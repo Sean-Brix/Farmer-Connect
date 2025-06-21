@@ -28,5 +28,18 @@ export async function createToken(req, res, next){
 export async function verifyToken(req, res, next){
 
     //VERIFY AUTH
-
+    const token = req.cookies.token;
+    if(!token){
+        return res.status(401).json({message: "Unauthorized"});
+    }
+    
+    jwt.verify(token, process.env.ACCESS_KEY, (err, decoded) => {
+        if(err){
+            return res.status(403).json({message: "Forbidden"});
+        }
+        req.userID = decoded.ID;
+        req.username = decoded.username;
+        next();
+    });
+    
 }
