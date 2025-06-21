@@ -13,7 +13,7 @@ function API_Request() {
 
     const testRequest = async ()=>{
 
-        const response = await fetch("/api/TEST/API_Response.php", {
+        const response = await fetch("/api/TEST/API_Response", {
             method: 'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -24,6 +24,7 @@ function API_Request() {
             })
         });
 
+        // console.log(await response.text());
         const data = await response.json();
 
         if(!response.ok){
@@ -47,6 +48,7 @@ function API_Request() {
         console.log(dataList);
     }, [dataList])
 
+    
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-96 space-y-6">
