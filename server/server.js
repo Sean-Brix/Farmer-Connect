@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 import colors from 'colors'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import app from './app.js'
+import app from './config/app.js'
 
 // Configuration
 dotenv.config();
