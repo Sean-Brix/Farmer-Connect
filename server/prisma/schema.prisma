@@ -10,7 +10,7 @@ datasource db {
 
 model accounts {
   id                                                             Int                     @id @default(autoincrement())
-  access                                                         accounts_access
+  access                                                         accounts_access         @default(User)
   firstname                                                      String                  @db.VarChar(100)
   lastname                                                       String                  @db.VarChar(100)
   gender                                                         accounts_gender
@@ -262,7 +262,7 @@ enum accounts_client_profile {
   Agricultural_Fisheries_Technician @map("Agricultural/Fisheries Technician")
   Youth
   Women
-  Gov_t_Employee                    @map("Gov't Employee")
+  Gov_t_Employee                    @map("Govt Employee")
   PWD
   Indigenous_People                 @map("Indigenous People")
 }
