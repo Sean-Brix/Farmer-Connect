@@ -1,0 +1,275 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model accounts {
+  id                                                             Int                     @id @default(autoincrement())
+  access                                                         accounts_access
+  firstname                                                      String                  @db.VarChar(100)
+  lastname                                                       String                  @db.VarChar(100)
+  gender                                                         accounts_gender
+  profile_picture                                                Bytes?
+  client_profile                                                 accounts_client_profile
+  address                                                        String?                 @db.VarChar(255)
+  telephone_no                                                   String?                 @db.VarChar(20)
+  cellphone_no                                                   String?                 @db.VarChar(20)
+  occupation                                                     String?                 @db.VarChar(100)
+  position                                                       String?                 @db.VarChar(100)
+  institution                                                    String?                 @db.VarChar(150)
+  email_address                                                  String?                 @db.VarChar(150)
+  username                                                       String                  @unique(map: "username") @db.VarChar(100)
+  password                                                       String                  @db.VarChar(255)
+  created_at                                                     DateTime                @default(now()) @db.Timestamp(0)
+  updated_at                                                     DateTime                @default(now()) @db.Timestamp(0)
+  distribution_items                                             distribution_items[]
+  distribution_request_distribution_request_account_idToaccounts distribution_request[]  @relation("distribution_request_account_idToaccounts")
+  distribution_request_distribution_request_admin_idToaccounts   distribution_request[]  @relation("distribution_request_admin_idToaccounts")
+  eic                                                            eic[]
+  eic_request_eic_request_account_idToaccounts                   eic_request[]           @relation("eic_request_account_idToaccounts")
+  eic_request_eic_request_admin_idToaccounts                     eic_request[]           @relation("eic_request_admin_idToaccounts")
+  seminar_participants                                           seminar_participants[]
+}
+
+model distribution_items {
+  id                   Int                         @id @default(autoincrement())
+  name                 String                      @db.VarChar(255)
+  description          String?                     @db.Text
+  quantity             Int
+  status               distribution_items_status   @default(Available)
+  category             distribution_items_category
+  added_by             Int
+  photo                Bytes?
+  created_at           DateTime                    @default(now()) @db.Timestamp(0)
+  updated_at           DateTime                    @default(now()) @db.Timestamp(0)
+  accounts             accounts                    @relation(fields: [added_by], references: [id], onUpdate: Restrict, map: "distribution_items_ibfk_1")
+  distribution_request distribution_request[]
+
+  @@index([added_by], map: "added_by")
+}
+
+model distribution_request {
+  id                                                 Int                         @id @default(autoincrement())
+  account_id                                         Int
+  distribution_item_id                               Int
+  admin_id                                           Int?
+  quantity                                           Int
+  status                                             distribution_request_status @default(Waiting)
+  request_note                                       String?                     @db.Text
+  schedule_date                                      DateTime?                   @db.Date
+  approval_date                                      DateTime?                   @db.Timestamp(0)
+  created_at                                         DateTime                    @default(now()) @db.Timestamp(0)
+  updated_at                                         DateTime                    @default(now()) @db.Timestamp(0)
+  accounts_distribution_request_account_idToaccounts accounts                    @relation("distribution_request_account_idToaccounts", fields: [account_id], references: [id], onUpdate: Restrict, map: "distribution_request_ibfk_1")
+  distribution_items                                 distribution_items          @relation(fields: [distribution_item_id], references: [id], onUpdate: Restrict, map: "distribution_request_ibfk_2")
+  accounts_distribution_request_admin_idToaccounts   accounts?                   @relation("distribution_request_admin_idToaccounts", fields: [admin_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "distribution_request_ibfk_3")
+
+  @@index([account_id], map: "account_id")
+  @@index([admin_id], map: "admin_id")
+  @@index([distribution_item_id], map: "distribution_item_id")
+}
+
+model eic {
+  id          Int           @id @default(autoincrement())
+  Name        String        @db.VarChar(255)
+  description String?       @db.Text
+  quantity    Int
+  status      eic_status
+  category    eic_category
+  added_by    Int
+  photo       Bytes
+  created_at  DateTime      @default(now()) @db.Timestamp(0)
+  updated_at  DateTime      @default(now()) @db.Timestamp(0)
+  accounts    accounts      @relation(fields: [added_by], references: [id], onUpdate: Restrict, map: "fk_eic_added_by")
+  eic_request eic_request[]
+
+  @@index([added_by], map: "fk_eic_added_by")
+}
+
+model eic_request {
+  id                                        Int                @id @default(autoincrement())
+  account_id                                Int
+  eic_id                                    Int
+  admin_id                                  Int?
+  quantity                                  Int
+  status                                    eic_request_status @default(Waiting)
+  request_note                              String?            @db.Text
+  borrow_date                               DateTime?          @db.Date
+  return_date                               DateTime?          @db.Date
+  approval_date                             DateTime?          @db.Timestamp(0)
+  created_at                                DateTime           @default(now()) @db.Timestamp(0)
+  updated_at                                DateTime           @default(now()) @db.Timestamp(0)
+  accounts_eic_request_account_idToaccounts accounts           @relation("eic_request_account_idToaccounts", fields: [account_id], references: [id], onUpdate: Restrict, map: "eic_request_ibfk_1")
+  eic                                       eic                @relation(fields: [eic_id], references: [id], onUpdate: Restrict, map: "eic_request_ibfk_2")
+  accounts_eic_request_admin_idToaccounts   accounts?          @relation("eic_request_admin_idToaccounts", fields: [admin_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "eic_request_ibfk_3")
+
+  @@index([account_id], map: "account_id")
+  @@index([admin_id], map: "admin_id")
+  @@index([eic_id], map: "eic_id")
+}
+
+model inventory {
+  id          Int                @id @default(autoincrement())
+  name        String             @db.VarChar(255)
+  quantity    Int                @default(0)
+  description String?            @db.Text
+  category    inventory_category
+  status      inventory_status?  @default(Available)
+  created_at  DateTime           @default(now()) @db.Timestamp(0)
+  updated_at  DateTime           @default(now()) @db.Timestamp(0)
+}
+
+model seminar_participants {
+  id                Int                         @id @default(autoincrement())
+  account_id        Int
+  seminar_id        Int
+  status            seminar_participants_status
+  registration_date DateTime                    @default(now()) @db.Timestamp(0)
+  created_at        DateTime                    @default(now()) @db.Timestamp(0)
+  updated_at        DateTime                    @default(now()) @db.Timestamp(0)
+  accounts          accounts                    @relation(fields: [account_id], references: [id], onUpdate: Restrict, map: "seminar_participants_ibfk_1")
+  seminars          seminars                    @relation(fields: [seminar_id], references: [id], onUpdate: Restrict, map: "seminar_participants_ibfk_2")
+
+  @@index([account_id], map: "account_id")
+  @@index([seminar_id], map: "seminar_id")
+}
+
+model seminars {
+  id                    Int                    @id @default(autoincrement())
+  title                 String                 @db.VarChar(255)
+  description           String?                @db.Text
+  location              String                 @db.VarChar(255)
+  start_date            DateTime               @db.Date
+  end_date              DateTime               @db.Date
+  start_time            DateTime               @db.Time(0)
+  end_time              DateTime               @db.Time(0)
+  capacity              Int?
+  photo                 Bytes
+  status                seminars_status
+  speaker               String?                @db.VarChar(255)
+  registration_deadline DateTime?              @db.Date
+  created_at            DateTime               @default(now()) @db.Timestamp(0)
+  updated_at            DateTime               @default(now()) @db.Timestamp(0)
+  seminar_participants  seminar_participants[]
+}
+
+enum accounts_access {
+  User
+  Admin
+  Super_Admin      @map("Super Admin")
+  EMPTY_ENUM_VALUE @map("")
+}
+
+enum seminar_participants_status {
+  Registered
+  Attended
+  Cancelled
+  No_Show    @map("No Show")
+}
+
+enum accounts_gender {
+  Male
+  Female
+  Other
+}
+
+enum distribution_items_status {
+  Available
+  Out_of_Stock @map("Out of Stock")
+  Discontinued
+}
+
+enum eic_status {
+  Available
+  Not_Available @map("Not Available")
+  Borrowed
+}
+
+enum inventory_category {
+  Farming_Equipment    @map("Farming Equipment")
+  Harvesting_Tools     @map("Harvesting Tools")
+  Irrigation_Systems   @map("Irrigation Systems")
+  Storage_Equipment    @map("Storage Equipment")
+  Processing_Equipment @map("Processing Equipment")
+  Safety_Gear          @map("Safety Gear")
+  Pest_Control         @map("Pest Control")
+  Livestock_Equipment  @map("Livestock Equipment")
+  Measuring_Tools      @map("Measuring Tools")
+  Fisheries
+  Machinery
+  Other
+}
+
+enum distribution_items_category {
+  Seeds
+  Fertilizers
+  Livestock
+  Fish_Fingerlings @map("Fish Fingerlings")
+  Organic_Inputs   @map("Organic Inputs")
+  Tools
+  Plants
+  Compost
+  Other
+}
+
+enum distribution_request_status {
+  Waiting
+  Approved
+  Rejected
+  Processing
+  Claimed
+}
+
+enum eic_category {
+  Farming_Equipment    @map("Farming Equipment")
+  Harvesting_Tools     @map("Harvesting Tools")
+  Irrigation_Systems   @map("Irrigation Systems")
+  Storage_Equipment    @map("Storage Equipment")
+  Processing_Equipment @map("Processing Equipment")
+  Safety_Gear          @map("Safety Gear")
+  Pest_Control         @map("Pest Control")
+  Livestock_Equipment  @map("Livestock Equipment")
+  Measuring_Tools      @map("Measuring Tools")
+  Fisheries
+  Machinery
+  Other
+}
+
+enum eic_request_status {
+  Waiting
+  Approved
+  Rejected
+  Processing
+  Returned
+}
+
+enum inventory_status {
+  Available
+  Damaged
+  Out_of_Stock @map("Out of Stock")
+  Maintenance
+}
+
+enum accounts_client_profile {
+  Fishfolk
+  Rural_Based_Org                   @map("Rural Based Org")
+  Student
+  Agricultural_Fisheries_Technician @map("Agricultural/Fisheries Technician")
+  Youth
+  Women
+  Gov_t_Employee                    @map("Gov't Employee")
+  PWD
+  Indigenous_People                 @map("Indigenous People")
+}
+
+enum seminars_status {
+  Upcoming
+  Ongoing
+  Completed
+  Cancelled
+}
