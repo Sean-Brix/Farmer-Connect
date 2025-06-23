@@ -518,14 +518,13 @@ export default function Distribution() {
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-white relative"
+                className="flex min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 relative"
                 style={{
-                    backgroundColor: '#fff',
                     overflow: 'hidden',
                 }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
-                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-16 ">
+                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-16">
                         <header className="flex flex-col items-center mb-10">
                             <span className="uppercase tracking-widest text-gray-400 text-xs font-medium mb-1 letter-spacing-wide">
                                 Welcome to
@@ -533,9 +532,10 @@ export default function Distribution() {
                             <h1 className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title">
                                 Distribution Center
                             </h1>
-                            <div className="mt-3 w-16 sm:w-24 h-2 rounded-full bg-gray-200 opacity-80"></div>
+                            <div className="mt-3 w-16 sm:w-24 h-2 rounded-full bg-blue-300 opacity-80"></div>
                         </header>
                         <div className="flex flex-row items-center w-full max-w-3xl mt-4 mb-8 gap-3 justify-center">
+                            {/* Search */}
                             <div className="flex flex-none min-w-1/2 max-w-xs gap-2 bg-white rounded-2xl shadow-lg px-4 py-1 items-center border border-gray-200 h-12">
                                 <div className="relative w-full">
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
@@ -553,6 +553,7 @@ export default function Distribution() {
                                     />
                                 </div>
                             </div>
+                            {/* Filter */}
                             <div className="relative h-12 flex items-center">
                                 <button
                                     id="modernFilterButton"
@@ -583,8 +584,8 @@ export default function Distribution() {
                                                 key={opt.value}
                                                 className={`flex items-center gap-3 w-full text-left px-3 sm:px-4 py-2 rounded-xl font-semibold transition text-sm sm:text-base ${
                                                     filterBy === opt.value
-                                                        ? 'bg-gray-800 text-white'
-                                                        : 'text-gray-700 hover:bg-gray-50'
+                                                        ? 'bg-blue-700 text-white'
+                                                        : 'text-gray-700 hover:bg-blue-50'
                                                 }`}
                                                 onClick={() => {
                                                     setFilter(opt.value);
@@ -614,6 +615,7 @@ export default function Distribution() {
                                     </select>
                                 </div>
                             </div>
+                            {/* My Requests */}
                             <button
                                 className="flex items-center gap-2 px-4 sm:px-5 py-2 h-12 rounded-xl bg-white text-blue-900 font-semibold border border-gray-200 shadow transition-all duration-200 hover:bg-gray-50 focus:outline-none text-base sm:text-lg"
                                 onClick={handleMyRequestsClick}
@@ -627,94 +629,77 @@ export default function Distribution() {
                                 </span>
                             </button>
                         </div>
-                        <div className="grid  grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 w-full max-w-6xl">
+                        {/* Modern Card Grid */}
+                        <div className="w-full max-w-7xl grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 px-2">
                             {paginatedItems.map((item) => (
                                 <div
                                     key={item.id}
-                                    className="max-w-full max-h-[370px] rounded-xl overflow-hidden shadow-2xl hover:shadow-[0_8px_32px_0_rgba(60,60,60,0.25)] bg-blue-200 m-4 border-2 border-blue-300 transition duration-200 hover:border-blue-400 hover:scale-[1.025] backdrop-blur-lg"
+                                    className="group relative bg-white rounded-3xl shadow-xl border border-blue-100 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 flex flex-col overflow-hidden"
+                                    style={{
+                                        minHeight: 370,
+                                    }}
                                 >
+                                    {/* Image */}
                                     <div className="relative">
                                         <img
-                                            className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
+                                            className="w-full h-44 object-cover transition-transform duration-300 group-hover:scale-105"
                                             src={item.img}
                                             alt={item.name}
                                         />
                                         <span
-                                            className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold shadow-sm
-                                                        ${
-                                                            item.category ===
-                                                            'Seeds'
-                                                                ? 'bg-gray-700'
-                                                                : item.category ===
-                                                                  'Fertilizers'
-                                                                ? 'bg-gray-500'
-                                                                : item.category ===
-                                                                  'Livestock'
-                                                                ? 'bg-gray-900'
-                                                                : item.category ===
-                                                                  'Fish Fingerlings'
-                                                                ? 'bg-blue-500'
-                                                                : item.category ===
-                                                                  'Organic Inputs'
-                                                                ? 'bg-blue-500'
-                                                                : item.category ===
-                                                                  'Tools'
-                                                                ? 'bg-yellow-500'
-                                                                : item.category ===
-                                                                  'Plants'
-                                                                ? 'bg-indigo-500'
-                                                                : item.category ===
-                                                                  'Compost'
-                                                                ? 'bg-orange-500'
-                                                                : 'bg-gray-400'
-                                                        } text-white`}
+                                            className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold shadow-sm bg-white/80 text-blue-900 border border-blue-200 backdrop-blur-sm`}
                                             style={{
                                                 boxShadow:
-                                                    '0 2px 8px 0 rgba(60,60,60,0.12)',
+                                                    '0 2px 8px 0 rgba(60,60,60,0.10)',
                                             }}
                                         >
-                                            {item.category}
+                                            {typeIcon(item.category)}
+                                            <span className="ml-2">{item.category}</span>
+                                        </span>
+                                        <span
+                                            className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-semibold shadow-sm
+                                                ${
+                                                    item.status === 'Available'
+                                                        ? 'bg-green-100 text-green-700 border border-green-200'
+                                                        : item.status === 'Out of Stock'
+                                                        ? 'bg-yellow-100 text-yellow-700 border border-yellow-200'
+                                                        : item.status === 'Scheduled'
+                                                        ? 'bg-red-100 text-red-700 border border-red-200'
+                                                        : 'bg-gray-100 text-gray-700 border border-gray-200'
+                                                }`}
+                                        >
+                                            {item.status}
                                         </span>
                                     </div>
-                                    <div className="p-5 flex flex-col h-[170px]">
-                                        <h3 className="text-xl font-bold mb-1 truncate text-blue-900">
+                                    {/* Card Body */}
+                                    <div className="flex-1 flex flex-col px-6 py-5">
+                                        <h3 className="text-lg font-bold mb-1 text-blue-900 truncate">
                                             {item.name}
                                         </h3>
                                         <p
-                                            className="text-gray-700 text-sm mb-4 truncate"
+                                            className="text-gray-600 text-sm mb-3 line-clamp-2"
                                             title={item.description}
                                         >
                                             {item.description}
                                         </p>
-                                        <div className="flex items-center justify-between mt-auto">
-                                            <span className="text-xs text-gray-700 flex items-center gap-1">
-                                                <span
-                                                    className={`inline-block w-2 h-2 rounded-full mr-1
-                                                        ${
-                                                            item.status ===
-                                                            'Available'
-                                                                ? 'bg-green-400'
-                                                                : item.status ===
-                                                                  'Out of Stock'
-                                                                ? 'bg-yellow-400'
-                                                                : item.status ===
-                                                                  'Scheduled'
-                                                                ? 'bg-red-400'
-                                                                : 'bg-gray-400'
-                                                        }`}
-                                                ></span>
-                                                {item.status}
-                                            </span>
-                                            <div className="flex gap-2">
-                                                <button
-                                                    className="bg-white hover:bg-blue-700 text-blue-900 hover:text-white font-bold py-2 px-5 rounded-2xl text-base border-2 border-blue-700 transition-colors shadow-lg"
-                                                    onClick={() =>
-                                                        handleRequestClick(item)
-                                                    }
-                                                >
-                                                    Request
-                                                </button>
+                                        <div className="flex items-end justify-between mt-auto pt-2">
+                                            <div className="flex flex-col">
+                                                <span className="text-xs text-gray-400">
+                                                    Quantity
+                                                </span>
+                                                <span className="font-semibold text-blue-700">
+                                                    {item.quantity ?? '-'}
+                                                </span>
                                             </div>
+                                            <button
+                                                className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold py-2 px-6 rounded-2xl text-base shadow-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                onClick={() =>
+                                                    handleRequestClick(item)
+                                                }
+                                            >
+                                                <i className="fa-solid fa-paper-plane mr-2"></i>
+                                                Request
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -744,8 +729,8 @@ export default function Distribution() {
                                         key={i}
                                         className={`px-4 py-2 rounded-lg font-semibold ${
                                             currentPage === i + 1
-                                                ? 'bg-gray-900 text-white'
-                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                ? 'bg-blue-700 text-white'
+                                                : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
                                         }`}
                                         onClick={() => setCurrentPage(i + 1)}
                                     >
@@ -769,6 +754,7 @@ export default function Distribution() {
                     </section>
                 </main>
             </div>
+            {/* Request Modal */}
             {modalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
                     <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in">
@@ -787,103 +773,104 @@ export default function Distribution() {
                             </button>
                         </div>
                         {/* Modal Body */}
-                                                <form
-                                                    onSubmit={handleSubmit}
-                                                    className="px-8 py-6 space-y-5"
-                                                >
-                                                    <div className="flex items-center gap-4 mb-2">
-                                                        <img
-                                                            src={selectedItem?.img}
-                                                            alt={selectedItem?.name}
-                                                            className="w-16 h-16 rounded-xl object-cover border-2 border-blue-700 shadow"
-                                                        />
-                                                        <div>
-                                                            <div className="text-lg font-semibold text-blue-900 truncate">
-                                                                {selectedItem?.name}
-                                                            </div>
-                                                            <div className="text-xs text-gray-500">
-                                                                {selectedItem?.category}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                        <div>
-                                                            <label
-                                                                htmlFor="schedule_date"
-                                                                className="block text-gray-700 text-sm font-medium mb-1"
-                                                            >
-                                                                Pickup Date
-                                                            </label>
-                                                            <input
-                                                                type="date"
-                                                                id="schedule_date"
-                                                                name="schedule_date"
-                                                                value={requestData.schedule_date}
-                                                                onChange={handleInputChange}
-                                                                className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
-                                                                required
-                                                                min={new Date().toISOString().split('T')[0]}
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <label
-                                                                htmlFor="quantity"
-                                                                className="block text-gray-700 text-sm font-medium mb-1"
-                                                            >
-                                                                Quantity
-                                                            </label>
-                                                            <input
-                                                                type="number"
-                                                                id="quantity"
-                                                                name="quantity"
-                                                                value={requestData.quantity}
-                                                                onChange={handleInputChange}
-                                                                className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
-                                                                required
-                                                                min="1"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <label
-                                                            htmlFor="request_note"
-                                                            className="block text-gray-700 text-sm font-medium mb-1"
-                                                        >
-                                                            Notes
-                                                        </label>
-                                                        <textarea
-                                                            id="request_note"
-                                                            name="request_note"
-                                                            value={requestData.request_note}
-                                                            onChange={handleInputChange}
-                                                            rows="3"
-                                                            className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition resize-none"
-                                                            placeholder="Optional"
-                                                        ></textarea>
-                                                    </div>
-                                                    <div className="flex justify-end gap-3 pt-2">
-                                                        <button
-                                                            type="button"
-                                                            className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-5 py-2 rounded-xl transition focus:outline-none"
-                                                            onClick={handleCloseModal}
-                                                        >
-                                                            Cancel
-                                                        </button>
-                                                        <button
-                                                            type="submit"
-                                                            className="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-xl shadow transition focus:outline-none"
-                                                        >
-                                                            Submit Request
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    )}
-                                    {showMyRequestsModal && (
-                                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
-                                            <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-3xl w-full relative overflow-hidden animate-fade-in">
-                                                {/* Modal Header */}
+                        <form
+                            onSubmit={handleSubmit}
+                            className="px-8 py-6 space-y-5"
+                        >
+                            <div className="flex items-center gap-4 mb-2">
+                                <img
+                                    src={selectedItem?.img}
+                                    alt={selectedItem?.name}
+                                    className="w-16 h-16 rounded-xl object-cover border-2 border-blue-700 shadow"
+                                />
+                                <div>
+                                    <div className="text-lg font-semibold text-blue-900 truncate">
+                                        {selectedItem?.name}
+                                    </div>
+                                    <div className="text-xs text-gray-500">
+                                        {selectedItem?.category}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label
+                                        htmlFor="schedule_date"
+                                        className="block text-gray-700 text-sm font-medium mb-1"
+                                    >
+                                        Pickup Date
+                                    </label>
+                                    <input
+                                        type="date"
+                                        id="schedule_date"
+                                        name="schedule_date"
+                                        value={requestData.schedule_date}
+                                        onChange={handleInputChange}
+                                        className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
+                                        required
+                                        min={new Date().toISOString().split('T')[0]}
+                                    />
+                                </div>
+                                <div>
+                                    <label
+                                        htmlFor="quantity"
+                                        className="block text-gray-700 text-sm font-medium mb-1"
+                                    >
+                                        Quantity
+                                    </label>
+                                    <input
+                                        type="number"
+                                        id="quantity"
+                                        name="quantity"
+                                        value={requestData.quantity}
+                                        onChange={handleInputChange}
+                                        className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
+                                        required
+                                        min="1"
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="request_note"
+                                    className="block text-gray-700 text-sm font-medium mb-1"
+                                >
+                                    Notes
+                                </label>
+                                <textarea
+                                    id="request_note"
+                                    name="request_note"
+                                    value={requestData.request_note}
+                                    onChange={handleInputChange}
+                                    rows="3"
+                                    className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition resize-none"
+                                    placeholder="Optional"
+                                ></textarea>
+                            </div>
+                            <div className="flex justify-end gap-3 pt-2">
+                                <button
+                                    type="button"
+                                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-5 py-2 rounded-xl transition focus:outline-none"
+                                    onClick={handleCloseModal}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-800 hover:to-blue-700 text-white font-semibold px-6 py-2 rounded-xl shadow transition focus:outline-none"
+                                >
+                                    Submit Request
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+            {/* My Requests Modal */}
+            {showMyRequestsModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
+                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-3xl w-full relative overflow-hidden animate-fade-in">
+                        {/* Modal Header */}
                         <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-700 to-blue-600">
                             <h2 className="text-xl font-bold text-white">
                                 <i className="fa-solid fa-list mr-2"></i>
@@ -968,48 +955,45 @@ export default function Distribution() {
                 .letter-spacing-wide {
                     letter-spacing: 0.15em;
                 }
-
                 .eic-title {
                     color: #1e3a8a !important;
                 }
-
                 @media (max-width: 640px) {
                     .text-4xl, .md\\:text-5xl {
                         font-size: 1.7rem !important;
                     }
-
                     .text-2xl, .sm\\:text-2xl {
                         font-size: 1.2rem !important;
                     }
-
                     .text-3xl, .sm\\:text-3xl {
                         font-size: 1.5rem !important;
                     }
                 }
-
                 .animate-fade-in {
                     animation: fadeIn 0.2s;
                 }
-
                 @keyframes fadeIn {
                     from {
                         opacity: 0;
                         transform: translateY(10px);
                     }
-
                     to {
                         opacity: 1;
                         transform: translateY(0);
                     }
                 }
-
+                .line-clamp-2 {
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
                 html,
                 body,
                 #root {
                     scrollbar-width: none;
                     -ms-overflow-style: none;
                 }
-
                 html::-webkit-scrollbar,
                 body::-webkit-scrollbar,
                 #root::-webkit-scrollbar {

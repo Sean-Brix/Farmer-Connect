@@ -410,43 +410,7 @@ export default function Landing() {
                 </div>
             </section>
 
-
-    // Replace all green color classes with blue equivalents
-    return (
-        <>
-            <Navbar />
-            <main className="bg-gradient-to-br from-blue-50 to-blue-100 pb-20  min-h-screen">
-                <section className="max-w-6xl mx-auto px-4  mb-0">
-                    <div
-                        className="
-                            w-screen relative left-1/2 right-1/2  -ml-[50vw] -mr-[50vw]
-                            flex flex-col items-center justify-center gap-6
-                            bg-black/80 backdrop-blur shadow-2xl p-35 sm:p-55 mb-20 border border-blue-900
-                            overflow-hidden
-                            reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700
-                        "
-                    >
-                        <video
-                            src={video}
-                            autoPlay
-                            loop
-                            muted
-                         playsInline
-                            className="absolute inset-0 w-full h-full object-cover z-0 opacity-60"
-                            style={{
-                                animation: 'none',
-                                transition: 'none',
-                                // filter: 'brightness(0.5) hue-rotate(160deg) saturate(2.5)',
-                                
-                            }}></video>
-                        {/* Text and Buttons */}
-                        <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center">
-                            <h1
-                                className="text-5xl font-extrabold mb-6 text-white leading-tight tracking-tight drop-shadow-2xl"
-                                style={{
-                                    textShadow:
-                                        '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
-                                            <section className="max-w-6xl mx-auto px-4 py-14 mb-20">
+            <section className="max-w-6xl mx-auto px-4 py-14 mb-20">
                 <h2 className="text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
                     Frequently Asked Questions
                 </h2>
@@ -653,4 +617,3 @@ export default function Landing() {
         </>
     )
 }
-}          
