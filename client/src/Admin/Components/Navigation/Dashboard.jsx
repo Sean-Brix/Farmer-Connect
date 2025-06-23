@@ -357,50 +357,53 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="flex min-h-screen h-screen">
+      <div className="flex min-h-screen h-screen bg-gray-50">
         {/* DESKTOP SIDEBAR */}
         <Sidebar
           logging={logging}
           details={details}
           setPage={setPage}
           elements={elements}
-          iconOnlyClass="sidebar-icon-only"
           currentPageKey={currentPageKey}
           handleSetPage={handleSetPage}
         />
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col min-h-screen h-screen ml-0 md:ml-64 transition-all">
-          <header className="gradient-bg shadow-md drop-shadow-lg p-3 flex justify-evenly md:justify-center md:px-8 items-center w-full fixed top-0 left-0 z-20 md:left-64 md:w-[calc(100%-16rem)] ">
-            <div className="flex items-center space-x-4 justify-center">
-              <img src={logo} alt="Logo" className="h-10 w-10 rounded-full" />
-              <h1 className="text-lg font-semibold text text-center items-center family">
+        <div className="flex-1 flex flex-col min-h-screen h-screen ml-0 transition-all dashboard-main-content">
+          <header className="bg-white/80 backdrop-blur-md shadow-sm px-4 flex justify-between md:justify-center items-center w-full fixed top-0 left-0 z-20 dashboard-header h-16 border-b border-gray-200">
+            <div className="flex items-center gap-3">
+              <img src={logo} alt="Logo" className="h-9 w-9 rounded-full shadow-sm" />
+              <h1
+                className="text-base md:text-lg font-semibold text-gray-800 tracking-tight cursor-pointer"
+                onClick={() => navigate('/')}
+                style={{ userSelect: 'none' }}
+              >
                 FITS Tanza - Municipal Agriculture Office
               </h1>
-              <button
-                className="md:hidden text mt-2 md:mt-0 translate-y-[-4px] ml-4"
-                onClick={() => setMobileMenuOpen(true)}
-                aria-label="Open menu"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-7 w-7"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16m-7 6h7"
-                  />
-                </svg>
-              </button>
             </div>
+            <button
+              className="md:hidden text-gray-600 hover:text-blue-600 transition ml-2"
+              onClick={() => setMobileMenuOpen(true)}
+              aria-label="Open menu"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-7 w-7"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
+              </svg>
+            </button>
           </header>
           {/* Render children below the header */}
-          <main className="flex-1 p-2 sm:p-4 overflow-auto pt-20 h-0 min-h-0 minimalist-scrollbar">
+          <main className="flex-1 p-2 sm:p-6 overflow-auto pt-20 h-0 min-h-0 minimalist-scrollbar bg-white/70">
             <Page admin_navigate={admin_navigate} details={details} />
           </main>
         </div>
@@ -409,23 +412,23 @@ export default function Dashboard() {
       {/* Mobile menu overlay */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 md:hidden"
+          className="fixed inset-0 bg-black/30 z-40 md:hidden"
           onClick={() => setMobileMenuOpen(false)}
           aria-label="Close menu overlay"
         />
       )}
       {/* Mobile sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 gradient-bg text-white drop-shadow-lg shadow-lg w-64 z-50 transform transition-transform duration-300 ${
+        className={`fixed inset-y-0 left-0 bg-white/95 backdrop-blur-md border-r border-gray-200 w-64 z-50 transform transition-transform duration-300 ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:hidden flex flex-col h-screen max-h-screen`}
+        } md:hidden flex flex-col h-screen max-h-screen shadow-lg`}
         id="mobile-menu"
       >
         <div className="flex flex-col h-full max-h-screen">
-          <div className="p-4 border-b border-blue-500 flex justify-between items-center">
-            <h1 className="text-2xl font-bold family">Dashboard</h1>
+          <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+            <h1 className="text-xl font-bold text-gray-800 pl-2">Dashboard</h1>
             <button
-              className="text-white"
+              className="text-gray-500 hover:text-blue-600 transition"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Close menu"
             >
@@ -447,260 +450,252 @@ export default function Dashboard() {
           </div>
           <div className="flex-1 min-h-0 flex flex-col">
             <nav className="mt-2 flex-1 overflow-y-auto minimalist-scrollbar">
-              <ul className="space-y-2 px-2 max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent">
-                {/* Home */}
-                <li
-                  className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                    currentPageKey === 'home' ? 'bg-blue-800 text-white font-bold' : ''
-                  }`}
-                  onClick={() => {
-                    setCurrentPageKey('home');
-                    setMobileMenuOpen(false);
-                    window.location.href = '/';
-                  }}
-                >
-                  <div className="flex items-center space-x-4">
-                    <span>
-                      {/* Modern home icon (Material Design style) */}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M10.707 2.293a1 1 0 0 1 1.414 0l8 8A1 1 0 0 1 19.707 11H19v8a2 2 0 0 1-2 2h-2a1 1 0 0 1-1-1v-4h-2v4a1 1 0 0 1-1 1h-2a2 2 0 0 1-2-2v-8h-.707a1 1 0 0 1-.707-1.707l8-8z"/>
-                      </svg>
-                    </span>
-                    <span>Home</span>
-                  </div>
-                </li>
+              <ul className="space-y-1 px-2 max-h-[70vh] overflow-y-auto">
                 {/* Analytics */}
                 <li
-                  className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                    currentPageKey === 'analytics' ? 'bg-blue-800 text-white font-bold' : ''
+                  className={`flex items-center gap-3 p-3 text-base hover:bg-gray-100 rounded-lg transition cursor-pointer w-full h-12 min-h-[3rem] ${
+                    currentPageKey === 'analytics' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
                   }`}
                   onClick={() => {
                     handleSetPage('analytics');
                     setMobileMenuOpen(false);
                   }}
+                  style={{ minHeight: '3rem' }}
                 >
-                  <div className="flex items-center space-x-4">
-                    <span>
-                      <i className="fas fa-cog h-6 w-6"></i>
-                    </span>
-                    <span>Analytics</span>
-                  </div>
+                  <span>
+                    <i className="fas fa-chart-line h-5 w-5"></i>
+                  </span>
+                  <span>Analytics</span>
                 </li>
                 {/* User Profiles */}
                 <li
-                  className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                    currentPageKey === 'profiles' ? 'bg-blue-800 text-white font-bold' : ''
+                  className={`flex items-center gap-3 p-3 text-base hover:bg-gray-100 rounded-lg transition cursor-pointer w-full h-12 min-h-[3rem] ${
+                    currentPageKey === 'profiles' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
                   }`}
                   onClick={() => {
                     handleSetPage('profiles');
                     setMobileMenuOpen(false);
                   }}
+                  style={{ minHeight: '3rem' }}
                 >
-                  <div className="flex items-center space-x-4">
-                    <span>
-                      <i className="fas fa-user-circle h-6 w-6"></i>
-                    </span>
-                    <span>User Profiles</span>
-                  </div>
+                  <span>
+                    <i className="fas fa-user-circle h-5 w-5"></i>
+                  </span>
+                  <span>User Profiles</span>
                 </li>
                 {/* Seminar Programs */}
                 <li
-                  className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                    currentPageKey === 'enrollment' ? 'bg-blue-800 text-white font-bold' : ''
+                  className={`flex items-center gap-3 p-3 text-base hover:bg-gray-100 rounded-lg transition cursor-pointer w-full h-12 min-h-[3rem] ${
+                    currentPageKey === 'enrollment' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
                   }`}
                   onClick={() => {
                     handleSetPage('enrollment');
                     setMobileMenuOpen(false);
                   }}
+                  style={{ minHeight: '3rem' }}
                 >
-                  <div className="flex items-center space-x-4">
-                    <span>
-                      <i className="fas fa-user-plus h-6 w-6"></i>
-                    </span>
-                    <span>Seminar Programs</span>
-                  </div>
+                  <span>
+                    <i className="fas fa-user-plus h-5 w-5"></i>
+                  </span>
+                  <span>Seminar Programs</span>
                 </li>
                 {/* EIC */}
                 <li
-                  className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                    currentPageKey === 'eic' ? 'bg-blue-800 text-white font-bold' : ''
+                  className={`flex items-center gap-3 p-3 text-base hover:bg-gray-100 rounded-lg transition cursor-pointer w-full h-12 min-h-[3rem] ${
+                    currentPageKey === 'eic' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
                   }`}
                   onClick={() => {
                     handleSetPage('eic');
                     setMobileMenuOpen(false);
                   }}
+                  style={{ minHeight: '3rem' }}
                 >
-                  <div className="flex items-center space-x-4">
-                    <span>
-                      <i className="fas fa-id-card h-6 w-6"></i>
-                    </span>
-                    <span>EIC - Item Panel</span>
-                  </div>
+                  <span>
+                    <i className="fas fa-id-card h-5 w-5"></i>
+                  </span>
+                  <span>EIC - Item Panel</span>
                 </li>
-                {/* DOSTRIBUTION */}
+                {/* Distribution */}
                 <li
-                  className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                    currentPageKey === 'distribution' ? 'bg-blue-800 text-white font-bold' : ''
+                  className={`flex items-center gap-3 p-3 text-base hover:bg-gray-100 rounded-lg transition cursor-pointer w-full h-12 min-h-[3rem] ${
+                    currentPageKey === 'distribution' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
                   }`}
                   onClick={() => {
                     handleSetPage('distribution');
                     setMobileMenuOpen(false);
                   }}
+                  style={{ minHeight: '3rem' }}
                 >
-                  <div className="flex items-center space-x-4">
-                    <span>
-                      <i className="fas fa-id-card h-6 w-6"></i>
-                    </span>
-                    <span>Distributions</span>
-                  </div>
+                  <span>
+                    <i className="fas fa-box-open h-5 w-5"></i>
+                  </span>
+                  <span>Distributions</span>
                 </li>
                 {/* Content Management */}
                 <li
-                  className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                    currentPageKey === 'content' ? 'bg-blue-800 text-white font-bold' : ''
+                  className={`flex items-center gap-3 p-3 text-base hover:bg-gray-100 rounded-lg transition cursor-pointer w-full h-12 min-h-[3rem] ${
+                    currentPageKey === 'content' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
                   }`}
                   onClick={() => {
                     handleSetPage('content');
                     setMobileMenuOpen(false);
                   }}
+                  style={{ minHeight: '3rem' }}
                 >
-                  <div className="flex items-center space-x-4">
-                    <span>
-                      <i className="fas fa-home h-6 w-6"></i>
-                    </span>
-                    <span>Inventory</span>
-                  </div>
+                  <span>
+                    <i className="fas fa-archive h-5 w-5"></i>
+                  </span>
+                  <span>Inventory</span>
                 </li>
                 {/* Audit */}
                 <li
-                  className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                    currentPageKey === 'audit' ? 'bg-blue-800 text-white font-bold' : ''
+                  className={`flex items-center gap-3 p-3 text-base hover:bg-gray-100 rounded-lg transition cursor-pointer w-full h-12 min-h-[3rem] ${
+                    currentPageKey === 'audit' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
                   }`}
                   onClick={() => {
                     handleSetPage('audit');
                     setMobileMenuOpen(false);
                   }}
+                  style={{ minHeight: '3rem' }}
                 >
-                  <div className="flex items-center space-x-4">
-                    <span>
-                      <i className="fas fa-id-card h-6 w-6"></i>
-                    </span>
-                    <span>Logs / Audit Trail</span>
-                  </div>
+                  <span>
+                    <i className="fas fa-clipboard-list h-5 w-5"></i>
+                  </span>
+                  <span>Logs / Audit Trail</span>
                 </li>
                 {/* Survey */}
                 <li
-                  className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                    currentPageKey === 'survey' ? 'bg-blue-800 text-white font-bold' : ''
+                  className={`flex items-center gap-3 p-3 text-base hover:bg-gray-100 rounded-lg transition cursor-pointer w-full h-12 min-h-[3rem] ${
+                    currentPageKey === 'survey' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
                   }`}
                   onClick={() => {
                     handleSetPage('survey');
                     setMobileMenuOpen(false);
                   }}
+                  style={{ minHeight: '3rem' }}
                 >
-                  <div className="flex items-center space-x-4">
-                    <span>
-                      <i className="fas fa-home h-6 w-6"></i>
-                    </span>
-                    <span>Survey Forms</span>
-                  </div>
+                  <span>
+                    <i className="fas fa-poll h-5 w-5"></i>
+                  </span>
+                  <span>Survey Forms</span>
                 </li>
                 {/* Settings */}
                 <li
-                  className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                    currentPageKey === 'settings' ? 'bg-blue-800 text-white font-bold' : ''
+                  className={`flex items-center gap-3 p-3 text-base hover:bg-gray-100 rounded-lg transition cursor-pointer w-full h-12 min-h-[3rem] ${
+                    currentPageKey === 'settings' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
                   }`}
                   onClick={() => {
                     handleSetPage('settings');
                     setMobileMenuOpen(false);
                   }}
+                  style={{ minHeight: '3rem' }}
                 >
-                  <div className="flex items-center space-x-4">
-                    <span>
-                      <i className="fas fa-cog h-6 w-6"></i>
-                    </span>
-                    <span>Settings</span>
-                  </div>
+                  <span>
+                    <i className="fas fa-cog h-5 w-5"></i>
+                  </span>
+                  <span>Settings</span>
                 </li>
               </ul>
             </nav>
             {/* Profile and Logout at the bottom, styled like desktop */}
-                  <div className="p-4 border-t logout flex flex-col items-center mt-auto bg-gradient-to-t from-blue-900/80 via-blue-900/60 to-transparent">
-                    <div
-                    className="flex items-start mb-4 w-full justify-evenly neon-profile-hover cursor-pointer"
-                    onClick={() => {
-                      setPage(elements.current["account"]);
-                      // Don't mutate props directly
-                    }}
-                    >
-                    <div className="relative rounded-full border-3 border-blue-800 neon-avatar">
-                      <img 
-                      src={details.picture} 
-                      alt="Profile" 
-                      className="h-10 w-10 rounded-full border-2 border-white object-cover" 
-                      />
-                      <span className="neon-border"></span>
-                    </div>
-                    <div className="flex-col flex flex-start">
-                      <span className="font-bold">{ details.username }</span>
-                      <span className="text-sm text-gray-300">{ details.position }</span>
-                    </div>
-                    </div>
-                    {/* Logout button (mobile sidebar, bottom) */}
-              <button 
-                className="flex items-center justify-center space-x-2 px-4 py-2 element hover:element rounded-lg transition text w-full border"
+            <div className="p-4 border-t border-gray-200 flex flex-col items-center mt-auto bg-white/80">
+              <div
+                className="flex items-center mb-4 w-full gap-3 cursor-pointer hover:bg-gray-100 rounded-lg p-2 transition sidebar-profile"
+                onClick={() => {
+                  setPage(elements.current["account"]);
+                }}
+              >
+                <div className="relative rounded-full border-2 border-blue-100 shadow-sm sidebar-profile-picture">
+                  <img
+                    src={details.picture}
+                    alt="Profile"
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+                </div>
+                <div className="flex flex-col sidebar-profile-info">
+                  <span className="font-semibold text-gray-800">{details.username}</span>
+                  <span className="text-xs text-gray-500">{details.position}</span>
+                </div>
+              </div>
+              {/* Logout button (mobile sidebar, bottom) */}
+              <button
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-700 w-full border border-gray-200 font-semibold"
                 onClick={logging}
               >
-                <span className="flex items-center py-2k">
-                  <i className="fas fa-sign-out-alt h-5 w-5 translate-y-1"></i>
+                <span>
+                  <i className="fas fa-sign-out-alt h-5 w-5"></i>
                 </span>
-                <span className="font-bold">Logout</span>
+                <span>Logout</span>
               </button>
             </div>
           </div>
         </div>
       </aside>
-      
-      {/* Minimalist scrollbar utility, neon profile effect, and sidebar icon-only mode */}
+
+      {/* Minimalist scrollbar utility and sidebar icon-only mode */}
       <style>{`
         .minimalist-scrollbar::-webkit-scrollbar {
           width: 8px;
           background: transparent;
         }
         .minimalist-scrollbar::-webkit-scrollbar-thumb {
-          background: #cbd5e1;
+          background: #e5e7eb;
           border-radius: 4px;
         }
         .minimalist-scrollbar {
           scrollbar-width: thin;
-          scrollbar-color: #cbd5e1 transparent;
+          scrollbar-color: #e5e7eb transparent;
         }
         html, body, #root {
           height: 100%;
         }
-      
-      
-        /* Sidebar icon-only mode for 1000px-1300px */
-        @media (max-width: 1300px) and (min-width: 1000px) {
-          .sidebar-icon-only {
-            width: 5rem !important;
-            min-width: 5rem !important;
-            max-width: 5rem !important;
+        /* Responsive main content margin/width based on sidebar size */
+        @media (min-width: 751px) and (max-width: 1300px) {
+          .dashboard-main-content {
+            margin-left: 16rem !important;
+            width: calc(100% - 16rem) !important;
           }
-          .sidebar-icon-only .sidebar-label,
-          .sidebar-icon-only .sidebar-username,
-          .sidebar-icon-only .sidebar-position,
-          .sidebar-icon-only .sidebar-logout-text {
-            display: none !important;
+          .dashboard-header {
+            left: 16rem !important;
+            width: calc(100% - 16rem) !important;
           }
-          .sidebar-icon-only .sidebar-icon {
-            justify-content: center !important;
+        }
+        @media (min-width: 1300px) {
+          .dashboard-main-content {
+            margin-left: 16rem !important;
+            width: calc(100% - 16rem) !important;
           }
+          .dashboard-header {
+            left: 16rem !important;
+            width: calc(100% - 16rem) !important;
+          }
+        }
+        @media (max-width: 751px) {
+          .dashboard-main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+          }
+          .dashboard-header {
+            left: 0 !important;
+            width: 100% !important;
+          }
+        }
+        /* Sidebar default mode */
+        .sidebar,
+        .sidebar-icon-only {
+          top: 0 !important;
+        }
+        /* Responsive sidebar/mobile nav link sizing */
+        #mobile-menu li {
+          min-height: 3rem !important;
+          height: 3rem !important;
+          width: 100% !important;
+          box-sizing: border-box;
+        }
+        #mobile-menu li > .flex {
+          min-height: 3rem !important;
+          height: 3rem !important;
+          align-items: center !important;
         }
       `}</style>
     </>

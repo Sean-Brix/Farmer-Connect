@@ -316,21 +316,23 @@ function Analytics() {
     }, [userStats, seminarStats, eicStats, availableEIC, analyticsData]);
 
     return (
-        <div className="w-full mx-auto px-4 py-10 bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen">
-            <div className="relative mb-12">
-                <h1 className="text-3xl md:text-4xl font-extrabold mt-10 sm:20 text-blue-800 text-center tracking-tight">
-                    <span className="bg-gradient-to-r from-blue-500 via-blue-400 to-blue-700 bg-clip-text text-transparent">
+        <div className="w-full mx-auto px-2 sm:mt-10 sm:px-4 py-8 bg-gradient-to-br from-gray-50 via-white to-gray-100 min-h-screen">
+            <div className="mb-10">
+                <div className="flex items-center w-full">
+                    <hr className="flex-grow border-t border-gray-200" />
+                    <h1 className="mx-3 text-2xl sm:text-3xl font-bold text-gray-800 bg-white/80 px-6 py-1 rounded-full shadow whitespace-nowrap tracking-tight">
                         Analytics Dashboard
-                    </span>
-                </h1>
+                    </h1>
+                    <hr className="flex-grow border-t border-gray-200" />
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center hover:shadow-2xl transition">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center hover:shadow-lg transition">
                     <div className="flex items-center gap-2 mb-2">
-                        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100">
+                        <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100">
                             <svg
-                                className="w-6 h-6 text-blue-500"
+                                className="w-5 h-5 text-gray-500"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
@@ -339,14 +341,14 @@ function Analytics() {
                                 <path d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m13-7a4 4 0 11-8 0 4 4 0 018 0zm-8 0a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
                         </span>
-                        <span className="text-sm font-medium text-blue-500">
+                        <span className="text-xs font-medium text-gray-500">
                             Total Users
                         </span>
                     </div>
-                    <span className="text-3xl font-bold text-blue-700 mb-1">
+                    <span className="text-2xl font-semibold text-gray-800 mb-1">
                         {totalUsers}
                     </span>
-                    <span className="text-xs text-blue-500 font-semibold mb-2">
+                    <span className="text-xs text-gray-400 font-medium mb-2">
                         +
                         {userStats.length > 1
                             ? userStats[userStats.length - 1] -
@@ -354,15 +356,15 @@ function Analytics() {
                             : 0}{' '}
                         this month
                     </span>
-                    <div className="w-full h-24">
+                    <div className="w-full h-20">
                         <canvas ref={userChartRef} />
                     </div>
                 </div>
-                <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center hover:shadow-2xl transition">
+                <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center hover:shadow-lg transition">
                     <div className="flex items-center gap-2 mb-2">
-                        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100">
+                        <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100">
                             <svg
-                                className="w-6 h-6 text-blue-500"
+                                className="w-5 h-5 text-gray-500"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
@@ -371,14 +373,14 @@ function Analytics() {
                                 <path d="M13 16h-1v-4h-1m4 0h-1v-4h-1m4 0h-1v-4h-1m-4 0h-1v-4h-1" />
                             </svg>
                         </span>
-                        <span className="text-sm font-medium text-blue-500">
+                        <span className="text-xs font-medium text-gray-500">
                             Total Seminars
                         </span>
                     </div>
-                    <span className="text-3xl font-bold text-blue-700 mb-1">
+                    <span className="text-2xl font-semibold text-gray-800 mb-1">
                         {totalSeminars}
                     </span>
-                    <span className="text-xs text-blue-500 font-semibold mb-2">
+                    <span className="text-xs text-gray-400 font-medium mb-2">
                         +
                         {seminarStats.length > 1
                             ? seminarStats[seminarStats.length - 1] -
@@ -386,15 +388,15 @@ function Analytics() {
                             : 0}{' '}
                         this month
                     </span>
-                    <div className="w-full h-24">
+                    <div className="w-full h-20">
                         <canvas ref={seminarChartRef} />
                     </div>
                 </div>
-                <div className="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center hover:shadow-2xl transition">
+                <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center hover:shadow-lg transition">
                     <div className="flex items-center gap-2 mb-2">
-                        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-100">
+                        <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100">
                             <svg
-                                className="w-6 h-6 text-blue-500"
+                                className="w-5 h-5 text-gray-500"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
@@ -403,14 +405,14 @@ function Analytics() {
                                 <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
                             </svg>
                         </span>
-                        <span className="text-sm font-medium text-blue-500">
+                        <span className="text-xs font-medium text-gray-500">
                             Available EIC
                         </span>
                     </div>
-                    <span className="text-3xl font-bold text-blue-700 mb-1">
+                    <span className="text-2xl font-semibold text-gray-800 mb-1">
                         {availableEIC}
                     </span>
-                    <span className="text-xs text-blue-500 font-semibold mb-2">
+                    <span className="text-xs text-gray-400 font-medium mb-2">
                         +
                         {eicStats.length > 1
                             ? eicStats[eicStats.length - 1] -
@@ -418,20 +420,21 @@ function Analytics() {
                             : 0}{' '}
                         this month
                     </span>
-                    <div className="w-full h-24">
+                    <div className="w-full h-20">
                         <canvas ref={eicChartRef} />
                     </div>
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                <div className="bg-gradient-to-br from-blue-100 via-white to-blue-200 rounded-2xl shadow-lg p-8 flex flex-col">
-                    <h2 className="text-lg font-semibold text-blue-700 mb-4 text-center tracking-wide">
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+                <div className="bg-white rounded-xl shadow-md p-6 flex flex-col">
+                    <h2 className="text-base font-semibold text-gray-700 mb-3 text-center tracking-wide">
                         Monthly User Growth
                     </h2>
                     <div className="w-full">
                         <canvas ref={monthlyUserGrowthChartRef} />
                     </div>
-                    <div className="flex justify-between mt-4 text-xs text-blue-400 font-semibold">
+                    <div className="flex justify-between mt-3 text-xs text-gray-400 font-medium">
                         {months.map((m, i) => (
                             <span key={i} className="text-center w-1/12">
                                 {m}
@@ -439,32 +442,32 @@ function Analytics() {
                         ))}
                     </div>
                 </div>
-                <div className="bg-gradient-to-br from-blue-100 via-white to-blue-200 rounded-2xl shadow-lg p-8 flex flex-col items-center">
-                    <h2 className="text-lg font-semibold text-blue-700 mb-4 text-center tracking-wide">
+                <div className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center">
+                    <h2 className="text-base font-semibold text-gray-700 mb-3 text-center tracking-wide">
                         Key Metrics
                     </h2>
                     <div className="grid grid-cols-2 gap-4 w-full">
-                        <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
-                            <span className="text-blue-600 font-semibold">
+                        <div className="bg-gray-50 rounded-lg shadow-sm p-4 flex flex-col items-center">
+                            <span className="text-gray-600 font-medium text-xs">
                                 Waiting Distribution Requests
                             </span>
-                            <span className="text-xl font-bold text-blue-700 mt-1">
+                            <span className="text-lg font-bold text-gray-800 mt-1">
                                 {waitingDistributionRequests}
                             </span>
                         </div>
-                        <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
-                            <span className="text-blue-600 font-semibold">
+                        <div className="bg-gray-50 rounded-lg shadow-sm p-4 flex flex-col items-center">
+                            <span className="text-gray-600 font-medium text-xs">
                                 Top Client Profile
                             </span>
-                            <span className="text-xl font-bold text-blue-700 mt-1">
+                            <span className="text-lg font-bold text-gray-800 mt-1">
                                 {topClientProfile}
                             </span>
                         </div>
-                        <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
-                            <span className="text-blue-600 font-semibold">
+                        <div className="bg-gray-50 rounded-lg shadow-sm p-4 flex flex-col items-center col-span-2">
+                            <span className="text-gray-600 font-medium text-xs">
                                 Top EIC Category
                             </span>
-                            <span className="text-xl font-bold text-blue-700 mt-1">
+                            <span className="text-lg font-bold text-gray-800 mt-1">
                                 {topEICCategory}
                             </span>
                         </div>
@@ -472,23 +475,23 @@ function Analytics() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-white rounded-2xl shadow-lg p-6">
-                    <h2 className="text-base font-semibold text-blue-700 mb-4 text-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-white rounded-xl shadow-md p-5">
+                    <h2 className="text-base font-semibold text-gray-700 mb-3 text-center">
                         Client Profile Distribution
                     </h2>
-                    <ul className="divide-y divide-blue-100">
+                    <ul className="divide-y divide-gray-100">
                         {Object.entries(clientProfileCounts)
                             .sort(([, a], [, b]) => b - a)
                             .map(([profile, count], idx) => (
                                 <li
                                     key={idx}
-                                    className="flex justify-between py-3 px-2"
+                                    className="flex justify-between py-2 px-1"
                                 >
-                                    <span className="font-medium text-blue-700">
+                                    <span className="font-medium text-gray-700">
                                         {profile}
                                     </span>
-                                    <span className="text-blue-500">
+                                    <span className="text-gray-500">
                                         <span className="font-semibold">
                                             {count}
                                         </span>
@@ -497,12 +500,12 @@ function Analytics() {
                             ))}
                     </ul>
                 </div>
-                <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
-                    <h2 className="text-base font-semibold text-blue-700 mb-4 text-center">
+                <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center">
+                    <h2 className="text-base font-semibold text-gray-700 mb-3 text-center">
                         User Growth Rate
                     </h2>
                     <div className="flex flex-col items-center">
-                        <span className="text-4xl font-extrabold text-blue-600">
+                        <span className="text-3xl font-extrabold text-gray-700">
                             {userStats.length > 1
                                 ? (
                                       ((userStats[userStats.length - 1] -
@@ -513,7 +516,7 @@ function Analytics() {
                                 : 0}
                             %
                         </span>
-                        <span className="text-xs text-blue-400 mt-1">
+                        <span className="text-xs text-gray-400 mt-1">
                             Since {months[0]}
                         </span>
                     </div>

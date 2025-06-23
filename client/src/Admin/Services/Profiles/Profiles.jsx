@@ -72,33 +72,33 @@ export default function Profiles({ details }) {
     }, [filter]);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 py-6 px-2 sm:py-10 sm:px-4 mt-10">
-            {/* MODERN HEADER WITH LINE */}
-            <div className="flex items-center justify-center md:justify-start max-w-5xl mx-auto mb-8">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-3 px-1 sm:py-6 md:py-10 lg:py-14 xl:py-20 sm:mt-10 transition-all">
+            {/* HEADER */}
+            <div className="flex items-center justify-center md:justify-start max-w-4xl mx-auto mb-6">
                 <div className="flex items-center w-full">
-                    <hr className="flex-grow border-t-2 border-blue-400" />
-                    <h1 className="mx-4 text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-blue-900 px-8 py-2 rounded-full shadow-lg whitespace-nowrap tracking-tight">
+                    <hr className="flex-grow border-t border-gray-200" />
+                    <h1 className="mx-3 text-2xl sm:text-3xl font-bold text-gray-800 bg-white/80 px-6 py-1 rounded-full shadow whitespace-nowrap tracking-tight">
                         Account Management
                     </h1>
-                    <hr className="flex-grow border-t-2 border-blue-400" />
+                    <hr className="flex-grow border-t border-gray-200" />
                 </div>
             </div>
-            <div className="max-w-5xl mx-auto bg-white/90 rounded-2xl shadow-2xl p-4 sm:p-8 border border-blue-200">
+            <div className="max-w-4xl mx-auto bg-white/95 rounded-xl shadow-lg p-3 sm:p-6 border border-gray-100">
                 {/* FILTERS */}
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
-                    <div className="flex flex-col gap-3 w-full md:w-auto md:flex-row md:items-center md:gap-6 flex-wrap">
+                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-6">
+                    <div className="flex flex-col gap-2 w-full md:w-auto md:flex-row md:items-center md:gap-4 flex-wrap">
                         {/* Search Bar */}
                         <input
                             type="text"
                             placeholder="Search profiles..."
-                            className="w-full md:w-72 px-4 py-2 border border-blue-300 rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-blue-400 transition bg-blue-50/70 placeholder:text-blue-400"
+                            className="w-full md:w-64 px-3 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition bg-gray-50/60 placeholder:text-gray-400"
                             onChange={(e) => setFilter({ ...filter, search: e.target.value })}
                         />
                         {/* Filters */}
-                        <div className="flex flex-col gap-2 sm:flex-row sm:gap-4 w-full md:w-auto flex-wrap">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:gap-3 w-full md:w-auto flex-wrap">
                             {/* ACCESS FILTER */}
                             <select
-                                className="w-full sm:w-40 px-3 py-2 border border-blue-300 rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-blue-400 transition bg-blue-50/70 text-blue-700"
+                                className="w-full sm:w-36 px-2 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition bg-gray-50/60 text-gray-700"
                                 onChange={(e) =>
                                     setFilter({ ...filter, roles: e.target.value })
                                 }
@@ -111,7 +111,7 @@ export default function Profiles({ details }) {
 
                             {/* CLIENT FILTER */}
                             <select
-                                className="w-full sm:w-55 px-3 py-2 border border-blue-300 rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-blue-400 transition bg-blue-50/70 text-blue-700"
+                                className="w-full sm:w-44 px-2 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition bg-gray-50/60 text-gray-700"
                                 onChange={(e) =>
                                     setFilter({
                                         ...filter,
@@ -144,7 +144,7 @@ export default function Profiles({ details }) {
 
                             {/* SORT BY FILTER */}
                             <select
-                                className="w-full sm:w-40 px-3 py-2 border border-blue-300 rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-blue-400 transition bg-blue-50/70 text-blue-700"
+                                className="w-full sm:w-36 px-2 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition bg-gray-50/60 text-gray-700"
                                 onChange={(e) =>
                                     setFilter({
                                         ...filter,
@@ -163,19 +163,19 @@ export default function Profiles({ details }) {
                     </div>
                 </div>
 
-                <hr className="mb-6 border-blue-200" />
+                <hr className="mb-5 border-gray-100" />
 
                 {/* LIST */}
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3">
                     {!Array.isArray(userList) || userList.length === 0 ? (
-                        <div className="text-center text-blue-400 py-12 font-semibold">
+                        <div className="text-center text-gray-400 py-10 font-medium">
                             No profiles found.
                         </div>
                     ) : (
                         userList.map((user) => (
                             <div
                                 key={user.id}
-                                className="bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 rounded-xl shadow-md hover:shadow-lg transition p-4 border border-blue-200"
+                                className="bg-gradient-to-r from-gray-50 via-white to-gray-100 rounded-lg shadow hover:shadow-md transition p-3 border border-gray-100"
                             >
                                 <User user={user} details={details} />
                             </div>
@@ -183,7 +183,7 @@ export default function Profiles({ details }) {
                     )}
                 </div>
             </div>
-            {/* Extra responsive styles for filter overlap */}
+            {/* Responsive tweaks */}
             <style>
                 {`
                 @media (max-width: 640px) {

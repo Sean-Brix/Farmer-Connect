@@ -1,189 +1,190 @@
-import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function Sidebar({ setPage, details = {}, logging, elements }) {
-    // Helper function to determine if a sidebar item is active
-    const isActive = (key) => details && details.currentPage === key;
-    const location = useLocation();
+const menuItems = [
+    {
+        key: 'home',
+        label: 'Home',
+        icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sidebar-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10.707 2.293a1 1 0 0 1 1.414 0l8 8A1 1 0 0 1 19.707 11H19v8a2 2 0 0 1-2 2h-2a1 1 0 0 1-1-1v-4h-2v4a1 1 0 0 1-1 1h-2a2 2 0 0 1-2-2v-8h-.707a1 1 0 0 1-.707-1.707l8-8z"/>
+            </svg>
+        ),
+        to: '/',
+    },
+    {
+        key: 'analytics',
+        label: 'Analytics',
+        icon: <i className="fas fa-chart-line h-5 w-5 sidebar-icon"></i>,
+    },
+    {
+        key: 'profiles',
+        label: 'User Profiles',
+        icon: <i className="fas fa-user-circle h-5 w-5 sidebar-icon"></i>,
+    },
+    {
+        key: 'enrollment',
+        label: 'Seminar Programs',
+        icon: <i className="fas fa-user-plus h-5 w-5 sidebar-icon"></i>,
+    },
+    {
+        key: 'eic',
+        label: 'EIC - Item Panel',
+        icon: <i className="fas fa-id-card h-5 w-5 sidebar-icon"></i>,
+    },
+    {
+        key: 'distribution',
+        label: 'Distributions',
+        icon: <i className="fas fa-box-open h-5 w-5 sidebar-icon"></i>,
+    },
+    {
+        key: 'content',
+        label: 'Inventory',
+        icon: <i className="fas fa-archive h-5 w-5 sidebar-icon"></i>,
+    },
+    {
+        key: 'audit',
+        label: 'Logs / Audit Trail',
+        icon: <i className="fas fa-clipboard-list h-5 w-5 sidebar-icon"></i>,
+    },
+    {
+        key: 'survey',
+        label: 'Survey Forms',
+        icon: <i className="fas fa-poll h-5 w-5 sidebar-icon"></i>,
+    },
+    {
+        key: 'settings',
+        label: 'Settings',
+        icon: <i className="fas fa-cog h-5 w-5 sidebar-icon"></i>,
+    },
+];
+
+export default function Sidebar({
+    setPage,
+    details = {},
+    logging,
+    elements,
+    iconOnlyClass = '',
+    currentPageKey,
+    handleSetPage,
+}) {
     const navigate = useNavigate();
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [location.pathname]);
+    const handleClick = (item) => {
+        if (item.to) {
+            window.location.href = item.to;
+        } else if (handleSetPage) {
+            handleSetPage(item.key);
+        } else if (setPage && elements?.current?.[item.key]) {
+            setPage(elements.current[item.key]);
+        }
+    };
+
+    // Remove the Home icon from menuItems
+    const filteredMenuItems = menuItems.filter(item => item.key !== 'home');
 
     return (
-        <>
-            {/* Desktop Sidebar */}
-            <aside className="w-64 gradient-bg text shadow-md hidden md:flex flex-col fixed left-0 top-0 z-30 h-screen max-h-screen">
-                <div className="flex flex-col h-full max-h-screen">
-                    <div className="p-4 border-b border-blue-500">
-                        <h1 className="text-xl font-semibold ml-7 family">
-                            Dashboard
-                        </h1>
-                    </div>
-                    <div className="flex min-h-0 overflow-y-auto minimalist-scrollbar">
-                        <nav className="mt-2">
-                            <ul className="space-y-2 px-2 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-transparent">
-                                <li
-                                    className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                                        isActive('home')
-                                            ? 'bg-blue-700 font-bold'
-                                            : ''
-                                    }`}
-                                    onClick={() => {
-                                        setPage(elements.current['home']);
-                                        navigate('/');
-                                    }}
-                                >
-                                    <div className="flex items-center space-x-4">
-                                        <span>
-                                            <i className="fas fa-home h-6 w-6"></i>
-                                        </span>
-                                        <span>Home</span>
-                                    </div>
-                                </li>
-                                <li
-                                    className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                                        isActive('analytics')
-                                            ? 'bg-blue-700 font-bold'
-                                            : ''
-                                    }`}
-                                    onClick={() =>
-                                        setPage(elements.current['analytics'])
-                                    }
-                                >
-                                    <div className="flex items-center space-x-4">
-                                        <span>
-                                            <i className="fas fa-cog h-6 w-6"></i>
-                                        </span>
-                                        <span>Analytics</span>
-                                    </div>
-                                </li>
-                                <li
-                                    className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                                        isActive('profiles')
-                                            ? 'bg-blue-700 font-bold'
-                                            : ''
-                                    }`}
-                                    onClick={() =>
-                                        setPage(elements.current['profiles'])
-                                    }
-                                >
-                                    <div className="flex items-center space-x-4">
-                                        <span>
-                                            <i className="fas fa-user-circle h-6 w-6"></i>
-                                        </span>
-                                        <span>User Profiles</span>
-                                    </div>
-                                </li>
-                                <li
-                                    className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                                        isActive('enrollment')
-                                            ? 'bg-blue-700 font-bold'
-                                            : ''
-                                    }`}
-                                    onClick={() =>
-                                        setPage(elements.current['enrollment'])
-                                    }
-                                >
-                                    <div className="flex items-center space-x-4">
-                                        <span>
-                                            <i className="fas fa-user-plus h-6 w-6"></i>
-                                        </span>
-                                        <span>Seminar Programs</span>
-                                    </div>
-                                </li>
-                                <li
-                                    className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                                        isActive('eic')
-                                            ? 'bg-blue-700 font-bold'
-                                            : ''
-                                    }`}
-                                    onClick={() =>
-                                        setPage(elements.current['eic'])
-                                    }
-                                >
-                                    <div className="flex items-center space-x-4">
-                                        <span>
-                                            <i className="fas fa-id-card h-6 w-6"></i>
-                                        </span>
-                                        <span>EIC - Item Panel</span>
-                                    </div>
-                                </li>
-                                <li
-                                    className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                                        isActive('distribution')
-                                            ? 'bg-blue-700 font-bold'
-                                            : ''
-                                    }`}
-                                    onClick={() =>
-                                        setPage(elements.current['distribution'])
-                                    }
-                                >
-                                    <div className="flex items-center space-x-4">
-                                        <span>
-                                            <i className="fas fa-id-card h-6 w-6"></i>
-                                        </span>
-                                        <span>Distribution</span>
-                                    </div>
-                                </li>
-                                <li
-                                    className={`p-5 text-lg hover:bg-blue-700 rounded-lg transition cursor-pointer ${
-                                        isActive('content')
-                                            ? 'bg-blue-700 font-bold'
-                                            : ''
-                                    }`}
-                                    onClick={() =>
-                                        setPage(elements.current['content'])
-                                    }
-                                >
-                                    <div className="flex items-center space-x-4">
-                                        <span>
-                                            <i className="fas fa-home h-6 w-6"></i>
-                                        </span>
-                                        <span>Inventory</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    
-                    <div className="p-6 border-t logout flex flex-col items-center mt-auto bg-gradient-to-t from-blue-900/80 via-blue-900/60 to-transparent">
-                        <button
-                            className="flex flex-col items-center w-full mb-4 focus:outline-none group"
-                            onClick={() => setPage(elements.current['account'])}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                padding: 0,
-                                cursor: 'pointer',
-                            }}
-                        >
-                            <div className="flex flex-col items-center">
-                                <div className="relative mb-2">
-                                    <img
-                                        src={details.picture}
-                                        alt="Profile"
-                                        className="h-16 w-16 rounded-full border-4 border-blue-500 shadow-lg object-cover transition-transform duration-200 group-hover:scale-105"
-                                    />
-                                    <span className="absolute bottom-1 right-1 h-4 w-4 bg-green-400 border-2 border-white rounded-full"></span>
-                                </div>
-                                <span className="font-semibold text-white text-lg text-center">{details.username}</span>
-                            </div>
-                        </button>
-                        {/* Logout button (desktop sidebar, bottom) */}
-                        <button
-                            className="flex items-center justify-center space-x-2 px-4 py-2 element hover:element rounded-lg transition text w-full border"
-                            onClick={logging}
-                        >
-                            <span className="flex items-center py-2k">
-                                <i className="fas fa-sign-out-alt h-5 w-5 translate-y-1"></i>
-                            </span>
-                            <span className="font-bold">Logout</span>
-                        </button>
-                    </div>
+        <aside
+            className={`sidebar transition-all duration-200 w-64 bg-white/95 backdrop-blur-md border-r border-gray-200 shadow-lg hidden md:flex flex-col fixed left-0 top-0 z-30 h-screen max-h-screen ${iconOnlyClass}`}
+        >
+            <div className="flex flex-col h-full max-h-screen">
+                <div className="p-4 border-b border-gray-200">
+                    <h1 className="text-xl font-bold text-gray-800 sidebar-label">Dashboard</h1>
                 </div>
-            </aside>
-        </>
+                <nav className="mt-2 flex-1 overflow-y-auto minimalist-scrollbar">
+                    <ul className="space-y-1 px-2">
+                        {filteredMenuItems.map((item) => (
+                            <li
+                                key={item.key}
+                                className={`flex items-center gap-3 p-3 text-base rounded-lg transition cursor-pointer sidebar-item
+                                    ${
+                                        currentPageKey === item.key
+                                            ? 'bg-gray-200 font-semibold text-blue-700'
+                                            : 'text-gray-700 hover:bg-gray-100'
+                                    }
+                                `}
+                                onClick={() => handleClick(item)}
+                            >
+                                <span className="sidebar-icon">{item.icon}</span>
+                                <span className="sidebar-label">{item.label}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+                <div className="p-4 border-t border-gray-200 flex flex-col items-center mt-auto bg-white/80">
+                    <div
+                        className="flex items-center mb-4 w-full gap-3 cursor-pointer hover:bg-gray-100 rounded-lg p-2 transition"
+                        onClick={() => setPage(elements.current['account'])}
+                    >
+                        <div className="relative rounded-full border-2 border-blue-100 shadow-sm">
+                            <img
+                                src={details.picture}
+                                alt="Profile"
+                                className="h-10 w-10 rounded-full object-cover"
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="font-semibold text-gray-800 sidebar-username">{details.username}</span>
+                            <span className="text-xs text-gray-500 sidebar-position">{details.position}</span>
+                        </div>
+                    </div>
+                    <button
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-700 w-full border border-gray-200 font-semibold"
+                        onClick={logging}
+                    >
+                        <span>
+                            <i className="fas fa-sign-out-alt h-5 w-5"></i>
+                        </span>
+                        <span className="sidebar-logout-text">Logout</span>
+                    </button>
+                </div>
+            </div>
+            {/* Minimalist scrollbar and icon-only mode styles */}
+            <style>{`
+                .minimalist-scrollbar::-webkit-scrollbar {
+                    width: 8px;
+                    background: transparent;
+                }
+                .minimalist-scrollbar::-webkit-scrollbar-thumb {
+                    background: #e5e7eb;
+                    border-radius: 4px;
+                }
+                .minimalist-scrollbar {
+                    scrollbar-width: thin;
+                    scrollbar-color: #e5e7eb transparent;
+                }
+                @media (max-width: 1300px) and (min-width: 1000px) {
+                    .sidebar-icon-only {
+                        width: 4.5rem !important;
+                        min-width: 4.5rem !important;
+                        max-width: 4.5rem !important;
+                    }
+                    .sidebar-icon-only .sidebar-label,
+                    .sidebar-icon-only .sidebar-username,
+                    .sidebar-icon-only .sidebar-position,
+                    .sidebar-icon-only .sidebar-logout-text {
+                        display: none !important;
+                    }
+                    .sidebar-icon-only .sidebar-icon {
+                        justify-content: center !important;
+                    }
+                }
+                /* Ensure all sidebar icons are the same size */
+                .sidebar-icon {
+                    width: 1.25rem !important;
+                    height: 1.25rem !important;
+                    min-width: 1.25rem !important;
+                    min-height: 1.25rem !important;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                /* Remove icon size from Home SVG itself, handled by sidebar-icon */
+                .sidebar-icon svg {
+                    width: 100% !important;
+                    height: 100% !important;
+                }
+            `}</style>
+        </aside>
     );
 }
