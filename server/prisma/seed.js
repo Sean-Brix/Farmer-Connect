@@ -1,4 +1,4 @@
-import { PrismaClient } from './schema/generated/prisma/index.js'
+import { PrismaClient } from './generated/index.js'
 import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
@@ -56,7 +56,15 @@ async function createAccountCommodities() {
   const commoditiesData = await prisma.commodities.findMany();
 
   for (const account of accountsData) {
-    for (const commodity of commoditiesData) {
+    // Randomly determine how many commodities this account will have
+    const numberOfCommodities = Math.floor(Math.random() * commoditiesData.length);
+
+    // Shuffle the commodities array to pick commodities randomly
+    const shuffledCommodities = [...commoditiesData.sort(() => Math.random() - 0.5)];
+
+    // Assign the randomly selected commodities to the account
+    for (let i = 0; i < numberOfCommodities; i++) {
+      const commodity = shuffledCommodities[i];
       await prisma.accounts_commodities.create({
         data: {
           account_id: account.id,
@@ -98,7 +106,15 @@ async function createSeminarParticipants() {
     const accounts = await prisma.accounts.findMany();
 
     for (const seminar of seminars) {
-        for (const account of accounts) {
+        // Randomly determine how many accounts will participate in this seminar
+        const numberOfParticipants = Math.floor(Math.random() * accounts.length);
+
+        // Shuffle the accounts array to pick participants randomly
+        const shuffledAccounts = [...accounts].sort(() => Math.random() - 0.5);
+
+        // Assign the randomly selected accounts to the seminar
+        for (let i = 0; i < numberOfParticipants; i++) {
+            const account = shuffledAccounts[i];
             await prisma.seminar_participants.create({
                 data: {
                     seminar_id: seminar.id,

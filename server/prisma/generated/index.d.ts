@@ -39,6 +39,11 @@ export type inventory_items = $Result.DefaultSelection<Prisma.$inventory_itemsPa
  */
 export type inventory_categories = $Result.DefaultSelection<Prisma.$inventory_categoriesPayload>
 /**
+ * Model borrowed_items
+ * 
+ */
+export type borrowed_items = $Result.DefaultSelection<Prisma.$borrowed_itemsPayload>
+/**
  * Model seminars
  * 
  */
@@ -316,6 +321,16 @@ export class PrismaClient<
     * ```
     */
   get inventory_categories(): Prisma.inventory_categoriesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.borrowed_items`: Exposes CRUD operations for the **borrowed_items** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Borrowed_items
+    * const borrowed_items = await prisma.borrowed_items.findMany()
+    * ```
+    */
+  get borrowed_items(): Prisma.borrowed_itemsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.seminars`: Exposes CRUD operations for the **seminars** model.
@@ -781,6 +796,7 @@ export namespace Prisma {
     accounts_commodities: 'accounts_commodities',
     inventory_items: 'inventory_items',
     inventory_categories: 'inventory_categories',
+    borrowed_items: 'borrowed_items',
     seminars: 'seminars',
     seminar_participants: 'seminar_participants'
   };
@@ -801,7 +817,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "accounts" | "commodities" | "accounts_commodities" | "inventory_items" | "inventory_categories" | "seminars" | "seminar_participants"
+      modelProps: "accounts" | "commodities" | "accounts_commodities" | "inventory_items" | "inventory_categories" | "borrowed_items" | "seminars" | "seminar_participants"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1135,6 +1151,72 @@ export namespace Prisma {
           }
         }
       }
+      borrowed_items: {
+        payload: Prisma.$borrowed_itemsPayload<ExtArgs>
+        fields: Prisma.borrowed_itemsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.borrowed_itemsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$borrowed_itemsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.borrowed_itemsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$borrowed_itemsPayload>
+          }
+          findFirst: {
+            args: Prisma.borrowed_itemsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$borrowed_itemsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.borrowed_itemsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$borrowed_itemsPayload>
+          }
+          findMany: {
+            args: Prisma.borrowed_itemsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$borrowed_itemsPayload>[]
+          }
+          create: {
+            args: Prisma.borrowed_itemsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$borrowed_itemsPayload>
+          }
+          createMany: {
+            args: Prisma.borrowed_itemsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.borrowed_itemsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$borrowed_itemsPayload>
+          }
+          update: {
+            args: Prisma.borrowed_itemsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$borrowed_itemsPayload>
+          }
+          deleteMany: {
+            args: Prisma.borrowed_itemsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.borrowed_itemsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.borrowed_itemsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$borrowed_itemsPayload>
+          }
+          aggregate: {
+            args: Prisma.Borrowed_itemsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBorrowed_items>
+          }
+          groupBy: {
+            args: Prisma.borrowed_itemsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Borrowed_itemsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.borrowed_itemsCountArgs<ExtArgs>
+            result: $Utils.Optional<Borrowed_itemsCountAggregateOutputType> | number
+          }
+        }
+      }
       seminars: {
         payload: Prisma.$seminarsPayload<ExtArgs>
         fields: Prisma.seminarsFieldRefs
@@ -1356,6 +1438,7 @@ export namespace Prisma {
     accounts_commodities?: accounts_commoditiesOmit
     inventory_items?: inventory_itemsOmit
     inventory_categories?: inventory_categoriesOmit
+    borrowed_items?: borrowed_itemsOmit
     seminars?: seminarsOmit
     seminar_participants?: seminar_participantsOmit
   }
@@ -6576,6 +6659,937 @@ export namespace Prisma {
 
 
   /**
+   * Model borrowed_items
+   */
+
+  export type AggregateBorrowed_items = {
+    _count: Borrowed_itemsCountAggregateOutputType | null
+    _avg: Borrowed_itemsAvgAggregateOutputType | null
+    _sum: Borrowed_itemsSumAggregateOutputType | null
+    _min: Borrowed_itemsMinAggregateOutputType | null
+    _max: Borrowed_itemsMaxAggregateOutputType | null
+  }
+
+  export type Borrowed_itemsAvgAggregateOutputType = {
+    id: number | null
+    itemId: number | null
+  }
+
+  export type Borrowed_itemsSumAggregateOutputType = {
+    id: number | null
+    itemId: number | null
+  }
+
+  export type Borrowed_itemsMinAggregateOutputType = {
+    id: number | null
+    itemId: number | null
+    borrowedAt: Date | null
+    returnedAt: Date | null
+    borrowerId: string | null
+    notes: string | null
+  }
+
+  export type Borrowed_itemsMaxAggregateOutputType = {
+    id: number | null
+    itemId: number | null
+    borrowedAt: Date | null
+    returnedAt: Date | null
+    borrowerId: string | null
+    notes: string | null
+  }
+
+  export type Borrowed_itemsCountAggregateOutputType = {
+    id: number
+    itemId: number
+    borrowedAt: number
+    returnedAt: number
+    borrowerId: number
+    notes: number
+    _all: number
+  }
+
+
+  export type Borrowed_itemsAvgAggregateInputType = {
+    id?: true
+    itemId?: true
+  }
+
+  export type Borrowed_itemsSumAggregateInputType = {
+    id?: true
+    itemId?: true
+  }
+
+  export type Borrowed_itemsMinAggregateInputType = {
+    id?: true
+    itemId?: true
+    borrowedAt?: true
+    returnedAt?: true
+    borrowerId?: true
+    notes?: true
+  }
+
+  export type Borrowed_itemsMaxAggregateInputType = {
+    id?: true
+    itemId?: true
+    borrowedAt?: true
+    returnedAt?: true
+    borrowerId?: true
+    notes?: true
+  }
+
+  export type Borrowed_itemsCountAggregateInputType = {
+    id?: true
+    itemId?: true
+    borrowedAt?: true
+    returnedAt?: true
+    borrowerId?: true
+    notes?: true
+    _all?: true
+  }
+
+  export type Borrowed_itemsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which borrowed_items to aggregate.
+     */
+    where?: borrowed_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of borrowed_items to fetch.
+     */
+    orderBy?: borrowed_itemsOrderByWithRelationInput | borrowed_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: borrowed_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` borrowed_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` borrowed_items.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned borrowed_items
+    **/
+    _count?: true | Borrowed_itemsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Borrowed_itemsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Borrowed_itemsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Borrowed_itemsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Borrowed_itemsMaxAggregateInputType
+  }
+
+  export type GetBorrowed_itemsAggregateType<T extends Borrowed_itemsAggregateArgs> = {
+        [P in keyof T & keyof AggregateBorrowed_items]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBorrowed_items[P]>
+      : GetScalarType<T[P], AggregateBorrowed_items[P]>
+  }
+
+
+
+
+  export type borrowed_itemsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: borrowed_itemsWhereInput
+    orderBy?: borrowed_itemsOrderByWithAggregationInput | borrowed_itemsOrderByWithAggregationInput[]
+    by: Borrowed_itemsScalarFieldEnum[] | Borrowed_itemsScalarFieldEnum
+    having?: borrowed_itemsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Borrowed_itemsCountAggregateInputType | true
+    _avg?: Borrowed_itemsAvgAggregateInputType
+    _sum?: Borrowed_itemsSumAggregateInputType
+    _min?: Borrowed_itemsMinAggregateInputType
+    _max?: Borrowed_itemsMaxAggregateInputType
+  }
+
+  export type Borrowed_itemsGroupByOutputType = {
+    id: number
+    itemId: number
+    borrowedAt: Date
+    returnedAt: Date | null
+    borrowerId: string
+    notes: string | null
+    _count: Borrowed_itemsCountAggregateOutputType | null
+    _avg: Borrowed_itemsAvgAggregateOutputType | null
+    _sum: Borrowed_itemsSumAggregateOutputType | null
+    _min: Borrowed_itemsMinAggregateOutputType | null
+    _max: Borrowed_itemsMaxAggregateOutputType | null
+  }
+
+  type GetBorrowed_itemsGroupByPayload<T extends borrowed_itemsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Borrowed_itemsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Borrowed_itemsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Borrowed_itemsGroupByOutputType[P]>
+            : GetScalarType<T[P], Borrowed_itemsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type borrowed_itemsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    itemId?: boolean
+    borrowedAt?: boolean
+    returnedAt?: boolean
+    borrowerId?: boolean
+    notes?: boolean
+  }, ExtArgs["result"]["borrowed_items"]>
+
+
+
+  export type borrowed_itemsSelectScalar = {
+    id?: boolean
+    itemId?: boolean
+    borrowedAt?: boolean
+    returnedAt?: boolean
+    borrowerId?: boolean
+    notes?: boolean
+  }
+
+  export type borrowed_itemsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "borrowedAt" | "returnedAt" | "borrowerId" | "notes", ExtArgs["result"]["borrowed_items"]>
+
+  export type $borrowed_itemsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "borrowed_items"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      itemId: number
+      borrowedAt: Date
+      returnedAt: Date | null
+      borrowerId: string
+      notes: string | null
+    }, ExtArgs["result"]["borrowed_items"]>
+    composites: {}
+  }
+
+  type borrowed_itemsGetPayload<S extends boolean | null | undefined | borrowed_itemsDefaultArgs> = $Result.GetResult<Prisma.$borrowed_itemsPayload, S>
+
+  type borrowed_itemsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<borrowed_itemsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Borrowed_itemsCountAggregateInputType | true
+    }
+
+  export interface borrowed_itemsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['borrowed_items'], meta: { name: 'borrowed_items' } }
+    /**
+     * Find zero or one Borrowed_items that matches the filter.
+     * @param {borrowed_itemsFindUniqueArgs} args - Arguments to find a Borrowed_items
+     * @example
+     * // Get one Borrowed_items
+     * const borrowed_items = await prisma.borrowed_items.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends borrowed_itemsFindUniqueArgs>(args: SelectSubset<T, borrowed_itemsFindUniqueArgs<ExtArgs>>): Prisma__borrowed_itemsClient<$Result.GetResult<Prisma.$borrowed_itemsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Borrowed_items that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {borrowed_itemsFindUniqueOrThrowArgs} args - Arguments to find a Borrowed_items
+     * @example
+     * // Get one Borrowed_items
+     * const borrowed_items = await prisma.borrowed_items.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends borrowed_itemsFindUniqueOrThrowArgs>(args: SelectSubset<T, borrowed_itemsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__borrowed_itemsClient<$Result.GetResult<Prisma.$borrowed_itemsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Borrowed_items that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {borrowed_itemsFindFirstArgs} args - Arguments to find a Borrowed_items
+     * @example
+     * // Get one Borrowed_items
+     * const borrowed_items = await prisma.borrowed_items.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends borrowed_itemsFindFirstArgs>(args?: SelectSubset<T, borrowed_itemsFindFirstArgs<ExtArgs>>): Prisma__borrowed_itemsClient<$Result.GetResult<Prisma.$borrowed_itemsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Borrowed_items that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {borrowed_itemsFindFirstOrThrowArgs} args - Arguments to find a Borrowed_items
+     * @example
+     * // Get one Borrowed_items
+     * const borrowed_items = await prisma.borrowed_items.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends borrowed_itemsFindFirstOrThrowArgs>(args?: SelectSubset<T, borrowed_itemsFindFirstOrThrowArgs<ExtArgs>>): Prisma__borrowed_itemsClient<$Result.GetResult<Prisma.$borrowed_itemsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Borrowed_items that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {borrowed_itemsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Borrowed_items
+     * const borrowed_items = await prisma.borrowed_items.findMany()
+     * 
+     * // Get first 10 Borrowed_items
+     * const borrowed_items = await prisma.borrowed_items.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const borrowed_itemsWithIdOnly = await prisma.borrowed_items.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends borrowed_itemsFindManyArgs>(args?: SelectSubset<T, borrowed_itemsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$borrowed_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Borrowed_items.
+     * @param {borrowed_itemsCreateArgs} args - Arguments to create a Borrowed_items.
+     * @example
+     * // Create one Borrowed_items
+     * const Borrowed_items = await prisma.borrowed_items.create({
+     *   data: {
+     *     // ... data to create a Borrowed_items
+     *   }
+     * })
+     * 
+     */
+    create<T extends borrowed_itemsCreateArgs>(args: SelectSubset<T, borrowed_itemsCreateArgs<ExtArgs>>): Prisma__borrowed_itemsClient<$Result.GetResult<Prisma.$borrowed_itemsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Borrowed_items.
+     * @param {borrowed_itemsCreateManyArgs} args - Arguments to create many Borrowed_items.
+     * @example
+     * // Create many Borrowed_items
+     * const borrowed_items = await prisma.borrowed_items.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends borrowed_itemsCreateManyArgs>(args?: SelectSubset<T, borrowed_itemsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Borrowed_items.
+     * @param {borrowed_itemsDeleteArgs} args - Arguments to delete one Borrowed_items.
+     * @example
+     * // Delete one Borrowed_items
+     * const Borrowed_items = await prisma.borrowed_items.delete({
+     *   where: {
+     *     // ... filter to delete one Borrowed_items
+     *   }
+     * })
+     * 
+     */
+    delete<T extends borrowed_itemsDeleteArgs>(args: SelectSubset<T, borrowed_itemsDeleteArgs<ExtArgs>>): Prisma__borrowed_itemsClient<$Result.GetResult<Prisma.$borrowed_itemsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Borrowed_items.
+     * @param {borrowed_itemsUpdateArgs} args - Arguments to update one Borrowed_items.
+     * @example
+     * // Update one Borrowed_items
+     * const borrowed_items = await prisma.borrowed_items.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends borrowed_itemsUpdateArgs>(args: SelectSubset<T, borrowed_itemsUpdateArgs<ExtArgs>>): Prisma__borrowed_itemsClient<$Result.GetResult<Prisma.$borrowed_itemsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Borrowed_items.
+     * @param {borrowed_itemsDeleteManyArgs} args - Arguments to filter Borrowed_items to delete.
+     * @example
+     * // Delete a few Borrowed_items
+     * const { count } = await prisma.borrowed_items.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends borrowed_itemsDeleteManyArgs>(args?: SelectSubset<T, borrowed_itemsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Borrowed_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {borrowed_itemsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Borrowed_items
+     * const borrowed_items = await prisma.borrowed_items.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends borrowed_itemsUpdateManyArgs>(args: SelectSubset<T, borrowed_itemsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Borrowed_items.
+     * @param {borrowed_itemsUpsertArgs} args - Arguments to update or create a Borrowed_items.
+     * @example
+     * // Update or create a Borrowed_items
+     * const borrowed_items = await prisma.borrowed_items.upsert({
+     *   create: {
+     *     // ... data to create a Borrowed_items
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Borrowed_items we want to update
+     *   }
+     * })
+     */
+    upsert<T extends borrowed_itemsUpsertArgs>(args: SelectSubset<T, borrowed_itemsUpsertArgs<ExtArgs>>): Prisma__borrowed_itemsClient<$Result.GetResult<Prisma.$borrowed_itemsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Borrowed_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {borrowed_itemsCountArgs} args - Arguments to filter Borrowed_items to count.
+     * @example
+     * // Count the number of Borrowed_items
+     * const count = await prisma.borrowed_items.count({
+     *   where: {
+     *     // ... the filter for the Borrowed_items we want to count
+     *   }
+     * })
+    **/
+    count<T extends borrowed_itemsCountArgs>(
+      args?: Subset<T, borrowed_itemsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Borrowed_itemsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Borrowed_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Borrowed_itemsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Borrowed_itemsAggregateArgs>(args: Subset<T, Borrowed_itemsAggregateArgs>): Prisma.PrismaPromise<GetBorrowed_itemsAggregateType<T>>
+
+    /**
+     * Group by Borrowed_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {borrowed_itemsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends borrowed_itemsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: borrowed_itemsGroupByArgs['orderBy'] }
+        : { orderBy?: borrowed_itemsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, borrowed_itemsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBorrowed_itemsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the borrowed_items model
+   */
+  readonly fields: borrowed_itemsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for borrowed_items.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__borrowed_itemsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the borrowed_items model
+   */
+  interface borrowed_itemsFieldRefs {
+    readonly id: FieldRef<"borrowed_items", 'Int'>
+    readonly itemId: FieldRef<"borrowed_items", 'Int'>
+    readonly borrowedAt: FieldRef<"borrowed_items", 'DateTime'>
+    readonly returnedAt: FieldRef<"borrowed_items", 'DateTime'>
+    readonly borrowerId: FieldRef<"borrowed_items", 'String'>
+    readonly notes: FieldRef<"borrowed_items", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * borrowed_items findUnique
+   */
+  export type borrowed_itemsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the borrowed_items
+     */
+    select?: borrowed_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the borrowed_items
+     */
+    omit?: borrowed_itemsOmit<ExtArgs> | null
+    /**
+     * Filter, which borrowed_items to fetch.
+     */
+    where: borrowed_itemsWhereUniqueInput
+  }
+
+  /**
+   * borrowed_items findUniqueOrThrow
+   */
+  export type borrowed_itemsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the borrowed_items
+     */
+    select?: borrowed_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the borrowed_items
+     */
+    omit?: borrowed_itemsOmit<ExtArgs> | null
+    /**
+     * Filter, which borrowed_items to fetch.
+     */
+    where: borrowed_itemsWhereUniqueInput
+  }
+
+  /**
+   * borrowed_items findFirst
+   */
+  export type borrowed_itemsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the borrowed_items
+     */
+    select?: borrowed_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the borrowed_items
+     */
+    omit?: borrowed_itemsOmit<ExtArgs> | null
+    /**
+     * Filter, which borrowed_items to fetch.
+     */
+    where?: borrowed_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of borrowed_items to fetch.
+     */
+    orderBy?: borrowed_itemsOrderByWithRelationInput | borrowed_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for borrowed_items.
+     */
+    cursor?: borrowed_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` borrowed_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` borrowed_items.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of borrowed_items.
+     */
+    distinct?: Borrowed_itemsScalarFieldEnum | Borrowed_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * borrowed_items findFirstOrThrow
+   */
+  export type borrowed_itemsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the borrowed_items
+     */
+    select?: borrowed_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the borrowed_items
+     */
+    omit?: borrowed_itemsOmit<ExtArgs> | null
+    /**
+     * Filter, which borrowed_items to fetch.
+     */
+    where?: borrowed_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of borrowed_items to fetch.
+     */
+    orderBy?: borrowed_itemsOrderByWithRelationInput | borrowed_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for borrowed_items.
+     */
+    cursor?: borrowed_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` borrowed_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` borrowed_items.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of borrowed_items.
+     */
+    distinct?: Borrowed_itemsScalarFieldEnum | Borrowed_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * borrowed_items findMany
+   */
+  export type borrowed_itemsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the borrowed_items
+     */
+    select?: borrowed_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the borrowed_items
+     */
+    omit?: borrowed_itemsOmit<ExtArgs> | null
+    /**
+     * Filter, which borrowed_items to fetch.
+     */
+    where?: borrowed_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of borrowed_items to fetch.
+     */
+    orderBy?: borrowed_itemsOrderByWithRelationInput | borrowed_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing borrowed_items.
+     */
+    cursor?: borrowed_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` borrowed_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` borrowed_items.
+     */
+    skip?: number
+    distinct?: Borrowed_itemsScalarFieldEnum | Borrowed_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * borrowed_items create
+   */
+  export type borrowed_itemsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the borrowed_items
+     */
+    select?: borrowed_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the borrowed_items
+     */
+    omit?: borrowed_itemsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a borrowed_items.
+     */
+    data: XOR<borrowed_itemsCreateInput, borrowed_itemsUncheckedCreateInput>
+  }
+
+  /**
+   * borrowed_items createMany
+   */
+  export type borrowed_itemsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many borrowed_items.
+     */
+    data: borrowed_itemsCreateManyInput | borrowed_itemsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * borrowed_items update
+   */
+  export type borrowed_itemsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the borrowed_items
+     */
+    select?: borrowed_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the borrowed_items
+     */
+    omit?: borrowed_itemsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a borrowed_items.
+     */
+    data: XOR<borrowed_itemsUpdateInput, borrowed_itemsUncheckedUpdateInput>
+    /**
+     * Choose, which borrowed_items to update.
+     */
+    where: borrowed_itemsWhereUniqueInput
+  }
+
+  /**
+   * borrowed_items updateMany
+   */
+  export type borrowed_itemsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update borrowed_items.
+     */
+    data: XOR<borrowed_itemsUpdateManyMutationInput, borrowed_itemsUncheckedUpdateManyInput>
+    /**
+     * Filter which borrowed_items to update
+     */
+    where?: borrowed_itemsWhereInput
+    /**
+     * Limit how many borrowed_items to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * borrowed_items upsert
+   */
+  export type borrowed_itemsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the borrowed_items
+     */
+    select?: borrowed_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the borrowed_items
+     */
+    omit?: borrowed_itemsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the borrowed_items to update in case it exists.
+     */
+    where: borrowed_itemsWhereUniqueInput
+    /**
+     * In case the borrowed_items found by the `where` argument doesn't exist, create a new borrowed_items with this data.
+     */
+    create: XOR<borrowed_itemsCreateInput, borrowed_itemsUncheckedCreateInput>
+    /**
+     * In case the borrowed_items was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<borrowed_itemsUpdateInput, borrowed_itemsUncheckedUpdateInput>
+  }
+
+  /**
+   * borrowed_items delete
+   */
+  export type borrowed_itemsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the borrowed_items
+     */
+    select?: borrowed_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the borrowed_items
+     */
+    omit?: borrowed_itemsOmit<ExtArgs> | null
+    /**
+     * Filter which borrowed_items to delete.
+     */
+    where: borrowed_itemsWhereUniqueInput
+  }
+
+  /**
+   * borrowed_items deleteMany
+   */
+  export type borrowed_itemsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which borrowed_items to delete
+     */
+    where?: borrowed_itemsWhereInput
+    /**
+     * Limit how many borrowed_items to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * borrowed_items without action
+   */
+  export type borrowed_itemsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the borrowed_items
+     */
+    select?: borrowed_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the borrowed_items
+     */
+    omit?: borrowed_itemsOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model seminars
    */
 
@@ -8705,6 +9719,18 @@ export namespace Prisma {
   export type Inventory_categoriesScalarFieldEnum = (typeof Inventory_categoriesScalarFieldEnum)[keyof typeof Inventory_categoriesScalarFieldEnum]
 
 
+  export const Borrowed_itemsScalarFieldEnum: {
+    id: 'id',
+    itemId: 'itemId',
+    borrowedAt: 'borrowedAt',
+    returnedAt: 'returnedAt',
+    borrowerId: 'borrowerId',
+    notes: 'notes'
+  };
+
+  export type Borrowed_itemsScalarFieldEnum = (typeof Borrowed_itemsScalarFieldEnum)[keyof typeof Borrowed_itemsScalarFieldEnum]
+
+
   export const SeminarsScalarFieldEnum: {
     id: 'id',
     title: 'title',
@@ -8809,6 +9835,14 @@ export namespace Prisma {
   };
 
   export type inventory_categoriesOrderByRelevanceFieldEnum = (typeof inventory_categoriesOrderByRelevanceFieldEnum)[keyof typeof inventory_categoriesOrderByRelevanceFieldEnum]
+
+
+  export const borrowed_itemsOrderByRelevanceFieldEnum: {
+    borrowerId: 'borrowerId',
+    notes: 'notes'
+  };
+
+  export type borrowed_itemsOrderByRelevanceFieldEnum = (typeof borrowed_itemsOrderByRelevanceFieldEnum)[keyof typeof borrowed_itemsOrderByRelevanceFieldEnum]
 
 
   export const seminarsOrderByRelevanceFieldEnum: {
@@ -9287,6 +10321,66 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"inventory_categories"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"inventory_categories"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"inventory_categories"> | Date | string
+  }
+
+  export type borrowed_itemsWhereInput = {
+    AND?: borrowed_itemsWhereInput | borrowed_itemsWhereInput[]
+    OR?: borrowed_itemsWhereInput[]
+    NOT?: borrowed_itemsWhereInput | borrowed_itemsWhereInput[]
+    id?: IntFilter<"borrowed_items"> | number
+    itemId?: IntFilter<"borrowed_items"> | number
+    borrowedAt?: DateTimeFilter<"borrowed_items"> | Date | string
+    returnedAt?: DateTimeNullableFilter<"borrowed_items"> | Date | string | null
+    borrowerId?: StringFilter<"borrowed_items"> | string
+    notes?: StringNullableFilter<"borrowed_items"> | string | null
+  }
+
+  export type borrowed_itemsOrderByWithRelationInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    borrowedAt?: SortOrder
+    returnedAt?: SortOrderInput | SortOrder
+    borrowerId?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    _relevance?: borrowed_itemsOrderByRelevanceInput
+  }
+
+  export type borrowed_itemsWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: borrowed_itemsWhereInput | borrowed_itemsWhereInput[]
+    OR?: borrowed_itemsWhereInput[]
+    NOT?: borrowed_itemsWhereInput | borrowed_itemsWhereInput[]
+    itemId?: IntFilter<"borrowed_items"> | number
+    borrowedAt?: DateTimeFilter<"borrowed_items"> | Date | string
+    returnedAt?: DateTimeNullableFilter<"borrowed_items"> | Date | string | null
+    borrowerId?: StringFilter<"borrowed_items"> | string
+    notes?: StringNullableFilter<"borrowed_items"> | string | null
+  }, "id">
+
+  export type borrowed_itemsOrderByWithAggregationInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    borrowedAt?: SortOrder
+    returnedAt?: SortOrderInput | SortOrder
+    borrowerId?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    _count?: borrowed_itemsCountOrderByAggregateInput
+    _avg?: borrowed_itemsAvgOrderByAggregateInput
+    _max?: borrowed_itemsMaxOrderByAggregateInput
+    _min?: borrowed_itemsMinOrderByAggregateInput
+    _sum?: borrowed_itemsSumOrderByAggregateInput
+  }
+
+  export type borrowed_itemsScalarWhereWithAggregatesInput = {
+    AND?: borrowed_itemsScalarWhereWithAggregatesInput | borrowed_itemsScalarWhereWithAggregatesInput[]
+    OR?: borrowed_itemsScalarWhereWithAggregatesInput[]
+    NOT?: borrowed_itemsScalarWhereWithAggregatesInput | borrowed_itemsScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"borrowed_items"> | number
+    itemId?: IntWithAggregatesFilter<"borrowed_items"> | number
+    borrowedAt?: DateTimeWithAggregatesFilter<"borrowed_items"> | Date | string
+    returnedAt?: DateTimeNullableWithAggregatesFilter<"borrowed_items"> | Date | string | null
+    borrowerId?: StringWithAggregatesFilter<"borrowed_items"> | string
+    notes?: StringNullableWithAggregatesFilter<"borrowed_items"> | string | null
   }
 
   export type seminarsWhereInput = {
@@ -9876,6 +10970,66 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type borrowed_itemsCreateInput = {
+    itemId: number
+    borrowedAt?: Date | string
+    returnedAt?: Date | string | null
+    borrowerId: string
+    notes?: string | null
+  }
+
+  export type borrowed_itemsUncheckedCreateInput = {
+    id?: number
+    itemId: number
+    borrowedAt?: Date | string
+    returnedAt?: Date | string | null
+    borrowerId: string
+    notes?: string | null
+  }
+
+  export type borrowed_itemsUpdateInput = {
+    itemId?: IntFieldUpdateOperationsInput | number
+    borrowedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    borrowerId?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type borrowed_itemsUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    itemId?: IntFieldUpdateOperationsInput | number
+    borrowedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    borrowerId?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type borrowed_itemsCreateManyInput = {
+    id?: number
+    itemId: number
+    borrowedAt?: Date | string
+    returnedAt?: Date | string | null
+    borrowerId: string
+    notes?: string | null
+  }
+
+  export type borrowed_itemsUpdateManyMutationInput = {
+    itemId?: IntFieldUpdateOperationsInput | number
+    borrowedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    borrowerId?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type borrowed_itemsUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    itemId?: IntFieldUpdateOperationsInput | number
+    borrowedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    returnedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    borrowerId?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type seminarsCreateInput = {
@@ -10524,6 +11678,74 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type borrowed_itemsOrderByRelevanceInput = {
+    fields: borrowed_itemsOrderByRelevanceFieldEnum | borrowed_itemsOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type borrowed_itemsCountOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    borrowedAt?: SortOrder
+    returnedAt?: SortOrder
+    borrowerId?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type borrowed_itemsAvgOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+  }
+
+  export type borrowed_itemsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    borrowedAt?: SortOrder
+    returnedAt?: SortOrder
+    borrowerId?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type borrowed_itemsMinOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    borrowedAt?: SortOrder
+    returnedAt?: SortOrder
+    borrowerId?: SortOrder
+    notes?: SortOrder
+  }
+
+  export type borrowed_itemsSumOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type Enumseminar_statusFilter<$PrismaModel = never> = {
     equals?: $Enums.seminar_status | Enumseminar_statusFieldRefInput<$PrismaModel>
     in?: $Enums.seminar_status[]
@@ -10915,6 +12137,10 @@ export namespace Prisma {
     deleteMany?: inventory_itemsScalarWhereInput | inventory_itemsScalarWhereInput[]
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type seminar_participantsCreateNestedManyWithoutSeminarInput = {
     create?: XOR<seminar_participantsCreateWithoutSeminarInput, seminar_participantsUncheckedCreateWithoutSeminarInput> | seminar_participantsCreateWithoutSeminarInput[] | seminar_participantsUncheckedCreateWithoutSeminarInput[]
     connectOrCreate?: seminar_participantsCreateOrConnectWithoutSeminarInput | seminar_participantsCreateOrConnectWithoutSeminarInput[]
@@ -11199,6 +12425,31 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumitem_statusFilter<$PrismaModel>
     _max?: NestedEnumitem_statusFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumseminar_statusFilter<$PrismaModel = never> = {

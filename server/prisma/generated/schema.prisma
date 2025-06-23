@@ -107,6 +107,17 @@ model inventory_categories {
   updatedAt   DateTime          @updatedAt
 }
 
+//? ====================================== BORROW SCHEMA ====================================== ?//
+
+model borrowed_items {
+  id         Int       @id @default(autoincrement())
+  itemId     Int
+  borrowedAt DateTime  @default(now())
+  returnedAt DateTime?
+  borrowerId String
+  notes      String?
+}
+
 //? ========================================== ENUMS ========================================== ?//
 
 enum item_status {
@@ -118,7 +129,7 @@ enum item_status {
 
 generator client {
   provider = "prisma-client-js"
-  output   = "./generated/prisma"
+  output   = "../generated"
 }
 
 datasource db {

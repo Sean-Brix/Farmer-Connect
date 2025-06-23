@@ -23,9 +23,8 @@
     "scripts": {
         "start": "node server.js",
         "dev": "npm run setup-db && nodemon server.js",
-        "setup-db": "prisma migrate deploy && (prisma generate || echo 'Nothing to generate')",
-        "reset-db": "npx prisma db push --force-reset",
-        "fill-db": "npx prisma db seed"
+        "setup-db": "prisma migrate deploy",
+        "reset": "npx prisma migrate reset --force && (prisma generate && node prisma/seed.js) || echo 'Nothing to generate'"
     },
     "prisma": {
         "seed": "node prisma/seed.js",
