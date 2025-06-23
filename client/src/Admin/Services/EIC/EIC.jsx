@@ -12,27 +12,27 @@ export default function EIC() {
 
     return (
         <>
-            {/* TITLE */}
-            <div className="flex items-center ml-8 mt-20 space-x-3">
-                <img src={default_image} alt="EIC Logo" className="w-10 h-10 rounded-full shadow-md" />
-                <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-700 via-blue-500 to-blue-400 text-transparent bg-clip-text tracking-tight">
-                    EIC Services
-                </h1>
+            {/* HEADER */}
+            <div className="flex items-center ml-8 mt-16 space-x-4">
+                <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full shadow">
+                    <img src={default_image} alt="EIC Logo" className="w-8 h-8 rounded-full object-cover" />
+                </div>
+                <div>
+                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+                        EIC Services
+                    </h1>
+                    <p className="text-sm text-gray-500 mt-1">
+                        Manage and review all EIC-related items and requests.
+                    </p>
+                </div>
             </div>
 
             {/* HEADER SECTIONS */}
-            {Section_Buttons(section, setSection)}
+            <div className="mt-8">{Section_Buttons(section, setSection)}</div>
             
             {/* SECTION CONTAINER */}
-            <div className='mt-[21vh] bg-blue-300 h-100%rounded-lg w-[100%]'>
-
-                {/* NAVIGATION */}
-                {
-                    section === 'requests'?
-                        <EIC_Request />:
-                        <All_Items />
-                }
-
+            <div className="mt-2 bg-white rounded-lg w-full shadow-sm border border-gray-200 p-6">
+                {section === 'requests' ? <EIC_Request /> : <All_Items />}
             </div>
         </>
     );
@@ -43,29 +43,24 @@ export default function EIC() {
 // SECTION CONTROL
 function Section_Buttons(section, setSection) {
     return (
-        <div className="flex mt-[5vh] ml-8 space-x-4 justify-center fixed z-10 ">
+        <div className="w-full flex mt-[5vh] space-x-4 justify-center rounded-lg sticky top-0 z-20 bg-blue-50/70 backdrop-blur-md border-b border-blue-100 shadow py-4">
             {[
                 { key: 'all', label: 'All Items' },
                 { key: 'requests', label: 'Requests' },
             ].map(({ key, label }) => (
-
                 <button
                     key={key}
-                    className={`relative px-6 py-2 font-semibold rounded-full transition-all duration-200
+                    className={`px-8 py-3 rounded-full text-lg font-semibold transition
                         ${
                             section === key
-                                ? 'bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow-lg scale-105'
-                                : 'bg-white text-blue-600 border border-blue-400 hover:bg-blue-50'
+                                ? 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-400'
+                                : 'bg-blue-200 text-blue-900 hover:bg-blue-300'
                         }
-                        focus:outline-none focus:ring-2 focus:ring-blue-300`}
+                        focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300`}
                     onClick={() => setSection(key)}
                 >
                     {label}
-                    {section === key && (
-                        <span className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-3 h-3 bg-blue-400 rounded-full border-2 border-white shadow"></span>
-                    )}
                 </button>
-
             ))}
         </div>
     );

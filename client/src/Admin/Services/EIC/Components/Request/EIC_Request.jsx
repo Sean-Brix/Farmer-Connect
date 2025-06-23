@@ -10,6 +10,29 @@ export default function EIC_Request() {
     const [accounts, setAccounts] = useState([]);
     const [refresh, setRefresh] = useState(false);
 
+    // Simple ViewDetailsButton component for showing more details in an alert/modal (replace with your own modal if needed)
+    function ViewDetailsButton({ request, account, eic }) {
+        const handleView = () => {
+            alert(
+                `Request Note: ${request.request_note || 'N/A'}\n` +
+                `Item Description: ${eic?.description || 'N/A'}\n` +
+                `Requested By: ${account?.firstname || ''} ${account?.lastname || ''}\n` +
+                `Username: ${account?.username || ''}\n` +
+                `Contact: ${account?.contact || ''}\n` +
+                `Status: ${request.status}\n`
+            );
+        };
+        return (
+            <button
+                className="w-full md:w-auto px-2 py-1 border border-blue-200 rounded-2xl bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs transition"
+                onClick={handleView}
+                type="button"
+            >
+                View
+            </button>
+        );
+    }
+
     const fetchRequests = useCallback(async () => {
         try {
             const response = await fetch('/api/eic/getAll_Request');
@@ -248,8 +271,95 @@ export default function EIC_Request() {
         }
     };
 
+    // Modal component for showing details
+    function DetailsModal({ open, onClose, request, account, eic }) {
+        if (!open) return null;
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+                <div className="bg-white rounded-2xl shadow-lg max-w-md w-full p-0 relative animate-fadeIn">
+                    <button
+                        className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-xl"
+                        onClick={onClose}
+                        aria-label="Close"
+                    >
+                        &times;
+                    </button>
+                    <h2 className="text-lg font-semibold mb-0 px-6 pt-6 pb-2 text-blue-700 flex items-center gap-2">
+                        <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M8 15h8M9 9h.01M15 9h.01" />
+                        </svg>
+                        Request Details
+                    </h2>
+                    <div className="max-h-[60vh] overflow-y-auto px-6 pb-6 pt-2 space-y-0 text-sm">
+                        <div className="py-3 border-b">
+                            <span className="font-medium text-gray-700">Request Note:</span>
+                            <span className="ml-2 text-gray-900 break-words">{request?.request_note || 'N/A'}</span>
+                        </div>
+                        <div className="py-3 border-b">
+                            <span className="font-medium text-gray-700">Item Description:</span>
+                            <span className="ml-2 text-gray-900 break-words">{eic?.description || 'N/A'}</span>
+                        </div>
+                        <div className="py-3 border-b">
+                            <span className="font-medium text-gray-700">Requested By:</span>
+                            <span className="ml-2 text-gray-900">{account?.firstname || ''} {account?.lastname || ''}</span>
+                        </div>
+                        <div className="py-3 border-b">
+                            <span className="font-medium text-gray-700">Username:</span>
+                            <span className="ml-2 text-gray-900">{account?.username || ''}</span>
+                        </div>
+                        <div className="py-3 border-b">
+                            <span className="font-medium text-gray-700">Contact:</span>
+                            <span className="ml-2 text-gray-900">{account?.contact || ''}</span>
+                        </div>
+                        <div className="py-3 border-b">
+                            <span className="font-medium text-gray-700">Status:</span>
+                            <span className="ml-2 text-gray-900">{request?.status}</span>
+                        </div>
+                        <div className="py-3 border-b">
+                            <span className="font-medium text-gray-700">Borrow Date:</span>
+                            <span className="ml-2 text-gray-900">{request?.borrow_date || 'N/A'}</span>
+                        </div>
+                        <div className="py-3">
+                            <span className="font-medium text-gray-700">Return Date:</span>
+                            <span className="ml-2 text-gray-900">{request?.return_date || 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    function ViewDetailsButton({ onClick }) {
+        return (
+            <button
+                className="w-full md:w-auto px-2 py-1 border border-blue-200 rounded-2xl bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs transition"
+                onClick={onClick}
+                type="button"
+            >
+                View
+            </button>
+        );
+    }
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalData, setModalData] = useState({ request: null, account: null, eic: null });
+
+    const handleOpenModal = (request, account, eic) => {
+        setModalData({ request, account, eic });
+        setModalOpen(true);
+    };
+    const handleCloseModal = () => setModalOpen(false);
+
     return (
         <>
+            <DetailsModal
+                open={modalOpen}
+                onClose={handleCloseModal}
+                request={modalData.request}
+                account={modalData.account}
+                eic={modalData.eic}
+            />
             <div className="flex flex-col md:flex-row justify-between items-center mb-10 max-w-7xl mx-auto gap-4 p-6">
                 <div className="flex-1 flex flex-col md:flex-row gap-4 w-full">
                     <div className="relative w-full max-w-lg">
@@ -301,320 +411,142 @@ export default function EIC_Request() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full h-auto p-4 rounded-2xl">
-                {filteredRequests.length === 0 ? (
-                    <div className="text-center w-full text-gray-400 py-10 bg-white rounded-2xl shadow">
-                        <svg
-                            className="mx-auto mb-2 w-10 h-10 text-gray-300"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M8 15h8M9 9h.01M15 9h.01" />
-                        </svg>
-                        No requests found
-                    </div>
-                ) : (
-                    filteredRequests.map((request) => {
-                        let indicatorColor = '';
-                        switch (request.status) {
-                            case 'Approved':
-                                indicatorColor = 'bg-green-500';
-                                break;
-                            case 'Rejected':
-                                indicatorColor = 'bg-red-500';
-                                break;
-                            case 'Processing':
-                                indicatorColor = 'bg-yellow-400';
-                                break;
-                            case 'Returned':
-                                indicatorColor = 'bg-blue-500';
-                                break;
-                            case 'Waiting':
-                            default:
-                                indicatorColor = 'bg-gray-400';
-                                break;
-                        }
-                        return (
-                            <RequestCardWrapper
-                                key={request.id}
-                                request={request}
-                                accounts={accounts}
-                                eics={eics}
-                                handleApprove={handleApprove}
-                                handleReject={handleReject}
-                                handleProcessing={handleProcessing}
-                                handleReturned={handleReturned}
-                                updateRequestStatus={updateRequestStatus}
-                                refresh={refresh}
-                                setRefresh={setRefresh}
-                            />
-                        );
-                    })
-                )}
+            <div className="overflow-x-auto w-full p-4">
+                <table className="min-w-full bg-white rounded-2xl shadow">
+                    <thead>
+                        <tr>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Status</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Item Name</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Requested By</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Quantity</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Borrow Date</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Return Date</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredRequests.length === 0 ? (
+                            <tr>
+                                <td colSpan={7} className="text-center text-gray-400 py-10">
+                                    <svg
+                                        className="mx-auto mb-2 w-10 h-10 text-gray-300"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M8 15h8M9 9h.01M15 9h.01" />
+                                    </svg>
+                                    No requests found
+                                </td>
+                            </tr>
+                        ) : (
+                            filteredRequests.map((request) => {
+                                const account = accounts?.find((a) => a.id === request.user_id);
+                                const eic = eics?.find((e) => e.id === request.eic_id);
+                                let indicatorColor = '';
+                                switch (request.status) {
+                                    case 'Approved':
+                                        indicatorColor = 'bg-green-500';
+                                        break;
+                                    case 'Rejected':
+                                        indicatorColor = 'bg-red-500';
+                                        break;
+                                    case 'Processing':
+                                        indicatorColor = 'bg-yellow-400';
+                                        break;
+                                    case 'Returned':
+                                        indicatorColor = 'bg-blue-500';
+                                        break;
+                                    case 'Waiting':
+                                    default:
+                                        indicatorColor = 'bg-gray-400';
+                                        break;
+                                }
+                                const isStatusChanged = request.previousStatus !== null;
+                                return (
+                                    <tr key={request.id} className="border-b last:border-b-0">
+                                        <td className="px-4 py-3">
+                                            <span
+                                                className={`inline-block w-3 h-3 rounded-full align-middle mr-2 ${indicatorColor}`}
+                                                title={request.status}
+                                            ></span>
+                                            <span
+                                                className={`font-medium px-2 py-1 rounded-full text-xs border transition
+                                                    ${
+                                                        request.status === 'Approved'
+                                                            ? 'bg-green-50 text-green-600 border-green-100'
+                                                            : request.status === 'Rejected'
+                                                            ? 'bg-red-50 text-red-500 border-red-100'
+                                                            : request.status === 'Processing'
+                                                            ? 'bg-yellow-50 text-yellow-600 border-yellow-100'
+                                                            : request.status === 'Returned'
+                                                            ? 'bg-blue-50 text-blue-600 border-blue-100'
+                                                            : 'bg-gray-50 text-gray-600 border-gray-100'
+                                                    }
+                                                `}
+                                            >
+                                                {request.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 py-3">{request.item_name}</td>
+                                        <td className="px-4 py-3">
+                                            {account?.firstname} {account?.lastname}
+                                        </td>
+                                        <td className="px-4 py-3">{request.quantity}</td>
+                                        <td className="px-4 py-3">{request.borrow_date}</td>
+                                        <td className="px-4 py-3">{request.return_date}</td>
+                                        <td className="px-4 py-3 flex flex-col gap-2 min-w-[120px]">
+                                            <select
+                                                className="w-full md:w-auto px-2 py-1 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-700 shadow-sm transition-all duration-200 cursor-pointer text-xs"
+                                                value={request.status}
+                                                onChange={async (e) => {
+                                                    const newStatus = e.target.value;
+                                                    if (newStatus !== request.status) {
+                                                        if (newStatus === 'Approved') {
+                                                            await handleApprove(request.id);
+                                                        } else if (newStatus === 'Rejected') {
+                                                            await handleReject(request.id);
+                                                        } else if (newStatus === 'Processing') {
+                                                            await handleProcessing(request.id);
+                                                        } else if (newStatus === 'Returned') {
+                                                            await handleReturned(request.id);
+                                                        } else {
+                                                            await updateRequestStatus(request.id, newStatus);
+                                                        }
+                                                        setRefresh((prev) => !prev);
+                                                    }
+                                                }}
+                                            >
+                                                <option value="Waiting" disabled={isStatusChanged}>
+                                                    Waiting
+                                                </option>
+                                                <option value="Approved" disabled={request.status === 'Returned'}>
+                                                    Approve
+                                                </option>
+                                                <option value="Rejected" disabled={request.status === 'Returned'}>
+                                                    Reject
+                                                </option>
+                                                <option value="Processing" disabled={request.status === 'Returned'}>
+                                                    Processing
+                                                </option>
+                                                <option value="Returned" disabled={request.status !== 'Approved'}>
+                                                    Returned
+                                                </option>
+                                            </select>
+                                            <ViewDetailsButton
+                                                onClick={() => handleOpenModal(request, account, eic)}
+                                            />
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        )}
+                    </tbody>
+                </table>
             </div>
         </>
     );
 }
 
-const RequestCardWrapper = ({
-    request,
-    accounts,
-    eics,
-    handleApprove,
-    handleReject,
-    handleProcessing,
-    handleReturned,
-    updateRequestStatus,
-    refresh,
-    setRefresh,
-}) => {
-    const [localRequest, setLocalRequest] = useState(request);
-    const [localEics, setLocalEics] = useState(eics);
-
-    useEffect(() => {
-        setLocalRequest(request);
-        setLocalEics(eics);
-    }, [request, eics, refresh]);
-    return (
-        <div className="relative">
-            <RequestCard
-                request={localRequest}
-                accounts={accounts}
-                eics={localEics}
-                handleApprove={handleApprove}
-                handleReject={handleReject}
-                handleProcessing={handleProcessing}
-                handleReturned={handleReturned}
-                updateRequestStatus={updateRequestStatus}
-                setRefresh={setRefresh}
-                refresh={refresh}
-            />
-        </div>
-    );
-};
-
-const RequestCard = ({
-    request,
-    accounts,
-    eics,
-    handleApprove,
-    handleReject,
-    handleProcessing,
-    handleReturned,
-    updateRequestStatus,
-    refresh,
-    setRefresh,
-}) => {
-    const account = accounts?.find((account) => account.id === request.user_id);
-    const eic = eics?.find((eic) => eic.id === request.eic_id);
-
-    const [showNote, setShowNote] = useState(false);
-    const isStatusChanged = request.previousStatus !== null;
-
-    let indicatorColor = '';
-    switch (request.status) {
-        case 'Approved':
-            indicatorColor = 'bg-green-500';
-            break;
-        case 'Rejected':
-            indicatorColor = 'bg-red-500';
-            break;
-        case 'Processing':
-            indicatorColor = 'bg-yellow-400';
-            break;
-        case 'Returned':
-            indicatorColor = 'bg-blue-500';
-            break;
-        case 'Waiting':
-        default:
-            indicatorColor = 'bg-gray-400';
-            break;
-    }
-    return (
-        <div className="w-full p-6 rounded-3xl shadow-xl bg-white flex flex-col justify-between h-[400px border border-gray-100 transition-all hover:shadow-2xl group relative overflow-hidden">
-            <span
-                className={`absolute top-4 right-4 w-3 h-3 rounded-full shadow ${indicatorColor} border-2 border-white z-10`}
-                title={request.status}
-            ></span>
-            <div>
-                <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-semibold text-gray-900 truncate">
-                        {request?.item_name}
-                    </h3>
-                    <span
-                        className={`font-medium px-3 py-1 rounded-full text-xs border transition ${
-                            request.status === 'Approved'
-                                ? 'bg-green-50 text-green-600 border-green-100'
-                                : request.status === 'Rejected'
-                                ? 'bg-red-50 text-red-500 border-red-100'
-                                : request.status === 'Processing'
-                                ? 'bg-yellow-50 text-yellow-600 border-yellow-100'
-                                : request.status === 'Returned'
-                                ? 'bg-blue-50 text-blue-600 border-blue-100'
-                                : 'bg-gray-50 text-gray-600 border-gray-100'
-                        }`}
-                    >
-                        {request.status}
-                    </span>
-                </div>
-                <p className="text-xs text-gray-400 mb-6">
-                    Requested by{' '}
-                    <span className="font-semibold text-gray-700">
-                        {account?.firstname} {account?.lastname}
-                    </span>
-                </p>
-                <div className="space-y-2">
-                    <div className="flex justify-between text-xs text-gray-500">
-                        <span className="font-medium">Item ID</span>
-                        <span>{eic?.id}</span>
-                    </div>
-                    <div className="flex justify-between text-xs text-gray-500">
-                        <span className="font-medium">Quantity</span>
-                        <span>{request.quantity}</span>
-                    </div>
-                    <div className="flex justify-between text-xs text-gray-500">
-                        <span className="font-medium">Borrow</span>
-                        <span>{request.borrow_date}</span>
-                    </div>
-                    <div className="flex justify-between text-xs text-gray-500">
-                        <span className="font-medium">Return</span>
-                        <span>{request.return_date}</span>
-                    </div>
-                    {eic && (
-                        <>
-                            <div className="flex justify-between text-xs text-gray-500">
-                                <span className="font-medium">Stock</span>
-                                <span>{eic?.quantity}</span>
-                            </div>
-                            <div className="flex justify-between text-xs text-gray-500">
-                                <span className="font-medium">Category</span>
-                                <span>{eic?.category}</span>
-                            </div>
-                        </>
-                    )}
-
-                    <div className="flex flex-col text-xs text-gray-500 relative">
-                        <div className="flex justify-between items-center">
-                            <span className="font-medium">Note</span>
-                            <button
-                                className={`transition-colors rounded-full p-1 focus:outline-none z-9999 ${
-                                    showNote
-                                        ? 'bg-green-100 text-green-600'
-                                        : 'bg-gray-100 text-gray-400 hover:bg-green-50 hover:text-green-600'
-                                }`}
-                                title="View note"
-                                onClick={() => setShowNote((prev) => !prev)}
-                                type="button"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className={`w-5 h-5 transition-transform duration-200 ${
-                                        showNote ? 'rotate-180' : ''
-                                    }`}
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M13 16h-1v-4h-1m1-4h.01M12 20c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z"
-                                    />
-                                </svg>
-                            </button>
-                            {showNote && (
-                                <div
-                                    className="absolute z-20 right-0 top-10 min-w-[220px max-w-xs bg-white border border-green-200 rounded-xl shadow-2xl p-4 animate-fade-in"
-                                    style={{
-                                        minWidth: 220,
-                                        wordBreak: 'break-word',
-                                        whiteSpace: 'pre-wrap',
-                                    }}
-                                >
-                                    <div className="flex items-start gap-2">
-                                        <div className="w-1 h-8 bg-gradient-to-b from-green-400 to-green-200 rounded-full opacity-30 mt-1"></div>
-                                        <div className="flex-1 text-gray-700 text-sm font-medium break-words whitespace-pre-wrap">
-                                            {request.request_note ? (
-                                                <span>
-                                                    {request.request_note}
-                                                </span>
-                                            ) : (
-                                                <span className="italic text-gray-400">
-                                                    No note provided.
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <button
-                                        className="absolute top-2 right-2 text-gray-400 hover:text-green-600"
-                                        onClick={() => setShowNote(false)}
-                                        type="button"
-                                        aria-label="Close note"
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className="w-4 h-4"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M6 18L18 6M6 6l12 12"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="flex justify-end mt-4">
-                <select
-                    className="w-full md:w-auto px-4 py-2 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-700 shadow-sm transition-all duration-200 cursor-pointer"
-                    value={request.status}
-                    onChange={async (e) => {
-                        const newStatus = e.target.value;
-                        if (newStatus !== request.status) {
-                            if (newStatus === 'Approved') {
-                                await handleApprove(request.id);
-                            } else if (newStatus === 'Rejected') {
-                                await handleReject(request.id);
-                            } else if (newStatus === 'Processing') {
-                                await handleProcessing(request.id);
-                            } else if (newStatus === 'Returned') {
-                                await handleReturned(request.id);
-                            } else {
-                                await updateRequestStatus(
-                                    request.id,
-                                    newStatus
-                                );
-                            }
-                            setRefresh((prev) => !prev);
-                        }
-                    }}
-                >
-                    <option value="Waiting" disabled={isStatusChanged}>
-                        Waiting
-                    </option>
-                    <option value="Approved" disabled={request.status == 'Returned'}>Approve</option>
-                    <option value="Rejected" disabled={request.status == 'Returned'}>Reject</option>
-                    <option value="Processing" disabled={request.status == 'Returned'}>Processing</option>
-                    <option
-                        value="Returned"
-                        disabled={request.status !== 'Approved'}
-                    >
-                        Returned
-                    </option>
-                </select>
-            </div>
-        </div>
-    );
-};

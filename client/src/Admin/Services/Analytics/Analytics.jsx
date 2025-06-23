@@ -331,14 +331,15 @@ function Analytics() {
                 <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center hover:shadow-lg transition">
                     <div className="flex items-center gap-2 mb-2">
                         <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100">
+                            {/* Users icon: User Group */}
                             <svg
-                                className="w-5 h-5 text-gray-500"
+                                className="w-5 h-5 text-blue-500"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
                                 viewBox="0 0 24 24"
                             >
-                                <path d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m13-7a4 4 0 11-8 0 4 4 0 018 0zm-8 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M16 7a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
                         </span>
                         <span className="text-xs font-medium text-gray-500">
@@ -363,14 +364,15 @@ function Analytics() {
                 <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center hover:shadow-lg transition">
                     <div className="flex items-center gap-2 mb-2">
                         <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100">
+                            {/* Seminar icon: Presentation Chart Bar */}
                             <svg
-                                className="w-5 h-5 text-gray-500"
+                                className="w-5 h-5 text-green-500"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
                                 viewBox="0 0 24 24"
                             >
-                                <path d="M13 16h-1v-4h-1m4 0h-1v-4h-1m4 0h-1v-4h-1m-4 0h-1v-4h-1" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 6h18M9 16v-4m3 4v-2m3 2v-6" />
                             </svg>
                         </span>
                         <span className="text-xs font-medium text-gray-500">
@@ -395,14 +397,16 @@ function Analytics() {
                 <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center hover:shadow-lg transition">
                     <div className="flex items-center gap-2 mb-2">
                         <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100">
+                            {/* EIC icon: Currency Dollar */}
                             <svg
-                                className="w-5 h-5 text-gray-500"
+                                className="w-5 h-5 text-yellow-500"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
                                 viewBox="0 0 24 24"
                             >
-                                <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
                             </svg>
                         </span>
                         <span className="text-xs font-medium text-gray-500">
