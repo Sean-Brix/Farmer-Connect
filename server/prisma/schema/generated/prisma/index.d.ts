@@ -28,6 +28,16 @@ export type commodities = $Result.DefaultSelection<Prisma.$commoditiesPayload>
  * 
  */
 export type accounts_commodities = $Result.DefaultSelection<Prisma.$accounts_commoditiesPayload>
+/**
+ * Model seminars
+ * 
+ */
+export type seminars = $Result.DefaultSelection<Prisma.$seminarsPayload>
+/**
+ * Model seminar_participants
+ * 
+ */
+export type seminar_participants = $Result.DefaultSelection<Prisma.$seminar_participantsPayload>
 
 /**
  * Enums
@@ -66,6 +76,26 @@ export const gender: {
 
 export type gender = (typeof gender)[keyof typeof gender]
 
+
+export const seminar_status: {
+  Upcoming: 'Upcoming',
+  Ongoing: 'Ongoing',
+  Completed: 'Completed',
+  Cancelled: 'Cancelled'
+};
+
+export type seminar_status = (typeof seminar_status)[keyof typeof seminar_status]
+
+
+export const participant_status: {
+  Attended: 'Attended',
+  Not_Attended: 'Not_Attended',
+  Registered: 'Registered',
+  Cancelled: 'Cancelled'
+};
+
+export type participant_status = (typeof participant_status)[keyof typeof participant_status]
+
 }
 
 export type client_profile = $Enums.client_profile
@@ -79,6 +109,14 @@ export const access: typeof $Enums.access
 export type gender = $Enums.gender
 
 export const gender: typeof $Enums.gender
+
+export type seminar_status = $Enums.seminar_status
+
+export const seminar_status: typeof $Enums.seminar_status
+
+export type participant_status = $Enums.participant_status
+
+export const participant_status: typeof $Enums.participant_status
 
 /**
  * ##  Prisma Client ʲˢ
@@ -234,6 +272,26 @@ export class PrismaClient<
     * ```
     */
   get accounts_commodities(): Prisma.accounts_commoditiesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seminars`: Exposes CRUD operations for the **seminars** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seminars
+    * const seminars = await prisma.seminars.findMany()
+    * ```
+    */
+  get seminars(): Prisma.seminarsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seminar_participants`: Exposes CRUD operations for the **seminar_participants** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seminar_participants
+    * const seminar_participants = await prisma.seminar_participants.findMany()
+    * ```
+    */
+  get seminar_participants(): Prisma.seminar_participantsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -676,7 +734,9 @@ export namespace Prisma {
   export const ModelName: {
     accounts: 'accounts',
     commodities: 'commodities',
-    accounts_commodities: 'accounts_commodities'
+    accounts_commodities: 'accounts_commodities',
+    seminars: 'seminars',
+    seminar_participants: 'seminar_participants'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -695,7 +755,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "accounts" | "commodities" | "accounts_commodities"
+      modelProps: "accounts" | "commodities" | "accounts_commodities" | "seminars" | "seminar_participants"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -897,6 +957,138 @@ export namespace Prisma {
           }
         }
       }
+      seminars: {
+        payload: Prisma.$seminarsPayload<ExtArgs>
+        fields: Prisma.seminarsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seminarsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminarsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seminarsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminarsPayload>
+          }
+          findFirst: {
+            args: Prisma.seminarsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminarsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seminarsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminarsPayload>
+          }
+          findMany: {
+            args: Prisma.seminarsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminarsPayload>[]
+          }
+          create: {
+            args: Prisma.seminarsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminarsPayload>
+          }
+          createMany: {
+            args: Prisma.seminarsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.seminarsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminarsPayload>
+          }
+          update: {
+            args: Prisma.seminarsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminarsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seminarsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seminarsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.seminarsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminarsPayload>
+          }
+          aggregate: {
+            args: Prisma.SeminarsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeminars>
+          }
+          groupBy: {
+            args: Prisma.seminarsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SeminarsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seminarsCountArgs<ExtArgs>
+            result: $Utils.Optional<SeminarsCountAggregateOutputType> | number
+          }
+        }
+      }
+      seminar_participants: {
+        payload: Prisma.$seminar_participantsPayload<ExtArgs>
+        fields: Prisma.seminar_participantsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seminar_participantsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminar_participantsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seminar_participantsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminar_participantsPayload>
+          }
+          findFirst: {
+            args: Prisma.seminar_participantsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminar_participantsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seminar_participantsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminar_participantsPayload>
+          }
+          findMany: {
+            args: Prisma.seminar_participantsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminar_participantsPayload>[]
+          }
+          create: {
+            args: Prisma.seminar_participantsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminar_participantsPayload>
+          }
+          createMany: {
+            args: Prisma.seminar_participantsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.seminar_participantsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminar_participantsPayload>
+          }
+          update: {
+            args: Prisma.seminar_participantsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminar_participantsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seminar_participantsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seminar_participantsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.seminar_participantsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seminar_participantsPayload>
+          }
+          aggregate: {
+            args: Prisma.Seminar_participantsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeminar_participants>
+          }
+          groupBy: {
+            args: Prisma.seminar_participantsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seminar_participantsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seminar_participantsCountArgs<ExtArgs>
+            result: $Utils.Optional<Seminar_participantsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -984,6 +1176,8 @@ export namespace Prisma {
     accounts?: accountsOmit
     commodities?: commoditiesOmit
     accounts_commodities?: accounts_commoditiesOmit
+    seminars?: seminarsOmit
+    seminar_participants?: seminar_participantsOmit
   }
 
   /* Types for Logging */
@@ -1079,10 +1273,12 @@ export namespace Prisma {
 
   export type AccountsCountOutputType = {
     commodity: number
+    seminars: number
   }
 
   export type AccountsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     commodity?: boolean | AccountsCountOutputTypeCountCommodityArgs
+    seminars?: boolean | AccountsCountOutputTypeCountSeminarsArgs
   }
 
   // Custom InputTypes
@@ -1101,6 +1297,13 @@ export namespace Prisma {
    */
   export type AccountsCountOutputTypeCountCommodityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: accounts_commoditiesWhereInput
+  }
+
+  /**
+   * AccountsCountOutputType without action
+   */
+  export type AccountsCountOutputTypeCountSeminarsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seminar_participantsWhereInput
   }
 
 
@@ -1132,6 +1335,37 @@ export namespace Prisma {
    */
   export type CommoditiesCountOutputTypeCountAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: accounts_commoditiesWhereInput
+  }
+
+
+  /**
+   * Count Type SeminarsCountOutputType
+   */
+
+  export type SeminarsCountOutputType = {
+    participants: number
+  }
+
+  export type SeminarsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    participants?: boolean | SeminarsCountOutputTypeCountParticipantsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SeminarsCountOutputType without action
+   */
+  export type SeminarsCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SeminarsCountOutputType
+     */
+    select?: SeminarsCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SeminarsCountOutputType without action
+   */
+  export type SeminarsCountOutputTypeCountParticipantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seminar_participantsWhereInput
   }
 
 
@@ -1408,6 +1642,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     commodity?: boolean | accounts$commodityArgs<ExtArgs>
+    seminars?: boolean | accounts$seminarsArgs<ExtArgs>
     _count?: boolean | AccountsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["accounts"]>
 
@@ -1437,6 +1672,7 @@ export namespace Prisma {
   export type accountsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "access" | "username" | "email" | "firstName" | "lastName" | "middleName" | "gender" | "client_profile" | "cellphone_no" | "telephone_no" | "occupation" | "position" | "address" | "picture" | "password" | "createdAt" | "updatedAt", ExtArgs["result"]["accounts"]>
   export type accountsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     commodity?: boolean | accounts$commodityArgs<ExtArgs>
+    seminars?: boolean | accounts$seminarsArgs<ExtArgs>
     _count?: boolean | AccountsCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -1444,6 +1680,7 @@ export namespace Prisma {
     name: "accounts"
     objects: {
       commodity: Prisma.$accounts_commoditiesPayload<ExtArgs>[]
+      seminars: Prisma.$seminar_participantsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1805,6 +2042,7 @@ export namespace Prisma {
   export interface Prisma__accountsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     commodity<T extends accounts$commodityArgs<ExtArgs> = {}>(args?: Subset<T, accounts$commodityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$accounts_commoditiesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    seminars<T extends accounts$seminarsArgs<ExtArgs> = {}>(args?: Subset<T, accounts$seminarsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seminar_participantsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2216,6 +2454,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Accounts_commoditiesScalarFieldEnum | Accounts_commoditiesScalarFieldEnum[]
+  }
+
+  /**
+   * accounts.seminars
+   */
+  export type accounts$seminarsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+    where?: seminar_participantsWhereInput
+    orderBy?: seminar_participantsOrderByWithRelationInput | seminar_participantsOrderByWithRelationInput[]
+    cursor?: seminar_participantsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Seminar_participantsScalarFieldEnum | Seminar_participantsScalarFieldEnum[]
   }
 
   /**
@@ -4137,6 +4399,2049 @@ export namespace Prisma {
 
 
   /**
+   * Model seminars
+   */
+
+  export type AggregateSeminars = {
+    _count: SeminarsCountAggregateOutputType | null
+    _avg: SeminarsAvgAggregateOutputType | null
+    _sum: SeminarsSumAggregateOutputType | null
+    _min: SeminarsMinAggregateOutputType | null
+    _max: SeminarsMaxAggregateOutputType | null
+  }
+
+  export type SeminarsAvgAggregateOutputType = {
+    capacity: number | null
+  }
+
+  export type SeminarsSumAggregateOutputType = {
+    capacity: number | null
+  }
+
+  export type SeminarsMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    description: string | null
+    location: string | null
+    speaker: string | null
+    start_date: Date | null
+    end_date: Date | null
+    start_time: Date | null
+    end_time: Date | null
+    capacity: number | null
+    registration_deadline: Date | null
+    status: $Enums.seminar_status | null
+    photo: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SeminarsMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    description: string | null
+    location: string | null
+    speaker: string | null
+    start_date: Date | null
+    end_date: Date | null
+    start_time: Date | null
+    end_time: Date | null
+    capacity: number | null
+    registration_deadline: Date | null
+    status: $Enums.seminar_status | null
+    photo: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SeminarsCountAggregateOutputType = {
+    id: number
+    title: number
+    description: number
+    location: number
+    speaker: number
+    start_date: number
+    end_date: number
+    start_time: number
+    end_time: number
+    capacity: number
+    registration_deadline: number
+    status: number
+    photo: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SeminarsAvgAggregateInputType = {
+    capacity?: true
+  }
+
+  export type SeminarsSumAggregateInputType = {
+    capacity?: true
+  }
+
+  export type SeminarsMinAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    location?: true
+    speaker?: true
+    start_date?: true
+    end_date?: true
+    start_time?: true
+    end_time?: true
+    capacity?: true
+    registration_deadline?: true
+    status?: true
+    photo?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SeminarsMaxAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    location?: true
+    speaker?: true
+    start_date?: true
+    end_date?: true
+    start_time?: true
+    end_time?: true
+    capacity?: true
+    registration_deadline?: true
+    status?: true
+    photo?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SeminarsCountAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    location?: true
+    speaker?: true
+    start_date?: true
+    end_date?: true
+    start_time?: true
+    end_time?: true
+    capacity?: true
+    registration_deadline?: true
+    status?: true
+    photo?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SeminarsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seminars to aggregate.
+     */
+    where?: seminarsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seminars to fetch.
+     */
+    orderBy?: seminarsOrderByWithRelationInput | seminarsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seminarsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seminars from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seminars.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seminars
+    **/
+    _count?: true | SeminarsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SeminarsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SeminarsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SeminarsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SeminarsMaxAggregateInputType
+  }
+
+  export type GetSeminarsAggregateType<T extends SeminarsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeminars]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeminars[P]>
+      : GetScalarType<T[P], AggregateSeminars[P]>
+  }
+
+
+
+
+  export type seminarsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seminarsWhereInput
+    orderBy?: seminarsOrderByWithAggregationInput | seminarsOrderByWithAggregationInput[]
+    by: SeminarsScalarFieldEnum[] | SeminarsScalarFieldEnum
+    having?: seminarsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SeminarsCountAggregateInputType | true
+    _avg?: SeminarsAvgAggregateInputType
+    _sum?: SeminarsSumAggregateInputType
+    _min?: SeminarsMinAggregateInputType
+    _max?: SeminarsMaxAggregateInputType
+  }
+
+  export type SeminarsGroupByOutputType = {
+    id: string
+    title: string
+    description: string
+    location: string
+    speaker: string
+    start_date: Date
+    end_date: Date
+    start_time: Date
+    end_time: Date
+    capacity: number
+    registration_deadline: Date
+    status: $Enums.seminar_status
+    photo: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: SeminarsCountAggregateOutputType | null
+    _avg: SeminarsAvgAggregateOutputType | null
+    _sum: SeminarsSumAggregateOutputType | null
+    _min: SeminarsMinAggregateOutputType | null
+    _max: SeminarsMaxAggregateOutputType | null
+  }
+
+  type GetSeminarsGroupByPayload<T extends seminarsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SeminarsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SeminarsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SeminarsGroupByOutputType[P]>
+            : GetScalarType<T[P], SeminarsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seminarsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    location?: boolean
+    speaker?: boolean
+    start_date?: boolean
+    end_date?: boolean
+    start_time?: boolean
+    end_time?: boolean
+    capacity?: boolean
+    registration_deadline?: boolean
+    status?: boolean
+    photo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    participants?: boolean | seminars$participantsArgs<ExtArgs>
+    _count?: boolean | SeminarsCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["seminars"]>
+
+
+
+  export type seminarsSelectScalar = {
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    location?: boolean
+    speaker?: boolean
+    start_date?: boolean
+    end_date?: boolean
+    start_time?: boolean
+    end_time?: boolean
+    capacity?: boolean
+    registration_deadline?: boolean
+    status?: boolean
+    photo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type seminarsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "speaker" | "start_date" | "end_date" | "start_time" | "end_time" | "capacity" | "registration_deadline" | "status" | "photo" | "createdAt" | "updatedAt", ExtArgs["result"]["seminars"]>
+  export type seminarsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    participants?: boolean | seminars$participantsArgs<ExtArgs>
+    _count?: boolean | SeminarsCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $seminarsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seminars"
+    objects: {
+      participants: Prisma.$seminar_participantsPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string
+      description: string
+      location: string
+      speaker: string
+      start_date: Date
+      end_date: Date
+      start_time: Date
+      end_time: Date
+      capacity: number
+      registration_deadline: Date
+      status: $Enums.seminar_status
+      photo: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["seminars"]>
+    composites: {}
+  }
+
+  type seminarsGetPayload<S extends boolean | null | undefined | seminarsDefaultArgs> = $Result.GetResult<Prisma.$seminarsPayload, S>
+
+  type seminarsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seminarsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SeminarsCountAggregateInputType | true
+    }
+
+  export interface seminarsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seminars'], meta: { name: 'seminars' } }
+    /**
+     * Find zero or one Seminars that matches the filter.
+     * @param {seminarsFindUniqueArgs} args - Arguments to find a Seminars
+     * @example
+     * // Get one Seminars
+     * const seminars = await prisma.seminars.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seminarsFindUniqueArgs>(args: SelectSubset<T, seminarsFindUniqueArgs<ExtArgs>>): Prisma__seminarsClient<$Result.GetResult<Prisma.$seminarsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seminars that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seminarsFindUniqueOrThrowArgs} args - Arguments to find a Seminars
+     * @example
+     * // Get one Seminars
+     * const seminars = await prisma.seminars.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seminarsFindUniqueOrThrowArgs>(args: SelectSubset<T, seminarsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seminarsClient<$Result.GetResult<Prisma.$seminarsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seminars that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminarsFindFirstArgs} args - Arguments to find a Seminars
+     * @example
+     * // Get one Seminars
+     * const seminars = await prisma.seminars.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seminarsFindFirstArgs>(args?: SelectSubset<T, seminarsFindFirstArgs<ExtArgs>>): Prisma__seminarsClient<$Result.GetResult<Prisma.$seminarsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seminars that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminarsFindFirstOrThrowArgs} args - Arguments to find a Seminars
+     * @example
+     * // Get one Seminars
+     * const seminars = await prisma.seminars.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seminarsFindFirstOrThrowArgs>(args?: SelectSubset<T, seminarsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seminarsClient<$Result.GetResult<Prisma.$seminarsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seminars that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminarsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seminars
+     * const seminars = await prisma.seminars.findMany()
+     * 
+     * // Get first 10 Seminars
+     * const seminars = await prisma.seminars.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const seminarsWithIdOnly = await prisma.seminars.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends seminarsFindManyArgs>(args?: SelectSubset<T, seminarsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seminarsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seminars.
+     * @param {seminarsCreateArgs} args - Arguments to create a Seminars.
+     * @example
+     * // Create one Seminars
+     * const Seminars = await prisma.seminars.create({
+     *   data: {
+     *     // ... data to create a Seminars
+     *   }
+     * })
+     * 
+     */
+    create<T extends seminarsCreateArgs>(args: SelectSubset<T, seminarsCreateArgs<ExtArgs>>): Prisma__seminarsClient<$Result.GetResult<Prisma.$seminarsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seminars.
+     * @param {seminarsCreateManyArgs} args - Arguments to create many Seminars.
+     * @example
+     * // Create many Seminars
+     * const seminars = await prisma.seminars.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seminarsCreateManyArgs>(args?: SelectSubset<T, seminarsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Seminars.
+     * @param {seminarsDeleteArgs} args - Arguments to delete one Seminars.
+     * @example
+     * // Delete one Seminars
+     * const Seminars = await prisma.seminars.delete({
+     *   where: {
+     *     // ... filter to delete one Seminars
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seminarsDeleteArgs>(args: SelectSubset<T, seminarsDeleteArgs<ExtArgs>>): Prisma__seminarsClient<$Result.GetResult<Prisma.$seminarsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seminars.
+     * @param {seminarsUpdateArgs} args - Arguments to update one Seminars.
+     * @example
+     * // Update one Seminars
+     * const seminars = await prisma.seminars.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seminarsUpdateArgs>(args: SelectSubset<T, seminarsUpdateArgs<ExtArgs>>): Prisma__seminarsClient<$Result.GetResult<Prisma.$seminarsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seminars.
+     * @param {seminarsDeleteManyArgs} args - Arguments to filter Seminars to delete.
+     * @example
+     * // Delete a few Seminars
+     * const { count } = await prisma.seminars.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seminarsDeleteManyArgs>(args?: SelectSubset<T, seminarsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seminars.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminarsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seminars
+     * const seminars = await prisma.seminars.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seminarsUpdateManyArgs>(args: SelectSubset<T, seminarsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Seminars.
+     * @param {seminarsUpsertArgs} args - Arguments to update or create a Seminars.
+     * @example
+     * // Update or create a Seminars
+     * const seminars = await prisma.seminars.upsert({
+     *   create: {
+     *     // ... data to create a Seminars
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seminars we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seminarsUpsertArgs>(args: SelectSubset<T, seminarsUpsertArgs<ExtArgs>>): Prisma__seminarsClient<$Result.GetResult<Prisma.$seminarsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seminars.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminarsCountArgs} args - Arguments to filter Seminars to count.
+     * @example
+     * // Count the number of Seminars
+     * const count = await prisma.seminars.count({
+     *   where: {
+     *     // ... the filter for the Seminars we want to count
+     *   }
+     * })
+    **/
+    count<T extends seminarsCountArgs>(
+      args?: Subset<T, seminarsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SeminarsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seminars.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SeminarsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SeminarsAggregateArgs>(args: Subset<T, SeminarsAggregateArgs>): Prisma.PrismaPromise<GetSeminarsAggregateType<T>>
+
+    /**
+     * Group by Seminars.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminarsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seminarsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seminarsGroupByArgs['orderBy'] }
+        : { orderBy?: seminarsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seminarsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeminarsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seminars model
+   */
+  readonly fields: seminarsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seminars.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seminarsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    participants<T extends seminars$participantsArgs<ExtArgs> = {}>(args?: Subset<T, seminars$participantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seminar_participantsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seminars model
+   */
+  interface seminarsFieldRefs {
+    readonly id: FieldRef<"seminars", 'String'>
+    readonly title: FieldRef<"seminars", 'String'>
+    readonly description: FieldRef<"seminars", 'String'>
+    readonly location: FieldRef<"seminars", 'String'>
+    readonly speaker: FieldRef<"seminars", 'String'>
+    readonly start_date: FieldRef<"seminars", 'DateTime'>
+    readonly end_date: FieldRef<"seminars", 'DateTime'>
+    readonly start_time: FieldRef<"seminars", 'DateTime'>
+    readonly end_time: FieldRef<"seminars", 'DateTime'>
+    readonly capacity: FieldRef<"seminars", 'Int'>
+    readonly registration_deadline: FieldRef<"seminars", 'DateTime'>
+    readonly status: FieldRef<"seminars", 'seminar_status'>
+    readonly photo: FieldRef<"seminars", 'String'>
+    readonly createdAt: FieldRef<"seminars", 'DateTime'>
+    readonly updatedAt: FieldRef<"seminars", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seminars findUnique
+   */
+  export type seminarsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminars
+     */
+    select?: seminarsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminars
+     */
+    omit?: seminarsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminarsInclude<ExtArgs> | null
+    /**
+     * Filter, which seminars to fetch.
+     */
+    where: seminarsWhereUniqueInput
+  }
+
+  /**
+   * seminars findUniqueOrThrow
+   */
+  export type seminarsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminars
+     */
+    select?: seminarsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminars
+     */
+    omit?: seminarsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminarsInclude<ExtArgs> | null
+    /**
+     * Filter, which seminars to fetch.
+     */
+    where: seminarsWhereUniqueInput
+  }
+
+  /**
+   * seminars findFirst
+   */
+  export type seminarsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminars
+     */
+    select?: seminarsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminars
+     */
+    omit?: seminarsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminarsInclude<ExtArgs> | null
+    /**
+     * Filter, which seminars to fetch.
+     */
+    where?: seminarsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seminars to fetch.
+     */
+    orderBy?: seminarsOrderByWithRelationInput | seminarsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seminars.
+     */
+    cursor?: seminarsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seminars from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seminars.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seminars.
+     */
+    distinct?: SeminarsScalarFieldEnum | SeminarsScalarFieldEnum[]
+  }
+
+  /**
+   * seminars findFirstOrThrow
+   */
+  export type seminarsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminars
+     */
+    select?: seminarsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminars
+     */
+    omit?: seminarsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminarsInclude<ExtArgs> | null
+    /**
+     * Filter, which seminars to fetch.
+     */
+    where?: seminarsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seminars to fetch.
+     */
+    orderBy?: seminarsOrderByWithRelationInput | seminarsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seminars.
+     */
+    cursor?: seminarsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seminars from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seminars.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seminars.
+     */
+    distinct?: SeminarsScalarFieldEnum | SeminarsScalarFieldEnum[]
+  }
+
+  /**
+   * seminars findMany
+   */
+  export type seminarsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminars
+     */
+    select?: seminarsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminars
+     */
+    omit?: seminarsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminarsInclude<ExtArgs> | null
+    /**
+     * Filter, which seminars to fetch.
+     */
+    where?: seminarsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seminars to fetch.
+     */
+    orderBy?: seminarsOrderByWithRelationInput | seminarsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seminars.
+     */
+    cursor?: seminarsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seminars from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seminars.
+     */
+    skip?: number
+    distinct?: SeminarsScalarFieldEnum | SeminarsScalarFieldEnum[]
+  }
+
+  /**
+   * seminars create
+   */
+  export type seminarsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminars
+     */
+    select?: seminarsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminars
+     */
+    omit?: seminarsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminarsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a seminars.
+     */
+    data: XOR<seminarsCreateInput, seminarsUncheckedCreateInput>
+  }
+
+  /**
+   * seminars createMany
+   */
+  export type seminarsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seminars.
+     */
+    data: seminarsCreateManyInput | seminarsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seminars update
+   */
+  export type seminarsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminars
+     */
+    select?: seminarsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminars
+     */
+    omit?: seminarsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminarsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a seminars.
+     */
+    data: XOR<seminarsUpdateInput, seminarsUncheckedUpdateInput>
+    /**
+     * Choose, which seminars to update.
+     */
+    where: seminarsWhereUniqueInput
+  }
+
+  /**
+   * seminars updateMany
+   */
+  export type seminarsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seminars.
+     */
+    data: XOR<seminarsUpdateManyMutationInput, seminarsUncheckedUpdateManyInput>
+    /**
+     * Filter which seminars to update
+     */
+    where?: seminarsWhereInput
+    /**
+     * Limit how many seminars to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seminars upsert
+   */
+  export type seminarsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminars
+     */
+    select?: seminarsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminars
+     */
+    omit?: seminarsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminarsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the seminars to update in case it exists.
+     */
+    where: seminarsWhereUniqueInput
+    /**
+     * In case the seminars found by the `where` argument doesn't exist, create a new seminars with this data.
+     */
+    create: XOR<seminarsCreateInput, seminarsUncheckedCreateInput>
+    /**
+     * In case the seminars was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seminarsUpdateInput, seminarsUncheckedUpdateInput>
+  }
+
+  /**
+   * seminars delete
+   */
+  export type seminarsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminars
+     */
+    select?: seminarsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminars
+     */
+    omit?: seminarsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminarsInclude<ExtArgs> | null
+    /**
+     * Filter which seminars to delete.
+     */
+    where: seminarsWhereUniqueInput
+  }
+
+  /**
+   * seminars deleteMany
+   */
+  export type seminarsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seminars to delete
+     */
+    where?: seminarsWhereInput
+    /**
+     * Limit how many seminars to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seminars.participants
+   */
+  export type seminars$participantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+    where?: seminar_participantsWhereInput
+    orderBy?: seminar_participantsOrderByWithRelationInput | seminar_participantsOrderByWithRelationInput[]
+    cursor?: seminar_participantsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Seminar_participantsScalarFieldEnum | Seminar_participantsScalarFieldEnum[]
+  }
+
+  /**
+   * seminars without action
+   */
+  export type seminarsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminars
+     */
+    select?: seminarsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminars
+     */
+    omit?: seminarsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminarsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seminar_participants
+   */
+
+  export type AggregateSeminar_participants = {
+    _count: Seminar_participantsCountAggregateOutputType | null
+    _min: Seminar_participantsMinAggregateOutputType | null
+    _max: Seminar_participantsMaxAggregateOutputType | null
+  }
+
+  export type Seminar_participantsMinAggregateOutputType = {
+    id: string | null
+    seminar_id: string | null
+    account_id: string | null
+    status: $Enums.participant_status | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Seminar_participantsMaxAggregateOutputType = {
+    id: string | null
+    seminar_id: string | null
+    account_id: string | null
+    status: $Enums.participant_status | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Seminar_participantsCountAggregateOutputType = {
+    id: number
+    seminar_id: number
+    account_id: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type Seminar_participantsMinAggregateInputType = {
+    id?: true
+    seminar_id?: true
+    account_id?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Seminar_participantsMaxAggregateInputType = {
+    id?: true
+    seminar_id?: true
+    account_id?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Seminar_participantsCountAggregateInputType = {
+    id?: true
+    seminar_id?: true
+    account_id?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type Seminar_participantsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seminar_participants to aggregate.
+     */
+    where?: seminar_participantsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seminar_participants to fetch.
+     */
+    orderBy?: seminar_participantsOrderByWithRelationInput | seminar_participantsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seminar_participantsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seminar_participants from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seminar_participants.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seminar_participants
+    **/
+    _count?: true | Seminar_participantsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seminar_participantsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seminar_participantsMaxAggregateInputType
+  }
+
+  export type GetSeminar_participantsAggregateType<T extends Seminar_participantsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeminar_participants]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeminar_participants[P]>
+      : GetScalarType<T[P], AggregateSeminar_participants[P]>
+  }
+
+
+
+
+  export type seminar_participantsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seminar_participantsWhereInput
+    orderBy?: seminar_participantsOrderByWithAggregationInput | seminar_participantsOrderByWithAggregationInput[]
+    by: Seminar_participantsScalarFieldEnum[] | Seminar_participantsScalarFieldEnum
+    having?: seminar_participantsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seminar_participantsCountAggregateInputType | true
+    _min?: Seminar_participantsMinAggregateInputType
+    _max?: Seminar_participantsMaxAggregateInputType
+  }
+
+  export type Seminar_participantsGroupByOutputType = {
+    id: string
+    seminar_id: string
+    account_id: string
+    status: $Enums.participant_status
+    createdAt: Date
+    updatedAt: Date
+    _count: Seminar_participantsCountAggregateOutputType | null
+    _min: Seminar_participantsMinAggregateOutputType | null
+    _max: Seminar_participantsMaxAggregateOutputType | null
+  }
+
+  type GetSeminar_participantsGroupByPayload<T extends seminar_participantsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seminar_participantsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seminar_participantsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seminar_participantsGroupByOutputType[P]>
+            : GetScalarType<T[P], Seminar_participantsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seminar_participantsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    seminar_id?: boolean
+    account_id?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    seminar?: boolean | seminarsDefaultArgs<ExtArgs>
+    account?: boolean | accountsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["seminar_participants"]>
+
+
+
+  export type seminar_participantsSelectScalar = {
+    id?: boolean
+    seminar_id?: boolean
+    account_id?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type seminar_participantsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "seminar_id" | "account_id" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["seminar_participants"]>
+  export type seminar_participantsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    seminar?: boolean | seminarsDefaultArgs<ExtArgs>
+    account?: boolean | accountsDefaultArgs<ExtArgs>
+  }
+
+  export type $seminar_participantsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seminar_participants"
+    objects: {
+      seminar: Prisma.$seminarsPayload<ExtArgs>
+      account: Prisma.$accountsPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      seminar_id: string
+      account_id: string
+      status: $Enums.participant_status
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["seminar_participants"]>
+    composites: {}
+  }
+
+  type seminar_participantsGetPayload<S extends boolean | null | undefined | seminar_participantsDefaultArgs> = $Result.GetResult<Prisma.$seminar_participantsPayload, S>
+
+  type seminar_participantsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seminar_participantsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seminar_participantsCountAggregateInputType | true
+    }
+
+  export interface seminar_participantsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seminar_participants'], meta: { name: 'seminar_participants' } }
+    /**
+     * Find zero or one Seminar_participants that matches the filter.
+     * @param {seminar_participantsFindUniqueArgs} args - Arguments to find a Seminar_participants
+     * @example
+     * // Get one Seminar_participants
+     * const seminar_participants = await prisma.seminar_participants.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seminar_participantsFindUniqueArgs>(args: SelectSubset<T, seminar_participantsFindUniqueArgs<ExtArgs>>): Prisma__seminar_participantsClient<$Result.GetResult<Prisma.$seminar_participantsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seminar_participants that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seminar_participantsFindUniqueOrThrowArgs} args - Arguments to find a Seminar_participants
+     * @example
+     * // Get one Seminar_participants
+     * const seminar_participants = await prisma.seminar_participants.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seminar_participantsFindUniqueOrThrowArgs>(args: SelectSubset<T, seminar_participantsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seminar_participantsClient<$Result.GetResult<Prisma.$seminar_participantsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seminar_participants that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminar_participantsFindFirstArgs} args - Arguments to find a Seminar_participants
+     * @example
+     * // Get one Seminar_participants
+     * const seminar_participants = await prisma.seminar_participants.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seminar_participantsFindFirstArgs>(args?: SelectSubset<T, seminar_participantsFindFirstArgs<ExtArgs>>): Prisma__seminar_participantsClient<$Result.GetResult<Prisma.$seminar_participantsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seminar_participants that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminar_participantsFindFirstOrThrowArgs} args - Arguments to find a Seminar_participants
+     * @example
+     * // Get one Seminar_participants
+     * const seminar_participants = await prisma.seminar_participants.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seminar_participantsFindFirstOrThrowArgs>(args?: SelectSubset<T, seminar_participantsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seminar_participantsClient<$Result.GetResult<Prisma.$seminar_participantsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seminar_participants that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminar_participantsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seminar_participants
+     * const seminar_participants = await prisma.seminar_participants.findMany()
+     * 
+     * // Get first 10 Seminar_participants
+     * const seminar_participants = await prisma.seminar_participants.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const seminar_participantsWithIdOnly = await prisma.seminar_participants.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends seminar_participantsFindManyArgs>(args?: SelectSubset<T, seminar_participantsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seminar_participantsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seminar_participants.
+     * @param {seminar_participantsCreateArgs} args - Arguments to create a Seminar_participants.
+     * @example
+     * // Create one Seminar_participants
+     * const Seminar_participants = await prisma.seminar_participants.create({
+     *   data: {
+     *     // ... data to create a Seminar_participants
+     *   }
+     * })
+     * 
+     */
+    create<T extends seminar_participantsCreateArgs>(args: SelectSubset<T, seminar_participantsCreateArgs<ExtArgs>>): Prisma__seminar_participantsClient<$Result.GetResult<Prisma.$seminar_participantsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seminar_participants.
+     * @param {seminar_participantsCreateManyArgs} args - Arguments to create many Seminar_participants.
+     * @example
+     * // Create many Seminar_participants
+     * const seminar_participants = await prisma.seminar_participants.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seminar_participantsCreateManyArgs>(args?: SelectSubset<T, seminar_participantsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Seminar_participants.
+     * @param {seminar_participantsDeleteArgs} args - Arguments to delete one Seminar_participants.
+     * @example
+     * // Delete one Seminar_participants
+     * const Seminar_participants = await prisma.seminar_participants.delete({
+     *   where: {
+     *     // ... filter to delete one Seminar_participants
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seminar_participantsDeleteArgs>(args: SelectSubset<T, seminar_participantsDeleteArgs<ExtArgs>>): Prisma__seminar_participantsClient<$Result.GetResult<Prisma.$seminar_participantsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seminar_participants.
+     * @param {seminar_participantsUpdateArgs} args - Arguments to update one Seminar_participants.
+     * @example
+     * // Update one Seminar_participants
+     * const seminar_participants = await prisma.seminar_participants.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seminar_participantsUpdateArgs>(args: SelectSubset<T, seminar_participantsUpdateArgs<ExtArgs>>): Prisma__seminar_participantsClient<$Result.GetResult<Prisma.$seminar_participantsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seminar_participants.
+     * @param {seminar_participantsDeleteManyArgs} args - Arguments to filter Seminar_participants to delete.
+     * @example
+     * // Delete a few Seminar_participants
+     * const { count } = await prisma.seminar_participants.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seminar_participantsDeleteManyArgs>(args?: SelectSubset<T, seminar_participantsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seminar_participants.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminar_participantsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seminar_participants
+     * const seminar_participants = await prisma.seminar_participants.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seminar_participantsUpdateManyArgs>(args: SelectSubset<T, seminar_participantsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Seminar_participants.
+     * @param {seminar_participantsUpsertArgs} args - Arguments to update or create a Seminar_participants.
+     * @example
+     * // Update or create a Seminar_participants
+     * const seminar_participants = await prisma.seminar_participants.upsert({
+     *   create: {
+     *     // ... data to create a Seminar_participants
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seminar_participants we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seminar_participantsUpsertArgs>(args: SelectSubset<T, seminar_participantsUpsertArgs<ExtArgs>>): Prisma__seminar_participantsClient<$Result.GetResult<Prisma.$seminar_participantsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seminar_participants.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminar_participantsCountArgs} args - Arguments to filter Seminar_participants to count.
+     * @example
+     * // Count the number of Seminar_participants
+     * const count = await prisma.seminar_participants.count({
+     *   where: {
+     *     // ... the filter for the Seminar_participants we want to count
+     *   }
+     * })
+    **/
+    count<T extends seminar_participantsCountArgs>(
+      args?: Subset<T, seminar_participantsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seminar_participantsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seminar_participants.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seminar_participantsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seminar_participantsAggregateArgs>(args: Subset<T, Seminar_participantsAggregateArgs>): Prisma.PrismaPromise<GetSeminar_participantsAggregateType<T>>
+
+    /**
+     * Group by Seminar_participants.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seminar_participantsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seminar_participantsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seminar_participantsGroupByArgs['orderBy'] }
+        : { orderBy?: seminar_participantsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seminar_participantsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeminar_participantsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seminar_participants model
+   */
+  readonly fields: seminar_participantsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seminar_participants.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seminar_participantsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    seminar<T extends seminarsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, seminarsDefaultArgs<ExtArgs>>): Prisma__seminarsClient<$Result.GetResult<Prisma.$seminarsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    account<T extends accountsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, accountsDefaultArgs<ExtArgs>>): Prisma__accountsClient<$Result.GetResult<Prisma.$accountsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seminar_participants model
+   */
+  interface seminar_participantsFieldRefs {
+    readonly id: FieldRef<"seminar_participants", 'String'>
+    readonly seminar_id: FieldRef<"seminar_participants", 'String'>
+    readonly account_id: FieldRef<"seminar_participants", 'String'>
+    readonly status: FieldRef<"seminar_participants", 'participant_status'>
+    readonly createdAt: FieldRef<"seminar_participants", 'DateTime'>
+    readonly updatedAt: FieldRef<"seminar_participants", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seminar_participants findUnique
+   */
+  export type seminar_participantsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+    /**
+     * Filter, which seminar_participants to fetch.
+     */
+    where: seminar_participantsWhereUniqueInput
+  }
+
+  /**
+   * seminar_participants findUniqueOrThrow
+   */
+  export type seminar_participantsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+    /**
+     * Filter, which seminar_participants to fetch.
+     */
+    where: seminar_participantsWhereUniqueInput
+  }
+
+  /**
+   * seminar_participants findFirst
+   */
+  export type seminar_participantsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+    /**
+     * Filter, which seminar_participants to fetch.
+     */
+    where?: seminar_participantsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seminar_participants to fetch.
+     */
+    orderBy?: seminar_participantsOrderByWithRelationInput | seminar_participantsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seminar_participants.
+     */
+    cursor?: seminar_participantsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seminar_participants from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seminar_participants.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seminar_participants.
+     */
+    distinct?: Seminar_participantsScalarFieldEnum | Seminar_participantsScalarFieldEnum[]
+  }
+
+  /**
+   * seminar_participants findFirstOrThrow
+   */
+  export type seminar_participantsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+    /**
+     * Filter, which seminar_participants to fetch.
+     */
+    where?: seminar_participantsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seminar_participants to fetch.
+     */
+    orderBy?: seminar_participantsOrderByWithRelationInput | seminar_participantsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seminar_participants.
+     */
+    cursor?: seminar_participantsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seminar_participants from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seminar_participants.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seminar_participants.
+     */
+    distinct?: Seminar_participantsScalarFieldEnum | Seminar_participantsScalarFieldEnum[]
+  }
+
+  /**
+   * seminar_participants findMany
+   */
+  export type seminar_participantsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+    /**
+     * Filter, which seminar_participants to fetch.
+     */
+    where?: seminar_participantsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seminar_participants to fetch.
+     */
+    orderBy?: seminar_participantsOrderByWithRelationInput | seminar_participantsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seminar_participants.
+     */
+    cursor?: seminar_participantsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seminar_participants from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seminar_participants.
+     */
+    skip?: number
+    distinct?: Seminar_participantsScalarFieldEnum | Seminar_participantsScalarFieldEnum[]
+  }
+
+  /**
+   * seminar_participants create
+   */
+  export type seminar_participantsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a seminar_participants.
+     */
+    data: XOR<seminar_participantsCreateInput, seminar_participantsUncheckedCreateInput>
+  }
+
+  /**
+   * seminar_participants createMany
+   */
+  export type seminar_participantsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seminar_participants.
+     */
+    data: seminar_participantsCreateManyInput | seminar_participantsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seminar_participants update
+   */
+  export type seminar_participantsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a seminar_participants.
+     */
+    data: XOR<seminar_participantsUpdateInput, seminar_participantsUncheckedUpdateInput>
+    /**
+     * Choose, which seminar_participants to update.
+     */
+    where: seminar_participantsWhereUniqueInput
+  }
+
+  /**
+   * seminar_participants updateMany
+   */
+  export type seminar_participantsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seminar_participants.
+     */
+    data: XOR<seminar_participantsUpdateManyMutationInput, seminar_participantsUncheckedUpdateManyInput>
+    /**
+     * Filter which seminar_participants to update
+     */
+    where?: seminar_participantsWhereInput
+    /**
+     * Limit how many seminar_participants to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seminar_participants upsert
+   */
+  export type seminar_participantsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the seminar_participants to update in case it exists.
+     */
+    where: seminar_participantsWhereUniqueInput
+    /**
+     * In case the seminar_participants found by the `where` argument doesn't exist, create a new seminar_participants with this data.
+     */
+    create: XOR<seminar_participantsCreateInput, seminar_participantsUncheckedCreateInput>
+    /**
+     * In case the seminar_participants was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seminar_participantsUpdateInput, seminar_participantsUncheckedUpdateInput>
+  }
+
+  /**
+   * seminar_participants delete
+   */
+  export type seminar_participantsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+    /**
+     * Filter which seminar_participants to delete.
+     */
+    where: seminar_participantsWhereUniqueInput
+  }
+
+  /**
+   * seminar_participants deleteMany
+   */
+  export type seminar_participantsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seminar_participants to delete
+     */
+    where?: seminar_participantsWhereInput
+    /**
+     * Limit how many seminar_participants to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seminar_participants without action
+   */
+  export type seminar_participantsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seminar_participants
+     */
+    select?: seminar_participantsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seminar_participants
+     */
+    omit?: seminar_participantsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: seminar_participantsInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -4197,6 +6502,39 @@ export namespace Prisma {
   export type Accounts_commoditiesScalarFieldEnum = (typeof Accounts_commoditiesScalarFieldEnum)[keyof typeof Accounts_commoditiesScalarFieldEnum]
 
 
+  export const SeminarsScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    description: 'description',
+    location: 'location',
+    speaker: 'speaker',
+    start_date: 'start_date',
+    end_date: 'end_date',
+    start_time: 'start_time',
+    end_time: 'end_time',
+    capacity: 'capacity',
+    registration_deadline: 'registration_deadline',
+    status: 'status',
+    photo: 'photo',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SeminarsScalarFieldEnum = (typeof SeminarsScalarFieldEnum)[keyof typeof SeminarsScalarFieldEnum]
+
+
+  export const Seminar_participantsScalarFieldEnum: {
+    id: 'id',
+    seminar_id: 'seminar_id',
+    account_id: 'account_id',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type Seminar_participantsScalarFieldEnum = (typeof Seminar_participantsScalarFieldEnum)[keyof typeof Seminar_participantsScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -4251,6 +6589,27 @@ export namespace Prisma {
   export type accounts_commoditiesOrderByRelevanceFieldEnum = (typeof accounts_commoditiesOrderByRelevanceFieldEnum)[keyof typeof accounts_commoditiesOrderByRelevanceFieldEnum]
 
 
+  export const seminarsOrderByRelevanceFieldEnum: {
+    id: 'id',
+    title: 'title',
+    description: 'description',
+    location: 'location',
+    speaker: 'speaker',
+    photo: 'photo'
+  };
+
+  export type seminarsOrderByRelevanceFieldEnum = (typeof seminarsOrderByRelevanceFieldEnum)[keyof typeof seminarsOrderByRelevanceFieldEnum]
+
+
+  export const seminar_participantsOrderByRelevanceFieldEnum: {
+    id: 'id',
+    seminar_id: 'seminar_id',
+    account_id: 'account_id'
+  };
+
+  export type seminar_participantsOrderByRelevanceFieldEnum = (typeof seminar_participantsOrderByRelevanceFieldEnum)[keyof typeof seminar_participantsOrderByRelevanceFieldEnum]
+
+
   /**
    * Field references
    */
@@ -4296,6 +6655,27 @@ export namespace Prisma {
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
+
+
+  /**
+   * Reference to a field of type 'seminar_status'
+   */
+  export type Enumseminar_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'seminar_status'>
+    
+
+
+  /**
+   * Reference to a field of type 'participant_status'
+   */
+  export type Enumparticipant_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'participant_status'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
   /**
    * Deep Input Types
    */
@@ -4324,6 +6704,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"accounts"> | Date | string
     updatedAt?: DateTimeFilter<"accounts"> | Date | string
     commodity?: Accounts_commoditiesListRelationFilter
+    seminars?: Seminar_participantsListRelationFilter
   }
 
   export type accountsOrderByWithRelationInput = {
@@ -4346,6 +6727,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     commodity?: accounts_commoditiesOrderByRelationAggregateInput
+    seminars?: seminar_participantsOrderByRelationAggregateInput
     _relevance?: accountsOrderByRelevanceInput
   }
 
@@ -4372,6 +6754,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"accounts"> | Date | string
     updatedAt?: DateTimeFilter<"accounts"> | Date | string
     commodity?: Accounts_commoditiesListRelationFilter
+    seminars?: Seminar_participantsListRelationFilter
   }, "id" | "username" | "email">
 
   export type accountsOrderByWithAggregationInput = {
@@ -4543,6 +6926,179 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"accounts_commodities"> | Date | string
   }
 
+  export type seminarsWhereInput = {
+    AND?: seminarsWhereInput | seminarsWhereInput[]
+    OR?: seminarsWhereInput[]
+    NOT?: seminarsWhereInput | seminarsWhereInput[]
+    id?: StringFilter<"seminars"> | string
+    title?: StringFilter<"seminars"> | string
+    description?: StringFilter<"seminars"> | string
+    location?: StringFilter<"seminars"> | string
+    speaker?: StringFilter<"seminars"> | string
+    start_date?: DateTimeFilter<"seminars"> | Date | string
+    end_date?: DateTimeFilter<"seminars"> | Date | string
+    start_time?: DateTimeFilter<"seminars"> | Date | string
+    end_time?: DateTimeFilter<"seminars"> | Date | string
+    capacity?: IntFilter<"seminars"> | number
+    registration_deadline?: DateTimeFilter<"seminars"> | Date | string
+    status?: Enumseminar_statusFilter<"seminars"> | $Enums.seminar_status
+    photo?: StringNullableFilter<"seminars"> | string | null
+    createdAt?: DateTimeFilter<"seminars"> | Date | string
+    updatedAt?: DateTimeFilter<"seminars"> | Date | string
+    participants?: Seminar_participantsListRelationFilter
+  }
+
+  export type seminarsOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    location?: SortOrder
+    speaker?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    start_time?: SortOrder
+    end_time?: SortOrder
+    capacity?: SortOrder
+    registration_deadline?: SortOrder
+    status?: SortOrder
+    photo?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    participants?: seminar_participantsOrderByRelationAggregateInput
+    _relevance?: seminarsOrderByRelevanceInput
+  }
+
+  export type seminarsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: seminarsWhereInput | seminarsWhereInput[]
+    OR?: seminarsWhereInput[]
+    NOT?: seminarsWhereInput | seminarsWhereInput[]
+    title?: StringFilter<"seminars"> | string
+    description?: StringFilter<"seminars"> | string
+    location?: StringFilter<"seminars"> | string
+    speaker?: StringFilter<"seminars"> | string
+    start_date?: DateTimeFilter<"seminars"> | Date | string
+    end_date?: DateTimeFilter<"seminars"> | Date | string
+    start_time?: DateTimeFilter<"seminars"> | Date | string
+    end_time?: DateTimeFilter<"seminars"> | Date | string
+    capacity?: IntFilter<"seminars"> | number
+    registration_deadline?: DateTimeFilter<"seminars"> | Date | string
+    status?: Enumseminar_statusFilter<"seminars"> | $Enums.seminar_status
+    photo?: StringNullableFilter<"seminars"> | string | null
+    createdAt?: DateTimeFilter<"seminars"> | Date | string
+    updatedAt?: DateTimeFilter<"seminars"> | Date | string
+    participants?: Seminar_participantsListRelationFilter
+  }, "id">
+
+  export type seminarsOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    location?: SortOrder
+    speaker?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    start_time?: SortOrder
+    end_time?: SortOrder
+    capacity?: SortOrder
+    registration_deadline?: SortOrder
+    status?: SortOrder
+    photo?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: seminarsCountOrderByAggregateInput
+    _avg?: seminarsAvgOrderByAggregateInput
+    _max?: seminarsMaxOrderByAggregateInput
+    _min?: seminarsMinOrderByAggregateInput
+    _sum?: seminarsSumOrderByAggregateInput
+  }
+
+  export type seminarsScalarWhereWithAggregatesInput = {
+    AND?: seminarsScalarWhereWithAggregatesInput | seminarsScalarWhereWithAggregatesInput[]
+    OR?: seminarsScalarWhereWithAggregatesInput[]
+    NOT?: seminarsScalarWhereWithAggregatesInput | seminarsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"seminars"> | string
+    title?: StringWithAggregatesFilter<"seminars"> | string
+    description?: StringWithAggregatesFilter<"seminars"> | string
+    location?: StringWithAggregatesFilter<"seminars"> | string
+    speaker?: StringWithAggregatesFilter<"seminars"> | string
+    start_date?: DateTimeWithAggregatesFilter<"seminars"> | Date | string
+    end_date?: DateTimeWithAggregatesFilter<"seminars"> | Date | string
+    start_time?: DateTimeWithAggregatesFilter<"seminars"> | Date | string
+    end_time?: DateTimeWithAggregatesFilter<"seminars"> | Date | string
+    capacity?: IntWithAggregatesFilter<"seminars"> | number
+    registration_deadline?: DateTimeWithAggregatesFilter<"seminars"> | Date | string
+    status?: Enumseminar_statusWithAggregatesFilter<"seminars"> | $Enums.seminar_status
+    photo?: StringNullableWithAggregatesFilter<"seminars"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"seminars"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"seminars"> | Date | string
+  }
+
+  export type seminar_participantsWhereInput = {
+    AND?: seminar_participantsWhereInput | seminar_participantsWhereInput[]
+    OR?: seminar_participantsWhereInput[]
+    NOT?: seminar_participantsWhereInput | seminar_participantsWhereInput[]
+    id?: StringFilter<"seminar_participants"> | string
+    seminar_id?: StringFilter<"seminar_participants"> | string
+    account_id?: StringFilter<"seminar_participants"> | string
+    status?: Enumparticipant_statusFilter<"seminar_participants"> | $Enums.participant_status
+    createdAt?: DateTimeFilter<"seminar_participants"> | Date | string
+    updatedAt?: DateTimeFilter<"seminar_participants"> | Date | string
+    seminar?: XOR<SeminarsScalarRelationFilter, seminarsWhereInput>
+    account?: XOR<AccountsScalarRelationFilter, accountsWhereInput>
+  }
+
+  export type seminar_participantsOrderByWithRelationInput = {
+    id?: SortOrder
+    seminar_id?: SortOrder
+    account_id?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    seminar?: seminarsOrderByWithRelationInput
+    account?: accountsOrderByWithRelationInput
+    _relevance?: seminar_participantsOrderByRelevanceInput
+  }
+
+  export type seminar_participantsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    seminar_id_account_id?: seminar_participantsSeminar_idAccount_idCompoundUniqueInput
+    AND?: seminar_participantsWhereInput | seminar_participantsWhereInput[]
+    OR?: seminar_participantsWhereInput[]
+    NOT?: seminar_participantsWhereInput | seminar_participantsWhereInput[]
+    seminar_id?: StringFilter<"seminar_participants"> | string
+    account_id?: StringFilter<"seminar_participants"> | string
+    status?: Enumparticipant_statusFilter<"seminar_participants"> | $Enums.participant_status
+    createdAt?: DateTimeFilter<"seminar_participants"> | Date | string
+    updatedAt?: DateTimeFilter<"seminar_participants"> | Date | string
+    seminar?: XOR<SeminarsScalarRelationFilter, seminarsWhereInput>
+    account?: XOR<AccountsScalarRelationFilter, accountsWhereInput>
+  }, "id" | "seminar_id_account_id">
+
+  export type seminar_participantsOrderByWithAggregationInput = {
+    id?: SortOrder
+    seminar_id?: SortOrder
+    account_id?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: seminar_participantsCountOrderByAggregateInput
+    _max?: seminar_participantsMaxOrderByAggregateInput
+    _min?: seminar_participantsMinOrderByAggregateInput
+  }
+
+  export type seminar_participantsScalarWhereWithAggregatesInput = {
+    AND?: seminar_participantsScalarWhereWithAggregatesInput | seminar_participantsScalarWhereWithAggregatesInput[]
+    OR?: seminar_participantsScalarWhereWithAggregatesInput[]
+    NOT?: seminar_participantsScalarWhereWithAggregatesInput | seminar_participantsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"seminar_participants"> | string
+    seminar_id?: StringWithAggregatesFilter<"seminar_participants"> | string
+    account_id?: StringWithAggregatesFilter<"seminar_participants"> | string
+    status?: Enumparticipant_statusWithAggregatesFilter<"seminar_participants"> | $Enums.participant_status
+    createdAt?: DateTimeWithAggregatesFilter<"seminar_participants"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"seminar_participants"> | Date | string
+  }
+
   export type accountsCreateInput = {
     id?: string
     access?: $Enums.access
@@ -4563,6 +7119,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     commodity?: accounts_commoditiesCreateNestedManyWithoutAccountInput
+    seminars?: seminar_participantsCreateNestedManyWithoutAccountInput
   }
 
   export type accountsUncheckedCreateInput = {
@@ -4585,6 +7142,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     commodity?: accounts_commoditiesUncheckedCreateNestedManyWithoutAccountInput
+    seminars?: seminar_participantsUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type accountsUpdateInput = {
@@ -4607,6 +7165,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: accounts_commoditiesUpdateManyWithoutAccountNestedInput
+    seminars?: seminar_participantsUpdateManyWithoutAccountNestedInput
   }
 
   export type accountsUncheckedUpdateInput = {
@@ -4629,6 +7188,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: accounts_commoditiesUncheckedUpdateManyWithoutAccountNestedInput
+    seminars?: seminar_participantsUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type accountsCreateManyInput = {
@@ -4815,6 +7375,197 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type seminarsCreateInput = {
+    id?: string
+    title: string
+    description: string
+    location: string
+    speaker: string
+    start_date: Date | string
+    end_date: Date | string
+    start_time: Date | string
+    end_time: Date | string
+    capacity: number
+    registration_deadline: Date | string
+    status?: $Enums.seminar_status
+    photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: seminar_participantsCreateNestedManyWithoutSeminarInput
+  }
+
+  export type seminarsUncheckedCreateInput = {
+    id?: string
+    title: string
+    description: string
+    location: string
+    speaker: string
+    start_date: Date | string
+    end_date: Date | string
+    start_time: Date | string
+    end_time: Date | string
+    capacity: number
+    registration_deadline: Date | string
+    status?: $Enums.seminar_status
+    photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: seminar_participantsUncheckedCreateNestedManyWithoutSeminarInput
+  }
+
+  export type seminarsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    speaker?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    capacity?: IntFieldUpdateOperationsInput | number
+    registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: seminar_participantsUpdateManyWithoutSeminarNestedInput
+  }
+
+  export type seminarsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    speaker?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    capacity?: IntFieldUpdateOperationsInput | number
+    registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: seminar_participantsUncheckedUpdateManyWithoutSeminarNestedInput
+  }
+
+  export type seminarsCreateManyInput = {
+    id?: string
+    title: string
+    description: string
+    location: string
+    speaker: string
+    start_date: Date | string
+    end_date: Date | string
+    start_time: Date | string
+    end_time: Date | string
+    capacity: number
+    registration_deadline: Date | string
+    status?: $Enums.seminar_status
+    photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type seminarsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    speaker?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    capacity?: IntFieldUpdateOperationsInput | number
+    registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seminarsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    speaker?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    capacity?: IntFieldUpdateOperationsInput | number
+    registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seminar_participantsCreateInput = {
+    id?: string
+    status?: $Enums.participant_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminar: seminarsCreateNestedOneWithoutParticipantsInput
+    account: accountsCreateNestedOneWithoutSeminarsInput
+  }
+
+  export type seminar_participantsUncheckedCreateInput = {
+    id?: string
+    seminar_id: string
+    account_id: string
+    status?: $Enums.participant_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type seminar_participantsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminar?: seminarsUpdateOneRequiredWithoutParticipantsNestedInput
+    account?: accountsUpdateOneRequiredWithoutSeminarsNestedInput
+  }
+
+  export type seminar_participantsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    seminar_id?: StringFieldUpdateOperationsInput | string
+    account_id?: StringFieldUpdateOperationsInput | string
+    status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seminar_participantsCreateManyInput = {
+    id?: string
+    seminar_id: string
+    account_id: string
+    status?: $Enums.participant_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type seminar_participantsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seminar_participantsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    seminar_id?: StringFieldUpdateOperationsInput | string
+    account_id?: StringFieldUpdateOperationsInput | string
+    status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -4883,12 +7634,22 @@ export namespace Prisma {
     none?: accounts_commoditiesWhereInput
   }
 
+  export type Seminar_participantsListRelationFilter = {
+    every?: seminar_participantsWhereInput
+    some?: seminar_participantsWhereInput
+    none?: seminar_participantsWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type accounts_commoditiesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type seminar_participantsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -5119,6 +7880,178 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type Enumseminar_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.seminar_status | Enumseminar_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.seminar_status[]
+    notIn?: $Enums.seminar_status[]
+    not?: NestedEnumseminar_statusFilter<$PrismaModel> | $Enums.seminar_status
+  }
+
+  export type seminarsOrderByRelevanceInput = {
+    fields: seminarsOrderByRelevanceFieldEnum | seminarsOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type seminarsCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    location?: SortOrder
+    speaker?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    start_time?: SortOrder
+    end_time?: SortOrder
+    capacity?: SortOrder
+    registration_deadline?: SortOrder
+    status?: SortOrder
+    photo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type seminarsAvgOrderByAggregateInput = {
+    capacity?: SortOrder
+  }
+
+  export type seminarsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    location?: SortOrder
+    speaker?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    start_time?: SortOrder
+    end_time?: SortOrder
+    capacity?: SortOrder
+    registration_deadline?: SortOrder
+    status?: SortOrder
+    photo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type seminarsMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    location?: SortOrder
+    speaker?: SortOrder
+    start_date?: SortOrder
+    end_date?: SortOrder
+    start_time?: SortOrder
+    end_time?: SortOrder
+    capacity?: SortOrder
+    registration_deadline?: SortOrder
+    status?: SortOrder
+    photo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type seminarsSumOrderByAggregateInput = {
+    capacity?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type Enumseminar_statusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.seminar_status | Enumseminar_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.seminar_status[]
+    notIn?: $Enums.seminar_status[]
+    not?: NestedEnumseminar_statusWithAggregatesFilter<$PrismaModel> | $Enums.seminar_status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumseminar_statusFilter<$PrismaModel>
+    _max?: NestedEnumseminar_statusFilter<$PrismaModel>
+  }
+
+  export type Enumparticipant_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.participant_status | Enumparticipant_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.participant_status[]
+    notIn?: $Enums.participant_status[]
+    not?: NestedEnumparticipant_statusFilter<$PrismaModel> | $Enums.participant_status
+  }
+
+  export type SeminarsScalarRelationFilter = {
+    is?: seminarsWhereInput
+    isNot?: seminarsWhereInput
+  }
+
+  export type seminar_participantsOrderByRelevanceInput = {
+    fields: seminar_participantsOrderByRelevanceFieldEnum | seminar_participantsOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type seminar_participantsSeminar_idAccount_idCompoundUniqueInput = {
+    seminar_id: string
+    account_id: string
+  }
+
+  export type seminar_participantsCountOrderByAggregateInput = {
+    id?: SortOrder
+    seminar_id?: SortOrder
+    account_id?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type seminar_participantsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    seminar_id?: SortOrder
+    account_id?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type seminar_participantsMinOrderByAggregateInput = {
+    id?: SortOrder
+    seminar_id?: SortOrder
+    account_id?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type Enumparticipant_statusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.participant_status | Enumparticipant_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.participant_status[]
+    notIn?: $Enums.participant_status[]
+    not?: NestedEnumparticipant_statusWithAggregatesFilter<$PrismaModel> | $Enums.participant_status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumparticipant_statusFilter<$PrismaModel>
+    _max?: NestedEnumparticipant_statusFilter<$PrismaModel>
+  }
+
   export type accounts_commoditiesCreateNestedManyWithoutAccountInput = {
     create?: XOR<accounts_commoditiesCreateWithoutAccountInput, accounts_commoditiesUncheckedCreateWithoutAccountInput> | accounts_commoditiesCreateWithoutAccountInput[] | accounts_commoditiesUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: accounts_commoditiesCreateOrConnectWithoutAccountInput | accounts_commoditiesCreateOrConnectWithoutAccountInput[]
@@ -5126,11 +8059,25 @@ export namespace Prisma {
     connect?: accounts_commoditiesWhereUniqueInput | accounts_commoditiesWhereUniqueInput[]
   }
 
+  export type seminar_participantsCreateNestedManyWithoutAccountInput = {
+    create?: XOR<seminar_participantsCreateWithoutAccountInput, seminar_participantsUncheckedCreateWithoutAccountInput> | seminar_participantsCreateWithoutAccountInput[] | seminar_participantsUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: seminar_participantsCreateOrConnectWithoutAccountInput | seminar_participantsCreateOrConnectWithoutAccountInput[]
+    createMany?: seminar_participantsCreateManyAccountInputEnvelope
+    connect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+  }
+
   export type accounts_commoditiesUncheckedCreateNestedManyWithoutAccountInput = {
     create?: XOR<accounts_commoditiesCreateWithoutAccountInput, accounts_commoditiesUncheckedCreateWithoutAccountInput> | accounts_commoditiesCreateWithoutAccountInput[] | accounts_commoditiesUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: accounts_commoditiesCreateOrConnectWithoutAccountInput | accounts_commoditiesCreateOrConnectWithoutAccountInput[]
     createMany?: accounts_commoditiesCreateManyAccountInputEnvelope
     connect?: accounts_commoditiesWhereUniqueInput | accounts_commoditiesWhereUniqueInput[]
+  }
+
+  export type seminar_participantsUncheckedCreateNestedManyWithoutAccountInput = {
+    create?: XOR<seminar_participantsCreateWithoutAccountInput, seminar_participantsUncheckedCreateWithoutAccountInput> | seminar_participantsCreateWithoutAccountInput[] | seminar_participantsUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: seminar_participantsCreateOrConnectWithoutAccountInput | seminar_participantsCreateOrConnectWithoutAccountInput[]
+    createMany?: seminar_participantsCreateManyAccountInputEnvelope
+    connect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -5171,6 +8118,20 @@ export namespace Prisma {
     deleteMany?: accounts_commoditiesScalarWhereInput | accounts_commoditiesScalarWhereInput[]
   }
 
+  export type seminar_participantsUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<seminar_participantsCreateWithoutAccountInput, seminar_participantsUncheckedCreateWithoutAccountInput> | seminar_participantsCreateWithoutAccountInput[] | seminar_participantsUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: seminar_participantsCreateOrConnectWithoutAccountInput | seminar_participantsCreateOrConnectWithoutAccountInput[]
+    upsert?: seminar_participantsUpsertWithWhereUniqueWithoutAccountInput | seminar_participantsUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: seminar_participantsCreateManyAccountInputEnvelope
+    set?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    disconnect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    delete?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    connect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    update?: seminar_participantsUpdateWithWhereUniqueWithoutAccountInput | seminar_participantsUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: seminar_participantsUpdateManyWithWhereWithoutAccountInput | seminar_participantsUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: seminar_participantsScalarWhereInput | seminar_participantsScalarWhereInput[]
+  }
+
   export type accounts_commoditiesUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<accounts_commoditiesCreateWithoutAccountInput, accounts_commoditiesUncheckedCreateWithoutAccountInput> | accounts_commoditiesCreateWithoutAccountInput[] | accounts_commoditiesUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: accounts_commoditiesCreateOrConnectWithoutAccountInput | accounts_commoditiesCreateOrConnectWithoutAccountInput[]
@@ -5183,6 +8144,20 @@ export namespace Prisma {
     update?: accounts_commoditiesUpdateWithWhereUniqueWithoutAccountInput | accounts_commoditiesUpdateWithWhereUniqueWithoutAccountInput[]
     updateMany?: accounts_commoditiesUpdateManyWithWhereWithoutAccountInput | accounts_commoditiesUpdateManyWithWhereWithoutAccountInput[]
     deleteMany?: accounts_commoditiesScalarWhereInput | accounts_commoditiesScalarWhereInput[]
+  }
+
+  export type seminar_participantsUncheckedUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<seminar_participantsCreateWithoutAccountInput, seminar_participantsUncheckedCreateWithoutAccountInput> | seminar_participantsCreateWithoutAccountInput[] | seminar_participantsUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: seminar_participantsCreateOrConnectWithoutAccountInput | seminar_participantsCreateOrConnectWithoutAccountInput[]
+    upsert?: seminar_participantsUpsertWithWhereUniqueWithoutAccountInput | seminar_participantsUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: seminar_participantsCreateManyAccountInputEnvelope
+    set?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    disconnect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    delete?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    connect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    update?: seminar_participantsUpdateWithWhereUniqueWithoutAccountInput | seminar_participantsUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: seminar_participantsUpdateManyWithWhereWithoutAccountInput | seminar_participantsUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: seminar_participantsScalarWhereInput | seminar_participantsScalarWhereInput[]
   }
 
   export type accounts_commoditiesCreateNestedManyWithoutCommodityInput = {
@@ -5253,6 +8228,92 @@ export namespace Prisma {
     upsert?: accountsUpsertWithoutCommodityInput
     connect?: accountsWhereUniqueInput
     update?: XOR<XOR<accountsUpdateToOneWithWhereWithoutCommodityInput, accountsUpdateWithoutCommodityInput>, accountsUncheckedUpdateWithoutCommodityInput>
+  }
+
+  export type seminar_participantsCreateNestedManyWithoutSeminarInput = {
+    create?: XOR<seminar_participantsCreateWithoutSeminarInput, seminar_participantsUncheckedCreateWithoutSeminarInput> | seminar_participantsCreateWithoutSeminarInput[] | seminar_participantsUncheckedCreateWithoutSeminarInput[]
+    connectOrCreate?: seminar_participantsCreateOrConnectWithoutSeminarInput | seminar_participantsCreateOrConnectWithoutSeminarInput[]
+    createMany?: seminar_participantsCreateManySeminarInputEnvelope
+    connect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+  }
+
+  export type seminar_participantsUncheckedCreateNestedManyWithoutSeminarInput = {
+    create?: XOR<seminar_participantsCreateWithoutSeminarInput, seminar_participantsUncheckedCreateWithoutSeminarInput> | seminar_participantsCreateWithoutSeminarInput[] | seminar_participantsUncheckedCreateWithoutSeminarInput[]
+    connectOrCreate?: seminar_participantsCreateOrConnectWithoutSeminarInput | seminar_participantsCreateOrConnectWithoutSeminarInput[]
+    createMany?: seminar_participantsCreateManySeminarInputEnvelope
+    connect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type Enumseminar_statusFieldUpdateOperationsInput = {
+    set?: $Enums.seminar_status
+  }
+
+  export type seminar_participantsUpdateManyWithoutSeminarNestedInput = {
+    create?: XOR<seminar_participantsCreateWithoutSeminarInput, seminar_participantsUncheckedCreateWithoutSeminarInput> | seminar_participantsCreateWithoutSeminarInput[] | seminar_participantsUncheckedCreateWithoutSeminarInput[]
+    connectOrCreate?: seminar_participantsCreateOrConnectWithoutSeminarInput | seminar_participantsCreateOrConnectWithoutSeminarInput[]
+    upsert?: seminar_participantsUpsertWithWhereUniqueWithoutSeminarInput | seminar_participantsUpsertWithWhereUniqueWithoutSeminarInput[]
+    createMany?: seminar_participantsCreateManySeminarInputEnvelope
+    set?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    disconnect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    delete?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    connect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    update?: seminar_participantsUpdateWithWhereUniqueWithoutSeminarInput | seminar_participantsUpdateWithWhereUniqueWithoutSeminarInput[]
+    updateMany?: seminar_participantsUpdateManyWithWhereWithoutSeminarInput | seminar_participantsUpdateManyWithWhereWithoutSeminarInput[]
+    deleteMany?: seminar_participantsScalarWhereInput | seminar_participantsScalarWhereInput[]
+  }
+
+  export type seminar_participantsUncheckedUpdateManyWithoutSeminarNestedInput = {
+    create?: XOR<seminar_participantsCreateWithoutSeminarInput, seminar_participantsUncheckedCreateWithoutSeminarInput> | seminar_participantsCreateWithoutSeminarInput[] | seminar_participantsUncheckedCreateWithoutSeminarInput[]
+    connectOrCreate?: seminar_participantsCreateOrConnectWithoutSeminarInput | seminar_participantsCreateOrConnectWithoutSeminarInput[]
+    upsert?: seminar_participantsUpsertWithWhereUniqueWithoutSeminarInput | seminar_participantsUpsertWithWhereUniqueWithoutSeminarInput[]
+    createMany?: seminar_participantsCreateManySeminarInputEnvelope
+    set?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    disconnect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    delete?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    connect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
+    update?: seminar_participantsUpdateWithWhereUniqueWithoutSeminarInput | seminar_participantsUpdateWithWhereUniqueWithoutSeminarInput[]
+    updateMany?: seminar_participantsUpdateManyWithWhereWithoutSeminarInput | seminar_participantsUpdateManyWithWhereWithoutSeminarInput[]
+    deleteMany?: seminar_participantsScalarWhereInput | seminar_participantsScalarWhereInput[]
+  }
+
+  export type seminarsCreateNestedOneWithoutParticipantsInput = {
+    create?: XOR<seminarsCreateWithoutParticipantsInput, seminarsUncheckedCreateWithoutParticipantsInput>
+    connectOrCreate?: seminarsCreateOrConnectWithoutParticipantsInput
+    connect?: seminarsWhereUniqueInput
+  }
+
+  export type accountsCreateNestedOneWithoutSeminarsInput = {
+    create?: XOR<accountsCreateWithoutSeminarsInput, accountsUncheckedCreateWithoutSeminarsInput>
+    connectOrCreate?: accountsCreateOrConnectWithoutSeminarsInput
+    connect?: accountsWhereUniqueInput
+  }
+
+  export type Enumparticipant_statusFieldUpdateOperationsInput = {
+    set?: $Enums.participant_status
+  }
+
+  export type seminarsUpdateOneRequiredWithoutParticipantsNestedInput = {
+    create?: XOR<seminarsCreateWithoutParticipantsInput, seminarsUncheckedCreateWithoutParticipantsInput>
+    connectOrCreate?: seminarsCreateOrConnectWithoutParticipantsInput
+    upsert?: seminarsUpsertWithoutParticipantsInput
+    connect?: seminarsWhereUniqueInput
+    update?: XOR<XOR<seminarsUpdateToOneWithWhereWithoutParticipantsInput, seminarsUpdateWithoutParticipantsInput>, seminarsUncheckedUpdateWithoutParticipantsInput>
+  }
+
+  export type accountsUpdateOneRequiredWithoutSeminarsNestedInput = {
+    create?: XOR<accountsCreateWithoutSeminarsInput, accountsUncheckedCreateWithoutSeminarsInput>
+    connectOrCreate?: accountsCreateOrConnectWithoutSeminarsInput
+    upsert?: accountsUpsertWithoutSeminarsInput
+    connect?: accountsWhereUniqueInput
+    update?: XOR<XOR<accountsUpdateToOneWithWhereWithoutSeminarsInput, accountsUpdateWithoutSeminarsInput>, accountsUncheckedUpdateWithoutSeminarsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -5419,6 +8480,67 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedEnumseminar_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.seminar_status | Enumseminar_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.seminar_status[]
+    notIn?: $Enums.seminar_status[]
+    not?: NestedEnumseminar_statusFilter<$PrismaModel> | $Enums.seminar_status
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumseminar_statusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.seminar_status | Enumseminar_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.seminar_status[]
+    notIn?: $Enums.seminar_status[]
+    not?: NestedEnumseminar_statusWithAggregatesFilter<$PrismaModel> | $Enums.seminar_status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumseminar_statusFilter<$PrismaModel>
+    _max?: NestedEnumseminar_statusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumparticipant_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.participant_status | Enumparticipant_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.participant_status[]
+    notIn?: $Enums.participant_status[]
+    not?: NestedEnumparticipant_statusFilter<$PrismaModel> | $Enums.participant_status
+  }
+
+  export type NestedEnumparticipant_statusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.participant_status | Enumparticipant_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.participant_status[]
+    notIn?: $Enums.participant_status[]
+    not?: NestedEnumparticipant_statusWithAggregatesFilter<$PrismaModel> | $Enums.participant_status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumparticipant_statusFilter<$PrismaModel>
+    _max?: NestedEnumparticipant_statusFilter<$PrismaModel>
+  }
+
   export type accounts_commoditiesCreateWithoutAccountInput = {
     id?: string
     createdAt?: Date | string
@@ -5440,6 +8562,32 @@ export namespace Prisma {
 
   export type accounts_commoditiesCreateManyAccountInputEnvelope = {
     data: accounts_commoditiesCreateManyAccountInput | accounts_commoditiesCreateManyAccountInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type seminar_participantsCreateWithoutAccountInput = {
+    id?: string
+    status?: $Enums.participant_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminar: seminarsCreateNestedOneWithoutParticipantsInput
+  }
+
+  export type seminar_participantsUncheckedCreateWithoutAccountInput = {
+    id?: string
+    seminar_id: string
+    status?: $Enums.participant_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type seminar_participantsCreateOrConnectWithoutAccountInput = {
+    where: seminar_participantsWhereUniqueInput
+    create: XOR<seminar_participantsCreateWithoutAccountInput, seminar_participantsUncheckedCreateWithoutAccountInput>
+  }
+
+  export type seminar_participantsCreateManyAccountInputEnvelope = {
+    data: seminar_participantsCreateManyAccountInput | seminar_participantsCreateManyAccountInput[]
     skipDuplicates?: boolean
   }
 
@@ -5468,6 +8616,34 @@ export namespace Prisma {
     commodity_id?: StringFilter<"accounts_commodities"> | string
     createdAt?: DateTimeFilter<"accounts_commodities"> | Date | string
     updatedAt?: DateTimeFilter<"accounts_commodities"> | Date | string
+  }
+
+  export type seminar_participantsUpsertWithWhereUniqueWithoutAccountInput = {
+    where: seminar_participantsWhereUniqueInput
+    update: XOR<seminar_participantsUpdateWithoutAccountInput, seminar_participantsUncheckedUpdateWithoutAccountInput>
+    create: XOR<seminar_participantsCreateWithoutAccountInput, seminar_participantsUncheckedCreateWithoutAccountInput>
+  }
+
+  export type seminar_participantsUpdateWithWhereUniqueWithoutAccountInput = {
+    where: seminar_participantsWhereUniqueInput
+    data: XOR<seminar_participantsUpdateWithoutAccountInput, seminar_participantsUncheckedUpdateWithoutAccountInput>
+  }
+
+  export type seminar_participantsUpdateManyWithWhereWithoutAccountInput = {
+    where: seminar_participantsScalarWhereInput
+    data: XOR<seminar_participantsUpdateManyMutationInput, seminar_participantsUncheckedUpdateManyWithoutAccountInput>
+  }
+
+  export type seminar_participantsScalarWhereInput = {
+    AND?: seminar_participantsScalarWhereInput | seminar_participantsScalarWhereInput[]
+    OR?: seminar_participantsScalarWhereInput[]
+    NOT?: seminar_participantsScalarWhereInput | seminar_participantsScalarWhereInput[]
+    id?: StringFilter<"seminar_participants"> | string
+    seminar_id?: StringFilter<"seminar_participants"> | string
+    account_id?: StringFilter<"seminar_participants"> | string
+    status?: Enumparticipant_statusFilter<"seminar_participants"> | $Enums.participant_status
+    createdAt?: DateTimeFilter<"seminar_participants"> | Date | string
+    updatedAt?: DateTimeFilter<"seminar_participants"> | Date | string
   }
 
   export type accounts_commoditiesCreateWithoutCommodityInput = {
@@ -5552,6 +8728,7 @@ export namespace Prisma {
     password: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    seminars?: seminar_participantsCreateNestedManyWithoutAccountInput
   }
 
   export type accountsUncheckedCreateWithoutCommodityInput = {
@@ -5573,6 +8750,7 @@ export namespace Prisma {
     password: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    seminars?: seminar_participantsUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type accountsCreateOrConnectWithoutCommodityInput = {
@@ -5639,6 +8817,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: seminar_participantsUpdateManyWithoutAccountNestedInput
   }
 
   export type accountsUncheckedUpdateWithoutCommodityInput = {
@@ -5660,11 +8839,254 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: seminar_participantsUncheckedUpdateManyWithoutAccountNestedInput
+  }
+
+  export type seminar_participantsCreateWithoutSeminarInput = {
+    id?: string
+    status?: $Enums.participant_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    account: accountsCreateNestedOneWithoutSeminarsInput
+  }
+
+  export type seminar_participantsUncheckedCreateWithoutSeminarInput = {
+    id?: string
+    account_id: string
+    status?: $Enums.participant_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type seminar_participantsCreateOrConnectWithoutSeminarInput = {
+    where: seminar_participantsWhereUniqueInput
+    create: XOR<seminar_participantsCreateWithoutSeminarInput, seminar_participantsUncheckedCreateWithoutSeminarInput>
+  }
+
+  export type seminar_participantsCreateManySeminarInputEnvelope = {
+    data: seminar_participantsCreateManySeminarInput | seminar_participantsCreateManySeminarInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type seminar_participantsUpsertWithWhereUniqueWithoutSeminarInput = {
+    where: seminar_participantsWhereUniqueInput
+    update: XOR<seminar_participantsUpdateWithoutSeminarInput, seminar_participantsUncheckedUpdateWithoutSeminarInput>
+    create: XOR<seminar_participantsCreateWithoutSeminarInput, seminar_participantsUncheckedCreateWithoutSeminarInput>
+  }
+
+  export type seminar_participantsUpdateWithWhereUniqueWithoutSeminarInput = {
+    where: seminar_participantsWhereUniqueInput
+    data: XOR<seminar_participantsUpdateWithoutSeminarInput, seminar_participantsUncheckedUpdateWithoutSeminarInput>
+  }
+
+  export type seminar_participantsUpdateManyWithWhereWithoutSeminarInput = {
+    where: seminar_participantsScalarWhereInput
+    data: XOR<seminar_participantsUpdateManyMutationInput, seminar_participantsUncheckedUpdateManyWithoutSeminarInput>
+  }
+
+  export type seminarsCreateWithoutParticipantsInput = {
+    id?: string
+    title: string
+    description: string
+    location: string
+    speaker: string
+    start_date: Date | string
+    end_date: Date | string
+    start_time: Date | string
+    end_time: Date | string
+    capacity: number
+    registration_deadline: Date | string
+    status?: $Enums.seminar_status
+    photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type seminarsUncheckedCreateWithoutParticipantsInput = {
+    id?: string
+    title: string
+    description: string
+    location: string
+    speaker: string
+    start_date: Date | string
+    end_date: Date | string
+    start_time: Date | string
+    end_time: Date | string
+    capacity: number
+    registration_deadline: Date | string
+    status?: $Enums.seminar_status
+    photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type seminarsCreateOrConnectWithoutParticipantsInput = {
+    where: seminarsWhereUniqueInput
+    create: XOR<seminarsCreateWithoutParticipantsInput, seminarsUncheckedCreateWithoutParticipantsInput>
+  }
+
+  export type accountsCreateWithoutSeminarsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    firstName: string
+    lastName: string
+    middleName?: string | null
+    gender: $Enums.gender
+    client_profile?: $Enums.client_profile
+    cellphone_no?: string | null
+    telephone_no?: string | null
+    occupation?: string | null
+    position?: string | null
+    address?: string | null
+    picture?: string | null
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    commodity?: accounts_commoditiesCreateNestedManyWithoutAccountInput
+  }
+
+  export type accountsUncheckedCreateWithoutSeminarsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    firstName: string
+    lastName: string
+    middleName?: string | null
+    gender: $Enums.gender
+    client_profile?: $Enums.client_profile
+    cellphone_no?: string | null
+    telephone_no?: string | null
+    occupation?: string | null
+    position?: string | null
+    address?: string | null
+    picture?: string | null
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    commodity?: accounts_commoditiesUncheckedCreateNestedManyWithoutAccountInput
+  }
+
+  export type accountsCreateOrConnectWithoutSeminarsInput = {
+    where: accountsWhereUniqueInput
+    create: XOR<accountsCreateWithoutSeminarsInput, accountsUncheckedCreateWithoutSeminarsInput>
+  }
+
+  export type seminarsUpsertWithoutParticipantsInput = {
+    update: XOR<seminarsUpdateWithoutParticipantsInput, seminarsUncheckedUpdateWithoutParticipantsInput>
+    create: XOR<seminarsCreateWithoutParticipantsInput, seminarsUncheckedCreateWithoutParticipantsInput>
+    where?: seminarsWhereInput
+  }
+
+  export type seminarsUpdateToOneWithWhereWithoutParticipantsInput = {
+    where?: seminarsWhereInput
+    data: XOR<seminarsUpdateWithoutParticipantsInput, seminarsUncheckedUpdateWithoutParticipantsInput>
+  }
+
+  export type seminarsUpdateWithoutParticipantsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    speaker?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    capacity?: IntFieldUpdateOperationsInput | number
+    registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seminarsUncheckedUpdateWithoutParticipantsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    speaker?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    capacity?: IntFieldUpdateOperationsInput | number
+    registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type accountsUpsertWithoutSeminarsInput = {
+    update: XOR<accountsUpdateWithoutSeminarsInput, accountsUncheckedUpdateWithoutSeminarsInput>
+    create: XOR<accountsCreateWithoutSeminarsInput, accountsUncheckedCreateWithoutSeminarsInput>
+    where?: accountsWhereInput
+  }
+
+  export type accountsUpdateToOneWithWhereWithoutSeminarsInput = {
+    where?: accountsWhereInput
+    data: XOR<accountsUpdateWithoutSeminarsInput, accountsUncheckedUpdateWithoutSeminarsInput>
+  }
+
+  export type accountsUpdateWithoutSeminarsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commodity?: accounts_commoditiesUpdateManyWithoutAccountNestedInput
+  }
+
+  export type accountsUncheckedUpdateWithoutSeminarsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commodity?: accounts_commoditiesUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type accounts_commoditiesCreateManyAccountInput = {
     id?: string
     commodity_id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type seminar_participantsCreateManyAccountInput = {
+    id?: string
+    seminar_id: string
+    status?: $Enums.participant_status
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -5686,6 +9108,30 @@ export namespace Prisma {
   export type accounts_commoditiesUncheckedUpdateManyWithoutAccountInput = {
     id?: StringFieldUpdateOperationsInput | string
     commodity_id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seminar_participantsUpdateWithoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminar?: seminarsUpdateOneRequiredWithoutParticipantsNestedInput
+  }
+
+  export type seminar_participantsUncheckedUpdateWithoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    seminar_id?: StringFieldUpdateOperationsInput | string
+    status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seminar_participantsUncheckedUpdateManyWithoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    seminar_id?: StringFieldUpdateOperationsInput | string
+    status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -5714,6 +9160,38 @@ export namespace Prisma {
   export type accounts_commoditiesUncheckedUpdateManyWithoutCommodityInput = {
     id?: StringFieldUpdateOperationsInput | string
     account_id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seminar_participantsCreateManySeminarInput = {
+    id?: string
+    account_id: string
+    status?: $Enums.participant_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type seminar_participantsUpdateWithoutSeminarInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    account?: accountsUpdateOneRequiredWithoutSeminarsNestedInput
+  }
+
+  export type seminar_participantsUncheckedUpdateWithoutSeminarInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    account_id?: StringFieldUpdateOperationsInput | string
+    status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seminar_participantsUncheckedUpdateManyWithoutSeminarInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    account_id?: StringFieldUpdateOperationsInput | string
+    status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

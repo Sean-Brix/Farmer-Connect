@@ -20,6 +20,9 @@ model accounts {
   password       String
   createdAt      DateTime               @default(now())
   updatedAt      DateTime               @updatedAt
+
+  // Relations
+  seminars seminar_participants[]
 }
 
 model commodities {
@@ -84,4 +87,58 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+//? ===================================== SEMINARS SCHEMA ===================================== ?//
+
+model seminars {
+  id                    String         @id @default(cuid())
+  title                 String
+  description           String         @db.Text
+  location              String
+  speaker               String
+  start_date            DateTime
+  end_date              DateTime
+  start_time            DateTime
+  end_time              DateTime
+  capacity              Int
+  registration_deadline DateTime
+  status                seminar_status @default(Upcoming)
+  photo                 String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  // Relations
+  participants seminar_participants[]
+}
+
+model seminar_participants {
+  id         String             @id @default(cuid())
+  seminar_id String
+  account_id String
+  status     participant_status @default(Registered)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  // Relations
+  seminar seminars @relation(fields: [seminar_id], references: [id])
+  account accounts @relation(fields: [account_id], references: [id])
+
+  @@unique([seminar_id, account_id])
+}
+
+//? ========================================== ENUMS ========================================== ?//
+
+enum seminar_status {
+  Upcoming
+  Ongoing
+  Completed
+  Cancelled
+}
+
+enum participant_status {
+  Attended
+  Not_Attended @map("Not Attended")
+  Registered
+  Cancelled
 }

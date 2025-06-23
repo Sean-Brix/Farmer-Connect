@@ -21,6 +21,9 @@ model accounts {
   password       String
   createdAt      DateTime               @default(now())
   updatedAt      DateTime               @updatedAt
+
+    // Relations
+    seminars      seminar_participants[]
 }
 
 model commodities {

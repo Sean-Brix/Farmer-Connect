@@ -158,6 +158,33 @@ exports.Prisma.Accounts_commoditiesScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SeminarsScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  location: 'location',
+  speaker: 'speaker',
+  start_date: 'start_date',
+  end_date: 'end_date',
+  start_time: 'start_time',
+  end_time: 'end_time',
+  capacity: 'capacity',
+  registration_deadline: 'registration_deadline',
+  status: 'status',
+  photo: 'photo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.Seminar_participantsScalarFieldEnum = {
+  id: 'id',
+  seminar_id: 'seminar_id',
+  account_id: 'account_id',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -196,6 +223,21 @@ exports.Prisma.accounts_commoditiesOrderByRelevanceFieldEnum = {
   account_id: 'account_id',
   commodity_id: 'commodity_id'
 };
+
+exports.Prisma.seminarsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  location: 'location',
+  speaker: 'speaker',
+  photo: 'photo'
+};
+
+exports.Prisma.seminar_participantsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  seminar_id: 'seminar_id',
+  account_id: 'account_id'
+};
 exports.access = exports.$Enums.access = {
   Admin: 'Admin',
   User: 'User',
@@ -221,10 +263,26 @@ exports.client_profile = exports.$Enums.client_profile = {
   Other: 'Other'
 };
 
+exports.seminar_status = exports.$Enums.seminar_status = {
+  Upcoming: 'Upcoming',
+  Ongoing: 'Ongoing',
+  Completed: 'Completed',
+  Cancelled: 'Cancelled'
+};
+
+exports.participant_status = exports.$Enums.participant_status = {
+  Attended: 'Attended',
+  Not_Attended: 'Not_Attended',
+  Registered: 'Registered',
+  Cancelled: 'Cancelled'
+};
+
 exports.Prisma.ModelName = {
   accounts: 'accounts',
   commodities: 'commodities',
-  accounts_commodities: 'accounts_commodities'
+  accounts_commodities: 'accounts_commodities',
+  seminars: 'seminars',
+  seminar_participants: 'seminar_participants'
 };
 
 /**
