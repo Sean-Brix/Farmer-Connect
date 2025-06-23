@@ -28,7 +28,8 @@
         "fill-db": "npx prisma db seed"
     },
     "prisma": {
-        "seed": "node prisma/seed.js"
+        "seed": "node prisma/seed.js",
+        "schema": "prisma/schema/"
     },
     "keywords": [],
     "author": "",
