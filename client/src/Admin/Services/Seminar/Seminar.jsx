@@ -275,7 +275,7 @@ export default function Seminar({ admin_navigate }) {
                     return (
                         <div
                             key={globalIdx}
-                            className={`relative flex flex-col bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden group ${
+                            className={`relative flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group ${
                                 selectMode && 'cursor-pointer'
                             } ${
                                 selectMode && isSelected

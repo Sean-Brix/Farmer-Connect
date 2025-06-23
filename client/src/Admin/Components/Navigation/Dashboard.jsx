@@ -16,6 +16,7 @@ import AccountProfile from '../../../Components/settings/AccountProfile/AccountP
 
 // SUB COMPONENT
 import Sidebar from './sub/Sidebar.jsx';
+import Audit from '../../Services/Logs/Audit.jsx';
 
 export default function Dashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -34,12 +35,15 @@ export default function Dashboard() {
   const elements = useRef({
 
     // SERVICES
-    analytics: ()=>Analytics,
-    profiles: ()=>Profiles,
-    enrollment: ()=>Seminar,
-    eic: ()=> EIC,
-    content: ()=> Content,
-    distribution: ()=> Distribution,
+    analytics: () => Analytics,
+    profiles: () => Profiles,
+    enrollment: () => Seminar,
+    eic: () => EIC,
+    content: () => Content,
+    distribution: () => Distribution,
+    audit: () => Audit,
+    survey: () => Survey,
+    settings: () => Settings,
 
     // GLOBAL
     account: ()=> AccountProfile,
