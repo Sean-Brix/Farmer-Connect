@@ -43,20 +43,20 @@ export default function EIC() {
 // SECTION CONTROL
 function Section_Buttons(section, setSection) {
     return (
-        <div className="w-full flex mt-[5vh] space-x-4 justify-center rounded-lg sticky top-0 z-20 bg-blue-50/70 backdrop-blur-md border-b border-blue-100 shadow py-4">
+        <div className="flex justify-center space-x-4 mb-6">
             {[
                 { key: 'all', label: 'All Items' },
                 { key: 'requests', label: 'Requests' },
             ].map(({ key, label }) => (
                 <button
                     key={key}
-                    className={`px-8 py-3 rounded-full text-lg font-semibold transition
+                    className={`px-8 py-3 rounded-lg text-lg font-semibold transition
                         ${
                             section === key
-                                ? 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-400'
-                                : 'bg-blue-200 text-blue-900 hover:bg-blue-300'
+                                ? 'bg-blue-600 text-white shadow-lg'
+                                : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
                         }
-                        focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300`}
+                        focus:outline-none`}
                     onClick={() => setSection(key)}
                 >
                     {label}
