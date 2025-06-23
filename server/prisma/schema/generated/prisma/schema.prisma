@@ -79,6 +79,43 @@ enum gender {
   Other
 }
 
+//? ======================================= ITEM SCHEMA ======================================= ?//
+
+model inventory_items {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  description String?
+  status      item_status @default(Out_of_Stock)
+  categoryId  String
+  stock       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  category inventory_categories @relation(fields: [categoryId], references: [id])
+}
+
+//? ===================================== CATEGORY SCHEMA ===================================== ?//
+
+model inventory_categories {
+  id          String            @id @default(cuid())
+  name        String            @unique
+  icon        String?
+  description String?
+  items       inventory_items[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+//? ========================================== ENUMS ========================================== ?//
+
+enum item_status {
+  Available
+  Unavailable
+  Out_of_Stock @map("Out of Stock")
+  Damaged
+}
+
 generator client {
   provider = "prisma-client-js"
   output   = "./generated/prisma"

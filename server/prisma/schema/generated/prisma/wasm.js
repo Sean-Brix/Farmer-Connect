@@ -158,6 +158,26 @@ exports.Prisma.Accounts_commoditiesScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.Inventory_itemsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  categoryId: 'categoryId',
+  stock: 'stock',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.Inventory_categoriesScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  icon: 'icon',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SeminarsScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -224,6 +244,19 @@ exports.Prisma.accounts_commoditiesOrderByRelevanceFieldEnum = {
   commodity_id: 'commodity_id'
 };
 
+exports.Prisma.inventory_itemsOrderByRelevanceFieldEnum = {
+  name: 'name',
+  description: 'description',
+  categoryId: 'categoryId'
+};
+
+exports.Prisma.inventory_categoriesOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  icon: 'icon',
+  description: 'description'
+};
+
 exports.Prisma.seminarsOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
@@ -263,6 +296,13 @@ exports.client_profile = exports.$Enums.client_profile = {
   Other: 'Other'
 };
 
+exports.item_status = exports.$Enums.item_status = {
+  Available: 'Available',
+  Unavailable: 'Unavailable',
+  Out_of_Stock: 'Out_of_Stock',
+  Damaged: 'Damaged'
+};
+
 exports.seminar_status = exports.$Enums.seminar_status = {
   Upcoming: 'Upcoming',
   Ongoing: 'Ongoing',
@@ -281,6 +321,8 @@ exports.Prisma.ModelName = {
   accounts: 'accounts',
   commodities: 'commodities',
   accounts_commodities: 'accounts_commodities',
+  inventory_items: 'inventory_items',
+  inventory_categories: 'inventory_categories',
   seminars: 'seminars',
   seminar_participants: 'seminar_participants'
 };

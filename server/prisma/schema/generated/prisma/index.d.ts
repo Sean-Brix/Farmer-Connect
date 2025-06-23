@@ -29,6 +29,16 @@ export type commodities = $Result.DefaultSelection<Prisma.$commoditiesPayload>
  */
 export type accounts_commodities = $Result.DefaultSelection<Prisma.$accounts_commoditiesPayload>
 /**
+ * Model inventory_items
+ * 
+ */
+export type inventory_items = $Result.DefaultSelection<Prisma.$inventory_itemsPayload>
+/**
+ * Model inventory_categories
+ * 
+ */
+export type inventory_categories = $Result.DefaultSelection<Prisma.$inventory_categoriesPayload>
+/**
  * Model seminars
  * 
  */
@@ -77,6 +87,16 @@ export const gender: {
 export type gender = (typeof gender)[keyof typeof gender]
 
 
+export const item_status: {
+  Available: 'Available',
+  Unavailable: 'Unavailable',
+  Out_of_Stock: 'Out_of_Stock',
+  Damaged: 'Damaged'
+};
+
+export type item_status = (typeof item_status)[keyof typeof item_status]
+
+
 export const seminar_status: {
   Upcoming: 'Upcoming',
   Ongoing: 'Ongoing',
@@ -109,6 +129,10 @@ export const access: typeof $Enums.access
 export type gender = $Enums.gender
 
 export const gender: typeof $Enums.gender
+
+export type item_status = $Enums.item_status
+
+export const item_status: typeof $Enums.item_status
 
 export type seminar_status = $Enums.seminar_status
 
@@ -272,6 +296,26 @@ export class PrismaClient<
     * ```
     */
   get accounts_commodities(): Prisma.accounts_commoditiesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inventory_items`: Exposes CRUD operations for the **inventory_items** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Inventory_items
+    * const inventory_items = await prisma.inventory_items.findMany()
+    * ```
+    */
+  get inventory_items(): Prisma.inventory_itemsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inventory_categories`: Exposes CRUD operations for the **inventory_categories** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Inventory_categories
+    * const inventory_categories = await prisma.inventory_categories.findMany()
+    * ```
+    */
+  get inventory_categories(): Prisma.inventory_categoriesDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.seminars`: Exposes CRUD operations for the **seminars** model.
@@ -735,6 +779,8 @@ export namespace Prisma {
     accounts: 'accounts',
     commodities: 'commodities',
     accounts_commodities: 'accounts_commodities',
+    inventory_items: 'inventory_items',
+    inventory_categories: 'inventory_categories',
     seminars: 'seminars',
     seminar_participants: 'seminar_participants'
   };
@@ -755,7 +801,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "accounts" | "commodities" | "accounts_commodities" | "seminars" | "seminar_participants"
+      modelProps: "accounts" | "commodities" | "accounts_commodities" | "inventory_items" | "inventory_categories" | "seminars" | "seminar_participants"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -954,6 +1000,138 @@ export namespace Prisma {
           count: {
             args: Prisma.accounts_commoditiesCountArgs<ExtArgs>
             result: $Utils.Optional<Accounts_commoditiesCountAggregateOutputType> | number
+          }
+        }
+      }
+      inventory_items: {
+        payload: Prisma.$inventory_itemsPayload<ExtArgs>
+        fields: Prisma.inventory_itemsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.inventory_itemsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_itemsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.inventory_itemsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_itemsPayload>
+          }
+          findFirst: {
+            args: Prisma.inventory_itemsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_itemsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.inventory_itemsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_itemsPayload>
+          }
+          findMany: {
+            args: Prisma.inventory_itemsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_itemsPayload>[]
+          }
+          create: {
+            args: Prisma.inventory_itemsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_itemsPayload>
+          }
+          createMany: {
+            args: Prisma.inventory_itemsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.inventory_itemsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_itemsPayload>
+          }
+          update: {
+            args: Prisma.inventory_itemsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_itemsPayload>
+          }
+          deleteMany: {
+            args: Prisma.inventory_itemsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.inventory_itemsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.inventory_itemsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_itemsPayload>
+          }
+          aggregate: {
+            args: Prisma.Inventory_itemsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInventory_items>
+          }
+          groupBy: {
+            args: Prisma.inventory_itemsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Inventory_itemsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.inventory_itemsCountArgs<ExtArgs>
+            result: $Utils.Optional<Inventory_itemsCountAggregateOutputType> | number
+          }
+        }
+      }
+      inventory_categories: {
+        payload: Prisma.$inventory_categoriesPayload<ExtArgs>
+        fields: Prisma.inventory_categoriesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.inventory_categoriesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_categoriesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.inventory_categoriesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_categoriesPayload>
+          }
+          findFirst: {
+            args: Prisma.inventory_categoriesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_categoriesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.inventory_categoriesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_categoriesPayload>
+          }
+          findMany: {
+            args: Prisma.inventory_categoriesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_categoriesPayload>[]
+          }
+          create: {
+            args: Prisma.inventory_categoriesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_categoriesPayload>
+          }
+          createMany: {
+            args: Prisma.inventory_categoriesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.inventory_categoriesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_categoriesPayload>
+          }
+          update: {
+            args: Prisma.inventory_categoriesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_categoriesPayload>
+          }
+          deleteMany: {
+            args: Prisma.inventory_categoriesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.inventory_categoriesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.inventory_categoriesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$inventory_categoriesPayload>
+          }
+          aggregate: {
+            args: Prisma.Inventory_categoriesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInventory_categories>
+          }
+          groupBy: {
+            args: Prisma.inventory_categoriesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Inventory_categoriesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.inventory_categoriesCountArgs<ExtArgs>
+            result: $Utils.Optional<Inventory_categoriesCountAggregateOutputType> | number
           }
         }
       }
@@ -1176,6 +1354,8 @@ export namespace Prisma {
     accounts?: accountsOmit
     commodities?: commoditiesOmit
     accounts_commodities?: accounts_commoditiesOmit
+    inventory_items?: inventory_itemsOmit
+    inventory_categories?: inventory_categoriesOmit
     seminars?: seminarsOmit
     seminar_participants?: seminar_participantsOmit
   }
@@ -1335,6 +1515,37 @@ export namespace Prisma {
    */
   export type CommoditiesCountOutputTypeCountAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: accounts_commoditiesWhereInput
+  }
+
+
+  /**
+   * Count Type Inventory_categoriesCountOutputType
+   */
+
+  export type Inventory_categoriesCountOutputType = {
+    items: number
+  }
+
+  export type Inventory_categoriesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | Inventory_categoriesCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * Inventory_categoriesCountOutputType without action
+   */
+  export type Inventory_categoriesCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inventory_categoriesCountOutputType
+     */
+    select?: Inventory_categoriesCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * Inventory_categoriesCountOutputType without action
+   */
+  export type Inventory_categoriesCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: inventory_itemsWhereInput
   }
 
 
@@ -4399,6 +4610,1972 @@ export namespace Prisma {
 
 
   /**
+   * Model inventory_items
+   */
+
+  export type AggregateInventory_items = {
+    _count: Inventory_itemsCountAggregateOutputType | null
+    _avg: Inventory_itemsAvgAggregateOutputType | null
+    _sum: Inventory_itemsSumAggregateOutputType | null
+    _min: Inventory_itemsMinAggregateOutputType | null
+    _max: Inventory_itemsMaxAggregateOutputType | null
+  }
+
+  export type Inventory_itemsAvgAggregateOutputType = {
+    id: number | null
+    stock: number | null
+  }
+
+  export type Inventory_itemsSumAggregateOutputType = {
+    id: number | null
+    stock: number | null
+  }
+
+  export type Inventory_itemsMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    description: string | null
+    status: $Enums.item_status | null
+    categoryId: string | null
+    stock: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Inventory_itemsMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    description: string | null
+    status: $Enums.item_status | null
+    categoryId: string | null
+    stock: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Inventory_itemsCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    status: number
+    categoryId: number
+    stock: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type Inventory_itemsAvgAggregateInputType = {
+    id?: true
+    stock?: true
+  }
+
+  export type Inventory_itemsSumAggregateInputType = {
+    id?: true
+    stock?: true
+  }
+
+  export type Inventory_itemsMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    status?: true
+    categoryId?: true
+    stock?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Inventory_itemsMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    status?: true
+    categoryId?: true
+    stock?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Inventory_itemsCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    status?: true
+    categoryId?: true
+    stock?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type Inventory_itemsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which inventory_items to aggregate.
+     */
+    where?: inventory_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inventory_items to fetch.
+     */
+    orderBy?: inventory_itemsOrderByWithRelationInput | inventory_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: inventory_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inventory_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inventory_items.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned inventory_items
+    **/
+    _count?: true | Inventory_itemsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Inventory_itemsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Inventory_itemsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Inventory_itemsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Inventory_itemsMaxAggregateInputType
+  }
+
+  export type GetInventory_itemsAggregateType<T extends Inventory_itemsAggregateArgs> = {
+        [P in keyof T & keyof AggregateInventory_items]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInventory_items[P]>
+      : GetScalarType<T[P], AggregateInventory_items[P]>
+  }
+
+
+
+
+  export type inventory_itemsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: inventory_itemsWhereInput
+    orderBy?: inventory_itemsOrderByWithAggregationInput | inventory_itemsOrderByWithAggregationInput[]
+    by: Inventory_itemsScalarFieldEnum[] | Inventory_itemsScalarFieldEnum
+    having?: inventory_itemsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Inventory_itemsCountAggregateInputType | true
+    _avg?: Inventory_itemsAvgAggregateInputType
+    _sum?: Inventory_itemsSumAggregateInputType
+    _min?: Inventory_itemsMinAggregateInputType
+    _max?: Inventory_itemsMaxAggregateInputType
+  }
+
+  export type Inventory_itemsGroupByOutputType = {
+    id: number
+    name: string
+    description: string | null
+    status: $Enums.item_status
+    categoryId: string
+    stock: number
+    createdAt: Date
+    updatedAt: Date
+    _count: Inventory_itemsCountAggregateOutputType | null
+    _avg: Inventory_itemsAvgAggregateOutputType | null
+    _sum: Inventory_itemsSumAggregateOutputType | null
+    _min: Inventory_itemsMinAggregateOutputType | null
+    _max: Inventory_itemsMaxAggregateOutputType | null
+  }
+
+  type GetInventory_itemsGroupByPayload<T extends inventory_itemsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Inventory_itemsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Inventory_itemsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Inventory_itemsGroupByOutputType[P]>
+            : GetScalarType<T[P], Inventory_itemsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type inventory_itemsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    categoryId?: boolean
+    stock?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    category?: boolean | inventory_categoriesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventory_items"]>
+
+
+
+  export type inventory_itemsSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    categoryId?: boolean
+    stock?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type inventory_itemsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "status" | "categoryId" | "stock" | "createdAt" | "updatedAt", ExtArgs["result"]["inventory_items"]>
+  export type inventory_itemsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | inventory_categoriesDefaultArgs<ExtArgs>
+  }
+
+  export type $inventory_itemsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "inventory_items"
+    objects: {
+      category: Prisma.$inventory_categoriesPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      description: string | null
+      status: $Enums.item_status
+      categoryId: string
+      stock: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["inventory_items"]>
+    composites: {}
+  }
+
+  type inventory_itemsGetPayload<S extends boolean | null | undefined | inventory_itemsDefaultArgs> = $Result.GetResult<Prisma.$inventory_itemsPayload, S>
+
+  type inventory_itemsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<inventory_itemsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Inventory_itemsCountAggregateInputType | true
+    }
+
+  export interface inventory_itemsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['inventory_items'], meta: { name: 'inventory_items' } }
+    /**
+     * Find zero or one Inventory_items that matches the filter.
+     * @param {inventory_itemsFindUniqueArgs} args - Arguments to find a Inventory_items
+     * @example
+     * // Get one Inventory_items
+     * const inventory_items = await prisma.inventory_items.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends inventory_itemsFindUniqueArgs>(args: SelectSubset<T, inventory_itemsFindUniqueArgs<ExtArgs>>): Prisma__inventory_itemsClient<$Result.GetResult<Prisma.$inventory_itemsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Inventory_items that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {inventory_itemsFindUniqueOrThrowArgs} args - Arguments to find a Inventory_items
+     * @example
+     * // Get one Inventory_items
+     * const inventory_items = await prisma.inventory_items.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends inventory_itemsFindUniqueOrThrowArgs>(args: SelectSubset<T, inventory_itemsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__inventory_itemsClient<$Result.GetResult<Prisma.$inventory_itemsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Inventory_items that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_itemsFindFirstArgs} args - Arguments to find a Inventory_items
+     * @example
+     * // Get one Inventory_items
+     * const inventory_items = await prisma.inventory_items.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends inventory_itemsFindFirstArgs>(args?: SelectSubset<T, inventory_itemsFindFirstArgs<ExtArgs>>): Prisma__inventory_itemsClient<$Result.GetResult<Prisma.$inventory_itemsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Inventory_items that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_itemsFindFirstOrThrowArgs} args - Arguments to find a Inventory_items
+     * @example
+     * // Get one Inventory_items
+     * const inventory_items = await prisma.inventory_items.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends inventory_itemsFindFirstOrThrowArgs>(args?: SelectSubset<T, inventory_itemsFindFirstOrThrowArgs<ExtArgs>>): Prisma__inventory_itemsClient<$Result.GetResult<Prisma.$inventory_itemsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Inventory_items that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_itemsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Inventory_items
+     * const inventory_items = await prisma.inventory_items.findMany()
+     * 
+     * // Get first 10 Inventory_items
+     * const inventory_items = await prisma.inventory_items.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inventory_itemsWithIdOnly = await prisma.inventory_items.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends inventory_itemsFindManyArgs>(args?: SelectSubset<T, inventory_itemsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$inventory_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Inventory_items.
+     * @param {inventory_itemsCreateArgs} args - Arguments to create a Inventory_items.
+     * @example
+     * // Create one Inventory_items
+     * const Inventory_items = await prisma.inventory_items.create({
+     *   data: {
+     *     // ... data to create a Inventory_items
+     *   }
+     * })
+     * 
+     */
+    create<T extends inventory_itemsCreateArgs>(args: SelectSubset<T, inventory_itemsCreateArgs<ExtArgs>>): Prisma__inventory_itemsClient<$Result.GetResult<Prisma.$inventory_itemsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Inventory_items.
+     * @param {inventory_itemsCreateManyArgs} args - Arguments to create many Inventory_items.
+     * @example
+     * // Create many Inventory_items
+     * const inventory_items = await prisma.inventory_items.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends inventory_itemsCreateManyArgs>(args?: SelectSubset<T, inventory_itemsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Inventory_items.
+     * @param {inventory_itemsDeleteArgs} args - Arguments to delete one Inventory_items.
+     * @example
+     * // Delete one Inventory_items
+     * const Inventory_items = await prisma.inventory_items.delete({
+     *   where: {
+     *     // ... filter to delete one Inventory_items
+     *   }
+     * })
+     * 
+     */
+    delete<T extends inventory_itemsDeleteArgs>(args: SelectSubset<T, inventory_itemsDeleteArgs<ExtArgs>>): Prisma__inventory_itemsClient<$Result.GetResult<Prisma.$inventory_itemsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Inventory_items.
+     * @param {inventory_itemsUpdateArgs} args - Arguments to update one Inventory_items.
+     * @example
+     * // Update one Inventory_items
+     * const inventory_items = await prisma.inventory_items.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends inventory_itemsUpdateArgs>(args: SelectSubset<T, inventory_itemsUpdateArgs<ExtArgs>>): Prisma__inventory_itemsClient<$Result.GetResult<Prisma.$inventory_itemsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Inventory_items.
+     * @param {inventory_itemsDeleteManyArgs} args - Arguments to filter Inventory_items to delete.
+     * @example
+     * // Delete a few Inventory_items
+     * const { count } = await prisma.inventory_items.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends inventory_itemsDeleteManyArgs>(args?: SelectSubset<T, inventory_itemsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Inventory_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_itemsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Inventory_items
+     * const inventory_items = await prisma.inventory_items.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends inventory_itemsUpdateManyArgs>(args: SelectSubset<T, inventory_itemsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Inventory_items.
+     * @param {inventory_itemsUpsertArgs} args - Arguments to update or create a Inventory_items.
+     * @example
+     * // Update or create a Inventory_items
+     * const inventory_items = await prisma.inventory_items.upsert({
+     *   create: {
+     *     // ... data to create a Inventory_items
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Inventory_items we want to update
+     *   }
+     * })
+     */
+    upsert<T extends inventory_itemsUpsertArgs>(args: SelectSubset<T, inventory_itemsUpsertArgs<ExtArgs>>): Prisma__inventory_itemsClient<$Result.GetResult<Prisma.$inventory_itemsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Inventory_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_itemsCountArgs} args - Arguments to filter Inventory_items to count.
+     * @example
+     * // Count the number of Inventory_items
+     * const count = await prisma.inventory_items.count({
+     *   where: {
+     *     // ... the filter for the Inventory_items we want to count
+     *   }
+     * })
+    **/
+    count<T extends inventory_itemsCountArgs>(
+      args?: Subset<T, inventory_itemsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Inventory_itemsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Inventory_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Inventory_itemsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Inventory_itemsAggregateArgs>(args: Subset<T, Inventory_itemsAggregateArgs>): Prisma.PrismaPromise<GetInventory_itemsAggregateType<T>>
+
+    /**
+     * Group by Inventory_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_itemsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends inventory_itemsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: inventory_itemsGroupByArgs['orderBy'] }
+        : { orderBy?: inventory_itemsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, inventory_itemsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInventory_itemsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the inventory_items model
+   */
+  readonly fields: inventory_itemsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for inventory_items.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__inventory_itemsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    category<T extends inventory_categoriesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, inventory_categoriesDefaultArgs<ExtArgs>>): Prisma__inventory_categoriesClient<$Result.GetResult<Prisma.$inventory_categoriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the inventory_items model
+   */
+  interface inventory_itemsFieldRefs {
+    readonly id: FieldRef<"inventory_items", 'Int'>
+    readonly name: FieldRef<"inventory_items", 'String'>
+    readonly description: FieldRef<"inventory_items", 'String'>
+    readonly status: FieldRef<"inventory_items", 'item_status'>
+    readonly categoryId: FieldRef<"inventory_items", 'String'>
+    readonly stock: FieldRef<"inventory_items", 'Int'>
+    readonly createdAt: FieldRef<"inventory_items", 'DateTime'>
+    readonly updatedAt: FieldRef<"inventory_items", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * inventory_items findUnique
+   */
+  export type inventory_itemsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_items
+     */
+    select?: inventory_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_items
+     */
+    omit?: inventory_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_itemsInclude<ExtArgs> | null
+    /**
+     * Filter, which inventory_items to fetch.
+     */
+    where: inventory_itemsWhereUniqueInput
+  }
+
+  /**
+   * inventory_items findUniqueOrThrow
+   */
+  export type inventory_itemsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_items
+     */
+    select?: inventory_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_items
+     */
+    omit?: inventory_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_itemsInclude<ExtArgs> | null
+    /**
+     * Filter, which inventory_items to fetch.
+     */
+    where: inventory_itemsWhereUniqueInput
+  }
+
+  /**
+   * inventory_items findFirst
+   */
+  export type inventory_itemsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_items
+     */
+    select?: inventory_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_items
+     */
+    omit?: inventory_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_itemsInclude<ExtArgs> | null
+    /**
+     * Filter, which inventory_items to fetch.
+     */
+    where?: inventory_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inventory_items to fetch.
+     */
+    orderBy?: inventory_itemsOrderByWithRelationInput | inventory_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for inventory_items.
+     */
+    cursor?: inventory_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inventory_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inventory_items.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of inventory_items.
+     */
+    distinct?: Inventory_itemsScalarFieldEnum | Inventory_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * inventory_items findFirstOrThrow
+   */
+  export type inventory_itemsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_items
+     */
+    select?: inventory_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_items
+     */
+    omit?: inventory_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_itemsInclude<ExtArgs> | null
+    /**
+     * Filter, which inventory_items to fetch.
+     */
+    where?: inventory_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inventory_items to fetch.
+     */
+    orderBy?: inventory_itemsOrderByWithRelationInput | inventory_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for inventory_items.
+     */
+    cursor?: inventory_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inventory_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inventory_items.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of inventory_items.
+     */
+    distinct?: Inventory_itemsScalarFieldEnum | Inventory_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * inventory_items findMany
+   */
+  export type inventory_itemsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_items
+     */
+    select?: inventory_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_items
+     */
+    omit?: inventory_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_itemsInclude<ExtArgs> | null
+    /**
+     * Filter, which inventory_items to fetch.
+     */
+    where?: inventory_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inventory_items to fetch.
+     */
+    orderBy?: inventory_itemsOrderByWithRelationInput | inventory_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing inventory_items.
+     */
+    cursor?: inventory_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inventory_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inventory_items.
+     */
+    skip?: number
+    distinct?: Inventory_itemsScalarFieldEnum | Inventory_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * inventory_items create
+   */
+  export type inventory_itemsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_items
+     */
+    select?: inventory_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_items
+     */
+    omit?: inventory_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_itemsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a inventory_items.
+     */
+    data: XOR<inventory_itemsCreateInput, inventory_itemsUncheckedCreateInput>
+  }
+
+  /**
+   * inventory_items createMany
+   */
+  export type inventory_itemsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many inventory_items.
+     */
+    data: inventory_itemsCreateManyInput | inventory_itemsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * inventory_items update
+   */
+  export type inventory_itemsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_items
+     */
+    select?: inventory_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_items
+     */
+    omit?: inventory_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_itemsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a inventory_items.
+     */
+    data: XOR<inventory_itemsUpdateInput, inventory_itemsUncheckedUpdateInput>
+    /**
+     * Choose, which inventory_items to update.
+     */
+    where: inventory_itemsWhereUniqueInput
+  }
+
+  /**
+   * inventory_items updateMany
+   */
+  export type inventory_itemsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update inventory_items.
+     */
+    data: XOR<inventory_itemsUpdateManyMutationInput, inventory_itemsUncheckedUpdateManyInput>
+    /**
+     * Filter which inventory_items to update
+     */
+    where?: inventory_itemsWhereInput
+    /**
+     * Limit how many inventory_items to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * inventory_items upsert
+   */
+  export type inventory_itemsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_items
+     */
+    select?: inventory_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_items
+     */
+    omit?: inventory_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_itemsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the inventory_items to update in case it exists.
+     */
+    where: inventory_itemsWhereUniqueInput
+    /**
+     * In case the inventory_items found by the `where` argument doesn't exist, create a new inventory_items with this data.
+     */
+    create: XOR<inventory_itemsCreateInput, inventory_itemsUncheckedCreateInput>
+    /**
+     * In case the inventory_items was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<inventory_itemsUpdateInput, inventory_itemsUncheckedUpdateInput>
+  }
+
+  /**
+   * inventory_items delete
+   */
+  export type inventory_itemsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_items
+     */
+    select?: inventory_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_items
+     */
+    omit?: inventory_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_itemsInclude<ExtArgs> | null
+    /**
+     * Filter which inventory_items to delete.
+     */
+    where: inventory_itemsWhereUniqueInput
+  }
+
+  /**
+   * inventory_items deleteMany
+   */
+  export type inventory_itemsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which inventory_items to delete
+     */
+    where?: inventory_itemsWhereInput
+    /**
+     * Limit how many inventory_items to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * inventory_items without action
+   */
+  export type inventory_itemsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_items
+     */
+    select?: inventory_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_items
+     */
+    omit?: inventory_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_itemsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model inventory_categories
+   */
+
+  export type AggregateInventory_categories = {
+    _count: Inventory_categoriesCountAggregateOutputType | null
+    _min: Inventory_categoriesMinAggregateOutputType | null
+    _max: Inventory_categoriesMaxAggregateOutputType | null
+  }
+
+  export type Inventory_categoriesMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    icon: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Inventory_categoriesMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    icon: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Inventory_categoriesCountAggregateOutputType = {
+    id: number
+    name: number
+    icon: number
+    description: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type Inventory_categoriesMinAggregateInputType = {
+    id?: true
+    name?: true
+    icon?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Inventory_categoriesMaxAggregateInputType = {
+    id?: true
+    name?: true
+    icon?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Inventory_categoriesCountAggregateInputType = {
+    id?: true
+    name?: true
+    icon?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type Inventory_categoriesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which inventory_categories to aggregate.
+     */
+    where?: inventory_categoriesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inventory_categories to fetch.
+     */
+    orderBy?: inventory_categoriesOrderByWithRelationInput | inventory_categoriesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: inventory_categoriesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inventory_categories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inventory_categories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned inventory_categories
+    **/
+    _count?: true | Inventory_categoriesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Inventory_categoriesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Inventory_categoriesMaxAggregateInputType
+  }
+
+  export type GetInventory_categoriesAggregateType<T extends Inventory_categoriesAggregateArgs> = {
+        [P in keyof T & keyof AggregateInventory_categories]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInventory_categories[P]>
+      : GetScalarType<T[P], AggregateInventory_categories[P]>
+  }
+
+
+
+
+  export type inventory_categoriesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: inventory_categoriesWhereInput
+    orderBy?: inventory_categoriesOrderByWithAggregationInput | inventory_categoriesOrderByWithAggregationInput[]
+    by: Inventory_categoriesScalarFieldEnum[] | Inventory_categoriesScalarFieldEnum
+    having?: inventory_categoriesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Inventory_categoriesCountAggregateInputType | true
+    _min?: Inventory_categoriesMinAggregateInputType
+    _max?: Inventory_categoriesMaxAggregateInputType
+  }
+
+  export type Inventory_categoriesGroupByOutputType = {
+    id: string
+    name: string
+    icon: string | null
+    description: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: Inventory_categoriesCountAggregateOutputType | null
+    _min: Inventory_categoriesMinAggregateOutputType | null
+    _max: Inventory_categoriesMaxAggregateOutputType | null
+  }
+
+  type GetInventory_categoriesGroupByPayload<T extends inventory_categoriesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Inventory_categoriesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Inventory_categoriesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Inventory_categoriesGroupByOutputType[P]>
+            : GetScalarType<T[P], Inventory_categoriesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type inventory_categoriesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    icon?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    items?: boolean | inventory_categories$itemsArgs<ExtArgs>
+    _count?: boolean | Inventory_categoriesCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventory_categories"]>
+
+
+
+  export type inventory_categoriesSelectScalar = {
+    id?: boolean
+    name?: boolean
+    icon?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type inventory_categoriesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "icon" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["inventory_categories"]>
+  export type inventory_categoriesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | inventory_categories$itemsArgs<ExtArgs>
+    _count?: boolean | Inventory_categoriesCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $inventory_categoriesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "inventory_categories"
+    objects: {
+      items: Prisma.$inventory_itemsPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      icon: string | null
+      description: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["inventory_categories"]>
+    composites: {}
+  }
+
+  type inventory_categoriesGetPayload<S extends boolean | null | undefined | inventory_categoriesDefaultArgs> = $Result.GetResult<Prisma.$inventory_categoriesPayload, S>
+
+  type inventory_categoriesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<inventory_categoriesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Inventory_categoriesCountAggregateInputType | true
+    }
+
+  export interface inventory_categoriesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['inventory_categories'], meta: { name: 'inventory_categories' } }
+    /**
+     * Find zero or one Inventory_categories that matches the filter.
+     * @param {inventory_categoriesFindUniqueArgs} args - Arguments to find a Inventory_categories
+     * @example
+     * // Get one Inventory_categories
+     * const inventory_categories = await prisma.inventory_categories.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends inventory_categoriesFindUniqueArgs>(args: SelectSubset<T, inventory_categoriesFindUniqueArgs<ExtArgs>>): Prisma__inventory_categoriesClient<$Result.GetResult<Prisma.$inventory_categoriesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Inventory_categories that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {inventory_categoriesFindUniqueOrThrowArgs} args - Arguments to find a Inventory_categories
+     * @example
+     * // Get one Inventory_categories
+     * const inventory_categories = await prisma.inventory_categories.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends inventory_categoriesFindUniqueOrThrowArgs>(args: SelectSubset<T, inventory_categoriesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__inventory_categoriesClient<$Result.GetResult<Prisma.$inventory_categoriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Inventory_categories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_categoriesFindFirstArgs} args - Arguments to find a Inventory_categories
+     * @example
+     * // Get one Inventory_categories
+     * const inventory_categories = await prisma.inventory_categories.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends inventory_categoriesFindFirstArgs>(args?: SelectSubset<T, inventory_categoriesFindFirstArgs<ExtArgs>>): Prisma__inventory_categoriesClient<$Result.GetResult<Prisma.$inventory_categoriesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Inventory_categories that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_categoriesFindFirstOrThrowArgs} args - Arguments to find a Inventory_categories
+     * @example
+     * // Get one Inventory_categories
+     * const inventory_categories = await prisma.inventory_categories.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends inventory_categoriesFindFirstOrThrowArgs>(args?: SelectSubset<T, inventory_categoriesFindFirstOrThrowArgs<ExtArgs>>): Prisma__inventory_categoriesClient<$Result.GetResult<Prisma.$inventory_categoriesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Inventory_categories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_categoriesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Inventory_categories
+     * const inventory_categories = await prisma.inventory_categories.findMany()
+     * 
+     * // Get first 10 Inventory_categories
+     * const inventory_categories = await prisma.inventory_categories.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inventory_categoriesWithIdOnly = await prisma.inventory_categories.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends inventory_categoriesFindManyArgs>(args?: SelectSubset<T, inventory_categoriesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$inventory_categoriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Inventory_categories.
+     * @param {inventory_categoriesCreateArgs} args - Arguments to create a Inventory_categories.
+     * @example
+     * // Create one Inventory_categories
+     * const Inventory_categories = await prisma.inventory_categories.create({
+     *   data: {
+     *     // ... data to create a Inventory_categories
+     *   }
+     * })
+     * 
+     */
+    create<T extends inventory_categoriesCreateArgs>(args: SelectSubset<T, inventory_categoriesCreateArgs<ExtArgs>>): Prisma__inventory_categoriesClient<$Result.GetResult<Prisma.$inventory_categoriesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Inventory_categories.
+     * @param {inventory_categoriesCreateManyArgs} args - Arguments to create many Inventory_categories.
+     * @example
+     * // Create many Inventory_categories
+     * const inventory_categories = await prisma.inventory_categories.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends inventory_categoriesCreateManyArgs>(args?: SelectSubset<T, inventory_categoriesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Inventory_categories.
+     * @param {inventory_categoriesDeleteArgs} args - Arguments to delete one Inventory_categories.
+     * @example
+     * // Delete one Inventory_categories
+     * const Inventory_categories = await prisma.inventory_categories.delete({
+     *   where: {
+     *     // ... filter to delete one Inventory_categories
+     *   }
+     * })
+     * 
+     */
+    delete<T extends inventory_categoriesDeleteArgs>(args: SelectSubset<T, inventory_categoriesDeleteArgs<ExtArgs>>): Prisma__inventory_categoriesClient<$Result.GetResult<Prisma.$inventory_categoriesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Inventory_categories.
+     * @param {inventory_categoriesUpdateArgs} args - Arguments to update one Inventory_categories.
+     * @example
+     * // Update one Inventory_categories
+     * const inventory_categories = await prisma.inventory_categories.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends inventory_categoriesUpdateArgs>(args: SelectSubset<T, inventory_categoriesUpdateArgs<ExtArgs>>): Prisma__inventory_categoriesClient<$Result.GetResult<Prisma.$inventory_categoriesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Inventory_categories.
+     * @param {inventory_categoriesDeleteManyArgs} args - Arguments to filter Inventory_categories to delete.
+     * @example
+     * // Delete a few Inventory_categories
+     * const { count } = await prisma.inventory_categories.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends inventory_categoriesDeleteManyArgs>(args?: SelectSubset<T, inventory_categoriesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Inventory_categories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_categoriesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Inventory_categories
+     * const inventory_categories = await prisma.inventory_categories.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends inventory_categoriesUpdateManyArgs>(args: SelectSubset<T, inventory_categoriesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Inventory_categories.
+     * @param {inventory_categoriesUpsertArgs} args - Arguments to update or create a Inventory_categories.
+     * @example
+     * // Update or create a Inventory_categories
+     * const inventory_categories = await prisma.inventory_categories.upsert({
+     *   create: {
+     *     // ... data to create a Inventory_categories
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Inventory_categories we want to update
+     *   }
+     * })
+     */
+    upsert<T extends inventory_categoriesUpsertArgs>(args: SelectSubset<T, inventory_categoriesUpsertArgs<ExtArgs>>): Prisma__inventory_categoriesClient<$Result.GetResult<Prisma.$inventory_categoriesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Inventory_categories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_categoriesCountArgs} args - Arguments to filter Inventory_categories to count.
+     * @example
+     * // Count the number of Inventory_categories
+     * const count = await prisma.inventory_categories.count({
+     *   where: {
+     *     // ... the filter for the Inventory_categories we want to count
+     *   }
+     * })
+    **/
+    count<T extends inventory_categoriesCountArgs>(
+      args?: Subset<T, inventory_categoriesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Inventory_categoriesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Inventory_categories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Inventory_categoriesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Inventory_categoriesAggregateArgs>(args: Subset<T, Inventory_categoriesAggregateArgs>): Prisma.PrismaPromise<GetInventory_categoriesAggregateType<T>>
+
+    /**
+     * Group by Inventory_categories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {inventory_categoriesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends inventory_categoriesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: inventory_categoriesGroupByArgs['orderBy'] }
+        : { orderBy?: inventory_categoriesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, inventory_categoriesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInventory_categoriesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the inventory_categories model
+   */
+  readonly fields: inventory_categoriesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for inventory_categories.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__inventory_categoriesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    items<T extends inventory_categories$itemsArgs<ExtArgs> = {}>(args?: Subset<T, inventory_categories$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$inventory_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the inventory_categories model
+   */
+  interface inventory_categoriesFieldRefs {
+    readonly id: FieldRef<"inventory_categories", 'String'>
+    readonly name: FieldRef<"inventory_categories", 'String'>
+    readonly icon: FieldRef<"inventory_categories", 'String'>
+    readonly description: FieldRef<"inventory_categories", 'String'>
+    readonly createdAt: FieldRef<"inventory_categories", 'DateTime'>
+    readonly updatedAt: FieldRef<"inventory_categories", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * inventory_categories findUnique
+   */
+  export type inventory_categoriesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_categories
+     */
+    select?: inventory_categoriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_categories
+     */
+    omit?: inventory_categoriesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_categoriesInclude<ExtArgs> | null
+    /**
+     * Filter, which inventory_categories to fetch.
+     */
+    where: inventory_categoriesWhereUniqueInput
+  }
+
+  /**
+   * inventory_categories findUniqueOrThrow
+   */
+  export type inventory_categoriesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_categories
+     */
+    select?: inventory_categoriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_categories
+     */
+    omit?: inventory_categoriesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_categoriesInclude<ExtArgs> | null
+    /**
+     * Filter, which inventory_categories to fetch.
+     */
+    where: inventory_categoriesWhereUniqueInput
+  }
+
+  /**
+   * inventory_categories findFirst
+   */
+  export type inventory_categoriesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_categories
+     */
+    select?: inventory_categoriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_categories
+     */
+    omit?: inventory_categoriesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_categoriesInclude<ExtArgs> | null
+    /**
+     * Filter, which inventory_categories to fetch.
+     */
+    where?: inventory_categoriesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inventory_categories to fetch.
+     */
+    orderBy?: inventory_categoriesOrderByWithRelationInput | inventory_categoriesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for inventory_categories.
+     */
+    cursor?: inventory_categoriesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inventory_categories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inventory_categories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of inventory_categories.
+     */
+    distinct?: Inventory_categoriesScalarFieldEnum | Inventory_categoriesScalarFieldEnum[]
+  }
+
+  /**
+   * inventory_categories findFirstOrThrow
+   */
+  export type inventory_categoriesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_categories
+     */
+    select?: inventory_categoriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_categories
+     */
+    omit?: inventory_categoriesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_categoriesInclude<ExtArgs> | null
+    /**
+     * Filter, which inventory_categories to fetch.
+     */
+    where?: inventory_categoriesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inventory_categories to fetch.
+     */
+    orderBy?: inventory_categoriesOrderByWithRelationInput | inventory_categoriesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for inventory_categories.
+     */
+    cursor?: inventory_categoriesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inventory_categories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inventory_categories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of inventory_categories.
+     */
+    distinct?: Inventory_categoriesScalarFieldEnum | Inventory_categoriesScalarFieldEnum[]
+  }
+
+  /**
+   * inventory_categories findMany
+   */
+  export type inventory_categoriesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_categories
+     */
+    select?: inventory_categoriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_categories
+     */
+    omit?: inventory_categoriesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_categoriesInclude<ExtArgs> | null
+    /**
+     * Filter, which inventory_categories to fetch.
+     */
+    where?: inventory_categoriesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of inventory_categories to fetch.
+     */
+    orderBy?: inventory_categoriesOrderByWithRelationInput | inventory_categoriesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing inventory_categories.
+     */
+    cursor?: inventory_categoriesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` inventory_categories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` inventory_categories.
+     */
+    skip?: number
+    distinct?: Inventory_categoriesScalarFieldEnum | Inventory_categoriesScalarFieldEnum[]
+  }
+
+  /**
+   * inventory_categories create
+   */
+  export type inventory_categoriesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_categories
+     */
+    select?: inventory_categoriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_categories
+     */
+    omit?: inventory_categoriesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_categoriesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a inventory_categories.
+     */
+    data: XOR<inventory_categoriesCreateInput, inventory_categoriesUncheckedCreateInput>
+  }
+
+  /**
+   * inventory_categories createMany
+   */
+  export type inventory_categoriesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many inventory_categories.
+     */
+    data: inventory_categoriesCreateManyInput | inventory_categoriesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * inventory_categories update
+   */
+  export type inventory_categoriesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_categories
+     */
+    select?: inventory_categoriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_categories
+     */
+    omit?: inventory_categoriesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_categoriesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a inventory_categories.
+     */
+    data: XOR<inventory_categoriesUpdateInput, inventory_categoriesUncheckedUpdateInput>
+    /**
+     * Choose, which inventory_categories to update.
+     */
+    where: inventory_categoriesWhereUniqueInput
+  }
+
+  /**
+   * inventory_categories updateMany
+   */
+  export type inventory_categoriesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update inventory_categories.
+     */
+    data: XOR<inventory_categoriesUpdateManyMutationInput, inventory_categoriesUncheckedUpdateManyInput>
+    /**
+     * Filter which inventory_categories to update
+     */
+    where?: inventory_categoriesWhereInput
+    /**
+     * Limit how many inventory_categories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * inventory_categories upsert
+   */
+  export type inventory_categoriesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_categories
+     */
+    select?: inventory_categoriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_categories
+     */
+    omit?: inventory_categoriesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_categoriesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the inventory_categories to update in case it exists.
+     */
+    where: inventory_categoriesWhereUniqueInput
+    /**
+     * In case the inventory_categories found by the `where` argument doesn't exist, create a new inventory_categories with this data.
+     */
+    create: XOR<inventory_categoriesCreateInput, inventory_categoriesUncheckedCreateInput>
+    /**
+     * In case the inventory_categories was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<inventory_categoriesUpdateInput, inventory_categoriesUncheckedUpdateInput>
+  }
+
+  /**
+   * inventory_categories delete
+   */
+  export type inventory_categoriesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_categories
+     */
+    select?: inventory_categoriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_categories
+     */
+    omit?: inventory_categoriesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_categoriesInclude<ExtArgs> | null
+    /**
+     * Filter which inventory_categories to delete.
+     */
+    where: inventory_categoriesWhereUniqueInput
+  }
+
+  /**
+   * inventory_categories deleteMany
+   */
+  export type inventory_categoriesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which inventory_categories to delete
+     */
+    where?: inventory_categoriesWhereInput
+    /**
+     * Limit how many inventory_categories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * inventory_categories.items
+   */
+  export type inventory_categories$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_items
+     */
+    select?: inventory_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_items
+     */
+    omit?: inventory_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_itemsInclude<ExtArgs> | null
+    where?: inventory_itemsWhereInput
+    orderBy?: inventory_itemsOrderByWithRelationInput | inventory_itemsOrderByWithRelationInput[]
+    cursor?: inventory_itemsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Inventory_itemsScalarFieldEnum | Inventory_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * inventory_categories without action
+   */
+  export type inventory_categoriesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the inventory_categories
+     */
+    select?: inventory_categoriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the inventory_categories
+     */
+    omit?: inventory_categoriesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: inventory_categoriesInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model seminars
    */
 
@@ -6502,6 +8679,32 @@ export namespace Prisma {
   export type Accounts_commoditiesScalarFieldEnum = (typeof Accounts_commoditiesScalarFieldEnum)[keyof typeof Accounts_commoditiesScalarFieldEnum]
 
 
+  export const Inventory_itemsScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    status: 'status',
+    categoryId: 'categoryId',
+    stock: 'stock',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type Inventory_itemsScalarFieldEnum = (typeof Inventory_itemsScalarFieldEnum)[keyof typeof Inventory_itemsScalarFieldEnum]
+
+
+  export const Inventory_categoriesScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    icon: 'icon',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type Inventory_categoriesScalarFieldEnum = (typeof Inventory_categoriesScalarFieldEnum)[keyof typeof Inventory_categoriesScalarFieldEnum]
+
+
   export const SeminarsScalarFieldEnum: {
     id: 'id',
     title: 'title',
@@ -6589,6 +8792,25 @@ export namespace Prisma {
   export type accounts_commoditiesOrderByRelevanceFieldEnum = (typeof accounts_commoditiesOrderByRelevanceFieldEnum)[keyof typeof accounts_commoditiesOrderByRelevanceFieldEnum]
 
 
+  export const inventory_itemsOrderByRelevanceFieldEnum: {
+    name: 'name',
+    description: 'description',
+    categoryId: 'categoryId'
+  };
+
+  export type inventory_itemsOrderByRelevanceFieldEnum = (typeof inventory_itemsOrderByRelevanceFieldEnum)[keyof typeof inventory_itemsOrderByRelevanceFieldEnum]
+
+
+  export const inventory_categoriesOrderByRelevanceFieldEnum: {
+    id: 'id',
+    name: 'name',
+    icon: 'icon',
+    description: 'description'
+  };
+
+  export type inventory_categoriesOrderByRelevanceFieldEnum = (typeof inventory_categoriesOrderByRelevanceFieldEnum)[keyof typeof inventory_categoriesOrderByRelevanceFieldEnum]
+
+
   export const seminarsOrderByRelevanceFieldEnum: {
     id: 'id',
     title: 'title',
@@ -6654,6 +8876,13 @@ export namespace Prisma {
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'item_status'
+   */
+  export type Enumitem_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'item_status'>
     
 
 
@@ -6924,6 +9153,140 @@ export namespace Prisma {
     commodity_id?: StringWithAggregatesFilter<"accounts_commodities"> | string
     createdAt?: DateTimeWithAggregatesFilter<"accounts_commodities"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"accounts_commodities"> | Date | string
+  }
+
+  export type inventory_itemsWhereInput = {
+    AND?: inventory_itemsWhereInput | inventory_itemsWhereInput[]
+    OR?: inventory_itemsWhereInput[]
+    NOT?: inventory_itemsWhereInput | inventory_itemsWhereInput[]
+    id?: IntFilter<"inventory_items"> | number
+    name?: StringFilter<"inventory_items"> | string
+    description?: StringNullableFilter<"inventory_items"> | string | null
+    status?: Enumitem_statusFilter<"inventory_items"> | $Enums.item_status
+    categoryId?: StringFilter<"inventory_items"> | string
+    stock?: IntFilter<"inventory_items"> | number
+    createdAt?: DateTimeFilter<"inventory_items"> | Date | string
+    updatedAt?: DateTimeFilter<"inventory_items"> | Date | string
+    category?: XOR<Inventory_categoriesScalarRelationFilter, inventory_categoriesWhereInput>
+  }
+
+  export type inventory_itemsOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    categoryId?: SortOrder
+    stock?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    category?: inventory_categoriesOrderByWithRelationInput
+    _relevance?: inventory_itemsOrderByRelevanceInput
+  }
+
+  export type inventory_itemsWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    name?: string
+    AND?: inventory_itemsWhereInput | inventory_itemsWhereInput[]
+    OR?: inventory_itemsWhereInput[]
+    NOT?: inventory_itemsWhereInput | inventory_itemsWhereInput[]
+    description?: StringNullableFilter<"inventory_items"> | string | null
+    status?: Enumitem_statusFilter<"inventory_items"> | $Enums.item_status
+    categoryId?: StringFilter<"inventory_items"> | string
+    stock?: IntFilter<"inventory_items"> | number
+    createdAt?: DateTimeFilter<"inventory_items"> | Date | string
+    updatedAt?: DateTimeFilter<"inventory_items"> | Date | string
+    category?: XOR<Inventory_categoriesScalarRelationFilter, inventory_categoriesWhereInput>
+  }, "id" | "name">
+
+  export type inventory_itemsOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    categoryId?: SortOrder
+    stock?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: inventory_itemsCountOrderByAggregateInput
+    _avg?: inventory_itemsAvgOrderByAggregateInput
+    _max?: inventory_itemsMaxOrderByAggregateInput
+    _min?: inventory_itemsMinOrderByAggregateInput
+    _sum?: inventory_itemsSumOrderByAggregateInput
+  }
+
+  export type inventory_itemsScalarWhereWithAggregatesInput = {
+    AND?: inventory_itemsScalarWhereWithAggregatesInput | inventory_itemsScalarWhereWithAggregatesInput[]
+    OR?: inventory_itemsScalarWhereWithAggregatesInput[]
+    NOT?: inventory_itemsScalarWhereWithAggregatesInput | inventory_itemsScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"inventory_items"> | number
+    name?: StringWithAggregatesFilter<"inventory_items"> | string
+    description?: StringNullableWithAggregatesFilter<"inventory_items"> | string | null
+    status?: Enumitem_statusWithAggregatesFilter<"inventory_items"> | $Enums.item_status
+    categoryId?: StringWithAggregatesFilter<"inventory_items"> | string
+    stock?: IntWithAggregatesFilter<"inventory_items"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"inventory_items"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"inventory_items"> | Date | string
+  }
+
+  export type inventory_categoriesWhereInput = {
+    AND?: inventory_categoriesWhereInput | inventory_categoriesWhereInput[]
+    OR?: inventory_categoriesWhereInput[]
+    NOT?: inventory_categoriesWhereInput | inventory_categoriesWhereInput[]
+    id?: StringFilter<"inventory_categories"> | string
+    name?: StringFilter<"inventory_categories"> | string
+    icon?: StringNullableFilter<"inventory_categories"> | string | null
+    description?: StringNullableFilter<"inventory_categories"> | string | null
+    createdAt?: DateTimeFilter<"inventory_categories"> | Date | string
+    updatedAt?: DateTimeFilter<"inventory_categories"> | Date | string
+    items?: Inventory_itemsListRelationFilter
+  }
+
+  export type inventory_categoriesOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    items?: inventory_itemsOrderByRelationAggregateInput
+    _relevance?: inventory_categoriesOrderByRelevanceInput
+  }
+
+  export type inventory_categoriesWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: inventory_categoriesWhereInput | inventory_categoriesWhereInput[]
+    OR?: inventory_categoriesWhereInput[]
+    NOT?: inventory_categoriesWhereInput | inventory_categoriesWhereInput[]
+    icon?: StringNullableFilter<"inventory_categories"> | string | null
+    description?: StringNullableFilter<"inventory_categories"> | string | null
+    createdAt?: DateTimeFilter<"inventory_categories"> | Date | string
+    updatedAt?: DateTimeFilter<"inventory_categories"> | Date | string
+    items?: Inventory_itemsListRelationFilter
+  }, "id" | "name">
+
+  export type inventory_categoriesOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: inventory_categoriesCountOrderByAggregateInput
+    _max?: inventory_categoriesMaxOrderByAggregateInput
+    _min?: inventory_categoriesMinOrderByAggregateInput
+  }
+
+  export type inventory_categoriesScalarWhereWithAggregatesInput = {
+    AND?: inventory_categoriesScalarWhereWithAggregatesInput | inventory_categoriesScalarWhereWithAggregatesInput[]
+    OR?: inventory_categoriesScalarWhereWithAggregatesInput[]
+    NOT?: inventory_categoriesScalarWhereWithAggregatesInput | inventory_categoriesScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"inventory_categories"> | string
+    name?: StringWithAggregatesFilter<"inventory_categories"> | string
+    icon?: StringNullableWithAggregatesFilter<"inventory_categories"> | string | null
+    description?: StringNullableWithAggregatesFilter<"inventory_categories"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"inventory_categories"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"inventory_categories"> | Date | string
   }
 
   export type seminarsWhereInput = {
@@ -7371,6 +9734,146 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     account_id?: StringFieldUpdateOperationsInput | string
     commodity_id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inventory_itemsCreateInput = {
+    name: string
+    description?: string | null
+    status?: $Enums.item_status
+    stock?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    category: inventory_categoriesCreateNestedOneWithoutItemsInput
+  }
+
+  export type inventory_itemsUncheckedCreateInput = {
+    id?: number
+    name: string
+    description?: string | null
+    status?: $Enums.item_status
+    categoryId: string
+    stock?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type inventory_itemsUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    stock?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: inventory_categoriesUpdateOneRequiredWithoutItemsNestedInput
+  }
+
+  export type inventory_itemsUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    categoryId?: StringFieldUpdateOperationsInput | string
+    stock?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inventory_itemsCreateManyInput = {
+    id?: number
+    name: string
+    description?: string | null
+    status?: $Enums.item_status
+    categoryId: string
+    stock?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type inventory_itemsUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    stock?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inventory_itemsUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    categoryId?: StringFieldUpdateOperationsInput | string
+    stock?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inventory_categoriesCreateInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: inventory_itemsCreateNestedManyWithoutCategoryInput
+  }
+
+  export type inventory_categoriesUncheckedCreateInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: inventory_itemsUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type inventory_categoriesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: inventory_itemsUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type inventory_categoriesUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: inventory_itemsUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type inventory_categoriesCreateManyInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type inventory_categoriesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inventory_categoriesUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7891,6 +10394,136 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type Enumitem_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.item_status[]
+    notIn?: $Enums.item_status[]
+    not?: NestedEnumitem_statusFilter<$PrismaModel> | $Enums.item_status
+  }
+
+  export type Inventory_categoriesScalarRelationFilter = {
+    is?: inventory_categoriesWhereInput
+    isNot?: inventory_categoriesWhereInput
+  }
+
+  export type inventory_itemsOrderByRelevanceInput = {
+    fields: inventory_itemsOrderByRelevanceFieldEnum | inventory_itemsOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type inventory_itemsCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    categoryId?: SortOrder
+    stock?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type inventory_itemsAvgOrderByAggregateInput = {
+    id?: SortOrder
+    stock?: SortOrder
+  }
+
+  export type inventory_itemsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    categoryId?: SortOrder
+    stock?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type inventory_itemsMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    categoryId?: SortOrder
+    stock?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type inventory_itemsSumOrderByAggregateInput = {
+    id?: SortOrder
+    stock?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type Enumitem_statusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.item_status[]
+    notIn?: $Enums.item_status[]
+    not?: NestedEnumitem_statusWithAggregatesFilter<$PrismaModel> | $Enums.item_status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumitem_statusFilter<$PrismaModel>
+    _max?: NestedEnumitem_statusFilter<$PrismaModel>
+  }
+
+  export type Inventory_itemsListRelationFilter = {
+    every?: inventory_itemsWhereInput
+    some?: inventory_itemsWhereInput
+    none?: inventory_itemsWhereInput
+  }
+
+  export type inventory_itemsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type inventory_categoriesOrderByRelevanceInput = {
+    fields: inventory_categoriesOrderByRelevanceFieldEnum | inventory_categoriesOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type inventory_categoriesCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type inventory_categoriesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type inventory_categoriesMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type Enumseminar_statusFilter<$PrismaModel = never> = {
     equals?: $Enums.seminar_status | Enumseminar_statusFieldRefInput<$PrismaModel>
     in?: $Enums.seminar_status[]
@@ -7964,22 +10597,6 @@ export namespace Prisma {
 
   export type seminarsSumOrderByAggregateInput = {
     capacity?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type Enumseminar_statusWithAggregatesFilter<$PrismaModel = never> = {
@@ -8230,6 +10847,74 @@ export namespace Prisma {
     update?: XOR<XOR<accountsUpdateToOneWithWhereWithoutCommodityInput, accountsUpdateWithoutCommodityInput>, accountsUncheckedUpdateWithoutCommodityInput>
   }
 
+  export type inventory_categoriesCreateNestedOneWithoutItemsInput = {
+    create?: XOR<inventory_categoriesCreateWithoutItemsInput, inventory_categoriesUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: inventory_categoriesCreateOrConnectWithoutItemsInput
+    connect?: inventory_categoriesWhereUniqueInput
+  }
+
+  export type Enumitem_statusFieldUpdateOperationsInput = {
+    set?: $Enums.item_status
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type inventory_categoriesUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<inventory_categoriesCreateWithoutItemsInput, inventory_categoriesUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: inventory_categoriesCreateOrConnectWithoutItemsInput
+    upsert?: inventory_categoriesUpsertWithoutItemsInput
+    connect?: inventory_categoriesWhereUniqueInput
+    update?: XOR<XOR<inventory_categoriesUpdateToOneWithWhereWithoutItemsInput, inventory_categoriesUpdateWithoutItemsInput>, inventory_categoriesUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type inventory_itemsCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<inventory_itemsCreateWithoutCategoryInput, inventory_itemsUncheckedCreateWithoutCategoryInput> | inventory_itemsCreateWithoutCategoryInput[] | inventory_itemsUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: inventory_itemsCreateOrConnectWithoutCategoryInput | inventory_itemsCreateOrConnectWithoutCategoryInput[]
+    createMany?: inventory_itemsCreateManyCategoryInputEnvelope
+    connect?: inventory_itemsWhereUniqueInput | inventory_itemsWhereUniqueInput[]
+  }
+
+  export type inventory_itemsUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<inventory_itemsCreateWithoutCategoryInput, inventory_itemsUncheckedCreateWithoutCategoryInput> | inventory_itemsCreateWithoutCategoryInput[] | inventory_itemsUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: inventory_itemsCreateOrConnectWithoutCategoryInput | inventory_itemsCreateOrConnectWithoutCategoryInput[]
+    createMany?: inventory_itemsCreateManyCategoryInputEnvelope
+    connect?: inventory_itemsWhereUniqueInput | inventory_itemsWhereUniqueInput[]
+  }
+
+  export type inventory_itemsUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<inventory_itemsCreateWithoutCategoryInput, inventory_itemsUncheckedCreateWithoutCategoryInput> | inventory_itemsCreateWithoutCategoryInput[] | inventory_itemsUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: inventory_itemsCreateOrConnectWithoutCategoryInput | inventory_itemsCreateOrConnectWithoutCategoryInput[]
+    upsert?: inventory_itemsUpsertWithWhereUniqueWithoutCategoryInput | inventory_itemsUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: inventory_itemsCreateManyCategoryInputEnvelope
+    set?: inventory_itemsWhereUniqueInput | inventory_itemsWhereUniqueInput[]
+    disconnect?: inventory_itemsWhereUniqueInput | inventory_itemsWhereUniqueInput[]
+    delete?: inventory_itemsWhereUniqueInput | inventory_itemsWhereUniqueInput[]
+    connect?: inventory_itemsWhereUniqueInput | inventory_itemsWhereUniqueInput[]
+    update?: inventory_itemsUpdateWithWhereUniqueWithoutCategoryInput | inventory_itemsUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: inventory_itemsUpdateManyWithWhereWithoutCategoryInput | inventory_itemsUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: inventory_itemsScalarWhereInput | inventory_itemsScalarWhereInput[]
+  }
+
+  export type inventory_itemsUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<inventory_itemsCreateWithoutCategoryInput, inventory_itemsUncheckedCreateWithoutCategoryInput> | inventory_itemsCreateWithoutCategoryInput[] | inventory_itemsUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: inventory_itemsCreateOrConnectWithoutCategoryInput | inventory_itemsCreateOrConnectWithoutCategoryInput[]
+    upsert?: inventory_itemsUpsertWithWhereUniqueWithoutCategoryInput | inventory_itemsUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: inventory_itemsCreateManyCategoryInputEnvelope
+    set?: inventory_itemsWhereUniqueInput | inventory_itemsWhereUniqueInput[]
+    disconnect?: inventory_itemsWhereUniqueInput | inventory_itemsWhereUniqueInput[]
+    delete?: inventory_itemsWhereUniqueInput | inventory_itemsWhereUniqueInput[]
+    connect?: inventory_itemsWhereUniqueInput | inventory_itemsWhereUniqueInput[]
+    update?: inventory_itemsUpdateWithWhereUniqueWithoutCategoryInput | inventory_itemsUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: inventory_itemsUpdateManyWithWhereWithoutCategoryInput | inventory_itemsUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: inventory_itemsScalarWhereInput | inventory_itemsScalarWhereInput[]
+  }
+
   export type seminar_participantsCreateNestedManyWithoutSeminarInput = {
     create?: XOR<seminar_participantsCreateWithoutSeminarInput, seminar_participantsUncheckedCreateWithoutSeminarInput> | seminar_participantsCreateWithoutSeminarInput[] | seminar_participantsUncheckedCreateWithoutSeminarInput[]
     connectOrCreate?: seminar_participantsCreateOrConnectWithoutSeminarInput | seminar_participantsCreateOrConnectWithoutSeminarInput[]
@@ -8242,14 +10927,6 @@ export namespace Prisma {
     connectOrCreate?: seminar_participantsCreateOrConnectWithoutSeminarInput | seminar_participantsCreateOrConnectWithoutSeminarInput[]
     createMany?: seminar_participantsCreateManySeminarInputEnvelope
     connect?: seminar_participantsWhereUniqueInput | seminar_participantsWhereUniqueInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type Enumseminar_statusFieldUpdateOperationsInput = {
@@ -8480,11 +11157,11 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedEnumseminar_statusFilter<$PrismaModel = never> = {
-    equals?: $Enums.seminar_status | Enumseminar_statusFieldRefInput<$PrismaModel>
-    in?: $Enums.seminar_status[]
-    notIn?: $Enums.seminar_status[]
-    not?: NestedEnumseminar_statusFilter<$PrismaModel> | $Enums.seminar_status
+  export type NestedEnumitem_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.item_status[]
+    notIn?: $Enums.item_status[]
+    not?: NestedEnumitem_statusFilter<$PrismaModel> | $Enums.item_status
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -8512,6 +11189,23 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumitem_statusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.item_status[]
+    notIn?: $Enums.item_status[]
+    not?: NestedEnumitem_statusWithAggregatesFilter<$PrismaModel> | $Enums.item_status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumitem_statusFilter<$PrismaModel>
+    _max?: NestedEnumitem_statusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumseminar_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.seminar_status | Enumseminar_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.seminar_status[]
+    notIn?: $Enums.seminar_status[]
+    not?: NestedEnumseminar_statusFilter<$PrismaModel> | $Enums.seminar_status
   }
 
   export type NestedEnumseminar_statusWithAggregatesFilter<$PrismaModel = never> = {
@@ -8842,6 +11536,117 @@ export namespace Prisma {
     seminars?: seminar_participantsUncheckedUpdateManyWithoutAccountNestedInput
   }
 
+  export type inventory_categoriesCreateWithoutItemsInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type inventory_categoriesUncheckedCreateWithoutItemsInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type inventory_categoriesCreateOrConnectWithoutItemsInput = {
+    where: inventory_categoriesWhereUniqueInput
+    create: XOR<inventory_categoriesCreateWithoutItemsInput, inventory_categoriesUncheckedCreateWithoutItemsInput>
+  }
+
+  export type inventory_categoriesUpsertWithoutItemsInput = {
+    update: XOR<inventory_categoriesUpdateWithoutItemsInput, inventory_categoriesUncheckedUpdateWithoutItemsInput>
+    create: XOR<inventory_categoriesCreateWithoutItemsInput, inventory_categoriesUncheckedCreateWithoutItemsInput>
+    where?: inventory_categoriesWhereInput
+  }
+
+  export type inventory_categoriesUpdateToOneWithWhereWithoutItemsInput = {
+    where?: inventory_categoriesWhereInput
+    data: XOR<inventory_categoriesUpdateWithoutItemsInput, inventory_categoriesUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type inventory_categoriesUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inventory_categoriesUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inventory_itemsCreateWithoutCategoryInput = {
+    name: string
+    description?: string | null
+    status?: $Enums.item_status
+    stock?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type inventory_itemsUncheckedCreateWithoutCategoryInput = {
+    id?: number
+    name: string
+    description?: string | null
+    status?: $Enums.item_status
+    stock?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type inventory_itemsCreateOrConnectWithoutCategoryInput = {
+    where: inventory_itemsWhereUniqueInput
+    create: XOR<inventory_itemsCreateWithoutCategoryInput, inventory_itemsUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type inventory_itemsCreateManyCategoryInputEnvelope = {
+    data: inventory_itemsCreateManyCategoryInput | inventory_itemsCreateManyCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type inventory_itemsUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: inventory_itemsWhereUniqueInput
+    update: XOR<inventory_itemsUpdateWithoutCategoryInput, inventory_itemsUncheckedUpdateWithoutCategoryInput>
+    create: XOR<inventory_itemsCreateWithoutCategoryInput, inventory_itemsUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type inventory_itemsUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: inventory_itemsWhereUniqueInput
+    data: XOR<inventory_itemsUpdateWithoutCategoryInput, inventory_itemsUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type inventory_itemsUpdateManyWithWhereWithoutCategoryInput = {
+    where: inventory_itemsScalarWhereInput
+    data: XOR<inventory_itemsUpdateManyMutationInput, inventory_itemsUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type inventory_itemsScalarWhereInput = {
+    AND?: inventory_itemsScalarWhereInput | inventory_itemsScalarWhereInput[]
+    OR?: inventory_itemsScalarWhereInput[]
+    NOT?: inventory_itemsScalarWhereInput | inventory_itemsScalarWhereInput[]
+    id?: IntFilter<"inventory_items"> | number
+    name?: StringFilter<"inventory_items"> | string
+    description?: StringNullableFilter<"inventory_items"> | string | null
+    status?: Enumitem_statusFilter<"inventory_items"> | $Enums.item_status
+    categoryId?: StringFilter<"inventory_items"> | string
+    stock?: IntFilter<"inventory_items"> | number
+    createdAt?: DateTimeFilter<"inventory_items"> | Date | string
+    updatedAt?: DateTimeFilter<"inventory_items"> | Date | string
+  }
+
   export type seminar_participantsCreateWithoutSeminarInput = {
     id?: string
     status?: $Enums.participant_status
@@ -9160,6 +11965,45 @@ export namespace Prisma {
   export type accounts_commoditiesUncheckedUpdateManyWithoutCommodityInput = {
     id?: StringFieldUpdateOperationsInput | string
     account_id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inventory_itemsCreateManyCategoryInput = {
+    id?: number
+    name: string
+    description?: string | null
+    status?: $Enums.item_status
+    stock?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type inventory_itemsUpdateWithoutCategoryInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    stock?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inventory_itemsUncheckedUpdateWithoutCategoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    stock?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type inventory_itemsUncheckedUpdateManyWithoutCategoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    stock?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
