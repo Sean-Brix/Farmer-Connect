@@ -1,4 +1,5 @@
 /node_modules
 /Reference
 *.env
+.env
 /prisma/generated/prisma
