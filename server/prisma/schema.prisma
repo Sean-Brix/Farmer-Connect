@@ -18,7 +18,7 @@ model accounts {
   firstName      String
   lastName       String
   middleName     String?
-  gender         String?
+  gender         gender
   client_profile client_profile         @default(Other)
   cellphone_no   String?
   telephone_no   String?
@@ -68,7 +68,7 @@ enum client_profile {
   Agricultural_Fisheries_Technician @map("Agricultural/Fisheries Technician")
   Youth                             @map("Youth")
   Women                             @map("Women")
-  Gov_t_Employee                    @map("Gov't Employee")
+  Govt_Employee                     @map("Govt Employee")
   PWD                               @map("PWD")
   Indigenous_People                 @map("Indigenous People")
   Other                             @map("Other")
@@ -78,4 +78,10 @@ enum access {
   Admin
   User
   Super_Admin @map("Super Admin")
+}
+
+enum gender {
+  Male
+  Female
+  Other
 }

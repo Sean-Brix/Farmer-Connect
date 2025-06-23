@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Rice",
+        "description": "A staple food for a large portion of the world's population."
+    },
+    {
+        "name": "Corn",
+        "description": "Used for livestock feed, ethanol production, and human consumption."
+    },
+    {
+        "name": "Wheat",
+        "description": "A major ingredient in bread, pasta, and other baked goods."
+    },
+    {
+        "name": "Soybeans",
+        "description": "Used for oil extraction, animal feed, and soy-based products."
+    },
+    {
+        "name": "Coffee",
+        "description": "A popular beverage made from roasted coffee beans."
+    },
+    {
+        "name": "Sugar",
+        "description": "Used as a sweetener in various food and beverage products."
+    },
+    {
+        "name": "Cotton",
+        "description": "A natural fiber used in the textile industry."
+    },
+    {
+        "name": "Crude Oil",
+        "description": "A fossil fuel used for energy production and various industrial processes."
+    },
+    {
+        "name": "Gold",
+        "description": "A precious metal used as a store of value and in jewelry."
+    },
+    {
+        "name": "Silver",
+        "description": "A precious metal used in jewelry, electronics, and industrial applications."
+    }
+]

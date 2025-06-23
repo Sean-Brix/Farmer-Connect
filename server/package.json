@@ -21,10 +21,14 @@
         "prisma": "^6.10.1"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node server.js",
         "dev": "npm run setup-db && nodemon server.js",
-        "setup-db": "prisma migrate deploy && prisma generate"
+        "setup-db": "prisma migrate deploy && prisma generate",
+        "reset-db": "npx prisma db push --force-reset",
+        "fill-db": "npx prisma db seed"
+    },
+    "prisma": {
+        "seed": "node prisma/seed.js"
     },
     "keywords": [],
     "author": "",
