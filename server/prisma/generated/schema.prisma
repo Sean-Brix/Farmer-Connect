@@ -82,29 +82,47 @@ enum gender {
 //? ======================================= ITEM SCHEMA ======================================= ?//
 
 model inventory_items {
-  id          Int         @id @default(autoincrement())
-  name        String      @unique
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
   description String?
-  status      item_status @default(Out_of_Stock)
   categoryId  String
-  stock       Int         @default(0)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   // Relations
-  category inventory_categories @relation(fields: [categoryId], references: [id])
+  item_stacks item_stacks[]
+  category    inventory_categories @relation(fields: [categoryId], references: [id])
 }
 
 //? ===================================== CATEGORY SCHEMA ===================================== ?//
 
 model inventory_categories {
-  id          String            @id @default(cuid())
-  name        String            @unique
+  id          String   @id @default(cuid())
+  name        String   @unique
   icon        String?
   description String?
-  items       inventory_items[]
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  items inventory_items[]
+}
+
+//? ====================================== STACKS SCHEMA ====================================== ?//
+model item_stacks {
+  id     Int @id @default(autoincrement())
+  itemId Int
+
+  // TODO: ===================== An item should have atleast one of these =====================
+  quantity Int?
+  weight   Float?
+
+  status    item_status @default(Available)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Relations
+  item inventory_items @relation(fields: [itemId], references: [id])
 }
 
 //? ========================================== ENUMS ========================================== ?//
@@ -112,8 +130,11 @@ model inventory_categories {
 enum item_status {
   Available
   Unavailable
-  Out_of_Stock @map("Out of Stock")
+  Lost
   Damaged
+  Reserved
+  Borrowed
+  Distributed
 }
 
 generator client {
