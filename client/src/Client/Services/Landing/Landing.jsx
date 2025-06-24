@@ -599,7 +599,7 @@ export default function Landing() {
 
                 {/* USEFUL EXTERNAL RESOURCES */}
                 <section className="max-w-5xl mx-auto px-6 py-16 mb-20">
-                    <h2 className="text-3xl font-extrabold text-blue-900 mb-12 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
+                    <h2 className="text-3xl font-extrabold text-blue-900 mb-12 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-10 transition-all duration-700 delay-100">
                         Useful External Resources
                     </h2>
                     <div className="flex flex-col md:flex-row items-stretch justify-center gap-10">
@@ -681,7 +681,7 @@ export default function Landing() {
                                 Advancing sustainable agriculture and community well-being through innovation and dedicated support.
                             </p>
                         </div>
-                        {/* Quick Links */}}
+                        {/* Quick Links */}
                         <div className="flex-1 mb-8 md:mb-0">
                             <h4 className="font-semibold text-blue-100 mb-3">Quick Links</h4>
                             <ul className="space-y-2 text-blue-100 text-base font-semibold">
