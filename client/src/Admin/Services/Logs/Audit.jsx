@@ -3,13 +3,17 @@ import { useState } from 'react'
 export default function Audit({admin_navigate}) {
   return (
     <>
-      <div className="relative mt-10 sm:mt-30">
-          <hr className="border-black-300" />
-          <span className="absolute left-1/4 md:left-1/8 -translate-x-1/4 family -top-5 bg-white rounded-lg px-4 text-2xl font-semibold text-gray-700">
-              Audit Trail
-          </span>
+      <div className="relative mt-6 md:mt-20 mb-8 flex items-center justify-between">
+        <h2 className="text-3xl font-bold text-blue-900 tracking-tight flex items-center gap-3">
+          <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          Audit Trail
+        </h2>
+        <div className="flex-1 mx-6 border-t border-blue-200" />
       </div>
-      <AuditLogsTable admin_navigate={admin_navigate}/>
+      <AuditLogsTable admin_navigate={admin_navigate} />
     </>
   )
 }
