@@ -198,8 +198,8 @@ export default function Landing() {
                 </section> */}
 
                 {/* MISSION & VISION */}
-                <section className="bg-gradient-to-br from-cyan-50 via-blue-50 to-sky-100 py-16 ">
-                    <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto px-4 mb-4">
+                <section className="py-16 ">
+                    <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto px-4 mb-4 ">
                         {/* Mission Card */}
                         <div className="flex-1 bg-gradient-to-br from-blue-200 via-blue-50 to-blue-100 rounded-3xl shadow-lg border border-blue-200 flex flex-col justify-between p-12 hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
                             <div>
