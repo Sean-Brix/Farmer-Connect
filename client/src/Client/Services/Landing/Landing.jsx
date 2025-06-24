@@ -80,8 +80,9 @@ export default function Landing() {
     return (
         <>
             <Navbar />
-            <main className="bg-gradient-to-br from-blue-50 to-blue-100 pb-20  min-h-screen">
-                <section className="max-w-6xl mx-auto px-4  mb-0">
+            <main className="min-h-screen">
+                {/* HERO SECTION */}
+                <section className="">
                     <div
                         className="
                             w-screen relative left-1/2 right-1/2  -ml-[50vw] -mr-[50vw]
@@ -96,15 +97,12 @@ export default function Landing() {
                             autoPlay
                             loop
                             muted
-                         playsInline
+                            playsInline
                             className="absolute inset-0 w-full h-full object-cover z-0 opacity-60"
                             style={{
                                 animation: 'none',
                                 transition: 'none',
-                                // filter: 'brightness(0.5) hue-rotate(160deg) saturate(2.5)',
-                                
                             }}></video>
-                        {/* Text and Buttons */}
                         <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center">
                             <h1
                                 className="text-5xl font-extrabold mb-6 text-white leading-tight tracking-tight drop-shadow-2xl"
@@ -132,297 +130,318 @@ export default function Landing() {
                                 >
                                     Our Programs
                                 </a>
-                                                                    <a
-                                                                        href="/about"
-                                                                        className="border-2 border-blue-100 text-blue-50 px-8 py-3 rounded-2xl font-semibold hover:bg-blue-900/30 transition"
-                                                                        onClick={e => { e.preventDefault(); window.location = '/about'; }}
-                                                                    >
-                                                                        Learn More
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                                           
-
-                                                                                {/* Mission & Vision Cards */}
-                            <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto px-4 mb-20">
-                                <div className="flex-1 bg-gradient-to-br from-blue-200 via-blue-50 to-blue-100 rounded-3xl shadow-lg border border-blue-200 flex flex-col justify-between p-12 hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
-                                    <div>
-                                        <div className="flex items-center gap-5 mb-6">
-                                            <span className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-200 text-blue-700 group-hover:bg-blue-300 transition shadow-md">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-9 h-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
-                                                </svg>
-                                            </span>
-                                            <h2 className="text-3xl font-bold text-blue-900">Mission</h2>
-                                        </div>
-                                        <p className="text-gray-800 text-lg leading-relaxed font-semibold">
-                                            To drive sustainable agricultural growth and improve community livelihoods through innovative solutions, education, and collaborative partnerships.
-                                        </p>
-                                    </div>
-                                </div>
-                                {/* Divider for desktop */}
-                                <div className="hidden md:flex flex-col justify-center">
-                                    <div className="w-1 h-32 bg-blue-200 rounded-full mx-auto"></div>
-                                </div>
-                                {/* Vision Card */}
-                                <div className="flex-1 bg-gradient-to-br from-blue-200 via-blue-50 to-blue-100 rounded-3xl shadow-lg border border-blue-200 flex flex-col justify-between p-12 hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200">
-                                    <div>
-                                        <div className="flex items-center gap-5 mb-6">
-                                            <span className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-300 text-blue-800 group-hover:bg-blue-400 transition shadow-md">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-9 h-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0c0 5-4.03 9-9 9s-9-4-9-9 4.03-9 9-9 9 4 9 9z" />
-                                                </svg>
-                                            </span>
-                                            <h2 className="text-3xl font-bold text-blue-900">Vision</h2>
-                                        </div>
-                                        <p className="text-gray-800 text-lg leading-relaxed font-semibold">
-                                            To be a leading force in transforming agriculture, fostering innovation, and building resilient, thriving communities for generations to come.
-                                        </p>
-                                    </div>
-                                </div>
+                                <a
+                                    href="/about"
+                                    className="border-2 border-blue-100 text-blue-50 px-8 py-3 rounded-2xl font-semibold hover:bg-blue-900/30 transition"
+                                    onClick={e => { e.preventDefault(); window.location = '/about'; }}
+                                >
+                                    Learn More
+                                </a>
                             </div>
-                            
+                        </div>
+                    </div>
+                </section>
 
-                            {/* Modern Horizontal Scrollbar for Programs */}
-                            <div id="programs" className="mb-20 py-14">
-                                <h2 className="text-3xl font-extrabold text-blue-900 mb-15 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
-                                    Our Programs
-                                </h2>
-                                <div className="relative max-w-6xl mx-auto">
-                                    <div
-                                        className="flex gap-8  overflow-x-auto scrollbar-modern scrollbar-thumb-dark-blue scrollbar-track-blue-100 py-6 px-8 rounded-2xl "
+                {/* IMAGE BANNER
+                <section className="bg-gradient-to-r from-sky-50 via-blue-100 to-cyan-50 py-6">
+                    <div
+                        className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden  mb-14 shadow-2xl"
+                        style={{
+                            perspective: '1200px',
+                            perspectiveOrigin: '50% 50%',
+                        }}
+                    >
+                        <div
+                            className="flex items-center gap-10"
+                            style={{
+                                width: 'max-content',
+                                animation: 'infinite-scroll 30s linear infinite',
+                                display: 'flex',
+                                minWidth: '200%',
+                                transformStyle: 'preserve-3d',
+                            }}
+                        >
+                            {Array(4).fill([img1, img3, img5, img6, img2, img4, img5, img6]).flat().map((img, idx) => (
+                                <div
+                                    key={idx}
+                                    className="relative group transition-transform duration-300 hover:scale-105"
+                                    style={{
+                                        transform: `rotateY(${(idx % 8 - 4) * 8}deg) translateZ(0px)`,
+                                        boxShadow: '0 8px 32px 0 rgba(30, 64, 175, 0.18), 0 1.5px 8px 0 rgba(30, 64, 175, 0.10)',
+                                        background: 'linear-gradient(135deg, #e0e7ff 60%, #f0f9ff 100%)',
+                                        borderRadius: '0.75rem',
+                                    }}
+                                >
+                                    <img
+                                        src={img}
+                                        alt={`slide-${idx}`}
+                                        className="h-24 w-36 object-cover rounded-lg shadow-xl"
+                                        draggable={false}
                                         style={{
-                                            scrollSnapType: 'x mandatory',
-                                            WebkitOverflowScrolling: 'touch',
+                                            boxShadow: '0 8px 24px 0 rgba(30, 64, 175, 0.14), 0 1.5px 8px 0 rgba(30, 64, 175, 0.08)',
+                                            borderRadius: '0.75rem',
+                                            border: 'none',
+                                            background: 'inherit',
                                         }}
-                                    >
-                                        {programs.map((program, idx) => (
-                                            <div
-                                                key={idx}
-                                                className="flex-shrink-0 w-80 md:w-96 bg-gradient-to-br from-blue-600 via-blue-400 to-blue-600 rounded-3xl shadow-2xl border border-blue-900 p-8 flex flex-col items-center text-center mx-2 transition-transform duration-300 hover:scale-105 hover:shadow-blue-700/40"
-                                                style={{
-                                                    scrollSnapAlign: 'start',
-                                                    minWidth: '20rem',
-                                                    maxWidth: '24rem',
-                                                }}
-                                            >
-                                                <div className="relative z-10 w-24 h-24 rounded-2xl overflow-hidden shadow-lg mb-6 border-4 border-blue-700 bg-blue-950">
-                                                    <img
-                                                        src={program.img}
-                                                        alt={program.title}
-                                                        className="w-full h-full object-cover scale-105 transition-transform duration-300"
-                                                    />
-                                                </div>
-                                                <h3 className="relative z-10 text-2xl font-bold text-blue-50 mb-2 tracking-wide">
-                                                    {program.title}
-                                                </h3>
-                                                <p className="relative z-10 text-blue-100 text-base mb-4 font-medium">
-                                                    {program.desc}
-                                                </p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    {/* Custom dark blue modern scrollbar style */}
-                                    <style>{`
-                                        .scrollbar-modern {
-                                            scrollbar-width: thin;
-                                            scrollbar-color: #1e3a8a #dbeafe;
-                                        }
-                                        .scrollbar-modern::-webkit-scrollbar {
-                                            height: 12px;
-                                            background: #dbeafe;
-                                            border-radius: 8px;
-                                        }
-                                        .scrollbar-modern::-webkit-scrollbar-thumb {
-                                            background: linear-gradient(135deg, #1e3a8a 60%, #1e40af 100%);
-                                            border-radius: 8px;
-                                            border: 2px solid #dbeafe;
-                                        }
-                                        .scrollbar-modern::-webkit-scrollbar-track {
-                                            background: #dbeafe;
-                                            border-radius: 8px;
-                                        }
-                                    `}</style>
+                                    />
+                                    <div className="absolute inset-0 bg-blue-900/10 opacity-0 group-hover:opacity-100 rounded-2xl transition"></div>
                                 </div>
-                            </div>
-     {/* Infinite moving image banner */}
-                                                                                <div
-                                                                                    className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden py-10 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-100 mb-20 shadow-2xl"
-                                                                                    style={{
-                                                                                        perspective: '1200px',
-                                                                                        perspectiveOrigin: '50% 50%',
-                                                                                    }}
-                                                                                >
-                                                                                    <div
-                                                                                        className="flex items-center gap-20"
-                                                                                        style={{
-                                                                                            width: 'max-content',
-                                                                                            animation: 'infinite-scroll 30s linear infinite',
-                                                                                            display: 'flex',
-                                                                                            minWidth: '200%',
-                                                                                            transformStyle: 'preserve-3d',
-                                                                                        }}
-                                                                                    >
-                                                                                        {/* Repeat the images enough times to ensure seamless looping */}
-                                                                                        {Array(4).fill([img1, img3, img5, img6, img2, img4, img5, img6]).flat().map((img, idx) => (
-                                                                                            <div
-                                                                                                key={idx}
-                                                                                                className="relative group transition-transform duration-300 hover:scale-110"
-                                                                                                style={{
-                                                                                                    transform: `rotateY(${(idx % 8 - 4) * 8}deg) translateZ(0px)`,
-                                                                                                    boxShadow: '0 8px 32px 0 rgba(30, 64, 175, 0.18), 0 1.5px 8px 0 rgba(30, 64, 175, 0.10)',
-                                                                                                    background: 'linear-gradient(135deg, #e0e7ff 60%, #f0f9ff 100%)',
-                                                                                                    borderRadius: '1rem',
-                                                                                                }}
-                                                                                            >
-                                                                                                <img
-                                                                                                    src={img}
-                                                                                                    alt={`slide-${idx}`}
-                                                                                                    className="h-36 w-56 object-cover rounded-xl shadow-2xl"
-                                                                                                    draggable={false}
-                                                                                                    style={{
-                                                                                                        boxShadow: '0 12px 32px 0 rgba(30, 64, 175, 0.18), 0 1.5px 8px 0 rgba(30, 64, 175, 0.10)',
-                                                                                                        borderRadius: '1rem',
-                                                                                                        border: 'none',
-                                                                                                        background: 'inherit',
-                                                                                                    }}
-                                                                                                />
-                                                                                                <div className="absolute inset-0 bg-blue-900/10 opacity-0 group-hover:opacity-100 rounded-3xl transition"></div>
-                                                                                            </div>
-                                                                                        ))}
-                                                                                <style>{`
-                                                                                            @keyframes infinite-scroll {
-                                                                                                0% { transform: translateX(0); }
-                                                                                                100% { transform: translateX(-50%); }
-                                                                                            }
-                                                                                        `}</style>
-                                                                                    </div>
-                                                                                </div>
-                            <section className="max-w-6xl mx-auto px-4 py-14 mb-20">
-                                <h2 className="text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
-                                    Latest News & Updates
-                                </h2>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                    {/* News Card 1 */}
-                                    <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border border-blue-100 p-8 flex flex-col hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
-                                        <div className="relative mb-5">
-                                            <img src={fits} alt="FITS Center" className="w-full h-40 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300" />
-                                            <span className="absolute top-3 right-3 bg-blue-700 text-blue-50 text-xs px-3 py-1 rounded-full font-bold shadow">New</span>
-                                        </div>
-                                        <h3 className="font-bold text-lg text-blue-900 mb-2">FITS Center Launches New Farmer Training</h3>
-                                        <p className="text-gray-800 text-base mb-4 font-semibold">
-                                            The FITS Center recently conducted a hands-on training session for local farmers, focusing on sustainable crop management and modern agricultural techniques.
-                                        </p>
-                                        <div className="flex items-center justify-between mt-auto">
-                                            <span className="text-blue-700 text-sm font-semibold">June 2024</span>
-                                            <a
-                                                href="https://ati.da.gov.ph/"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition"
-                                            >
-                                                Read More
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    {/* News Card 2 */}
-                                    <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border border-blue-100 p-8 flex flex-col hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200">
-                                        <div className="relative mb-5">
-                                            <img src={img4} alt="Organic Farming" className="w-full h-40 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300" />
-                                            <span className="absolute top-3 right-3 bg-blue-600 text-blue-50 text-xs px-3 py-1 rounded-full font-bold shadow">Update</span>
-                                        </div>
-                                        <h3 className="font-bold text-lg text-blue-900 mb-2">Organic Farming Initiative Expands</h3>
-                                        <p className="text-gray-800 text-base mb-4 font-semibold">
-                                            Our organic farming program has expanded to include more barangays, promoting healthier produce and eco-friendly practices across the region.
-                                        </p>
-                                        <div className="flex items-center justify-between mt-auto">
-                                            <span className="text-blue-700 text-sm font-semibold">May 2024</span>
-                                            <a
-                                                href="https://ati.da.gov.ph/"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition"
-                                            >
-                                                Read More
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    {/* News Card 3 */}
-                                    <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border border-blue-100 p-8 flex flex-col hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300">
-                                        <div className="relative mb-5">
-                                            <img src={img5} alt="Rabies Control" className="w-full h-40 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300" />
-                                            <span className="absolute top-3 right-3 bg-blue-500 text-blue-50 text-xs px-3 py-1 rounded-full font-bold shadow">Event</span>
-                                        </div>
-                                        <h3 className="font-bold text-lg text-blue-900 mb-2">Rabies Awareness Campaign</h3>
-                                        <p className="text-gray-800 text-base mb-4 font-semibold">
-                                            The Rabies Control team held a successful awareness drive, educating pet owners and distributing free vaccines to ensure community safety.
-                                        </p>
-                                        <div className="flex items-center justify-between mt-auto">
-                                            <span className="text-blue-700 text-sm font-semibold">April 2024</span>
-                                            <a
-                                                href="https://ati.da.gov.ph/"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition"
-                                            >
-                                                Read More
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
+                            ))}
+                            <style>{`
+                                @keyframes infinite-scroll {
+                                    0% { transform: translateX(0); }
+                                    100% { transform: translateX(-50%); }
+                                }
+                            `}</style>
+                        </div>
+                    </div>
+                </section> */}
 
+                {/* MISSION & VISION */}
+                <section className="bg-gradient-to-br from-cyan-50 via-blue-50 to-sky-100 py-16 ">
+                    <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto px-4 mb-4">
+                        {/* Mission Card */}
+                        <div className="flex-1 bg-gradient-to-br from-blue-200 via-blue-50 to-blue-100 rounded-3xl shadow-lg border border-blue-200 flex flex-col justify-between p-12 hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
                             <div>
-                                <h2 className="text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ">
-                                    Why Choose Us?
-                                </h2>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-15 max-w-5xl mx-auto">
-                                    {/* Card 1 */}
-                                    <div className="flex-1 bg-gradient-to-br from-blue-600 via-blue-400 to-blue-600 shadow-xl rounded-lg border border-blue-900 flex flex-col items-center p-10 hover:scale-105 hover:shadow-2xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-100">
-                                        <div className="bg-blue-800 rounded-full p-4 mb-5 shadow">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 10c-4.418 0-8-3.582-8-8 0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.418-3.582 8-8 8z" />
-                                            </svg>
+                                <div className="flex items-center gap-5 mb-6">
+                                    <span className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-200 text-blue-700 group-hover:bg-blue-300 transition shadow-md">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-9 h-9" fill="none" viewBox="0 0 24 24" stroke="currentColor"></svg>
+                                                            </span>
+                                                            <h2 className="text-3xl font-bold text-blue-900">Mission</h2>
+                                                        </div>
+                                                        <p className="text-gray-800 text-lg leading-relaxed font-semibold">
+                                                            To drive sustainable agricultural growth and improve community livelihoods through innovative solutions, education, and collaborative partnerships.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                {/* Divider for desktop */}
+                                                <div className="hidden md:flex flex-col justify-center">
+                                                    <div className="w-1 h-32 bg-blue-200 rounded-full mx-auto"></div>
+                                                </div>
+                                                {/* Vision Card - match Mission card style */}
+                                                <div className="flex-1 bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 rounded-3xl shadow-lg border border-blue-200 flex flex-col justify-between p-12 hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200">
+                                                    <div>
+                                                        <div className="flex items-center gap-5 mb-6">
+                                                            <span className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-200 text-blue-700 group-hover:bg-blue-300 transition shadow-md">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-9 h-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0c0 5-4.03 9-9 9s-9-4-9-9 4.03-9 9-9 9 4 9 9z" />
+                                                                </svg>
+                                                            </span>
+                                                            <h2 className="text-3xl font-bold text-blue-900">Vision</h2>
+                                                        </div>
+                                                        <p className="text-gray-800 text-lg leading-relaxed font-semibold">
+                                                            To be a leading force in transforming agriculture, fostering innovation, and building resilient, thriving communities for generations to come.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                                                                            {/* Our Programs - Horizontal Timeline Style */}
+                                <div id="programs" className="mb-20 mt-20 py-14">
+                                    <h2 className="text-3xl font-extrabold text-blue-900 mb-15 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
+                                        Our Programs
+                                    </h2>
+                                    <div className="relative max-w-6xl mx-auto">
+                                        <div className="flex items-center justify-between gap-0 overflow-x-auto scrollbar-modern py-10 px-2 md:px-8">
+                                            {/* Timeline line */}
+                                            <div className="absolute left-0 right-0 top-1/2 h-1 bg-blue-200 z-0" style={{ transform: 'translateY(-50%)' }}></div>
+                                            {programs.map((program, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="relative z-10 flex flex-col items-center flex-1 min-w-[180px] max-w-[220px] mx-2 group"
+                                                >
+                                                    {/* Timeline dot */}
+                                                    <div className="w-8 h-8 rounded-full bg-blue-700 border-4 border-blue-200 flex items-center justify-center mb-4 shadow-lg group-hover:bg-blue-800 transition">
+                                                        <img
+                                                            src={program.img}
+                                                            alt={program.title}
+                                                            className="w-6 h-6 object-cover rounded-full"
+                                                        />
+                                                    </div>
+                                                    <div className="bg-white/90 border border-blue-100 rounded-xl shadow-md px-5 py-4 text-center mb-2 group-hover:shadow-xl transition">
+                                                        <h3 className="text-lg font-bold text-blue-900 mb-1">{program.title}</h3>
+                                                        <p className="text-gray-700 text-sm font-medium">{program.desc}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
                                         </div>
-                                        <h3 className="font-bold text-xl text-blue-50 mb-2 text-center">Expert Support</h3>
-                                        <p className="text-blue-100 text-center text-base font-semibold">
-                                            Our team provides expert guidance and support to help you succeed in agriculture.
-                                        </p>
+                                        {/* Custom dark blue modern scrollbar style */}
+                                        <style>{`
+                                            .scrollbar-modern {
+                                                scrollbar-width: thin;
+                                                scrollbar-color: #1e3a8a #dbeafe;
+                                            }
+                                            .scrollbar-modern::-webkit-scrollbar {
+                                                height: 12px;
+                                                background: #dbeafe;
+                                                border-radius: 8px;
+                                            }
+                                            .scrollbar-modern::-webkit-scrollbar-thumb {
+                                                background: linear-gradient(135deg, #1e3a8a 60%, #1e40af 100%);
+                                                border-radius: 8px;
+                                                border: 2px solid #dbeafe;
+                                            }
+                                            .scrollbar-modern::-webkit-scrollbar-track {
+                                                background: #dbeafe;
+                                                border-radius: 8px;
+                                            }
+                                        `}</style>
                                     </div>
-                                    {/* Card 2 */}
-                                    <div className="flex-1 bg-gradient-to-br from-blue-600 via-blue-400 to-blue-600 shadow-xl rounded-lg border border-blue-900 flex flex-col items-center p-10 hover:scale-105 hover:shadow-2xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-100">
-                                        <div className="bg-blue-800 rounded-full p-4 mb-5 shadow">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a4 4 0 018 0v2m-4-6a4 4 0 100-8 4 4 0 000 8z" />
-                                            </svg>
+                           
+                                {/* --- Latest News & Updates: Unique Timeline Layout --- */}
+                                <section className="max-w-4xl mx-auto px-2 py-10 mb-14">
+                                    <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
+                                        Latest News & Updates
+                                    </h2>
+                                    <div className="relative flex flex-col items-center">
+                                        {/* Vertical timeline line */}
+                                        <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b mt-10 from-blue-200 via-blue-100 to-blue-50 z-0" style={{ transform: 'translateX(-50%)' }}></div>
+                                        {/* Timeline Items */}
+                                        <div className="space-y-10 w-full z-10">
+                                            {/* News Card 1 */}
+                                            <div className="flex md:flex-row flex-col items-center md:items-start w-full group relative">
+                                                <div className="md:w-1/2 w-full md:pr-6 flex justify-end md:justify-end">
+                                                    <div className="relative bg-white/90 rounded-2xl shadow-lg border border-blue-100 p-5 w-full max-w-sm hover:shadow-xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-100">
+                                                        <div className="absolute -left-6 top-1/2 transform -translate-y-1/2 w-7 h-7 bg-blue-700 border-4 border-blue-100 rounded-full flex items-center justify-center shadow-lg z-10">
+                                                            <span className="text-white font-bold text-base">1</span>
+                                                        </div>
+                                                        <div className="relative mb-3">
+                                                            <img src={fits} alt="FITS Center" className="w-full h-28 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" />
+                                                            <span className="absolute top-2 right-2 bg-blue-700 text-blue-50 text-xs px-2 py-0.5 rounded-full font-bold shadow">New</span>
+                                                        </div>
+                                                        <h3 className="font-bold text-base text-blue-900 mb-1">FITS Center Launches New Farmer Training</h3>
+                                                        <p className="text-gray-800 text-sm mb-3 font-semibold">
+                                                            The FITS Center recently conducted a hands-on training session for local farmers, focusing on sustainable crop management and modern agricultural techniques.
+                                                        </p>
+                                                        <div className="flex items-center justify-between mt-auto">
+                                                            <span className="text-blue-700 text-xs font-semibold">June 2024</span>
+                                                            <a
+                                                                href="https://ati.da.gov.ph/"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition text-xs"
+                                                            >
+                                                                Read More
+                                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                                                </svg>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="hidden md:block md:w-1/2"></div>
+                                            </div>
+                                            {/* News Card 2 */}
+                                            <div className="flex md:flex-row flex-col-reverse items-center md:items-start w-full group relative">
+                                                <div className="hidden md:block md:w-1/2"></div>
+                                                <div className="md:w-1/2 w-full md:pl-6 flex justify-start md:justify-start">
+                                                    <div className="relative bg-white/90 rounded-2xl shadow-lg border border-blue-100 p-5 w-full max-w-sm hover:shadow-xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-200">
+                                                        <div className="absolute -right-6 top-1/2 transform -translate-y-1/2 w-7 h-7 bg-blue-600 border-4 border-blue-100 rounded-full flex items-center justify-center shadow-lg z-10">
+                                                            <span className="text-white font-bold text-base">2</span>
+                                                        </div>
+                                                        <div className="relative mb-3">
+                                                            <img src={img4} alt="Organic Farming" className="w-full h-28 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" />
+                                                            <span className="absolute top-2 right-2 bg-blue-600 text-blue-50 text-xs px-2 py-0.5 rounded-full font-bold shadow">Update</span>
+                                                        </div>
+                                                        <h3 className="font-bold text-base text-blue-900 mb-1">Organic Farming Initiative Expands</h3>
+                                                        <p className="text-gray-800 text-sm mb-3 font-semibold">
+                                                            Our organic farming program has expanded to include more barangays, promoting healthier produce and eco-friendly practices across the region.
+                                                        </p>
+                                                        <div className="flex items-center justify-between mt-auto">
+                                                            <span className="text-blue-700 text-xs font-semibold">May 2024</span>
+                                                            <a
+                                                                href="https://ati.da.gov.ph/"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition text-xs"
+                                                            >
+                                                                Read More
+                                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                                                </svg>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* News Card 3 */}
+                                            <div className="flex md:flex-row flex-col items-center md:items-start w-full group relative">
+                                                <div className="md:w-1/2 w-full md:pr-6 flex justify-end md:justify-end">
+                                                    <div className="relative bg-white/90 rounded-2xl shadow-lg border border-blue-100 p-5 w-full max-w-sm hover:shadow-xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-300">
+                                                        <div className="absolute -left-6 top-1/2 transform -translate-y-1/2 w-7 h-7 bg-blue-500 border-4 border-blue-100 rounded-full flex items-center justify-center shadow-lg z-10">
+                                                            <span className="text-white font-bold text-base">3</span>
+                                                        </div>
+                                                        <div className="relative mb-3">
+                                                            <img src={img5} alt="Rabies Control" className="w-full h-28 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" />
+                                                            <span className="absolute top-2 right-2 bg-blue-500 text-blue-50 text-xs px-2 py-0.5 rounded-full font-bold shadow">Event</span>
+                                                        </div>
+                                                        <h3 className="font-bold text-base text-blue-900 mb-1">Rabies Awareness Campaign</h3>
+                                                        <p className="text-gray-800 text-sm mb-3 font-semibold">
+                                                            The Rabies Control team held a successful awareness drive, educating pet owners and distributing free vaccines to ensure community safety.
+                                                        </p>
+                                                        <div className="flex items-center justify-between mt-auto">
+                                                            <span className="text-blue-700 text-xs font-semibold">April 2024</span>
+                                                            <a
+                                                                href="https://ati.da.gov.ph/"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition text-xs"
+                                                            >
+                                                                Read More
+                                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                                                </svg>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="hidden md:block md:w-1/2"></div>
+                                            </div>
                                         </div>
-                                        <h3 className="font-bold text-xl text-blue-50 mb-2 text-center">Community Focus</h3>
-                                        <p className="text-blue-100 text-center text-base font-semibold">
-                                            We are dedicated to uplifting communities and fostering sustainable growth.
-                                        </p>
                                     </div>
-                                    {/* Card 3 */}
-                                    <div className="flex-1 bg-gradient-to-br from-blue-600 via-blue-400 to-blue-600 shadow-xl rounded-lg border border-blue-900 flex flex-col items-center p-10 hover:scale-105 hover:shadow-2xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-100">
-                                        <div className="bg-blue-800 rounded-full p-4 mb-5 shadow">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2z" />
-                                            </svg>
+                                </section>
+
+                                <div>
+                                    <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 mb-8 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100 ">
+                                        Why Choose Us?
+                                    </h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-10 max-w-4xl mx-auto">
+                                        {/* Card 1 */}
+                                        <div className="flex-1 bg-gradient-to-br from-blue-600 via-blue-400 to-blue-600 shadow-xl rounded-lg border border-blue-900 flex flex-col items-center p-7 hover:scale-105 hover:shadow-2xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-100">
+                                            <div className="bg-blue-800 rounded-full p-3 mb-4 shadow">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 10c-4.418 0-8-3.582-8-8 0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.418-3.582 8-8 8z" />
+                                                </svg>
+                                            </div>
+                                            <h3 className="font-bold text-lg text-blue-50 mb-1 text-center">Expert Support</h3>
+                                            <p className="text-blue-100 text-center text-sm font-semibold">
+                                                Our team provides expert guidance and support to help you succeed in agriculture.
+                                            </p>
                                         </div>
-                                        <h3 className="font-bold text-xl text-blue-50 mb-2 text-center">Trusted & Secure</h3>
-                                        <p className="text-blue-100 text-center text-base font-semibold">
-                                            We ensure your data and interactions are safe and handled with integrity.
-                                        </p>
+                                        {/* Card 2 */}
+                                        <div className="flex-1 bg-gradient-to-br from-blue-600 via-blue-400 to-blue-600 shadow-xl rounded-lg border border-blue-900 flex flex-col items-center p-7 hover:scale-105 hover:shadow-2xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-100">
+                                            <div className="bg-blue-800 rounded-full p-3 mb-4 shadow">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a4 4 0 018 0v2m-4-6a4 4 0 100-8 4 4 0 000 8z" />
+                                                </svg>
+                                            </div>
+                                            <h3 className="font-bold text-lg text-blue-50 mb-1 text-center">Community Focus</h3>
+                                            <p className="text-blue-100 text-center text-sm font-semibold">
+                                                We are dedicated to uplifting communities and fostering sustainable growth.
+                                            </p>
+                                        </div>
+                                        {/* Card 3 */}
+                                        <div className="flex-1 bg-gradient-to-br from-blue-600 via-blue-400 to-blue-600 shadow-xl rounded-lg border border-blue-900 flex flex-col items-center p-7 hover:scale-105 hover:shadow-2xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-100">
+                                            <div className="bg-blue-800 rounded-full p-3 mb-4 shadow">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2z" />
+                                                </svg>
+                                            </div>
+                                            <h3 className="font-bold text-lg text-blue-50 mb-1 text-center">Trusted & Secure</h3>
+                                            <p className="text-blue-100 text-center text-sm font-semibold">
+                                                We ensure your data and interactions are safe and handled with integrity.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
