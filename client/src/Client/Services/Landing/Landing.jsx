@@ -132,57 +132,58 @@ export default function Landing() {
                                 >
                                     Our Programs
                                 </a>
-                                <a
-                                    href="/about"
-                                    className="border-2 border-blue-100 text-blue-50 px-8 py-3 rounded-2xl font-semibold hover:bg-blue-900/30 transition"
-                                    onClick={e => { e.preventDefault(); window.location = '/about'; }}
-                                >
-                                    Learn More
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                                                                    <a
+                                                                        href="/about"
+                                                                        className="border-2 border-blue-100 text-blue-50 px-8 py-3 rounded-2xl font-semibold hover:bg-blue-900/30 transition"
+                                                                        onClick={e => { e.preventDefault(); window.location = '/about'; }}
+                                                                    >
+                                                                        Learn More
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-                    <div id="about" className="mb-28">
-                        <div className="flex flex-col md:flex-row gap-10 items-stretch">
-                            {/* Mission Card */}
-                            <div className="flex-1 bg-gradient-to-br from-blue-200 via-blue-50 to-blue-100 rounded-3xl shadow-lg border border-blue-200 flex flex-col justify-between p-12 hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
-                                <div>
-                                    <div className="flex items-center gap-5 mb-6">
-                                        <span className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-200 text-blue-700 group-hover:bg-blue-300 transition shadow-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-9 h-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
-                                            </svg>
-                                        </span>
-                                        <h2 className="text-3xl font-bold text-blue-900">Mission</h2>
+                                                                           
+
+                                                                                {/* Mission & Vision Cards */}
+                            <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto px-4 mb-20">
+                                <div className="flex-1 bg-gradient-to-br from-blue-200 via-blue-50 to-blue-100 rounded-3xl shadow-lg border border-blue-200 flex flex-col justify-between p-12 hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
+                                    <div>
+                                        <div className="flex items-center gap-5 mb-6">
+                                            <span className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-200 text-blue-700 group-hover:bg-blue-300 transition shadow-md">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-9 h-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                                                </svg>
+                                            </span>
+                                            <h2 className="text-3xl font-bold text-blue-900">Mission</h2>
+                                        </div>
+                                        <p className="text-gray-800 text-lg leading-relaxed font-semibold">
+                                            To drive sustainable agricultural growth and improve community livelihoods through innovative solutions, education, and collaborative partnerships.
+                                        </p>
                                     </div>
-                                    <p className="text-gray-800 text-lg leading-relaxed font-semibold">
-                                        To drive sustainable agricultural growth and improve community livelihoods through innovative solutions, education, and collaborative partnerships.
-                                    </p>
+                                </div>
+                                {/* Divider for desktop */}
+                                <div className="hidden md:flex flex-col justify-center">
+                                    <div className="w-1 h-32 bg-blue-200 rounded-full mx-auto"></div>
+                                </div>
+                                {/* Vision Card */}
+                                <div className="flex-1 bg-gradient-to-br from-blue-200 via-blue-50 to-blue-100 rounded-3xl shadow-lg border border-blue-200 flex flex-col justify-between p-12 hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200">
+                                    <div>
+                                        <div className="flex items-center gap-5 mb-6">
+                                            <span className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-300 text-blue-800 group-hover:bg-blue-400 transition shadow-md">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-9 h-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0c0 5-4.03 9-9 9s-9-4-9-9 4.03-9 9-9 9 4 9 9z" />
+                                                </svg>
+                                            </span>
+                                            <h2 className="text-3xl font-bold text-blue-900">Vision</h2>
+                                        </div>
+                                        <p className="text-gray-800 text-lg leading-relaxed font-semibold">
+                                            To be a leading force in transforming agriculture, fostering innovation, and building resilient, thriving communities for generations to come.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                            {/* Divider for desktop */}
-                            <div className="hidden md:flex flex-col justify-center">
-                                <div className="w-1 h-32 bg-blue-200 rounded-full mx-auto"></div>
-                            </div>
-                            {/* Vision Card */}
-                            <div className="flex-1 bg-gradient-to-br from-blue-200 via-blue-50 to-blue-100 rounded-3xl shadow-lg border border-blue-200 flex flex-col justify-between p-12 hover:shadow-2xl group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200">
-                                <div>
-                                    <div className="flex items-center gap-5 mb-6">
-                                        <span className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-300 text-blue-800 group-hover:bg-blue-400 transition shadow-md">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-9 h-9" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0c0 5-4.03 9-9 9s-9-4-9-9 4.03-9 9-9 9 4 9 9z" />
-                                            </svg>
-                                        </span>
-                                        <h2 className="text-3xl font-bold text-blue-900">Vision</h2>
-                                    </div>
-                                    <p className="text-gray-800 text-lg leading-relaxed font-semibold">
-                                        To be a leading force in transforming agriculture, fostering innovation, and building resilient, thriving communities for generations to come.
-                                    </p>
-                                </div>
-                            </div>
-                            </div>
-                            </div>
+                            
 
                             {/* Modern Horizontal Scrollbar for Programs */}
                             <div id="programs" className="mb-20 py-14">
@@ -246,7 +247,59 @@ export default function Landing() {
                                     `}</style>
                                 </div>
                             </div>
-
+     {/* Infinite moving image banner */}
+                                                                                <div
+                                                                                    className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden py-10 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-100 mb-20 shadow-2xl"
+                                                                                    style={{
+                                                                                        perspective: '1200px',
+                                                                                        perspectiveOrigin: '50% 50%',
+                                                                                    }}
+                                                                                >
+                                                                                    <div
+                                                                                        className="flex items-center gap-20"
+                                                                                        style={{
+                                                                                            width: 'max-content',
+                                                                                            animation: 'infinite-scroll 30s linear infinite',
+                                                                                            display: 'flex',
+                                                                                            minWidth: '200%',
+                                                                                            transformStyle: 'preserve-3d',
+                                                                                        }}
+                                                                                    >
+                                                                                        {/* Repeat the images enough times to ensure seamless looping */}
+                                                                                        {Array(4).fill([img1, img3, img5, img6, img2, img4, img5, img6]).flat().map((img, idx) => (
+                                                                                            <div
+                                                                                                key={idx}
+                                                                                                className="relative group transition-transform duration-300 hover:scale-110"
+                                                                                                style={{
+                                                                                                    transform: `rotateY(${(idx % 8 - 4) * 8}deg) translateZ(0px)`,
+                                                                                                    boxShadow: '0 8px 32px 0 rgba(30, 64, 175, 0.18), 0 1.5px 8px 0 rgba(30, 64, 175, 0.10)',
+                                                                                                    background: 'linear-gradient(135deg, #e0e7ff 60%, #f0f9ff 100%)',
+                                                                                                    borderRadius: '1rem',
+                                                                                                }}
+                                                                                            >
+                                                                                                <img
+                                                                                                    src={img}
+                                                                                                    alt={`slide-${idx}`}
+                                                                                                    className="h-36 w-56 object-cover rounded-xl shadow-2xl"
+                                                                                                    draggable={false}
+                                                                                                    style={{
+                                                                                                        boxShadow: '0 12px 32px 0 rgba(30, 64, 175, 0.18), 0 1.5px 8px 0 rgba(30, 64, 175, 0.10)',
+                                                                                                        borderRadius: '1rem',
+                                                                                                        border: 'none',
+                                                                                                        background: 'inherit',
+                                                                                                    }}
+                                                                                                />
+                                                                                                <div className="absolute inset-0 bg-blue-900/10 opacity-0 group-hover:opacity-100 rounded-3xl transition"></div>
+                                                                                            </div>
+                                                                                        ))}
+                                                                                <style>{`
+                                                                                            @keyframes infinite-scroll {
+                                                                                                0% { transform: translateX(0); }
+                                                                                                100% { transform: translateX(-50%); }
+                                                                                            }
+                                                                                        `}</style>
+                                                                                    </div>
+                                                                                </div>
                             <section className="max-w-6xl mx-auto px-4 py-14 mb-20">
                                 <h2 className="text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
                                     Latest News & Updates
