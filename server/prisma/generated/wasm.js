@@ -178,15 +178,6 @@ exports.Prisma.Inventory_categoriesScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.Borrowed_itemsScalarFieldEnum = {
-  id: 'id',
-  itemId: 'itemId',
-  borrowedAt: 'borrowedAt',
-  returnedAt: 'returnedAt',
-  borrowerId: 'borrowerId',
-  notes: 'notes'
-};
-
 exports.Prisma.SeminarsScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -266,11 +257,6 @@ exports.Prisma.inventory_categoriesOrderByRelevanceFieldEnum = {
   description: 'description'
 };
 
-exports.Prisma.borrowed_itemsOrderByRelevanceFieldEnum = {
-  borrowerId: 'borrowerId',
-  notes: 'notes'
-};
-
 exports.Prisma.seminarsOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
@@ -337,7 +323,6 @@ exports.Prisma.ModelName = {
   accounts_commodities: 'accounts_commodities',
   inventory_items: 'inventory_items',
   inventory_categories: 'inventory_categories',
-  borrowed_items: 'borrowed_items',
   seminars: 'seminars',
   seminar_participants: 'seminar_participants'
 };

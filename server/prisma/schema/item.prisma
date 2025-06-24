@@ -26,18 +26,6 @@ model inventory_categories {
     updatedAt   DateTime @updatedAt
 }
 
-//? ====================================== BORROW SCHEMA ====================================== ?//
-
-model borrowed_items {
-    id          Int      @id @default(autoincrement())
-    itemId      Int
-    borrowedAt  DateTime @default(now())
-    returnedAt  DateTime?
-    borrowerId  String
-    notes       String?
-
-}
-
 
 //? ========================================== ENUMS ========================================== ?//
 
