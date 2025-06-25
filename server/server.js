@@ -12,8 +12,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000;
 
-//TODO:  Database
-
 // Server
 const server = http.createServer(app);
 
@@ -22,7 +20,6 @@ server.listen(PORT, ()=>{
         '\n\n\n\nLINK: '.cyan + ('http://127.0.0.1:' + PORT + '/\n').yellow.italic.underline
     );
 })
-
 
 export default server;
 
