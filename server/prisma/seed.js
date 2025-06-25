@@ -9,6 +9,15 @@ import users from './Data/account.json' with { type: 'json' }
 
 async function createAccount() {
   for (const user of users) {
+
+    // Check if username already exists
+    const existingUser = await prisma.accounts.findUnique({
+      where: { username: user.username }
+    });
+    if (existingUser) {
+      continue;
+    }
+
     const hashedPassword = await bcrypt.hash("123456", 10)
 
     await prisma.accounts.create({
@@ -38,15 +47,21 @@ async function createAccount() {
 import commodities from './Data/commodities.json' with { type: 'json' }
 
 async function createCommodities() {
-
-    for (const commodity of commodities) {
-    await prisma.commodities.create({
-        data: {
-            name: commodity.name,
-            description: commodity.description,
-        },
+  for (const commodity of commodities) {
+    // Check if commodity with the same name already exists
+    const existingCommodity = await prisma.commodities.findUnique({
+      where: { name: commodity.name }
     });
+    if (existingCommodity) {
+      continue;
     }
+    await prisma.commodities.create({
+      data: {
+        name: commodity.name,
+        description: commodity.description,
+      },
+    });
+  }
 }
 
 //? ==================================== ACCOUNT COMMODITIES =================================== ?//
@@ -62,15 +77,33 @@ async function createAccountCommodities() {
     // Shuffle the commodities array to pick commodities randomly
     const shuffledCommodities = [...commoditiesData.sort(() => Math.random() - 0.5)];
 
+    // Track which commodity IDs have already been assigned to this account
+    const assignedCommodityIds = new Set();
+
     // Assign the randomly selected commodities to the account
     for (let i = 0; i < numberOfCommodities; i++) {
       const commodity = shuffledCommodities[i];
-      await prisma.accounts_commodities.create({
-        data: {
-          account_id: account.id,
-          commodity_id: commodity.id,
-        },
+      // Check if this (account_id, commodity_id) pair already exists
+      if (assignedCommodityIds.has(commodity.id)) {
+        continue;
+      }
+      const existing = await prisma.accounts_commodities.findUnique({
+        where: {
+          account_id_commodity_id: {
+            account_id: account.id,
+            commodity_id: commodity.id
+          }
+        }
       });
+      if (!existing) {
+        await prisma.accounts_commodities.create({
+          data: {
+            account_id: account.id,
+            commodity_id: commodity.id,
+          },
+        });
+        assignedCommodityIds.add(commodity.id);
+      }
     }
   }
 }
@@ -115,16 +148,113 @@ async function createSeminarParticipants() {
         // Assign the randomly selected accounts to the seminar
         for (let i = 0; i < numberOfParticipants; i++) {
             const account = shuffledAccounts[i];
-            await prisma.seminar_participants.create({
-                data: {
-                    seminar_id: seminar.id,
-                    account_id: account.id,
-                },
+            // Check if this (seminar_id, account_id) pair already exists
+            const existing = await prisma.seminar_participants.findUnique({
+                where: {
+                    seminar_id_account_id: {
+                        seminar_id: seminar.id,
+                        account_id: account.id,
+                    }
+                }
             });
+            if (!existing) {
+                await prisma.seminar_participants.create({
+                    data: {
+                        seminar_id: seminar.id,
+                        account_id: account.id,
+                    },
+                });
+            }
         }
     }
 }
 
+
+//? =================================== INVENTORY ITEMS =================================== ?//
+
+import inventoryItemsData from './Data/inventory_items.json' with { type: 'json' }
+
+async function createInventoryItems() {
+  for (const item of inventoryItemsData) {
+    // Check if item with the same id already exists
+    const existingItem = await prisma.inventory_items.findUnique({
+      where: { id: item.id }
+    });
+    if (existingItem) {
+      continue;
+    }
+    await prisma.inventory_items.create({
+      data: {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        category: {
+          connect: { id: item.categoryId }
+        }
+      },
+    });
+  }
+}
+
+//? =============================== INVENTORY CATEGORIES =============================== ?//
+
+import inventoryCategoriesData from './Data/inventory_category.json' with { type: 'json' }
+
+async function createInventoryCategories() {
+  for (const category of inventoryCategoriesData) {
+    // Check if category with the same id already exists
+    const existingCategory = await prisma.inventory_categories.findUnique({
+      where: { id: category.id }
+    });
+    if (existingCategory) {
+      continue;
+    }
+    await prisma.inventory_categories.create({
+      data: {
+        id: category.id,
+        name: category.name,
+        icon: null,
+        description: category.description,
+      },
+    });
+  }
+}
+
+//? ==================================== ITEM STACKS ==================================== ?//
+
+import { faker } from '@faker-js/faker';
+async function createItemStacks() {
+  const inventoryItems = await prisma.inventory_items.findMany();
+
+  const statuses = ['Available', 'Unavailable', 'Lost', 'Damaged', 'Reserved', 'Borrowed', 'Distributed'];
+
+  for (const item of inventoryItems) {
+    // Generate a random number of stacks for each item (1 to 5 stacks)
+    const numberOfStacks = Math.floor(Math.random() * 5) + 1;
+    let remainingQuantity = faker.number.int({ min: 1, max: 50 }); // Random initial quantity
+
+    for (let i = 0; i < numberOfStacks; i++) {
+      // Determine the quantity for this stack (up to the remaining quantity)
+      const stackQuantity = Math.min(faker.number.int({ min: 1, max: 20 }), remainingQuantity);
+      remainingQuantity -= stackQuantity;
+
+      // Randomly select a status for this stack
+      const status = statuses[Math.floor(Math.random() * statuses.length)];
+
+      await prisma.item_stacks.create({
+        data: {
+            itemId: item.id,
+            quantity: stackQuantity,
+            status: status,
+        },
+      });
+
+        if (remainingQuantity <= 0) {
+          break; // No more quantity to distribute
+        }
+    }
+  }
+}
 
 //? ====================================== EXECUTE SEEDS ====================================== ?//
 
@@ -144,9 +274,22 @@ async function main() {
 
     await createSeminarParticipants();
     console.log('Seminar Participants created successfully.');
-  } catch (error) {
+    
+    await createInventoryCategories();
+    console.log('Inventory Categories created successfully.');
+    
+    await createInventoryItems();
+    console.log('Inventory Items created successfully.');
+    
+    await createItemStacks();
+    console.log('Inventory Item Stacks created successfully.');
+  } 
+
+  catch (error) {
     console.error('Error seeding data:', error);
-  } finally {
+  } 
+  
+  finally {
     await prisma.$disconnect();
   }
 }

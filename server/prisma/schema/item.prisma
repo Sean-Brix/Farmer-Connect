@@ -1,7 +1,7 @@
 //? ======================================= ITEM SCHEMA ======================================= ?//
 
 model inventory_items {
-    id          Int      @id @default(autoincrement())
+    id          String   @id @default(cuid())
     name        String   @unique
     description String?
     categoryId  String
@@ -16,26 +16,22 @@ model inventory_items {
 //? ===================================== CATEGORY SCHEMA ===================================== ?//
 
 model inventory_categories {
-    id          String            @id @default(cuid())
-    name        String            @unique
+    id          String   @id @default(cuid())
+    name        String   @unique
     icon        String?
     description String?
-    createdAt   DateTime          @default(now())
-    updatedAt   DateTime          @updatedAt
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
 
     // Relations
-    items       inventory_items[]
+    items inventory_items[]
 }
 
 //? ====================================== STACKS SCHEMA ====================================== ?//
 model item_stacks {
-    id        Int         @id @default(autoincrement())
-    itemId    Int
-
-    // TODO: ===================== An item should have atleast one of these =====================
-    quantity  Int?
-    weight    Float?
-
+    id        String      @id @default(cuid())
+    itemId    String
+    quantity  Int         @default(1)
     status    item_status @default(Available)
     createdAt DateTime    @default(now())
     updatedAt DateTime    @updatedAt

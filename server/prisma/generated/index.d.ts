@@ -4732,22 +4732,12 @@ export namespace Prisma {
 
   export type AggregateInventory_items = {
     _count: Inventory_itemsCountAggregateOutputType | null
-    _avg: Inventory_itemsAvgAggregateOutputType | null
-    _sum: Inventory_itemsSumAggregateOutputType | null
     _min: Inventory_itemsMinAggregateOutputType | null
     _max: Inventory_itemsMaxAggregateOutputType | null
   }
 
-  export type Inventory_itemsAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type Inventory_itemsSumAggregateOutputType = {
-    id: number | null
-  }
-
   export type Inventory_itemsMinAggregateOutputType = {
-    id: number | null
+    id: string | null
     name: string | null
     description: string | null
     categoryId: string | null
@@ -4756,7 +4746,7 @@ export namespace Prisma {
   }
 
   export type Inventory_itemsMaxAggregateOutputType = {
-    id: number | null
+    id: string | null
     name: string | null
     description: string | null
     categoryId: string | null
@@ -4774,14 +4764,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type Inventory_itemsAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type Inventory_itemsSumAggregateInputType = {
-    id?: true
-  }
 
   export type Inventory_itemsMinAggregateInputType = {
     id?: true
@@ -4849,18 +4831,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: Inventory_itemsAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: Inventory_itemsSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: Inventory_itemsMinAggregateInputType
@@ -4891,22 +4861,18 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: Inventory_itemsCountAggregateInputType | true
-    _avg?: Inventory_itemsAvgAggregateInputType
-    _sum?: Inventory_itemsSumAggregateInputType
     _min?: Inventory_itemsMinAggregateInputType
     _max?: Inventory_itemsMaxAggregateInputType
   }
 
   export type Inventory_itemsGroupByOutputType = {
-    id: number
+    id: string
     name: string
     description: string | null
     categoryId: string
     createdAt: Date
     updatedAt: Date
     _count: Inventory_itemsCountAggregateOutputType | null
-    _avg: Inventory_itemsAvgAggregateOutputType | null
-    _sum: Inventory_itemsSumAggregateOutputType | null
     _min: Inventory_itemsMinAggregateOutputType | null
     _max: Inventory_itemsMaxAggregateOutputType | null
   }
@@ -4962,7 +4928,7 @@ export namespace Prisma {
       category: Prisma.$inventory_categoriesPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: number
+      id: string
       name: string
       description: string | null
       categoryId: string
@@ -5339,7 +5305,7 @@ export namespace Prisma {
    * Fields of the inventory_items model
    */
   interface inventory_itemsFieldRefs {
-    readonly id: FieldRef<"inventory_items", 'Int'>
+    readonly id: FieldRef<"inventory_items", 'String'>
     readonly name: FieldRef<"inventory_items", 'String'>
     readonly description: FieldRef<"inventory_items", 'String'>
     readonly categoryId: FieldRef<"inventory_items", 'String'>
@@ -6709,34 +6675,26 @@ export namespace Prisma {
   }
 
   export type Item_stacksAvgAggregateOutputType = {
-    id: number | null
-    itemId: number | null
     quantity: number | null
-    weight: number | null
   }
 
   export type Item_stacksSumAggregateOutputType = {
-    id: number | null
-    itemId: number | null
     quantity: number | null
-    weight: number | null
   }
 
   export type Item_stacksMinAggregateOutputType = {
-    id: number | null
-    itemId: number | null
+    id: string | null
+    itemId: string | null
     quantity: number | null
-    weight: number | null
     status: $Enums.item_status | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type Item_stacksMaxAggregateOutputType = {
-    id: number | null
-    itemId: number | null
+    id: string | null
+    itemId: string | null
     quantity: number | null
-    weight: number | null
     status: $Enums.item_status | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6746,7 +6704,6 @@ export namespace Prisma {
     id: number
     itemId: number
     quantity: number
-    weight: number
     status: number
     createdAt: number
     updatedAt: number
@@ -6755,24 +6712,17 @@ export namespace Prisma {
 
 
   export type Item_stacksAvgAggregateInputType = {
-    id?: true
-    itemId?: true
     quantity?: true
-    weight?: true
   }
 
   export type Item_stacksSumAggregateInputType = {
-    id?: true
-    itemId?: true
     quantity?: true
-    weight?: true
   }
 
   export type Item_stacksMinAggregateInputType = {
     id?: true
     itemId?: true
     quantity?: true
-    weight?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -6782,7 +6732,6 @@ export namespace Prisma {
     id?: true
     itemId?: true
     quantity?: true
-    weight?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -6792,7 +6741,6 @@ export namespace Prisma {
     id?: true
     itemId?: true
     quantity?: true
-    weight?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -6886,10 +6834,9 @@ export namespace Prisma {
   }
 
   export type Item_stacksGroupByOutputType = {
-    id: number
-    itemId: number
-    quantity: number | null
-    weight: number | null
+    id: string
+    itemId: string
+    quantity: number
     status: $Enums.item_status
     createdAt: Date
     updatedAt: Date
@@ -6918,7 +6865,6 @@ export namespace Prisma {
     id?: boolean
     itemId?: boolean
     quantity?: boolean
-    weight?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6931,13 +6877,12 @@ export namespace Prisma {
     id?: boolean
     itemId?: boolean
     quantity?: boolean
-    weight?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type item_stacksOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantity" | "weight" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["item_stacks"]>
+  export type item_stacksOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantity" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["item_stacks"]>
   export type item_stacksInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | inventory_itemsDefaultArgs<ExtArgs>
   }
@@ -6948,10 +6893,9 @@ export namespace Prisma {
       item: Prisma.$inventory_itemsPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: number
-      itemId: number
-      quantity: number | null
-      weight: number | null
+      id: string
+      itemId: string
+      quantity: number
       status: $Enums.item_status
       createdAt: Date
       updatedAt: Date
@@ -7325,10 +7269,9 @@ export namespace Prisma {
    * Fields of the item_stacks model
    */
   interface item_stacksFieldRefs {
-    readonly id: FieldRef<"item_stacks", 'Int'>
-    readonly itemId: FieldRef<"item_stacks", 'Int'>
+    readonly id: FieldRef<"item_stacks", 'String'>
+    readonly itemId: FieldRef<"item_stacks", 'String'>
     readonly quantity: FieldRef<"item_stacks", 'Int'>
-    readonly weight: FieldRef<"item_stacks", 'Float'>
     readonly status: FieldRef<"item_stacks", 'item_status'>
     readonly createdAt: FieldRef<"item_stacks", 'DateTime'>
     readonly updatedAt: FieldRef<"item_stacks", 'DateTime'>
@@ -9825,7 +9768,6 @@ export namespace Prisma {
     id: 'id',
     itemId: 'itemId',
     quantity: 'quantity',
-    weight: 'weight',
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -9922,6 +9864,7 @@ export namespace Prisma {
 
 
   export const inventory_itemsOrderByRelevanceFieldEnum: {
+    id: 'id',
     name: 'name',
     description: 'description',
     categoryId: 'categoryId'
@@ -9938,6 +9881,14 @@ export namespace Prisma {
   };
 
   export type inventory_categoriesOrderByRelevanceFieldEnum = (typeof inventory_categoriesOrderByRelevanceFieldEnum)[keyof typeof inventory_categoriesOrderByRelevanceFieldEnum]
+
+
+  export const item_stacksOrderByRelevanceFieldEnum: {
+    id: 'id',
+    itemId: 'itemId'
+  };
+
+  export type item_stacksOrderByRelevanceFieldEnum = (typeof item_stacksOrderByRelevanceFieldEnum)[keyof typeof item_stacksOrderByRelevanceFieldEnum]
 
 
   export const seminarsOrderByRelevanceFieldEnum: {
@@ -10009,13 +9960,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
    * Reference to a field of type 'item_status'
    */
   export type Enumitem_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'item_status'>
@@ -10033,6 +9977,13 @@ export namespace Prisma {
    * Reference to a field of type 'participant_status'
    */
   export type Enumparticipant_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'participant_status'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
   /**
    * Deep Input Types
@@ -10288,7 +10239,7 @@ export namespace Prisma {
     AND?: inventory_itemsWhereInput | inventory_itemsWhereInput[]
     OR?: inventory_itemsWhereInput[]
     NOT?: inventory_itemsWhereInput | inventory_itemsWhereInput[]
-    id?: IntFilter<"inventory_items"> | number
+    id?: StringFilter<"inventory_items"> | string
     name?: StringFilter<"inventory_items"> | string
     description?: StringNullableFilter<"inventory_items"> | string | null
     categoryId?: StringFilter<"inventory_items"> | string
@@ -10311,7 +10262,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
+    id?: string
     name?: string
     AND?: inventory_itemsWhereInput | inventory_itemsWhereInput[]
     OR?: inventory_itemsWhereInput[]
@@ -10332,17 +10283,15 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: inventory_itemsCountOrderByAggregateInput
-    _avg?: inventory_itemsAvgOrderByAggregateInput
     _max?: inventory_itemsMaxOrderByAggregateInput
     _min?: inventory_itemsMinOrderByAggregateInput
-    _sum?: inventory_itemsSumOrderByAggregateInput
   }
 
   export type inventory_itemsScalarWhereWithAggregatesInput = {
     AND?: inventory_itemsScalarWhereWithAggregatesInput | inventory_itemsScalarWhereWithAggregatesInput[]
     OR?: inventory_itemsScalarWhereWithAggregatesInput[]
     NOT?: inventory_itemsScalarWhereWithAggregatesInput | inventory_itemsScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"inventory_items"> | number
+    id?: StringWithAggregatesFilter<"inventory_items"> | string
     name?: StringWithAggregatesFilter<"inventory_items"> | string
     description?: StringNullableWithAggregatesFilter<"inventory_items"> | string | null
     categoryId?: StringWithAggregatesFilter<"inventory_items"> | string
@@ -10415,10 +10364,9 @@ export namespace Prisma {
     AND?: item_stacksWhereInput | item_stacksWhereInput[]
     OR?: item_stacksWhereInput[]
     NOT?: item_stacksWhereInput | item_stacksWhereInput[]
-    id?: IntFilter<"item_stacks"> | number
-    itemId?: IntFilter<"item_stacks"> | number
-    quantity?: IntNullableFilter<"item_stacks"> | number | null
-    weight?: FloatNullableFilter<"item_stacks"> | number | null
+    id?: StringFilter<"item_stacks"> | string
+    itemId?: StringFilter<"item_stacks"> | string
+    quantity?: IntFilter<"item_stacks"> | number
     status?: Enumitem_statusFilter<"item_stacks"> | $Enums.item_status
     createdAt?: DateTimeFilter<"item_stacks"> | Date | string
     updatedAt?: DateTimeFilter<"item_stacks"> | Date | string
@@ -10428,22 +10376,21 @@ export namespace Prisma {
   export type item_stacksOrderByWithRelationInput = {
     id?: SortOrder
     itemId?: SortOrder
-    quantity?: SortOrderInput | SortOrder
-    weight?: SortOrderInput | SortOrder
+    quantity?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     item?: inventory_itemsOrderByWithRelationInput
+    _relevance?: item_stacksOrderByRelevanceInput
   }
 
   export type item_stacksWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
+    id?: string
     AND?: item_stacksWhereInput | item_stacksWhereInput[]
     OR?: item_stacksWhereInput[]
     NOT?: item_stacksWhereInput | item_stacksWhereInput[]
-    itemId?: IntFilter<"item_stacks"> | number
-    quantity?: IntNullableFilter<"item_stacks"> | number | null
-    weight?: FloatNullableFilter<"item_stacks"> | number | null
+    itemId?: StringFilter<"item_stacks"> | string
+    quantity?: IntFilter<"item_stacks"> | number
     status?: Enumitem_statusFilter<"item_stacks"> | $Enums.item_status
     createdAt?: DateTimeFilter<"item_stacks"> | Date | string
     updatedAt?: DateTimeFilter<"item_stacks"> | Date | string
@@ -10453,8 +10400,7 @@ export namespace Prisma {
   export type item_stacksOrderByWithAggregationInput = {
     id?: SortOrder
     itemId?: SortOrder
-    quantity?: SortOrderInput | SortOrder
-    weight?: SortOrderInput | SortOrder
+    quantity?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10469,10 +10415,9 @@ export namespace Prisma {
     AND?: item_stacksScalarWhereWithAggregatesInput | item_stacksScalarWhereWithAggregatesInput[]
     OR?: item_stacksScalarWhereWithAggregatesInput[]
     NOT?: item_stacksScalarWhereWithAggregatesInput | item_stacksScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"item_stacks"> | number
-    itemId?: IntWithAggregatesFilter<"item_stacks"> | number
-    quantity?: IntNullableWithAggregatesFilter<"item_stacks"> | number | null
-    weight?: FloatNullableWithAggregatesFilter<"item_stacks"> | number | null
+    id?: StringWithAggregatesFilter<"item_stacks"> | string
+    itemId?: StringWithAggregatesFilter<"item_stacks"> | string
+    quantity?: IntWithAggregatesFilter<"item_stacks"> | number
     status?: Enumitem_statusWithAggregatesFilter<"item_stacks"> | $Enums.item_status
     createdAt?: DateTimeWithAggregatesFilter<"item_stacks"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"item_stacks"> | Date | string
@@ -10928,6 +10873,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsCreateInput = {
+    id?: string
     name: string
     description?: string | null
     createdAt?: Date | string
@@ -10937,7 +10883,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUncheckedCreateInput = {
-    id?: number
+    id?: string
     name: string
     description?: string | null
     categoryId: string
@@ -10947,6 +10893,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10956,7 +10903,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -10966,7 +10913,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsCreateManyInput = {
-    id?: number
+    id?: string
     name: string
     description?: string | null
     categoryId: string
@@ -10975,6 +10922,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10982,7 +10930,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -11058,8 +11006,8 @@ export namespace Prisma {
   }
 
   export type item_stacksCreateInput = {
-    quantity?: number | null
-    weight?: number | null
+    id?: string
+    quantity?: number
     status?: $Enums.item_status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11067,18 +11015,17 @@ export namespace Prisma {
   }
 
   export type item_stacksUncheckedCreateInput = {
-    id?: number
-    itemId: number
-    quantity?: number | null
-    weight?: number | null
+    id?: string
+    itemId: string
+    quantity?: number
     status?: $Enums.item_status
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type item_stacksUpdateInput = {
-    quantity?: NullableIntFieldUpdateOperationsInput | number | null
-    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11086,38 +11033,35 @@ export namespace Prisma {
   }
 
   export type item_stacksUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    itemId?: IntFieldUpdateOperationsInput | number
-    quantity?: NullableIntFieldUpdateOperationsInput | number | null
-    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type item_stacksCreateManyInput = {
-    id?: number
-    itemId: number
-    quantity?: number | null
-    weight?: number | null
+    id?: string
+    itemId: string
+    quantity?: number
     status?: $Enums.item_status
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type item_stacksUpdateManyMutationInput = {
-    quantity?: NullableIntFieldUpdateOperationsInput | number | null
-    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type item_stacksUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    itemId?: IntFieldUpdateOperationsInput | number
-    quantity?: NullableIntFieldUpdateOperationsInput | number | null
-    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11628,17 +11572,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type Item_stacksListRelationFilter = {
     every?: item_stacksWhereInput
     some?: item_stacksWhereInput
@@ -11669,10 +11602,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type inventory_itemsAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
   export type inventory_itemsMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -11689,26 +11618,6 @@ export namespace Prisma {
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type inventory_itemsSumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type Inventory_itemsListRelationFilter = {
@@ -11754,26 +11663,15 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type Enumitem_statusFilter<$PrismaModel = never> = {
@@ -11788,28 +11686,29 @@ export namespace Prisma {
     isNot?: inventory_itemsWhereInput
   }
 
+  export type item_stacksOrderByRelevanceInput = {
+    fields: item_stacksOrderByRelevanceFieldEnum | item_stacksOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type item_stacksCountOrderByAggregateInput = {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
-    weight?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type item_stacksAvgOrderByAggregateInput = {
-    id?: SortOrder
-    itemId?: SortOrder
     quantity?: SortOrder
-    weight?: SortOrder
   }
 
   export type item_stacksMaxOrderByAggregateInput = {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
-    weight?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11819,49 +11718,29 @@ export namespace Prisma {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
-    weight?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type item_stacksSumOrderByAggregateInput = {
-    id?: SortOrder
-    itemId?: SortOrder
     quantity?: SortOrder
-    weight?: SortOrder
   }
 
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type Enumitem_statusWithAggregatesFilter<$PrismaModel = never> = {
@@ -12239,14 +12118,6 @@ export namespace Prisma {
     update?: XOR<XOR<inventory_categoriesUpdateToOneWithWhereWithoutItemsInput, inventory_categoriesUpdateWithoutItemsInput>, inventory_categoriesUncheckedUpdateWithoutItemsInput>
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type item_stacksUncheckedUpdateManyWithoutItemNestedInput = {
     create?: XOR<item_stacksCreateWithoutItemInput, item_stacksUncheckedCreateWithoutItemInput> | item_stacksCreateWithoutItemInput[] | item_stacksUncheckedCreateWithoutItemInput[]
     connectOrCreate?: item_stacksCreateOrConnectWithoutItemInput | item_stacksCreateOrConnectWithoutItemInput[]
@@ -12309,16 +12180,8 @@ export namespace Prisma {
     connect?: inventory_itemsWhereUniqueInput
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
     increment?: number
     decrement?: number
     multiply?: number
@@ -12579,6 +12442,13 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedEnumitem_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.item_status[]
+    notIn?: $Enums.item_status[]
+    not?: NestedEnumitem_statusFilter<$PrismaModel> | $Enums.item_status
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -12604,56 +12474,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedEnumitem_statusFilter<$PrismaModel = never> = {
-    equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
-    in?: $Enums.item_status[]
-    notIn?: $Enums.item_status[]
-    not?: NestedEnumitem_statusFilter<$PrismaModel> | $Enums.item_status
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumitem_statusWithAggregatesFilter<$PrismaModel = never> = {
@@ -13002,17 +12822,16 @@ export namespace Prisma {
   }
 
   export type item_stacksCreateWithoutItemInput = {
-    quantity?: number | null
-    weight?: number | null
+    id?: string
+    quantity?: number
     status?: $Enums.item_status
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type item_stacksUncheckedCreateWithoutItemInput = {
-    id?: number
-    quantity?: number | null
-    weight?: number | null
+    id?: string
+    quantity?: number
     status?: $Enums.item_status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13071,10 +12890,9 @@ export namespace Prisma {
     AND?: item_stacksScalarWhereInput | item_stacksScalarWhereInput[]
     OR?: item_stacksScalarWhereInput[]
     NOT?: item_stacksScalarWhereInput | item_stacksScalarWhereInput[]
-    id?: IntFilter<"item_stacks"> | number
-    itemId?: IntFilter<"item_stacks"> | number
-    quantity?: IntNullableFilter<"item_stacks"> | number | null
-    weight?: FloatNullableFilter<"item_stacks"> | number | null
+    id?: StringFilter<"item_stacks"> | string
+    itemId?: StringFilter<"item_stacks"> | string
+    quantity?: IntFilter<"item_stacks"> | number
     status?: Enumitem_statusFilter<"item_stacks"> | $Enums.item_status
     createdAt?: DateTimeFilter<"item_stacks"> | Date | string
     updatedAt?: DateTimeFilter<"item_stacks"> | Date | string
@@ -13110,6 +12928,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsCreateWithoutCategoryInput = {
+    id?: string
     name: string
     description?: string | null
     createdAt?: Date | string
@@ -13118,7 +12937,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUncheckedCreateWithoutCategoryInput = {
-    id?: number
+    id?: string
     name: string
     description?: string | null
     createdAt?: Date | string
@@ -13156,7 +12975,7 @@ export namespace Prisma {
     AND?: inventory_itemsScalarWhereInput | inventory_itemsScalarWhereInput[]
     OR?: inventory_itemsScalarWhereInput[]
     NOT?: inventory_itemsScalarWhereInput | inventory_itemsScalarWhereInput[]
-    id?: IntFilter<"inventory_items"> | number
+    id?: StringFilter<"inventory_items"> | string
     name?: StringFilter<"inventory_items"> | string
     description?: StringNullableFilter<"inventory_items"> | string | null
     categoryId?: StringFilter<"inventory_items"> | string
@@ -13165,6 +12984,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsCreateWithoutItem_stacksInput = {
+    id?: string
     name: string
     description?: string | null
     createdAt?: Date | string
@@ -13173,7 +12993,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUncheckedCreateWithoutItem_stacksInput = {
-    id?: number
+    id?: string
     name: string
     description?: string | null
     categoryId: string
@@ -13198,6 +13018,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUpdateWithoutItem_stacksInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13206,7 +13027,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUncheckedUpdateWithoutItem_stacksInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -13537,42 +13358,39 @@ export namespace Prisma {
   }
 
   export type item_stacksCreateManyItemInput = {
-    id?: number
-    quantity?: number | null
-    weight?: number | null
+    id?: string
+    quantity?: number
     status?: $Enums.item_status
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type item_stacksUpdateWithoutItemInput = {
-    quantity?: NullableIntFieldUpdateOperationsInput | number | null
-    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type item_stacksUncheckedUpdateWithoutItemInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    quantity?: NullableIntFieldUpdateOperationsInput | number | null
-    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type item_stacksUncheckedUpdateManyWithoutItemInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    quantity?: NullableIntFieldUpdateOperationsInput | number | null
-    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type inventory_itemsCreateManyCategoryInput = {
-    id?: number
+    id?: string
     name: string
     description?: string | null
     createdAt?: Date | string
@@ -13580,6 +13398,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13588,7 +13407,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUncheckedUpdateWithoutCategoryInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13597,7 +13416,7 @@ export namespace Prisma {
   }
 
   export type inventory_itemsUncheckedUpdateManyWithoutCategoryInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

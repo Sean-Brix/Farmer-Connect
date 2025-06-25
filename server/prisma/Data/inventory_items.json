@@ -1,0 +1,80 @@
+[
+    {
+        "id": "p1a2b3c4-d5e6-7890-1234-567890abcdef",
+        "name": "Laptop",
+        "description": "High-performance laptop for professional use",
+        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+    },
+    {
+        "id": "p2b3c4d5-e6f7-8901-2345-67890abcdef0",
+        "name": "Office Chair",
+        "description": "Ergonomic office chair with adjustable lumbar support",
+        "categoryId": "f8e7d6c5-b4a3-1029-8765-43210fedcba09"
+    },
+    {
+        "id": "p3c4d5e6-f7a8-9012-3456-7890abcdef11",
+        "name": "T-Shirt",
+        "description": "Comfortable cotton t-shirt",
+        "categoryId": "b9c8d7e6-f5a4-3210-9876-543210fedcba"
+    },
+    {
+        "id": "p4d5e6f7-a8b9-0123-4567-890abcdef12",
+        "name": "Monitor",
+        "description": "27-inch 4K UHD monitor",
+        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+    },
+    {
+        "id": "p5e6f7a8-b9c0-1234-5678-90abcdef1314",
+        "name": "Keyboard",
+        "description": "Mechanical keyboard with RGB lighting",
+        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+    },
+    {
+        "id": "p6f7a8b9-c0d1-2345-6789-0abcdef1415",
+        "name": "Mouse",
+        "description": "Wireless ergonomic mouse",
+        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+    },
+    {
+        "id": "p7a8b9c0-d1e2-3456-7890-abcdef1516",
+        "name": "Desk",
+        "description": "Large wooden desk with drawers",
+        "categoryId": "f8e7d6c5-b4a3-1029-8765-43210fedcba09"
+    },
+    {
+        "id": "p8b9c0d1-e2f3-4567-890a-bcdef1617",
+        "name": "Printer",
+        "description": "Color laser printer with Wi-Fi",
+        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+    },
+    {
+        "id": "p9c0d1e2-f3a4-5678-90ab-cdef171819",
+        "name": "Projector",
+        "description": "Portable projector for presentations",
+        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+    },
+    {
+        "id": "pa0d1e2f-3a45-6789-0abc-def181920",
+        "name": "Whiteboard",
+        "description": "Large magnetic whiteboard",
+        "categoryId": "8e7d6c5b-4a39-1028-7654-3210fedcba8e7"
+    },
+    {
+        "id": "pb1e2f3a-4567-890a-bcde-f19202122",
+        "name": "Stationery Set",
+        "description": "Complete stationery set with pens, pencils, and notebooks",
+        "categoryId": "8e7d6c5b-4a39-1028-7654-3210fedcba8e7"
+    },
+    {
+        "id": "pc2f3a45-6789-0abc-def1-20212223",
+        "name": "External Hard Drive",
+        "description": "1TB external hard drive for backup",
+        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+    },
+    {
+        "id": "pd3a4567-890a-bcde-f123-21222324",
+        "name": "The Lord of the Rings",
+        "description": "Classic fantasy novel",
+        "categoryId": "a2b3c4d5-e6f7-8901-2345-67890abcdef0"
+    }
+]

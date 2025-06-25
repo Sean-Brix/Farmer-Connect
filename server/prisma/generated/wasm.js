@@ -180,7 +180,6 @@ exports.Prisma.Item_stacksScalarFieldEnum = {
   id: 'id',
   itemId: 'itemId',
   quantity: 'quantity',
-  weight: 'weight',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -253,6 +252,7 @@ exports.Prisma.accounts_commoditiesOrderByRelevanceFieldEnum = {
 };
 
 exports.Prisma.inventory_itemsOrderByRelevanceFieldEnum = {
+  id: 'id',
   name: 'name',
   description: 'description',
   categoryId: 'categoryId'
@@ -263,6 +263,11 @@ exports.Prisma.inventory_categoriesOrderByRelevanceFieldEnum = {
   name: 'name',
   icon: 'icon',
   description: 'description'
+};
+
+exports.Prisma.item_stacksOrderByRelevanceFieldEnum = {
+  id: 'id',
+  itemId: 'itemId'
 };
 
 exports.Prisma.seminarsOrderByRelevanceFieldEnum = {
