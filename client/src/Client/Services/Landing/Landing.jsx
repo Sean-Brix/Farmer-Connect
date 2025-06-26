@@ -215,7 +215,7 @@ export default function Landing() {
                 </section>
 
                 {/* PROGRAMS */}
-                <section id="programs" className="mb-20 mt-20 py-14 bg-gray-300">
+                <section id="programs" className="mb-20 mt-20 py-14 bg-blue-200">
                     <h2 className="text-3xl font-extrabold text-blue-900 mb-12 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
                         Our Programs
                     </h2>
@@ -268,7 +268,7 @@ export default function Landing() {
                 </section>
 
            { /* LATEST NEWS & UPDATES */}
-            <section className="relative max-w-3xl mx-auto px-2 py-15 mb-6">
+            <section className="relative max-w-3xl mx-auto px-2 py-15 mb-20">
                 {/* Decorative background shapes */}
                 <div className="absolute -top-8 -left-8 w-28 h-28 bg-blue-100 rounded-full opacity-30 blur-2xl z-0"></div>
                 <div className="absolute -bottom-8 -right-8 w-36 h-36 bg-blue-300 rounded-full opacity-20 blur-2xl z-0"></div>
@@ -405,7 +405,7 @@ export default function Landing() {
                     </svg>
                 </section>
 
-                <section className="bg-gray-300 py-30">
+                <section className="bg-blue-200 py-30 mb-20">
                     <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 mb-20 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-20 transition-all duration-700 delay-100">
                         Why Choose Us?
                     </h2>
@@ -675,7 +675,7 @@ export default function Landing() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10C22 6.477 17.523 2 12 2z" />
                                     </svg>
                                 </span>
-                                <span className="text-2xl font-extrabold tracking-tight">FITS-Tanza</span>
+                                <span className="text-2xl text-white font-extrabold tracking-tight">FITS-Tanza</span>
                             </div>
                             <p className="text-blue-100 text-base max-w-xs font-semibold">
                                 Advancing sustainable agriculture and community well-being through innovation and dedicated support.
