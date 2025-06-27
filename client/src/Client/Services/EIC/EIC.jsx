@@ -661,7 +661,7 @@ export default function Eic() {
                                 </span>
                             </button>
                         </div>
-                        <div className="grid  grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 w-full max-w-6xl">
+                        <div className="w-full max-w-7xl grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 px-2">
                             {paginatedItems.map((item) => {
                                 // Status color mapping
                                 let statusColor = 'bg-gray-400';
@@ -687,7 +687,7 @@ export default function Eic() {
                                 return (
                                     <div
                                         key={item.id}
-                                        className="max-w-full max-h-[370px] rounded-xl overflow-hidden shadow-2xl hover:shadow-[0_8px_32px_0_rgba(60,60,60,0.25)] bg-blue-100 m-4 border-2 border-blue-200 transition duration-200 hover:border-blue-300 hover:scale-[1.025] backdrop-blur-lg"
+                                        className="max-w-full max-h-[370px]  overflow-hidden shadow-2xl hover:shadow-[0_8px_32px_0_rgba(60,60,60,0.25)] bg-blue-100 m-4 border-2 border-blue-200 transition duration-200 hover:border-blue-300 hover:scale-[1.025] backdrop-blur-lg"
                                     >
                                         <div className="relative">
                                             <img
@@ -776,8 +776,8 @@ export default function Eic() {
                                         key={i}
                                         className={`px-4 py-2 rounded-lg font-semibold ${
                                             currentPage === i + 1
-                                                ? 'bg-gray-900 text-white'
-                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                ? 'bg-blue-700 text-white'
+                                                : 'bg-gray-200 text-blue-700 hover:bg-blue-300'
                                         }`}
                                         onClick={() => setCurrentPage(i + 1)}
                                     >

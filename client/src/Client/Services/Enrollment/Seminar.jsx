@@ -354,42 +354,41 @@ export default function Seminar() {
             showCustomAlert('Error cancelling seminar application.', 'error');
         }
     };  
-
     return (
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-white relative"
+                className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative"
                 style={{
-                    backgroundColor: '#fff',
                     overflow: 'hidden',
                 }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
-                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-16 ">
-                        <header className="flex flex-col items-center mb-10">
-                            <span className="uppercase tracking-widest text-gray-400 text-xs font-medium mb-1 letter-spacing-wide">
+                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20">
+                        {/* Header */}
+                        <header className="flex flex-col items-center mb-12">
+                            <span className="uppercase tracking-widest text-blue-400 text-xs font-semibold mb-1 letter-spacing-wide">
                                 Welcome to
                             </span>
                             <h1
                                 className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title"
-                                style={{ color: '#1e3a8a' }} // blue-800
+                                style={{ color: '#1e3a8a' }}
                             >
                                 Seminar Enrollment
                             </h1>
-                            <div className="mt-3 w-16 sm:w-24 h-2 rounded-full bg-blue-200 opacity-80"></div>
+                            <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200 opacity-90 shadow-lg"></div>
                         </header>
-                        {/* Search and Modern Filter */}
-                        <div className="flex flex-row items-center w-full max-w-3xl mt-4 mb-8 gap-3 justify-center">
+                        {/* Search and Filter */}
+                        <div className="flex flex-row items-center w-full max-w-4xl mt-4 mb-10 gap-4 justify-center">
                             {/* Search Bar */}
-                            <div className="flex flex-none min-w-1/2 max-w-xs gap-2 bg-white rounded-2xl shadow-lg px-4 py-1 items-center border border-gray-200 h-12">
+                            <div className="flex flex-none min-w-1/2 max-w-xs gap-2 bg-white/80 rounded-2xl shadow-xl px-5 py-2 items-center border border-blue-100 h-14 backdrop-blur-md">
                                 <div className="relative w-full">
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
                                         <i className="fa-solid fa-magnifying-glass"></i>
                                     </span>
                                     <input
                                         type="text"
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-transparent focus:outline-none focus:ring-0 text-gray-900 bg-transparent transition placeholder:text-gray-400"
+                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-200 text-blue-900 bg-transparent transition placeholder:text-blue-300 font-medium"
                                         placeholder={`Search by ${filterBy.toLowerCase()}...`}
                                         value={search}
                                         onChange={(e) =>
@@ -400,17 +399,17 @@ export default function Seminar() {
                                 </div>
                             </div>
                             {/* Modern Filter Button with Dropdown */}
-                            <div className="relative h-12 flex items-center">
+                            <div className="relative h-14 flex items-center">
                                 <button
                                     id="modernFilterButton"
-                                    className="flex items-center gap-2 px-4 sm:px-5 py-2 h-12 rounded-xl bg-white text-blue-700 font-semibold border border-gray-200 shadow transition-all duration-200 hover:bg-blue-50 focus:outline-none text-base sm:text-lg w-full"
+                                    className="flex items-center gap-2 px-5 py-2 h-14 rounded-xl bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 font-bold border border-blue-200 shadow-lg transition-all duration-200 hover:bg-blue-50 focus:outline-none text-base sm:text-lg w-full"
                                     onClick={() => setShowFilter((f) => !f)}
                                     type="button"
                                     aria-label="Show filter options"
-                                    style={{ minHeight: '3rem' }}
+                                    style={{ minHeight: '3.5rem' }}
                                 >
                                     <i className="fa-solid fa-filter text-blue-700 text-base sm:text-lg"></i>
-                                    <span className="  sm:inline">
+                                    <span className="sm:inline">
                                         {filterBy}
                                     </span>
                                     <i
@@ -422,7 +421,7 @@ export default function Seminar() {
                                 {/* Dropdown below the filter button */}
                                 {showFilter && (
                                     <div
-                                        className="absolute left-0 right-0 translate-y-12 mt-2 bg-white rounded-2xl shadow-2xl border border-blue-100 z-20 animate-fade-in py-2 px-2 w-full sm:w-auto"
+                                        className="absolute left-0 right-0 translate-y-14 mt-2 bg-white/90 rounded-2xl shadow-2xl border border-blue-100 z-20 animate-fade-in py-2 px-2 w-full sm:w-auto backdrop-blur-md"
                                         style={{
                                             minWidth: '100%',
                                             width: '100%',
@@ -432,9 +431,9 @@ export default function Seminar() {
                                         {filterOptions.map((opt) => (
                                             <button
                                                 key={opt.value}
-                                                className={`flex items-center gap-3 w-full text-left px-3 sm:px-4 py-2 rounded-xl font-semibold transition text-sm sm:text-base ${
+                                                className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-xl font-semibold transition text-base ${
                                                     filterBy === opt.value
-                                                        ? 'bg-blue-600 text-white'
+                                                        ? 'bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow'
                                                         : 'text-blue-900 hover:bg-blue-50'
                                                 }`}
                                                 onClick={() => {
@@ -458,93 +457,92 @@ export default function Seminar() {
                                     </div>
                                 )}
                             </div>
-                            
-                            </div>
-                            {/* My Requests Modal */}
-                            {showMyRequestsModal && (
-                                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
-                                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-2xl w-full relative overflow-hidden animate-fade-in">
-                                        {/* Modal Header */}
-                                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-700 to-blue-600">
-                                            <h2 className="text-xl font-bold text-white">
-                                                <i className="fa-solid fa-list mr-2"></i>
-                                                My Requests
-                                            </h2>
-                                            <button
-                                                className="text-white text-2xl hover:text-blue-200 transition"
-                                                onClick={handleCloseMyRequestsModal}
-                                                aria-label="Close"
-                                            >
-                                                <i className="fa-solid fa-xmark"></i>
-                                            </button>
-                                        </div>
-                                        {/* Modal Body */}
-                                        <div className="px-8 py-6 space-y-5">
-                                            {myRequests.length > 0 ? (
-                                                <table className="w-full">
-                                                    <thead>
-                                                        <tr className="text-left text-gray-600">
-                                                            <th className="py-2">Item</th>
-                                                            <th className="py-2">
-                                                                Borrow Date
-                                                            </th>
-                                                            <th className="py-2">
-                                                                Return Date
-                                                            </th>
-                                                            <th className="py-2">Status</th>
+                        </div>
+                        {/* My Requests Modal */}
+                        {showMyRequestsModal && (
+                            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md transition-all">
+                                <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-2xl w-full relative overflow-hidden animate-fade-in border-2 border-blue-200">
+                                    {/* Modal Header */}
+                                    <div className="flex items-center justify-between px-8 py-6 border-b border-blue-100 bg-gradient-to-r from-blue-700 to-blue-500">
+                                        <h2 className="text-xl font-bold text-white tracking-wide">
+                                            <i className="fa-solid fa-list mr-2"></i>
+                                            My Requests
+                                        </h2>
+                                        <button
+                                            className="text-white text-2xl hover:text-blue-200 transition"
+                                            onClick={handleCloseMyRequestsModal}
+                                            aria-label="Close"
+                                        >
+                                            <i className="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                    {/* Modal Body */}
+                                    <div className="px-8 py-6 space-y-5 bg-gradient-to-br from-blue-50 to-white">
+                                        {myRequests.length > 0 ? (
+                                            <table className="w-full rounded-xl overflow-hidden shadow">
+                                                <thead>
+                                                    <tr className="text-left text-blue-700 bg-blue-100">
+                                                        <th className="py-2 px-2">Item</th>
+                                                        <th className="py-2 px-2">
+                                                            Borrow Date
+                                                        </th>
+                                                        <th className="py-2 px-2">
+                                                            Return Date
+                                                        </th>
+                                                        <th className="py-2 px-2">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {myRequests.map((request) => (
+                                                        <tr
+                                                            key={request.id}
+                                                            className="border-b border-blue-50 hover:bg-blue-50 transition"
+                                                        >
+                                                            <td className="py-3 px-2">
+                                                                {request.item_name}
+                                                            </td>
+                                                            <td className="py-3 px-2">
+                                                                {request.borrow_date}
+                                                            </td>
+                                                            <td className="py-3 px-2">
+                                                                {request.return_date}
+                                                            </td>
+                                                            <td className="py-3 px-2">
+                                                                {request.status}
+                                                            </td>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {myRequests.map((request) => (
-                                                            <tr
-                                                                key={request.id}
-                                                                className="border-b border-gray-100"
-                                                            >
-                                                                <td className="py-3">
-                                                                    {request.item_name}
-                                                                </td>
-                                                                <td className="py-3">
-                                                                    {request.borrow_date}
-                                                                </td>
-                                                                <td className="py-3">
-                                                                    {request.return_date}
-                                                                </td>
-                                                                <td className="py-3">
-                                                                    {request.status}
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            ) : (
-                                                <div className="text-center text-gray-500 py-10">
-                                                    No requests found.
-                                                </div>
-                                            )}
-                                        </div>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        ) : (
+                                            <div className="text-center text-blue-400 py-10">
+                                                No requests found.
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                            )}
-                            <div className="flex flex-col gap-8 w-full max-w-3xl mt-6">
-
-                                {paginatedPrograms.length === 0 ? (
-                                    <div className="text-blue-300 text-center py-12 text-base">
-                                        No programs found.
-                                    </div>
-                                ) : (
-                                    paginatedPrograms.map((program) => {
+                            </div>
+                        )}
+                        {/* Seminar Cards */}
+                        <div className="flex flex-col gap-10 w-full max-w-4xl mt-6">
+                            {paginatedPrograms.length === 0 ? (
+                                <div className="text-blue-300 text-center py-16 text-lg font-semibold tracking-wide">
+                                    No programs found.
+                                </div>
+                            ) : (
+                                paginatedPrograms.map((program) => {
                                     const isApplied = appliedSeminars.includes(
                                         program.id
                                     );
                                     return (
                                         <article
                                             key={program.id}
-                                            className="relative flex flex-col md:flex-row gap-6 bg-blue-100 rounded-xl shadow-2xl p-0 border border-blue-200 overflow-hidden group transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-105"
+                                            className="relative flex flex-col md:flex-row gap-8 bg-white/90 rounded-3xl shadow-2xl border-2 border-blue-100 overflow-hidden group transition-transform duration-300 hover:scale-[1.025] hover:shadow-blue-200"
                                             style={{ transition: '0.3s' }}
                                         >
                                             {/* Image with border and outline */}
-                                            <div className="flex-shrink-0 flex items-center justify-center w-full md:w-56 h-56">
-                                                <div className="w-52 h-52 sm:w-44 sm:h-44 md:w-40 md:h-40 rounded-2xl bg-white shadow-lg flex items-center justify-center overflow-hidden border-4 border-blue-500 outline outline-blue-200 transition-all duration-300 ease-in-out">
+                                            <div className="flex-shrink-0 flex items-center justify-center w-full md:w-64 h-64 bg-gradient-to-br from-blue-100 to-blue-200">
+                                                <div className="w-56 h-56 sm:w-48 sm:h-48 md:w-44 md:h-44 rounded-2xl bg-white shadow-xl flex items-center justify-center overflow-hidden border-4 border-blue-400 outline outline-blue-100 transition-all duration-300 ease-in-out">
                                                     <img
                                                         src={
                                                             program.photo ||
@@ -556,10 +554,10 @@ export default function Seminar() {
                                                 </div>
                                             </div>
                                             {/* Content */}
-                                            <div className="flex flex-col justify-between flex-1 px-6 py-6">
+                                            <div className="flex flex-col justify-between flex-1 px-8 py-8">
                                                 <div>
-                                                    <div className="flex items-center gap-3 mb-2">
-                                                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-blue-200 to-blue-400 text-blue-900 text-lg shadow">
+                                                    <div className="flex items-center gap-4 mb-3">
+                                                        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-200 to-blue-400 text-blue-900 text-xl shadow-lg border-2 border-blue-300">
                                                             <i
                                                                 className={
                                                                     faIcons.All
@@ -567,7 +565,7 @@ export default function Seminar() {
                                                             ></i>
                                                         </span>
                                                         <span
-                                                            className="font-bold text-2xl text-blue-900 tracking-tight truncate"
+                                                            className="font-extrabold text-2xl text-blue-900 tracking-tight truncate"
                                                             title={
                                                                 program.title
                                                             }
@@ -576,7 +574,7 @@ export default function Seminar() {
                                                         </span>
                                                     </div>
                                                     <div
-                                                        className="text-blue-900 text-base mb-4 line-clamp-2 truncate"
+                                                        className="text-blue-900 text-base mb-5 line-clamp-2 truncate font-medium"
                                                         title={
                                                             program.description
                                                         }
@@ -588,7 +586,7 @@ export default function Seminar() {
                                                     </div>
                                                     <div className="flex flex-wrap gap-3 mt-2">
                                                         <span
-                                                            className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-200 px-3 py-1 rounded-lg font-semibold border border-blue-300 shadow-sm truncate"
+                                                            className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm truncate"
                                                             title={
                                                                 program.category
                                                             }
@@ -605,7 +603,7 @@ export default function Seminar() {
                                                             {program.category}
                                                         </span>
                                                         <span
-                                                            className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-200 px-3 py-1 rounded-lg font-semibold border border-blue-300 shadow-sm truncate"
+                                                            className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm truncate"
                                                             title={
                                                                 program.location
                                                             }
@@ -614,7 +612,7 @@ export default function Seminar() {
                                                             {program.location}
                                                         </span>
                                                         <span
-                                                            className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-200 px-3 py-1 rounded-lg font-semibold border border-blue-300 shadow-sm truncate"
+                                                            className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm truncate"
                                                             title={
                                                                 program.speaker
                                                             }
@@ -625,7 +623,7 @@ export default function Seminar() {
                                                     </div>
                                                 </div>
                                                 {/* Buttons */}
-                                                <div className="flex gap-3 w-full justify-end mt-6">
+                                                <div className="flex gap-4 w-full justify-end mt-8">
                                                     {isApplied ? (
                                                         <button
                                                             onClick={async () => {
@@ -643,7 +641,7 @@ export default function Seminar() {
                                                                         )
                                                                 );
                                                             }}
-                                                            className="flex items-center gap-2 px-8 py-2 rounded-xl bg-white text-blue-900 font-bold shadow-lg hover:bg-blue-100 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                            className="flex items-center gap-2 px-8 py-2 rounded-xl bg-white text-blue-900 font-bold shadow-lg hover:bg-blue-100 border border-blue-200 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
                                                         >
                                                             <i className="fa-solid fa-xmark"></i>
                                                             Cancel
@@ -670,7 +668,7 @@ export default function Seminar() {
                                                                     }
                                                                 );
                                                             }}
-                                                            className="flex items-center gap-2 px-8 py-2 rounded-xl bg-blue-900 text-white font-bold shadow-lg hover:bg-blue-800 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                            className="flex items-center gap-2 px-8 py-2 rounded-xl bg-gradient-to-r from-blue-800 to-blue-600 text-white font-bold shadow-lg hover:from-blue-900 hover:to-blue-700 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
                                                         >
                                                             <i className="fa-solid fa-paper-plane"></i>
                                                             Apply
@@ -694,13 +692,14 @@ export default function Seminar() {
                                 })
                             )}
                         </div>
+                        {/* Pagination */}
                         {totalPages > 1 && (
                             <nav
-                                className="flex justify-center mt-10 space-x-2 mb-6"
+                                className="flex justify-center mt-12 space-x-2 mb-8"
                                 aria-label="Pagination"
                             >
                                 <button
-                                    className="px-4 py-1.5 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 disabled:opacity-50 transition "
+                                    className="px-4 py-2 rounded-xl bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 disabled:opacity-50 transition "
                                     onClick={() =>
                                         setCurrentPage((p) =>
                                             Math.max(1, p - 1)
@@ -714,10 +713,10 @@ export default function Seminar() {
                                 {Array.from({ length: totalPages }, (_, i) => (
                                     <button
                                         key={i + 1}
-                                        className={`px-4 py-1.5 rounded-xl font-semibold transition ${
+                                        className={`px-4 py-2 rounded-xl font-semibold transition ${
                                             currentPage === i + 1
-                                                ? 'bg-black text-white'
-                                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                ? 'bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow'
+                                                : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
                                         }`}
                                         onClick={() => setCurrentPage(i + 1)}
                                         aria-current={
@@ -730,7 +729,7 @@ export default function Seminar() {
                                     </button>
                                 ))}
                                 <button
-                                    className="px-4 py-1.5 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 disabled:opacity-50 transition"
+                                    className="px-4 py-2 rounded-xl bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 disabled:opacity-50 transition"
                                     onClick={() =>
                                         setCurrentPage((p) =>
                                             Math.min(totalPages, p + 1)
@@ -759,12 +758,12 @@ export default function Seminar() {
 function SeminarDetails({ seminar, onClose }) {
     if (!seminar) {
         return (
-            <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white p-6 rounded-md">
-                    <p>Loading...</p>
+            <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 flex items-center justify-center z-50">
+                <div className="bg-white p-8 rounded-2xl shadow-xl border-2 border-blue-100">
+                    <p className="text-blue-700 font-semibold">Loading...</p>
                     <button
                         onClick={onClose}
-                        className="mt-4 px-4 py-2 bg-gray-200 rounded"
+                        className="mt-4 px-6 py-2 bg-blue-100 text-blue-800 rounded-xl font-bold shadow hover:bg-blue-200 transition"
                     >
                         Close
                     </button>
@@ -774,53 +773,53 @@ function SeminarDetails({ seminar, onClose }) {
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-            <div className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full flex flex-col overflow-hidden animate-fade-in max-h-[90vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
+            <div className="relative bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-3xl shadow-2xl max-w-2xl w-full flex flex-col overflow-hidden animate-fade-in max-h-[90vh] border-2 border-blue-200">
                 {/* Seminar Image on Top, Large and Responsive */}
                 <div className="w-full flex-shrink-0 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
                     <img
                         src={seminar.photo}
                         alt={seminar.title}
-                        className="object-contain w-full max-h-[350px] sm:max-h-[400px] md:max-h-[450px] rounded-t-3xl"
-                        style={{ background: '#eff6ff' }} // blue-50
+                        className="object-contain w-full max-h-[350px] sm:max-h-[400px] md:max-h-[450px] rounded-t-3xl shadow-lg"
+                        style={{ background: '#eff6ff' }}
                     />
                 </div>
                 {/* Seminar Details, Scrollable if needed */}
                 <div
-                    className="flex-1 p-8 flex flex-col relative overflow-y-auto"
+                    className="flex-1 p-10 flex flex-col relative overflow-y-auto"
                     style={{ maxHeight: 'calc(90vh - 350px)' }}
                 >
                     <button
                         onClick={onClose}
-                        className="absolute top-4 right-4 text-gray-400 hover:text-blue-700 text-2xl focus:outline-none"
+                        className="absolute top-4 right-4 text-blue-400 hover:text-blue-700 text-2xl focus:outline-none"
                         aria-label="Close"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
-                    <h2 className="text-3xl font-extrabold text-blue-900 mb-2 mt-2">
+                    <h2 className="text-3xl font-extrabold text-blue-900 mb-3 mt-2 tracking-tight">
                         {seminar.title}
                     </h2>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                        <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-200 px-3 py-1 rounded-lg font-semibold border border-blue-300 shadow-sm">
+                    <div className="flex flex-wrap gap-3 mb-6">
+                        <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
                             <i className="fa-solid fa-user"></i>
                             {seminar.speaker}
                         </span>
-                        <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-200 px-3 py-1 rounded-lg font-semibold border border-blue-300 shadow-sm">
+                        <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
                             <i className="fa-solid fa-location-dot"></i>
                             {seminar.location}
                         </span>
-                        <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-200 px-3 py-1 rounded-lg font-semibold border border-blue-300 shadow-sm">
+                        <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
                             <i className="fa-solid fa-layer-group"></i>
                             {seminar.category}
                         </span>
                     </div>
-                    <div className="text-gray-700 text-base mb-6 whitespace-pre-line">
+                    <div className="text-blue-800 text-base mb-8 whitespace-pre-line leading-relaxed font-medium">
                         {seminar.description}
                     </div>
                     <div className="flex justify-end mt-auto">
                         <button
                             onClick={onClose}
-                            className="px-6 py-2 rounded-xl bg-blue-700 text-white font-bold shadow hover:bg-blue-800 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="px-8 py-2 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 text-white font-bold shadow hover:from-blue-800 hover:to-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
                         >
                             Close
                         </button>

@@ -634,7 +634,7 @@ export default function Distribution() {
                             {paginatedItems.map((item) => (
                                 <div
                                     key={item.id}
-                                    className="group relative bg-white rounded-3xl shadow-xl border border-blue-100 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 flex flex-col overflow-hidden"
+                                    className="group relative bg-white shadow-xl border border-blue-100 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 flex flex-col overflow-hidden"
                                     style={{
                                         minHeight: 370,
                                     }}
