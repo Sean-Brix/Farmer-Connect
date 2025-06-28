@@ -2,8 +2,8 @@ import React, { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 // COMPONENTS
-import cover from '../Assets/Cover.jpg'
-import logo from '../../Assets/Logo.png'
+import cover from '../Assets/Cover.jpg';
+import logo from '../../Assets/Logo.png';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -28,12 +28,41 @@ export default function Login() {
         const data = await response.json();
 
         if (!response.ok) {
-            console.log(data.payload.error);
-            alert(data.message);
+
+            // USER ERROR
+            if (response.status === 400) {
+
+                // 'username or password required'
+
+            } 
+            
+            // USER ERROR
+            if (response.status === 404) {
+
+                // 'User not found' ( Username does not exist );
+
+            } 
+
+            // USER ERROR
+            if (response.status === 401) {
+
+                // 'Invalid password' ( Password is incorrect );
+
+            } 
+
+            // SERVER ERROR HANDLING
+            else if (response.status === 500) {
+
+                // 'Internal server error' ( Something went wrong );
+            }
+
             return;
         }
 
         if (data.payload.access == 'User') {
+
+            // SUCCESSFUL LOGIN
+
             navigate('/');
             return;
         }
@@ -41,12 +70,19 @@ export default function Login() {
     };
 
     // Modern Alert State
-    const [alert, setAlert] = React.useState({ show: false, message: '', type: '' });
+    const [alert, setAlert] = React.useState({
+        show: false,
+        message: '',
+        type: '',
+    });
 
     // Helper to show alert
     const showAlert = (message, type = 'success') => {
         setAlert({ show: true, message, type });
-        setTimeout(() => setAlert({ show: false, message: '', type: '' }), 2000);
+        setTimeout(
+            () => setAlert({ show: false, message: '', type: '' }),
+            2000
+        );
     };
 
     return (
@@ -59,13 +95,33 @@ export default function Login() {
 
             {/* Modern Centered Alert */}
             {alert.show && (
-                <div className={`fixed top-6 left-1/2 z-50 transform -translate-x-1/2 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3
-                    ${alert.type === 'success' ? 'bg-green-500/90 text-white' : 'bg-red-500/90 text-white'}`}>
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <div
+                    className={`fixed top-6 left-1/2 z-50 transform -translate-x-1/2 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3
+                    ${
+                        alert.type === 'success'
+                            ? 'bg-green-500/90 text-white'
+                            : 'bg-red-500/90 text-white'
+                    }`}
+                >
+                    <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                    >
                         {alert.type === 'success' ? (
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M5 13l4 4L19 7"
+                            />
                         ) : (
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
                         )}
                     </svg>
                     <span className="font-medium">{alert.message}</span>
@@ -88,37 +144,46 @@ export default function Login() {
                     <h2 className="text-2xl font-bold text-center text-gray-800">
                         Sign in to your account
                     </h2>
-                    <form className="space-y-4" onSubmit={async (event) => {
-                        event.preventDefault();
+                    <form
+                        className="space-y-4"
+                        onSubmit={async (event) => {
+                            event.preventDefault();
 
-                        const response = await fetch('/api/Authentication/login', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                username: username.current.value,
-                                password: password.current.value,
-                            }),
-                        });
+                            const response = await fetch(
+                                '/api/Authentication/login',
+                                {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        username: username.current.value,
+                                        password: password.current.value,
+                                    }),
+                                }
+                            );
 
-                        const data = await response.json();
+                            const data = await response.json();
 
-                        if (!response.ok) {
-                            showAlert(data.message || 'Login failed', 'error');
-                            return;
-                        }
-
-                        showAlert('Signed in successfully!', 'success');
-
-                        setTimeout(() => {
-                            if (data.payload.access == 'User') {
-                                navigate('/');
+                            if (!response.ok) {
+                                showAlert(
+                                    data.message || 'Login failed',
+                                    'error'
+                                );
                                 return;
                             }
-                            navigate('/admin');
-                        }, 1200);
-                    }}>
+
+                            showAlert('Signed in successfully!', 'success');
+
+                            setTimeout(() => {
+                                if (data.payload.access == 'User') {
+                                    navigate('/');
+                                    return;
+                                }
+                                navigate('/admin');
+                            }, 1200);
+                        }}
+                    >
                         <div>
                             <label
                                 htmlFor="email"
