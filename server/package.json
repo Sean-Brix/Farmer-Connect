@@ -25,7 +25,8 @@
         "start": "node server.js",
         "dev": "npm run setup-db && nodemon server.js",
         "setup-db": "prisma migrate deploy",
-        "reset": "npx prisma migrate reset --force && (prisma generate && node prisma/seed.js) || echo 'Nothing to generate'"
+        "reset": "npx prisma migrate reset --force && (prisma generate && node prisma/seed.js) || echo 'Nothing to generate'",
+        "generate": "npx prisma generate --schema=prisma/schema/schema.prisma"
     },
     "prisma": {
         "seed": "node prisma/seed.js",
