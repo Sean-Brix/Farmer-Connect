@@ -30,7 +30,7 @@ app.use(
 
 // API Route
 import index from '../Router/index.js';
-app.use('/api', index);
+app.use('/', index);
 
 app.use((req, res) => {
     res.sendFile(viewPath);
