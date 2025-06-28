@@ -153,7 +153,7 @@ export default function Navbar() {
                     <img
                         src={logo}
                         alt="FITS -Tanza Logo"
-                        className="w-10 h-10 object-contain ml-4"
+                        className="w-10 h-10 object-contain ml-4 rounded-full"
                     />
                     <Link
                         to="/"
