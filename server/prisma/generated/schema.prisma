@@ -14,6 +14,7 @@ model Account {
   telephone_no   String?
   occupation     String?
   position       String?
+  institution    String?
   address        String?
   picture        String?
   commodity      AccountCommodity[]

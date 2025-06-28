@@ -134,6 +134,7 @@ exports.Prisma.AccountScalarFieldEnum = {
   telephone_no: 'telephone_no',
   occupation: 'occupation',
   position: 'position',
+  institution: 'institution',
   address: 'address',
   picture: 'picture',
   password: 'password',
@@ -233,6 +234,7 @@ exports.Prisma.AccountOrderByRelevanceFieldEnum = {
   telephone_no: 'telephone_no',
   occupation: 'occupation',
   position: 'position',
+  institution: 'institution',
   address: 'address',
   picture: 'picture',
   password: 'password'

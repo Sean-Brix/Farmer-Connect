@@ -1725,6 +1725,7 @@ export namespace Prisma {
     telephone_no: string | null
     occupation: string | null
     position: string | null
+    institution: string | null
     address: string | null
     picture: string | null
     password: string | null
@@ -1746,6 +1747,7 @@ export namespace Prisma {
     telephone_no: string | null
     occupation: string | null
     position: string | null
+    institution: string | null
     address: string | null
     picture: string | null
     password: string | null
@@ -1767,6 +1769,7 @@ export namespace Prisma {
     telephone_no: number
     occupation: number
     position: number
+    institution: number
     address: number
     picture: number
     password: number
@@ -1790,6 +1793,7 @@ export namespace Prisma {
     telephone_no?: true
     occupation?: true
     position?: true
+    institution?: true
     address?: true
     picture?: true
     password?: true
@@ -1811,6 +1815,7 @@ export namespace Prisma {
     telephone_no?: true
     occupation?: true
     position?: true
+    institution?: true
     address?: true
     picture?: true
     password?: true
@@ -1832,6 +1837,7 @@ export namespace Prisma {
     telephone_no?: true
     occupation?: true
     position?: true
+    institution?: true
     address?: true
     picture?: true
     password?: true
@@ -1926,6 +1932,7 @@ export namespace Prisma {
     telephone_no: string | null
     occupation: string | null
     position: string | null
+    institution: string | null
     address: string | null
     picture: string | null
     password: string
@@ -1964,6 +1971,7 @@ export namespace Prisma {
     telephone_no?: boolean
     occupation?: boolean
     position?: boolean
+    institution?: boolean
     address?: boolean
     picture?: boolean
     password?: boolean
@@ -1990,6 +1998,7 @@ export namespace Prisma {
     telephone_no?: boolean
     occupation?: boolean
     position?: boolean
+    institution?: boolean
     address?: boolean
     picture?: boolean
     password?: boolean
@@ -1997,7 +2006,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "access" | "username" | "email" | "firstName" | "lastName" | "middleName" | "gender" | "client_profile" | "cellphone_no" | "telephone_no" | "occupation" | "position" | "address" | "picture" | "password" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
+  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "access" | "username" | "email" | "firstName" | "lastName" | "middleName" | "gender" | "client_profile" | "cellphone_no" | "telephone_no" | "occupation" | "position" | "institution" | "address" | "picture" | "password" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     commodity?: boolean | Account$commodityArgs<ExtArgs>
     seminars?: boolean | Account$seminarsArgs<ExtArgs>
@@ -2024,6 +2033,7 @@ export namespace Prisma {
       telephone_no: string | null
       occupation: string | null
       position: string | null
+      institution: string | null
       address: string | null
       picture: string | null
       password: string
@@ -2413,6 +2423,7 @@ export namespace Prisma {
     readonly telephone_no: FieldRef<"Account", 'String'>
     readonly occupation: FieldRef<"Account", 'String'>
     readonly position: FieldRef<"Account", 'String'>
+    readonly institution: FieldRef<"Account", 'String'>
     readonly address: FieldRef<"Account", 'String'>
     readonly picture: FieldRef<"Account", 'String'>
     readonly password: FieldRef<"Account", 'String'>
@@ -9707,6 +9718,7 @@ export namespace Prisma {
     telephone_no: 'telephone_no',
     occupation: 'occupation',
     position: 'position',
+    institution: 'institution',
     address: 'address',
     picture: 'picture',
     password: 'password',
@@ -9836,6 +9848,7 @@ export namespace Prisma {
     telephone_no: 'telephone_no',
     occupation: 'occupation',
     position: 'position',
+    institution: 'institution',
     address: 'address',
     picture: 'picture',
     password: 'password'
@@ -10007,6 +10020,7 @@ export namespace Prisma {
     telephone_no?: StringNullableFilter<"Account"> | string | null
     occupation?: StringNullableFilter<"Account"> | string | null
     position?: StringNullableFilter<"Account"> | string | null
+    institution?: StringNullableFilter<"Account"> | string | null
     address?: StringNullableFilter<"Account"> | string | null
     picture?: StringNullableFilter<"Account"> | string | null
     password?: StringFilter<"Account"> | string
@@ -10030,6 +10044,7 @@ export namespace Prisma {
     telephone_no?: SortOrderInput | SortOrder
     occupation?: SortOrderInput | SortOrder
     position?: SortOrderInput | SortOrder
+    institution?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     picture?: SortOrderInput | SortOrder
     password?: SortOrder
@@ -10057,6 +10072,7 @@ export namespace Prisma {
     telephone_no?: StringNullableFilter<"Account"> | string | null
     occupation?: StringNullableFilter<"Account"> | string | null
     position?: StringNullableFilter<"Account"> | string | null
+    institution?: StringNullableFilter<"Account"> | string | null
     address?: StringNullableFilter<"Account"> | string | null
     picture?: StringNullableFilter<"Account"> | string | null
     password?: StringFilter<"Account"> | string
@@ -10080,6 +10096,7 @@ export namespace Prisma {
     telephone_no?: SortOrderInput | SortOrder
     occupation?: SortOrderInput | SortOrder
     position?: SortOrderInput | SortOrder
+    institution?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     picture?: SortOrderInput | SortOrder
     password?: SortOrder
@@ -10107,6 +10124,7 @@ export namespace Prisma {
     telephone_no?: StringNullableWithAggregatesFilter<"Account"> | string | null
     occupation?: StringNullableWithAggregatesFilter<"Account"> | string | null
     position?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    institution?: StringNullableWithAggregatesFilter<"Account"> | string | null
     address?: StringNullableWithAggregatesFilter<"Account"> | string | null
     picture?: StringNullableWithAggregatesFilter<"Account"> | string | null
     password?: StringWithAggregatesFilter<"Account"> | string
@@ -10610,6 +10628,7 @@ export namespace Prisma {
     telephone_no?: string | null
     occupation?: string | null
     position?: string | null
+    institution?: string | null
     address?: string | null
     picture?: string | null
     password: string
@@ -10633,6 +10652,7 @@ export namespace Prisma {
     telephone_no?: string | null
     occupation?: string | null
     position?: string | null
+    institution?: string | null
     address?: string | null
     picture?: string | null
     password: string
@@ -10656,6 +10676,7 @@ export namespace Prisma {
     telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
     occupation?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
@@ -10679,6 +10700,7 @@ export namespace Prisma {
     telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
     occupation?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
@@ -10702,6 +10724,7 @@ export namespace Prisma {
     telephone_no?: string | null
     occupation?: string | null
     position?: string | null
+    institution?: string | null
     address?: string | null
     picture?: string | null
     password: string
@@ -10723,6 +10746,7 @@ export namespace Prisma {
     telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
     occupation?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
@@ -10744,6 +10768,7 @@ export namespace Prisma {
     telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
     occupation?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
@@ -11365,6 +11390,7 @@ export namespace Prisma {
     telephone_no?: SortOrder
     occupation?: SortOrder
     position?: SortOrder
+    institution?: SortOrder
     address?: SortOrder
     picture?: SortOrder
     password?: SortOrder
@@ -11386,6 +11412,7 @@ export namespace Prisma {
     telephone_no?: SortOrder
     occupation?: SortOrder
     position?: SortOrder
+    institution?: SortOrder
     address?: SortOrder
     picture?: SortOrder
     password?: SortOrder
@@ -11407,6 +11434,7 @@ export namespace Prisma {
     telephone_no?: SortOrder
     occupation?: SortOrder
     position?: SortOrder
+    institution?: SortOrder
     address?: SortOrder
     picture?: SortOrder
     password?: SortOrder
@@ -12702,6 +12730,7 @@ export namespace Prisma {
     telephone_no?: string | null
     occupation?: string | null
     position?: string | null
+    institution?: string | null
     address?: string | null
     picture?: string | null
     password: string
@@ -12724,6 +12753,7 @@ export namespace Prisma {
     telephone_no?: string | null
     occupation?: string | null
     position?: string | null
+    institution?: string | null
     address?: string | null
     picture?: string | null
     password: string
@@ -12791,6 +12821,7 @@ export namespace Prisma {
     telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
     occupation?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
@@ -12813,6 +12844,7 @@ export namespace Prisma {
     telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
     occupation?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
@@ -13132,6 +13164,7 @@ export namespace Prisma {
     telephone_no?: string | null
     occupation?: string | null
     position?: string | null
+    institution?: string | null
     address?: string | null
     picture?: string | null
     password: string
@@ -13154,6 +13187,7 @@ export namespace Prisma {
     telephone_no?: string | null
     occupation?: string | null
     position?: string | null
+    institution?: string | null
     address?: string | null
     picture?: string | null
     password: string
@@ -13239,6 +13273,7 @@ export namespace Prisma {
     telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
     occupation?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
@@ -13261,6 +13296,7 @@ export namespace Prisma {
     telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
     occupation?: NullableStringFieldUpdateOperationsInput | string | null
     position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     picture?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string

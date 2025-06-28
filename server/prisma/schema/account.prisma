@@ -1,36 +1,36 @@
-
 //? ===================================== ACCOUNTS SCHEMA ===================================== ?//
 
 model Account {
-  id             String                 @id @default(cuid())
-  access         access                 @default(User)
-  username       String                 @unique
-  email          String                 @unique
+  id             String             @id @default(cuid())
+  access         access             @default(User)
+  username       String             @unique
+  email          String             @unique
   firstName      String
   lastName       String
   middleName     String?
   gender         gender
-  client_profile client_profile         @default(Other)
+  client_profile client_profile     @default(Other)
   cellphone_no   String?
   telephone_no   String?
   occupation     String?
   position       String?
+  institution    String?
   address        String?
   picture        String?
   commodity      AccountCommodity[]
   password       String
-  createdAt      DateTime               @default(now())
-  updatedAt      DateTime               @updatedAt
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
 
   // Relations
-  seminars      SeminarParticipant[]
+  seminars SeminarParticipant[]
 
   @@map("accounts")
 }
 
 model Commodity {
-  id          String                 @id @default(cuid())
-  name        String                 @unique
+  id          String             @id @default(cuid())
+  name        String             @unique
   icon        String?
   description String?
   accounts    AccountCommodity[]
@@ -52,7 +52,7 @@ model AccountCommodity {
 
   // Relations
   commodity Commodity @relation(fields: [commodity_id], references: [id])
-  account   Account    @relation(fields: [account_id], references: [id])
+  account   Account   @relation(fields: [account_id], references: [id])
 
   @@unique([account_id, commodity_id])
   @@map("accounts_commodities")
