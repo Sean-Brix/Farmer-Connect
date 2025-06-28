@@ -96,7 +96,7 @@ export default function Sidebar({
                         {filteredMenuItems.map((item) => (
                             <li
                                 key={item.key}
-                                className={`flex items-center gap-3 p-3 text-base rounded-lg transition cursor-pointer sidebar-item
+                                className={`flex items-center gap-4 p-4 text-lg rounded-lg transition cursor-pointer sidebar-item
                                     ${
                                         currentPageKey === item.key
                                             ? 'bg-gray-200 font-semibold text-blue-700'
@@ -113,23 +113,23 @@ export default function Sidebar({
                 </nav>
                 <div className="p-4 border-t border-gray-200 flex flex-col items-center mt-auto bg-white/80">
                     <div
-                        className="flex items-center mb-4 w-full gap-3 cursor-pointer hover:bg-gray-100 rounded-lg p-2 transition"
+                        className="flex items-center mb-4 w-full gap-4 cursor-pointer hover:bg-gray-100 rounded-lg p-3 transition"
                         onClick={() => setPage(elements.current['account'])}
                     >
                         <div className="relative rounded-full border-2 border-blue-100 shadow-sm">
                             <img
                                 src={details.picture}
                                 alt="Profile"
-                                className="h-10 w-10 rounded-full object-cover"
+                                className="h-12 w-12 rounded-full object-cover"
                             />
                         </div>
                         <div className="flex flex-col">
-                            <span className="font-semibold text-gray-800 sidebar-username">{details.username}</span>
-                            <span className="text-xs text-gray-500 sidebar-position">{details.position}</span>
+                            <span className="font-semibold text-gray-800 sidebar-username text-base">{details.username}</span>
+                            <span className="text-sm text-gray-500 sidebar-position">{details.position}</span>
                         </div>
                     </div>
                     <button
-                        className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-700 w-full border border-gray-200 font-semibold"
+                        className="flex items-center justify-center gap-3 px-5 py-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-700 w-full border border-gray-200 font-semibold text-base"
                         onClick={logging}
                     >
                         <span>
@@ -171,10 +171,10 @@ export default function Sidebar({
                 }
                 /* Ensure all sidebar icons are the same size */
                 .sidebar-icon {
-                    width: 1.25rem !important;
-                    height: 1.25rem !important;
-                    min-width: 1.25rem !important;
-                    min-height: 1.25rem !important;
+                    width: 1.5rem !important;
+                    height: 1.5rem !important;
+                    min-width: 1.5rem !important;
+                    min-height: 1.5rem !important;
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;

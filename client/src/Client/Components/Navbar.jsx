@@ -93,7 +93,7 @@ export default function Navbar() {
         <>
             <Chat />
             {showAlert && (
-                <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/70 transition-all duration-300">
+                <div className="fixed inset-0 z-[999] flex items-center justify-center  bg-black/70 transition-all duration-300">
                     <div
                         id="logout-alert"
                         className="bg-white rounded-2xl shadow-xl px-7 py-7 flex flex-col items-center gap-5 border border-blue-100 transition-all duration-500 animate-fade-in-up"
@@ -148,7 +148,7 @@ export default function Navbar() {
                     </div>
                 </div>
             )}
-            <nav className="bg-white shadow-lg fixed w-full z-30 top-0 left-0">
+            <nav className="bg-white shadow-lg fixed w-full rounded-b-4xl z-30 top-0 left-0">
                 <div className="max-w-7xl mx-auto flex items-center justify-between px-2 md:px-8 py-6">
                     <img
                         src={logo}

@@ -13,6 +13,7 @@ import img4 from './Assets/4.jpg'
 import img5 from './Assets/rabies.jpg'
 import img6 from './Assets/bg.jpg'
 import video from './Assets/rice.mp4'
+import logo from './Assets/Logo.png'
 
 export default function Landing() {
     // Slider state
@@ -80,194 +81,192 @@ export default function Landing() {
     return (
         <>
             <Navbar />
-            <main className="min-h-screen">
+        <main className="min-h-screen">
                 {/* HERO SECTION */}
-                <section className="">
-                    <div
-                        className="
-                            w-screen relative left-1/2 right-1/2  -ml-[50vw] -mr-[50vw]
-                            flex flex-col items-center justify-center gap-6
-                            bg-black/80 backdrop-blur shadow-2xl p-35 sm:p-55 mb-20 border border-blue-900
-                            overflow-hidden
-                            reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700
-                        "
-                    >
-                        <video
-                            src={video}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="absolute inset-0 w-full h-full object-cover z-0 opacity-60"
+            <section className="mb-0">
+                <div
+                    className="
+                        w-screen relative left-1/2 right-1/2  -ml-[50vw] -mr-[50vw]
+                        flex flex-col items-center justify-center gap-6
+                        bg-black/80 backdrop-blur shadow-2xl p-35 sm:p-55 mb-20 border border-blue-900
+                        overflow-hidden
+                        reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700
+                    "
+                >
+                    <video
+                        src={video}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover z-0 opacity-60"
+                        style={{
+                            animation: 'none',
+                            transition: 'none',
+                        }}></video>
+                    <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center">
+                        <h1
+                            className="text-5xl font-extrabold mb-6 text-white leading-tight tracking-tight drop-shadow-2xl"
                             style={{
-                                animation: 'none',
-                                transition: 'none',
-                            }}></video>
-                        <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center">
-                            <h1
-                                className="text-5xl font-extrabold mb-6 text-white leading-tight tracking-tight drop-shadow-2xl"
-                                style={{
-                                    textShadow:
-                                        '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
-                                }}
+                                textShadow:
+                                    '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
+                            }}
+                        >
+                            Empowering Agriculture,<br />Enriching Lives
+                        </h1>
+                        <p
+                            className="text-xl text-white mb-8 drop-shadow-2xl font-semibold"
+                            style={{
+                                textShadow:
+                                    '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
+                            }}
+                        >
+                            Advancing sustainable agriculture and community well-being through innovation and dedicated support.
+                        </p>
+                        <div className="flex gap-4 flex-wrap mb-8 justify-center">
+                            <a
+                                href="/seminar"
+                                className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-3 rounded-2xl font-semibold shadow hover:scale-105 transition-transform"
+                                onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
                             >
-                                Empowering Agriculture,<br />Enriching Lives
-                            </h1>
-                            <p
-                                className="text-xl text-white mb-8 drop-shadow-2xl font-semibold"
-                                style={{
-                                    textShadow:
-                                        '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
-                                }}
+                                Our Programs
+                            </a>
+                            <a
+                                href="/about"
+                                className="border-2 border-blue-100 text-blue-50 px-8 py-3 rounded-2xl font-semibold hover:bg-blue-900/30 transition"
+                                onClick={e => { e.preventDefault(); window.location = '/about'; }}
                             >
-                                Advancing sustainable agriculture and community well-being through innovation and dedicated support.
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* MISSION & VISION */}
+            <section className="py-20 mt-0  relative overflow-hidden ">
+                {/* Decorative SVG background */}
+                <svg className="absolute top-0 left-0 w-full h-40 opacity-20 pointer-events-none" viewBox="0 0 1440 320" fill="none">
+                    <path fill="#2563eb" fillOpacity="0.08" d="M0,160L60,170.7C120,181,240,203,360,197.3C480,192,600,160,720,154.7C840,149,960,171,1080,181.3C1200,192,1320,192,1380,192L1440,192L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
+                </svg>
+                <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row gap-10 relative z-10">
+                    {/* Mission */}
+                    <div className="flex-1 flex flex-col items-center justify-center relative group">
+                        {/* Unique shape background */}
+                        <svg className="absolute -top-6 left-1/2 -translate-x-1/2 w-64 h-64 opacity-30 blur-2xl z-0" viewBox="0 0 300 300" fill="none">
+                            <ellipse cx="150" cy="150" rx="120" ry="80" fill="#3b82f6" />
+                        </svg>
+                        <div className="relative z-10 flex flex-col items-center">
+                            <span className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 via-blue-200 to-blue-400 text-blue-800 shadow-lg mb-6 group-hover:scale-110 transition">
+                                {/* Mission Icon */}
+                                <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 10c-4.418 0-8-3.582-8-8 0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.418-3.582 8-8 8z" />
+                                </svg>
+                            </span>
+                            <h2 className="text-3xl font-extrabold text-blue-900 tracking-tight letter-spacing-wide mb-4">Mission</h2>
+                            <p className="text-gray-700 text-lg leading-relaxed font-semibold text-center max-w-md">
+                                To drive sustainable agricultural growth and elevate community livelihoods through innovative solutions, transformative education, and collaborative partnerships.
                             </p>
-                            <div className="flex gap-4 flex-wrap mb-8 justify-center">
-                                <a
-                                    href="/seminar"
-                                    className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-3 rounded-2xl font-semibold shadow hover:scale-105 transition-transform"
-                                    onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
-                                >
-                                    Our Programs
-                                </a>
-                                <a
-                                    href="/about"
-                                    className="border-2 border-blue-100 text-blue-50 px-8 py-3 rounded-2xl font-semibold hover:bg-blue-900/30 transition"
-                                    onClick={e => { e.preventDefault(); window.location = '/about'; }}
-                                >
-                                    Learn More
-                                </a>
-                            </div>
+                        </div>
+                        {/* Decorative dots */}
+                        <div className="mt-8 flex items-center gap-2 z-10">
+                            <span className="w-3 h-3 rounded-full bg-blue-700"></span>
+                            <span className="w-3 h-3 rounded-full bg-blue-400"></span>
+                            <span className="w-3 h-3 rounded-full bg-blue-200"></span>
                         </div>
                     </div>
-                </section>
-
-             
-
-                {/* MISSION & VISION */}
-                <section className="py-20  relative overflow-hidden">
-                    {/* Decorative SVG background */}
-                    <svg className="absolute top-0 left-0 w-full h-40 opacity-20 pointer-events-none" viewBox="0 0 1440 320" fill="none">
-                        <path fill="#2563eb" fillOpacity="0.08" d="M0,160L60,170.7C120,181,240,203,360,197.3C480,192,600,160,720,154.7C840,149,960,171,1080,181.3C1200,192,1320,192,1380,192L1440,192L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
-                    </svg>
-                    <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row gap-10 relative z-10">
-                        {/* Mission */}
-                        <div className="flex-1 flex flex-col items-center justify-center relative group">
-                            {/* Unique shape background */}
-                            <svg className="absolute -top-6 left-1/2 -translate-x-1/2 w-64 h-64 opacity-30 blur-2xl z-0" viewBox="0 0 300 300" fill="none">
-                                <ellipse cx="150" cy="150" rx="120" ry="80" fill="#3b82f6" />
-                            </svg>
-                            <div className="relative z-10 flex flex-col items-center">
-                                <span className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 via-blue-200 to-blue-400 text-blue-800 shadow-lg mb-6 group-hover:scale-110 transition">
-                                    {/* Mission Icon */}
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 10c-4.418 0-8-3.582-8-8 0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.418-3.582 8-8 8z" />
-                                    </svg>
-                                </span>
-                                <h2 className="text-3xl font-extrabold text-blue-900 tracking-tight letter-spacing-wide mb-4">Mission</h2>
-                                <p className="text-gray-700 text-lg leading-relaxed font-semibold text-center max-w-md">
-                                    To drive sustainable agricultural growth and elevate community livelihoods through innovative solutions, transformative education, and collaborative partnerships.
-                                </p>
-                            </div>
-                            {/* Decorative dots */}
-                            <div className="mt-8 flex items-center gap-2 z-10">
-                                <span className="w-3 h-3 rounded-full bg-blue-700"></span>
-                                <span className="w-3 h-3 rounded-full bg-blue-400"></span>
-                                <span className="w-3 h-3 rounded-full bg-blue-200"></span>
-                            </div>
+                    {/* Divider for desktop */}
+                    <div className="hidden md:flex flex-col justify-center">
+                        <svg className="w-2 h-40" viewBox="0 0 8 160" fill="none">
+                            <path d="M4 0C4 0 4 80 4 160" stroke="#60a5fa" strokeWidth="4" strokeDasharray="8 8" />
+                        </svg>
+                    </div>
+                    {/* Vision */}
+                    <div className="flex-1 flex flex-col items-center justify-center relative group">
+                        {/* Unique shape background */}
+                        <svg className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-64 h-64 opacity-30 blur-2xl z-0" viewBox="0 0 300 300" fill="none">
+                            <ellipse cx="150" cy="150" rx="120" ry="80" fill="#2563eb" />
+                        </svg>
+                        <div className="relative z-10 flex flex-col items-center">
+                            <span className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-200 via-blue-100 to-blue-400 text-blue-800 shadow-lg mb-6 group-hover:scale-110 transition">
+                                {/* Vision Icon */}
+                                <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0c0 5-4.03 9-9 9s-9-4-9-9 4.03-9 9-9 9 4 9 9z" />
+                                </svg>
+                            </span>
+                            <h2 className="text-3xl font-extrabold text-blue-900 tracking-tight letter-spacing-wide mb-4">Vision</h2>
+                            <p className="text-gray-700 text-lg leading-relaxed font-semibold text-center max-w-md">
+                                To be a catalyst for agricultural transformation, fostering innovation and building resilient, thriving communities for generations to come.
+                            </p>
                         </div>
-                        {/* Divider for desktop */}
-                        <div className="hidden md:flex flex-col justify-center">
-                            <svg className="w-2 h-40" viewBox="0 0 8 160" fill="none">
-                                <path d="M4 0C4 0 4 80 4 160" stroke="#60a5fa" strokeWidth="4" strokeDasharray="8 8" />
-                            </svg>
-                        </div>
-                        {/* Vision */}
-                        <div className="flex-1 flex flex-col items-center justify-center relative group">
-                            {/* Unique shape background */}
-                            <svg className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-64 h-64 opacity-30 blur-2xl z-0" viewBox="0 0 300 300" fill="none">
-                                <ellipse cx="150" cy="150" rx="120" ry="80" fill="#2563eb" />
-                            </svg>
-                            <div className="relative z-10 flex flex-col items-center">
-                                <span className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-200 via-blue-100 to-blue-400 text-blue-800 shadow-lg mb-6 group-hover:scale-110 transition">
-                                    {/* Vision Icon */}
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0c0 5-4.03 9-9 9s-9-4-9-9 4.03-9 9-9 9 4 9 9z" />
-                                    </svg>
-                                </span>
-                                <h2 className="text-3xl font-extrabold text-blue-900 tracking-tight letter-spacing-wide mb-4">Vision</h2>
-                                <p className="text-gray-700 text-lg leading-relaxed font-semibold text-center max-w-md">
-                                    To be a catalyst for agricultural transformation, fostering innovation and building resilient, thriving communities for generations to come.
-                                </p>
-                            </div>
-                            {/* Decorative dots */}
-                            <div className="mt-8 flex items-center gap-2 z-10">
-                                <span className="w-3 h-3 rounded-full bg-blue-500"></span>
-                                <span className="w-3 h-3 rounded-full bg-blue-300"></span>
-                                <span className="w-3 h-3 rounded-full bg-blue-100"></span>
-                            </div>
+                        {/* Decorative dots */}
+                        <div className="mt-8 flex items-center gap-2 z-10">
+                            <span className="w-3 h-3 rounded-full bg-blue-500"></span>
+                            <span className="w-3 h-3 rounded-full bg-blue-300"></span>
+                            <span className="w-3 h-3 rounded-full bg-blue-100"></span>
                         </div>
                     </div>
-                    {/* Decorative SVG bottom */}
-                    <svg className="absolute bottom-0 left-0 w-full h-24 opacity-20 pointer-events-none" viewBox="0 0 1440 120" fill="none">
-                        <path fill="#2563eb" fillOpacity="0.08" d="M0,40 C480,0 960,160 1440,40 L1440,120 L0,120 Z"></path>
-                    </svg>
-                </section>
+                </div>
+                {/* Decorative SVG bottom */}
+                <svg className="absolute bottom-0 left-0 w-full h-24 opacity-20 pointer-events-none" viewBox="0 0 1440 120" fill="none">
+                    <path fill="#2563eb" fillOpacity="0.08" d="M0,40 C480,0 960,160 1440,40 L1440,120 L0,120 Z"></path>
+                </svg>
+            </section>
 
-                {/* PROGRAMS */}
-                <section id="programs" className="mb-20 mt-20 py-14 bg-blue-200">
-                    <h2 className="text-3xl font-extrabold text-blue-900 mb-12 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
-                        Our Programs
-                    </h2>
-                    <div className="relative max-w-6xl mx-auto">
-                        <div className="flex items-center justify-between gap-0 overflow-x-auto scrollbar-modern py-10 px-2 md:px-8">
-                            {/* Timeline line */}
-                            <div className="absolute left-0 right-0 top-1/2 h-1 bg-blue-200 z-0" style={{ transform: 'translateY(-50%)' }}></div>
-                            {programs.map((program, idx) => (
-                                <div
-                                    key={idx}
-                                    className="relative z-10 flex flex-col items-center flex-1 min-w-[180px] max-w-[220px] mx-2 group"
-                                >
-                                    {/* Timeline dot */}
-                                    <div className="w-8 h-8 rounded-full bg-blue-700 border-4 border-blue-200 flex items-center justify-center mb-4 shadow-lg group-hover:bg-blue-800 transition">
-                                        <img
-                                            src={program.img}
-                                            alt={program.title}
-                                            className="w-6 h-6 object-cover rounded-full"
-                                        />
-                                    </div>
-                                    <div className="bg-white/90 border border-blue-100 rounded-xl shadow-md px-5 py-4 text-center mb-2 group-hover:shadow-xl transition">
-                                        <h3 className="text-lg font-bold text-blue-900 mb-1">{program.title}</h3>
-                                        <p className="text-gray-700 text-sm font-medium">{program.desc}</p>
-                                    </div>
+            {/* PROGRAMS */}
+            <section id="programs" className="mb-20 mt-20 py-14 bg-blue-300">
+                <h2 className="text-3xl font-extrabold text-blue-900 mb-12 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
+                    Our Programs
+                </h2>
+                <div className="relative max-w-6xl mx-auto">
+                    <div className="flex items-center justify-between gap-0 overflow-x-auto scrollbar-modern py-10 px-2 md:px-8">
+                        {/* Timeline line */}
+                        <div className="absolute left-0 right-0 top-1/2 h-1 bg-blue-200 z-0" style={{ transform: 'translateY(-50%)' }}></div>
+                        {programs.map((program, idx) => (
+                            <div
+                                key={idx}
+                                className="relative z-10 flex flex-col items-center flex-1 min-w-[180px] max-w-[220px] mx-2 group"
+                            >
+                                {/* Timeline dot */}
+                                <div className="w-8 h-8 rounded-full bg-blue-700 border-4 border-blue-200 flex items-center justify-center mb-4 shadow-lg group-hover:bg-blue-800 transition">
+                                    <img
+                                        src={program.img}
+                                        alt={program.title}
+                                        className="w-6 h-6 object-cover rounded-full"
+                                    />
                                 </div>
-                            ))}
-                        </div>
-                        {/* Custom dark blue modern scrollbar style */}
-                        <style>{`
-                            .scrollbar-modern {
-                                scrollbar-width: thin;
-                                scrollbar-color: #1e3a8a #dbeafe;
-                            }
-                            .scrollbar-modern::-webkit-scrollbar {
-                                height: 12px;
-                                background: #dbeafe;
-                                border-radius: 8px;
-                            }
-                            .scrollbar-modern::-webkit-scrollbar-thumb {
-                                background: linear-gradient(135deg, #1e3a8a 60%, #1e40af 100%);
-                                border-radius: 8px;
-                                border: 2px solid #dbeafe;
-                            }
-                            .scrollbar-modern::-webkit-scrollbar-track {
-                                background: #dbeafe;
-                                border-radius: 8px;
-                            }
-                        `}</style>
+                                <div className="bg-white/90 border border-blue-100 rounded-xl shadow-md px-5 py-4 text-center mb-2 group-hover:shadow-xl transition">
+                                    <h3 className="text-lg font-bold text-blue-900 mb-1">{program.title}</h3>
+                                    <p className="text-gray-700 text-sm font-medium">{program.desc}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                </section>
+                    {/* Custom dark blue modern scrollbar style */}
+                    <style>{`
+                        .scrollbar-modern {
+                            scrollbar-width: thin;
+                            scrollbar-color: #1e3a8a #dbeafe;
+                        }
+                        .scrollbar-modern::-webkit-scrollbar {
+                            height: 12px;
+                            background: #dbeafe;
+                            border-radius: 8px;
+                        }
+                        .scrollbar-modern::-webkit-scrollbar-thumb {
+                            background: linear-gradient(135deg, #1e3a8a 60%, #1e40af 100%);
+                            border-radius: 8px;
+                            border: 2px solid #dbeafe;
+                        }
+                        .scrollbar-modern::-webkit-scrollbar-track {
+                            background: #dbeafe;
+                            border-radius: 8px;
+                        }
+                    `}</style>
+                </div>
+            </section>
 
-           { /* LATEST NEWS & UPDATES */}
+            {/* LATEST NEWS & UPDATES */}
             <section className="relative max-w-3xl mx-auto px-2 py-15 mb-20">
                 {/* Decorative background shapes */}
                 <div className="absolute -top-8 -left-8 w-28 h-28 bg-blue-100 rounded-full opacity-30 blur-2xl z-0"></div>
@@ -403,284 +402,318 @@ export default function Landing() {
                     <svg className="absolute left-0 right-0 bottom-0 w-full h-16 pointer-events-none" viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill="#2563eb" fillOpacity="0.06" d="M0,40 C480,0 960,80 1440,40 L1440,80 L0,80 Z"></path>
                     </svg>
-                </section>
-
-                <section className="bg-blue-200 py-30 mb-20">
-                    <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 mb-20 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-20 transition-all duration-700 delay-100">
-                        Why Choose Us?
-                    </h2>
-                    <div className="relative max-w-5xl mx-auto flex flex-col items-center">
-                        {/* Decorative SVG curve */}
-                        <svg className="absolute left-0 right-0 top-0 w-full h-32 pointer-events-none" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill="#2563eb" fillOpacity="0.08" d="M0,80 C480,160 960,0 1440,80 L1440,120 L0,120 Z"></path>
-                        </svg>
-                        {/* Timeline style cards */}
-                        <div className="flex flex-col md:flex-row items-center justify-between w-full z-10">
-                            {/* Line */}
-                            <div className="hidden md:block absolute left-1/2 top-24 bottom-0 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200" style={{height: '220px', transform: 'translateX(-50%)'}}></div>
-                            {/* Card 1 */}
-                            <div className="flex flex-col items-center md:w-1/3 mb-12 md:mb-0 relative z-10">
-                                <div className="bg-blue-800 rounded-full p-5 shadow-lg mb-4 border-4 border-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 10c-4.418 0-8-3.582-8-8 0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.418-3.582 8-8 8z" />
-                                    </svg>
-                                </div>
-                                <div className="bg-white/90 rounded-xl shadow-md px-7 py-6 text-center border-t-4 border-blue-700 reveal-on-scroll opacity-0 translate-y-10 delay-100">
-                                    <h3 className="font-bold text-lg text-blue-900 mb-2">Expert Support</h3>
-                                    <p className="text-blue-700 text-base font-semibold">
-                                        Our team provides expert guidance and support to help you succeed in agriculture.
-                                    </p>
-                                </div>
-                            </div>
-                            {/* Connector for desktop */}
-                            <div className="hidden md:flex flex-col items-center w-1/6">
-                                <div className="w-3 h-3 bg-blue-700 rounded-full mb-2"></div>
-                                <div className="flex-1 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200"></div>
-                                <div className="w-3 h-3 bg-blue-700 rounded-full mt-2"></div>
-                            </div>
-                            {/* Card 2 */}
-                            <div className="flex flex-col items-center md:w-1/3 mb-12 md:mb-0 relative z-10">
-                                <div className="bg-blue-800 rounded-full p-5 shadow-lg mb-4 border-4 border-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a4 4 0 018 0v2m-4-6a4 4 0 100-8 4 4 0 000 8z" />
-                                    </svg>
-                                </div>
-                                <div className="bg-white/90 rounded-xl shadow-md px-7 py-6 text-center border-t-4 border-blue-700 reveal-on-scroll opacity-0 translate-y-10 delay-200">
-                                    <h3 className="font-bold text-lg text-blue-900 mb-2">Community Focus</h3>
-                                    <p className="text-blue-700 text-base font-semibold">
-                                        We are dedicated to uplifting communities and fostering sustainable growth.
-                                    </p>
-                                </div>
-                            </div>
-                            {/* Connector for desktop */}
-                            <div className="hidden md:flex flex-col items-center w-1/6">
-                                <div className="w-3 h-3 bg-blue-700 rounded-full mb-2"></div>
-                                <div className="flex-1 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200"></div>
-                                <div className="w-3 h-3 bg-blue-700 rounded-full mt-2"></div>
-                            </div>
-                            {/* Card 3 */}
-                            <div className="flex flex-col items-center md:w-1/3 relative z-10">
-                                <div className="bg-blue-800 rounded-full p-5 shadow-lg mb-4 border-4 border-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2z" />
-                                    </svg>
-                                </div>
-                                <div className="bg-white/90 rounded-xl shadow-md px-7 py-6 text-center border-t-4 border-blue-700 reveal-on-scroll opacity-0 translate-y-10 delay-300">
-                                    <h3 className="font-bold text-lg text-blue-900 mb-2">Trusted & Secure</h3>
-                                    <p className="text-blue-700 text-base font-semibold">
-                                        We ensure your data and interactions are safe and handled with integrity.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Decorative SVG curve bottom */}
-                        <svg className="absolute left-0 right-0 bottom-0 w-full h-32 pointer-events-none" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill="#2563eb" fillOpacity="0.08" d="M0,40 C480,0 960,160 1440,40 L1440,120 L0,120 Z"></path>
-                        </svg>
-                        </div>
-                        </section>
-
-                        {/* --- TESTIMONIALS --- */}
-                        <section className="max-w-6xl mx-auto px-4 py-14 mb-20">
-                            <h2 className="text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-10 transition-all duration-700 delay-100">
-                                Testimonials
-                            </h2>
-                            <div className="relative flex flex-col md:flex-row items-stretch gap-8">
-                                {/* Decorative background gradient line */}
-                                <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200 rounded-full opacity-40" style={{transform: 'translateX(-50%)'}}></div>
-                                {/* Testimonial 1 */}
-                                <div className="relative flex-1 flex flex-col items-center text-center group">
-                                    <div className="relative mb-6">
-                                        <img
-                                            src="https://randomuser.me/api/portraits/men/32.jpg"
-                                            alt="Testimonial 1"
-                                            className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg object-cover z-10"
-                                        />
-                                        <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-700 text-white px-3 py-1 rounded-full text-xs font-bold shadow group-hover:bg-blue-800 transition">Farmer</span>
-                                    </div>
-                                    <div className="relative bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-700/80 rounded-3xl shadow-xl border border-blue-800 px-8 py-7 flex flex-col items-center group-hover:scale-105 transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-100">
-                                        <svg className="w-8 h-8 text-blue-400 mb-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                            <path d="M9 17c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5h-1zm-6 0c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5H3z" />
-                                        </svg>
-                                        <p className="text-blue-100 text-base mb-4 font-semibold">
-                                            "Thanks to Agri-Connect, I learned new farming techniques that doubled my harvest. The support team is always ready to help!"
-                                        </p>
-                                        <span className="text-blue-300 font-bold">Juan Dela Cruz</span>
-                                        <span className="text-blue-400 text-xs">Tanza</span>
-                                    </div>
-                                </div>
-                                {/* Testimonial 2 */}
-                                <div className="relative flex-1 flex flex-col items-center text-center group">
-                                    <div className="relative mb-6">
-                                        <img
-                                            src="https://randomuser.me/api/portraits/women/44.jpg"
-                                            alt="Testimonial 2"
-                                            className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg object-cover z-10"
-                                        />
-                                        <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow group-hover:bg-blue-700 transition">Barangay Leader</span>
-                                    </div>
-                                    <div className="relative bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-700/80 rounded-3xl shadow-xl border border-blue-800 px-8 py-7 flex flex-col items-center group-hover:scale-105 transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-200">
-                                        <svg className="w-8 h-8 text-blue-400 mb-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                            <path d="M9 17c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5h-1zm-6 0c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5H3z" />
-                                        </svg>
-                                        <p className="text-blue-100 text-base mb-4 font-semibold">
-                                            "The FITS Center's organic farming program helped our community grow healthier food and protect our environment."
-                                        </p>
-                                        <span className="text-blue-300 font-bold">Maria Santos</span>
-                                        <span className="text-blue-400 text-xs">Tanza</span>
-                                    </div>
-                                </div>
-                                {/* Testimonial 3 */}
-                                <div className="relative flex-1 flex flex-col items-center text-center group">
-                                    <div className="relative mb-6">
-                                        <img
-                                            src="https://randomuser.me/api/portraits/men/65.jpg"
-                                            alt="Testimonial 3"
-                                            className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg object-cover z-10"
-                                        />
-                                        <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow group-hover:bg-blue-600 transition">Student</span>
-                                    </div>
-                                    <div className="relative bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-700/80 rounded-3xl shadow-xl border border-blue-800 px-8 py-7 flex flex-col items-center group-hover:scale-105 transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-300">
-                                        <svg className="w-8 h-8 text-blue-400 mb-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                            <path d="M9 17c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5h-1zm-6 0c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5H3z" />
-                                        </svg>
-                                        <p className="text-blue-100 text-base mb-4 font-semibold">
-                                            "I attended the Agri Bootcamp and learned so much about sustainable agriculture. Highly recommended for the youth!"
-                                        </p>
-                                        <span className="text-blue-300 font-bold">Mark Reyes</span>
-                                        <span className="text-blue-400 text-xs">Tanza</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                <section className="max-w-6xl mx-auto px-4 py-14 mb-20">
-                    <h2 className="text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
-                        Frequently Asked Questions
-                    </h2>
-                    <div className="space-y-6">
-                        <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
-                            <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
-                                What is the FITS Program?
-                                <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
-                            </summary>
-                            <p className="mt-3 text-blue-100 font-semibold">
-                                The Farmers' Information and Technology Services (FITS) Program provides agricultural information, training, and technology support to farmers and stakeholders.
-                            </p>
-                        </details>
-                        <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200">
-                            <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
-                                How can I join your programs?
-                                <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
-                            </summary>
-                            <p className="mt-3 text-blue-100 font-semibold">
-                                You can join by contacting us through our website, visiting the FITS Center, or following our social media for announcements and registration details.
-                            </p>
-                        </details>
-                        <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300">
-                            <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
-                                Are your services free?
-                                <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
-                            </summary>
-                            <p className="mt-3 text-blue-100 font-semibold">
-                                Most of our services, trainings, and consultations are free for local farmers and community members, thanks to government and partner support.
-                            </p>
-                        </details>
-                        <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-400">
-                            <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
-                                How do I get updates on events?
-                                <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
-                            </summary>
-                            <p className="mt-3 text-blue-100 font-semibold">
-                                Subscribe to our newsletter, follow us on social media, or regularly check our website for the latest news and event schedules.
-                            </p>
-                        </details>
-                    </div>
-                </section>
-
-                {/* USEFUL EXTERNAL RESOURCES */}
-                <section className="max-w-5xl mx-auto px-6 py-16 mb-20">
-                    <h2 className="text-3xl font-extrabold text-blue-900 mb-12 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-1/  transition-all duration-700 delay-100">
-                        Useful External Resources
-                    </h2>
-                    {/* Unique layout: circular/arc arrangement with connecting lines */}
-                    <div className="relative flex items-center justify-center min-h-[380px]">
-                        {/* SVG arc connector */}
-                        <svg
-                            className="absolute left-0 translate-y-1/2 right-0 mx-auto top-8 w-[90%] h-[260px] pointer-events-none"
-                            viewBox="0 0 600 260"
-                            fill="none"
-                            style={{ zIndex: 0 }}
-                        >
-                            <path
-                                d="M60 220 Q300 20 540 220"
-                                stroke="#2563eb"
-                                strokeWidth="3"
-                                strokeDasharray="8 8"
-                                fill="none"
-                            />
-                        </svg>
-                        {/* Resource 1 - left */}
-                        <a
-                            href="https://www.da.gov.ph/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="absolute left-0 translate-y-1/2 top-32 group flex flex-col items-center"
-                            style={{ width: 220 }}
-                        >
-                            <span className="bg-white shadow-lg border-4 border-blue-700 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-blue-700 group-hover:text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-700 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <circle cx="12" cy="12" r="10" strokeWidth={2} />
+            </section>
+            
+            {/* Why Choose Us Section */}
+            <section className="bg-blue-200 py-30 mb-20">
+                <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 mb-20 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-20 transition-all duration-700 delay-100">
+                    Why Choose Us?
+                </h2>
+                <div className="relative max-w-5xl mx-auto flex flex-col items-center">
+                    {/* Decorative SVG curve */}
+                    <svg className="absolute left-0 right-0 top-0 w-full h-32 pointer-events-none" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#2563eb" fillOpacity="0.08" d="M0,80 C480,160 960,0 1440,80 L1440,120 L0,120 Z"></path>
+                    </svg>
+                    {/* Timeline style cards */}
+                    <div className="flex flex-col md:flex-row items-center justify-between w-full z-10">
+                        {/* Line */}
+                        <div className="hidden md:block absolute left-1/2 top-24 bottom-0 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200" style={{height: '220px', transform: 'translateX(-50%)'}}></div>
+                        {/* Card 1 */}
+                        <div className="flex flex-col items-center md:w-1/3 mb-12 md:mb-0 relative z-10">
+                            <div className="bg-blue-800 rounded-full p-5 shadow-lg mb-4 border-4 border-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 10c-4.418 0-8-3.582-8-8 0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.418-3.582 8-8 8z" />
                                 </svg>
-                            </span>
-                            <div className="text-center">
-                                <h3 className="font-bold text-lg text-blue-900 mb-1">Department of Agriculture</h3>
-                                <p className="text-blue-700 text-sm font-semibold">Official government portal for Philippine agriculture programs, news, and resources.</p>
                             </div>
-                        </a>
-                        {/* Resource 2 - top center */}
-                        <a
-                            href="https://ati.da.gov.ph/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="absolute left-1/2 -translate-x-1/2 translate-y-1/8 top-0 group flex flex-col items-center"
-                            style={{ width: 220 }}
-                        >
-                            <span className="bg-white shadow-lg border-4 border-blue-800 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-blue-800 group-hover:text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-800 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div className="bg-white/90 rounded-xl shadow-md px-7 py-6 text-center border-t-4 border-blue-700 reveal-on-scroll opacity-0 translate-y-10 delay-100">
+                                <h3 className="font-bold text-lg text-blue-900 mb-2">Expert Support</h3>
+                                <p className="text-blue-700 text-base font-semibold">
+                                    Our team provides expert guidance and support to help you succeed in agriculture.
+                                </p>
+                            </div>
+                        </div>
+                        {/* Connector for desktop */}
+                        <div className="hidden md:flex flex-col items-center w-1/6">
+                            <div className="w-3 h-3 bg-blue-700 rounded-full mb-2"></div>
+                            <div className="flex-1 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200"></div>
+                            <div className="w-3 h-3 bg-blue-700 rounded-full mt-2"></div>
+                        </div>
+                        {/* Card 2 */}
+                        <div className="flex flex-col items-center md:w-1/3 mb-12 md:mb-0 relative z-10">
+                            <div className="bg-blue-800 rounded-full p-5 shadow-lg mb-4 border-4 border-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a4 4 0 018 0v2m-4-6a4 4 0 100-8 4 4 0 000 8z" />
                                 </svg>
-                            </span>
-                            <div className="text-center">
-                                <h3 className="font-bold text-lg text-blue-900 mb-1">Agricultural Training Institute</h3>
-                                <p className="text-blue-700 text-sm font-semibold">Training, extension, and e-learning for farmers and agri-entrepreneurs.</p>
                             </div>
-                        </a>
-                        {/* Resource 3 - right */}
-                        <a
-                            href="https://www.philrice.gov.ph/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="absolute right-0 top-32 translate-y-1/2 group flex flex-col items-center"
-                            style={{ width: 220 }}
-                        >
-                            <span className="bg-white shadow-lg border-4 border-blue-900 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-blue-900 group-hover:text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-900 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div className="bg-white/90 rounded-xl shadow-md px-7 py-6 text-center border-t-4 border-blue-700 reveal-on-scroll opacity-0 translate-y-10 delay-200">
+                                <h3 className="font-bold text-lg text-blue-900 mb-2">Community Focus</h3>
+                                <p className="text-blue-700 text-base font-semibold">
+                                    We are dedicated to uplifting communities and fostering sustainable growth.
+                                </p>
+                            </div>
+                        </div>
+                        {/* Connector for desktop */}
+                        <div className="hidden md:flex flex-col items-center w-1/6">
+                            <div className="w-3 h-3 bg-blue-700 rounded-full mb-2"></div>
+                            <div className="flex-1 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200"></div>
+                            <div className="w-3 h-3 bg-blue-700 rounded-full mt-2"></div>
+                        </div>
+                        {/* Card 3 */}
+                        <div className="flex flex-col items-center md:w-1/3 relative z-10">
+                            <div className="bg-blue-800 rounded-full p-5 shadow-lg mb-4 border-4 border-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2z" />
                                 </svg>
-                            </span>
-                            <div className="text-center">
-                                <h3 className="font-bold text-lg text-blue-900 mb-1">PhilRice</h3>
-                                <p className="text-blue-700 text-sm font-semibold">Research and innovations for rice farmers and the rice industry.</p>
                             </div>
-                        </a>
+                            <div className="bg-white/90 rounded-xl shadow-md px-7 py-6 text-center border-t-4 border-blue-700 reveal-on-scroll opacity-0 translate-y-10 delay-300">
+                                <h3 className="font-bold text-lg text-blue-900 mb-2">Trusted & Secure</h3>
+                                <p className="text-blue-700 text-base font-semibold">
+                                    We ensure your data and interactions are safe and handled with integrity.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </section>
-                {/* Move footer outside of main for valid structure */}
-            </main>
-            <footer className="bg-blue-900 py-12 px-6">
-                <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
-                    <div className="flex-1 mb-8 md:mb-0">
-                        <h4 className="font-semibold text-blue-100 mb-3">Quick Links</h4>
+                    {/* Decorative SVG curve bottom */}
+                    <svg className="absolute left-0 right-0 bottom-0 w-full h-32 pointer-events-none" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#2563eb" fillOpacity="0.08" d="M0,40 C480,0 960,160 1440,40 L1440,120 L0,120 Z"></path>
+                    </svg>
+                    </div>
+            </section>
+
+            {/* --- TESTIMONIALS --- */}
+            <section className="max-w-6xl mx-auto px-4 py-14 mb-20">
+                <h2 className="text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-10 transition-all duration-700 delay-100">
+                    Testimonials
+                </h2>
+                <div className="relative flex flex-col md:flex-row items-stretch gap-8">
+                    {/* Decorative background gradient line */}
+                    <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200 rounded-full opacity-40" style={{transform: 'translateX(-50%)'}}></div>
+                    {/* Testimonial 1 */}
+                    <div className="relative flex-1 flex flex-col items-center text-center group">
+                        <div className="relative mb-6">
+                            <img
+                                src="https://randomuser.me/api/portraits/men/32.jpg"
+                                alt="Testimonial 1"
+                                className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg object-cover z-10"
+                            />
+                            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-700 text-white px-3 py-1 rounded-full text-xs font-bold shadow group-hover:bg-blue-800 transition">Farmer</span>
+                        </div>
+                        <div className="relative bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-700/80 rounded-3xl shadow-xl border border-blue-800 px-8 py-7 flex flex-col items-center group-hover:scale-105 transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-100">
+                            <svg className="w-8 h-8 text-blue-400 mb-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                <path d="M9 17c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5h-1zm-6 0c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5H3z" />
+                            </svg>
+                            <p className="text-blue-100 text-base mb-4 font-semibold">
+                                "Thanks to Agri-Connect, I learned new farming techniques that doubled my harvest. The support team is always ready to help!"
+                            </p>
+                            <span className="text-blue-300 font-bold">Juan Dela Cruz</span>
+                            <span className="text-blue-400 text-xs">Tanza</span>
+                        </div>
+                    </div>
+                    {/* Testimonial 2 */}
+                    <div className="relative flex-1 flex flex-col items-center text-center group">
+                        <div className="relative mb-6">
+                            <img
+                                src="https://randomuser.me/api/portraits/women/44.jpg"
+                                alt="Testimonial 2"
+                                className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg object-cover z-10"
+                            />
+                            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow group-hover:bg-blue-700 transition">Barangay Leader</span>
+                        </div>
+                        <div className="relative bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-700/80 rounded-3xl shadow-xl border border-blue-800 px-8 py-7 flex flex-col items-center group-hover:scale-105 transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-200">
+                            <svg className="w-8 h-8 text-blue-400 mb-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                <path d="M9 17c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5h-1zm-6 0c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5H3z" />
+                            </svg>
+                            <p className="text-blue-100 text-base mb-4 font-semibold">
+                                "The FITS Center's organic farming program helped our community grow healthier food and protect our environment."
+                            </p>
+                            <span className="text-blue-300 font-bold">Maria Santos</span>
+                            <span className="text-blue-400 text-xs">Tanza</span>
+                        </div>
+                    </div>
+                    {/* Testimonial 3 */}
+                    <div className="relative flex-1 flex flex-col items-center text-center group">
+                        <div className="relative mb-6">
+                            <img
+                                src="https://randomuser.me/api/portraits/men/65.jpg"
+                                alt="Testimonial 3"
+                                className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg object-cover z-10"
+                            />
+                            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow group-hover:bg-blue-600 transition">Student</span>
+                        </div>
+                        <div className="relative bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-700/80 rounded-3xl shadow-xl border border-blue-800 px-8 py-7 flex flex-col items-center group-hover:scale-105 transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-300">
+                            <svg className="w-8 h-8 text-blue-400 mb-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                <path d="M9 17c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5h-1zm-6 0c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5H3z" />
+                            </svg>
+                            <p className="text-blue-100 text-base mb-4 font-semibold">
+                                "I attended the Agri Bootcamp and learned so much about sustainable agriculture. Highly recommended for the youth!"
+                            </p>
+                            <span className="text-blue-300 font-bold">Mark Reyes</span>
+                            <span className="text-blue-400 text-xs">Tanza</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Frequently Asked Questions */}
+            <section className="max-w-6xl mx-auto px-4 py-14 mb-20">
+                <h2 className="text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
+                    Frequently Asked Questions
+                </h2>
+                <div className="space-y-6">
+                    <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
+                        <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
+                            What is the FITS Program?
+                            <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
+                        </summary>
+                        <p className="mt-3 text-blue-100 font-semibold">
+                            The Farmers' Information and Technology Services (FITS) Program provides agricultural information, training, and technology support to farmers and stakeholders.
+                        </p>
+                    </details>
+                    <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200">
+                        <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
+                            How can I join your programs?
+                            <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
+                        </summary>
+                        <p className="mt-3 text-blue-100 font-semibold">
+                            You can join by contacting us through our website, visiting the FITS Center, or following our social media for announcements and registration details.
+                        </p>
+                    </details>
+                    <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300">
+                        <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
+                            Are your services free?
+                            <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
+                        </summary>
+                        <p className="mt-3 text-blue-100 font-semibold">
+                            Most of our services, trainings, and consultations are free for local farmers and community members, thanks to government and partner support.
+                        </p>
+                    </details>
+                    <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-400">
+                        <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
+                            How do I get updates on events?
+                            <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
+                        </summary>
+                        <p className="mt-3 text-blue-100 font-semibold">
+                            Subscribe to our newsletter, follow us on social media, or regularly check our website for the latest news and event schedules.
+                        </p>
+                    </details>
+                </div>
+            </section>
+
+            {/* USEFUL EXTERNAL RESOURCES */}
+            <section className="max-w-5xl mx-auto px-6 py-16 mb-20">
+                <h2 className="text-3xl font-extrabold text-blue-900 mb-12 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-1/  transition-all duration-700 delay-100">
+                    Useful External Resources
+                </h2>
+                {/* Unique layout: circular/arc arrangement with connecting lines */}
+                <div className="relative flex items-center justify-center min-h-[380px]">
+                    {/* SVG arc connector */}
+                    <svg
+                        className="absolute left-0 translate-y-1/2 right-0 mx-auto top-8 w-[90%] h-[260px] pointer-events-none"
+                        viewBox="0 0 600 260"
+                        fill="none"
+                        style={{ zIndex: 0 }}
+                    >
+                        <path
+                            d="M60 220 Q300 20 540 220"
+                            stroke="#2563eb"
+                            strokeWidth="3"
+                            strokeDasharray="8 8"
+                            fill="none"
+                        />
+                    </svg>
+                    {/* Resource 1 - left */}
+                    <a
+                        href="https://www.da.gov.ph/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute left-0 translate-y-1/2 top-32 group flex flex-col items-center"
+                        style={{ width: 220 }}
+                    >
+                        <span className="bg-white shadow-lg border-4 border-blue-700 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-blue-700 group-hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-700 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10" strokeWidth={2} />
+                            </svg>
+                        </span>
+                        <div className="text-center">
+                            <h3 className="font-bold text-lg text-blue-900 mb-1">Department of Agriculture</h3>
+                            <p className="text-blue-700 text-sm font-semibold">Official government portal for Philippine agriculture programs, news, and resources.</p>
+                        </div>
+                    </a>
+                    {/* Resource 2 - top center */}
+                    <a
+                        href="https://ati.da.gov.ph/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute left-1/2 -translate-x-1/2 translate-y-1/8 top-0 group flex flex-col items-center"
+                        style={{ width: 220 }}
+                    >
+                        <span className="bg-white shadow-lg border-4 border-blue-800 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-blue-800 group-hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-800 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a4 4 0 018 0v2m-4-6a4 4 0 100-8 4 4 0 000 8z" />
+                            </svg>
+                        </span>
+                        <div className="text-center">
+                            <h3 className="font-bold text-lg text-blue-900 mb-1">Agricultural Training Institute</h3>
+                            <p className="text-blue-700 text-sm font-semibold">Training, extension, and e-learning for farmers and agri-entrepreneurs.</p>
+                        </div>
+                    </a>
+                    {/* Resource 3 - right */}
+                    <a
+                        href="https://www.philrice.gov.ph/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute right-0 top-32 translate-y-1/2 group flex flex-col items-center"
+                        style={{ width: 220 }}
+                    >
+                        <span className="bg-white shadow-lg border-4 border-blue-900 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-blue-900 group-hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-900 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2z" />
+                            </svg>
+                        </span>
+                        <div className="text-center">
+                            <h3 className="font-bold text-lg text-blue-900 mb-1">PhilRice</h3>
+                            <p className="text-blue-700 text-sm font-semibold">Research and innovations for rice farmers and the rice industry.</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            {/* Move footer outside of main for valid structure */}
+        </main>
+           <footer className="bg-blue-900 py-16 px-6">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-14">
+                    {/* Logo & About */}
+                    <div className="flex-1 mb-10 md:mb-0">
+                        <div className="flex items-center gap-3 mb-4">
+                            <img src={logo} alt="FITS Logo" className="w-12 h-12 rounded-full border-2 border-blue-200 shadow" />
+                            <span className="text-2xl font-extrabold text-blue-100 tracking-wide">FITS-Tanza</span>
+                        </div>
+                        <p className="text-blue-200 text-sm mb-4 font-semibold">
+                            The Farmers' Information and Technology Services (FITS) Center of Tanza is dedicated to empowering local farmers and communities through innovative agricultural programs, training, and support.
+                        </p>
+                        <div className="flex items-center gap-2 text-blue-300 text-xs">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 12.414a2 2 0 10-2.828 2.828l4.243 4.243a8 8 0 111.414-1.414z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>Poblacion, Tanza, Cavite, Philippines</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-blue-300 text-xs mt-2">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 12v1a4 4 0 01-8 0v-1m8 0a4 4 0 00-8 0m8 0V8a4 4 0 00-8 0v4" />
+                            </svg>
+                            <span>Email: <a href="mailto:fitstanza@gmail.com" className="underline hover:text-blue-400">fitstanza@gmail.com</a></span>
+                        </div>
+                        <div className="flex items-center gap-2 text-blue-300 text-xs mt-2">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm14 0a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2V5z" />
+                            </svg>
+                            <span>Tel: <a href="tel:+63464123456" className="underline hover:text-blue-400">(+63) 46 412 3456</a></span>
+                        </div>
+                    </div>
+                    {/* Quick Links */}
+                    <div className="flex-1 mb-10 md:mb-0">
+                        <h4 className="font-semibold text-blue-100 mb-4 text-lg">Quick Links</h4>
                         <ul className="space-y-2 text-blue-100 text-base font-semibold">
                             <li>
                                 <a
@@ -709,12 +742,45 @@ export default function Landing() {
                                     Contact
                                 </a>
                             </li>
+                            <li>
+                                <a
+                                    href="/faq"
+                                    className="hover:text-blue-400 transition"
+                                    onClick={e => { e.preventDefault(); window.location = '/faq'; }}
+                                >
+                                    FAQ
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="/resources"
+                                    className="hover:text-blue-400 transition"
+                                    onClick={e => { e.preventDefault(); window.location = '/resources'; }}
+                                >
+                                    Resources
+                                </a>
+                            </li>
                         </ul>
                     </div>
-                    {/* Social Media */}
+                    {/* Contact & Hours */}
+                    <div className="flex-1 mb-10 md:mb-0">
+                        <h4 className="font-semibold text-blue-100 mb-4 text-lg">Contact & Hours</h4>
+                        <div className="text-blue-200 text-sm font-semibold mb-2">
+                            <span className="block">Office Hours:</span>
+                            <span className="block">Mon - Fri: 8:00 AM - 5:00 PM</span>
+                            <span className="block">Sat - Sun: Closed</span>
+                        </div>
+                        <div className="text-blue-200 text-sm font-semibold mb-2">
+                            <span className="block">Facebook Messenger: <a href="https://m.me/fitstanza" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-400">Message Us</a></span>
+                        </div>
+                        <div className="text-blue-200 text-sm font-semibold">
+                            <span className="block">For urgent concerns, please call or visit our office during working hours.</span>
+                        </div>
+                    </div>
+                    {/* Social Media & Newsletter */}
                     <div className="flex-1">
-                        <h4 className="font-semibold text-blue-100 mb-3">Connect with us</h4>
-                        <div className="flex gap-5 mb-4">
+                        <h4 className="font-semibold text-blue-100 mb-4 text-lg">Connect with us</h4>
+                        <div className="flex gap-5 mb-6">
                             <a
                                 href="https://facebook.com/fitstanza"
                                 target="_blank"
@@ -749,10 +815,45 @@ export default function Landing() {
                                 </svg>
                             </a>
                         </div>
+                        <form
+                            className="mb-4"
+                            onSubmit={e => {
+                                e.preventDefault();
+                                alert('Thank you for subscribing!');
+                            }}
+                        >
+                            <label htmlFor="newsletter" className="block text-blue-100 font-semibold mb-2">
+                                Subscribe to our newsletter
+                            </label>
+                            <div className="flex">
+                                <input
+                                    id="newsletter"
+                                    type="email"
+                                    required
+                                    placeholder="Your email"
+                                    className="rounded-l-lg px-4 py-2 bg-blue-50 text-blue-900 focus:outline-none"
+                                />
+                                <button
+                                    type="submit"
+                                    className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-r-lg font-semibold transition"
+                                >
+                                    Subscribe
+                                </button>
+                            </div>
+                        </form>
                         <p className="text-blue-200 text-xs">&copy; {new Date().getFullYear()} FITS-Tanza. All rights reserved.</p>
+                        <p className="text-blue-300 text-xs mt-1">Developed by the FITS-Tanza IT Team. <a href="mailto:fitstanza@gmail.com" className="underline hover:text-blue-400">Contact Webmaster</a></p>
                     </div>
                 </div>
+                <div className="mt-10 border-t border-blue-800 pt-6 text-center text-blue-300 text-xs">
+                    <span>
+                        <a href="/privacy" className="underline hover:text-blue-400">Privacy Policy</a> &nbsp;|&nbsp;
+                        <a href="/terms" className="underline hover:text-blue-400">Terms of Service</a> &nbsp;|&nbsp;
+                        <a href="/accessibility" className="underline hover:text-blue-400">Accessibility</a>
+                    </span>
+                </div>
             </footer>
+
             <style>{`
                 html, body, #root {
                     overflow-x: hidden !important;
