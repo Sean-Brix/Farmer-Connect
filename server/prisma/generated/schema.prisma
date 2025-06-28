@@ -1,3 +1,149 @@
+//? ===================================== ACCOUNTS SCHEMA ===================================== ?//
+
+model Account {
+  id             String             @id @default(cuid())
+  access         access             @default(User)
+  username       String             @unique
+  email          String             @unique
+  firstName      String
+  lastName       String
+  middleName     String?
+  gender         gender
+  client_profile client_profile     @default(Other)
+  cellphone_no   String?
+  telephone_no   String?
+  occupation     String?
+  position       String?
+  address        String?
+  picture        String?
+  commodity      AccountCommodity[]
+  password       String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  // Relations
+  seminars SeminarParticipant[]
+
+  @@map("accounts")
+}
+
+model Commodity {
+  id          String             @id @default(cuid())
+  name        String             @unique
+  icon        String?
+  description String?
+  accounts    AccountCommodity[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("commodities")
+}
+
+//? ====================================== RELATIONSHIPS ====================================== ?//
+
+model AccountCommodity {
+  id           String   @id @default(cuid())
+  account_id   String
+  commodity_id String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  commodity Commodity @relation(fields: [commodity_id], references: [id])
+  account   Account   @relation(fields: [account_id], references: [id])
+
+  @@unique([account_id, commodity_id])
+  @@map("accounts_commodities")
+}
+
+//? ========================================== ENUMS ========================================== ?//
+
+enum client_profile {
+  Fishfolk                          @map("Fishfolk")
+  Rural_Based_Org                   @map("Rural Based Org")
+  Student                           @map("Student")
+  Agricultural_Fisheries_Technician @map("Agricultural/Fisheries Technician")
+  Youth                             @map("Youth")
+  Women                             @map("Women")
+  Govt_Employee                     @map("Govt Employee")
+  PWD                               @map("PWD")
+  Indigenous_People                 @map("Indigenous People")
+  Other                             @map("Other")
+}
+
+enum access {
+  Admin
+  User
+  Super_Admin @map("Super Admin")
+}
+
+enum gender {
+  Male
+  Female
+  Other
+}
+
+//? ======================================= ITEM SCHEMA ======================================= ?//
+
+model InventoryItem {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  categoryId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  item_stacks ItemStack[]
+  category    InventoryCategory @relation(fields: [categoryId], references: [id])
+
+  @@map("inventory_items")
+}
+
+//? ===================================== CATEGORY SCHEMA ===================================== ?//
+
+model InventoryCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  icon        String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  items InventoryItem[]
+
+  @@map("inventory_categories")
+}
+
+//? ====================================== STACKS SCHEMA ====================================== ?//
+model ItemStack {
+  id        String      @id @default(cuid())
+  itemId    String
+  quantity  Int         @default(1)
+  status    item_status @default(Available)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Relations
+  item InventoryItem @relation(fields: [itemId], references: [id])
+
+  @@map("item_stacks")
+}
+
+//? ========================================== ENUMS ========================================== ?//
+
+enum item_status {
+  Available
+  Unavailable
+  Lost
+  Damaged
+  Reserved
+  Borrowed
+  Distributed
+}
+
 generator client {
   provider = "prisma-client-js"
   output   = "../generated"
@@ -6,4 +152,61 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+//? ===================================== SEMINARS SCHEMA ===================================== ?//
+
+model Seminar {
+  id                    String         @id @default(cuid())
+  title                 String
+  description           String         @db.Text
+  location              String
+  speaker               String
+  start_date            DateTime
+  end_date              DateTime
+  start_time            DateTime
+  end_time              DateTime
+  capacity              Int
+  registration_deadline DateTime
+  status                seminar_status @default(Upcoming)
+  photo                 String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  // Relations
+  participants SeminarParticipant[]
+
+  @@map("seminars")
+}
+
+model SeminarParticipant {
+  id         String             @id @default(cuid())
+  seminar_id String
+  account_id String
+  status     participant_status @default(Registered)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  // Relations
+  seminar Seminar @relation(fields: [seminar_id], references: [id])
+  account Account @relation(fields: [account_id], references: [id])
+
+  @@unique([seminar_id, account_id])
+  @@map("seminar_participants")
+}
+
+//? ========================================== ENUMS ========================================== ?//
+
+enum seminar_status {
+  Upcoming
+  Ongoing
+  Completed
+  Cancelled
+}
+
+enum participant_status {
+  Attended
+  Not_Attended @map("Not Attended")
+  Registered
+  Cancelled
 }

@@ -1,7 +1,7 @@
 
 //? ===================================== ACCOUNTS SCHEMA ===================================== ?//
 
-model accounts {
+model Account {
   id             String                 @id @default(cuid())
   access         access                 @default(User)
   username       String                 @unique
@@ -17,29 +17,33 @@ model accounts {
   position       String?
   address        String?
   picture        String?
-  commodity      accounts_commodities[]
+  commodity      AccountCommodity[]
   password       String
   createdAt      DateTime               @default(now())
   updatedAt      DateTime               @updatedAt
 
-    // Relations
-    seminars      seminar_participants[]
+  // Relations
+  seminars      SeminarParticipant[]
+
+  @@map("accounts")
 }
 
-model commodities {
+model Commodity {
   id          String                 @id @default(cuid())
   name        String                 @unique
   icon        String?
   description String?
-  accounts    accounts_commodities[]
+  accounts    AccountCommodity[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("commodities")
 }
 
 //? ====================================== RELATIONSHIPS ====================================== ?//
 
-model accounts_commodities {
+model AccountCommodity {
   id           String   @id @default(cuid())
   account_id   String
   commodity_id String
@@ -47,10 +51,11 @@ model accounts_commodities {
   updatedAt    DateTime @updatedAt
 
   // Relations
-  commodity commodities @relation(fields: [commodity_id], references: [id])
-  account   accounts    @relation(fields: [account_id], references: [id])
+  commodity Commodity @relation(fields: [commodity_id], references: [id])
+  account   Account    @relation(fields: [account_id], references: [id])
 
   @@unique([account_id, commodity_id])
+  @@map("accounts_commodities")
 }
 
 //? ========================================== ENUMS ========================================== ?//

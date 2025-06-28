@@ -4,9 +4,13 @@ const prisma = new PrismaClient();
 
 async function login(req, res) {
     const { username, password } = req.body;
+    
+    if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required' });
+    }
 
     try {
-        const user = await prisma.accounts.findUnique({
+        const user = await prisma.account.findUnique({
             where: {
                 username: username,
             },

@@ -120,9 +120,228 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.AccountScalarFieldEnum = {
+  id: 'id',
+  access: 'access',
+  username: 'username',
+  email: 'email',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  middleName: 'middleName',
+  gender: 'gender',
+  client_profile: 'client_profile',
+  cellphone_no: 'cellphone_no',
+  telephone_no: 'telephone_no',
+  occupation: 'occupation',
+  position: 'position',
+  address: 'address',
+  picture: 'picture',
+  password: 'password',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommodityScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  icon: 'icon',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AccountCommodityScalarFieldEnum = {
+  id: 'id',
+  account_id: 'account_id',
+  commodity_id: 'commodity_id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InventoryItemScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  categoryId: 'categoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InventoryCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  icon: 'icon',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ItemStackScalarFieldEnum = {
+  id: 'id',
+  itemId: 'itemId',
+  quantity: 'quantity',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SeminarScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  location: 'location',
+  speaker: 'speaker',
+  start_date: 'start_date',
+  end_date: 'end_date',
+  start_time: 'start_time',
+  end_time: 'end_time',
+  capacity: 'capacity',
+  registration_deadline: 'registration_deadline',
+  status: 'status',
+  photo: 'photo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SeminarParticipantScalarFieldEnum = {
+  id: 'id',
+  seminar_id: 'seminar_id',
+  account_id: 'account_id',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
+exports.Prisma.AccountOrderByRelevanceFieldEnum = {
+  id: 'id',
+  username: 'username',
+  email: 'email',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  middleName: 'middleName',
+  cellphone_no: 'cellphone_no',
+  telephone_no: 'telephone_no',
+  occupation: 'occupation',
+  position: 'position',
+  address: 'address',
+  picture: 'picture',
+  password: 'password'
+};
+
+exports.Prisma.CommodityOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  icon: 'icon',
+  description: 'description'
+};
+
+exports.Prisma.AccountCommodityOrderByRelevanceFieldEnum = {
+  id: 'id',
+  account_id: 'account_id',
+  commodity_id: 'commodity_id'
+};
+
+exports.Prisma.InventoryItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  categoryId: 'categoryId'
+};
+
+exports.Prisma.InventoryCategoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  icon: 'icon',
+  description: 'description'
+};
+
+exports.Prisma.ItemStackOrderByRelevanceFieldEnum = {
+  id: 'id',
+  itemId: 'itemId'
+};
+
+exports.Prisma.SeminarOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  location: 'location',
+  speaker: 'speaker',
+  photo: 'photo'
+};
+
+exports.Prisma.SeminarParticipantOrderByRelevanceFieldEnum = {
+  id: 'id',
+  seminar_id: 'seminar_id',
+  account_id: 'account_id'
+};
+exports.access = exports.$Enums.access = {
+  Admin: 'Admin',
+  User: 'User',
+  Super_Admin: 'Super_Admin'
+};
+
+exports.gender = exports.$Enums.gender = {
+  Male: 'Male',
+  Female: 'Female',
+  Other: 'Other'
+};
+
+exports.client_profile = exports.$Enums.client_profile = {
+  Fishfolk: 'Fishfolk',
+  Rural_Based_Org: 'Rural_Based_Org',
+  Student: 'Student',
+  Agricultural_Fisheries_Technician: 'Agricultural_Fisheries_Technician',
+  Youth: 'Youth',
+  Women: 'Women',
+  Govt_Employee: 'Govt_Employee',
+  PWD: 'PWD',
+  Indigenous_People: 'Indigenous_People',
+  Other: 'Other'
+};
+
+exports.item_status = exports.$Enums.item_status = {
+  Available: 'Available',
+  Unavailable: 'Unavailable',
+  Lost: 'Lost',
+  Damaged: 'Damaged',
+  Reserved: 'Reserved',
+  Borrowed: 'Borrowed',
+  Distributed: 'Distributed'
+};
+
+exports.seminar_status = exports.$Enums.seminar_status = {
+  Upcoming: 'Upcoming',
+  Ongoing: 'Ongoing',
+  Completed: 'Completed',
+  Cancelled: 'Cancelled'
+};
+
+exports.participant_status = exports.$Enums.participant_status = {
+  Attended: 'Attended',
+  Not_Attended: 'Not_Attended',
+  Registered: 'Registered',
+  Cancelled: 'Cancelled'
+};
 
 exports.Prisma.ModelName = {
-
+  Account: 'Account',
+  Commodity: 'Commodity',
+  AccountCommodity: 'AccountCommodity',
+  InventoryItem: 'InventoryItem',
+  InventoryCategory: 'InventoryCategory',
+  ItemStack: 'ItemStack',
+  Seminar: 'Seminar',
+  SeminarParticipant: 'SeminarParticipant'
 };
 
 /**

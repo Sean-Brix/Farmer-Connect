@@ -1,6 +1,6 @@
 //? ======================================= ITEM SCHEMA ======================================= ?//
 
-model inventory_items {
+model InventoryItem {
     id          String   @id @default(cuid())
     name        String   @unique
     description String?
@@ -9,13 +9,15 @@ model inventory_items {
     updatedAt   DateTime @updatedAt
 
     // Relations
-    item_stacks item_stacks[]
-    category    inventory_categories @relation(fields: [categoryId], references: [id])
+    item_stacks ItemStack[]
+    category    InventoryCategory @relation(fields: [categoryId], references: [id])
+
+    @@map("inventory_items")
 }
 
 //? ===================================== CATEGORY SCHEMA ===================================== ?//
 
-model inventory_categories {
+model InventoryCategory {
     id          String   @id @default(cuid())
     name        String   @unique
     icon        String?
@@ -24,11 +26,13 @@ model inventory_categories {
     updatedAt   DateTime @updatedAt
 
     // Relations
-    items inventory_items[]
+    items InventoryItem[]
+
+    @@map("inventory_categories")
 }
 
 //? ====================================== STACKS SCHEMA ====================================== ?//
-model item_stacks {
+model ItemStack {
     id        String      @id @default(cuid())
     itemId    String
     quantity  Int         @default(1)
@@ -37,7 +41,9 @@ model item_stacks {
     updatedAt DateTime    @updatedAt
 
     // Relations
-    item inventory_items @relation(fields: [itemId], references: [id])
+    item InventoryItem @relation(fields: [itemId], references: [id])
+
+    @@map("item_stacks")
 }
 
 //? ========================================== ENUMS ========================================== ?//

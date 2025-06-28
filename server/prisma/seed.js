@@ -1,4 +1,4 @@
-import { PrismaClient } from './generated/index.js'
+import { PrismaClient } from './generated/client.js'
 import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
@@ -11,7 +11,7 @@ async function createAccount() {
   for (const user of users) {
 
     // Check if username already exists
-    const existingUser = await prisma.accounts.findUnique({
+    const existingUser = await prisma.account.findUnique({
       where: { username: user.username }
     });
     if (existingUser) {
@@ -20,7 +20,7 @@ async function createAccount() {
 
     const hashedPassword = await bcrypt.hash("123456", 10)
 
-    await prisma.accounts.create({
+    await prisma.account.create({
       data: {
         username: user.username,
         email: user.email,
@@ -49,13 +49,13 @@ import commodities from './Data/commodities.json' with { type: 'json' }
 async function createCommodities() {
   for (const commodity of commodities) {
     // Check if commodity with the same name already exists
-    const existingCommodity = await prisma.commodities.findUnique({
+    const existingCommodity = await prisma.commodity.findUnique({
       where: { name: commodity.name }
     });
     if (existingCommodity) {
       continue;
     }
-    await prisma.commodities.create({
+    await prisma.commodity.create({
       data: {
         name: commodity.name,
         description: commodity.description,
@@ -67,8 +67,8 @@ async function createCommodities() {
 //? ==================================== ACCOUNT COMMODITIES =================================== ?//
 
 async function createAccountCommodities() {
-  const accountsData = await prisma.accounts.findMany();
-  const commoditiesData = await prisma.commodities.findMany();
+  const accountsData = await prisma.account.findMany();
+  const commoditiesData = await prisma.commodity.findMany();
 
   for (const account of accountsData) {
     // Randomly determine how many commodities this account will have
@@ -87,7 +87,7 @@ async function createAccountCommodities() {
       if (assignedCommodityIds.has(commodity.id)) {
         continue;
       }
-      const existing = await prisma.accounts_commodities.findUnique({
+      const existing = await prisma.accountCommodity.findUnique({
         where: {
           account_id_commodity_id: {
             account_id: account.id,
@@ -96,7 +96,7 @@ async function createAccountCommodities() {
         }
       });
       if (!existing) {
-        await prisma.accounts_commodities.create({
+        await prisma.accountCommodity.create({
           data: {
             account_id: account.id,
             commodity_id: commodity.id,
@@ -113,7 +113,7 @@ async function createAccountCommodities() {
 import seminarsData from './Data/seminars.json' with { type: 'json' }
 async function createSeminars() {
   for (const seminar of seminarsData) {
-    await prisma.seminars.create({
+    await prisma.seminar.create({
       data: {
         title: seminar.title,
         description: seminar.description,
@@ -135,8 +135,8 @@ async function createSeminars() {
 //? ================================= SEMINAR PARTICIPANTS ================================= ?//
 
 async function createSeminarParticipants() {
-    const seminars = await prisma.seminars.findMany();
-    const accounts = await prisma.accounts.findMany();
+    const seminars = await prisma.seminar.findMany();
+    const accounts = await prisma.account.findMany();
 
     for (const seminar of seminars) {
         // Randomly determine how many accounts will participate in this seminar
@@ -149,7 +149,7 @@ async function createSeminarParticipants() {
         for (let i = 0; i < numberOfParticipants; i++) {
             const account = shuffledAccounts[i];
             // Check if this (seminar_id, account_id) pair already exists
-            const existing = await prisma.seminar_participants.findUnique({
+            const existing = await prisma.seminarParticipant.findUnique({
                 where: {
                     seminar_id_account_id: {
                         seminar_id: seminar.id,
@@ -158,7 +158,7 @@ async function createSeminarParticipants() {
                 }
             });
             if (!existing) {
-                await prisma.seminar_participants.create({
+                await prisma.seminarParticipant.create({
                     data: {
                         seminar_id: seminar.id,
                         account_id: account.id,
@@ -177,13 +177,13 @@ import inventoryItemsData from './Data/inventory_items.json' with { type: 'json'
 async function createInventoryItems() {
   for (const item of inventoryItemsData) {
     // Check if item with the same id already exists
-    const existingItem = await prisma.inventory_items.findUnique({
+    const existingItem = await prisma.inventoryItem.findUnique({
       where: { id: item.id }
     });
     if (existingItem) {
       continue;
     }
-    await prisma.inventory_items.create({
+    await prisma.inventoryItem.create({
       data: {
         id: item.id,
         name: item.name,
@@ -203,13 +203,13 @@ import inventoryCategoriesData from './Data/inventory_category.json' with { type
 async function createInventoryCategories() {
   for (const category of inventoryCategoriesData) {
     // Check if category with the same id already exists
-    const existingCategory = await prisma.inventory_categories.findUnique({
+    const existingCategory = await prisma.inventoryCategory.findUnique({
       where: { id: category.id }
     });
     if (existingCategory) {
       continue;
     }
-    await prisma.inventory_categories.create({
+    await prisma.inventoryCategory.create({
       data: {
         id: category.id,
         name: category.name,
@@ -224,7 +224,7 @@ async function createInventoryCategories() {
 
 import { faker } from '@faker-js/faker';
 async function createItemStacks() {
-  const inventoryItems = await prisma.inventory_items.findMany();
+  const inventoryItems = await prisma.inventoryItem.findMany();
 
   const statuses = ['Available', 'Unavailable', 'Lost', 'Damaged', 'Reserved', 'Borrowed', 'Distributed'];
 
@@ -241,7 +241,7 @@ async function createItemStacks() {
       // Randomly select a status for this stack
       const status = statuses[Math.floor(Math.random() * statuses.length)];
 
-      await prisma.item_stacks.create({
+      await prisma.itemStack.create({
         data: {
             itemId: item.id,
             quantity: stackQuantity,
