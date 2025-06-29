@@ -4,20 +4,7 @@ import default_picture from '../../../Assets/default_picture.png';
 
 export default function Account() {
     // --- Combined logic from both components ---
-    const [profile, setProfile] = useState({
-        occupation: '',
-        address: '',
-        cellphone_no: '',
-        institution: '',
-        email_address: '',
-        telephone_no: '',
-        gender: 'Male',
-        position: '',
-        firstname: '',
-        lastname: '',
-        password: '',
-        confirmPassword: '',
-    });
+    const [profile, setProfile] = useState({});
 
     const [editMode, setEditMode] = useState(false);
     const [photo, setPhoto] = useState(null);
@@ -28,15 +15,12 @@ export default function Account() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const response = await fetch(`/api/accounts/myAccount`);
+                const response = await fetch(`/api/account/details`);
                 if (response.ok) {
                     const data = await response.json();
-                    setProfile((prev) => ({
-                        ...prev,
-                        ...data.payload.details,
-                        password: '',
-                        confirmPassword: '',
-                    }));
+
+                    console.log(data);
+                    setProfile(data);
 
                     const getImage = await fetch(
                         `/api/accounts/getProfile?user_id=${data.payload.details.id}`
@@ -47,7 +31,8 @@ export default function Account() {
                         setPhoto(imageObjectURL);
                     }
                 }
-            } catch (error) {
+            } 
+            catch (error) {
                 // handle error
             }
         };

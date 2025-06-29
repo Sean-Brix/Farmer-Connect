@@ -106,7 +106,7 @@ export default function Login() {
                             catch (error) {
 
                                 // UNABLE TO CONNECT TO SERVER
-                                alert('Network error, please try again later.');
+                                showAlert('Network error, please try again later.', 'error');
                                 return;
                             }
 
@@ -116,27 +116,28 @@ export default function Login() {
                                 // USER ERROR
                                 if (response.status === 400) {
                                     // 'username or password required'
-
+                                    showAlert('Username and password are required.', 'error');  
                                     return;
                                 }
 
                                 // USER ERROR
                                 if (response.status === 404) {
                                     // 'User not found' ( Username does not exist );
-
+                                    showAlert('Username not found', 'error');  
                                     return;
                                 }
 
                                 // USER ERROR
                                 if (response.status === 401) {
                                     // 'Invalid password' ( Password is incorrect );
-
+                                    showAlert('Incorrect Password', 'error');
                                     return;
                                 }
 
                                 // SERVER ERROR HANDLING
                                 if (response.status === 500) {
                                     // 'Internal server error' ( Something went wrong );
+                                    showAlert('Something went wrong, please try again later.', 'error');
                                     return;
                                 }
                             }
