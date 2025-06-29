@@ -287,7 +287,7 @@ class Register extends Component {
                                             type="radio"
                                             name="gender"
                                             onChange={this.onChange_input}
-                                            value="male"
+                                            value="Male"
                                             required
                                             className="form-radio text-blue-600"
                                         />
@@ -300,7 +300,7 @@ class Register extends Component {
                                             type="radio"
                                             name="gender"
                                             onChange={this.onChange_input}
-                                            value="female"
+                                            value="Female"
                                             required
                                             className="form-radio text-blue-600"
                                         />
@@ -313,7 +313,7 @@ class Register extends Component {
                                             type="radio"
                                             name="gender"
                                             onChange={this.onChange_input}
-                                            value="other"
+                                            value="Other"
                                             required
                                             className="form-radio text-blue-600"
                                         />
