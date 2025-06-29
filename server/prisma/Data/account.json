@@ -12,7 +12,8 @@
         "telephone_no": "111-222-3333",
         "occupation": "Backend Engineer",
         "position": "Junior Developer",
-        "address": "ACM Sanja Mayor Tanza Cavite"
+        "address": "ACM Sanja Mayor Tanza Cavite",
+        "institution": "Technological University of the Philippines"
     },
     {
         "access": "Super_Admin",
@@ -27,7 +28,24 @@
         "telephone_no": "444-555-6666",
         "occupation": "Frontend Engineer",
         "position": "Graphic Designer",
-        "address": "ALP Rosario Tanza Cavite"
+        "address": "ALP Rosario Tanza Cavite",
+        "institution": "Cavite State University"
+    },
+    {
+        "access": "User",
+        "username": "sean-user",
+        "email": "sean@example.com",
+        "firstName": "Kc Sean Brix",
+        "lastName": "Calinao",
+        "middleName": "Dolosa",
+        "gender": "Male",
+        "client_profile": "Other",
+        "cellphone_no": "555-999-2222",
+        "telephone_no": "555-777-4444",
+        "occupation": "Consultant",
+        "position": "Associate Developer",
+        "address": "789 Pine St",
+        "institution": "Global Solutions Inc."
     },
     {
         "access": "User",
@@ -42,7 +60,8 @@
         "telephone_no": "555-333-4444",
         "occupation": "Developer",
         "position": "Junior Developer",
-        "address": "456 Oak Ave"
+        "address": "456 Oak Ave",
+        "institution": "Government Agency X"
     },
     {
         "access": "User",
@@ -57,7 +76,8 @@
         "telephone_no": "555-987-6543",
         "occupation": "Engineer",
         "position": "Senior Engineer",
-        "address": "123 Main St"
+        "address": "123 Main St",
+        "institution": "Acme Corp Engineering"
     },
     {
         "access": "Admin",
@@ -72,7 +92,8 @@
         "telephone_no": "555-666-7777",
         "occupation": "Administrator",
         "position": "System Admin",
-        "address": "789 Pine Ln"
+        "address": "789 Pine Ln",
+        "institution": "Global Tech Solutions"
     },
     {
         "access": "User",
@@ -87,7 +108,8 @@
         "telephone_no": "555-999-0000",
         "occupation": "Manager",
         "position": "Project Manager",
-        "address": "101 Elm Rd"
+        "address": "101 Elm Rd",
+        "institution": "Coastal Fishery Cooperative"
     },
     {
         "access": "User",
@@ -102,7 +124,8 @@
         "telephone_no": "555-444-5555",
         "occupation": "Student",
         "position": "Undergraduate",
-        "address": "222 Maple Ave"
+        "address": "222 Maple Ave",
+        "institution": "State University"
     },
     {
         "access": "User",
@@ -117,7 +140,8 @@
         "telephone_no": "555-111-2222",
         "occupation": "Analyst",
         "position": "Data Analyst",
-        "address": "333 Birch Ln"
+        "address": "333 Birch Ln",
+        "institution": "Department of Statistics"
     },
     {
         "access": "User",
@@ -132,7 +156,8 @@
         "telephone_no": "555-555-6666",
         "occupation": "Designer",
         "position": "Graphic Designer",
-        "address": "444 Cedar St"
+        "address": "444 Cedar St",
+        "institution": "Creative Design Agency"
     },
     {
         "access": "User",
@@ -147,7 +172,8 @@
         "telephone_no": "555-777-8888",
         "occupation": "Consultant",
         "position": "Business Consultant",
-        "address": "555 Willow Rd"
+        "address": "555 Willow Rd",
+        "institution": "Independent Consultant"
     },
     {
         "access": "User",
@@ -162,7 +188,8 @@
         "telephone_no": "555-222-3333",
         "occupation": "Marketing",
         "position": "Marketing Manager",
-        "address": "666 Pine Tree Ct"
+        "address": "666 Pine Tree Ct",
+        "institution": "Rural Advancement Foundation"
     },
     {
         "access": "User",
@@ -177,6 +204,7 @@
         "telephone_no": "555-888-4444",
         "occupation": "Student",
         "position": "Graduate Student",
-        "address": "777 Oakwood Dr"
+        "address": "777 Oakwood Dr",
+        "institution": "Ivy League University"
     }
 ]

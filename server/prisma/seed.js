@@ -34,6 +34,7 @@ async function createAccount() {
         cellphone_no: user.cellphone_no,
         telephone_no: user.telephone_no,
         occupation: user.occupation,
+        institution: user.institution,
         position: user.position,
         address: user.address
       }

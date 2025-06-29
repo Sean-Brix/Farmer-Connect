@@ -17,9 +17,8 @@ export default function Account() {
             try {
                 const response = await fetch(`/api/account/details`);
                 if (response.ok) {
+                    
                     const data = await response.json();
-
-                    console.log(data);
                     setProfile(data);
 
                     const getImage = await fetch(
@@ -90,7 +89,8 @@ export default function Account() {
                 }),
             });
             // Optionally show success message
-        } catch (error) {
+        } 
+        catch (error) {
             // handle error
         }
     };
@@ -136,13 +136,13 @@ export default function Account() {
                                 <input
                                     type="text"
                                     name="firstname"
-                                    value={profile.firstname}
+                                    value={profile.firstName}
                                     onChange={handleChange}
                                     placeholder="First Name"
                                     className="bg-blue-800 border-2 border-blue-700 rounded-2xl px-3 py-1 text-white font-bold mb-1 shadow-lg tracking-wide text-center text-sm w-full max-w-[160px]"
                                     style={{
                                         fontSize:
-                                            `${(profile.firstname + ' ' + profile.lastname).length > 20
+                                            `${(profile.firstName + ' ' + profile.lastName).length > 20
                                                 ? '1rem'
                                                 : '1.2rem'}`
                                     }}
@@ -150,13 +150,13 @@ export default function Account() {
                                 <input
                                     type="text"
                                     name="lastname"
-                                    value={profile.lastname}
+                                    value={profile.lastName}
                                     onChange={handleChange}
                                     placeholder="Last Name"
                                     className="bg-blue-800 border-2 border-blue-700 rounded-2xl px-3 py-1 text-white font-bold mb-1 shadow-lg tracking-wide text-center text-sm w-full max-w-[160px]"
                                     style={{
                                         fontSize:
-                                            `${(profile.firstname + ' ' + profile.lastname).length > 20
+                                            `${(profile.firstName + ' ' + profile.lastName).length > 20
                                                 ? '1rem'
                                                 : '1.2rem'}`
                                     }}
@@ -167,12 +167,12 @@ export default function Account() {
                                 className="bg-blue-800 border-2 border-blue-700 rounded-2xl px-6 py-1 text-xl font-bold text-white mb-1 shadow-lg tracking-wide whitespace-nowrap overflow-hidden"
                                 style={{
                                     fontSize:
-                                        `${(profile.firstname + ' ' + profile.lastname).length > 20
+                                        `${(profile.firstName + ' ' + profile.lastName).length > 20
                                             ? '1rem'
                                             : '1.5rem'}`
                                 }}
                             >
-                                {profile.firstname} {profile.lastname}
+                                {profile.firstName} {profile.lastName}
                             </span>
                         )}
                         {editMode ? (
@@ -301,14 +301,14 @@ export default function Account() {
                                     {editMode ? (
                                         <input
                                             type="email"
-                                            name="email_address"
+                                            name="email"
                                             className="text-blue-900 break-all border border-blue-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 transition text-sm"
-                                            value={profile.email_address || ''}
+                                            value={profile.email || ''}
                                             onChange={handleChange}
                                         />
                                     ) : (
                                         <span className="text-blue-900 break-all text-sm">
-                                            {profile.email_address}
+                                            {profile.email}
                                         </span>
                                     )}
                                 </div>
