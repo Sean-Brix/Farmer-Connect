@@ -10,22 +10,19 @@ async function register(req, res) {
 
     // Validate input
     if (!req.body.firstName || !req.body.lastName || !req.body.username || !req.body.password || !req.body.confirmPass) {
-        return res.status(400).json({ message: 'All fields are required' });
+        return res.status(400).json({ message: 'All fields are required', error: 'required' });
     }
     if (req.body.password !== req.body.confirmPass) {
-        return res.status(400).json({ message: 'Passwords do not match' });
+        return res.status(400).json({ message: 'Passwords do not match', error: 'password' });
     }
     if (req.body.password.length < 6) {
-        return res.status(400).json({ message: 'Password must be at least 6 characters long' });
-    }
-    if (!req.body.email || !/\S+@\S+\.\S+/.test(req.body.email)) {
-        return res.status(400).json({ message: 'Invalid email address' });
+        return res.status(400).json({ message: 'Password must be at least 6 characters long', error: 'password-long' });
     }
     if (!req.body.username || req.body.username.length < 3) {
-        return res.status(400).json({ message: 'Username must be at least 3 characters long' });
+        return res.status(400).json({ message: 'Username must be at least 3 characters long', error: 'username-short'  });
     }
     if (!/^[a-zA-Z0-9]+$/.test(req.body.username)) {
-        return res.status(400).json({ message: 'Username can only contain letters and numbers' });
+        return res.status(400).json({ message: 'Username can only contain letters and numbers', error: 'username-letters'  });
     }
 
     try {
@@ -38,7 +35,7 @@ async function register(req, res) {
 
         // If user exists, return error
         if (existingUser) {
-            return res.status(400).json({ message: 'Username already exists', error: 'username' });
+            return res.status(409).json({ message: 'Username already exists', error: 'username' });
         }
 
         // check if email already exists
@@ -50,7 +47,7 @@ async function register(req, res) {
 
         // If email exists, return error
         if (existingEmail) {
-            return res.status(400).json({ message: 'Email already exists', error: 'email' });
+            return res.status(409).json({ message: 'Email already exists', error: 'email' });
         }
 
         // Hash password

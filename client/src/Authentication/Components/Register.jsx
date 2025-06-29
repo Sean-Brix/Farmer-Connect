@@ -33,10 +33,12 @@ class Register extends Component {
     // State
     state = {
         register: 'first',
-        confirm_value: ''
+        confirm_value: '',
+        checkEmail: false,
+        email_prompt: ''
     };
 
-    // Check Email Uniqueness
+    // Check Email Uniqueness (Class Method)
     check_email = async (event) => {
         event.preventDefault();
 
@@ -49,19 +51,56 @@ class Register extends Component {
         });
 
         const data = await response.json();
-        console.log(data);
 
         if (!response.ok) {
-            alert(data.message);
+            if (response.status === 400) {
+                // BAD REQUEST (Invalid Email)
+                this.setState({
+                    checkEmail: false, 
+                    email_prompt: 'Invalid Email Address'
+                })
+                this.inputs.email = '';
+                return;
+            }
+
+            if (response.status === 409) {
+                this.setState({
+                    checkEmail: false, 
+                    email_prompt: 'Email Already Exist'
+                })
+                this.inputs.email = '';
+                return;
+            }
+
+            if (response.status === 500) {
+
+                // SERVER ERROR (Something went wrong)
+
+                alert('Something went wrong. Please try again later.');
+                this.setState({ register: 'first' });
+                this.props.navigate('/login');
+                return;
+            }
+
             return;
         }
 
-        this.setState({ confirm_value: data.payload });
+        // If email is unique, set confirm_value to the email
+        if (data.result) {
+            this.setState({
+                checkEmail: true,
+                email_prompt: 'Yan okay na email'
+            });
+            return;
+        }
 
-    }
+        this.setState({
+            checkEmail: false,
+        });
+    };
 
     // Input Reference
-    onChange_input = (event) => {
+    onChange_input = async (event) => {
         this.inputs[event.target.name] = event.target.value;
     };
 
@@ -102,22 +141,66 @@ class Register extends Component {
         });
 
         const data = await response.json();
-        console.log(data);
 
         if (!response.ok) {
-            alert(data.message);
-            console.log(data.payload.error);
+            if( response.status == 400) {
+                // BAD REQUEST (Invalid Input)
+                if(data.error === 'required') {
+                    alert('All fields are required. Please fill in all fields.');
+                    return;
+                }
+
+                if (data.error === 'password') {
+                    alert('Passwords do not match. Please try again.');
+                    return;
+                }
+
+                if (data.error === 'password-long') {
+                    alert('Password must be at least 6 characters long.');
+                    return;
+                }
+
+                if (data.error === 'email_format') {
+                    alert('Invalid email format. Please enter a valid email address.');
+                    return;
+                }
+
+                if (data.error === 'username-short') {
+                    alert('Username must be at least 3 characters long.');
+                    return;
+                }
+
+                if(data.error === 'username-letters'){
+                    alert('Username can only contain letters and numbers.');
+                    return;
+                }
+            }
+
+            if (response.status == 409) {
+                // CONFLICT (Already Exists)
+                if (data.error === 'username') {
+                    alert('Username already exists. Please choose another one.');
+                    return;
+                }
+
+                if (data.error === 'email') {
+                    // Email already exists
+                    alert('Email already exists. Please choose another one.');
+                    return;
+                }
+            }
 
             if (response.status == 500) {
                 this.setState({ register: 'first' });
+                alert('something went wrong. Please try again later.');
                 return;
             }
 
-            this.setState({ register: 'third' });
             return;
         }
 
-        alert(data.message);
+        alert('Account Registered');
+
         this.props.navigate('/login');
     };
 
@@ -344,9 +427,7 @@ class Register extends Component {
                                         <option value="Indigenous_People">
                                             Indigenous People
                                         </option>
-                                        <option value="Other">
-                                            Other
-                                        </option>
+                                        <option value="Other">Other</option>
                                     </select>
                                 </div>
                             </div>
@@ -356,6 +437,38 @@ class Register extends Component {
                                     Contact Information
                                 </span>
                             </div>
+
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4">
+                                <label
+                                    htmlFor="email"
+                                    className="block text-sm font-medium text-black-700 w-full sm:w-40 mb-2 sm:mb-0"
+                                >
+                                    Email Address :
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    onChange={(e) => {
+                                        this.onChange_input(e);
+                                        clearTimeout(this.emailCheckTimeout);
+                                        this.emailCheckTimeout = setTimeout(
+                                            () => {
+                                                this.check_email(e);
+                                            },
+                                            500
+                                        ); 
+                                    }}
+                                    name="email"
+                                    required
+                                    className="flex-1 px-4 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-black-300 min-w-0 w-full sm:w-auto"
+                                />
+                            </div>
+                            {this.state.email_prompt && (
+                                <p className={`mt-1 text-sm ${this.state.checkEmail ? 'text-green-500' : 'text-red-500'}`}>
+                                    {this.state.email_prompt}
+                                </p>
+                            )}
+
                             <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4">
                                 <label
                                     htmlFor="address"
@@ -452,25 +565,23 @@ class Register extends Component {
                                     className="flex-1 px-4 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-black-300 min-w-0 w-full sm:w-auto"
                                 />
                             </div>
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4">
-                                <label
-                                    htmlFor="email"
-                                    className="block text-sm font-medium text-black-700 w-full sm:w-40 mb-2 sm:mb-0"
-                                >
-                                    Email Address :
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    onChange={this.onChange_input}
-                                    name="email"
-                                    required
-                                    className="flex-1 px-4 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-black-300 min-w-0 w-full sm:w-auto"
-                                />
-                            </div>
+
                             <button
                                 type="submit"
                                 className="w-full px-4 py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 mt-5 focus:ring-4 focus:ring-blue-500"
+                                onClick={(e) => {
+                                    if (!this.state.checkEmail) {
+                                        e.preventDefault();
+
+                                        // User clicked Next without checking email
+
+                                        alert(
+                                            'Invalid Email Address. Please check your email and try again.'
+                                        );
+
+                                        return;
+                                    }
+                                }}
                             >
                                 Next
                             </button>
@@ -485,217 +596,191 @@ class Register extends Component {
     render_third() {
         return (
             <div className="fixed inset-0 flex items-center justify-center bg-gray-100 overflow-hidden min-h-screen">
-            <img
-                src={cover}
-                alt="Background"
-                className="absolute inset-0 w-full h-full object-cover opacity-60 blur-sm"
-            />
-
-            {/* Custom Alert */}
-            {this.state.alert && (
-                <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
-                <div className="bg-white rounded-lg shadow-xl px-8 py-6 max-w-xs w-full text-center border border-blue-200 animate-fade-in">
-                    <div className="mb-3">
-                    {this.state.alertType === "error" ? (
-                        <svg className="mx-auto h-10 w-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z" />
-                        </svg>
-                    ) : (
-                        <svg className="mx-auto h-10 w-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                    )}
-                    </div>
-                    <h3 className={`text-lg font-semibold mb-2 ${this.state.alertType === "error" ? "text-red-600" : "text-green-600"}`}>
-                    {this.state.alertTitle}
-                    </h3>
-                    <p className="text-gray-700 mb-4">{this.state.alertMsg}</p>
-                    <button
-                    className={`px-4 py-2 rounded-md font-medium shadow transition ${
-                        this.state.alertType === "error"
-                        ? "bg-red-500 text-white hover:bg-red-600"
-                        : "bg-green-500 text-white hover:bg-green-600"
-                    }`}
-                    onClick={() => {
-                        this.setState({ alert: false });
-                        if (this.state.alertType === "success") {
-                        this.props.navigate('/login');
-                        }
-                    }}
-                    >
-                    OK
-                    </button>
-                </div>
-                </div>
-            )}
-
-            <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
-                <div className="flex flex-col items-center justify-center mb-6 text-center">
                 <img
-                    src={logo}
-                    alt=""
-                    className="rounded-full mb-4 h-16 w-16 sm:h-20 sm:w-20"
+                    src={cover}
+                    alt="Background"
+                    className="absolute inset-0 w-full h-full object-cover opacity-60 blur-sm"
                 />
-                <h1 className="px-4 font-bold text-lg sm:text-2xl text-center">
-                    FITS Tanza - Municipal Agriculture Office
-                </h1>
+
+                {/* Custom Alert */}
+                {this.state.alert && (
+                    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
+                        <div className="bg-white rounded-lg shadow-xl px-8 py-6 max-w-xs w-full text-center border border-blue-200 animate-fade-in">
+                            <div className="mb-3">
+                                {this.state.alertType === 'error' ? (
+                                    <svg
+                                        className="mx-auto h-10 w-10 text-red-500"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M12 9v2m0 4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z"
+                                        />
+                                    </svg>
+                                ) : (
+                                    <svg
+                                        className="mx-auto h-10 w-10 text-green-500"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M5 13l4 4L19 7"
+                                        />
+                                    </svg>
+                                )}
+                            </div>
+                            <h3
+                                className={`text-lg font-semibold mb-2 ${
+                                    this.state.alertType === 'error'
+                                        ? 'text-red-600'
+                                        : 'text-green-600'
+                                }`}
+                            >
+                                {this.state.alertTitle}
+                            </h3>
+                            <p className="text-gray-700 mb-4">
+                                {this.state.alertMsg}
+                            </p>
+                            <button
+                                className={`px-4 py-2 rounded-md font-medium shadow transition ${
+                                    this.state.alertType === 'error'
+                                        ? 'bg-red-500 text-white hover:bg-red-600'
+                                        : 'bg-green-500 text-white hover:bg-green-600'
+                                }`}
+                                onClick={() => {
+                                    this.setState({ alert: false });
+                                    if (this.state.alertType === 'success') {
+                                        this.props.navigate('/login');
+                                    }
+                                }}
+                            >
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
+                    <div className="flex flex-col items-center justify-center mb-6 text-center">
+                        <img
+                            src={logo}
+                            alt=""
+                            className="rounded-full mb-4 h-16 w-16 sm:h-20 sm:w-20"
+                        />
+                        <h1 className="px-4 font-bold text-lg sm:text-2xl text-center">
+                            FITS Tanza - Municipal Agriculture Office
+                        </h1>
+                    </div>
+
+                    <div className="w-full max-w-xs sm:max-w-md p-6 sm:p-8 space-y-6 bg-white rounded-lg shadow-lg border border-gray-300 backdrop-blur-md bg-opacity-70">
+                        <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-800">
+                            Register Now
+                        </h2>
+                        <form
+                            className="space-y-4"
+                            onSubmit={this.post_account}
+                        >
+                            <div>
+                                <label
+                                    htmlFor="email"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Username
+                                </label>
+                                <input
+                                    type="text"
+                                    id="email"
+                                    name="username"
+                                    onChange={this.onChange_input}
+                                    required
+                                    className="w-full px-3 py-2 mt-1 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-gray-300"
+                                />
+                            </div>
+
+                            <div>
+                                <label
+                                    htmlFor="password"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Password
+                                </label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    onChange={this.onChange_input}
+                                    name="password"
+                                    required
+                                    className="w-full px-3 py-2 mt-1 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-gray-300"
+                                />
+                            </div>
+
+                            <div>
+                                <label
+                                    htmlFor="confirmPass"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Confirm Password
+                                </label>
+                                <input
+                                    type="password"
+                                    id="confirmPass"
+                                    onChange={(e) => {
+                                        this.inputs.confirmPass =
+                                            e.target.value;
+                                        this.setState({
+                                            ...this.state,
+                                            confirm_value: e.target.value,
+                                        });
+                                    }}
+                                    value={this.state.confirm_value}
+                                    name="confirmPass"
+                                    required
+                                    className="w-full px-3 py-2 mt-1 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-gray-300"
+                                />
+                            </div>
+
+                            <div className="flex items-center my-3">
+                                <input
+                                    id="remember"
+                                    name="remember"
+                                    type="checkbox"
+                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                />
+                                <label
+                                    htmlFor="remember"
+                                    className="ml-2 block text-sm text-gray-900"
+                                >
+                                    Remember me
+                                </label>
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="w-full px-4 py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-500"
+                            >
+                                Register
+                            </button>
+
+                            <p className="mt-4 text-center text-sm text-gray-700">
+                                Already have an account?{' '}
+                                <Link
+                                    to="/login"
+                                    className="text-blue-600 hover:underline"
+                                >
+                                    Sign in
+                                </Link>
+                            </p>
+                        </form>
+                    </div>
                 </div>
-
-                <div className="w-full max-w-xs sm:max-w-md p-6 sm:p-8 space-y-6 bg-white rounded-lg shadow-lg border border-gray-300 backdrop-blur-md bg-opacity-70">
-                <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-800">
-                    Register Now
-                </h2>
-                <form
-                    className="space-y-4"
-                    onSubmit={async (e) => {
-                    e.preventDefault();
-                    if (this.inputs.password !== this.inputs.confirmPass) {
-                        this.setState({
-                        alert: true,
-                        alertType: "error",
-                        alertTitle: "Password Mismatch",
-                        alertMsg: "Passwords do not match. Please try again.",
-                        });
-                        return;
-                    }
-                    // Call original post_account
-                    const response = await fetch('/api/Authentication/register', {
-                        method: 'POST',
-                        headers: {
-                        'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                        firstName: this.inputs.firstName,
-                        lastName: this.inputs.lastName,
-                        gender: this.inputs.gender,
-                        clientProfile: this.inputs.clientProfile,
-                        address: this.inputs.address,
-                        telephoneNum: this.inputs.telephoneNumber,
-                        cellphoneNum: this.inputs.cellphoneNumber,
-                        occupation: this.inputs.occupation,
-                        position: this.inputs.position,
-                        institution: this.inputs.institution,
-                        email: this.inputs.email,
-                        username: this.inputs.username,
-                        password: this.inputs.password,
-                        confirmPass: this.inputs.confirmPass,
-                        }),
-                    });
-
-                    const data = await response.json();
-
-                    if (!response.ok) {
-                        this.setState({
-                        alert: true,
-                        alertType: "error",
-                        alertTitle: "Registration Failed",
-                        alertMsg: data.message || "An error occurred. Please try again.",
-                        });
-                        if (response.status == 500) {
-                        this.setState({ register: 'first' });
-                        } else {
-                        this.setState({ register: 'third' });
-                        }
-                        return;
-                    }
-
-                    this.setState({
-                        alert: true,
-                        alertType: "success",
-                        alertTitle: "Account Created",
-                        alertMsg: "Your account has been successfully created!",
-                    });
-                    }}
-                >
-                    <div>
-                    <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700"
-                    >
-                        Username
-                    </label>
-                    <input
-                        type="text"
-                        id="email"
-                        name="username"
-                        onChange={this.onChange_input}
-                        required
-                        className="w-full px-3 py-2 mt-1 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-gray-300"
-                    />
-                    </div>
-
-                    <div>
-                    <label
-                        htmlFor="password"
-                        className="block text-sm font-medium text-gray-700"
-                    >
-                        Password
-                    </label>
-                    <input
-                        type="password"
-                        id="password"
-                        onChange={this.onChange_input}
-                        name="password"
-                        required
-                        className="w-full px-3 py-2 mt-1 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-gray-300"
-                    />
-                    </div>
-
-                    <div>
-                    <label
-                        htmlFor="confirmPass"
-                        className="block text-sm font-medium text-gray-700"
-                    >
-                        Confirm Password
-                    </label>
-                    <input
-                        type="password"
-                        id="confirmPass"
-                        onChange={(e) => {
-                        this.inputs.confirmPass = e.target.value;
-                        this.setState({ ...this.state, confirm_value: e.target.value });
-                        }}
-                        value={this.state.confirm_value}
-                        name="confirmPass"
-                        required
-                        className="w-full px-3 py-2 mt-1 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-gray-300"
-                    />
-                    </div>
-
-                    <div className="flex items-center my-3">
-                    <input
-                        id="remember"
-                        name="remember"
-                        type="checkbox"
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <label
-                        htmlFor="remember"
-                        className="ml-2 block text-sm text-gray-900"
-                    >
-                        Remember me
-                    </label>
-                    </div>
-
-                    <button
-                    type="submit"
-                    className="w-full px-4 py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-500"
-                    >
-                    Register
-                    </button>
-
-                    <p className="mt-4 text-center text-sm text-gray-700">
-                    Already have an account?{' '}
-                    <Link
-                        to="/login"
-                        className="text-blue-600 hover:underline"
-                    >
-                        Sign in
-                    </Link>
-                    </p>
-                </form>
-                </div>
-            </div>
             </div>
         );
     }
