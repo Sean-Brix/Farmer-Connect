@@ -192,6 +192,8 @@ class Register extends Component {
 
             if (response.status == 500) {
                 this.setState({ register: 'first' });
+
+                // Server error
                 alert('something went wrong. Please try again later.');
                 return;
             }
@@ -199,6 +201,7 @@ class Register extends Component {
             return;
         }
 
+        // SUCCESSFUL REGISTRATION
         alert('Account Registered');
 
         this.props.navigate('/login');

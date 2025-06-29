@@ -90,70 +90,73 @@ export default function Login() {
                         onSubmit={async (event) => {
                             event.preventDefault();
 
-                            const response = await fetch('/auth/login', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    username: username.current.value,
-                                    password: password.current.value,
-                                }),
-                            });
+                            let response;
+                            try {
+                                response = await fetch('/auth/login', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        username: username.current.value,
+                                        password: password.current.value,
+                                    }),
+                                });
+                            } 
+                            catch (error) {
+
+                                // UNABLE TO CONNECT TO SERVER
+                                alert('Network error, please try again later.');
+                                return;
+                            }
 
                             const data = await response.json();
 
                             if (!response.ok) {
-
                                 // USER ERROR
                                 if (response.status === 400) {
-
                                     // 'username or password required'
 
                                     return;
-                                } 
-                                
+                                }
+
                                 // USER ERROR
                                 if (response.status === 404) {
-
                                     // 'User not found' ( Username does not exist );
 
                                     return;
-                                } 
+                                }
 
                                 // USER ERROR
                                 if (response.status === 401) {
-
                                     // 'Invalid password' ( Password is incorrect );
 
                                     return;
-                                } 
+                                }
 
                                 // SERVER ERROR HANDLING
                                 if (response.status === 500) {
-
                                     // 'Internal server error' ( Something went wrong );
                                     return;
                                 }
-                                
                             }
 
                             if (data.user.access == 'User') {
-
                                 // SUCCESSFUL LOGIN
-                                
+
                                 navigate('/');
                                 return;
                             }
 
-                            if (data.user.access == 'Admin' || data.user.access == 'Super_Admin') {
-
+                            if (
+                                data.user.access == 'Admin' ||
+                                data.user.access == 'Super_Admin'
+                            ) {
                                 // SUCCESSFUL ADMIN LOGIN
 
                                 navigate('/admin');
                                 return;
                             }
-                            
                         }}
                     >
                         <div>
