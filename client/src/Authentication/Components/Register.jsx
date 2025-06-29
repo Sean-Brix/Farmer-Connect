@@ -36,6 +36,30 @@ class Register extends Component {
         confirm_value: ''
     };
 
+    // Check Email Uniqueness
+    check_email = async (event) => {
+        event.preventDefault();
+
+        const response = await fetch('/auth/check-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: this.inputs.email }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        if (!response.ok) {
+            alert(data.message);
+            return;
+        }
+
+        this.setState({ confirm_value: data.payload });
+
+    }
+
     // Input Reference
     onChange_input = (event) => {
         this.inputs[event.target.name] = event.target.value;
@@ -54,7 +78,7 @@ class Register extends Component {
     post_account = async (event) => {
         event.preventDefault();
 
-        const response = await fetch('/api/Authentication/register', {
+        const response = await fetch('/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -301,24 +325,27 @@ class Register extends Component {
                                         className="flex-1 px-4 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-black-300 min-w-0 w-full sm:w-auto"
                                     >
                                         <option value="">Select profile</option>
-                                        <option value="fishfolk">
+                                        <option value="Fishfolk">
                                             Fishfolk
                                         </option>
-                                        <option value="rural-based-org">
+                                        <option value="Rural_Based_Org">
                                             Rural Based Org
                                         </option>
-                                        <option value="student">Student</option>
-                                        <option value="agri-fisheries-tech">
+                                        <option value="Student">Student</option>
+                                        <option value="Agricultural_Fisheries_Technician">
                                             Agricultural/Fisheries Technician
                                         </option>
-                                        <option value="youth">Youth</option>
-                                        <option value="women">Women</option>
-                                        <option value="govt-employee">
+                                        <option value="Youth">Youth</option>
+                                        <option value="Women">Women</option>
+                                        <option value="Govt_Employee">
                                             Gov't Employee
                                         </option>
-                                        <option value="pwd">PWD</option>
-                                        <option value="indigenous-people">
+                                        <option value="PWD">PWD</option>
+                                        <option value="Indigenous_People">
                                             Indigenous People
+                                        </option>
+                                        <option value="Other">
+                                            Other
                                         </option>
                                     </select>
                                 </div>

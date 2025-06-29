@@ -10,65 +10,6 @@ export default function Login() {
     const username = useRef(null);
     const password = useRef(null);
 
-    // Login Request
-    const login = async (event) => {
-        event.preventDefault();
-
-        const response = await fetch('/api/Authentication/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username.current.value,
-                password: password.current.value,
-            }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-
-            // USER ERROR
-            if (response.status === 400) {
-
-                // 'username or password required'
-
-            } 
-            
-            // USER ERROR
-            if (response.status === 404) {
-
-                // 'User not found' ( Username does not exist );
-
-            } 
-
-            // USER ERROR
-            if (response.status === 401) {
-
-                // 'Invalid password' ( Password is incorrect );
-
-            } 
-
-            // SERVER ERROR HANDLING
-            else if (response.status === 500) {
-
-                // 'Internal server error' ( Something went wrong );
-            }
-
-            return;
-        }
-
-        if (data.payload.access == 'User') {
-
-            // SUCCESSFUL LOGIN
-
-            navigate('/');
-            return;
-        }
-        navigate('/admin');
-    };
-
     // Modern Alert State
     const [alert, setAlert] = React.useState({
         show: false,
@@ -149,39 +90,70 @@ export default function Login() {
                         onSubmit={async (event) => {
                             event.preventDefault();
 
-                            const response = await fetch(
-                                '/api/Authentication/login',
-                                {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({
-                                        username: username.current.value,
-                                        password: password.current.value,
-                                    }),
-                                }
-                            );
+                            const response = await fetch('/auth/login', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    username: username.current.value,
+                                    password: password.current.value,
+                                }),
+                            });
 
                             const data = await response.json();
 
                             if (!response.ok) {
-                                showAlert(
-                                    data.message || 'Login failed',
-                                    'error'
-                                );
+
+                                // USER ERROR
+                                if (response.status === 400) {
+
+                                    // 'username or password required'
+
+                                    return;
+                                } 
+                                
+                                // USER ERROR
+                                if (response.status === 404) {
+
+                                    // 'User not found' ( Username does not exist );
+
+                                    return;
+                                } 
+
+                                // USER ERROR
+                                if (response.status === 401) {
+
+                                    // 'Invalid password' ( Password is incorrect );
+
+                                    return;
+                                } 
+
+                                // SERVER ERROR HANDLING
+                                if (response.status === 500) {
+
+                                    // 'Internal server error' ( Something went wrong );
+                                    return;
+                                }
+                                
+                            }
+
+                            if (data.user.access == 'User') {
+
+                                // SUCCESSFUL LOGIN
+                                
+                                navigate('/');
                                 return;
                             }
 
-                            showAlert('Signed in successfully!', 'success');
+                            if (data.user.access == 'Admin' || data.user.access == 'Super_Admin') {
 
-                            setTimeout(() => {
-                                if (data.payload.access == 'User') {
-                                    navigate('/');
-                                    return;
-                                }
+                                // SUCCESSFUL ADMIN LOGIN
+
                                 navigate('/admin');
-                            }, 1200);
+                                return;
+                            }
+                            
                         }}
                     >
                         <div>

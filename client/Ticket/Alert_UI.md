@@ -1,7 +1,7 @@
 *   UI/UX Custom Alert
 
--   Login.jsx :: Line 30-70 (4 ERROR, 1 SUCCESS)
--   ...
+-   Login.jsx           ::           Line 88-155 (4 ERROR, 2 SUCCESS)
+-   Register.jsx        ::           Line 
 -   ...
 -   ...
 

@@ -6,44 +6,55 @@ import dotenv from 'dotenv';
 dotenv.config();
 const prisma = new PrismaClient();
 
-
-
 async function register(req, res) {
 
     // Validate input
-    if (!firstName || !lastName || !username || !password || !confirmPass) {
+    if (!req.body.firstName || !req.body.lastName || !req.body.username || !req.body.password || !req.body.confirmPass) {
         return res.status(400).json({ message: 'All fields are required' });
     }
-    if (password !== confirmPass) {
+    if (req.body.password !== req.body.confirmPass) {
         return res.status(400).json({ message: 'Passwords do not match' });
     }
-    if (password.length < 6) {
+    if (req.body.password.length < 6) {
         return res.status(400).json({ message: 'Password must be at least 6 characters long' });
     }
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    if (!req.body.email || !/\S+@\S+\.\S+/.test(req.body.email)) {
         return res.status(400).json({ message: 'Invalid email address' });
     }
-    if (!username || username.length < 3) {
+    if (!req.body.username || req.body.username.length < 3) {
         return res.status(400).json({ message: 'Username must be at least 3 characters long' });
     }
-    if (!/^[a-zA-Z0-9]+$/.test(username)) {
+    if (!/^[a-zA-Z0-9]+$/.test(req.body.username)) {
         return res.status(400).json({ message: 'Username can only contain letters and numbers' });
     }
-    
+
     try {
         // Check if user already exists
         const existingUser = await prisma.account.findUnique({
             where: {
-                username: username,
+                username: req.body.username,
             },
         });
 
+        // If user exists, return error
         if (existingUser) {
-            return res.status(400).json({ message: 'Username already exists' });
+            return res.status(400).json({ message: 'Username already exists', error: 'username' });
+        }
+
+        // check if email already exists
+        const existingEmail = await prisma.account.findUnique({
+            where: {
+                email: req.body.email,
+            },
+        });
+
+        // If email exists, return error
+        if (existingEmail) {
+            return res.status(400).json({ message: 'Email already exists', error: 'email' });
         }
 
         // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
         // Create new user
         const newUser = await prisma.account.create({
@@ -96,3 +107,4 @@ async function register(req, res) {
     }
 }
 
+export default register;
