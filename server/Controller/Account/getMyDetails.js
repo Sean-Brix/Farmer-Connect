@@ -21,6 +21,8 @@ async function getMyDetails(req, res) {
         }
 
         user.password = undefined; 
+        user.picture = undefined;
+        user.mimeType = undefined;
 
         return res.status(200).json(user);
 
