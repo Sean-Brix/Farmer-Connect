@@ -1727,7 +1727,8 @@ export namespace Prisma {
     position: string | null
     institution: string | null
     address: string | null
-    picture: string | null
+    picture: Uint8Array | null
+    mimeType: string | null
     password: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -1749,7 +1750,8 @@ export namespace Prisma {
     position: string | null
     institution: string | null
     address: string | null
-    picture: string | null
+    picture: Uint8Array | null
+    mimeType: string | null
     password: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -1772,6 +1774,7 @@ export namespace Prisma {
     institution: number
     address: number
     picture: number
+    mimeType: number
     password: number
     createdAt: number
     updatedAt: number
@@ -1796,6 +1799,7 @@ export namespace Prisma {
     institution?: true
     address?: true
     picture?: true
+    mimeType?: true
     password?: true
     createdAt?: true
     updatedAt?: true
@@ -1818,6 +1822,7 @@ export namespace Prisma {
     institution?: true
     address?: true
     picture?: true
+    mimeType?: true
     password?: true
     createdAt?: true
     updatedAt?: true
@@ -1840,6 +1845,7 @@ export namespace Prisma {
     institution?: true
     address?: true
     picture?: true
+    mimeType?: true
     password?: true
     createdAt?: true
     updatedAt?: true
@@ -1934,7 +1940,8 @@ export namespace Prisma {
     position: string | null
     institution: string | null
     address: string | null
-    picture: string | null
+    picture: Uint8Array | null
+    mimeType: string | null
     password: string
     createdAt: Date
     updatedAt: Date
@@ -1974,6 +1981,7 @@ export namespace Prisma {
     institution?: boolean
     address?: boolean
     picture?: boolean
+    mimeType?: boolean
     password?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2001,12 +2009,13 @@ export namespace Prisma {
     institution?: boolean
     address?: boolean
     picture?: boolean
+    mimeType?: boolean
     password?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "access" | "username" | "email" | "firstName" | "lastName" | "middleName" | "gender" | "client_profile" | "cellphone_no" | "telephone_no" | "occupation" | "position" | "institution" | "address" | "picture" | "password" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
+  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "access" | "username" | "email" | "firstName" | "lastName" | "middleName" | "gender" | "client_profile" | "cellphone_no" | "telephone_no" | "occupation" | "position" | "institution" | "address" | "picture" | "mimeType" | "password" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     commodity?: boolean | Account$commodityArgs<ExtArgs>
     seminars?: boolean | Account$seminarsArgs<ExtArgs>
@@ -2035,7 +2044,8 @@ export namespace Prisma {
       position: string | null
       institution: string | null
       address: string | null
-      picture: string | null
+      picture: Uint8Array | null
+      mimeType: string | null
       password: string
       createdAt: Date
       updatedAt: Date
@@ -2425,7 +2435,8 @@ export namespace Prisma {
     readonly position: FieldRef<"Account", 'String'>
     readonly institution: FieldRef<"Account", 'String'>
     readonly address: FieldRef<"Account", 'String'>
-    readonly picture: FieldRef<"Account", 'String'>
+    readonly picture: FieldRef<"Account", 'Bytes'>
+    readonly mimeType: FieldRef<"Account", 'String'>
     readonly password: FieldRef<"Account", 'String'>
     readonly createdAt: FieldRef<"Account", 'DateTime'>
     readonly updatedAt: FieldRef<"Account", 'DateTime'>
@@ -9721,6 +9732,7 @@ export namespace Prisma {
     institution: 'institution',
     address: 'address',
     picture: 'picture',
+    mimeType: 'mimeType',
     password: 'password',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -9850,7 +9862,7 @@ export namespace Prisma {
     position: 'position',
     institution: 'institution',
     address: 'address',
-    picture: 'picture',
+    mimeType: 'mimeType',
     password: 'password'
   };
 
@@ -9959,6 +9971,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Bytes'
+   */
+  export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -10022,7 +10041,8 @@ export namespace Prisma {
     position?: StringNullableFilter<"Account"> | string | null
     institution?: StringNullableFilter<"Account"> | string | null
     address?: StringNullableFilter<"Account"> | string | null
-    picture?: StringNullableFilter<"Account"> | string | null
+    picture?: BytesNullableFilter<"Account"> | Uint8Array | null
+    mimeType?: StringNullableFilter<"Account"> | string | null
     password?: StringFilter<"Account"> | string
     createdAt?: DateTimeFilter<"Account"> | Date | string
     updatedAt?: DateTimeFilter<"Account"> | Date | string
@@ -10047,6 +10067,7 @@ export namespace Prisma {
     institution?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     picture?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
     password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10074,7 +10095,8 @@ export namespace Prisma {
     position?: StringNullableFilter<"Account"> | string | null
     institution?: StringNullableFilter<"Account"> | string | null
     address?: StringNullableFilter<"Account"> | string | null
-    picture?: StringNullableFilter<"Account"> | string | null
+    picture?: BytesNullableFilter<"Account"> | Uint8Array | null
+    mimeType?: StringNullableFilter<"Account"> | string | null
     password?: StringFilter<"Account"> | string
     createdAt?: DateTimeFilter<"Account"> | Date | string
     updatedAt?: DateTimeFilter<"Account"> | Date | string
@@ -10099,6 +10121,7 @@ export namespace Prisma {
     institution?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     picture?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
     password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10126,7 +10149,8 @@ export namespace Prisma {
     position?: StringNullableWithAggregatesFilter<"Account"> | string | null
     institution?: StringNullableWithAggregatesFilter<"Account"> | string | null
     address?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    picture?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    picture?: BytesNullableWithAggregatesFilter<"Account"> | Uint8Array | null
+    mimeType?: StringNullableWithAggregatesFilter<"Account"> | string | null
     password?: StringWithAggregatesFilter<"Account"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Account"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Account"> | Date | string
@@ -10630,7 +10654,8 @@ export namespace Prisma {
     position?: string | null
     institution?: string | null
     address?: string | null
-    picture?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     password: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10654,7 +10679,8 @@ export namespace Prisma {
     position?: string | null
     institution?: string | null
     address?: string | null
-    picture?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     password: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10678,7 +10704,8 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10702,7 +10729,8 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10726,7 +10754,8 @@ export namespace Prisma {
     position?: string | null
     institution?: string | null
     address?: string | null
-    picture?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     password: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10748,7 +10777,8 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10770,7 +10800,8 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11334,6 +11365,13 @@ export namespace Prisma {
     not?: NestedEnumclient_profileFilter<$PrismaModel> | $Enums.client_profile
   }
 
+  export type BytesNullableFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel> | null
+    in?: Uint8Array[] | null
+    notIn?: Uint8Array[] | null
+    not?: NestedBytesNullableFilter<$PrismaModel> | Uint8Array | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -11393,6 +11431,7 @@ export namespace Prisma {
     institution?: SortOrder
     address?: SortOrder
     picture?: SortOrder
+    mimeType?: SortOrder
     password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11415,6 +11454,7 @@ export namespace Prisma {
     institution?: SortOrder
     address?: SortOrder
     picture?: SortOrder
+    mimeType?: SortOrder
     password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11437,6 +11477,7 @@ export namespace Prisma {
     institution?: SortOrder
     address?: SortOrder
     picture?: SortOrder
+    mimeType?: SortOrder
     password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11506,6 +11547,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumclient_profileFilter<$PrismaModel>
     _max?: NestedEnumclient_profileFilter<$PrismaModel>
+  }
+
+  export type BytesNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel> | null
+    in?: Uint8Array[] | null
+    notIn?: Uint8Array[] | null
+    not?: NestedBytesNullableWithAggregatesFilter<$PrismaModel> | Uint8Array | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBytesNullableFilter<$PrismaModel>
+    _max?: NestedBytesNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -11974,6 +12025,10 @@ export namespace Prisma {
     set?: $Enums.client_profile
   }
 
+  export type NullableBytesFieldUpdateOperationsInput = {
+    set?: Uint8Array | null
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -12357,6 +12412,13 @@ export namespace Prisma {
     not?: NestedEnumclient_profileFilter<$PrismaModel> | $Enums.client_profile
   }
 
+  export type NestedBytesNullableFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel> | null
+    in?: Uint8Array[] | null
+    notIn?: Uint8Array[] | null
+    not?: NestedBytesNullableFilter<$PrismaModel> | Uint8Array | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -12454,6 +12516,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumclient_profileFilter<$PrismaModel>
     _max?: NestedEnumclient_profileFilter<$PrismaModel>
+  }
+
+  export type NestedBytesNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel> | null
+    in?: Uint8Array[] | null
+    notIn?: Uint8Array[] | null
+    not?: NestedBytesNullableWithAggregatesFilter<$PrismaModel> | Uint8Array | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBytesNullableFilter<$PrismaModel>
+    _max?: NestedBytesNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -12732,7 +12804,8 @@ export namespace Prisma {
     position?: string | null
     institution?: string | null
     address?: string | null
-    picture?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     password: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12755,7 +12828,8 @@ export namespace Prisma {
     position?: string | null
     institution?: string | null
     address?: string | null
-    picture?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     password: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12823,7 +12897,8 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12846,7 +12921,8 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13166,7 +13242,8 @@ export namespace Prisma {
     position?: string | null
     institution?: string | null
     address?: string | null
-    picture?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     password: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13189,7 +13266,8 @@ export namespace Prisma {
     position?: string | null
     institution?: string | null
     address?: string | null
-    picture?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     password: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13275,7 +13353,8 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13298,7 +13377,8 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     institution?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

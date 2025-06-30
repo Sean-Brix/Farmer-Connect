@@ -16,7 +16,8 @@ model Account {
   position       String?
   institution    String?
   address        String?
-  picture        String?
+  picture        Bytes?
+  mimeType       String?
   commodity      AccountCommodity[]
   password       String
   createdAt      DateTime           @default(now())

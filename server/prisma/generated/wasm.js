@@ -137,6 +137,7 @@ exports.Prisma.AccountScalarFieldEnum = {
   institution: 'institution',
   address: 'address',
   picture: 'picture',
+  mimeType: 'mimeType',
   password: 'password',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -236,7 +237,7 @@ exports.Prisma.AccountOrderByRelevanceFieldEnum = {
   position: 'position',
   institution: 'institution',
   address: 'address',
-  picture: 'picture',
+  mimeType: 'mimeType',
   password: 'password'
 };
 
