@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Router } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../Assets/Logo.png';
 import Chat from '../../Components/Chats/Chat';
+
 export default function Navbar({refresh}) {
+
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [servicesOpen, setServicesOpen] = useState(false);
 
@@ -30,7 +32,7 @@ export default function Navbar({refresh}) {
                 if(!data.check) {
                     setLoggedIn(false);
                         setUser({
-                        avatar: '/api/account/picture/me',
+                        avatar: '/api/account/picture/me?refresh=' + new Date().getTime(),
                         name: 'Guest User',
                     });
                     return;
@@ -38,7 +40,7 @@ export default function Navbar({refresh}) {
 
                 setLoggedIn(true);
                 setUser({
-                    avatar: '/api/account/picture/me',
+                    avatar: '/api/account/picture/me?refresh=' + new Date().getTime(),
                     name: data.payload.username,
                 });
             }
@@ -75,26 +77,44 @@ export default function Navbar({refresh}) {
     const [showAlert, setShowAlert] = useState(false);
 
     // Helper for logout
-    const handleLogout = (navigate) => {
-        setLoggedIn(false);
-        setOpen(false);
-        setShowAlert(true);
-        // Show alert for 10 seconds, then fade out smoothly
-        setTimeout(() => {
-            // Start fade out by adding a class
-            const alert = document.getElementById('logout-alert');
-            if (alert) {
-            alert.classList.add('opacity-0');
-            }
-            // Wait for fade-out transition, then hide alert
-            setTimeout(() => setShowAlert(false), 1000);
-        }, 120000); // 20 seconds
-        if (navigate) navigate('/login');
-    };
+    const handleLogout = async () => {
 
-    // For navigation in logout (for both desktop and mobile)
-    const navigate = (to) => {
-        window.location.href = to;
+        try {
+            const response = await fetch('/auth/logout', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Logout failed');
+            }
+        
+            setLoggedIn(false);
+            setOpen(false);
+            setShowAlert(true);
+
+            // Show alert for 10 seconds, then fade out smoothly
+            setTimeout(() => {
+                // Start fade out by adding a class
+                const alert = document.getElementById('logout-alert');
+                if (alert) {
+                alert.classList.add('opacity-0');
+                }
+                // Wait for fade-out transition, then hide alert
+                setTimeout(() => setShowAlert(false), 1000);
+            }, 120000); // 20 seconds
+
+            navigate('/login');
+        } 
+        catch (error) {
+            console.error('Logout error:', error);
+            setShowAlert(true);
+            setTimeout(() => {
+                setShowAlert(false);
+            }, 5000); // Hide alert after 5 seconds
+            return;
+        }
     };
 
     // Scroll to top on route change and on refresh
@@ -166,14 +186,7 @@ export default function Navbar({refresh}) {
                         <div className="flex gap-2 mt-1">
                             <button
                                 className="px-5 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                onClick={() => {
-                                    setShowAlert(false);
-                                    setTimeout(() => {
-                                        setLoggedIn(false);
-                                        setOpen(false);
-                                        navigate('/login');
-                                    }, 200);
-                                }}
+                                onClick={handleLogout}
                             >
                                 Logout
                             </button>

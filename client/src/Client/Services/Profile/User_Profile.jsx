@@ -8,7 +8,7 @@ export default function Account() {
     // --- Combined logic from both components ---
     const [profile, setProfile] = useState({});
     const [editMode, setEditMode] = useState(false);
-    const [photo, setPhoto] = useState("/api/account/picture/me");
+    const [photo, setPhoto] = useState("/api/account/picture/me?refresh=" + new Date().getTime());
     const [imageFile, setImageFile] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [passwordError, setPasswordError] = useState('');

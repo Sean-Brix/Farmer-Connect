@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 // COMPONENTS
@@ -10,8 +10,30 @@ export default function Login() {
     const username = useRef(null);
     const password = useRef(null);
 
+    useEffect(() => {
+        const checkAuthentication = async () => {
+            try {
+                const response = await fetch('/auth/is-authenticated', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+
+                const data = await response.json();
+
+                if (data.check) {
+                    navigate('/');
+                }
+            } 
+            catch (error) {
+                console.error('Error checking authentication:', error);
+            }
+        };
+
+        checkAuthentication();
+    }, []);
+
     // Modern Alert State
-    const [alert, setAlert] = React.useState({
+    const [alert, setAlert] = useState({
         show: false,
         message: '',
         type: '',
