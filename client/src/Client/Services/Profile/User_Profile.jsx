@@ -7,7 +7,7 @@ export default function Account() {
     const [profile, setProfile] = useState({});
 
     const [editMode, setEditMode] = useState(false);
-    const [photo, setPhoto] = useState(null);
+    const [photo, setPhoto] = useState("/api/account/picture/me");
     const [imageFile, setImageFile] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [passwordError, setPasswordError] = useState('');
@@ -65,29 +65,39 @@ export default function Account() {
         try {
             if (imageFile) {
                 const formData = new FormData();
-                formData.append('image', imageFile);
-                await fetch('/api/accounts/uploadProfile', {
+                formData.append('photo', imageFile);
+                const changePicture = await fetch('/api/account/picture/me', {
                     method: 'POST',
                     body: formData,
                 });
+
+                if (!changePicture.ok) {
+                    alert('Failed to update profile picture.');
+                    return;
+                }
+
+                // show success message
+                alert('Profile picture updated successfully!');
+                setPhoto(URL.createObjectURL(imageFile));
             }
 
-            await fetch('/api/accounts/updateAccount', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    id: profile.id,
-                    occupation: profile.occupation,
-                    address: profile.address,
-                    cellphone_no: profile.cellphone_no,
-                    institution: profile.institution,
-                    email_address: profile.email_address,
-                    gender: profile.gender,
-                    position: profile.position,
-                    telephone_no: profile.telephone_no,
-                    password: profile.password,
-                }),
-            });
+
+            // await fetch('/api/accounts/updateAccount', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         id: profile.id,
+            //         occupation: profile.occupation,
+            //         address: profile.address,
+            //         cellphone_no: profile.cellphone_no,
+            //         institution: profile.institution,
+            //         email_address: profile.email_address,
+            //         gender: profile.gender,
+            //         position: profile.position,
+            //         telephone_no: profile.telephone_no,
+            //         password: profile.password,
+            //     }),
+            // });
             // Optionally show success message
         } 
         catch (error) {
@@ -115,7 +125,7 @@ export default function Account() {
                     <div className="bg-gradient-to-b from-blue-300 via-blue-200 to-blue-900 flex flex-col items-center justify-center p-12 lg:w-1/3 gap-5">
                         <div className="relative rounded-full border-4 border-blue-700 shadow-2xl p-1 mb-2 bg-gradient-to-tr from-blue-700 to-blue-900">
                             <img
-                                src={photo || profile.profile_pic || default_picture}
+                                src={photo}
                                 alt="Profile"
                                 className="w-28 h-28 md:w-36 md:h-36 object-cover rounded-full border-4 border-blue-800"
                             />
@@ -217,6 +227,7 @@ export default function Account() {
                         ) : (
                             <button
                                 onClick={() => {
+                                    setPhoto("/api/account/picture/me");
                                     setEditMode(false);
                                     setImageFile(null);
                                     setPasswordError('');
