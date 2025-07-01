@@ -10,7 +10,7 @@ export default function Navbar() {
     // Dummy user data (replace with real user data as needed)
     const user = {
        
-        avatar: 'https://ui-avatars.com/api/?name=John+Doe&background=1e40af&color=fff',
+        avatar: '/api/account/picture/me',
     };
     const [infoOpen, setInfoOpen] = useState(false);
     const [settingsOpen, setSettingsOpen] = useState(false);
@@ -486,16 +486,13 @@ export default function Navbar() {
                                 aria-haspopup="true"
                                 aria-expanded={open}
                             >
-                                <svg
-                                    className="w-6 h-6 text-white"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <circle cx="12" cy="7" r="4" />
-                                    <path d="M5.5 21a8.38 8.38 0 0113 0" />
-                                </svg>
+                                <img
+                                    src={user.avatar}
+                                    alt="User Avatar"
+                                    className="w-8 h-8 rounded-full object-cover"
+                                />
+                                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
+                                
                             </button>
                             {open && (
                                 <ul

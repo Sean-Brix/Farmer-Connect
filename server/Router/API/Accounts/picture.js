@@ -4,13 +4,28 @@ import upload from '../../../Utils/multer_upload.js';
 // Route: ('/api/account/picture')
 const router = express.Router();
 
-import setMyPhoto from '../../../Controller/Account/setMyPhoto.js';
-router.post('/me', upload.single('photo'), setMyPhoto);
+//? ========================================= ROUTES =============================================== ?//
 
 import getMyPhoto from '../../../Controller/Account/getMyPhoto.js';
 router.get('/me', getMyPhoto);
 
+
+
+//? ================================================================================================ ?//
+
+
+//? ======================================= AUTHORIZED ============================================= ?//
+
+// Authorization middleware
+import parseToken from '../../../Middlewares/JWT/parseToken.js';
+router.use(parseToken);
+
 import deleteMyPhoto from '../../../Controller/Account/deleteMyPhoto.js';
 router.delete('/me', deleteMyPhoto);
+
+import setMyPhoto from '../../../Controller/Account/setMyPhoto.js';
+router.post('/me', upload.single('photo'), setMyPhoto);
+
+//? ================================================================================================ ?//
 
 export default router;
