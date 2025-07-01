@@ -1,38 +1,77 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Router } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import logo from '../../Assets/Logo.png';
 import Chat from '../../Components/Chats/Chat';
-export default function Navbar() {
+export default function Navbar({refresh}) {
     const [open, setOpen] = useState(false);
     const [servicesOpen, setServicesOpen] = useState(false);
 
-    // Dummy user data (replace with real user data as needed)
-    const user = {
-       
+    const [user, setUser] = useState({
         avatar: '/api/account/picture/me',
-    };
-    const [infoOpen, setInfoOpen] = useState(false);
-    const [settingsOpen, setSettingsOpen] = useState(false);
+        name: 'Guest User',
+    });
 
-    // Simulate authentication state (replace with real auth logic)
-    const isLoggedIn = !!user; // true if user object exists
+    const [infoOpen, setInfoOpen] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
 
     // Helper to determine if we are in the "mid" screen size (750px - 1050px)
     const [isMidScreen, setIsMidScreen] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
+
+        async function isAuthenticated() {
+
+            try {
+                const response = await fetch('/auth/is-authenticated');
+    
+                const data = await response.json();
+
+                if(!data.check) {
+                    setLoggedIn(false);
+                        setUser({
+                        avatar: '/api/account/picture/me',
+                        name: 'Guest User',
+                    });
+                    return;
+                }
+
+                setLoggedIn(true);
+                setUser({
+                    avatar: '/api/account/picture/me',
+                    name: data.payload.username,
+                });
+            }
+
+            catch (error) {
+                console.error('Error checking authentication:', error);
+                setLoggedIn(false);
+            }
+    
+        }
+
         function handleResize() {
             const width = window.innerWidth;
             setIsMidScreen(width >= 750 && width <= 1050);
         }
+
+        isAuthenticated();
         handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
+
     }, []);
 
+    useEffect(()=>{
+
+        setUser((prev)=>({
+            ...prev,
+            avatar: '/api/account/picture/me?refresh=' + new Date().getTime(),
+        }))
+
+    }, [refresh]);
+
     // Add a state to simulate logout
-    const [loggedIn, setLoggedIn] = useState(isLoggedIn);
     const [showAlert, setShowAlert] = useState(false);
 
     // Helper for logout
@@ -59,7 +98,7 @@ export default function Navbar() {
     };
 
     // Scroll to top on route change and on refresh
-    React.useEffect(() => {
+    useEffect(() => {
         // Always scroll to top on mount (refresh)
         window.scrollTo(0, 0);
 
@@ -665,21 +704,16 @@ export default function Navbar() {
                                 </svg>
                             </button>
                         </div>
+
+                        {/* MOBILE NAV */}
                         <div className="flex flex-col items-center gap-4 py-10 border-b border-blue-100 bg-gradient-to-b from-blue-50 to-white">
                             <div className="relative flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-tr from-blue-700 to-blue-400 shadow-lg">
-                                <svg
-                                    className="w-12 h-12 text-white"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <circle cx="12" cy="7" r="4" />
-                                    <path d="M5.5 21a8.38 8.38 0 0113 0" />
-                                </svg>
-                                {loggedIn && (
-                                    <span className="absolute bottom-2 right-2 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></span>
-                                )}
+                                <img
+                                    src={user.avatar}
+                                    alt="User Avatar"
+                                    className="h-[95%] w-[95%] rounded-full object-cover"
+                                />
+                                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
                             </div>
                             {loggedIn ? (
                                 <>

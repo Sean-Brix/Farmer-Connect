@@ -3,9 +3,10 @@ import Navbar from '../../Components/Navbar';
 import default_picture from '../../../Assets/default_picture.png';
 
 export default function Account() {
+    const [refreshNav, setRefreshNav] = useState(false);
+
     // --- Combined logic from both components ---
     const [profile, setProfile] = useState({});
-
     const [editMode, setEditMode] = useState(false);
     const [photo, setPhoto] = useState("/api/account/picture/me");
     const [imageFile, setImageFile] = useState(null);
@@ -63,21 +64,22 @@ export default function Account() {
         setEditMode(false);
 
         try {
-            if (imageFile) {
+            if (imageFile && imageFile.size > 0 && confirm('Are You Sure?')) {
                 const formData = new FormData();
                 formData.append('photo', imageFile);
                 const changePicture = await fetch('/api/account/picture/me', {
                     method: 'POST',
                     body: formData,
                 });
-
+                
                 if (!changePicture.ok) {
                     alert('Failed to update profile picture.');
                     return;
                 }
-
+                
                 // show success message
                 alert('Profile picture updated successfully!');
+                setRefreshNav(!refreshNav);
                 setPhoto(URL.createObjectURL(imageFile));
             }
 
@@ -113,7 +115,7 @@ export default function Account() {
 
     return (
         <>
-            <Navbar />
+            <Navbar refresh={refreshNav} />
             <div className="w-full flex flex-col items-center mt-10 py-10 px-2 sm:px-0 pt-40 bg-gradient-to-br from-blue-100 via-white to-blue-200 min-h-screen">
                 <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-blue-700 mb-8 tracking-tight drop-shadow-lg flex items-center gap-3">
                     <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
