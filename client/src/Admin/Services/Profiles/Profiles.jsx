@@ -15,16 +15,15 @@ export default function Profiles({ details }) {
     useEffect(() => {
         (async () => {
             // Get the list of accounts
-            const response = await fetch('/api/Accounts/allAccounts');
+            const response = await fetch('/api/account/all');
             const data = await response.json();
 
-            if (data.payload.error || !response.ok) {
-                console.log(data.payload.error);
-                alert(data.message);
-                return;
+            // Handle error later
+            if(!response.ok){
+                alert("something went wrong");
             }
 
-            setUserList(data.payload);
+            setUserList(data.list);
         })();
     }, []);
 
@@ -36,25 +35,25 @@ export default function Profiles({ details }) {
             if (filter.search !== '') {
 
                 timeoutId = setTimeout(async () => {
-                // Get the list of accounts
-                const response = await fetch(
-                    `/api/Accounts/allAccounts?access=${filter.roles}&client=${filter.client_profile}&order=${filter.order}&search=${filter.search}`
-                );
+                    // Get the list of accounts
+                    const response = await fetch(
+                        `/api/account/all?access=${filter.roles}&client=${filter.client_profile}&order=${filter.order}&search=${filter.search}`
+                    );
 
-                if (!response.ok) {
-                    console.log(await response.text());
-                    alert('Something went wrong');
-                    return;
-                }
-                const data = await response.json();
+                    if (!response.ok) {
+                        console.log(await response.text());
+                        alert('Something went wrong');
+                        return;
+                    }
+                    const data = await response.json();
 
-                setUserList(data.payload);
-            }, 300); // Adjust the debounce delay as needed (e.g., 300ms)
+                    setUserList(data.list);
+                }, 300);
 
             } 
             else {
                 const response = await fetch(
-                    `/api/Accounts/allAccounts?access=${filter.roles}&client=${filter.client_profile}&order=${filter.order}&search=${filter.search}`
+                    `/api/Accounts/all?access=${filter.roles}&client=${filter.client_profile}&order=${filter.order}&search=${filter.search}`
                 );
 
                 if (!response.ok) {
@@ -64,11 +63,11 @@ export default function Profiles({ details }) {
                 }
                 const data = await response.json();
 
-                setUserList(data.payload);
+                setUserList(data.list);
             }
         })();
 
-        return () => clearTimeout(timeoutId); // Clear the timeout on unmount or filter change
+        return () => clearTimeout(timeoutId);
     }, [filter]);
 
     return (

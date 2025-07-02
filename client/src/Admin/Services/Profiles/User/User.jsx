@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
 
 // ASSETS
@@ -14,21 +14,7 @@ export default function User({ user, details }) {
     const [rowUpdate, setRowUpdate] = useState(user);
 
     useEffect(() => {
-        (async () => {
-            const getImage = await fetch(
-                `/api/Accounts/getProfile?user_id=${user.id}`
-            );
-
-            if (getImage.status == 204) {
-                setAccount({ ...account, picture: default_picture });
-                return;
-            }
-
-            const imageBlob = await getImage.blob();
-            const imageObjectURL = URL.createObjectURL(imageBlob);
-
-            setAccount({ ...account, picture: imageObjectURL });
-        })();
+        setAccount({ ...account, picture: `/api/account/all/picture/${user.id}?refresh=${new Date().getTime()}` });
     }, []);
 
     useEffect(()=>{
@@ -91,7 +77,7 @@ export default function User({ user, details }) {
 
                         {/* EMAIL */}
                         <p className="truncate text-sm sm:text-base">
-                            Email: {rowUpdate.email_address}
+                            Email: {rowUpdate.email}
                         </p>
 
                         {/* USERNAME */}

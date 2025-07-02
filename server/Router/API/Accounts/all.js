@@ -17,5 +17,8 @@ router.use(authorize);
 import getAllAccounts from '../../../Controller/Account/getAllAccounts.js';
 router.get('/', getAllAccounts);
 
+import getUserPhoto from '../../../Controller/Account/getUserPhoto.js';
+router.get('/picture/:id', getUserPhoto)
+
 
 export default router;

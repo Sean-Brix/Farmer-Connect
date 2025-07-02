@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function authorize(req, res, next) {
 
-    const access = prisma.account.findUnique({
+    const user = await prisma.account.findUnique({
         where: {
             id: req.user.id,
         },
@@ -12,12 +12,12 @@ async function authorize(req, res, next) {
         },
     });
 
-    if (!access) {
+    if (!user.access) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
     // Check if the user has the required role
-    if (access = 'User') {
+    if (user.access == 'User') {
         return res.status(403).json({ error: 'Forbidden' });
     }
 
