@@ -1,5 +1,6 @@
 import express from 'express'
 import upload from '../../../Utils/multer_upload.js';
+import parseToken from '../../../Middlewares/JWT/parseToken.js';
 
 // Route: ('/api/account/picture')
 const router = express.Router();
@@ -17,7 +18,6 @@ router.get('/me', getMyPhoto);
 //? ======================================= AUTHORIZED ============================================= ?//
 
 // Authorization middleware
-import parseToken from '../../../Middlewares/JWT/parseToken.js';
 router.use(parseToken);
 
 import deleteMyPhoto from '../../../Controller/Account/deleteMyPhoto.js';

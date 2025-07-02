@@ -9,4 +9,7 @@ router.use('/details', details);
 import picture from './picture.js';
 router.use('/picture', picture);
 
+import all from './all.js';
+router.use('/all', all);
+
 export default router;

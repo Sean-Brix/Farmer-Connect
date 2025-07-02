@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import logo from '../../../Assets/Logo.png';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import default_picture from '../../../Assets/default_picture.png';
 
 // SERVICES
@@ -19,7 +19,7 @@ import Sidebar from './sub/Sidebar.jsx';
 import Audit from '../../Services/Logs/Audit.jsx';
 
 export default function Dashboard() {
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
 
@@ -61,10 +61,9 @@ export default function Dashboard() {
 
         try {
           // Get Account Details
-          const response = await fetch("/api/accounts/details");
-          const data = (await response.json()).payload;
+          const response = await fetch("/api/account/details/me");
+          const data = await response.json();
 
-          console.log(data)
           if (!response.ok) {
             throw new Error(data.error);
           }
@@ -72,24 +71,12 @@ export default function Dashboard() {
             throw new Error(data.error);
           }
 
-          // Get Profile Picture
-          const profile = await fetch("/api/accounts/getProfile");
-          let image_url;
-
-          if (profile.ok && profile.headers.get('content-type').includes('image')) {
-            const blob = await profile.blob();
-            image_url = URL.createObjectURL(blob);
-          } else {
-            image_url = default_picture;
-          }
-
           // Render State
           setDetails({
             username: data.username,
             position: data.position,
-            picture: image_url,
+            picture: '/api/account/picture/me?refresh=' + new Date().getTime(),
             setProfile: setDetails,
-            id: data.id,
             access: data.access
           });
 

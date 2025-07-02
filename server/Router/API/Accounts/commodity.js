@@ -1,4 +1,5 @@
 import express from 'express'
+import parseToken from '../../../Middlewares/JWT/parseToken.js';
 
 // Route: ('/api/account/commodity')
 const router = express.Router();
@@ -13,7 +14,6 @@ const router = express.Router();
 //? ======================================= AUTHORIZED ============================================= ?//
 
 // Authorization middleware
-import parseToken from '../../../Middlewares/JWT/parseToken.js';
 router.use(parseToken);
 
 
