@@ -20,6 +20,8 @@ router.use(parseToken);
 import getMyDetails from '../../../Controller/Account/getMyDetails.js';
 router.get('/', getMyDetails);
 
+import setMyDetails from '../../../Controller/Account/setMyDetails.js';
+router.post('/', setMyDetails);
 
 //? ================================================================================================ ?//
 

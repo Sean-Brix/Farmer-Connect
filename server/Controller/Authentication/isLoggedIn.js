@@ -26,8 +26,6 @@ async function isLoggedIn(req, res) {
         },
     });
 
-    console.log(userDetails);
-
     if (!userDetails) {
         return res.status(404).json({
             message: 'Cannot retrieve user details',
