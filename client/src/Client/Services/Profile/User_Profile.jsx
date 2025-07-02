@@ -11,33 +11,25 @@ export default function Account() {
     const [photo, setPhoto] = useState("/api/account/picture/me?refresh=" + new Date().getTime());
     const [imageFile, setImageFile] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [passwordError, setPasswordError] = useState('');
+    const [cancel, setCancel] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const response = await fetch(`/api/account/details`);
+                const response = await fetch(`/api/account/details/me`);
                 if (response.ok) {
                     
                     const data = await response.json();
                     setProfile(data);
-
-                    const getImage = await fetch(
-                        `/api/accounts/getProfile?user_id=${data.payload.details.id}`
-                    );
-                    if (getImage.status !== 204) {
-                        const imageBlob = await getImage.blob();
-                        const imageObjectURL = URL.createObjectURL(imageBlob);
-                        setPhoto(imageObjectURL);
-                    }
                 }
             } 
             catch (error) {
-                // handle error
+                alert('Failed to fetch profile details. Please try again later.');
+                console.error('Error fetching profile:', error);
             }
         };
         fetchProfile();
-    }, []);
+    }, [cancel]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -56,11 +48,6 @@ export default function Account() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setPasswordError('');
-        if (profile.password && profile.password !== profile.confirmPassword) {
-            setPasswordError('Passwords do not match.');
-            return;
-        }
         setEditMode(false);
 
         try {
@@ -83,27 +70,39 @@ export default function Account() {
                 setPhoto(URL.createObjectURL(imageFile));
             }
 
+            const details_update = await fetch('/api/account/details/me', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
 
-            // await fetch('/api/accounts/updateAccount', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         id: profile.id,
-            //         occupation: profile.occupation,
-            //         address: profile.address,
-            //         cellphone_no: profile.cellphone_no,
-            //         institution: profile.institution,
-            //         email_address: profile.email_address,
-            //         gender: profile.gender,
-            //         position: profile.position,
-            //         telephone_no: profile.telephone_no,
-            //         password: profile.password,
-            //     }),
-            // });
-            // Optionally show success message
+                    username: profile.username,
+                    email: profile.email,
+                    firstName: profile.firstName,
+                    lastName: profile.lastName,
+                    middleName: profile.middleName,
+                    gender: profile.gender,
+                    client_profile: profile.client_profile,
+                    cellphone_no: profile.cellphone_no,
+                    telephone_no: profile.telephone_no,
+                    occupation: profile.occupation,
+                    position: profile.position,
+                    institution: profile.institution,
+                    address: profile.address,
+
+                }),
+            });
+
+            if (!details_update.ok) {
+                const errorData = await details_update.json();
+                alert(`Failed to Update: ${errorData.message}`);
+                return;
+            }  
+            const updatedProfile = await details_update.json();
+            setProfile(updatedProfile.user);
+
         } 
         catch (error) {
-            // handle error
+            console.log(error);
         }
     };
 
@@ -232,8 +231,7 @@ export default function Account() {
                                     setPhoto("/api/account/picture/me");
                                     setEditMode(false);
                                     setImageFile(null);
-                                    setPasswordError('');
-                                    setProfile((prev) => ({ ...prev, password: '', confirmPassword: '' }));
+                                    setCancel(!cancel);
                                 }}
                                 className="flex items-center gap-2 px-4 py-1 bg-gradient-to-r from-blue-700 to-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition border-2 border-blue-700 shadow-lg text-sm"
                             >

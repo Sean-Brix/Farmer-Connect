@@ -6,7 +6,8 @@
 
 @@ ___ CLIENT ___ @@
 
-- Add the account profile ( pagsamahin mo ung profile settings at account profile don sa bilog na picture sa navbar )
+- Add the account profile on Navbar ( pagsamahin mo ung profile settings at account profile don sa bilog na picture sa navbar )
+- Fix the profile settings (ayusin mo ung edit mode)
 - Add a service called "Inquire" (Sariling page nung messaging system natin)
 
 ========================================================================================================================
@@ -14,6 +15,6 @@
 
 @@ ___ ADMIN ___ @@
 
--
+- 
 
 ========================================================================================================================

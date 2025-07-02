@@ -18,10 +18,10 @@ import parseToken from '../../../Middlewares/JWT/parseToken.js';
 router.use(parseToken);
 
 import getMyDetails from '../../../Controller/Account/getMyDetails.js';
-router.get('/', getMyDetails);
+router.get('/me', getMyDetails);
 
 import setMyDetails from '../../../Controller/Account/setMyDetails.js';
-router.post('/', setMyDetails);
+router.post('/me', setMyDetails);
 
 //? ================================================================================================ ?//
 
