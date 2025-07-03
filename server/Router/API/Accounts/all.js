@@ -24,8 +24,18 @@ router.get('/picture/:id', getUserPhoto)
 
 // DETAILS
 import getUserDetails from '../../../Controller/Account/getUserDetails.js';
-router.get('/details/:id', getUserDetails)
+router.get('/details/:id', getUserDetails);
 
+
+//? ================================================================================================ ?//
+
+//? ====================================== SUPER ADMINS ============================================ ?//
+
+// DETAILS
+import setUserDetails from '../../../Controller/Account/setUserDetails.js'
+router.post('/details/:id', setUserDetails);
+
+//? ================================================================================================ ?//
 
 
 export default router;

@@ -19,8 +19,17 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                     return;
                 }
 
+                if(!data.middleName){
+                    data.middleName = 'none';
+                    data.initial = ""
+                }
+                else{
+                    data.initial = " " + data.middleName[0] + "."
+                }
+
                 setuserDetails(data);
-            } catch (err) {
+            } 
+            catch (err) {
                 console.error(err);
                 alert('Failed to fetch user details');
             }
@@ -39,36 +48,46 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
     const handleSave = async () => {
         if (!window.confirm('Are you sure?')) return;
 
+        if(editedUser.middleName == "none"){
+            editedUser.middleName = null;
+            editedUser.initial = ""
+        }
+
         try {
-            const response = await fetch(`/api/Accounts/updateAccount`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(editedUser),
-            });
+            const response = await fetch(
+                `/api/account/all/details/${userDetail.id}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(editedUser),
+                }
+            );
 
             if (!response.ok) {
-                let data;
-                try {
-                    data = await response.json();
-                } catch {
-                    data = {};
+                const data = await response.json();
+                console.log(data);
+
+                if(response.status == 403){
+                    alert("Unauthorize: Super Admin only");
+                    return
                 }
-                alert(data.payload?.error || 'Something Went Wrong');
+
+                alert(data.message || 'Something Went Wrong');
                 return;
             }
 
             const data = await response.json();
 
-            setEditedUser((prev) => ({ ...prev, ...data.payload.updated }));
-            setuserDetails((prev) => ({ ...prev, ...data.payload.updated }));
+            setEditedUser((prev) => ({ ...prev, ...data }));
+            setuserDetails((prev) => ({ ...prev, ...data }));
 
             // Rerender user Row
             setRowUpdate((prev) => ({ ...prev, ...editedUser }));
             setIsEditing(false);
-        } catch (e) {
-            alert(e.message || e);
+        } 
+        catch (e) {
             console.log(e);
             setIsEditing(false);
         }
@@ -85,14 +104,18 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
             {/* Title with cut-through line */}
             <div className="flex items-center mb-8">
                 <div className="flex-1 border-t-2 border-blue-500"></div>
-                <span className="px-4 text-xl font-bold text-blue-700 bg-white z-10">User Details</span>
+                <span className="px-4 text-xl font-bold text-blue-700 bg-white z-10">
+                    User Details
+                </span>
                 <div className="flex-1 border-t-2 border-blue-500"></div>
             </div>
             {/* Details in a modern textbox */}
             <div className="bg-gradient-to-tr from-blue-50 via-white to-blue-100 rounded-lg border border-blue-200 p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">ID</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            ID
+                        </label>
                         <input
                             type="text"
                             value={userDetail.id || ''}
@@ -101,7 +124,9 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Username</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Username
+                        </label>
                         <input
                             type="text"
                             value={userDetail.username || ''}
@@ -110,7 +135,9 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Access</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Access
+                        </label>
                         <input
                             type="text"
                             value={userDetail.access || ''}
@@ -119,16 +146,23 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Full Name</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Full Name
+                        </label>
                         <input
                             type="text"
-                            value={`${userDetail.firstName || ''} ${userDetail.lastName || ''}`}
+                            value={
+                                `${userDetail.firstName || ''}${userDetail.initial} ${
+                                userDetail.lastName || ''
+                            }`}
                             readOnly
                             className="w-full bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-2 focus:outline-none rounded-lg"
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Gender</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Gender
+                        </label>
                         <input
                             type="text"
                             value={userDetail.gender || ''}
@@ -137,7 +171,9 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Client Profile</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Client Profile
+                        </label>
                         <input
                             type="text"
                             value={userDetail.client_profile || ''}
@@ -146,7 +182,9 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Address</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Address
+                        </label>
                         <input
                             type="text"
                             value={userDetail.address || ''}
@@ -155,7 +193,9 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Telephone No</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Telephone No
+                        </label>
                         <input
                             type="text"
                             value={userDetail.telephone_no || ''}
@@ -164,7 +204,9 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Cellphone No</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Cellphone No
+                        </label>
                         <input
                             type="text"
                             value={userDetail.cellphone_no || ''}
@@ -173,7 +215,9 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Occupation</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Occupation
+                        </label>
                         <input
                             type="text"
                             value={userDetail.occupation || ''}
@@ -182,7 +226,9 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Position</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Position
+                        </label>
                         <input
                             type="text"
                             value={userDetail.position || ''}
@@ -191,7 +237,9 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Institution</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Institution
+                        </label>
                         <input
                             type="text"
                             value={userDetail.institution || ''}
@@ -200,7 +248,9 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Email Address</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Email Address
+                        </label>
                         <input
                             type="text"
                             value={userDetail.email || ''}
@@ -209,12 +259,16 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Created At</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Created At
+                        </label>
                         <input
                             type="text"
                             value={
                                 userDetail.createdAt
-                                    ? new Date(userDetail.createdAt).toLocaleDateString('en-US', {
+                                    ? new Date(
+                                          userDetail.createdAt
+                                      ).toLocaleDateString('en-US', {
                                           month: 'long',
                                           day: 'numeric',
                                           year: 'numeric',
@@ -226,12 +280,16 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Updated At</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Updated At
+                        </label>
                         <input
                             type="text"
                             value={
                                 userDetail.updatedAt
-                                    ? new Date(userDetail.updatedAt).toLocaleDateString('en-US', {
+                                    ? new Date(
+                                          userDetail.updatedAt
+                                      ).toLocaleDateString('en-US', {
                                           month: 'long',
                                           day: 'numeric',
                                           year: 'numeric',
@@ -244,7 +302,6 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                     </div>
                 </div>
             </div>
-          
         </div>
     );
 
@@ -254,70 +311,109 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
             {/* Title with cut-through line */}
             <div className="flex items-center mb-8">
                 <div className="flex-1 border-t-2 border-blue-500"></div>
-                <span className="px-4 text-xl font-bold text-blue-700 bg-white z-10">Edit User Details</span>
+                <span className="px-4 text-xl font-bold text-blue-700 bg-white z-10">
+                    Edit User Details
+                </span>
                 <div className="flex-1 border-t-2 border-blue-500"></div>
             </div>
             <div className="bg-gradient-to-tr from-blue-50 via-white to-blue-100 rounded-lg border border-blue-200 p-6">
+                {/* ID */}
+                <div>
+                    <label className="block text-xs text-blue-700 font-semibold mb-1">
+                        Account ID
+                    </label>
+                    <input
+                        type="text"
+                        value={(editedUser.id || '').toUpperCase()}
+                        readOnly
+                        className="w-full bg-white border border-blue-300 text-blue-900 font-bold py-1 px-2 mb-5 focus:outline-none focus:border-blue-600 rounded-lg"
+                    />
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* ID */}
-                    <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">ID</label>
-                        <input
-                            type="text"
-                            value={editedUser.id || ''}
-                            readOnly
-                            className="w-full bg-white border border-blue-400 text-blue-900 font-bold py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
-                        />
-                    </div>
                     {/* Username */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Username</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Username
+                        </label>
                         <input
                             type="text"
                             value={editedUser.username || ''}
-                            onChange={(e) => handleChange('username', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('username', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
                     </div>
                     {/* Access */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Access</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Access
+                        </label>
                         <select
                             value={editedUser.access || ''}
-                            onChange={(e) => handleChange('access', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('access', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         >
                             <option value="User">User</option>
                             <option value="Admin">Admin</option>
-                            <option value="Super_Admin">Super Admin</option>
+                            <option value="Super Admin">Super Admin</option>
                         </select>
                     </div>
                     {/* First Name */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">First Name</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            First Name
+                        </label>
                         <input
                             type="text"
                             value={editedUser.firstName || ''}
-                            onChange={(e) => handleChange('firstname', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('firstname', e.target.value)
+                            }
+                            className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
+                        />
+                    </div>
+                    {/* Middle Name */}
+                    <div>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Middle Name
+                        </label>
+                        <input
+                            type="text"
+                            value={editedUser.middleName}
+                            onChange={(e) =>
+                                handleChange('middleName', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
                     </div>
                     {/* Last Name */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Last Name</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Last Name
+                        </label>
                         <input
                             type="text"
                             value={editedUser.lastName || ''}
-                            onChange={(e) => handleChange('lastname', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('lastname', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
                     </div>
                     {/* Gender */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Gender</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Gender
+                        </label>
                         <select
                             value={editedUser.gender || ''}
-                            onChange={(e) => handleChange('gender', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('gender', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         >
                             <option value="">Select</option>
@@ -328,106 +424,150 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                     </div>
                     {/* Client Profile */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Client Profile</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Client Profile
+                        </label>
                         <select
                             value={editedUser.client_profile || ''}
-                            onChange={(e) => handleChange('client_profile', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('client_profile', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         >
                             <option value="">Select</option>
                             <option value="Fishfolk">Fishfolk</option>
-                            <option value="Rural Based Org">Rural Based Org</option>
+                            <option value="Rural Based Org">
+                                Rural Based Org
+                            </option>
                             <option value="Student">Student</option>
-                            <option value="Agricultural/Fisheries Technician">Agricultural/Fisheries Technician</option>
+                            <option value="Agricultural/Fisheries Technician">
+                                Agricultural/Fisheries Technician
+                            </option>
                             <option value="Youth">Youth</option>
                             <option value="Women">Women</option>
-                            <option value="Gov't Employee">Gov't Employee</option>
+                            <option value="Gov't Employee">
+                                Gov't Employee
+                            </option>
                             <option value="PWD">PWD</option>
-                            <option value="Indigenous People">Indigenous People</option>
+                            <option value="Indigenous People">
+                                Indigenous People
+                            </option>
                         </select>
                     </div>
                     {/* Address */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Address</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Address
+                        </label>
                         <input
                             type="text"
                             value={editedUser.address || ''}
-                            onChange={(e) => handleChange('address', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('address', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
                     </div>
                     {/* Telephone No */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Telephone No</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Telephone No
+                        </label>
                         <input
                             type="text"
                             value={editedUser.telephone_no || ''}
-                            onChange={(e) => handleChange('telephone_no', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('telephone_no', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
                     </div>
                     {/* Cellphone No */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Cellphone No</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Cellphone No
+                        </label>
                         <input
                             type="text"
                             value={editedUser.cellphone_no || ''}
-                            onChange={(e) => handleChange('cellphone_no', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('cellphone_no', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
                     </div>
                     {/* Occupation */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Occupation</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Occupation
+                        </label>
                         <input
                             type="text"
                             value={editedUser.occupation || ''}
-                            onChange={(e) => handleChange('occupation', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('occupation', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
                     </div>
                     {/* Position */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Position</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Position
+                        </label>
                         <input
                             type="text"
                             value={editedUser.position || ''}
-                            onChange={(e) => handleChange('position', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('position', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
                     </div>
                     {/* Institution */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Institution</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Institution
+                        </label>
                         <input
                             type="text"
                             value={editedUser.institution || ''}
-                            onChange={(e) => handleChange('institution', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('institution', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
                     </div>
                     {/* Email Address */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Email Address</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Email Address
+                        </label>
                         <input
                             type="text"
                             value={editedUser.email || ''}
-                            onChange={(e) => handleChange('email_address', e.target.value)}
+                            onChange={(e) =>
+                                handleChange('email_address', e.target.value)
+                            }
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
                     </div>
                     {/* Created At */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Created At</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Created At
+                        </label>
                         <input
                             type="text"
                             value={
                                 editedUser.createdAt
-                                    ? new Date(editedUser.createdAt).toLocaleDateString('en-US', {
-                                        month: 'long',
-                                        day: 'numeric',
-                                        year: 'numeric',
-                                    })
+                                    ? new Date(
+                                          editedUser.createdAt
+                                      ).toLocaleDateString('en-US', {
+                                          month: 'long',
+                                          day: 'numeric',
+                                          year: 'numeric',
+                                      })
                                     : ''
                             }
                             readOnly
@@ -436,16 +576,20 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                     </div>
                     {/* Updated At */}
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">Updated At</label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">
+                            Updated At
+                        </label>
                         <input
                             type="text"
                             value={
                                 editedUser.updatedAt
-                                    ? new Date(editedUser.updatedAt).toLocaleDateString('en-US', {
-                                        month: 'long',
-                                        day: 'numeric',
-                                        year: 'numeric',
-                                    })
+                                    ? new Date(
+                                          editedUser.updatedAt
+                                      ).toLocaleDateString('en-US', {
+                                          month: 'long',
+                                          day: 'numeric',
+                                          year: 'numeric',
+                                      })
                                     : ''
                             }
                             readOnly
