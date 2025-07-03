@@ -14,11 +14,18 @@ router.use(authorize);
 
 //? ================================================================================================ ?//
 
+// LIST
 import getAllAccounts from '../../../Controller/Account/getAllAccounts.js';
 router.get('/', getAllAccounts);
 
+// PHOTOS
 import getUserPhoto from '../../../Controller/Account/getUserPhoto.js';
 router.get('/picture/:id', getUserPhoto)
+
+// DETAILS
+import getUserDetails from '../../../Controller/Account/getUserDetails.js';
+router.get('/details/:id', getUserDetails)
+
 
 
 export default router;

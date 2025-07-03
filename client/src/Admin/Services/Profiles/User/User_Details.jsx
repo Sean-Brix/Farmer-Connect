@@ -10,17 +10,16 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
         (async () => {
             try {
                 const response = await fetch(
-                    `/api/accounts/getAccount?id=${userDetail.id}`
+                    `/api/account/all/details/${userDetail.id}`
                 );
                 const data = await response.json();
 
                 if (!response.ok) {
-                    console.log(data.payload?.error || "Unknown error");
                     alert('Something went wrong');
                     return;
                 }
 
-                setuserDetails(data.payload.details);
+                setuserDetails(data);
             } catch (err) {
                 console.error(err);
                 alert('Failed to fetch user details');
@@ -123,7 +122,7 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         <label className="block text-xs text-blue-700 font-semibold mb-1">Full Name</label>
                         <input
                             type="text"
-                            value={`${userDetail.firstname || ''} ${userDetail.lastname || ''}`}
+                            value={`${userDetail.firstName || ''} ${userDetail.lastName || ''}`}
                             readOnly
                             className="w-full bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-2 focus:outline-none rounded-lg"
                         />
@@ -204,7 +203,7 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         <label className="block text-xs text-blue-700 font-semibold mb-1">Email Address</label>
                         <input
                             type="text"
-                            value={userDetail.email_address || ''}
+                            value={userDetail.email || ''}
                             readOnly
                             className="w-full bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-2 focus:outline-none rounded-lg"
                         />
@@ -214,8 +213,8 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         <input
                             type="text"
                             value={
-                                userDetail.created_at
-                                    ? new Date(userDetail.created_at).toLocaleDateString('en-US', {
+                                userDetail.createdAt
+                                    ? new Date(userDetail.createdAt).toLocaleDateString('en-US', {
                                           month: 'long',
                                           day: 'numeric',
                                           year: 'numeric',
@@ -231,8 +230,8 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         <input
                             type="text"
                             value={
-                                userDetail.updated_at
-                                    ? new Date(userDetail.updated_at).toLocaleDateString('en-US', {
+                                userDetail.updatedAt
+                                    ? new Date(userDetail.updatedAt).toLocaleDateString('en-US', {
                                           month: 'long',
                                           day: 'numeric',
                                           year: 'numeric',
@@ -290,7 +289,7 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         >
                             <option value="User">User</option>
                             <option value="Admin">Admin</option>
-                            <option value="Super Admin">Super Admin</option>
+                            <option value="Super_Admin">Super Admin</option>
                         </select>
                     </div>
                     {/* First Name */}
@@ -298,7 +297,7 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         <label className="block text-xs text-blue-700 font-semibold mb-1">First Name</label>
                         <input
                             type="text"
-                            value={editedUser.firstname || ''}
+                            value={editedUser.firstName || ''}
                             onChange={(e) => handleChange('firstname', e.target.value)}
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
@@ -308,7 +307,7 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         <label className="block text-xs text-blue-700 font-semibold mb-1">Last Name</label>
                         <input
                             type="text"
-                            value={editedUser.lastname || ''}
+                            value={editedUser.lastName || ''}
                             onChange={(e) => handleChange('lastname', e.target.value)}
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
@@ -412,7 +411,7 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         <label className="block text-xs text-blue-700 font-semibold mb-1">Email Address</label>
                         <input
                             type="text"
-                            value={editedUser.email_address || ''}
+                            value={editedUser.email || ''}
                             onChange={(e) => handleChange('email_address', e.target.value)}
                             className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
@@ -423,8 +422,8 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         <input
                             type="text"
                             value={
-                                editedUser.created_at
-                                    ? new Date(editedUser.created_at).toLocaleDateString('en-US', {
+                                editedUser.createdAt
+                                    ? new Date(editedUser.createdAt).toLocaleDateString('en-US', {
                                         month: 'long',
                                         day: 'numeric',
                                         year: 'numeric',
@@ -441,8 +440,8 @@ export default function User_Details({ user, isEdit, setRowUpdate }) {
                         <input
                             type="text"
                             value={
-                                editedUser.updated_at
-                                    ? new Date(editedUser.updated_at).toLocaleDateString('en-US', {
+                                editedUser.updatedAt
+                                    ? new Date(editedUser.updatedAt).toLocaleDateString('en-US', {
                                         month: 'long',
                                         day: 'numeric',
                                         year: 'numeric',

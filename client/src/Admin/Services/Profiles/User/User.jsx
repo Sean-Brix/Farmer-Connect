@@ -98,7 +98,7 @@ export default function User({ user, details }) {
                 </div>
                 {/* Button container for responsiveness */}
                 <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 justify-center sm:justify-end w-full sm:w-auto">
-                    {details.access === 'Super Admin' && (
+                    {details.access === 'Super_Admin' && (
                         <div className="w-full sm:w-auto">
                             <button
                                 onClick={() => {
