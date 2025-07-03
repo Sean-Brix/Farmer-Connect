@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Navbar from '../../Components/Navbar';
 import User_Profile_Loading from './Loading/User_Profile_Loading';
+import User_Profile_Error from './Error/User_Profile_Error';
 
 export default function Account() {
     const [refreshNav, setRefreshNav] = useState(false);
@@ -22,7 +23,9 @@ export default function Account() {
         queryFn: async () => {
             const response = await fetch(`/api/account/details/me`);
             if (!response.ok) {
-                throw new Error('Failed to fetch profile details');
+                const error = new Error("Fetch Error");
+                error.status = response.status
+                throw error
             }
             return await response.json();
         },
@@ -102,22 +105,6 @@ export default function Account() {
                 setPhoto(URL.createObjectURL(imageFile));
             }
 
-            console.log({
-                username: tempProfile.username || profile.username,
-                email: tempProfile.email || profile.email,
-                firstName: tempProfile.firstName || profile.firstName,
-                lastName: tempProfile.lastName || profile.lastName,
-                middleName: tempProfile.middleName || profile.middleName,
-                gender: tempProfile.gender || profile.gender,
-                client_profile: tempProfile.client_profile || profile.client_profile,
-                cellphone_no: tempProfile.cellphone_no || profile.cellphone_no,
-                telephone_no: tempProfile.telephone_no || profile.telephone_no,
-                occupation: tempProfile.occupation || profile.occupation,
-                position: tempProfile.position || profile.position,
-                institution: tempProfile.institution || profile.institution,
-                address: tempProfile.address || profile.address,
-            })
-
             await updateProfileMutation.mutateAsync({
                 username: tempProfile.username || profile.username,
                 email: tempProfile.email || profile.email,
@@ -146,7 +133,10 @@ export default function Account() {
     };
 
     if (isLoading) return <User_Profile_Loading/>;
-    if (isError) return <div>Error: {error.message}</div>;
+
+    if (isError) {
+        return <User_Profile_Error statusCode={error.status} />
+    }
 
     return (
         <>
@@ -464,7 +454,7 @@ export default function Account() {
                     scrollbar-width: none;
                     -ms-overflow-style: none;
                     background: #f1f5f9;
-}
+                }
                 html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar {
                     display: none;
                 }
