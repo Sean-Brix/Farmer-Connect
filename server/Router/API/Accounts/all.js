@@ -31,6 +31,9 @@ router.get('/details/:id', getUserDetails);
 
 //? ====================================== SUPER ADMINS ============================================ ?//
 
+import super_admin from '../../../Middlewares/Auth/super_admin.js';
+router.use(super_admin)
+
 // DETAILS
 import setUserDetails from '../../../Controller/Account/setUserDetails.js'
 router.post('/details/:id', setUserDetails);

@@ -100,14 +100,9 @@ function filterUpdateData(data) {
             !email ||
             !firstName ||
             !lastName ||
-            !middleName ||
             !gender ||
             !client_profile ||
             !cellphone_no ||
-            !telephone_no ||
-            !occupation ||
-            !position ||
-            !institution ||
             !address
         ) {
             return 'All fields are required.';

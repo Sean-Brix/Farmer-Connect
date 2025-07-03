@@ -1,39 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Navbar from '../../Components/Navbar';
-import default_picture from '../../../Assets/default_picture.png';
+import User_Profile_Loading from './Loading/User_Profile_Loading';
 
 export default function Account() {
     const [refreshNav, setRefreshNav] = useState(false);
-
-    // --- Combined logic from both components ---
-    const [profile, setProfile] = useState({});
     const [editMode, setEditMode] = useState(false);
-    const [photo, setPhoto] = useState("/api/account/picture/me?refresh=" + new Date().getTime());
+    const [photo, setPhoto] = useState('/api/account/picture/me?refresh=' + new Date().getTime());
     const [imageFile, setImageFile] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [cancel, setCancel] = useState(false);
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const response = await fetch(`/api/account/details/me`);
-                if (response.ok) {
-                    
-                    const data = await response.json();
-                    setProfile(data);
-                }
-            } 
-            catch (error) {
-                alert('Failed to fetch profile details. Please try again later.');
-                console.error('Error fetching profile:', error);
+    const queryClient = useQueryClient();
+
+    const {
+        data: profile,
+        isLoading,
+        isError,
+        error,
+    } = useQuery({
+        queryKey: ['profile'],
+        queryFn: async () => {
+            const response = await fetch(`/api/account/details/me`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch profile details');
             }
-        };
-        fetchProfile();
-    }, [cancel]);
+            return await response.json();
+        },
+        retry: false,
+    });
 
+    const [tempProfile, setTempProfile] = useState({});
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProfile((prev) => ({
+        setTempProfile((prev) => ({
             ...prev,
             [name]: value,
         }));
@@ -46,60 +45,94 @@ export default function Account() {
         }
     };
 
+    const updateProfileMutation = useMutation({
+        mutationFn: async (updates) => {
+            const response = await fetch('/api/account/details/me', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Failed to Update: ${errorData.message}`);
+            }
+            return response.json();
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['profile']);
+            setEditMode(false);
+        },
+        onError: (error) => {
+            alert(error.message);
+        },
+    });
+
+    const updatePictureMutation = useMutation({
+        mutationFn: async (formData) => {
+            const changePicture = await fetch('/api/account/picture/me', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!changePicture.ok) {
+                throw new Error('Failed to update profile picture.');
+            }
+            return changePicture;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(['profile']);
+        },
+        onError: (error) => {
+            alert(error.message);
+        },
+    });
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setEditMode(false);
 
         try {
             if (imageFile && imageFile.size > 0 && confirm('Are You Sure?')) {
                 const formData = new FormData();
                 formData.append('photo', imageFile);
-                const changePicture = await fetch('/api/account/picture/me', {
-                    method: 'POST',
-                    body: formData,
-                });
-                
-                if (!changePicture.ok) {
-                    alert('Failed to update profile picture.');
-                    return;
-                }
-                
-                // show success message
+                await updatePictureMutation.mutateAsync(formData);
+
                 alert('Profile picture updated successfully!');
                 setRefreshNav(!refreshNav);
                 setPhoto(URL.createObjectURL(imageFile));
             }
 
-            const details_update = await fetch('/api/account/details/me', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+            console.log({
+                username: tempProfile.username || profile.username,
+                email: tempProfile.email || profile.email,
+                firstName: tempProfile.firstName || profile.firstName,
+                lastName: tempProfile.lastName || profile.lastName,
+                middleName: tempProfile.middleName || profile.middleName,
+                gender: tempProfile.gender || profile.gender,
+                client_profile: tempProfile.client_profile || profile.client_profile,
+                cellphone_no: tempProfile.cellphone_no || profile.cellphone_no,
+                telephone_no: tempProfile.telephone_no || profile.telephone_no,
+                occupation: tempProfile.occupation || profile.occupation,
+                position: tempProfile.position || profile.position,
+                institution: tempProfile.institution || profile.institution,
+                address: tempProfile.address || profile.address,
+            })
 
-                    username: profile.username,
-                    email: profile.email,
-                    firstName: profile.firstName,
-                    lastName: profile.lastName,
-                    middleName: profile.middleName,
-                    gender: profile.gender,
-                    client_profile: profile.client_profile,
-                    cellphone_no: profile.cellphone_no,
-                    telephone_no: profile.telephone_no,
-                    occupation: profile.occupation,
-                    position: profile.position,
-                    institution: profile.institution,
-                    address: profile.address,
-
-                }),
+            await updateProfileMutation.mutateAsync({
+                username: tempProfile.username || profile.username,
+                email: tempProfile.email || profile.email,
+                firstName: tempProfile.firstName || profile.firstName,
+                lastName: tempProfile.lastName || profile.lastName,
+                middleName: tempProfile.middleName || profile.middleName,
+                gender: tempProfile.gender || profile.gender,
+                client_profile: tempProfile.client_profile || profile.client_profile,
+                cellphone_no: tempProfile.cellphone_no || profile.cellphone_no,
+                telephone_no: tempProfile.telephone_no || profile.telephone_no,
+                occupation: tempProfile.occupation || profile.occupation,
+                position: tempProfile.position || profile.position,
+                institution: tempProfile.institution || profile.institution,
+                address: tempProfile.address || profile.address,
             });
-
-            if (!details_update.ok) {
-                const errorData = await details_update.json();
-                alert(`Failed to Update: ${errorData.message}`);
-                return;
-            }  
-            const updatedProfile = await details_update.json();
-            setProfile(updatedProfile.user);
-
         } 
         catch (error) {
             console.log(error);
@@ -112,13 +145,26 @@ export default function Account() {
         alert('Account deleted!');
     };
 
+    if (isLoading) return <User_Profile_Loading/>;
+    if (isError) return <div>Error: {error.message}</div>;
+
     return (
         <>
             <Navbar refresh={refreshNav} />
             <div className="w-full flex flex-col items-center mt-10 py-10 px-2 sm:px-0 pt-40 bg-gradient-to-br from-blue-100 via-white to-blue-200 min-h-screen">
                 <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-blue-700 mb-8 tracking-tight drop-shadow-lg flex items-center gap-3">
-                    <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    <svg
+                        className="w-10 h-10 text-blue-500"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                        />
                     </svg>
                     Account Profile
                 </h1>
@@ -146,30 +192,40 @@ export default function Account() {
                             <div className="flex flex-col gap-1 w-full items-center">
                                 <input
                                     type="text"
-                                    name="firstname"
-                                    value={profile.firstName}
+                                    name="firstName"
+                                    defaultValue={profile.firstName}
                                     onChange={handleChange}
                                     placeholder="First Name"
                                     className="bg-blue-800 border-2 border-blue-700 rounded-2xl px-3 py-1 text-white font-bold mb-1 shadow-lg tracking-wide text-center text-sm w-full max-w-[160px]"
                                     style={{
-                                        fontSize:
-                                            `${(profile.firstName + ' ' + profile.lastName).length > 20
+                                        fontSize: `${
+                                            (
+                                                profile.firstName +
+                                                ' ' +
+                                                profile.lastName
+                                            ).length > 20
                                                 ? '1rem'
-                                                : '1.2rem'}`
+                                                : '1.2rem'
+                                        }`,
                                     }}
                                 />
                                 <input
                                     type="text"
-                                    name="lastname"
-                                    value={profile.lastName}
+                                    name="lastName"
+                                    defaultValue={profile.lastName}
                                     onChange={handleChange}
                                     placeholder="Last Name"
                                     className="bg-blue-800 border-2 border-blue-700 rounded-2xl px-3 py-1 text-white font-bold mb-1 shadow-lg tracking-wide text-center text-sm w-full max-w-[160px]"
                                     style={{
-                                        fontSize:
-                                            `${(profile.firstName + ' ' + profile.lastName).length > 20
+                                        fontSize: `${
+                                            (
+                                                profile.firstName +
+                                                ' ' +
+                                                profile.lastName
+                                            ).length > 20
                                                 ? '1rem'
-                                                : '1.2rem'}`
+                                                : '1.2rem'
+                                        }`,
                                     }}
                                 />
                             </div>
@@ -177,10 +233,15 @@ export default function Account() {
                             <span
                                 className="bg-blue-800 border-2 border-blue-700 rounded-2xl px-6 py-1 text-xl font-bold text-white mb-1 shadow-lg tracking-wide whitespace-nowrap overflow-hidden"
                                 style={{
-                                    fontSize:
-                                        `${(profile.firstName + ' ' + profile.lastName).length > 20
+                                    fontSize: `${
+                                        (
+                                            profile.firstName +
+                                            ' ' +
+                                            profile.lastName
+                                        ).length > 20
                                             ? '1rem'
-                                            : '1.5rem'}`
+                                            : '1.5rem'
+                                    }`,
                                 }}
                             >
                                 {profile.firstName} {profile.lastName}
@@ -189,7 +250,7 @@ export default function Account() {
                         {editMode ? (
                             <select
                                 name="gender"
-                                value={profile.gender || 'Male'}
+                                defaultValue={profile.gender || 'Male'}
                                 onChange={handleChange}
                                 className="text-white font-semibold rounded-xl px-3 py-1 bg-blue-800 border border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-sm"
                             >
@@ -207,7 +268,7 @@ export default function Account() {
                             <input
                                 type="text"
                                 name="position"
-                                value={profile.position || ''}
+                                defaultValue={profile.position || ''}
                                 onChange={handleChange}
                                 className="text-white font-semibold rounded-xl px-3 py-1 bg-blue-800 text-center border border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-sm"
                             />
@@ -219,7 +280,10 @@ export default function Account() {
                         )}
                         {!editMode ? (
                             <button
-                                onClick={() => setEditMode(true)}
+                                onClick={() => {
+                                    setTempProfile(profile.user);
+                                    setEditMode(true);
+                                }}
                                 className="flex items-center gap-2 px-4 py-1 bg-gradient-to-r from-blue-700 to-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition border-2 border-blue-700 shadow-lg text-sm"
                             >
                                 <i className="fa-solid fa-pen-to-square"></i>
@@ -228,10 +292,9 @@ export default function Account() {
                         ) : (
                             <button
                                 onClick={() => {
-                                    setPhoto("/api/account/picture/me");
+                                    setPhoto('/api/account/picture/me');
                                     setEditMode(false);
                                     setImageFile(null);
-                                    setCancel(!cancel);
                                 }}
                                 className="flex items-center gap-2 px-4 py-1 bg-gradient-to-r from-blue-700 to-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition border-2 border-blue-700 shadow-lg text-sm"
                             >
@@ -240,7 +303,10 @@ export default function Account() {
                             </button>
                         )}
                     </div>
-                    <form className="flex-1 p-8 bg-white" onSubmit={handleSubmit}>
+                    <form
+                        className="flex-1 p-8 bg-white"
+                        onSubmit={handleSubmit}
+                    >
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block mb-2 text-blue-900 font-semibold tracking-wide text-sm">
@@ -250,7 +316,7 @@ export default function Account() {
                                     type="text"
                                     name="occupation"
                                     className="block w-full border border-blue-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 text-blue-900 transition text-sm"
-                                    value={profile.occupation || ''}
+                                    defaultValue={profile.occupation || ''}
                                     onChange={handleChange}
                                     disabled={!editMode}
                                 />
@@ -263,7 +329,7 @@ export default function Account() {
                                     type="text"
                                     name="address"
                                     className="block w-full border border-blue-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 text-blue-900 transition text-sm"
-                                    value={profile.address || ''}
+                                    defaultValue={profile.address || ''}
                                     onChange={handleChange}
                                     disabled={!editMode}
                                 />
@@ -276,7 +342,9 @@ export default function Account() {
                                     type="text"
                                     name="cellphone_no"
                                     className="block w-full border border-blue-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 text-blue-900 transition text-sm"
-                                    value={profile.cellphone_no || ''}
+                                    defaultValue={
+                                        profile.cellphone_no || ''
+                                    }
                                     onChange={handleChange}
                                     disabled={!editMode}
                                 />
@@ -289,7 +357,9 @@ export default function Account() {
                                     type="text"
                                     name="institution"
                                     className="block w-full border border-blue-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 text-blue-900 transition text-sm"
-                                    value={profile.institution || ''}
+                                    defaultValue={
+                                        profile.institution || ''
+                                    }
                                     onChange={handleChange}
                                     disabled={!editMode}
                                 />
@@ -314,7 +384,9 @@ export default function Account() {
                                             type="email"
                                             name="email"
                                             className="text-blue-900 break-all border border-blue-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 transition text-sm"
-                                            value={profile.email || ''}
+                                            defaultValue={
+                                                profile.email || ''
+                                            }
                                             onChange={handleChange}
                                         />
                                     ) : (
@@ -333,7 +405,9 @@ export default function Account() {
                                             type="text"
                                             name="telephone_no"
                                             className="text-blue-900 border border-blue-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 transition text-sm"
-                                            value={profile.telephone_no || ''}
+                                            defaultValue={
+                                                profile.telephone_no || ''
+                                            }
                                             onChange={handleChange}
                                         />
                                     ) : (
@@ -344,7 +418,7 @@ export default function Account() {
                                 </div>
                             </div>
                         </div>
-                    
+
                         <div className="flex gap-4 pt-6">
                             {editMode && (
                                 <button
@@ -354,7 +428,6 @@ export default function Account() {
                                     Save Changes
                                 </button>
                             )}
-                          
                         </div>
                     </form>
                 </div>
@@ -365,7 +438,8 @@ export default function Account() {
                                 Delete Account
                             </div>
                             <div className="mb-6 text-gray-700">
-                                Are you sure you want to delete your account? This action cannot be undone.
+                                Are you sure you want to delete your account?
+                                This action cannot be undone.
                             </div>
                             <div className="flex gap-4">
                                 <button
@@ -390,7 +464,7 @@ export default function Account() {
                     scrollbar-width: none;
                     -ms-overflow-style: none;
                     background: #f1f5f9;
-                }
+}
                 html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar {
                     display: none;
                 }
