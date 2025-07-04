@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Navbar from '../../Components/Navbar';
-import User_Profile_Loading from './Loading/User_Profile_Loading';
-import User_Profile_Error from './Error/User_Profile_Error';
+
+// LOADING-ERROR UI/UX
+import User_Profile_Loading from './Loading/User_Profile_Details';
+import User_Profile_Error from './Error/User_Profile_Details';
+import UserProfile_UpdateError from './Error/User_Profile_Update';
+import UserProfile_UpdateLoading from './Loading/User_Profile_Update';
 
 export default function Account() {
     const [refreshNav, setRefreshNav] = useState(false);
@@ -48,7 +52,7 @@ export default function Account() {
         }
     };
 
-    const updateProfileMutation = useMutation({
+    const profileMutation = useMutation({
         mutationFn: async (updates) => {
             const response = await fetch('/api/account/details/me', {
                 method: 'POST',
@@ -71,7 +75,7 @@ export default function Account() {
         },
     });
 
-    const updatePictureMutation = useMutation({
+    const pictureMutation = useMutation({
         mutationFn: async (formData) => {
             const changePicture = await fetch('/api/account/picture/me', {
                 method: 'POST',
@@ -98,28 +102,12 @@ export default function Account() {
             if (imageFile && imageFile.size > 0 && confirm('Are You Sure?')) {
                 const formData = new FormData();
                 formData.append('photo', imageFile);
-                await updatePictureMutation.mutateAsync(formData);
-
-                alert('Profile picture updated successfully!');
+                await pictureMutation.mutateAsync(formData);
                 setRefreshNav(!refreshNav);
                 setPhoto(URL.createObjectURL(imageFile));
             }
 
-            await updateProfileMutation.mutateAsync({
-                username: tempProfile.username || profile.username,
-                email: tempProfile.email || profile.email,
-                firstName: tempProfile.firstName || profile.firstName,
-                lastName: tempProfile.lastName || profile.lastName,
-                middleName: tempProfile.middleName || profile.middleName,
-                gender: tempProfile.gender || profile.gender,
-                client_profile: tempProfile.client_profile || profile.client_profile,
-                cellphone_no: tempProfile.cellphone_no || profile.cellphone_no,
-                telephone_no: tempProfile.telephone_no || profile.telephone_no,
-                occupation: tempProfile.occupation || profile.occupation,
-                position: tempProfile.position || profile.position,
-                institution: tempProfile.institution || profile.institution,
-                address: tempProfile.address || profile.address,
-            });
+            await profileMutation.mutateAsync({...profile, ...tempProfile});
         } 
         catch (error) {
             console.log(error);
@@ -132,15 +120,17 @@ export default function Account() {
         alert('Account deleted!');
     };
 
-    if (isLoading) return <User_Profile_Loading/>;
+    // Profile Details
+    if(isLoading) return <User_Profile_Loading/>;
+    if(isError) return <User_Profile_Error statusCode={error.status} />
 
-    if (isError) {
-        return <User_Profile_Error statusCode={error.status} />
-    }
+    // Profile Updates
+    if(profileMutation.isPending || pictureMutation.isPending) return <UserProfile_UpdateLoading/>
 
     return (
         <>
             <Navbar refresh={refreshNav} />
+
             <div className="w-full flex flex-col items-center mt-10 py-10 px-2 sm:px-0 pt-40 bg-gradient-to-br from-blue-100 via-white to-blue-200 min-h-screen">
                 <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-blue-700 mb-8 tracking-tight drop-shadow-lg flex items-center gap-3">
                     <svg

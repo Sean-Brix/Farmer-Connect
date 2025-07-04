@@ -11,7 +11,8 @@ export default function User_Profile_Error({ statusCode }) {
         errorMessage = 'Server error. Please try again later.';
         errorTitle = 'Server Error';
         errorColor = '#c0392b';
-    } else if (statusCode === 401) {
+    } 
+    else if (statusCode === 401) {
         errorMessage = 'Please log in to continue.';
         errorTitle = 'Unauthorize';
         errorColor = '#3498db';
