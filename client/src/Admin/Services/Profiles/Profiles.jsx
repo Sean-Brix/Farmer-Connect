@@ -1,74 +1,49 @@
-import { Link } from 'react-router-dom';
 import User from './User/User.jsx';
 import { useEffect, useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function Profiles({ details }) {
-    const [userList, setUserList] = useState([]);
+    const queryClient = useQueryClient();
+    const [refreshToken, setRefreshToken] = useState(Date.now());
     const [filter, setFilter] = useState({
         roles: 'none',
         client_profile: 'none',
         order: 'none',
-        search: 'none'
+        search: 'none',
     });
 
-    // Initial Render
-    useEffect(() => {
-        (async () => {
-            // Get the list of accounts
-            const response = await fetch('/api/account/all');
-            const data = await response.json();
+    const { isLoading, error, data, refetch } = useQuery({
+        queryKey: ['accounts', filter, refreshToken],
+        queryFn: async () => {
+            const queryString = Object.entries(filter)
+                .map(([key, value]) => `${key}=${value}`)
+                .join('&');
 
-            // Handle error later
-            if(!response.ok){
-                alert("something went wrong");
-            }
+            const url = `/api/account/all?${queryString}`;
 
-            setUserList(data.list);
-        })();
-    }, []);
-
-    useEffect(() => {
-        let timeoutId;
-
-        (async () => {
-            // Debounce the search input
-            if (filter.search !== '') {
-
-                timeoutId = setTimeout(async () => {
-                    // Get the list of accounts
-                    const response = await fetch(
-                        `/api/account/all?access=${filter.roles}&client=${filter.client_profile}&order=${filter.order}&search=${filter.search}`
-                    );
-
-                    if (!response.ok) {
-                        console.log(await response.text());
-                        alert('Something went wrong');
-                        return;
-                    }
-                    const data = await response.json();
-
-                    setUserList(data.list);
-                }, 300);
-
-            } 
-            else {
-                const response = await fetch(
-                    `/api/Accounts/all?access=${filter.roles}&client=${filter.client_profile}&order=${filter.order}&search=${filter.search}`
-                );
-
+            if (filter.search === 'none') {
+                const response = await fetch('/api/account/all');
                 if (!response.ok) {
                     console.log(await response.text());
-                    alert('Something went wrong');
-                    return;
+                    throw new Error('Something went wrong');
                 }
-                const data = await response.json();
-
-                setUserList(data.list);
+                return response.json();
+            } else {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    console.log(await response.text());
+                    throw new Error('Something went wrong');
+                }
+                return response.json();
             }
-        })();
+        },
+    });
 
-        return () => clearTimeout(timeoutId);
-    }, [filter]);
+    useEffect(() => {
+        refetch();
+    }, [filter, refetch]);
+
+    const userList = data?.list || [];
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-3 px-1 sm:py-6 md:py-10 lg:py-14 xl:py-20 sm:mt-10 transition-all">
@@ -91,7 +66,9 @@ export default function Profiles({ details }) {
                             type="text"
                             placeholder="Search profiles..."
                             className="w-full md:w-64 px-3 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition bg-gray-50/60 placeholder:text-gray-400"
-                            onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+                            onChange={(e) =>
+                                setFilter({ ...filter, search: e.target.value })
+                            }
                         />
                         {/* Filters */}
                         <div className="flex flex-col gap-2 sm:flex-row sm:gap-3 w-full md:w-auto flex-wrap">
@@ -99,7 +76,10 @@ export default function Profiles({ details }) {
                             <select
                                 className="w-full sm:w-36 px-2 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition bg-gray-50/60 text-gray-700"
                                 onChange={(e) =>
-                                    setFilter({ ...filter, roles: e.target.value })
+                                    setFilter({
+                                        ...filter,
+                                        roles: e.target.value,
+                                    })
                                 }
                             >
                                 <option value="none">All Roles</option>
@@ -156,7 +136,9 @@ export default function Profiles({ details }) {
                                 <option value="firstname">Firstname</option>
                                 <option value="lastname">Lastname</option>
                                 <option value="created_at">Date Created</option>
-                                <option value="updated_at">Recently Updated</option>
+                                <option value="updated_at">
+                                    Recently Updated
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -166,7 +148,15 @@ export default function Profiles({ details }) {
 
                 {/* LIST */}
                 <div className="flex flex-col gap-3">
-                    {!Array.isArray(userList) || userList.length === 0 ? (
+                    {isLoading ? (
+                        <div className="text-center text-gray-400 py-10 font-medium">
+                            Loading profiles...
+                        </div>
+                    ) : error ? (
+                        <div className="text-center text-gray-400 py-10 font-medium">
+                            Error: {error.message}
+                        </div>
+                    ) : !Array.isArray(userList) || userList.length === 0 ? (
                         <div className="text-center text-gray-400 py-10 font-medium">
                             No profiles found.
                         </div>
@@ -176,7 +166,9 @@ export default function Profiles({ details }) {
                                 key={user.id}
                                 className="bg-gradient-to-r from-gray-50 via-white to-gray-100 rounded-lg shadow hover:shadow-md transition p-3 border border-gray-100"
                             >
-                                <User user={user} details={details} />
+
+                                <User user={user} details={details} refetchRow={() => setRefreshToken(Date.now())} />
+                                    
                             </div>
                         ))
                     )}

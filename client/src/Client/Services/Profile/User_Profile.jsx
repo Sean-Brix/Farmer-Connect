@@ -5,7 +5,6 @@ import Navbar from '../../Components/Navbar';
 // LOADING-ERROR UI/UX
 import User_Profile_Loading from './Loading/User_Profile_Details';
 import User_Profile_Error from './Error/User_Profile_Details';
-import UserProfile_UpdateError from './Error/User_Profile_Update';
 import UserProfile_UpdateLoading from './Loading/User_Profile_Update';
 
 export default function Account() {
@@ -112,12 +111,6 @@ export default function Account() {
         catch (error) {
             console.log(error);
         }
-    };
-
-    const handleDelete = () => {
-        setShowDeleteModal(false);
-        // Add delete logic here
-        alert('Account deleted!');
     };
 
     // Profile Details

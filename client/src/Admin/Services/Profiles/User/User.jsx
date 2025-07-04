@@ -1,27 +1,28 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-// ASSETS
-import default_picture from '../../../../Assets/default_picture.png';
-
-// SUB Component
 import User_Details from './User_Details';
 
-export default function User({ user, details }) {
+export default function User({ user, details, refetchRow }) {
+    const queryClient = useQueryClient();
     const [isExpanded, setIsExpanded] = useState(false);
-    const [account, setAccount] = useState(user);
     const [editBtn, setEditBtn] = useState(false);
-    const [rowUpdate, setRowUpdate] = useState(user);
+    const userId = user.id;
 
+    const { data: account, refetch } = useQuery({
+        queryKey: ['account', userId],
+        queryFn: async () => {
+            return {
+                ...user,
+                picture: `/api/account/all/picture/${userId}?refresh=${new Date().getTime()}`,
+            };
+        },
+        initialData: user,
+    });
     useEffect(() => {
-        setAccount({ ...account, picture: `/api/account/all/picture/${user.id}?refresh=${new Date().getTime()}` });
-    }, []);
+        refetch();
+    }, [userId, refetch]);
 
-    useEffect(()=>{
-        setIsExpanded(false);
-    }, [rowUpdate])
-
-    // Modal component
     const Modal = ({ open, onClose, children }) => {
         if (!open) return null;
         return (
@@ -60,39 +61,43 @@ export default function User({ user, details }) {
 
     return (
         <div className="flex flex-col items-center w-full px-2">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full max-w-4xl bg-white rounded-xl shadow p-3 sm:p-6 gap-4 transition-all duration-200"
-                style={{ minWidth: 0 }}>
+            <div
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full max-w-4xl bg-white rounded-xl shadow p-3 sm:p-6 gap-4 transition-all duration-200"
+                style={{ minWidth: 0 }}
+            >
                 <div className="flex flex-col sm:flex-row items-center gap-4 flex-1 min-w-0 w-full">
                     <img
-                        src={account.picture}
-                        alt={`${rowUpdate.username}'s profile`}
+                        src={account?.picture}
+                        alt={`${account?.username}'s profile`}
                         className="w-16 h-16 rounded-full object-cover border-2 border-blue-400 flex-shrink-0"
                     />
 
                     <div className="flex flex-col min-w-0 w-full">
                         {/* FULLNAME */}
                         <h3 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">
-                            {rowUpdate.firstname} {rowUpdate.lastname}
+                            {account?.firstname} {account?.lastname}
                         </h3>
 
                         {/* EMAIL */}
                         <p className="truncate text-sm sm:text-base">
-                            Email: {rowUpdate.email}
+                            Email: {account?.email}
                         </p>
 
                         {/* USERNAME */}
-                        <p className="text-gray-500 truncate text-sm sm:text-base">Username: {rowUpdate.username}</p>
+                        <p className="text-gray-500 truncate text-sm sm:text-base">
+                            Username: {account?.username}
+                        </p>
 
                         <p
                             className={`font-semibold text-center py-1 px-2 rounded-full text-xs sm:text-sm w-fit ${
-                                rowUpdate.access === 'Super Admin'
+                                account?.access === 'Super Admin'
                                     ? 'bg-red-500 text-white'
-                                    : rowUpdate.access === 'Admin'
+                                    : account?.access === 'Admin'
                                     ? 'bg-green-500 text-white'
                                     : 'bg-blue-400 text-white'
                             }`}
                         >
-                            {rowUpdate.access}
+                            {account?.access}
                         </p>
                     </div>
                 </div>
@@ -146,7 +151,11 @@ export default function User({ user, details }) {
                 </h2>
 
                 <div className="mb-4">
-                    <User_Details user={account} isEdit={editBtn} setRowUpdate={setRowUpdate}/>
+                    <User_Details
+                        user={account}
+                        isEdit={editBtn}
+                        refetchRow={refetchRow}
+                    />
                 </div>
             </Modal>
         </div>
