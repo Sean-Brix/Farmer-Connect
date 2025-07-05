@@ -62,6 +62,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
 
             return response.json();
         },
+
         onSuccess: (_, __, ___) => {
 
             queryClient.invalidateQueries(['userDetails', user.id]);
@@ -76,6 +77,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
 
             setIsEditing(false);
         },
+        
         onError: (error) => {
             alert(error.message);
             setIsEditing(false);

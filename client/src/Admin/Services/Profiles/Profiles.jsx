@@ -16,12 +16,13 @@ export default function Profiles({ details }) {
         queryKey: ['accounts', filter, refreshToken],
         queryFn: async () => {
             const queryString = Object.entries(filter)
+                .filter(([key, value]) => value !== 'none' && value !== '')
                 .map(([key, value]) => `${key}=${value}`)
                 .join('&');
 
             const url = `/api/account/all?${queryString}`;
 
-            if (filter.search === 'none') {
+            if (Object.values(filter).every((value) => value === 'none')) {
                 const response = await fetch('/api/account/all');
                 if (!response.ok) {
                     console.log(await response.text());
@@ -154,7 +155,7 @@ export default function Profiles({ details }) {
                         </div>
                     ) : error ? (
                         <div className="text-center text-gray-400 py-10 font-medium">
-                            Error: {error.message}
+                            {error.message}
                         </div>
                     ) : !Array.isArray(userList) || userList.length === 0 ? (
                         <div className="text-center text-gray-400 py-10 font-medium">
@@ -166,9 +167,13 @@ export default function Profiles({ details }) {
                                 key={user.id}
                                 className="bg-gradient-to-r from-gray-50 via-white to-gray-100 rounded-lg shadow hover:shadow-md transition p-3 border border-gray-100"
                             >
-
-                                <User user={user} details={details} refetchRow={() => setRefreshToken(Date.now())} />
-                                    
+                                <User
+                                    user={user}
+                                    details={details}
+                                    refetchRow={() =>
+                                        setRefreshToken(Date.now())
+                                    }
+                                />
                             </div>
                         ))
                     )}
