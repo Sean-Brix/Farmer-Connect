@@ -19,6 +19,7 @@ export default function User({ user, details, refetchRow }) {
         },
         initialData: user,
     });
+    
     useEffect(() => {
         refetch();
     }, [userId, refetch]);
@@ -75,7 +76,7 @@ export default function User({ user, details, refetchRow }) {
                     <div className="flex flex-col min-w-0 w-full">
                         {/* FULLNAME */}
                         <h3 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">
-                            {account?.firstname} {account?.lastname}
+                            {account?.firstName} {account?.lastName}
                         </h3>
 
                         {/* EMAIL */}
