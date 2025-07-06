@@ -16,14 +16,10 @@ export default function Seminar({ admin_navigate }) {
     useEffect(() => {
         (async () => {
             // Data
-            const response = await fetch(`/api/Seminars/getSeminars`);
+            const response = await fetch(`/api/seminar/all`);
             const data = await response.json();
 
-            // Fetch and set image URLs for each seminar
-            const updatedProgramList = await fetchAndSetImageUrls(
-                data.payload.seminars
-            );
-            setProgramList(updatedProgramList);
+            setProgramList(data.list);
         })();
     }, []);
 
@@ -32,18 +28,8 @@ export default function Seminar({ admin_navigate }) {
         return Promise.all(
             seminars.map(async (item) => {
                 try {
-                    const imageFetch = await fetch(
-                        `/api/seminars/getPhoto?id=${item.id}`
-                    );
+                    return { ...item, photo: default_seminar_pic };
 
-                    if (imageFetch.status == 204) {
-                        // Don't log errors for missing images
-                        return { ...item, photo: default_seminar_pic };
-                    } else {
-                        const blob = await imageFetch.blob();
-                        const picture = URL.createObjectURL(blob);
-                        return { ...item, photo: picture };
-                    }
                 } catch (error) {
                     console.error(
                         `Error fetching image for seminar ${item.id}:`,
@@ -301,7 +287,7 @@ export default function Seminar({ admin_navigate }) {
                             )}
                             <div className="relative">
                                 <img
-                                    src={item.photo}
+                                    src={default_seminar_pic}
                                     alt={item.title}
                                     className="w-full h-40 sm:h-48 object-cover transition-all duration-300 group-hover:scale-105"
                                 />
