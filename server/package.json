@@ -20,7 +20,8 @@
     "devDependencies": {
         "@faker-js/faker": "^9.8.0",
         "nodemon": "^3.1.10",
-        "prisma": "^6.11.1"
+        "prisma": "^6.11.1",
+        "sharp": "^0.34.2"
     },
     "scripts": {
         "start": "node server.js",

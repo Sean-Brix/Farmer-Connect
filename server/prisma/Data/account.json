@@ -144,7 +144,7 @@
         "institution": "Independent Consultant"
     },
     {
-        "access": "User",
+        "access": "Admin",
         "username": "william.green",
         "email": "william@example.com",
         "firstName": "William",

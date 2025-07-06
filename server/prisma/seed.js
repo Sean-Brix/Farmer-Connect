@@ -1,14 +1,22 @@
 import { PrismaClient } from './generated/client.js'
 import bcrypt from 'bcrypt'
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import sharp from 'sharp';
 
 const prisma = new PrismaClient()
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+
 
 //? ========================================= ACCOUNT ========================================= ?//
-
 import users from './Data/account.json' with { type: 'json' }
 
 async function createAccount() {
-  for (const user of users) {
+  for (let i = 0; i < users.length; i++) {
+    const user = users[i];
 
     // Check if username already exists
     const existingUser = await prisma.account.findUnique({
@@ -20,25 +28,72 @@ async function createAccount() {
 
     const hashedPassword = await bcrypt.hash("123456", 10)
 
-    await prisma.account.create({
-      data: {
-        username: user.username,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        password: hashedPassword,
-        access: user.access,
-        client_profile: user.client_profile,
-        middleName: user.middleName,
-        gender: user.gender,
-        cellphone_no: user.cellphone_no,
-        telephone_no: user.telephone_no,
-        occupation: user.occupation,
-        institution: user.institution,
-        position: user.position,
-        address: user.address
+    let picture = null;
+    let mimeType = null;
+    let imageName = null;
+    let imagePath = null;
+
+    if (i < 13) {
+      const imageIndex = i + 1;
+      imageName = `sample${imageIndex}`;
+
+      if (imageIndex === 2) {
+        imageName += '.jpeg';
+        mimeType = 'image/jpeg';
+      } else if (imageIndex === 3) {
+        imageName += '.png';
+        mimeType = 'image/png';
+      } else {
+        imageName += '.jpg';
+        mimeType = 'image/jpeg';
       }
-    })
+
+      try {
+
+        imagePath = path.join(__dirname, '/Data/images', imageName);
+        
+        if (imagePath) {
+          picture = await sharp(imagePath).resize(300).jpeg({ quality: 80 }).toBuffer();
+        }
+
+      }
+      catch (error) {
+        console.error(`Error reading image ${imageName}:`, error);
+        picture = null;
+        mimeType = null;
+      }
+    }
+
+    try{
+
+      await prisma.account.create({
+        data: {
+          username: user.username,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          password: hashedPassword,
+          access: user.access,
+          client_profile: user.client_profile,
+          middleName: user.middleName,
+          gender: user.gender,
+          cellphone_no: user.cellphone_no,
+          telephone_no: user.telephone_no,
+          occupation: user.occupation,
+          institution: user.institution,
+          position: user.position,
+          address: user.address,
+          picture: picture,
+          mimeType: mimeType,
+        }
+      })
+
+      await wait(100);
+
+    }
+    catch(error){
+      console.log(error);
+    }
   }
 }
 
