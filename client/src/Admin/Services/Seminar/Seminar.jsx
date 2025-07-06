@@ -19,7 +19,12 @@ export default function Seminar({ admin_navigate }) {
             const response = await fetch(`/api/seminar/all`);
             const data = await response.json();
 
-            setProgramList(data.list);
+            const updatedDataList = data.list.map(item => ({
+                ...item,
+                photo: `/api/seminar/picture/${item.id}`
+            }));
+
+            setProgramList(updatedDataList);
         })();
     }, []);
 
@@ -288,7 +293,7 @@ export default function Seminar({ admin_navigate }) {
                             )}
                             <div className="relative">
                                 <img
-                                    src={default_seminar_pic}
+                                    src={item.photo}
                                     alt={item.title}
                                     className="w-full h-40 sm:h-48 object-cover transition-all duration-300 group-hover:scale-105"
                                 />
