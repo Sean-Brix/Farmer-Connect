@@ -30,7 +30,8 @@ export default function Seminar({ admin_navigate }) {
                 try {
                     return { ...item, photo: default_seminar_pic };
 
-                } catch (error) {
+                } 
+                catch (error) {
                     console.error(
                         `Error fetching image for seminar ${item.id}:`,
                         error

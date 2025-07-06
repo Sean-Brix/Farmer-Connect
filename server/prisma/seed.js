@@ -50,7 +50,7 @@ async function createAccount() {
 
       try {
 
-        imagePath = path.join(__dirname, '/Data/images', imageName);
+        imagePath = path.join(__dirname, '/Data/images/Accounts', imageName);
         
         if (imagePath) {
           picture = await sharp(imagePath).resize(300).jpeg({ quality: 80 }).toBuffer();
