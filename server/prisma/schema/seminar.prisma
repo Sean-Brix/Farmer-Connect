@@ -13,7 +13,8 @@ model Seminar {
     capacity              Int
     registration_deadline DateTime
     status                seminar_status @default(Upcoming)
-    photo                 String?
+    picture               Bytes?
+    mimeType              String?
     createdAt             DateTime       @default(now())
     updatedAt             DateTime       @updatedAt
 
@@ -38,7 +39,6 @@ model SeminarParticipant {
     @@unique([seminar_id, account_id])
     @@map("seminar_participants")
 }
-
 
 //? ========================================== ENUMS ========================================== ?//
 

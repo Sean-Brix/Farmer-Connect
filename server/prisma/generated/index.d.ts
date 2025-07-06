@@ -7691,7 +7691,8 @@ export namespace Prisma {
     capacity: number | null
     registration_deadline: Date | null
     status: $Enums.seminar_status | null
-    photo: string | null
+    picture: Uint8Array | null
+    mimeType: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7709,7 +7710,8 @@ export namespace Prisma {
     capacity: number | null
     registration_deadline: Date | null
     status: $Enums.seminar_status | null
-    photo: string | null
+    picture: Uint8Array | null
+    mimeType: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7727,7 +7729,8 @@ export namespace Prisma {
     capacity: number
     registration_deadline: number
     status: number
-    photo: number
+    picture: number
+    mimeType: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7755,7 +7758,8 @@ export namespace Prisma {
     capacity?: true
     registration_deadline?: true
     status?: true
-    photo?: true
+    picture?: true
+    mimeType?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7773,7 +7777,8 @@ export namespace Prisma {
     capacity?: true
     registration_deadline?: true
     status?: true
-    photo?: true
+    picture?: true
+    mimeType?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7791,7 +7796,8 @@ export namespace Prisma {
     capacity?: true
     registration_deadline?: true
     status?: true
-    photo?: true
+    picture?: true
+    mimeType?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7896,7 +7902,8 @@ export namespace Prisma {
     capacity: number
     registration_deadline: Date
     status: $Enums.seminar_status
-    photo: string | null
+    picture: Uint8Array | null
+    mimeType: string | null
     createdAt: Date
     updatedAt: Date
     _count: SeminarCountAggregateOutputType | null
@@ -7933,7 +7940,8 @@ export namespace Prisma {
     capacity?: boolean
     registration_deadline?: boolean
     status?: boolean
-    photo?: boolean
+    picture?: boolean
+    mimeType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     participants?: boolean | Seminar$participantsArgs<ExtArgs>
@@ -7955,12 +7963,13 @@ export namespace Prisma {
     capacity?: boolean
     registration_deadline?: boolean
     status?: boolean
-    photo?: boolean
+    picture?: boolean
+    mimeType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SeminarOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "speaker" | "start_date" | "end_date" | "start_time" | "end_time" | "capacity" | "registration_deadline" | "status" | "photo" | "createdAt" | "updatedAt", ExtArgs["result"]["seminar"]>
+  export type SeminarOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "speaker" | "start_date" | "end_date" | "start_time" | "end_time" | "capacity" | "registration_deadline" | "status" | "picture" | "mimeType" | "createdAt" | "updatedAt", ExtArgs["result"]["seminar"]>
   export type SeminarInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     participants?: boolean | Seminar$participantsArgs<ExtArgs>
     _count?: boolean | SeminarCountOutputTypeDefaultArgs<ExtArgs>
@@ -7984,7 +7993,8 @@ export namespace Prisma {
       capacity: number
       registration_deadline: Date
       status: $Enums.seminar_status
-      photo: string | null
+      picture: Uint8Array | null
+      mimeType: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["seminar"]>
@@ -8369,7 +8379,8 @@ export namespace Prisma {
     readonly capacity: FieldRef<"Seminar", 'Int'>
     readonly registration_deadline: FieldRef<"Seminar", 'DateTime'>
     readonly status: FieldRef<"Seminar", 'seminar_status'>
-    readonly photo: FieldRef<"Seminar", 'String'>
+    readonly picture: FieldRef<"Seminar", 'Bytes'>
+    readonly mimeType: FieldRef<"Seminar", 'String'>
     readonly createdAt: FieldRef<"Seminar", 'DateTime'>
     readonly updatedAt: FieldRef<"Seminar", 'DateTime'>
   }
@@ -9813,7 +9824,8 @@ export namespace Prisma {
     capacity: 'capacity',
     registration_deadline: 'registration_deadline',
     status: 'status',
-    photo: 'photo',
+    picture: 'picture',
+    mimeType: 'mimeType',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -9922,7 +9934,7 @@ export namespace Prisma {
     description: 'description',
     location: 'location',
     speaker: 'speaker',
-    photo: 'photo'
+    mimeType: 'mimeType'
   };
 
   export type SeminarOrderByRelevanceFieldEnum = (typeof SeminarOrderByRelevanceFieldEnum)[keyof typeof SeminarOrderByRelevanceFieldEnum]
@@ -10481,7 +10493,8 @@ export namespace Prisma {
     capacity?: IntFilter<"Seminar"> | number
     registration_deadline?: DateTimeFilter<"Seminar"> | Date | string
     status?: Enumseminar_statusFilter<"Seminar"> | $Enums.seminar_status
-    photo?: StringNullableFilter<"Seminar"> | string | null
+    picture?: BytesNullableFilter<"Seminar"> | Uint8Array | null
+    mimeType?: StringNullableFilter<"Seminar"> | string | null
     createdAt?: DateTimeFilter<"Seminar"> | Date | string
     updatedAt?: DateTimeFilter<"Seminar"> | Date | string
     participants?: SeminarParticipantListRelationFilter
@@ -10500,7 +10513,8 @@ export namespace Prisma {
     capacity?: SortOrder
     registration_deadline?: SortOrder
     status?: SortOrder
-    photo?: SortOrderInput | SortOrder
+    picture?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     participants?: SeminarParticipantOrderByRelationAggregateInput
@@ -10523,7 +10537,8 @@ export namespace Prisma {
     capacity?: IntFilter<"Seminar"> | number
     registration_deadline?: DateTimeFilter<"Seminar"> | Date | string
     status?: Enumseminar_statusFilter<"Seminar"> | $Enums.seminar_status
-    photo?: StringNullableFilter<"Seminar"> | string | null
+    picture?: BytesNullableFilter<"Seminar"> | Uint8Array | null
+    mimeType?: StringNullableFilter<"Seminar"> | string | null
     createdAt?: DateTimeFilter<"Seminar"> | Date | string
     updatedAt?: DateTimeFilter<"Seminar"> | Date | string
     participants?: SeminarParticipantListRelationFilter
@@ -10542,7 +10557,8 @@ export namespace Prisma {
     capacity?: SortOrder
     registration_deadline?: SortOrder
     status?: SortOrder
-    photo?: SortOrderInput | SortOrder
+    picture?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: SeminarCountOrderByAggregateInput
@@ -10568,7 +10584,8 @@ export namespace Prisma {
     capacity?: IntWithAggregatesFilter<"Seminar"> | number
     registration_deadline?: DateTimeWithAggregatesFilter<"Seminar"> | Date | string
     status?: Enumseminar_statusWithAggregatesFilter<"Seminar"> | $Enums.seminar_status
-    photo?: StringNullableWithAggregatesFilter<"Seminar"> | string | null
+    picture?: BytesNullableWithAggregatesFilter<"Seminar"> | Uint8Array | null
+    mimeType?: StringNullableWithAggregatesFilter<"Seminar"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Seminar"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Seminar"> | Date | string
   }
@@ -11136,7 +11153,8 @@ export namespace Prisma {
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
-    photo?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: SeminarParticipantCreateNestedManyWithoutSeminarInput
@@ -11155,7 +11173,8 @@ export namespace Prisma {
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
-    photo?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: SeminarParticipantUncheckedCreateNestedManyWithoutSeminarInput
@@ -11174,7 +11193,8 @@ export namespace Prisma {
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: SeminarParticipantUpdateManyWithoutSeminarNestedInput
@@ -11193,7 +11213,8 @@ export namespace Prisma {
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: SeminarParticipantUncheckedUpdateManyWithoutSeminarNestedInput
@@ -11212,7 +11233,8 @@ export namespace Prisma {
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
-    photo?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11230,7 +11252,8 @@ export namespace Prisma {
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11248,7 +11271,8 @@ export namespace Prisma {
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11858,7 +11882,8 @@ export namespace Prisma {
     capacity?: SortOrder
     registration_deadline?: SortOrder
     status?: SortOrder
-    photo?: SortOrder
+    picture?: SortOrder
+    mimeType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -11880,7 +11905,8 @@ export namespace Prisma {
     capacity?: SortOrder
     registration_deadline?: SortOrder
     status?: SortOrder
-    photo?: SortOrder
+    picture?: SortOrder
+    mimeType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -11898,7 +11924,8 @@ export namespace Prisma {
     capacity?: SortOrder
     registration_deadline?: SortOrder
     status?: SortOrder
-    photo?: SortOrder
+    picture?: SortOrder
+    mimeType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13198,7 +13225,8 @@ export namespace Prisma {
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
-    photo?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13216,7 +13244,8 @@ export namespace Prisma {
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
-    photo?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13303,7 +13332,8 @@ export namespace Prisma {
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13321,7 +13351,8 @@ export namespace Prisma {
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

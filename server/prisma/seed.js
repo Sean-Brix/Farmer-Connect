@@ -168,7 +168,38 @@ async function createAccountCommodities() {
 
 import seminarsData from './Data/seminars.json' with { type: 'json' }
 async function createSeminars() {
-  for (const seminar of seminarsData) {
+  for (let i = 0; i < seminarsData.length; i++) {
+    const seminar = seminarsData[i];
+
+    let picture = null;
+    let mimeType = null;
+    let imageName = null;
+    let imagePath = null;
+
+    if (i < 19) {
+      const imageIndex = i + 1;
+      imageName = `sample${imageIndex}`;
+
+      if (imageIndex === 19) {
+        imageName += '.png';
+        mimeType = 'image/png';
+      } 
+      else {
+        imageName += '.jpg';
+        mimeType = 'image/jpeg';
+      }
+      try {
+        imagePath = path.join(__dirname, '/Data/images/seminars', imageName);
+        if (imagePath) {
+          picture = await sharp(imagePath).resize(300).jpeg({ quality: 80 }).toBuffer();
+        }
+      } catch (error) {
+        console.error(`Error reading image ${imageName}:`, error);
+        picture = null;
+        mimeType = null;
+      }
+    }
+
     await prisma.seminar.create({
       data: {
         title: seminar.title,
@@ -182,7 +213,8 @@ async function createSeminars() {
         capacity: seminar.capacity,
         registration_deadline: new Date(seminar.registration_deadline),
         status: seminar.status,
-        photo: seminar.photo,
+        picture: picture,
+        mimeType: mimeType,
       },
     });
   }
