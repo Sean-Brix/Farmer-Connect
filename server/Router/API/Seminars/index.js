@@ -9,6 +9,9 @@ router.use('/details', details);
 import picture from './picture.js';
 router.use('/picture', picture);
 
+import participants from './participants.js';
+router.use('/participants', participants);
+
 import all from './all.js';
 router.use('/all', all);
 

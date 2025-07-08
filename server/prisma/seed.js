@@ -215,46 +215,68 @@ async function createSeminars() {
         status: seminar.status,
         picture: picture,
         mimeType: mimeType,
+        createdAt: seminar.createdAt
       },
     });
   }
 }
 
 //? ================================= SEMINAR PARTICIPANTS ================================= ?//
-
 async function createSeminarParticipants() {
-    const seminars = await prisma.seminar.findMany();
-    const accounts = await prisma.account.findMany();
+  const seminars = await prisma.seminar.findMany();
+  const accounts = await prisma.account.findMany();
 
-    for (const seminar of seminars) {
-        // Randomly determine how many accounts will participate in this seminar
-        const numberOfParticipants = Math.floor(Math.random() * accounts.length);
+  for (const seminar of seminars) {
+    const now = new Date();
 
-        // Shuffle the accounts array to pick participants randomly
-        const shuffledAccounts = [...accounts].sort(() => Math.random() - 0.5);
+    // Randomly determine how many accounts will participate in this seminar
+    const numberOfParticipants = Math.floor(Math.random() * accounts.length);
 
-        // Assign the randomly selected accounts to the seminar
-        for (let i = 0; i < numberOfParticipants; i++) {
-            const account = shuffledAccounts[i];
-            // Check if this (seminar_id, account_id) pair already exists
-            const existing = await prisma.seminarParticipant.findUnique({
-                where: {
-                    seminar_id_account_id: {
-                        seminar_id: seminar.id,
-                        account_id: account.id,
-                    }
-                }
-            });
-            if (!existing) {
-                await prisma.seminarParticipant.create({
-                    data: {
-                        seminar_id: seminar.id,
-                        account_id: account.id,
-                    },
-                });
-            }
+    // Shuffle the accounts array to pick participants randomly
+    const shuffledAccounts = [...accounts].sort(() => Math.random() - 0.5);
+
+    // Assign the randomly selected accounts to the seminar
+    for (let i = 0; i < numberOfParticipants; i++) {
+      const account = shuffledAccounts[i];
+
+      // Check if this (seminar_id, account_id) pair already exists
+      const existing = await prisma.seminarParticipant.findUnique({
+        where: {
+          seminar_id_account_id: {
+            seminar_id: seminar.id,
+            account_id: account.id,
+          }
         }
+      });
+
+      if (!existing) {
+        // Optionally, simulate different registration times by slightly offsetting the creation date
+        const registrationTime = new Date(now.getTime() - Math.random() * (24 * 60 * 60 * 1000)); // Up to 24 hours ago
+
+        //Determine status based on seminar status
+        let participantStatus = 'Registered';
+        if(seminar.status === 'Ongoing'){
+          participantStatus = 'Registered'
+        }
+        else if(seminar.status == 'Cancelled'){
+          participantStatus = 'Cancelled'
+        }
+        else {
+          const attendanceOptions = ['Attended', 'Not_Attended', 'Cancelled'];
+          participantStatus = attendanceOptions[Math.floor(Math.random() * attendanceOptions.length)];
+        }
+
+        await prisma.seminarParticipant.create({
+          data: {
+              seminar_id: seminar.id,
+              account_id: account.id,
+              status: participantStatus,
+              createdAt: registrationTime,
+          },
+        });
+      }
     }
+  }
 }
 
 

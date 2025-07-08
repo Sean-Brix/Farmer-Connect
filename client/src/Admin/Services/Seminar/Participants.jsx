@@ -22,11 +22,16 @@ export default function Participants({ data, toggleOff }) {
 
     const fetchParticipants = async () => {
         try {
+
+            console.log(data);
+
             const response = await fetch(
-                `/api/seminars/getParticipants?seminar_id=${data.id}`
+                `/api/seminar/participants/${data.id}`
             );
+
             const users = await response.json();
-            const participantList = users.payload.list;
+            const participantList = users.list;
+
             setParticipants(participantList);
             updateCounts(participantList);
         } catch (error) {
@@ -139,13 +144,13 @@ export default function Participants({ data, toggleOff }) {
 
                 const filteredParticipants = allParticipants.filter(
                     (participant) =>
-                        participant.firstname
+                        participant.firstName
                             .toLowerCase()
                             .includes(searchTerm) ||
-                        participant.lastname
+                        participant.lastName
                             .toLowerCase()
                             .includes(searchTerm) ||
-                        participant.email_address
+                        participant.email
                             .toLowerCase()
                             .includes(searchTerm)
                 );
@@ -388,9 +393,6 @@ export default function Participants({ data, toggleOff }) {
                         <table className="min-w-full text-base text-left text-gray-700">
                             <thead className="text-xs uppercase bg-gradient-to-r from-blue-50 to-blue-100">
                                 <tr>
-                                    <th className="px-3 py-3 font-bold whitespace-nowrap">
-                                        ID
-                                    </th>
                                     <th className="px-4 py-3 font-bold whitespace-nowrap">
                                         Full Name
                                     </th>
@@ -429,18 +431,14 @@ export default function Participants({ data, toggleOff }) {
                                             key={index}
                                             className="bg-white border-b hover:bg-blue-50 transition"
                                         >
-                                            <th className="px-3 py-3 font-semibold text-blue-900 whitespace-nowrap">
-                                                {user.id}
-                                            </th>
                                             <td className="px-4 py-3 max-w-[120px] md:max-w-[220px] truncate">
                                                 <span className="font-bold text-blue-900 truncate block">
-                                                    {user.firstname}{' '}
-                                                    {user.lastname}
+                                                    {user.info.fullName}
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3 max-w-[140px] md:max-w-[260px] truncate">
                                                 <span className="text-blue-700 truncate block">
-                                                    {user.email_address}
+                                                    {user.info.email}
                                                 </span>
                                             </td>
                                             <td className="px-3 py-3">
@@ -456,9 +454,9 @@ export default function Participants({ data, toggleOff }) {
                                                               'Cancelled'
                                                             ? 'bg-red-100 text-red-800'
                                                             : user.status ===
-                                                              'No Show'
-                                                            ? 'bg-yellow-100 text-yellow-800'
-                                                            : 'bg-gray-100 text-gray-800'
+                                                              'Not Attended'
+                                                            ? 'bg-gray-100 text-gray-800'
+                                                            : 'bg-yellow-100 text-yellow-800'
                                                     }`}
                                                 >
                                                     {user.status || 'loading'}
@@ -466,7 +464,7 @@ export default function Participants({ data, toggleOff }) {
                                             </td>
                                             <td className="px-4 py-3 max-w-[100px] md:max-w-[180px] truncate">
                                                 <span className="text-gray-500 truncate block">
-                                                    {user.reg_date}
+                                                    {user.createdAt}
                                                 </span>
                                             </td>
                                             <td className="px-3 py-3">
