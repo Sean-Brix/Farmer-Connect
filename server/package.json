@@ -28,7 +28,7 @@
         "dev": "prisma migrate deploy && nodemon server.js",
         "setup": "prisma migrate deploy && node prisma/seed.js",
         "fill": "node prisma/seed.js",
-        "reset": "npx prisma migrate reset --force && (prisma generate && node prisma/seed.js) || echo 'Nothing to generate'",
+        "reset": "npx prisma migrate reset --force && (prisma generate || echo 'Nothing to generate')",
         "generate": "npx prisma generate --schema=prisma/schema/schema.prisma"
     },
     "prisma": {

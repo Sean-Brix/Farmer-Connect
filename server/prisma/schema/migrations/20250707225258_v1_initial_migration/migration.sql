@@ -13,8 +13,10 @@ CREATE TABLE `accounts` (
     `telephone_no` VARCHAR(191) NULL,
     `occupation` VARCHAR(191) NULL,
     `position` VARCHAR(191) NULL,
+    `institution` VARCHAR(191) NULL,
     `address` VARCHAR(191) NULL,
-    `picture` VARCHAR(191) NULL,
+    `picture` LONGBLOB NULL,
+    `mimeType` VARCHAR(191) NULL,
     `password` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -51,12 +53,10 @@ CREATE TABLE `accounts_commodities` (
 
 -- CreateTable
 CREATE TABLE `inventory_items` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
-    `status` ENUM('Available', 'Unavailable', 'Out of Stock', 'Damaged') NOT NULL DEFAULT 'Out of Stock',
     `categoryId` VARCHAR(191) NOT NULL,
-    `stock` INTEGER NOT NULL DEFAULT 0,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -78,6 +78,18 @@ CREATE TABLE `inventory_categories` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `item_stacks` (
+    `id` VARCHAR(191) NOT NULL,
+    `itemId` VARCHAR(191) NOT NULL,
+    `quantity` INTEGER NOT NULL DEFAULT 1,
+    `status` ENUM('Available', 'Unavailable', 'Lost', 'Damaged', 'Reserved', 'Borrowed', 'Distributed') NOT NULL DEFAULT 'Available',
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `seminars` (
     `id` VARCHAR(191) NOT NULL,
     `title` VARCHAR(191) NOT NULL,
@@ -91,7 +103,8 @@ CREATE TABLE `seminars` (
     `capacity` INTEGER NOT NULL,
     `registration_deadline` DATETIME(3) NOT NULL,
     `status` ENUM('Upcoming', 'Ongoing', 'Completed', 'Cancelled') NOT NULL DEFAULT 'Upcoming',
-    `photo` VARCHAR(191) NULL,
+    `picture` LONGBLOB NULL,
+    `mimeType` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -119,6 +132,9 @@ ALTER TABLE `accounts_commodities` ADD CONSTRAINT `accounts_commodities_account_
 
 -- AddForeignKey
 ALTER TABLE `inventory_items` ADD CONSTRAINT `inventory_items_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `inventory_categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `item_stacks` ADD CONSTRAINT `item_stacks_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `inventory_items`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `seminar_participants` ADD CONSTRAINT `seminar_participants_seminar_id_fkey` FOREIGN KEY (`seminar_id`) REFERENCES `seminars`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

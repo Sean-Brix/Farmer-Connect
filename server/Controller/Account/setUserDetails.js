@@ -1,4 +1,4 @@
-import { gender, PrismaClient } from '../../prisma/generated/client.js';
+import { PrismaClient } from '../../prisma/generated/client.js';
 const prisma = new PrismaClient();
 
 async function setUserDetails(req, res) {
