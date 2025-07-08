@@ -168,6 +168,14 @@ async function createAccountCommodities() {
 
 import seminarsData from './Data/seminars.json' with { type: 'json' }
 async function createSeminars() {
+  const adminAccounts = await prisma.account.findMany({
+    where: {
+      access: {
+        in: ['Admin', 'Super_Admin'],
+      },
+    },
+  });
+
   for (let i = 0; i < seminarsData.length; i++) {
     const seminar = seminarsData[i];
 
@@ -183,7 +191,7 @@ async function createSeminars() {
       if (imageIndex === 19) {
         imageName += '.png';
         mimeType = 'image/png';
-      } 
+      }
       else {
         imageName += '.jpg';
         mimeType = 'image/jpeg';
@@ -200,6 +208,10 @@ async function createSeminars() {
       }
     }
 
+    // Select a random admin/superadmin account
+    const randomIndex = Math.floor(Math.random() * adminAccounts.length);
+    const createdByAccountId = adminAccounts[randomIndex].id;
+
     await prisma.seminar.create({
       data: {
         title: seminar.title,
@@ -215,7 +227,8 @@ async function createSeminars() {
         status: seminar.status,
         picture: picture,
         mimeType: mimeType,
-        createdAt: seminar.createdAt
+        createdAt: new Date(seminar.createdAt),
+        createdById: createdByAccountId,
       },
     });
   }

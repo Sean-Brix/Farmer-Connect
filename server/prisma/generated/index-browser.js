@@ -202,6 +202,7 @@ exports.Prisma.SeminarScalarFieldEnum = {
   status: 'status',
   picture: 'picture',
   mimeType: 'mimeType',
+  createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -280,7 +281,8 @@ exports.Prisma.SeminarOrderByRelevanceFieldEnum = {
   description: 'description',
   location: 'location',
   speaker: 'speaker',
-  mimeType: 'mimeType'
+  mimeType: 'mimeType',
+  createdById: 'createdById'
 };
 
 exports.Prisma.SeminarParticipantOrderByRelevanceFieldEnum = {

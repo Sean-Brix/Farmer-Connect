@@ -34,7 +34,8 @@ export default function Participants({ data, toggleOff }) {
 
             setParticipants(participantList);
             updateCounts(participantList);
-        } catch (error) {
+        } 
+        catch (error) {
             console.error('Error fetching participants:', error);
         }
     };

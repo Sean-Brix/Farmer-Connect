@@ -3,49 +3,51 @@ const prisma = new PrismaClient();
 
 async function getAllSeminar(req, res) {
     try {
-        const filters = {
-            status: req.query.status,
-            order: req.query.order,
-            search: req.query.search,
-        };
-
+        const search = req.query.find || '';
+        const searchFilter = req.query.filter || 'Title';
+        let statusFilter = req.query.status || 'all';
         const where = {};
-        const orderBy = {};
+        const orderBy = [];
 
-        if (filters.status) {
-            const statuses = filters.status.split(',');
+        if (statusFilter !== 'all') {
+            const statuses = statusFilter.split(',');
             where.status = { in: statuses };
         }
 
-        if (filters.search) {
-            where.OR = [
-                { title: { contains: filters.search } },
-                { description: { contains: filters.search } },
-                { location: { contains: filters.search } },
-                { speaker: { contains: filters.search } },
-            ];
+        if (search) {
+            const searchTerm = search;
+            where.OR = [];
+
+            if (searchFilter === 'Title' || searchFilter === '') {
+                where.OR.push({
+                    title: { contains: searchTerm},
+                });
+            }
+            if (searchFilter === 'Speaker' || searchFilter === '') {
+                where.OR.push({
+                    speaker: { contains: searchTerm},
+                });
+            }
+            if (searchFilter === 'Location' || searchFilter === '') {
+                where.OR.push({
+                    location: { contains: searchTerm},
+                });
+            }
+
+            if (where.OR.length === 0) {
+                delete where.OR;
+            }
         }
 
-        if (filters.order) {
-            if (filters.order === 'Title') {
-                orderBy.title = 'asc';
-            } else if (filters.order === 'Location') {
-                orderBy.location = 'asc';
-            } else if (filters.order === 'Speaker') {
-                orderBy.speaker = 'asc';
-            } else if (filters.order === 'Start Date') {
-                orderBy.start_date = 'asc';
-            } else if (filters.order === 'End Date') {
-                orderBy.end_date = 'asc';
-            } else if (filters.order === 'Date Created') {
-            orderBy.createdAt = 'asc';
-            } else if (filters.order === 'Recently Updated') {
-                orderBy.updatedAt = 'desc';
+        if (statusFilter === 'all') {
+            orderBy.push({
+                status: 'asc',
+            });
         }
-        } 
-        else {
-            orderBy.createdAt = 'asc';
-        }
+
+        orderBy.push({
+            createdAt: 'asc',
+        });
 
         const seminars = await prisma.seminar.findMany({
             where: where,
@@ -55,6 +57,23 @@ async function getAllSeminar(req, res) {
                     select: { participants: true },
                 },
             },
+        });
+
+        const statusOrder = ['Upcoming', 'Ongoing', 'Completed', 'Cancelled'];
+
+        seminars.sort((a, b) => {
+            const aIndex = statusOrder.indexOf(a.status);
+            const bIndex = statusOrder.indexOf(b.status);
+
+            if (aIndex !== -1 && bIndex !== -1) {
+                return aIndex - bIndex;
+            } else if (aIndex !== -1) {
+                return -1;
+            } else if (bIndex !== -1) {
+                return 1;
+            } else {
+                return 0;
+            }
         });
 
         const seminarList = seminars.map((seminar) => ({
@@ -77,8 +96,7 @@ async function getAllSeminar(req, res) {
         }));
 
         return res.status(200).json({ list: seminarList });
-    } 
-    catch (error) {
+    } catch (error) {
         console.error('Error fetching seminars:', error);
         return res.status(500).json({
             message: 'An error occurred while fetching seminars',

@@ -9,7 +9,7 @@ import Edit_Seminar from './Edit_Seminar';
 import Participants from './Participants';
 import Add_Program from './Add_Program';
 
-export default function Seminar({ admin_navigate }) {
+export default function Seminar(){
     const [programList, setProgramList] = useState([]);
 
     // Initial Render
@@ -28,25 +28,6 @@ export default function Seminar({ admin_navigate }) {
         })();
     }, []);
 
-    // Helper function to fetch and set image URLs
-    const fetchAndSetImageUrls = async (seminars) => {
-        return Promise.all(
-            seminars.map(async (item) => {
-                try {
-                    return { ...item, photo: default_seminar_pic };
-
-                } 
-                catch (error) {
-                    console.error(
-                        `Error fetching image for seminar ${item.id}:`,
-                        error
-                    );
-                    return { ...item, photo: default_seminar_pic }; // Fallback in case of error
-                }
-            })
-        );
-    };
-
     // Adding New Seminar
     const [showAdd, setShowAdd] = useState(false);
     
@@ -63,13 +44,13 @@ export default function Seminar({ admin_navigate }) {
     // Search Function
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
-    const [searchFilter, setSearchFilter] = useState('all');
+    const [searchFilter, setSearchFilter] = useState('Title');
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(async () => {
             try {
                 const response = await fetch(
-                    `/api/Seminars/searchSeminar?find=${search}&filter=${searchFilter}&status=${statusFilter}`
+                    `/api/seminar/all?find=${search}&filter=${searchFilter}&status=${statusFilter}`
                 );
                 const data = await response.json();
 
@@ -77,12 +58,17 @@ export default function Seminar({ admin_navigate }) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const updatedProgramList = await fetchAndSetImageUrls(data);
+                const updatedProgramList = data.list.map(item => ({
+                    ...item,
+                    photo: `/api/seminar/picture/${item.id}`
+                }));
+
                 setProgramList(updatedProgramList);
-            } catch (error) {
+            } 
+            catch (error) {
                 console.error('Could not fetch seminars:', error);
             }
-        }, 500); // Delay of 500 milliseconds
+        }, 500);
 
         return () => clearTimeout(delayDebounceFn);
     }, [search, searchFilter, statusFilter]);
@@ -166,6 +152,45 @@ export default function Seminar({ admin_navigate }) {
                     </svg>
                     Seminars & Programs
                 </span>
+                {/* Search and Filter */}
+                <div className="flex flex-col md:flex-row items-center gap-2 w-full md:w-auto">
+                    <div className="relative w-full md:w-auto">
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </div>
+                        <input
+                            type="search"
+                            placeholder="Search..."
+                            className="block w-full md:w-64 p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-md bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
+                    <select
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full md:w-auto p-2"
+                        value={searchFilter}
+                        onChange={(e) => setSearchFilter(e.target.value)}
+                    >
+                        <option value="title">Title</option>
+                        <option value="speaker">Speaker</option>
+                        <option value="location">Location</option>
+                    </select>
+
+                    <select
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full md:w-auto p-2"
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                        <option value="all">All Statuses</option>
+                        <option value="Upcoming">Upcoming</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+
                 {/* Button group */}
                 <div className="flex gap-2 flex-wrap w-full md:w-auto justify-center md:justify-end">
                     {selectMode && (
@@ -222,9 +247,9 @@ export default function Seminar({ admin_navigate }) {
 
             {/* Add Program Modal */}
             {showAdd && (
-                <Add_Program 
-                    programList = {programList} 
-                    setProgramList = {setProgramList} 
+                <Add_Program
+                    programList = {programList}
+                    setProgramList = {setProgramList}
                     fetchAndSetImageUrls = {fetchAndSetImageUrls}
                     setShowAdd = {setShowAdd}
                 />

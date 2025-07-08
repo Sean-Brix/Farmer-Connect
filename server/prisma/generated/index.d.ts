@@ -1540,11 +1540,13 @@ export namespace Prisma {
   export type AccountCountOutputType = {
     commodity: number
     seminars: number
+    seminarsCreated: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     commodity?: boolean | AccountCountOutputTypeCountCommodityArgs
     seminars?: boolean | AccountCountOutputTypeCountSeminarsArgs
+    seminarsCreated?: boolean | AccountCountOutputTypeCountSeminarsCreatedArgs
   }
 
   // Custom InputTypes
@@ -1570,6 +1572,13 @@ export namespace Prisma {
    */
   export type AccountCountOutputTypeCountSeminarsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SeminarParticipantWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountSeminarsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SeminarWhereInput
   }
 
 
@@ -1987,6 +1996,7 @@ export namespace Prisma {
     updatedAt?: boolean
     commodity?: boolean | Account$commodityArgs<ExtArgs>
     seminars?: boolean | Account$seminarsArgs<ExtArgs>
+    seminarsCreated?: boolean | Account$seminarsCreatedArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -2019,6 +2029,7 @@ export namespace Prisma {
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     commodity?: boolean | Account$commodityArgs<ExtArgs>
     seminars?: boolean | Account$seminarsArgs<ExtArgs>
+    seminarsCreated?: boolean | Account$seminarsCreatedArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -2027,6 +2038,7 @@ export namespace Prisma {
     objects: {
       commodity: Prisma.$AccountCommodityPayload<ExtArgs>[]
       seminars: Prisma.$SeminarParticipantPayload<ExtArgs>[]
+      seminarsCreated: Prisma.$SeminarPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2391,6 +2403,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     commodity<T extends Account$commodityArgs<ExtArgs> = {}>(args?: Subset<T, Account$commodityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     seminars<T extends Account$seminarsArgs<ExtArgs> = {}>(args?: Subset<T, Account$seminarsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeminarParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    seminarsCreated<T extends Account$seminarsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, Account$seminarsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeminarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2828,6 +2841,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SeminarParticipantScalarFieldEnum | SeminarParticipantScalarFieldEnum[]
+  }
+
+  /**
+   * Account.seminarsCreated
+   */
+  export type Account$seminarsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Seminar
+     */
+    select?: SeminarSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Seminar
+     */
+    omit?: SeminarOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SeminarInclude<ExtArgs> | null
+    where?: SeminarWhereInput
+    orderBy?: SeminarOrderByWithRelationInput | SeminarOrderByWithRelationInput[]
+    cursor?: SeminarWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SeminarScalarFieldEnum | SeminarScalarFieldEnum[]
   }
 
   /**
@@ -7693,6 +7730,7 @@ export namespace Prisma {
     status: $Enums.seminar_status | null
     picture: Uint8Array | null
     mimeType: string | null
+    createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7712,6 +7750,7 @@ export namespace Prisma {
     status: $Enums.seminar_status | null
     picture: Uint8Array | null
     mimeType: string | null
+    createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7731,6 +7770,7 @@ export namespace Prisma {
     status: number
     picture: number
     mimeType: number
+    createdById: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7760,6 +7800,7 @@ export namespace Prisma {
     status?: true
     picture?: true
     mimeType?: true
+    createdById?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7779,6 +7820,7 @@ export namespace Prisma {
     status?: true
     picture?: true
     mimeType?: true
+    createdById?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7798,6 +7840,7 @@ export namespace Prisma {
     status?: true
     picture?: true
     mimeType?: true
+    createdById?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7904,6 +7947,7 @@ export namespace Prisma {
     status: $Enums.seminar_status
     picture: Uint8Array | null
     mimeType: string | null
+    createdById: string
     createdAt: Date
     updatedAt: Date
     _count: SeminarCountAggregateOutputType | null
@@ -7942,9 +7986,11 @@ export namespace Prisma {
     status?: boolean
     picture?: boolean
     mimeType?: boolean
+    createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     participants?: boolean | Seminar$participantsArgs<ExtArgs>
+    creator?: boolean | AccountDefaultArgs<ExtArgs>
     _count?: boolean | SeminarCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["seminar"]>
 
@@ -7965,13 +8011,15 @@ export namespace Prisma {
     status?: boolean
     picture?: boolean
     mimeType?: boolean
+    createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SeminarOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "speaker" | "start_date" | "end_date" | "start_time" | "end_time" | "capacity" | "registration_deadline" | "status" | "picture" | "mimeType" | "createdAt" | "updatedAt", ExtArgs["result"]["seminar"]>
+  export type SeminarOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "speaker" | "start_date" | "end_date" | "start_time" | "end_time" | "capacity" | "registration_deadline" | "status" | "picture" | "mimeType" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["seminar"]>
   export type SeminarInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     participants?: boolean | Seminar$participantsArgs<ExtArgs>
+    creator?: boolean | AccountDefaultArgs<ExtArgs>
     _count?: boolean | SeminarCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -7979,6 +8027,7 @@ export namespace Prisma {
     name: "Seminar"
     objects: {
       participants: Prisma.$SeminarParticipantPayload<ExtArgs>[]
+      creator: Prisma.$AccountPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7995,6 +8044,7 @@ export namespace Prisma {
       status: $Enums.seminar_status
       picture: Uint8Array | null
       mimeType: string | null
+      createdById: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["seminar"]>
@@ -8338,6 +8388,7 @@ export namespace Prisma {
   export interface Prisma__SeminarClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     participants<T extends Seminar$participantsArgs<ExtArgs> = {}>(args?: Subset<T, Seminar$participantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeminarParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    creator<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8381,6 +8432,7 @@ export namespace Prisma {
     readonly status: FieldRef<"Seminar", 'seminar_status'>
     readonly picture: FieldRef<"Seminar", 'Bytes'>
     readonly mimeType: FieldRef<"Seminar", 'String'>
+    readonly createdById: FieldRef<"Seminar", 'String'>
     readonly createdAt: FieldRef<"Seminar", 'DateTime'>
     readonly updatedAt: FieldRef<"Seminar", 'DateTime'>
   }
@@ -9826,6 +9878,7 @@ export namespace Prisma {
     status: 'status',
     picture: 'picture',
     mimeType: 'mimeType',
+    createdById: 'createdById',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -9934,7 +9987,8 @@ export namespace Prisma {
     description: 'description',
     location: 'location',
     speaker: 'speaker',
-    mimeType: 'mimeType'
+    mimeType: 'mimeType',
+    createdById: 'createdById'
   };
 
   export type SeminarOrderByRelevanceFieldEnum = (typeof SeminarOrderByRelevanceFieldEnum)[keyof typeof SeminarOrderByRelevanceFieldEnum]
@@ -10060,6 +10114,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Account"> | Date | string
     commodity?: AccountCommodityListRelationFilter
     seminars?: SeminarParticipantListRelationFilter
+    seminarsCreated?: SeminarListRelationFilter
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -10085,6 +10140,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     commodity?: AccountCommodityOrderByRelationAggregateInput
     seminars?: SeminarParticipantOrderByRelationAggregateInput
+    seminarsCreated?: SeminarOrderByRelationAggregateInput
     _relevance?: AccountOrderByRelevanceInput
   }
 
@@ -10114,6 +10170,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Account"> | Date | string
     commodity?: AccountCommodityListRelationFilter
     seminars?: SeminarParticipantListRelationFilter
+    seminarsCreated?: SeminarListRelationFilter
   }, "id" | "username" | "email">
 
   export type AccountOrderByWithAggregationInput = {
@@ -10495,9 +10552,11 @@ export namespace Prisma {
     status?: Enumseminar_statusFilter<"Seminar"> | $Enums.seminar_status
     picture?: BytesNullableFilter<"Seminar"> | Uint8Array | null
     mimeType?: StringNullableFilter<"Seminar"> | string | null
+    createdById?: StringFilter<"Seminar"> | string
     createdAt?: DateTimeFilter<"Seminar"> | Date | string
     updatedAt?: DateTimeFilter<"Seminar"> | Date | string
     participants?: SeminarParticipantListRelationFilter
+    creator?: XOR<AccountScalarRelationFilter, AccountWhereInput>
   }
 
   export type SeminarOrderByWithRelationInput = {
@@ -10515,9 +10574,11 @@ export namespace Prisma {
     status?: SortOrder
     picture?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
+    createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     participants?: SeminarParticipantOrderByRelationAggregateInput
+    creator?: AccountOrderByWithRelationInput
     _relevance?: SeminarOrderByRelevanceInput
   }
 
@@ -10539,9 +10600,11 @@ export namespace Prisma {
     status?: Enumseminar_statusFilter<"Seminar"> | $Enums.seminar_status
     picture?: BytesNullableFilter<"Seminar"> | Uint8Array | null
     mimeType?: StringNullableFilter<"Seminar"> | string | null
+    createdById?: StringFilter<"Seminar"> | string
     createdAt?: DateTimeFilter<"Seminar"> | Date | string
     updatedAt?: DateTimeFilter<"Seminar"> | Date | string
     participants?: SeminarParticipantListRelationFilter
+    creator?: XOR<AccountScalarRelationFilter, AccountWhereInput>
   }, "id">
 
   export type SeminarOrderByWithAggregationInput = {
@@ -10559,6 +10622,7 @@ export namespace Prisma {
     status?: SortOrder
     picture?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
+    createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: SeminarCountOrderByAggregateInput
@@ -10586,6 +10650,7 @@ export namespace Prisma {
     status?: Enumseminar_statusWithAggregatesFilter<"Seminar"> | $Enums.seminar_status
     picture?: BytesNullableWithAggregatesFilter<"Seminar"> | Uint8Array | null
     mimeType?: StringNullableWithAggregatesFilter<"Seminar"> | string | null
+    createdById?: StringWithAggregatesFilter<"Seminar"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Seminar"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Seminar"> | Date | string
   }
@@ -10678,6 +10743,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateInput = {
@@ -10703,6 +10769,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUpdateInput = {
@@ -10728,6 +10795,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateInput = {
@@ -10753,6 +10821,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountCreateManyInput = {
@@ -11158,6 +11227,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: SeminarParticipantCreateNestedManyWithoutSeminarInput
+    creator: AccountCreateNestedOneWithoutSeminarsCreatedInput
   }
 
   export type SeminarUncheckedCreateInput = {
@@ -11175,6 +11245,7 @@ export namespace Prisma {
     status?: $Enums.seminar_status
     picture?: Uint8Array | null
     mimeType?: string | null
+    createdById: string
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: SeminarParticipantUncheckedCreateNestedManyWithoutSeminarInput
@@ -11198,6 +11269,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: SeminarParticipantUpdateManyWithoutSeminarNestedInput
+    creator?: AccountUpdateOneRequiredWithoutSeminarsCreatedNestedInput
   }
 
   export type SeminarUncheckedUpdateInput = {
@@ -11215,6 +11287,7 @@ export namespace Prisma {
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: SeminarParticipantUncheckedUpdateManyWithoutSeminarNestedInput
@@ -11235,6 +11308,7 @@ export namespace Prisma {
     status?: $Enums.seminar_status
     picture?: Uint8Array | null
     mimeType?: string | null
+    createdById: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11273,6 +11347,7 @@ export namespace Prisma {
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11419,6 +11494,12 @@ export namespace Prisma {
     none?: SeminarParticipantWhereInput
   }
 
+  export type SeminarListRelationFilter = {
+    every?: SeminarWhereInput
+    some?: SeminarWhereInput
+    none?: SeminarWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -11429,6 +11510,10 @@ export namespace Prisma {
   }
 
   export type SeminarParticipantOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SeminarOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -11884,6 +11969,7 @@ export namespace Prisma {
     status?: SortOrder
     picture?: SortOrder
     mimeType?: SortOrder
+    createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -11907,6 +11993,7 @@ export namespace Prisma {
     status?: SortOrder
     picture?: SortOrder
     mimeType?: SortOrder
+    createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -11926,6 +12013,7 @@ export namespace Prisma {
     status?: SortOrder
     picture?: SortOrder
     mimeType?: SortOrder
+    createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12018,6 +12106,13 @@ export namespace Prisma {
     connect?: SeminarParticipantWhereUniqueInput | SeminarParticipantWhereUniqueInput[]
   }
 
+  export type SeminarCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<SeminarCreateWithoutCreatorInput, SeminarUncheckedCreateWithoutCreatorInput> | SeminarCreateWithoutCreatorInput[] | SeminarUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SeminarCreateOrConnectWithoutCreatorInput | SeminarCreateOrConnectWithoutCreatorInput[]
+    createMany?: SeminarCreateManyCreatorInputEnvelope
+    connect?: SeminarWhereUniqueInput | SeminarWhereUniqueInput[]
+  }
+
   export type AccountCommodityUncheckedCreateNestedManyWithoutAccountInput = {
     create?: XOR<AccountCommodityCreateWithoutAccountInput, AccountCommodityUncheckedCreateWithoutAccountInput> | AccountCommodityCreateWithoutAccountInput[] | AccountCommodityUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: AccountCommodityCreateOrConnectWithoutAccountInput | AccountCommodityCreateOrConnectWithoutAccountInput[]
@@ -12030,6 +12125,13 @@ export namespace Prisma {
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
     createMany?: SeminarParticipantCreateManyAccountInputEnvelope
     connect?: SeminarParticipantWhereUniqueInput | SeminarParticipantWhereUniqueInput[]
+  }
+
+  export type SeminarUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<SeminarCreateWithoutCreatorInput, SeminarUncheckedCreateWithoutCreatorInput> | SeminarCreateWithoutCreatorInput[] | SeminarUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SeminarCreateOrConnectWithoutCreatorInput | SeminarCreateOrConnectWithoutCreatorInput[]
+    createMany?: SeminarCreateManyCreatorInputEnvelope
+    connect?: SeminarWhereUniqueInput | SeminarWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -12088,6 +12190,20 @@ export namespace Prisma {
     deleteMany?: SeminarParticipantScalarWhereInput | SeminarParticipantScalarWhereInput[]
   }
 
+  export type SeminarUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<SeminarCreateWithoutCreatorInput, SeminarUncheckedCreateWithoutCreatorInput> | SeminarCreateWithoutCreatorInput[] | SeminarUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SeminarCreateOrConnectWithoutCreatorInput | SeminarCreateOrConnectWithoutCreatorInput[]
+    upsert?: SeminarUpsertWithWhereUniqueWithoutCreatorInput | SeminarUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: SeminarCreateManyCreatorInputEnvelope
+    set?: SeminarWhereUniqueInput | SeminarWhereUniqueInput[]
+    disconnect?: SeminarWhereUniqueInput | SeminarWhereUniqueInput[]
+    delete?: SeminarWhereUniqueInput | SeminarWhereUniqueInput[]
+    connect?: SeminarWhereUniqueInput | SeminarWhereUniqueInput[]
+    update?: SeminarUpdateWithWhereUniqueWithoutCreatorInput | SeminarUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: SeminarUpdateManyWithWhereWithoutCreatorInput | SeminarUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: SeminarScalarWhereInput | SeminarScalarWhereInput[]
+  }
+
   export type AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<AccountCommodityCreateWithoutAccountInput, AccountCommodityUncheckedCreateWithoutAccountInput> | AccountCommodityCreateWithoutAccountInput[] | AccountCommodityUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: AccountCommodityCreateOrConnectWithoutAccountInput | AccountCommodityCreateOrConnectWithoutAccountInput[]
@@ -12114,6 +12230,20 @@ export namespace Prisma {
     update?: SeminarParticipantUpdateWithWhereUniqueWithoutAccountInput | SeminarParticipantUpdateWithWhereUniqueWithoutAccountInput[]
     updateMany?: SeminarParticipantUpdateManyWithWhereWithoutAccountInput | SeminarParticipantUpdateManyWithWhereWithoutAccountInput[]
     deleteMany?: SeminarParticipantScalarWhereInput | SeminarParticipantScalarWhereInput[]
+  }
+
+  export type SeminarUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<SeminarCreateWithoutCreatorInput, SeminarUncheckedCreateWithoutCreatorInput> | SeminarCreateWithoutCreatorInput[] | SeminarUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SeminarCreateOrConnectWithoutCreatorInput | SeminarCreateOrConnectWithoutCreatorInput[]
+    upsert?: SeminarUpsertWithWhereUniqueWithoutCreatorInput | SeminarUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: SeminarCreateManyCreatorInputEnvelope
+    set?: SeminarWhereUniqueInput | SeminarWhereUniqueInput[]
+    disconnect?: SeminarWhereUniqueInput | SeminarWhereUniqueInput[]
+    delete?: SeminarWhereUniqueInput | SeminarWhereUniqueInput[]
+    connect?: SeminarWhereUniqueInput | SeminarWhereUniqueInput[]
+    update?: SeminarUpdateWithWhereUniqueWithoutCreatorInput | SeminarUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: SeminarUpdateManyWithWhereWithoutCreatorInput | SeminarUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: SeminarScalarWhereInput | SeminarScalarWhereInput[]
   }
 
   export type AccountCommodityCreateNestedManyWithoutCommodityInput = {
@@ -12317,6 +12447,12 @@ export namespace Prisma {
     connect?: SeminarParticipantWhereUniqueInput | SeminarParticipantWhereUniqueInput[]
   }
 
+  export type AccountCreateNestedOneWithoutSeminarsCreatedInput = {
+    create?: XOR<AccountCreateWithoutSeminarsCreatedInput, AccountUncheckedCreateWithoutSeminarsCreatedInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutSeminarsCreatedInput
+    connect?: AccountWhereUniqueInput
+  }
+
   export type SeminarParticipantUncheckedCreateNestedManyWithoutSeminarInput = {
     create?: XOR<SeminarParticipantCreateWithoutSeminarInput, SeminarParticipantUncheckedCreateWithoutSeminarInput> | SeminarParticipantCreateWithoutSeminarInput[] | SeminarParticipantUncheckedCreateWithoutSeminarInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutSeminarInput | SeminarParticipantCreateOrConnectWithoutSeminarInput[]
@@ -12340,6 +12476,14 @@ export namespace Prisma {
     update?: SeminarParticipantUpdateWithWhereUniqueWithoutSeminarInput | SeminarParticipantUpdateWithWhereUniqueWithoutSeminarInput[]
     updateMany?: SeminarParticipantUpdateManyWithWhereWithoutSeminarInput | SeminarParticipantUpdateManyWithWhereWithoutSeminarInput[]
     deleteMany?: SeminarParticipantScalarWhereInput | SeminarParticipantScalarWhereInput[]
+  }
+
+  export type AccountUpdateOneRequiredWithoutSeminarsCreatedNestedInput = {
+    create?: XOR<AccountCreateWithoutSeminarsCreatedInput, AccountUncheckedCreateWithoutSeminarsCreatedInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutSeminarsCreatedInput
+    upsert?: AccountUpsertWithoutSeminarsCreatedInput
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutSeminarsCreatedInput, AccountUpdateWithoutSeminarsCreatedInput>, AccountUncheckedUpdateWithoutSeminarsCreatedInput>
   }
 
   export type SeminarParticipantUncheckedUpdateManyWithoutSeminarNestedInput = {
@@ -12697,6 +12841,56 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SeminarCreateWithoutCreatorInput = {
+    id?: string
+    title: string
+    description: string
+    location: string
+    speaker: string
+    start_date: Date | string
+    end_date: Date | string
+    start_time: Date | string
+    end_time: Date | string
+    capacity: number
+    registration_deadline: Date | string
+    status?: $Enums.seminar_status
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: SeminarParticipantCreateNestedManyWithoutSeminarInput
+  }
+
+  export type SeminarUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    title: string
+    description: string
+    location: string
+    speaker: string
+    start_date: Date | string
+    end_date: Date | string
+    start_time: Date | string
+    end_time: Date | string
+    capacity: number
+    registration_deadline: Date | string
+    status?: $Enums.seminar_status
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: SeminarParticipantUncheckedCreateNestedManyWithoutSeminarInput
+  }
+
+  export type SeminarCreateOrConnectWithoutCreatorInput = {
+    where: SeminarWhereUniqueInput
+    create: XOR<SeminarCreateWithoutCreatorInput, SeminarUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type SeminarCreateManyCreatorInputEnvelope = {
+    data: SeminarCreateManyCreatorInput | SeminarCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountCommodityUpsertWithWhereUniqueWithoutAccountInput = {
     where: AccountCommodityWhereUniqueInput
     update: XOR<AccountCommodityUpdateWithoutAccountInput, AccountCommodityUncheckedUpdateWithoutAccountInput>
@@ -12750,6 +12944,45 @@ export namespace Prisma {
     status?: Enumparticipant_statusFilter<"SeminarParticipant"> | $Enums.participant_status
     createdAt?: DateTimeFilter<"SeminarParticipant"> | Date | string
     updatedAt?: DateTimeFilter<"SeminarParticipant"> | Date | string
+  }
+
+  export type SeminarUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: SeminarWhereUniqueInput
+    update: XOR<SeminarUpdateWithoutCreatorInput, SeminarUncheckedUpdateWithoutCreatorInput>
+    create: XOR<SeminarCreateWithoutCreatorInput, SeminarUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type SeminarUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: SeminarWhereUniqueInput
+    data: XOR<SeminarUpdateWithoutCreatorInput, SeminarUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type SeminarUpdateManyWithWhereWithoutCreatorInput = {
+    where: SeminarScalarWhereInput
+    data: XOR<SeminarUpdateManyMutationInput, SeminarUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type SeminarScalarWhereInput = {
+    AND?: SeminarScalarWhereInput | SeminarScalarWhereInput[]
+    OR?: SeminarScalarWhereInput[]
+    NOT?: SeminarScalarWhereInput | SeminarScalarWhereInput[]
+    id?: StringFilter<"Seminar"> | string
+    title?: StringFilter<"Seminar"> | string
+    description?: StringFilter<"Seminar"> | string
+    location?: StringFilter<"Seminar"> | string
+    speaker?: StringFilter<"Seminar"> | string
+    start_date?: DateTimeFilter<"Seminar"> | Date | string
+    end_date?: DateTimeFilter<"Seminar"> | Date | string
+    start_time?: DateTimeFilter<"Seminar"> | Date | string
+    end_time?: DateTimeFilter<"Seminar"> | Date | string
+    capacity?: IntFilter<"Seminar"> | number
+    registration_deadline?: DateTimeFilter<"Seminar"> | Date | string
+    status?: Enumseminar_statusFilter<"Seminar"> | $Enums.seminar_status
+    picture?: BytesNullableFilter<"Seminar"> | Uint8Array | null
+    mimeType?: StringNullableFilter<"Seminar"> | string | null
+    createdById?: StringFilter<"Seminar"> | string
+    createdAt?: DateTimeFilter<"Seminar"> | Date | string
+    updatedAt?: DateTimeFilter<"Seminar"> | Date | string
   }
 
   export type AccountCommodityCreateWithoutCommodityInput = {
@@ -12837,6 +13070,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutCommodityInput = {
@@ -12861,6 +13095,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutCommodityInput = {
@@ -12930,6 +13165,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutCommodityInput = {
@@ -12954,6 +13190,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type ItemStackCreateWithoutItemInput = {
@@ -13196,6 +13433,61 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AccountCreateWithoutSeminarsCreatedInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    firstName: string
+    lastName: string
+    middleName?: string | null
+    gender: $Enums.gender
+    client_profile?: $Enums.client_profile
+    cellphone_no?: string | null
+    telephone_no?: string | null
+    occupation?: string | null
+    position?: string | null
+    institution?: string | null
+    address?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+  }
+
+  export type AccountUncheckedCreateWithoutSeminarsCreatedInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    firstName: string
+    lastName: string
+    middleName?: string | null
+    gender: $Enums.gender
+    client_profile?: $Enums.client_profile
+    cellphone_no?: string | null
+    telephone_no?: string | null
+    occupation?: string | null
+    position?: string | null
+    institution?: string | null
+    address?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+  }
+
+  export type AccountCreateOrConnectWithoutSeminarsCreatedInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutSeminarsCreatedInput, AccountUncheckedCreateWithoutSeminarsCreatedInput>
+  }
+
   export type SeminarParticipantUpsertWithWhereUniqueWithoutSeminarInput = {
     where: SeminarParticipantWhereUniqueInput
     update: XOR<SeminarParticipantUpdateWithoutSeminarInput, SeminarParticipantUncheckedUpdateWithoutSeminarInput>
@@ -13210,6 +13502,67 @@ export namespace Prisma {
   export type SeminarParticipantUpdateManyWithWhereWithoutSeminarInput = {
     where: SeminarParticipantScalarWhereInput
     data: XOR<SeminarParticipantUpdateManyMutationInput, SeminarParticipantUncheckedUpdateManyWithoutSeminarInput>
+  }
+
+  export type AccountUpsertWithoutSeminarsCreatedInput = {
+    update: XOR<AccountUpdateWithoutSeminarsCreatedInput, AccountUncheckedUpdateWithoutSeminarsCreatedInput>
+    create: XOR<AccountCreateWithoutSeminarsCreatedInput, AccountUncheckedCreateWithoutSeminarsCreatedInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutSeminarsCreatedInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutSeminarsCreatedInput, AccountUncheckedUpdateWithoutSeminarsCreatedInput>
+  }
+
+  export type AccountUpdateWithoutSeminarsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutSeminarsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type SeminarCreateWithoutParticipantsInput = {
@@ -13229,6 +13582,7 @@ export namespace Prisma {
     mimeType?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    creator: AccountCreateNestedOneWithoutSeminarsCreatedInput
   }
 
   export type SeminarUncheckedCreateWithoutParticipantsInput = {
@@ -13246,6 +13600,7 @@ export namespace Prisma {
     status?: $Enums.seminar_status
     picture?: Uint8Array | null
     mimeType?: string | null
+    createdById: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13277,6 +13632,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsInput = {
@@ -13301,6 +13657,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsInput = {
@@ -13336,6 +13693,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: AccountUpdateOneRequiredWithoutSeminarsCreatedNestedInput
   }
 
   export type SeminarUncheckedUpdateWithoutParticipantsInput = {
@@ -13353,6 +13711,7 @@ export namespace Prisma {
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13390,6 +13749,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsInput = {
@@ -13414,6 +13774,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountCommodityCreateManyAccountInput = {
@@ -13427,6 +13788,25 @@ export namespace Prisma {
     id?: string
     seminar_id: string
     status?: $Enums.participant_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SeminarCreateManyCreatorInput = {
+    id?: string
+    title: string
+    description: string
+    location: string
+    speaker: string
+    start_date: Date | string
+    end_date: Date | string
+    start_time: Date | string
+    end_time: Date | string
+    capacity: number
+    registration_deadline: Date | string
+    status?: $Enums.seminar_status
+    picture?: Uint8Array | null
+    mimeType?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13472,6 +13852,65 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     seminar_id?: StringFieldUpdateOperationsInput | string
     status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SeminarUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    speaker?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    capacity?: IntFieldUpdateOperationsInput | number
+    registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: SeminarParticipantUpdateManyWithoutSeminarNestedInput
+  }
+
+  export type SeminarUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    speaker?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    capacity?: IntFieldUpdateOperationsInput | number
+    registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: SeminarParticipantUncheckedUpdateManyWithoutSeminarNestedInput
+  }
+
+  export type SeminarUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    speaker?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    capacity?: IntFieldUpdateOperationsInput | number
+    registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
