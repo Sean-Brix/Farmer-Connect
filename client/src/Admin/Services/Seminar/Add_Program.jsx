@@ -1,8 +1,12 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import default_seminar_pic from '../../../Assets/default_seminar_pic.jpg';
 
-export default function Add_Program({programList, setProgramList, fetchAndSetImageUrls, setShowAdd}) {
-
+export default function Add_Program({
+    programList,
+    setProgramList,
+    fetchAndSetImageUrls,
+    setShowAdd,
+}) {
     const [newProgram, setNewProgram] = useState({
         title: '',
         description: '',
@@ -11,7 +15,7 @@ export default function Add_Program({programList, setProgramList, fetchAndSetIma
         endDate: '',
         openTime: '',
         closeTime: '',
-        maxParticipants: '',
+        capacity: '',
         speaker: '',
         registrationDeadline: '',
         photo: '',
@@ -20,56 +24,39 @@ export default function Add_Program({programList, setProgramList, fetchAndSetIma
     const handleAddProgram = async (e) => {
         e.preventDefault();
 
+        console.log(newProgram);
         try {
-            const response = await fetch('/api/seminars/addSeminar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    title: newProgram.title,
-                    description: newProgram.description,
-                    location: newProgram.location,
-                    start_date: newProgram.startDate,
-                    end_date: newProgram.endDate,
-                    start_time: newProgram.openTime,
-                    end_time: newProgram.closeTime,
-                    capacity: newProgram.capacity,
-                    speaker: newProgram.speaker,
-                    registration_deadline: newProgram.registrationDeadline,
-                }),
-            });
-            const data = await response.json();
-
-            // Create Body
             const formData = new FormData();
+            formData.append('title', newProgram.title);
+            formData.append('description', newProgram.description);
+            formData.append('location', newProgram.location);
+            formData.append('start_date', newProgram.startDate);
+            formData.append('end_date', newProgram.endDate);
+            formData.append('start_time', newProgram.openTime);
+            formData.append('end_time', newProgram.closeTime);
+            formData.append('capacity', newProgram.capacity);
+            formData.append('speaker', newProgram.speaker);
+            formData.append('registration_deadline', newProgram.registrationDeadline);
+
             // If newImage is a base64 string, convert it to a Blob
-            let imageFile;
             if (
                 typeof newImage === 'string' &&
                 newImage.startsWith('data:image')
-            ){
+            ) {
                 const response = await fetch(newImage);
                 const blob = await response.blob();
-                imageFile = new File([blob], 'image.png', { type: blob.type }); // You can adjust the filename and type
-            } 
-            else {
-                imageFile = newImage; // Use the File object directly if it's already a File
+                const imageFile = new File([blob], 'image.png', {
+                    type: blob.type,
+                }); // You can adjust the filename and type
+                formData.append('photo', imageFile);
+            } else if (newImage instanceof File) {
+                formData.append('photo', newImage);
             }
-            formData.append('image', imageFile);
-            formData.append('id', data.payload.id);
-            const setImage = await fetch('/api/seminars/setPhoto', {
+            const response = await fetch('/api/seminar/all/add', {
                 method: 'POST',
                 body: formData,
             });
-
-            // If Fails
-            if (!setImage.ok) {
-                const data = await setImage.json();
-                console.log(data.payload.error);
-                alert('Failed to upload image');
-                return;
-            }
+            const data = await response.json();
 
             if (response.ok) {
                 // Program added successfully, update the program list
@@ -83,10 +70,10 @@ export default function Add_Program({programList, setProgramList, fetchAndSetIma
                     title: '',
                     description: '',
                     location: '',
-                    start_date: '',
-                    end_date: '',
-                    start_time: '',
-                    end_time: '',
+                    startDate: '',
+                    endDate: '',
+                    openTime: '',
+                    closeTime: '',
                     capacity: '',
                     speaker: '',
                     registrationDeadline: '',
@@ -97,9 +84,8 @@ export default function Add_Program({programList, setProgramList, fetchAndSetIma
             }
 
             // Handle error response
-            console.error('Failed to add program:', data.payload.Error);
+            console.error('Failed to add program:', data.payload?.Error);
             alert('All Parameters Required');
-            
         } catch (error) {
             console.error('Error adding program:', error);
         }
@@ -354,7 +340,8 @@ export default function Add_Program({programList, setProgramList, fetchAndSetIma
                     {/* Right: Image Upload */}
                     <div className="flex flex-col items-center gap-4 w-full md:w-64">
                         <label className="block text-xs font-semibold text-blue-600 mb-1 self-start">
-                            Upload Image <span className="text-blue-300">(optional)</span>
+                            Upload Image{' '}
+                            <span className="text-blue-300">(optional)</span>
                         </label>
                         <input
                             type="file"
@@ -365,7 +352,7 @@ export default function Add_Program({programList, setProgramList, fetchAndSetIma
                         <div className="w-full flex justify-center">
                             <img
                                 src={
-                                    typeof newImage === "string"
+                                    typeof newImage === 'string'
                                         ? newImage
                                         : URL.createObjectURL(newImage)
                                 }

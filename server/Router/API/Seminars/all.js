@@ -20,6 +20,9 @@ router.use(parseToken);
 import authorize from '../../../Middlewares/Auth/authorize.js';
 router.use(authorize);
 
+// New Seminar
+import addSeminar from '../../../Controller/Seminar/addSeminar.js';
+router.post('/add', addSeminar);
 
 //? ================================================================================================ ?//
 

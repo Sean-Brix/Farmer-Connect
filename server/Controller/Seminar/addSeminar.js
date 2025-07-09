@@ -1,9 +1,9 @@
 import { PrismaClient } from '../../prisma/generated/client.js';
+import { buffer } from 'stream/consumers';
 const prisma = new PrismaClient();
 
 async function addSeminar(req, res) {
     try {
-
         const adminId = req.user.id;
         const {
             title,
@@ -16,9 +16,38 @@ async function addSeminar(req, res) {
             end_time,
             capacity,
             registration_deadline,
-            picture,
-            mimeType,
         } = req.body;
+
+        if (
+            
+            !title ||
+            !description ||
+            !location ||
+            !speaker ||
+            !start_date ||
+            !end_date ||
+            !start_time ||
+            !end_time ||
+            !capacity ||
+            !registration_deadline
+
+        ) return res.status(400).json({ payload: { Error: 'All parameters are required' } })
+
+        let picture = null;
+        let mimeType = null;
+
+        if (req.file) {
+
+            try {
+                picture = await buffer(req.file.stream);
+                mimeType = req.file.mimetype;
+            } 
+            catch (bufferError) {
+                console.error('Error buffering file:', bufferError);
+                return res.status(500).json({ payload: { Error: 'Failed to process file' } });
+            }
+
+        }
 
         const seminar = await prisma.seminar.create({
             data: {
@@ -32,18 +61,17 @@ async function addSeminar(req, res) {
                 end_time: new Date(end_time),
                 capacity: parseInt(capacity),
                 registration_deadline: new Date(registration_deadline),
-                picture: picture ? Buffer.from(picture, 'base64') : null,
-                mimeType: mimeType || null,
                 createdById: adminId,
+                picture: picture,
+                mimeType: mimeType,
             },
         });
 
-        return res.status(201).json({ seminar });
-
+        return res.status(201).json({ payload: seminar });
     } 
     catch (error) {
         console.error('Error creating seminar:', error);
-        return res.status(500).json({ error: 'Failed to create seminar' });
+        return res.status(500).json({ payload: { Error: 'Failed to create seminar' } });
     }
 }
 
