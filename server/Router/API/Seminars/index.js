@@ -15,4 +15,7 @@ router.use('/participants', participants);
 import all from './all.js';
 router.use('/all', all);
 
+import one from './one.js';
+router.use('/', one);
+
 export default router;

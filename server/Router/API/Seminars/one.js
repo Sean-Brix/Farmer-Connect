@@ -1,12 +1,10 @@
 import express from 'express';
+import upload from '../../../Utils/multer_upload.js';
 
-// Route: ('/api/seminar/all')
+// Route: ('/api/seminar/')
 const router = express.Router();
 
 //? ========================================= ROUTES =============================================== ?//
-
-import getAllSeminar from '../../../Controller/Seminar/getAllSeminar.js'
-router.get('/', getAllSeminar);
 
 
 //? ================================================================================================ ?//
@@ -21,13 +19,13 @@ import authorize from '../../../Middlewares/Auth/authorize.js';
 router.use(authorize);
 
 
-//? ================================================================================================ ?//
+// Add
+import addSeminar from '../../../Controller/Seminar/addSeminar.js';
+router.post('/add', upload.single('photo'), addSeminar);
 
-//? ====================================== SUPER ADMINS ============================================ ?//
-
-import super_admin from '../../../Middlewares/Auth/super_admin.js';
-router.use(super_admin)
-
+// Delete
+import deleteSeminar from '../../../Controller/Seminar/deleteSeminar.js';
+router.delete('/delete/:id', deleteSeminar)
 
 
 //? ================================================================================================ ?//

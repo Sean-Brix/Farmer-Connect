@@ -27,7 +27,7 @@ export default function Add_Program({
 
     const mutation = useMutation({
         mutationFn: async (data) => {
-            const response = await fetch('/api/seminar/all/add', {
+            const response = await fetch('/api/seminar/one/add', {
                 method: 'POST',
                 body: data,
             });

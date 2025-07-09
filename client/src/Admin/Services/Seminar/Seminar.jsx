@@ -46,9 +46,9 @@ export default function Seminar() {
 
     const mutation = useMutation({
         mutationFn: async (id) => {
-            const response = await fetch(
-                `/api/Seminars/deleteSeminar?delete=${id}`
-            );
+            const response = await fetch(`/api/seminar/delete/${id}`, {
+                method: 'DELETE',
+            });
             const data = await response.json();
             return data;
         },
