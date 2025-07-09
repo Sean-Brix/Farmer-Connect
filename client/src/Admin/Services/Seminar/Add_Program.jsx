@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import default_seminar_pic from '../../../Assets/default_seminar_pic.jpg';
 
 export default function Add_Program({
-    programList,
-    setProgramList,
-    fetchAndSetImageUrls,
     setShowAdd,
+    search,
+    searchFilter,
+    statusFilter,
 }) {
     const [newProgram, setNewProgram] = useState({
         title: '',
@@ -18,97 +19,72 @@ export default function Add_Program({
         capacity: '',
         speaker: '',
         registrationDeadline: '',
-        photo: '',
+        photo: null,
     });
 
+    const [newImage, setNewImage] = useState(default_seminar_pic);
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: async (data) => {
+            const response = await fetch('/api/seminar/all/add', {
+                method: 'POST',
+                body: data,
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(
+                    errorData.payload?.Error || 'Failed to add program'
+                );
+            }
+            return response.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['seminars', search, searchFilter, statusFilter],
+            });
+            setShowAdd(false);
+        },
+        onError: (error) => {
+            console.error('Error adding program:', error.message);
+            alert(
+                error.message === 'Failed to add program'
+                    ? 'All Parameters Required'
+                    : error.message
+            );
+        },
+    });
     const handleAddProgram = async (e) => {
         e.preventDefault();
 
-        console.log(newProgram);
-        try {
-            const formData = new FormData();
-            formData.append('title', newProgram.title);
-            formData.append('description', newProgram.description);
-            formData.append('location', newProgram.location);
-            formData.append('start_date', newProgram.startDate);
-            formData.append('end_date', newProgram.endDate);
-            formData.append('start_time', newProgram.openTime);
-            formData.append('end_time', newProgram.closeTime);
-            formData.append('capacity', newProgram.capacity);
-            formData.append('speaker', newProgram.speaker);
-            formData.append('registration_deadline', newProgram.registrationDeadline);
+        const formData = new FormData();
+        formData.append('title', newProgram.title);
+        formData.append('description', newProgram.description);
+        formData.append('location', newProgram.location);
+        formData.append('start_date', newProgram.startDate);
+        formData.append('end_date', newProgram.endDate);
+        formData.append('start_time', newProgram.openTime);
+        formData.append('end_time', newProgram.closeTime);
+        formData.append('capacity', newProgram.capacity);
+        formData.append('speaker', newProgram.speaker);
+        formData.append(
+            'registration_deadline',
+            newProgram.registrationDeadline
+        );
 
-            // If newImage is a base64 string, convert it to a Blob
-            if (
-                typeof newImage === 'string' &&
-                newImage.startsWith('data:image')
-            ) {
-                const response = await fetch(newImage);
-                const blob = await response.blob();
-                const imageFile = new File([blob], 'image.png', {
-                    type: blob.type,
-                }); // You can adjust the filename and type
-                formData.append('photo', imageFile);
-            } else if (newImage instanceof File) {
-                formData.append('photo', newImage);
-            }
-            const response = await fetch('/api/seminar/all/add', {
-                method: 'POST',
-                body: formData,
-            });
-            const data = await response.json();
-
-            if (response.ok) {
-                // Program added successfully, update the program list
-                const updatedList = await fetchAndSetImageUrls([
-                    data.payload,
-                    ...programList,
-                ]);
-                setProgramList(updatedList);
-                setShowAdd(false); // Close the modal
-                setNewProgram({
-                    title: '',
-                    description: '',
-                    location: '',
-                    startDate: '',
-                    endDate: '',
-                    openTime: '',
-                    closeTime: '',
-                    capacity: '',
-                    speaker: '',
-                    registrationDeadline: '',
-                    photo: '',
-                });
-
-                return;
-            }
-
-            // Handle error response
-            console.error('Failed to add program:', data.payload?.Error);
-            alert('All Parameters Required');
-        } catch (error) {
-            console.error('Error adding program:', error);
+        if (newImage && typeof newImage !== 'string') {
+            formData.append('photo', newImage);
         }
+
+        mutation.mutate(formData);
     };
 
-    // upload image
-    const [newImage, setNewImage] = useState(default_seminar_pic);
-
     const changeImage = (event) => {
-        event.preventDefault();
-
         const file = event.target.files[0];
 
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setNewImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-
             setNewImage(file);
         } else {
-            // Revert to default if no file selected
             setNewImage(default_seminar_pic);
         }
     };
@@ -120,7 +96,6 @@ export default function Add_Program({
                 onSubmit={handleAddProgram}
                 style={{ minWidth: 320 }}
             >
-                {/* Header */}
                 <div className="flex justify-between items-center border-b border-blue-100 px-8 py-5 bg-gradient-to-r from-blue-500/10 to-blue-100 rounded-t-3xl">
                     <h2 className="text-xl font-bold text-blue-700 tracking-tight">
                         Add Program
@@ -134,31 +109,8 @@ export default function Add_Program({
                         &times;
                     </button>
                 </div>
-                {/* Content */}
                 <div className="flex flex-col md:flex-row gap-10 px-8 py-8 overflow-y-auto">
-                    {/* Left: Form Fields */}
                     <div className="flex-1 flex flex-col gap-5">
-                        {/* Status (optional for Add, remove if not needed) */}
-                        {/* <div>
-                            <label className="block text-xs font-semibold text-blue-600 mb-1">
-                                Status
-                            </label>
-                            <select
-                                onChange={(e) =>
-                                    setNewProgram({
-                                        ...newProgram,
-                                        status: e.target.value,
-                                    })
-                                }
-                                className="w-full border border-blue-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 shadow-sm"
-                                value={newProgram.status || "Upcoming"}
-                            >
-                                <option value="Ongoing">Ongoing</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Cancelled">Cancelled</option>
-                                <option value="Upcoming">Upcoming</option>
-                            </select>
-                        </div> */}
                         <div>
                             <label className="block text-xs font-semibold text-blue-600 mb-1">
                                 Title
@@ -337,7 +289,6 @@ export default function Add_Program({
                             />
                         </div>
                     </div>
-                    {/* Right: Image Upload */}
                     <div className="flex flex-col items-center gap-4 w-full md:w-64">
                         <label className="block text-xs font-semibold text-blue-600 mb-1 self-start">
                             Upload Image{' '}
@@ -352,9 +303,9 @@ export default function Add_Program({
                         <div className="w-full flex justify-center">
                             <img
                                 src={
-                                    typeof newImage === 'string'
-                                        ? newImage
-                                        : URL.createObjectURL(newImage)
+                                    newImage instanceof File
+                                        ? URL.createObjectURL(newImage)
+                                        : newImage
                                 }
                                 alt="Seminar"
                                 className="w-full max-w-[200px] max-h-[200px] bg-blue-50 object-cover mt-2 rounded-xl border border-blue-200 shadow"
@@ -362,13 +313,13 @@ export default function Add_Program({
                         </div>
                     </div>
                 </div>
-                {/* Footer */}
                 <div className="px-8 py-5 border-t border-blue-100 bg-gradient-to-r from-blue-50 to-blue-100 rounded-b-3xl flex justify-end">
                     <button
                         type="submit"
                         className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl py-2 px-8 transition-colors shadow focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                        disabled={mutation.isPending}
                     >
-                        Save
+                        {mutation.isPending ? 'Saving...' : 'Save'}
                     </button>
                 </div>
             </form>
