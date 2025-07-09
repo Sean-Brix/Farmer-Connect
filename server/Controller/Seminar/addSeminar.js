@@ -19,7 +19,6 @@ async function addSeminar(req, res) {
         } = req.body;
 
         if (
-            
             !title ||
             !description ||
             !location ||
@@ -30,23 +29,24 @@ async function addSeminar(req, res) {
             !end_time ||
             !capacity ||
             !registration_deadline
-
-        ) return res.status(400).json({ payload: { Error: 'All parameters are required' } })
+        )
+            return res
+                .status(400)
+                .json({ payload: { Error: 'All parameters are required' } });
 
         let picture = null;
         let mimeType = null;
 
         if (req.file) {
-
             try {
-                picture = await buffer(req.file.stream);
+                picture = req.file.buffer;
                 mimeType = req.file.mimetype;
-            } 
-            catch (bufferError) {
+            } catch (bufferError) {
                 console.error('Error buffering file:', bufferError);
-                return res.status(500).json({ payload: { Error: 'Failed to process file' } });
+                return res
+                    .status(500)
+                    .json({ payload: { Error: 'Failed to process file' } });
             }
-
         }
 
         const seminar = await prisma.seminar.create({
@@ -57,8 +57,8 @@ async function addSeminar(req, res) {
                 speaker,
                 start_date: new Date(start_date),
                 end_date: new Date(end_date),
-                start_time: new Date(start_time),
-                end_time: new Date(end_time),
+                start_time,
+                end_time,
                 capacity: parseInt(capacity),
                 registration_deadline: new Date(registration_deadline),
                 createdById: adminId,
@@ -68,10 +68,11 @@ async function addSeminar(req, res) {
         });
 
         return res.status(201).json({ payload: seminar });
-    } 
-    catch (error) {
+    } catch (error) {
         console.error('Error creating seminar:', error);
-        return res.status(500).json({ payload: { Error: 'Failed to create seminar' } });
+        return res
+            .status(500)
+            .json({ payload: { Error: 'Failed to create seminar' } });
     }
 }
 

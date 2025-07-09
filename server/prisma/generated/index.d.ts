@@ -7723,8 +7723,8 @@ export namespace Prisma {
     speaker: string | null
     start_date: Date | null
     end_date: Date | null
-    start_time: Date | null
-    end_time: Date | null
+    start_time: string | null
+    end_time: string | null
     capacity: number | null
     registration_deadline: Date | null
     status: $Enums.seminar_status | null
@@ -7743,8 +7743,8 @@ export namespace Prisma {
     speaker: string | null
     start_date: Date | null
     end_date: Date | null
-    start_time: Date | null
-    end_time: Date | null
+    start_time: string | null
+    end_time: string | null
     capacity: number | null
     registration_deadline: Date | null
     status: $Enums.seminar_status | null
@@ -7940,8 +7940,8 @@ export namespace Prisma {
     speaker: string
     start_date: Date
     end_date: Date
-    start_time: Date
-    end_time: Date
+    start_time: string
+    end_time: string
     capacity: number
     registration_deadline: Date
     status: $Enums.seminar_status
@@ -8037,8 +8037,8 @@ export namespace Prisma {
       speaker: string
       start_date: Date
       end_date: Date
-      start_time: Date
-      end_time: Date
+      start_time: string
+      end_time: string
       capacity: number
       registration_deadline: Date
       status: $Enums.seminar_status
@@ -8425,8 +8425,8 @@ export namespace Prisma {
     readonly speaker: FieldRef<"Seminar", 'String'>
     readonly start_date: FieldRef<"Seminar", 'DateTime'>
     readonly end_date: FieldRef<"Seminar", 'DateTime'>
-    readonly start_time: FieldRef<"Seminar", 'DateTime'>
-    readonly end_time: FieldRef<"Seminar", 'DateTime'>
+    readonly start_time: FieldRef<"Seminar", 'String'>
+    readonly end_time: FieldRef<"Seminar", 'String'>
     readonly capacity: FieldRef<"Seminar", 'Int'>
     readonly registration_deadline: FieldRef<"Seminar", 'DateTime'>
     readonly status: FieldRef<"Seminar", 'seminar_status'>
@@ -9987,6 +9987,8 @@ export namespace Prisma {
     description: 'description',
     location: 'location',
     speaker: 'speaker',
+    start_time: 'start_time',
+    end_time: 'end_time',
     mimeType: 'mimeType',
     createdById: 'createdById'
   };
@@ -10545,8 +10547,8 @@ export namespace Prisma {
     speaker?: StringFilter<"Seminar"> | string
     start_date?: DateTimeFilter<"Seminar"> | Date | string
     end_date?: DateTimeFilter<"Seminar"> | Date | string
-    start_time?: DateTimeFilter<"Seminar"> | Date | string
-    end_time?: DateTimeFilter<"Seminar"> | Date | string
+    start_time?: StringFilter<"Seminar"> | string
+    end_time?: StringFilter<"Seminar"> | string
     capacity?: IntFilter<"Seminar"> | number
     registration_deadline?: DateTimeFilter<"Seminar"> | Date | string
     status?: Enumseminar_statusFilter<"Seminar"> | $Enums.seminar_status
@@ -10593,8 +10595,8 @@ export namespace Prisma {
     speaker?: StringFilter<"Seminar"> | string
     start_date?: DateTimeFilter<"Seminar"> | Date | string
     end_date?: DateTimeFilter<"Seminar"> | Date | string
-    start_time?: DateTimeFilter<"Seminar"> | Date | string
-    end_time?: DateTimeFilter<"Seminar"> | Date | string
+    start_time?: StringFilter<"Seminar"> | string
+    end_time?: StringFilter<"Seminar"> | string
     capacity?: IntFilter<"Seminar"> | number
     registration_deadline?: DateTimeFilter<"Seminar"> | Date | string
     status?: Enumseminar_statusFilter<"Seminar"> | $Enums.seminar_status
@@ -10643,8 +10645,8 @@ export namespace Prisma {
     speaker?: StringWithAggregatesFilter<"Seminar"> | string
     start_date?: DateTimeWithAggregatesFilter<"Seminar"> | Date | string
     end_date?: DateTimeWithAggregatesFilter<"Seminar"> | Date | string
-    start_time?: DateTimeWithAggregatesFilter<"Seminar"> | Date | string
-    end_time?: DateTimeWithAggregatesFilter<"Seminar"> | Date | string
+    start_time?: StringWithAggregatesFilter<"Seminar"> | string
+    end_time?: StringWithAggregatesFilter<"Seminar"> | string
     capacity?: IntWithAggregatesFilter<"Seminar"> | number
     registration_deadline?: DateTimeWithAggregatesFilter<"Seminar"> | Date | string
     status?: Enumseminar_statusWithAggregatesFilter<"Seminar"> | $Enums.seminar_status
@@ -11217,8 +11219,8 @@ export namespace Prisma {
     speaker: string
     start_date: Date | string
     end_date: Date | string
-    start_time: Date | string
-    end_time: Date | string
+    start_time: string
+    end_time: string
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
@@ -11238,8 +11240,8 @@ export namespace Prisma {
     speaker: string
     start_date: Date | string
     end_date: Date | string
-    start_time: Date | string
-    end_time: Date | string
+    start_time: string
+    end_time: string
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
@@ -11259,8 +11261,8 @@ export namespace Prisma {
     speaker?: StringFieldUpdateOperationsInput | string
     start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
@@ -11280,8 +11282,8 @@ export namespace Prisma {
     speaker?: StringFieldUpdateOperationsInput | string
     start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
@@ -11301,8 +11303,8 @@ export namespace Prisma {
     speaker: string
     start_date: Date | string
     end_date: Date | string
-    start_time: Date | string
-    end_time: Date | string
+    start_time: string
+    end_time: string
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
@@ -11321,8 +11323,8 @@ export namespace Prisma {
     speaker?: StringFieldUpdateOperationsInput | string
     start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
@@ -11340,8 +11342,8 @@ export namespace Prisma {
     speaker?: StringFieldUpdateOperationsInput | string
     start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
@@ -12849,8 +12851,8 @@ export namespace Prisma {
     speaker: string
     start_date: Date | string
     end_date: Date | string
-    start_time: Date | string
-    end_time: Date | string
+    start_time: string
+    end_time: string
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
@@ -12869,8 +12871,8 @@ export namespace Prisma {
     speaker: string
     start_date: Date | string
     end_date: Date | string
-    start_time: Date | string
-    end_time: Date | string
+    start_time: string
+    end_time: string
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
@@ -12973,8 +12975,8 @@ export namespace Prisma {
     speaker?: StringFilter<"Seminar"> | string
     start_date?: DateTimeFilter<"Seminar"> | Date | string
     end_date?: DateTimeFilter<"Seminar"> | Date | string
-    start_time?: DateTimeFilter<"Seminar"> | Date | string
-    end_time?: DateTimeFilter<"Seminar"> | Date | string
+    start_time?: StringFilter<"Seminar"> | string
+    end_time?: StringFilter<"Seminar"> | string
     capacity?: IntFilter<"Seminar"> | number
     registration_deadline?: DateTimeFilter<"Seminar"> | Date | string
     status?: Enumseminar_statusFilter<"Seminar"> | $Enums.seminar_status
@@ -13573,8 +13575,8 @@ export namespace Prisma {
     speaker: string
     start_date: Date | string
     end_date: Date | string
-    start_time: Date | string
-    end_time: Date | string
+    start_time: string
+    end_time: string
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
@@ -13593,8 +13595,8 @@ export namespace Prisma {
     speaker: string
     start_date: Date | string
     end_date: Date | string
-    start_time: Date | string
-    end_time: Date | string
+    start_time: string
+    end_time: string
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
@@ -13684,8 +13686,8 @@ export namespace Prisma {
     speaker?: StringFieldUpdateOperationsInput | string
     start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
@@ -13704,8 +13706,8 @@ export namespace Prisma {
     speaker?: StringFieldUpdateOperationsInput | string
     start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
@@ -13800,8 +13802,8 @@ export namespace Prisma {
     speaker: string
     start_date: Date | string
     end_date: Date | string
-    start_time: Date | string
-    end_time: Date | string
+    start_time: string
+    end_time: string
     capacity: number
     registration_deadline: Date | string
     status?: $Enums.seminar_status
@@ -13864,8 +13866,8 @@ export namespace Prisma {
     speaker?: StringFieldUpdateOperationsInput | string
     start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
@@ -13884,8 +13886,8 @@ export namespace Prisma {
     speaker?: StringFieldUpdateOperationsInput | string
     start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status
@@ -13904,8 +13906,8 @@ export namespace Prisma {
     speaker?: StringFieldUpdateOperationsInput | string
     start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    start_time?: DateTimeFieldUpdateOperationsInput | Date | string
-    end_time?: DateTimeFieldUpdateOperationsInput | Date | string
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
     capacity?: IntFieldUpdateOperationsInput | number
     registration_deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: Enumseminar_statusFieldUpdateOperationsInput | $Enums.seminar_status

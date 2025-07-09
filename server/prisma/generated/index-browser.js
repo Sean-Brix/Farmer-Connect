@@ -281,6 +281,8 @@ exports.Prisma.SeminarOrderByRelevanceFieldEnum = {
   description: 'description',
   location: 'location',
   speaker: 'speaker',
+  start_time: 'start_time',
+  end_time: 'end_time',
   mimeType: 'mimeType',
   createdById: 'createdById'
 };

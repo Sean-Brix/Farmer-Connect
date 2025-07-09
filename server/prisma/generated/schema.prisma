@@ -165,12 +165,12 @@ model Seminar {
   description           String         @db.Text
   location              String
   speaker               String
-  start_date            DateTime
-  end_date              DateTime
-  start_time            DateTime
-  end_time              DateTime
+  start_date            DateTime       @db.Date
+  end_date              DateTime       @db.Date
+  start_time            String
+  end_time              String
   capacity              Int
-  registration_deadline DateTime
+  registration_deadline DateTime       @db.Date
   status                seminar_status @default(Upcoming)
   picture               Bytes?
   mimeType              String?

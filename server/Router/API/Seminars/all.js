@@ -1,4 +1,5 @@
 import express from 'express';
+import upload from '../../../Utils/multer_upload.js';
 
 // Route: ('/api/seminar/all')
 const router = express.Router();
@@ -22,7 +23,7 @@ router.use(authorize);
 
 // New Seminar
 import addSeminar from '../../../Controller/Seminar/addSeminar.js';
-router.post('/add', addSeminar);
+router.post('/add', upload.single('photo'), addSeminar);
 
 //? ================================================================================================ ?//
 
