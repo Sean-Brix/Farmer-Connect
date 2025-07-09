@@ -1,5 +1,4 @@
 import { PrismaClient } from '../../prisma/generated/client.js';
-import { buffer } from 'stream/consumers';
 const prisma = new PrismaClient();
 
 async function addSeminar(req, res) {

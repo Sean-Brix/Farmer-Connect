@@ -268,23 +268,36 @@ async function createSeminarParticipants() {
 
         //Determine status based on seminar status
         let participantStatus = 'Registered';
-        if(seminar.status === 'Ongoing'){
-          participantStatus = 'Registered'
-        }
-        else if(seminar.status == 'Cancelled'){
-          participantStatus = 'Cancelled'
-        }
-        else {
-          const attendanceOptions = ['Attended', 'Not_Attended', 'Cancelled'];
-          participantStatus = attendanceOptions[Math.floor(Math.random() * attendanceOptions.length)];
+
+        // Cancelled
+        if (seminar.status === 'Cancelled') {
+          participantStatus = 'Cancelled';
+        } 
+
+        // Upcoming or Ongoing
+        else if (seminar.status === 'Upcoming' || seminar.status === 'Ongoing') {
+          const randomValue = Math.random();
+          participantStatus = randomValue < 0.85 ? 'Registered' : 'Cancelled';
+        } 
+
+        // Completed
+        else if (seminar.status === 'Completed') {
+          const randomValue = Math.random();
+          if (randomValue < 0.15) {
+            participantStatus = 'Cancelled';
+          } 
+          else {
+            const attendanceOptions = ['Attended', 'Not_Attended'];
+            participantStatus = attendanceOptions[Math.floor(Math.random() * attendanceOptions.length)];
+          }
         }
 
         await prisma.seminarParticipant.create({
           data: {
-              seminar_id: seminar.id,
-              account_id: account.id,
-              status: participantStatus,
-              createdAt: registrationTime,
+            seminar_id: seminar.id,
+            account_id: account.id,
+            status: participantStatus,
+            createdAt: registrationTime,
           },
         });
       }

@@ -23,6 +23,9 @@ router.use(authorize);
 import getParticipants from '../../../Controller/Seminar/getParticipants.js';
 router.get('/:id', getParticipants)
 
+// Update
+import updateParticipant from '../../../Controller/Seminar/updateParticipant.js';
+router.post('/update/:id', updateParticipant);
 
 //? ================================================================================================ ?//
 

@@ -1,121 +1,114 @@
-import React, { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function Participants({ data, toggleOff }) {
     const [section, setSection] = useState('participants');
-    const [participants, setParticipants] = useState([]);
     const [statsVisible, setStatsVisible] = useState(false);
     const [selectedParticipants, setSelectedParticipants] = useState([]);
-    const [totalCounts, setTotalCounts] = useState({
-        total: 0,
-        attended: 0,
-        cancelled: 0,
-        noShow: 0,
-        registered: 0,
-    });
     const [showSelect, setShowSelect] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [bulkStatus, setBulkStatus] = useState('Registered');
 
-    useEffect(() => {
-        fetchParticipants();
-    }, [data.id]);
+    const queryClient = useQueryClient();
+    const [initLoad, setInitLoad] = useState(true);
 
-    const fetchParticipants = async () => {
-        try {
-
-            console.log(data);
-
+    const {
+        error,
+        data: participantsData,
+        refetch,
+    } = useQuery({
+        queryKey: ['participants', data.id],
+        queryFn: async () => {
             const response = await fetch(
                 `/api/seminar/participants/${data.id}`
             );
+            if (!response.ok) {
+                console.error(
+                    'Failed to fetch participants:',
+                    response.status,
+                    response.statusText
+                );
+                throw new Error('Failed to fetch participants');
+            }
+            setInitLoad(false);
+            return response.json();
+        },
+        initialData: { list: [] },
+        staleTime: 60 * 1000,
+        retry: 1,
+    });
 
-            const users = await response.json();
-            const participantList = users.list;
+    useEffect(() => {
+        refetch();
+    }, [data.id, refetch]);
 
-            setParticipants(participantList);
-            updateCounts(participantList);
-        } 
-        catch (error) {
-            console.error('Error fetching participants:', error);
-        }
-    };
+    const { total, attended, cancelled, noShow, registered } =
+        participantsData?.list?.reduce(
+            (acc, participant) => {
+                acc.total++;
+                if (participant.status === 'Attended') acc.attended++;
+                if (participant.status === 'Cancelled') acc.cancelled++;
+                if (participant.status === 'Not Attended') acc.noShow++;
+                if (participant.status === 'Registered') acc.registered++;
+                return acc;
+            },
+            {
+                total: 0,
+                attended: 0,
+                cancelled: 0,
+                noShow: 0,
+                registered: 0,
+            }
+        ) || { total: 0, attended: 0, cancelled: 0, noShow: 0, registered: 0 };
 
-    const updateCounts = (participantList) => {
-        const initialCounts = {
-            total: participantList.length,
-            attended: participantList.filter((p) => p.status === 'Attended')
-                .length,
-            cancelled: participantList.filter((p) => p.status === 'Cancelled')
-                .length,
-            noShow: participantList.filter((p) => p.status === 'No Show')
-                .length,
-            registered: participantList.filter((p) => p.status === 'Registered')
-                .length,
-        };
-        setTotalCounts(initialCounts);
-    };
-
-    const handleStatusUpdate = async (e) => {
-        e.preventDefault();
-
-        const newStatus = e.target.value;
-        const userId = e.target.closest('tr').querySelector('th').textContent;
-
-        await updateStatus(userId, newStatus);
-    };
-
-    const updateStatus = async (userId, newStatus) => {
-        const participant_id = participants.find(
-            (participant) => participant.id == userId
-        )?.participant_id;
-
-        try {
+    const updateStatusMutation = useMutation({
+        mutationFn: async ({ participantId, new_status }) => {
             const response = await fetch(
-                '/api/seminars/participants/updateStatus',
+                `/api/seminar/participants/update/${participantId}`,
                 {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        participants_id: participant_id,
-                        new_status: newStatus,
+                        new_status,
                     }),
                 }
             );
-
             if (!response.ok) {
-                console.error('Failed to update status:', response.status);
-                alert('Failed to update status. Please try again.');
-                return;
+                console.error(
+                    'Failed to update status:',
+                    response.status,
+                    response.statusText
+                );
+                throw new Error('Failed to update status');
             }
-            const updatedResponse = await fetch(
-                `/api/seminars/getParticipants?seminar_id=${data.id}`
-            );
-            const updatedUsers = await updatedResponse.json();
-
-            const updatedParticipantList = updatedUsers.payload.list;
-            setParticipants(updatedParticipantList);
-
-            const updatedCounts = {
-                total: updatedParticipantList.length,
-                attended: updatedParticipantList.filter(
-                    (p) => p.status === 'Attended'
-                ).length,
-                cancelled: updatedParticipantList.filter(
-                    (p) => p.status === 'Cancelled'
-                ).length,
-                noShow: updatedParticipantList.filter(
-                    (p) => p.status === 'No Show'
-                ).length,
-                registered: updatedParticipantList.filter(
-                    (p) => p.status === 'Registered'
-                ).length,
-            };
-            setTotalCounts(updatedCounts);
-        } catch (error) {
+            return response.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['participants', data.id],
+            });
+        },
+        onError: (error) => {
             console.error('Error updating status:', error);
             alert('Error updating status. Please try again.');
+        },
+        retry: 1,
+    });
+
+    const handleStatusUpdate = async (e, userId) => {
+        e.preventDefault();
+        const newStatus = e.target.value;
+        const participant = participantsData.list.find(
+            (participant) => participant.id === userId
+        );
+
+        if (participant) {
+            updateStatusMutation.mutate({
+                participantId: participant.id,
+                new_status: newStatus,
+            });
         }
     };
 
@@ -130,38 +123,19 @@ export default function Participants({ data, toggleOff }) {
     };
 
     const handleSearchChange = async (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        setSearchTerm(searchTerm);
-
-        if (searchTerm === '') {
-            fetchParticipants();
-        } else {
-            try {
-                const response = await fetch(
-                    `/api/seminars/getParticipants?seminar_id=${data.id}`
-                );
-                const users = await response.json();
-                const allParticipants = users.payload.list;
-
-                const filteredParticipants = allParticipants.filter(
-                    (participant) =>
-                        participant.firstName
-                            .toLowerCase()
-                            .includes(searchTerm) ||
-                        participant.lastName
-                            .toLowerCase()
-                            .includes(searchTerm) ||
-                        participant.email
-                            .toLowerCase()
-                            .includes(searchTerm)
-                );
-                setParticipants(filteredParticipants);
-                updateCounts(filteredParticipants);
-            } catch (error) {
-                console.error('Error fetching participants:', error);
-            }
-        }
+        setSearchTerm(e.target.value.toLowerCase());
     };
+
+    const filteredParticipants =
+        participantsData?.list?.filter((participant) => {
+            const searchTermLower = searchTerm.toLowerCase();
+            return (
+                participant.info.fullName
+                    .toLowerCase()
+                    .includes(searchTermLower) ||
+                participant.info.email.toLowerCase().includes(searchTermLower)
+            );
+        }) || [];
 
     const handleBulkStatusChange = (e) => {
         setBulkStatus(e.target.value);
@@ -169,7 +143,15 @@ export default function Participants({ data, toggleOff }) {
 
     const handleUpdateBulkStatus = async () => {
         for (const userId of selectedParticipants) {
-            await updateStatus(userId, bulkStatus);
+            const participant = participantsData.list.find(
+                (participant) => participant.id === userId
+            );
+            if (participant) {
+                await updateStatusMutation.mutateAsync({
+                    participantId: participant.id,
+                    new_status: bulkStatus,
+                });
+            }
         }
         setSelectedParticipants([]);
         setShowSelect(false);
@@ -177,17 +159,27 @@ export default function Participants({ data, toggleOff }) {
 
     const handleSelectAll = () => {
         if (
-            selectedParticipants.length === participants.map((p) => p.id).length
+            selectedParticipants.length ===
+            (filteredParticipants
+                ? filteredParticipants.map((p) => p.id).length
+                : 0)
         ) {
             setSelectedParticipants([]);
         } else {
-            setSelectedParticipants(participants.map((p) => p.id));
+            setSelectedParticipants(
+                filteredParticipants
+                    ? filteredParticipants.map((p) => p.id)
+                    : []
+            );
         }
     };
 
     const isAllSelected =
-        selectedParticipants.length === participants.map((p) => p.id).length &&
-        participants.length > 0;
+        selectedParticipants.length ===
+            (filteredParticipants
+                ? filteredParticipants.map((p) => p.id).length
+                : 0) &&
+        (filteredParticipants ? filteredParticipants.length > 0 : 0);
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
@@ -291,9 +283,6 @@ export default function Participants({ data, toggleOff }) {
                     <div className="flex flex-wrap gap-2 items-center">
                         <button
                             onClick={() => setShowSelect(!showSelect)}
-
-
-
                             className={`font-semibold px-4 py-2 rounded-xl transition text-base shadow ${
                                 showSelect
                                     ? 'bg-gradient-to-r from-red-600 to-red-400 hover:from-red-700 hover:to-red-500 text-white'
@@ -308,11 +297,11 @@ export default function Participants({ data, toggleOff }) {
                                 <button
                                     onClick={handleSelectAll}
                                     className={`bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold px-4 py-2 rounded-xl transition text-base shadow ${
-                                        participants.length === 0
+                                        filteredParticipants.length === 0
                                             ? 'opacity-50 cursor-not-allowed'
                                             : ''
                                     }`}
-                                    disabled={participants.length === 0}
+                                    disabled={filteredParticipants.length === 0}
                                 >
                                     {isAllSelected
                                         ? 'Deselect All'
@@ -328,7 +317,9 @@ export default function Participants({ data, toggleOff }) {
                                     </option>
                                     <option value="Attended">Attended</option>
                                     <option value="Cancelled">Cancelled</option>
-                                    <option value="No Show">No Show</option>
+                                    <option value="Not Attended">
+                                        Not Attended
+                                    </option>
                                 </select>
                                 <button
                                     onClick={handleUpdateBulkStatus}
@@ -346,13 +337,13 @@ export default function Participants({ data, toggleOff }) {
                     <div className="mb-4 md:mb-6 p-4 border rounded-2xl bg-gradient-to-r from-blue-50 via-white to-blue-100 flex flex-wrap gap-6 justify-between shadow-inner">
                         <div className="flex flex-col items-center min-w-[70px]">
                             <span className="text-xl font-black text-blue-700">
-                                {totalCounts.total}
+                                {total}
                             </span>
                             <span className="text-xs text-gray-500">Total</span>
                         </div>
                         <div className="flex flex-col items-center min-w-[70px]">
                             <span className="text-xl font-black text-green-700">
-                                {totalCounts.attended}
+                                {attended}
                             </span>
                             <span className="text-xs text-gray-500">
                                 Attended
@@ -360,7 +351,7 @@ export default function Participants({ data, toggleOff }) {
                         </div>
                         <div className="flex flex-col items-center min-w-[70px]">
                             <span className="text-xl font-black text-blue-700">
-                                {totalCounts.registered}
+                                {registered}
                             </span>
                             <span className="text-xs text-gray-500">
                                 Registered
@@ -368,7 +359,7 @@ export default function Participants({ data, toggleOff }) {
                         </div>
                         <div className="flex flex-col items-center min-w-[70px]">
                             <span className="text-xl font-black text-red-700">
-                                {totalCounts.cancelled}
+                                {cancelled}
                             </span>
                             <span className="text-xs text-gray-500">
                                 Cancelled
@@ -376,10 +367,10 @@ export default function Participants({ data, toggleOff }) {
                         </div>
                         <div className="flex flex-col items-center min-w-[70px]">
                             <span className="text-xl font-black text-yellow-700">
-                                {totalCounts.noShow}
+                                {noShow}
                             </span>
                             <span className="text-xs text-gray-500">
-                                No Show
+                                Not Attended
                             </span>
                         </div>
                     </div>
@@ -417,7 +408,30 @@ export default function Participants({ data, toggleOff }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {participants.length === 0 ? (
+                                {initLoad ? (
+                                    <tr>
+                                        <td
+                                            colSpan={showSelect ? 7 : 6}
+                                            className="px-4 py-16 text-center text-base font-semibold bg-blue-50"
+                                        >
+                                            <div className="flex flex-col items-center justify-center">
+                                                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+                                                <p className="text-gray-700 text-lg font-semibold">
+                                                    Loading...
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) : error ? (
+                                    <tr>
+                                        <td
+                                            colSpan={showSelect ? 7 : 6}
+                                            className="px-4 py-16 text-center text-base font-semibold bg-blue-50"
+                                        >
+                                            Error: {error.message}
+                                        </td>
+                                    </tr>
+                                ) : filteredParticipants.length === 0 ? (
                                     <tr>
                                         <td
                                             colSpan={showSelect ? 7 : 6}
@@ -427,7 +441,7 @@ export default function Participants({ data, toggleOff }) {
                                         </td>
                                     </tr>
                                 ) : (
-                                    participants.map((user, index) => (
+                                    filteredParticipants.map((user, index) => (
                                         <tr
                                             key={index}
                                             className="bg-white border-b hover:bg-blue-50 transition"
@@ -474,8 +488,11 @@ export default function Participants({ data, toggleOff }) {
                                                     value={
                                                         user.status || 'loading'
                                                     }
-                                                    onChange={
-                                                        handleStatusUpdate
+                                                    onChange={(e) =>
+                                                        handleStatusUpdate(
+                                                            e,
+                                                            user.id
+                                                        )
                                                     }
                                                 >
                                                     <option value="Registered">
@@ -487,8 +504,8 @@ export default function Participants({ data, toggleOff }) {
                                                     <option value="Cancelled">
                                                         Cancelled
                                                     </option>
-                                                    <option value="No Show">
-                                                        No Show
+                                                    <option value="Not Attended">
+                                                        Not Attended
                                                     </option>
                                                 </select>
                                             </td>
