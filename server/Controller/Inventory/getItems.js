@@ -7,7 +7,7 @@ async function getItems(req, res) {
             include: {
                 item_stacks: {
                     orderBy: {
-                        created_at: 'desc',
+                        createdAt: 'desc',
                     },
                 },
                 category: true,

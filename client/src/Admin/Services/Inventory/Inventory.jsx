@@ -21,6 +21,7 @@ function Content() {
     const [items, setItems] = useState([]);
     const [showStacksModal, setShowStacksModal] = useState(false);
     const [selectedItemStacks, setSelectedItemStacks] = useState(null);
+    const [expandedStacks, setExpandedStacks] = useState(new Set());
     const [form, setForm] = useState({
         id: '',
         name: '',
@@ -633,6 +634,7 @@ function Content() {
                             onClick={() => {
                                 setShowStacksModal(false);
                                 setSelectedItemStacks(null);
+                                setExpandedStacks(new Set());
                             }}
                             aria-label="Close"
                         >
@@ -658,104 +660,78 @@ function Content() {
                                 Total Quantity: {selectedItemStacks.total}
                             </p>
                         </div>
-                        <div className="overflow-hidden rounded-xl border border-blue-100">
-                            <table className="min-w-full divide-y divide-blue-200">
-                                <thead className="bg-blue-50">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
-                                            Stack #
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
-                                            Quantity
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
-                                            Status
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
-                                            Created At
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
-                                            Last Updated
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-blue-200">
-                                    {selectedItemStacks.item_stacks?.map(
-                                        (stack, index) => (
-                                            <tr
-                                                key={stack.id}
-                                                className="hover:bg-blue-50 transition-colors"
-                                            >
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-900">
-                                                    Stack #{index + 1}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">
-                                                    {stack.quantity}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                                    <span
-                                                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                    ${
-                                                        stack.status ===
-                                                        'Available'
-                                                            ? 'bg-green-100 text-green-800'
-                                                            : ''
-                                                    }
-                                                    ${
-                                                        stack.status ===
-                                                        'Borrowed'
-                                                            ? 'bg-yellow-100 text-yellow-800'
-                                                            : ''
-                                                    }
-                                                    ${
-                                                        stack.status ===
-                                                        'Damaged'
-                                                            ? 'bg-red-100 text-red-800'
-                                                            : ''
-                                                    }
-                                                    ${
-                                                        stack.status === 'Lost'
-                                                            ? 'bg-gray-100 text-gray-800'
-                                                            : ''
-                                                    }
-                                                    ${
-                                                        stack.status ===
-                                                        'Reserved'
-                                                            ? 'bg-purple-100 text-purple-800'
-                                                            : ''
-                                                    }
-                                                    ${
-                                                        stack.status ===
-                                                        'Distributed'
-                                                            ? 'bg-blue-100 text-blue-800'
-                                                            : ''
-                                                    }
-                                                    ${
-                                                        stack.status ===
-                                                        'Unavailable'
-                                                            ? 'bg-red-100 text-red-800'
-                                                            : ''
-                                                    }
-                                                `}
-                                                    >
-                                                        {stack.status}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">
-                                                    {new Date(
-                                                        stack.createdAt
-                                                    ).toLocaleDateString()}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">
-                                                    {new Date(
-                                                        stack.updatedAt
-                                                    ).toLocaleDateString()}
-                                                </td>
-                                            </tr>
-                                        )
+                        <div className="space-y-4">
+                            {Object.entries(
+                                selectedItemStacks.item_stacks.reduce((acc, stack) => {
+                                    if (!acc[stack.status]) {
+                                        acc[stack.status] = {
+                                            stacks: [],
+                                            totalQuantity: 0
+                                        };
+                                    }
+                                    acc[stack.status].stacks.push(stack);
+                                    acc[stack.status].totalQuantity += stack.quantity;
+                                    return acc;
+                                }, {})
+                            ).map(([status, { stacks, totalQuantity }]) => (
+                                <div key={status} className="rounded-xl border border-blue-100 overflow-hidden">
+                                    <button
+                                        onClick={() => {
+                                            const newExpandedStacks = expandedStacks.has(status) 
+                                                ? new Set([...expandedStacks].filter(s => s !== status))
+                                                : new Set([...expandedStacks, status]);
+                                            setExpandedStacks(newExpandedStacks);
+                                        }}
+                                        className="w-full px-6 py-4 bg-blue-50 hover:bg-blue-100 transition-colors flex items-center justify-between group"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <span className={`px-3 py-1 rounded-full text-sm font-semibold
+                                                ${status === 'Available' ? 'bg-green-100 text-green-800' : ''}
+                                                ${status === 'Borrowed' ? 'bg-yellow-100 text-yellow-800' : ''}
+                                                ${status === 'Damaged' ? 'bg-red-100 text-red-800' : ''}
+                                                ${status === 'Lost' ? 'bg-gray-100 text-gray-800' : ''}
+                                                ${status === 'Reserved' ? 'bg-purple-100 text-purple-800' : ''}
+                                                ${status === 'Distributed' ? 'bg-blue-100 text-blue-800' : ''}
+                                                ${status === 'Unavailable' ? 'bg-red-100 text-red-800' : ''}
+                                            `}>
+                                                {status}
+                                            </span>
+                                            <span className="text-blue-700 font-medium">
+                                                Total Quantity: {totalQuantity}
+                                            </span>
+                                            <span className="text-blue-600 text-sm">
+                                                ({stacks.length} {stacks.length === 1 ? 'stack' : 'stacks'})
+                                            </span>
+                                        </div>
+                                        <svg
+                                            className={`w-5 h-5 text-blue-600 transition-transform ${
+                                                expandedStacks.has(status) ? 'rotate-180' : ''
+                                            }`}
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    {expandedStacks.has(status) && (
+                                        <div className="divide-y divide-blue-100">
+                                            {stacks.map((stack, index) => (
+                                                <div key={stack.id} className="px-6 py-4 hover:bg-blue-50 transition-colors">
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="text-blue-900 font-medium">Stack #{index + 1}</span>
+                                                        <span className="text-blue-700">Quantity: {stack.quantity}</span>
+                                                    </div>
+                                                    <div className="mt-1 text-sm text-blue-600 flex gap-4">
+                                                        <span>Created: {new Date(stack.createdAt).toLocaleDateString()}</span>
+                                                        <span>Updated: {new Date(stack.updatedAt).toLocaleDateString()}</span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     )}
-                                </tbody>
-                            </table>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
