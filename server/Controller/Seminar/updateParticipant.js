@@ -34,7 +34,8 @@ async function updateParticipant(req, res) {
         });
 
         return res.status(200).json(updatedParticipant);
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('Error updating participant status:', error);
         return res.status(500).json({
             message: 'Failed to update participant status',

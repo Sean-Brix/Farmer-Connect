@@ -8,7 +8,7 @@ import Analytics from '../../Services/Analytics/Analytics';
 import Profiles from '../../Services/Profiles/Profiles.jsx';
 import Seminar from '../../Services/Seminar/Seminar.jsx';
 import EIC from '../../Services/EIC/EIC.jsx';
-import Content from '../../Services/Content/Content.jsx';
+import Content from '../../Services/Inventory/Inventory.jsx';
 import Distribution from '../../Services/Distribution/Distribution.jsx';
 
 // GLOBAL

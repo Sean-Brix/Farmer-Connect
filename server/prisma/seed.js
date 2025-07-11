@@ -312,16 +312,9 @@ import inventoryItemsData from './Data/inventory_items.json' with { type: 'json'
 
 async function createInventoryItems() {
   for (const item of inventoryItemsData) {
-    // Check if item with the same id already exists
-    const existingItem = await prisma.inventoryItem.findUnique({
-      where: { id: item.id }
-    });
-    if (existingItem) {
-      continue;
-    }
+
     await prisma.inventoryItem.create({
       data: {
-        id: item.id,
         name: item.name,
         description: item.description,
         category: {
@@ -338,13 +331,7 @@ import inventoryCategoriesData from './Data/inventory_category.json' with { type
 
 async function createInventoryCategories() {
   for (const category of inventoryCategoriesData) {
-    // Check if category with the same id already exists
-    const existingCategory = await prisma.inventoryCategory.findUnique({
-      where: { id: category.id }
-    });
-    if (existingCategory) {
-      continue;
-    }
+
     await prisma.inventoryCategory.create({
       data: {
         id: category.id,
