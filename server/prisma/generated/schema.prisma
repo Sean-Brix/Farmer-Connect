@@ -93,6 +93,7 @@ model InventoryItem {
   id          String   @id @default(cuid())
   name        String   @unique
   description String?
+  picture     Bytes?
   categoryId  String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

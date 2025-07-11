@@ -6,14 +6,22 @@ async function getItems(req, res) {
         const items = await prisma.inventoryItem.findMany({
             include: {
                 item_stacks: true,
+                category: true
             },
         });
 
-        console.log(items);
+        const updated = items.map((item) => ({
+            ...item,
+            total: item.item_stacks.reduce(
+                (sum, stack) => sum + stack.quantity,
+                0
+            ),
+        }));
 
-        res.status(200).json(items);
-    } 
-    catch (error) {
+        console.log(updated);
+
+        res.status(200).json(updated);
+    } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to retrieve items' });
     }

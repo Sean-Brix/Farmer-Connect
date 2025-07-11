@@ -9,4 +9,7 @@ router.use('/account', account);
 import seminar from './Seminars/index.js';
 router.use('/seminar', seminar);
 
+import inventory from './Inventory/index.js'
+router.use('/inventory', inventory);
+
 export default router;

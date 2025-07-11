@@ -4799,6 +4799,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     description: string | null
+    picture: Uint8Array | null
     categoryId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4808,6 +4809,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     description: string | null
+    picture: Uint8Array | null
     categoryId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4817,6 +4819,7 @@ export namespace Prisma {
     id: number
     name: number
     description: number
+    picture: number
     categoryId: number
     createdAt: number
     updatedAt: number
@@ -4828,6 +4831,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    picture?: true
     categoryId?: true
     createdAt?: true
     updatedAt?: true
@@ -4837,6 +4841,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    picture?: true
     categoryId?: true
     createdAt?: true
     updatedAt?: true
@@ -4846,6 +4851,7 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    picture?: true
     categoryId?: true
     createdAt?: true
     updatedAt?: true
@@ -4928,6 +4934,7 @@ export namespace Prisma {
     id: string
     name: string
     description: string | null
+    picture: Uint8Array | null
     categoryId: string
     createdAt: Date
     updatedAt: Date
@@ -4954,6 +4961,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    picture?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4968,12 +4976,13 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    picture?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type InventoryItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["inventoryItem"]>
+  export type InventoryItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "picture" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["inventoryItem"]>
   export type InventoryItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item_stacks?: boolean | InventoryItem$item_stacksArgs<ExtArgs>
     category?: boolean | InventoryCategoryDefaultArgs<ExtArgs>
@@ -4990,6 +4999,7 @@ export namespace Prisma {
       id: string
       name: string
       description: string | null
+      picture: Uint8Array | null
       categoryId: string
       createdAt: Date
       updatedAt: Date
@@ -5367,6 +5377,7 @@ export namespace Prisma {
     readonly id: FieldRef<"InventoryItem", 'String'>
     readonly name: FieldRef<"InventoryItem", 'String'>
     readonly description: FieldRef<"InventoryItem", 'String'>
+    readonly picture: FieldRef<"InventoryItem", 'Bytes'>
     readonly categoryId: FieldRef<"InventoryItem", 'String'>
     readonly createdAt: FieldRef<"InventoryItem", 'DateTime'>
     readonly updatedAt: FieldRef<"InventoryItem", 'DateTime'>
@@ -9831,6 +9842,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
+    picture: 'picture',
     categoryId: 'categoryId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -10355,6 +10367,7 @@ export namespace Prisma {
     id?: StringFilter<"InventoryItem"> | string
     name?: StringFilter<"InventoryItem"> | string
     description?: StringNullableFilter<"InventoryItem"> | string | null
+    picture?: BytesNullableFilter<"InventoryItem"> | Uint8Array | null
     categoryId?: StringFilter<"InventoryItem"> | string
     createdAt?: DateTimeFilter<"InventoryItem"> | Date | string
     updatedAt?: DateTimeFilter<"InventoryItem"> | Date | string
@@ -10366,6 +10379,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    picture?: SortOrderInput | SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10381,6 +10395,7 @@ export namespace Prisma {
     OR?: InventoryItemWhereInput[]
     NOT?: InventoryItemWhereInput | InventoryItemWhereInput[]
     description?: StringNullableFilter<"InventoryItem"> | string | null
+    picture?: BytesNullableFilter<"InventoryItem"> | Uint8Array | null
     categoryId?: StringFilter<"InventoryItem"> | string
     createdAt?: DateTimeFilter<"InventoryItem"> | Date | string
     updatedAt?: DateTimeFilter<"InventoryItem"> | Date | string
@@ -10392,6 +10407,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    picture?: SortOrderInput | SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10407,6 +10423,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"InventoryItem"> | string
     name?: StringWithAggregatesFilter<"InventoryItem"> | string
     description?: StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+    picture?: BytesNullableWithAggregatesFilter<"InventoryItem"> | Uint8Array | null
     categoryId?: StringWithAggregatesFilter<"InventoryItem"> | string
     createdAt?: DateTimeWithAggregatesFilter<"InventoryItem"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"InventoryItem"> | Date | string
@@ -11020,6 +11037,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    picture?: Uint8Array | null
     createdAt?: Date | string
     updatedAt?: Date | string
     item_stacks?: ItemStackCreateNestedManyWithoutItemInput
@@ -11030,6 +11048,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    picture?: Uint8Array | null
     categoryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11040,6 +11059,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item_stacks?: ItemStackUpdateManyWithoutItemNestedInput
@@ -11050,6 +11070,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11060,6 +11081,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    picture?: Uint8Array | null
     categoryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11069,6 +11091,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11077,6 +11100,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11787,6 +11811,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    picture?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11796,6 +11821,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    picture?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11805,6 +11831,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    picture?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13305,6 +13332,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    picture?: Uint8Array | null
     createdAt?: Date | string
     updatedAt?: Date | string
     item_stacks?: ItemStackCreateNestedManyWithoutItemInput
@@ -13314,6 +13342,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    picture?: Uint8Array | null
     createdAt?: Date | string
     updatedAt?: Date | string
     item_stacks?: ItemStackUncheckedCreateNestedManyWithoutItemInput
@@ -13352,6 +13381,7 @@ export namespace Prisma {
     id?: StringFilter<"InventoryItem"> | string
     name?: StringFilter<"InventoryItem"> | string
     description?: StringNullableFilter<"InventoryItem"> | string | null
+    picture?: BytesNullableFilter<"InventoryItem"> | Uint8Array | null
     categoryId?: StringFilter<"InventoryItem"> | string
     createdAt?: DateTimeFilter<"InventoryItem"> | Date | string
     updatedAt?: DateTimeFilter<"InventoryItem"> | Date | string
@@ -13361,6 +13391,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    picture?: Uint8Array | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category: InventoryCategoryCreateNestedOneWithoutItemsInput
@@ -13370,6 +13401,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    picture?: Uint8Array | null
     categoryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13395,6 +13427,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: InventoryCategoryUpdateOneRequiredWithoutItemsNestedInput
@@ -13404,6 +13437,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13981,6 +14015,7 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    picture?: Uint8Array | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13989,6 +14024,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item_stacks?: ItemStackUpdateManyWithoutItemNestedInput
@@ -13998,6 +14034,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item_stacks?: ItemStackUncheckedUpdateManyWithoutItemNestedInput
@@ -14007,6 +14044,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

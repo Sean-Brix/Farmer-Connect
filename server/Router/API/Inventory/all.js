@@ -1,6 +1,6 @@
 import express from 'express';
 
-// Route: ('/api/seminar/all')
+// Route: ('/api/inventory/all')
 const router = express.Router();
 
 //? ======================================= AUTHORIZED ============================================= ?//

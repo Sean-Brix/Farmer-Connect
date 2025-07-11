@@ -43,13 +43,14 @@ function Content() {
 
     const fetchItems = async () => {
         try {
-            const response = await fetch('/api/inventory/getAll');
+            const response = await fetch('/api/inventory/all/items');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            setItems(data.payload?.list || []);
-        } catch (error) {
+            setItems(data || []);
+        } 
+        catch (error) {
             console.error('Failed to fetch inventory:', error);
             setItems([]);
         }
@@ -721,9 +722,6 @@ function Content() {
                                     Category
                                 </th>
                                 <th className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-left text-xs md:text-sm text-blue-700 font-semibold">
-                                    Status
-                                </th>
-                                <th className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-left text-xs md:text-sm text-blue-700 font-semibold">
                                     Actions
                                 </th>
                             </tr>
@@ -761,7 +759,7 @@ function Content() {
                                             {item.name}
                                         </td>
                                         <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
-                                            {item.quantity}
+                                            {item.total}
                                         </td>
                                         <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
                                             <span
@@ -772,10 +770,7 @@ function Content() {
                                             </span>
                                         </td>
                                         <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
-                                            {item.category}
-                                        </td>
-                                        <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
-                                            {item.status}
+                                            {item.category.name}
                                         </td>
                                         <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
                                             <button

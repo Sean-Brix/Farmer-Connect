@@ -164,6 +164,7 @@ exports.Prisma.InventoryItemScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
+  picture: 'picture',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
