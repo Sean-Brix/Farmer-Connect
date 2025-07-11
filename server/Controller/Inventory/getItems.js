@@ -5,8 +5,12 @@ async function getItems(req, res) {
     try {
         const items = await prisma.inventoryItem.findMany({
             include: {
-                item_stacks: true,
-                category: true
+                item_stacks: {
+                    orderBy: {
+                        created_at: 'desc',
+                    },
+                },
+                category: true,
             },
         });
 
@@ -17,8 +21,6 @@ async function getItems(req, res) {
                 0
             ),
         }));
-
-        console.log(updated);
 
         res.status(200).json(updated);
     } catch (error) {

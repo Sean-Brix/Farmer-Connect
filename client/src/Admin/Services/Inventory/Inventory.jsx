@@ -19,6 +19,8 @@ const statuses = ['Available', 'Borrowed', 'Damaged', 'Out of Stock'];
 
 function Content() {
     const [items, setItems] = useState([]);
+    const [showStacksModal, setShowStacksModal] = useState(false);
+    const [selectedItemStacks, setSelectedItemStacks] = useState(null);
     const [form, setForm] = useState({
         id: '',
         name: '',
@@ -49,8 +51,7 @@ function Content() {
             }
             const data = await response.json();
             setItems(data || []);
-        } 
-        catch (error) {
+        } catch (error) {
             console.error('Failed to fetch inventory:', error);
             setItems([]);
         }
@@ -258,6 +259,11 @@ function Content() {
         } else {
             setSelectedItems([]);
         }
+    };
+
+    const handleViewStacks = (item) => {
+        setSelectedItemStacks(item);
+        setShowStacksModal(true);
     };
 
     const [showStats, setShowStats] = useState(false);
@@ -619,6 +625,142 @@ function Content() {
                     </div>
                 </div>
             )}
+            {showStacksModal && selectedItemStacks && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 w-[98vw] max-w-4xl relative border border-blue-200 animate-fadeIn">
+                        <button
+                            className="absolute top-3 right-3 text-blue-400 hover:text-blue-700 text-2xl sm:text-3xl transition"
+                            onClick={() => {
+                                setShowStacksModal(false);
+                                setSelectedItemStacks(null);
+                            }}
+                            aria-label="Close"
+                        >
+                            <svg
+                                className="w-7 h-7"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                        <div className="mb-6">
+                            <h2 className="text-xl sm:text-2xl font-extrabold text-blue-800 text-center tracking-tight">
+                                {selectedItemStacks.name} - Stacks
+                            </h2>
+                            <p className="text-center text-blue-600 mt-2">
+                                Total Quantity: {selectedItemStacks.total}
+                            </p>
+                        </div>
+                        <div className="overflow-hidden rounded-xl border border-blue-100">
+                            <table className="min-w-full divide-y divide-blue-200">
+                                <thead className="bg-blue-50">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
+                                            Stack #
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
+                                            Quantity
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
+                                            Created At
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">
+                                            Last Updated
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-blue-200">
+                                    {selectedItemStacks.item_stacks?.map(
+                                        (stack, index) => (
+                                            <tr
+                                                key={stack.id}
+                                                className="hover:bg-blue-50 transition-colors"
+                                            >
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-900">
+                                                    Stack #{index + 1}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">
+                                                    {stack.quantity}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                    <span
+                                                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                                    ${
+                                                        stack.status ===
+                                                        'Available'
+                                                            ? 'bg-green-100 text-green-800'
+                                                            : ''
+                                                    }
+                                                    ${
+                                                        stack.status ===
+                                                        'Borrowed'
+                                                            ? 'bg-yellow-100 text-yellow-800'
+                                                            : ''
+                                                    }
+                                                    ${
+                                                        stack.status ===
+                                                        'Damaged'
+                                                            ? 'bg-red-100 text-red-800'
+                                                            : ''
+                                                    }
+                                                    ${
+                                                        stack.status === 'Lost'
+                                                            ? 'bg-gray-100 text-gray-800'
+                                                            : ''
+                                                    }
+                                                    ${
+                                                        stack.status ===
+                                                        'Reserved'
+                                                            ? 'bg-purple-100 text-purple-800'
+                                                            : ''
+                                                    }
+                                                    ${
+                                                        stack.status ===
+                                                        'Distributed'
+                                                            ? 'bg-blue-100 text-blue-800'
+                                                            : ''
+                                                    }
+                                                    ${
+                                                        stack.status ===
+                                                        'Unavailable'
+                                                            ? 'bg-red-100 text-red-800'
+                                                            : ''
+                                                    }
+                                                `}
+                                                    >
+                                                        {stack.status}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">
+                                                    {new Date(
+                                                        stack.createdAt
+                                                    ).toLocaleDateString()}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">
+                                                    {new Date(
+                                                        stack.updatedAt
+                                                    ).toLocaleDateString()}
+                                                </td>
+                                            </tr>
+                                        )
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {showStats && (
                 <div className="w-full max-w-6xl mt-4">
                     <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-4 text-center tracking-tight">
@@ -713,7 +855,7 @@ function Content() {
                                     Name
                                 </th>
                                 <th className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-left text-xs md:text-sm text-blue-700 font-semibold">
-                                    Quantity
+                                    Total Quantity
                                 </th>
                                 <th className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-left text-xs md:text-sm text-blue-700 font-semibold">
                                     Description
@@ -739,48 +881,66 @@ function Content() {
                                 </tr>
                             ) : (
                                 filteredItems.map((item, index) => (
-                                    <tr
-                                        key={item.id + index}
-                                        className="hover:bg-blue-50/70 transition"
-                                    >
-                                        <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedItems.includes(
-                                                    item.id
-                                                )}
-                                                onChange={() =>
-                                                    handleSelectItem(item.id)
-                                                }
-                                                aria-label={`Select ${item.name}`}
-                                            />
-                                        </td>
-                                        <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b font-semibold text-blue-900">
-                                            {item.name}
-                                        </td>
-                                        <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
-                                            {item.total}
-                                        </td>
-                                        <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
-                                            <span
-                                                title={item.description}
-                                                className="block max-w-[120px] sm:max-w-[180px] truncate"
-                                            >
-                                                {truncate(item.description, 40)}
-                                            </span>
-                                        </td>
-                                        <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
-                                            {item.category.name}
-                                        </td>
-                                        <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
-                                            <button
-                                                onClick={() => handleEdit(item)}
-                                                className="bg-gradient-to-r from-green-400 to-green-600 text-white font-bold px-2 py-1 rounded-xl hover:from-green-500 hover:to-green-700 transition shadow-lg text-xs sm:text-sm"
-                                            >
-                                                Edit
-                                            </button>
-                                        </td>
-                                    </tr>
+                                    <React.Fragment key={item.id + index}>
+                                        <tr className="hover:bg-blue-50/70 transition">
+                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedItems.includes(
+                                                        item.id
+                                                    )}
+                                                    onChange={() =>
+                                                        handleSelectItem(
+                                                            item.id
+                                                        )
+                                                    }
+                                                    aria-label={`Select ${item.name}`}
+                                                />
+                                            </td>
+                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b font-semibold text-blue-900">
+                                                {item.name}
+                                            </td>
+                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
+                                                <div className="flex items-center gap-2">
+                                                    <span>{item.total}</span>
+                                                    <button
+                                                        onClick={() =>
+                                                            handleViewStacks(
+                                                                item
+                                                            )
+                                                        }
+                                                        className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
+                                                    >
+                                                        View Stacks
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
+                                                <span
+                                                    title={item.description}
+                                                    className="block max-w-[120px] sm:max-w-[180px] truncate"
+                                                >
+                                                    {truncate(
+                                                        item.description,
+                                                        40
+                                                    )}
+                                                </span>
+                                            </td>
+                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
+                                                {item.category.name}
+                                            </td>
+                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
+                                                <button
+                                                    onClick={() =>
+                                                        handleEdit(item)
+                                                    }
+                                                    className="bg-gradient-to-r from-green-400 to-green-600 text-white font-bold px-2 py-1 rounded-xl hover:from-green-500 hover:to-green-700 transition shadow-lg text-xs sm:text-sm"
+                                                >
+                                                    Edit
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </React.Fragment>
                                 ))
                             )}
                         </tbody>
