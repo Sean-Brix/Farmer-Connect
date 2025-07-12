@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AddItemModal from './addItem';
 
 const categories = [
     'Farming Equipment',
@@ -15,7 +16,14 @@ const categories = [
     'Other',
 ];
 
-const statuses = ['Available', 'Borrowed', 'Damaged', 'Out of Stock'];
+const statuses = [
+    'Available',
+    'Unavailable',
+    'Lost',
+    'Damaged',
+    'EIC',
+    'Distributed',
+];
 
 function Content() {
     const [items, setItems] = useState([]);
@@ -39,6 +47,7 @@ function Content() {
     const [showDelete, setShowDelete] = useState(false);
     const [editItemId, setEditItemId] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [uiSize, setUiSize] = useState('md'); // 'sm', 'md', 'lg'
 
     useEffect(() => {
         fetchItems();
@@ -127,30 +136,19 @@ function Content() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!form.name || !form.quantity) return;
-
+    const handleSubmit = async (formData) => {
         try {
             const response = await fetch('/api/inventory/addItem', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(form),
+                body: JSON.stringify(formData),
             });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            setForm({
-                id: '',
-                name: '',
-                quantity: '',
-                description: '',
-                category: 'Other',
-                status: 'Available',
-            });
             setShowModal(false);
             fetchItems();
         } catch (error) {
@@ -222,7 +220,7 @@ function Content() {
         return matchesSearch && matchesCategoryFilter && matchesStatusFilter;
     });
 
-    const truncate = (str, n = 40) =>
+    const truncate = (str, n = 24) =>
         str && str.length > n ? str.slice(0, n) + '...' : str;
 
     const handleRemoveSelected = async () => {
@@ -287,24 +285,43 @@ function Content() {
         }
     };
 
+    // UI size classes
+    const sizeClasses = {
+        sm: 'max-w-full p-2 text-xs',
+        md: 'max-w-full p-4 text-sm',
+        lg: 'max-w-full p-6 text-base',
+    };
+
     return (
-        <div className="flex flex-col items-center justify-center min-h-[91vh] w-full bg-gradient-to-br from-blue-200 via-blue-100 to-blue-300 p-2 sm:p-4 md:p-8 rounded-2xl shadow-2xl mt-[5%] transition-all">
-            <div className="w-full max-w-6xl z-20 sticky top-0 md:top-14 bg-white/80 backdrop-blur-md p-4 sm:p-6 md:p-10 rounded-2xl shadow-lg border-b border-blue-200">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-blue-800 mb-4 text-center tracking-tight drop-shadow">
+        <div
+            className={`flex flex-col items-center justify-center min-h-[91vh] w-full bg-white rounded-xl shadow mt-15 transition-all
+                ${sizeClasses[uiSize]}
+            `}
+            style={{
+                boxSizing: 'border-box',
+                width: '100%',
+            }}
+        >
+            <div
+                className={`w-full sticky top-[-5px] bg-white rounded-xl shadow border-b border-blue-100 mb-4 ${
+                    uiSize === 'lg' ? 'p-6' : uiSize === 'md' ? 'p-4' : 'p-2'
+                }`}
+            >
+                <h1 className="text-lg sm:text-xl font-bold text-blue-800 mb-4 text-center tracking-tight">
                     Inventory Management
                 </h1>
-                <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 w-full max-w-3xl mx-auto justify-center md:justify-between">
+                <div className="flex flex-wrap gap-2 w-full mx-auto justify-center mb-2">
                     <input
                         type="text"
-                        placeholder="Search items..."
+                        placeholder="Search..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="flex-1 min-w-[160px] border border-blue-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow transition text-blue-900 placeholder:text-blue-400 text-sm sm:text-base"
+                        className="flex-1 min-w-[120px] border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 text-blue-900 placeholder:text-blue-400 w-full sm:w-auto"
                     />
                     <select
                         value={categoryFilter}
                         onChange={(e) => setCategoryFilter(e.target.value)}
-                        className="min-w-[120px] border border-blue-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow transition text-blue-900 text-sm sm:text-base"
+                        className="min-w-[100px] border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 text-blue-900 w-full sm:w-auto"
                     >
                         <option key="All">All</option>
                         {categories.map((cat) => (
@@ -316,7 +333,7 @@ function Content() {
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="min-w-[120px] border border-blue-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow transition text-blue-900 text-sm sm:text-base"
+                        className="min-w-[100px] border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 text-blue-900 w-full sm:w-auto"
                     >
                         <option key="All">All</option>
                         {statuses.map((status) => (
@@ -327,72 +344,33 @@ function Content() {
                     </select>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold px-4 sm:px-6 py-2 rounded-xl hover:from-blue-600 hover:to-blue-800 transition shadow-lg flex items-center gap-2 text-sm sm:text-base"
+                        className="bg-blue-500 text-white font-bold px-4 py-2 rounded hover:bg-blue-600 transition w-full sm:w-auto"
                     >
-                        <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M12 4v16m8-8H4"
-                            />
-                        </svg>
-                        Add Item
+                        + Add
                     </button>
                     {!showDelete ? (
                         <button
                             onClick={() => setShowDelete(true)}
-                            className="bg-gradient-to-r from-red-400 to-red-600 text-white font-bold px-4 sm:px-6 py-2 rounded-xl hover:from-red-500 hover:to-red-700 transition shadow-lg flex items-center gap-2 text-sm sm:text-base"
+                            className="bg-red-500 text-white font-bold px-4 py-2 rounded hover:bg-red-600 transition w-full sm:w-auto"
                         >
-                            <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
                             Delete
                         </button>
                     ) : (
                         <button
                             onClick={() => setShowDelete(false)}
-                            className="bg-gradient-to-r from-gray-300 to-gray-400 text-blue-900 font-bold px-4 sm:px-6 py-2 rounded-xl hover:from-gray-400 hover:to-gray-500 transition shadow-lg flex items-center gap-2 text-sm sm:text-base"
+                            className="bg-gray-300 text-blue-900 font-bold px-4 py-2 rounded hover:bg-gray-400 transition w-full sm:w-auto"
                         >
-                            <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
                             Cancel
                         </button>
                     )}
                 </div>
                 {showDelete && (
                     <div className="flex flex-col items-end mt-2 gap-2 w-full">
-                        <div className="flex flex-col gap-2 w-full sm:w-auto">
+                        <div className="flex gap-2 flex-wrap w-full">
                             <button
                                 onClick={handleRemoveSelected}
                                 disabled={selectedItems.length === 0}
-                                className={`px-4 py-2 rounded-xl font-semibold transition shadow-lg bg-red-500 text-white hover:bg-red-600 disabled:bg-red-200 disabled:cursor-not-allowed text-sm sm:text-base`}
+                                className={`px-4 py-2 rounded font-semibold bg-red-500 text-white hover:bg-red-600 disabled:bg-red-200 disabled:cursor-not-allowed w-full sm:w-auto`}
                             >
                                 Remove Selected
                             </button>
@@ -403,7 +381,7 @@ function Content() {
                                         filteredItems.map((item) => item.id)
                                     );
                                 }}
-                                className="px-4 py-2 rounded-xl font-semibold transition shadow-lg bg-blue-500 text-white hover:bg-blue-600 text-sm sm:text-base"
+                                className="px-4 py-2 rounded font-semibold bg-blue-500 text-white hover:bg-blue-600 w-full sm:w-auto"
                             >
                                 Select All
                             </button>
@@ -411,124 +389,28 @@ function Content() {
                     </div>
                 )}
             </div>
-            {showModal && (
-                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 w-[98vw] max-w-lg relative border border-blue-200 animate-fadeIn">
-                        <button
-                            className="absolute top-3 right-3 text-blue-400 hover:text-blue-700 text-2xl sm:text-3xl transition"
-                            onClick={() => setShowModal(false)}
-                            aria-label="Close"
-                        >
-                            <svg
-                                className="w-7 h-7"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </button>
-                        <h2 className="text-xl sm:text-2xl font-extrabold mb-6 text-blue-800 text-center tracking-tight">
-                            Add New Item
-                        </h2>
-                        <form
-                            className="flex flex-col gap-4"
-                            onSubmit={handleSubmit}
-                        >
-                            <input
-                                type="text"
-                                name="name"
-                                value={form.name}
-                                onChange={handleChange}
-                                placeholder="Item Name"
-                                className="border border-blue-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow text-sm sm:text-base"
-                                required
-                            />
-                            <input
-                                type="number"
-                                name="quantity"
-                                value={form.quantity}
-                                onChange={handleChange}
-                                placeholder="Quantity"
-                                className="border border-blue-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow text-sm sm:text-base"
-                                min="1"
-                                required
-                            />
-                            <input
-                                type="text"
-                                name="description"
-                                value={form.description}
-                                onChange={handleChange}
-                                placeholder="Description"
-                                className="border border-blue-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow text-sm sm:text-base"
-                            />
-                            <select
-                                name="category"
-                                value={form.category}
-                                onChange={handleChange}
-                                className="border border-blue-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow transition text-blue-900 text-sm sm:text-base"
-                            >
-                                {categories.map((cat) => (
-                                    <option key={cat} value={cat}>
-                                        {cat}
-                                    </option>
-                                ))}
-                            </select>
-                            <select
-                                name="status"
-                                value={form.status}
-                                onChange={handleChange}
-                                className="border border-blue-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow transition text-blue-900 text-sm sm:text-base"
-                            >
-                                {statuses.map((status) => (
-                                    <option key={status} value={status}>
-                                        {status}
-                                    </option>
-                                ))}
-                            </select>
-                            <button
-                                type="submit"
-                                className="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-2 rounded-xl hover:from-blue-600 hover:to-blue-800 transition shadow-lg mt-2 text-sm sm:text-base"
-                            >
-                                Add Item
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            )}
+            <AddItemModal
+                isOpen={showModal}
+                onClose={() => setShowModal(false)}
+                onSubmit={handleSubmit}
+                existingItems={items}
+            />
 
             {showEditModal && (
-                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 w-[98vw] max-w-lg relative border border-blue-200 animate-fadeIn">
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl shadow p-6 w-full max-w-sm relative border border-blue-100 mx-2">
                         <button
-                            className="absolute top-3 right-3 text-blue-400 hover:text-blue-700 text-2xl sm:text-3xl transition"
+                            className="absolute top-2 right-2 text-blue-400 hover:text-blue-700 text-xl transition"
                             onClick={() => setShowEditModal(false)}
                             aria-label="Close"
                         >
-                            <svg
-                                className="w-7 h-7"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
+                            ×
                         </button>
-                        <h2 className="text-xl sm:text-2xl font-extrabold mb-6 text-blue-800 text-center tracking-tight">
+                        <h2 className="text-base font-bold mb-4 text-blue-800 text-center">
                             Edit Item
                         </h2>
                         <form
-                            className="flex flex-col gap-4"
+                            className="flex flex-col gap-3"
                             onSubmit={handleUpdate}
                         >
                             <input
@@ -536,8 +418,8 @@ function Content() {
                                 name="name"
                                 value={form.name}
                                 onChange={handleChange}
-                                placeholder="Item Name"
-                                className="border border-blue-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow text-sm sm:text-base"
+                                placeholder="Name"
+                                className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
                                 required
                             />
                             <input
@@ -545,8 +427,8 @@ function Content() {
                                 name="quantity"
                                 value={form.quantity}
                                 onChange={handleChange}
-                                placeholder="Quantity"
-                                className="border border-blue-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow text-sm sm:text-base"
+                                placeholder="Qty"
+                                className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
                                 min="0"
                                 required
                             />
@@ -556,13 +438,13 @@ function Content() {
                                 value={form.description}
                                 onChange={handleChange}
                                 placeholder="Description"
-                                className="border border-blue-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow text-sm sm:text-base"
+                                className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
                             />
                             <select
                                 name="category"
                                 value={form.category}
                                 onChange={handleChange}
-                                className="border border-blue-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow transition text-blue-900 text-sm sm:text-base"
+                                className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
                             >
                                 {categories.map((cat) => (
                                     <option key={cat} value={cat}>
@@ -574,7 +456,7 @@ function Content() {
                                 name="status"
                                 value={form.status}
                                 onChange={handleChange}
-                                className="border border-blue-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 shadow transition text-blue-900 text-sm sm:text-base"
+                                className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
                             >
                                 {statuses.map((status) => (
                                     <option key={status} value={status}>
@@ -584,9 +466,9 @@ function Content() {
                             </select>
                             <button
                                 type="submit"
-                                className="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-2 rounded-xl hover:from-blue-600 hover:to-blue-800 transition shadow-lg mt-2 text-sm sm:text-base"
+                                className="bg-blue-500 text-white font-bold py-2 rounded hover:bg-blue-600 transition mt-2 w-full"
                             >
-                                Update Item
+                                Update
                             </button>
                         </form>
                     </div>
@@ -595,51 +477,39 @@ function Content() {
             {showStacksModal &&
                 selectedItemStacks &&
                 selectedItemStacks.currentStacks && (
-                    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 w-[98vw] max-w-4xl relative border border-blue-200 animate-fadeIn">
+                    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-xl shadow p-6 w-full max-w-lg relative border border-blue-100 mx-2">
                             <button
-                                className="absolute top-3 right-3 text-blue-400 hover:text-blue-700 text-2xl sm:text-3xl transition"
+                                className="absolute top-2 right-2 text-blue-400 hover:text-blue-700 text-xl transition"
                                 onClick={() => {
                                     setShowStacksModal(false);
                                 }}
                                 aria-label="Close"
                             >
-                                <svg
-                                    className="w-7 h-7"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
+                                ×
                             </button>
-                            <div className="mb-6">
-                                <h2 className="text-xl sm:text-2xl font-extrabold text-blue-800 text-center tracking-tight">
+                            <div className="mb-4">
+                                <h2 className="text-base font-bold text-blue-800 text-center">
                                     {selectedItemStacks.name} -{' '}
                                     {selectedItemStacks.currentStatus} Stacks
                                 </h2>
                             </div>
-                            <div className="divide-y divide-blue-100">
+                            <div>
                                 {selectedItemStacks.currentStacks.map(
                                     (stack, index) => (
                                         <div
                                             key={stack.id}
-                                            className="px-6 py-4 hover:bg-blue-50 transition-colors"
+                                            className="px-2 py-2 border-b last:border-b-0"
                                         >
-                                            <div className="flex justify-between items-center">
+                                            <div className="flex justify-between items-center text-xs">
                                                 <span className="text-blue-900 font-medium">
                                                     Stack #{index + 1}
                                                 </span>
                                                 <span className="text-blue-700">
-                                                    Quantity: {stack.quantity}
+                                                    Qty: {stack.quantity}
                                                 </span>
                                             </div>
-                                            <div className="mt-1 text-sm text-blue-600 flex gap-4">
+                                            <div className="mt-1 text-xs text-blue-600 flex gap-2 flex-wrap">
                                                 <span>
                                                     Created:{' '}
                                                     {new Date(
@@ -661,38 +531,38 @@ function Content() {
                     </div>
                 )}
 
-            <div className="w-full max-w-6xl mt-4">
-                <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-4 text-center tracking-tight">
-                    Current Inventory
-                </h2>
-                <div className="overflow-x-auto rounded-2xl shadow-lg bg-white/80 backdrop-blur-md border border-blue-100">
-                    <table className="min-w-full bg-transparent rounded-2xl text-xs sm:text-sm md:text-base">
+            <div className="w-full mt-2">
+                <div className="overflow-x-auto rounded-xl shadow bg-white border border-blue-50 p-2 sm:p-4 w-full">
+                    <table className="min-w-full bg-transparent rounded-xl">
                         <thead>
                             <tr>
-                                <th className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-left text-xs md:text-sm text-blue-700 font-semibold">
-                                    <input
-                                        type="checkbox"
-                                        checked={
-                                            selectAll &&
-                                            filteredItems.length > 0
-                                        }
-                                        onChange={handleSelectAll}
-                                        aria-label="Select all"
-                                    />
+                                <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold w-[40px]">
+                                    {/* Show select all checkbox only if delete mode is active, else empty for expand icon */}
+                                    {showDelete ? (
+                                        <input
+                                            type="checkbox"
+                                            checked={
+                                                selectAll &&
+                                                filteredItems.length > 0
+                                            }
+                                            onChange={handleSelectAll}
+                                            aria-label="Select all"
+                                        />
+                                    ) : null}
                                 </th>
-                                <th className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-left text-xs md:text-sm text-blue-700 font-semibold">
+                                <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold">
                                     Name
                                 </th>
-                                <th className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-left text-xs md:text-sm text-blue-700 font-semibold">
-                                    Total Quantity
+                                <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold">
+                                    Quantity
                                 </th>
-                                <th className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-left text-xs md:text-sm text-blue-700 font-semibold">
+                                <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold">
                                     Description
                                 </th>
-                                <th className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-left text-xs md:text-sm text-blue-700 font-semibold">
+                                <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold">
                                     Category
                                 </th>
-                                <th className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-left text-xs md:text-sm text-blue-700 font-semibold">
+                                <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold">
                                     Actions
                                 </th>
                             </tr>
@@ -711,33 +581,30 @@ function Content() {
                             ) : (
                                 filteredItems.map((item, index) => (
                                     <React.Fragment key={item.id + index}>
-                                        <tr className="hover:bg-blue-50/70 transition">
-                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedItems.includes(
-                                                        item.id
-                                                    )}
-                                                    onChange={() =>
-                                                        handleSelectItem(
+                                        <tr className="hover:bg-blue-50 transition">
+                                            <td className="py-2 px-2 border-b w-[40px]">
+                                                {/* Show checkbox if delete mode, else expand button */}
+                                                {showDelete ? (
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedItems.includes(
                                                             item.id
-                                                        )
-                                                    }
-                                                    aria-label={`Select ${item.name}`}
-                                                />
-                                            </td>
-                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b font-semibold text-blue-900">
-                                                {item.name}
-                                            </td>
-                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
-                                                <div className="flex items-center gap-2">
+                                                        )}
+                                                        onChange={() =>
+                                                            handleSelectItem(
+                                                                item.id
+                                                            )
+                                                        }
+                                                        aria-label={`Select ${item.name}`}
+                                                    />
+                                                ) : (
                                                     <button
                                                         onClick={() =>
                                                             handleViewStacks(
                                                                 item
                                                             )
                                                         }
-                                                        className="text-xs p-1 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors"
+                                                        className="p-1 rounded transition hover:bg-blue-100 focus:outline-none"
                                                         aria-label={
                                                             expandedStacks.has(
                                                                 item.id
@@ -745,65 +612,80 @@ function Content() {
                                                                 ? 'Collapse Stacks'
                                                                 : 'Expand Stacks'
                                                         }
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                            justifyContent:
+                                                                'center',
+                                                            background: 'none',
+                                                            border: 'none',
+                                                        }}
                                                     >
                                                         {expandedStacks.has(
                                                             item.id
                                                         ) ? (
+                                                            // Minimal modern collapse icon (chevron up)
                                                             <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="18"
+                                                                height="18"
+                                                                viewBox="0 0 20 20"
                                                                 fill="none"
-                                                                viewBox="0 0 24 24"
-                                                                strokeWidth="2"
-                                                                stroke="currentColor"
-                                                                className="w-4 h-4"
                                                             >
                                                                 <path
+                                                                    d="M6 12l4-4 4 4"
+                                                                    stroke="#2563eb"
+                                                                    strokeWidth="2"
                                                                     strokeLinecap="round"
                                                                     strokeLinejoin="round"
-                                                                    d="M5 15l7-7 7 7"
                                                                 />
                                                             </svg>
                                                         ) : (
+                                                            // Minimal modern expand icon (chevron down)
                                                             <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="18"
+                                                                height="18"
+                                                                viewBox="0 0 20 20"
                                                                 fill="none"
-                                                                viewBox="0 0 24 24"
-                                                                strokeWidth="2"
-                                                                stroke="currentColor"
-                                                                className="w-4 h-4"
                                                             >
                                                                 <path
+                                                                    d="M6 8l4 4 4-4"
+                                                                    stroke="#2563eb"
+                                                                    strokeWidth="2"
                                                                     strokeLinecap="round"
                                                                     strokeLinejoin="round"
-                                                                    d="M19 9l-7 7-7-7"
                                                                 />
                                                             </svg>
                                                         )}
                                                     </button>
-                                                    <span>{item.total}</span>
-
-                                                </div>
+                                                )}
                                             </td>
-                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
+                                            <td className="py-2 px-2 border-b font-semibold text-blue-900 max-w-[120px] truncate">
+                                                {item.name}
+                                            </td>
+                                            <td className="py-2 px-2 border-b text-blue-700">
+                                                <span>{item.total}</span>
+                                            </td>
+                                            <td className="py-2 px-2 border-b text-blue-700 max-w-[120px] truncate">
                                                 <span
                                                     title={item.description}
-                                                    className="block max-w-[120px] sm:max-w-[180px] truncate"
+                                                    className="block truncate"
                                                 >
                                                     {truncate(
                                                         item.description,
-                                                        40
+                                                        24
                                                     )}
                                                 </span>
                                             </td>
-                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
+                                            <td className="py-2 px-2 border-b text-blue-700 max-w-[120px] truncate">
                                                 {item.category.name}
                                             </td>
-                                            <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
+                                            <td className="py-2 px-2 border-b text-blue-700">
                                                 <button
                                                     onClick={() =>
                                                         handleEdit(item)
                                                     }
-                                                    className="bg-gradient-to-r from-green-400 to-green-600 text-white font-bold px-2 py-1 rounded-xl hover:from-green-500 hover:to-green-700 transition shadow-lg text-xs sm:text-sm"
+                                                    className="bg-green-500 text-white font-bold px-3 py-1 rounded hover:bg-green-600 transition w-full sm:w-auto"
                                                 >
                                                     Edit
                                                 </button>
@@ -816,20 +698,19 @@ function Content() {
                                                 <tr>
                                                     <td
                                                         colSpan={6}
-                                                        className="bg-blue-50/50"
+                                                        className="bg-blue-50"
                                                     >
-                                                        <div className="px-4 py-3">
-                                                            <table className="min-w-full bg-white rounded-xl shadow-md">
+                                                        <div className="px-2 py-2 w-full overflow-x-auto">
+                                                            <table className="min-w-full bg-white rounded shadow">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th className="py-2 px-4 bg-blue-100 text-left text-sm font-semibold text-blue-800 rounded-tl-xl">
+                                                                        <th className="py-2 px-3 bg-blue-100 text-left font-semibold text-blue-800">
                                                                             Status
                                                                         </th>
-                                                                        <th className="py-2 px-4 bg-blue-100 text-left text-sm font-semibold text-blue-800">
-                                                                            Total
-                                                                            Quantity
+                                                                        <th className="py-2 px-3 bg-blue-100 text-left font-semibold text-blue-800">
+                                                                            Qty
                                                                         </th>
-                                                                        <th className="py-2 px-4 bg-blue-100 text-left text-sm font-semibold text-blue-800 rounded-tr-xl">
+                                                                        <th className="py-2 px-3 bg-blue-100 text-left font-semibold text-blue-800">
                                                                             Actions
                                                                         </th>
                                                                     </tr>
@@ -893,9 +774,9 @@ function Content() {
                                                                                         : 'border-b border-blue-100'
                                                                                 }
                                                                             >
-                                                                                <td className="py-2 px-4">
+                                                                                <td className="py-2 px-3">
                                                                                     <span
-                                                                                        className={`px-3 py-1 rounded-full text-sm font-semibold
+                                                                                        className={`px-2 py-1 rounded font-semibold
                                                                                 ${
                                                                                     status ===
                                                                                     'Available'
@@ -904,8 +785,8 @@ function Content() {
                                                                                 }
                                                                                 ${
                                                                                     status ===
-                                                                                    'Borrowed'
-                                                                                        ? 'bg-yellow-100 text-yellow-800'
+                                                                                    'Unavailable'
+                                                                                        ? 'bg-red-100 text-red-800'
                                                                                         : ''
                                                                                 }
                                                                                 ${
@@ -922,7 +803,7 @@ function Content() {
                                                                                 }
                                                                                 ${
                                                                                     status ===
-                                                                                    'Reserved'
+                                                                                    'EIC'
                                                                                         ? 'bg-purple-100 text-purple-800'
                                                                                         : ''
                                                                                 }
@@ -931,12 +812,6 @@ function Content() {
                                                                                     'Distributed'
                                                                                         ? 'bg-blue-100 text-blue-800'
                                                                                         : ''
-                                                                                }
-                                                                                ${
-                                                                                    status ===
-                                                                                    'Unavailable'
-                                                                                        ? 'bg-red-100 text-red-800'
-                                                                                        : ''
                                                                                 }`}
                                                                                     >
                                                                                         {
@@ -944,12 +819,12 @@ function Content() {
                                                                                         }
                                                                                     </span>
                                                                                 </td>
-                                                                                <td className="py-2 px-4 text-blue-700">
+                                                                                <td className="py-2 px-3 text-blue-700">
                                                                                     {
                                                                                         totalQuantity
                                                                                     }
                                                                                 </td>
-                                                                                <td className="py-2 px-4">
+                                                                                <td className="py-2 px-3">
                                                                                     <button
                                                                                         onClick={() => {
                                                                                             setSelectedItemStacks(
@@ -965,9 +840,8 @@ function Content() {
                                                                                                 true
                                                                                             );
                                                                                         }}
-                                                                                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm"
+                                                                                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition w-full sm:w-auto"
                                                                                     >
-                                                                                        View
                                                                                         Logs
                                                                                     </button>
                                                                                 </td>
@@ -986,6 +860,19 @@ function Content() {
                         </tbody>
                     </table>
                 </div>
+            </div>
+            {/* UI Size Control */}
+            <div className="w-full flex flex-col sm:flex-row justify-end items-center mt-8 mr-8 mb-2 gap-2">
+                <label className="font-semibold text-blue-700">UI Size:</label>
+                <select
+                    value={uiSize}
+                    onChange={(e) => setUiSize(e.target.value)}
+                    className="border border-blue-200 rounded px-3 py-2 bg-blue-50 text-blue-900 w-full sm:w-auto"
+                >
+                    <option value="sm">Small</option>
+                    <option value="md">Medium</option>
+                    <option value="lg">Large</option>
+                </select>
             </div>
         </div>
     );
