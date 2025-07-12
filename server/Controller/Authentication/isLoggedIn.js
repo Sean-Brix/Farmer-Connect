@@ -23,6 +23,7 @@ async function isLoggedIn(req, res) {
             firstName: true,
             lastName: true,
             email: true,
+            access: true,
         },
     });
 

@@ -37,6 +37,7 @@ async function getAllSeminar(req, res) {
             if (where.OR.length === 0) {
                 delete where.OR;
             }
+
         }
 
         if (statusFilter === 'all') {
@@ -92,7 +93,7 @@ async function getAllSeminar(req, res) {
             photo: seminar.photo,
             createdAt: seminar.createdAt,
             updatedAt: seminar.updatedAt,
-            participantCount: seminar._count.participants,
+            totalParticipants: seminar._count.participants,
         }));
 
         return res.status(200).json({ list: seminarList });

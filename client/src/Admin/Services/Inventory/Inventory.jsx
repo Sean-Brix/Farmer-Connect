@@ -263,8 +263,17 @@ function Content() {
     };
 
     const handleViewStacks = (item) => {
-        setSelectedItemStacks(item);
-        setShowStacksModal(true);
+        if (expandedStacks.has(item.id)) {
+            setExpandedStacks(
+                new Set([...expandedStacks].filter((id) => id !== item.id))
+            );
+            if (selectedItemStacks?.id === item.id) {
+                setSelectedItemStacks(null);
+            }
+        } else {
+            setSelectedItemStacks(item);
+            setExpandedStacks(new Set([...expandedStacks, item.id]));
+        }
     };
 
     const handleSelectItem = (id) => {
@@ -583,195 +592,74 @@ function Content() {
                     </div>
                 </div>
             )}
-            {showStacksModal && selectedItemStacks && (
-                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 w-[98vw] max-w-4xl relative border border-blue-200 animate-fadeIn">
-                        <button
-                            className="absolute top-3 right-3 text-blue-400 hover:text-blue-700 text-2xl sm:text-3xl transition"
-                            onClick={() => {
-                                setShowStacksModal(false);
-                                setSelectedItemStacks(null);
-                                setExpandedStacks(new Set());
-                            }}
-                            aria-label="Close"
-                        >
-                            <svg
-                                className="w-7 h-7"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
+            {showStacksModal &&
+                selectedItemStacks &&
+                selectedItemStacks.currentStacks && (
+                    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 w-[98vw] max-w-4xl relative border border-blue-200 animate-fadeIn">
+                            <button
+                                className="absolute top-3 right-3 text-blue-400 hover:text-blue-700 text-2xl sm:text-3xl transition"
+                                onClick={() => {
+                                    setShowStacksModal(false);
+                                }}
+                                aria-label="Close"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </button>
-                        <div className="mb-6">
-                            <h2 className="text-xl sm:text-2xl font-extrabold text-blue-800 text-center tracking-tight">
-                                {selectedItemStacks.name} - Stacks
-                            </h2>
-                            <p className="text-center text-blue-600 mt-2">
-                                Total Quantity: {selectedItemStacks.total}
-                            </p>
-                        </div>
-                        <div className="space-y-4">
-                            {Object.entries(
-                                selectedItemStacks.item_stacks.reduce(
-                                    (acc, stack) => {
-                                        if (!acc[stack.status]) {
-                                            acc[stack.status] = {
-                                                stacks: [],
-                                                totalQuantity: 0,
-                                            };
-                                        }
-                                        acc[stack.status].stacks.push(stack);
-                                        acc[stack.status].totalQuantity +=
-                                            stack.quantity;
-                                        return acc;
-                                    },
-                                    {}
-                                )
-                            ).map(([status, { stacks, totalQuantity }]) => (
-                                <div
-                                    key={status}
-                                    className="rounded-xl border border-blue-100 overflow-hidden"
+                                <svg
+                                    className="w-7 h-7"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
                                 >
-                                    <button
-                                        onClick={() => {
-                                            const newExpandedStacks =
-                                                expandedStacks.has(status)
-                                                    ? new Set(
-                                                          [
-                                                              ...expandedStacks,
-                                                          ].filter(
-                                                              (s) =>
-                                                                  s !== status
-                                                          )
-                                                      )
-                                                    : new Set([
-                                                          ...expandedStacks,
-                                                          status,
-                                                      ]);
-                                            setExpandedStacks(
-                                                newExpandedStacks
-                                            );
-                                        }}
-                                        className="w-full px-6 py-4 bg-blue-50 hover:bg-blue-100 transition-colors flex items-center justify-between group"
-                                    >
-                                        <div className="flex items-center gap-4">
-                                            <span
-                                                className={`px-3 py-1 rounded-full text-sm font-semibold
-                                                ${
-                                                    status === 'Available'
-                                                        ? 'bg-green-100 text-green-800'
-                                                        : ''
-                                                }
-                                                ${
-                                                    status === 'Borrowed'
-                                                        ? 'bg-yellow-100 text-yellow-800'
-                                                        : ''
-                                                }
-                                                ${
-                                                    status === 'Damaged'
-                                                        ? 'bg-red-100 text-red-800'
-                                                        : ''
-                                                }
-                                                ${
-                                                    status === 'Lost'
-                                                        ? 'bg-gray-100 text-gray-800'
-                                                        : ''
-                                                }
-                                                ${
-                                                    status === 'Reserved'
-                                                        ? 'bg-purple-100 text-purple-800'
-                                                        : ''
-                                                }
-                                                ${
-                                                    status === 'Distributed'
-                                                        ? 'bg-blue-100 text-blue-800'
-                                                        : ''
-                                                }
-                                                ${
-                                                    status === 'Unavailable'
-                                                        ? 'bg-red-100 text-red-800'
-                                                        : ''
-                                                }
-                                            `}
-                                            >
-                                                {status}
-                                            </span>
-                                            <span className="text-blue-700 font-medium">
-                                                Total Quantity: {totalQuantity}
-                                            </span>
-                                            <span className="text-blue-600 text-sm">
-                                                ({stacks.length}{' '}
-                                                {stacks.length === 1
-                                                    ? 'stack'
-                                                    : 'stacks'}
-                                                )
-                                            </span>
-                                        </div>
-                                        <svg
-                                            className={`w-5 h-5 text-blue-600 transition-transform ${
-                                                expandedStacks.has(status)
-                                                    ? 'rotate-180'
-                                                    : ''
-                                            }`}
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
+                            <div className="mb-6">
+                                <h2 className="text-xl sm:text-2xl font-extrabold text-blue-800 text-center tracking-tight">
+                                    {selectedItemStacks.name} -{' '}
+                                    {selectedItemStacks.currentStatus} Stacks
+                                </h2>
+                            </div>
+                            <div className="divide-y divide-blue-100">
+                                {selectedItemStacks.currentStacks.map(
+                                    (stack, index) => (
+                                        <div
+                                            key={stack.id}
+                                            className="px-6 py-4 hover:bg-blue-50 transition-colors"
                                         >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M19 9l-7 7-7-7"
-                                            />
-                                        </svg>
-                                    </button>
-                                    {expandedStacks.has(status) && (
-                                        <div className="divide-y divide-blue-100">
-                                            {stacks.map((stack, index) => (
-                                                <div
-                                                    key={stack.id}
-                                                    className="px-6 py-4 hover:bg-blue-50 transition-colors"
-                                                >
-                                                    <div className="flex justify-between items-center">
-                                                        <span className="text-blue-900 font-medium">
-                                                            Stack #{index + 1}
-                                                        </span>
-                                                        <span className="text-blue-700">
-                                                            Quantity:{' '}
-                                                            {stack.quantity}
-                                                        </span>
-                                                    </div>
-                                                    <div className="mt-1 text-sm text-blue-600 flex gap-4">
-                                                        <span>
-                                                            Created:{' '}
-                                                            {new Date(
-                                                                stack.createdAt
-                                                            ).toLocaleDateString()}
-                                                        </span>
-                                                        <span>
-                                                            Updated:{' '}
-                                                            {new Date(
-                                                                stack.updatedAt
-                                                            ).toLocaleDateString()}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            ))}
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-blue-900 font-medium">
+                                                    Stack #{index + 1}
+                                                </span>
+                                                <span className="text-blue-700">
+                                                    Quantity: {stack.quantity}
+                                                </span>
+                                            </div>
+                                            <div className="mt-1 text-sm text-blue-600 flex gap-4">
+                                                <span>
+                                                    Created:{' '}
+                                                    {new Date(
+                                                        stack.createdAt
+                                                    ).toLocaleDateString()}
+                                                </span>
+                                                <span>
+                                                    Updated:{' '}
+                                                    {new Date(
+                                                        stack.updatedAt
+                                                    ).toLocaleDateString()}
+                                                </span>
+                                            </div>
                                         </div>
-                                    )}
-                                </div>
-                            ))}
+                                    )
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
             <div className="w-full max-w-6xl mt-4">
                 <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-4 text-center tracking-tight">
@@ -843,17 +731,57 @@ function Content() {
                                             </td>
                                             <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
                                                 <div className="flex items-center gap-2">
-                                                    <span>{item.total}</span>
                                                     <button
                                                         onClick={() =>
                                                             handleViewStacks(
                                                                 item
                                                             )
                                                         }
-                                                        className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
+                                                        className="text-xs p-1 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors"
+                                                        aria-label={
+                                                            expandedStacks.has(
+                                                                item.id
+                                                            )
+                                                                ? 'Collapse Stacks'
+                                                                : 'Expand Stacks'
+                                                        }
                                                     >
-                                                        View Stacks
+                                                        {expandedStacks.has(
+                                                            item.id
+                                                        ) ? (
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                fill="none"
+                                                                viewBox="0 0 24 24"
+                                                                strokeWidth="2"
+                                                                stroke="currentColor"
+                                                                className="w-4 h-4"
+                                                            >
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    d="M5 15l7-7 7 7"
+                                                                />
+                                                            </svg>
+                                                        ) : (
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                fill="none"
+                                                                viewBox="0 0 24 24"
+                                                                strokeWidth="2"
+                                                                stroke="currentColor"
+                                                                className="w-4 h-4"
+                                                            >
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    d="M19 9l-7 7-7-7"
+                                                                />
+                                                            </svg>
+                                                        )}
                                                     </button>
+                                                    <span>{item.total}</span>
+
                                                 </div>
                                             </td>
                                             <td className="py-2 sm:py-3 px-1 sm:px-2 md:px-4 border-b text-blue-700">
@@ -881,6 +809,177 @@ function Content() {
                                                 </button>
                                             </td>
                                         </tr>
+                                        {expandedStacks.has(item.id) &&
+                                            selectedItemStacks &&
+                                            selectedItemStacks.id ===
+                                                item.id && (
+                                                <tr>
+                                                    <td
+                                                        colSpan={6}
+                                                        className="bg-blue-50/50"
+                                                    >
+                                                        <div className="px-4 py-3">
+                                                            <table className="min-w-full bg-white rounded-xl shadow-md">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th className="py-2 px-4 bg-blue-100 text-left text-sm font-semibold text-blue-800 rounded-tl-xl">
+                                                                            Status
+                                                                        </th>
+                                                                        <th className="py-2 px-4 bg-blue-100 text-left text-sm font-semibold text-blue-800">
+                                                                            Total
+                                                                            Quantity
+                                                                        </th>
+                                                                        <th className="py-2 px-4 bg-blue-100 text-left text-sm font-semibold text-blue-800 rounded-tr-xl">
+                                                                            Actions
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {Object.entries(
+                                                                        selectedItemStacks.item_stacks.reduce(
+                                                                            (
+                                                                                acc,
+                                                                                stack
+                                                                            ) => {
+                                                                                if (
+                                                                                    !acc[
+                                                                                        stack
+                                                                                            .status
+                                                                                    ]
+                                                                                ) {
+                                                                                    acc[
+                                                                                        stack.status
+                                                                                    ] =
+                                                                                        {
+                                                                                            stacks: [],
+                                                                                            totalQuantity: 0,
+                                                                                        };
+                                                                                }
+                                                                                acc[
+                                                                                    stack
+                                                                                        .status
+                                                                                ].stacks.push(
+                                                                                    stack
+                                                                                );
+                                                                                acc[
+                                                                                    stack.status
+                                                                                ].totalQuantity +=
+                                                                                    stack.quantity;
+                                                                                return acc;
+                                                                            },
+                                                                            {}
+                                                                        )
+                                                                    ).map(
+                                                                        (
+                                                                            [
+                                                                                status,
+                                                                                {
+                                                                                    stacks,
+                                                                                    totalQuantity,
+                                                                                },
+                                                                            ],
+                                                                            index,
+                                                                            array
+                                                                        ) => (
+                                                                            <tr
+                                                                                key={
+                                                                                    status
+                                                                                }
+                                                                                className={
+                                                                                    index ===
+                                                                                    array.length -
+                                                                                        1
+                                                                                        ? ''
+                                                                                        : 'border-b border-blue-100'
+                                                                                }
+                                                                            >
+                                                                                <td className="py-2 px-4">
+                                                                                    <span
+                                                                                        className={`px-3 py-1 rounded-full text-sm font-semibold
+                                                                                ${
+                                                                                    status ===
+                                                                                    'Available'
+                                                                                        ? 'bg-green-100 text-green-800'
+                                                                                        : ''
+                                                                                }
+                                                                                ${
+                                                                                    status ===
+                                                                                    'Borrowed'
+                                                                                        ? 'bg-yellow-100 text-yellow-800'
+                                                                                        : ''
+                                                                                }
+                                                                                ${
+                                                                                    status ===
+                                                                                    'Damaged'
+                                                                                        ? 'bg-red-100 text-red-800'
+                                                                                        : ''
+                                                                                }
+                                                                                ${
+                                                                                    status ===
+                                                                                    'Lost'
+                                                                                        ? 'bg-gray-100 text-gray-800'
+                                                                                        : ''
+                                                                                }
+                                                                                ${
+                                                                                    status ===
+                                                                                    'Reserved'
+                                                                                        ? 'bg-purple-100 text-purple-800'
+                                                                                        : ''
+                                                                                }
+                                                                                ${
+                                                                                    status ===
+                                                                                    'Distributed'
+                                                                                        ? 'bg-blue-100 text-blue-800'
+                                                                                        : ''
+                                                                                }
+                                                                                ${
+                                                                                    status ===
+                                                                                    'Unavailable'
+                                                                                        ? 'bg-red-100 text-red-800'
+                                                                                        : ''
+                                                                                }`}
+                                                                                    >
+                                                                                        {
+                                                                                            status
+                                                                                        }
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td className="py-2 px-4 text-blue-700">
+                                                                                    {
+                                                                                        totalQuantity
+                                                                                    }
+                                                                                </td>
+                                                                                <td className="py-2 px-4">
+                                                                                    <button
+                                                                                        onClick={() => {
+                                                                                            setSelectedItemStacks(
+                                                                                                {
+                                                                                                    ...selectedItemStacks,
+                                                                                                    currentStatus:
+                                                                                                        status,
+                                                                                                    currentStacks:
+                                                                                                        stacks,
+                                                                                                }
+                                                                                            );
+                                                                                            setShowStacksModal(
+                                                                                                true
+                                                                                            );
+                                                                                        }}
+                                                                                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm"
+                                                                                    >
+                                                                                        View
+                                                                                        Logs
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        )
+                                                                    )}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
                                     </React.Fragment>
                                 ))
                             )}

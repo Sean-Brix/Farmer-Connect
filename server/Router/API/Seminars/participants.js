@@ -9,7 +9,8 @@ router.use(parseToken);
 
 //? ========================================= ROUTES =============================================== ?//
 
-
+import applySeminar from '../../../Controller/Seminar/applySeminar.js';
+router.post('/apply/:id', applySeminar);
 
 //? ================================================================================================ ?//
 

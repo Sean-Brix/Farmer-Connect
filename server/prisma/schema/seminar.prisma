@@ -42,6 +42,7 @@ model SeminarParticipant {
     @@map("seminar_participants")
 }
 
+
 //? ========================================== ENUMS ========================================== ?//
 
 enum seminar_status {
