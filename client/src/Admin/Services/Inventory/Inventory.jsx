@@ -267,8 +267,6 @@ function Content() {
         setShowStacksModal(true);
     };
 
-    const [showStats, setShowStats] = useState(false);
-
     const handleSelectItem = (id) => {
         if (selectedItems.includes(id)) {
             setSelectedItems(selectedItems.filter((itemId) => itemId !== id));
@@ -279,28 +277,6 @@ function Content() {
             if (newSelected.length === filteredItems.length) setSelectAll(true);
         }
     };
-
-    const calculateStats = () => {
-        const categoryCounts = {};
-        const statusCounts = {};
-
-        items.forEach((item) => {
-            categoryCounts[item.category] =
-                (categoryCounts[item.category] || 0) + 1;
-            statusCounts[item.status] = (statusCounts[item.status] || 0) + 1;
-        });
-
-        const totalItems = items.length;
-        const uniqueCategories = Object.keys(categoryCounts).length;
-        return {
-            totalItems,
-            uniqueCategories,
-            categoryCounts,
-            statusCounts,
-        };
-    };
-
-    const stats = calculateStats();
 
     return (
         <div className="flex flex-col items-center justify-center min-h-[91vh] w-full bg-gradient-to-br from-blue-200 via-blue-100 to-blue-300 p-2 sm:p-4 md:p-8 rounded-2xl shadow-2xl mt-[5%] transition-all">
@@ -400,25 +376,6 @@ function Content() {
                             Cancel
                         </button>
                     )}
-                    <button
-                        onClick={() => setShowStats(!showStats)}
-                        className="bg-gradient-to-r from-green-400 to-green-600 text-white font-bold px-4 sm:px-6 py-2 rounded-xl hover:from-green-500 hover:to-green-700 transition shadow-lg flex items-center gap-2 text-sm sm:text-base"
-                    >
-                        <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M4 6h16M4 12h16M4 18h7"
-                            />
-                        </svg>
-                        Statistics
-                    </button>
                 </div>
                 {showDelete && (
                     <div className="flex flex-col items-end mt-2 gap-2 w-full">
@@ -662,69 +619,148 @@ function Content() {
                         </div>
                         <div className="space-y-4">
                             {Object.entries(
-                                selectedItemStacks.item_stacks.reduce((acc, stack) => {
-                                    if (!acc[stack.status]) {
-                                        acc[stack.status] = {
-                                            stacks: [],
-                                            totalQuantity: 0
-                                        };
-                                    }
-                                    acc[stack.status].stacks.push(stack);
-                                    acc[stack.status].totalQuantity += stack.quantity;
-                                    return acc;
-                                }, {})
+                                selectedItemStacks.item_stacks.reduce(
+                                    (acc, stack) => {
+                                        if (!acc[stack.status]) {
+                                            acc[stack.status] = {
+                                                stacks: [],
+                                                totalQuantity: 0,
+                                            };
+                                        }
+                                        acc[stack.status].stacks.push(stack);
+                                        acc[stack.status].totalQuantity +=
+                                            stack.quantity;
+                                        return acc;
+                                    },
+                                    {}
+                                )
                             ).map(([status, { stacks, totalQuantity }]) => (
-                                <div key={status} className="rounded-xl border border-blue-100 overflow-hidden">
+                                <div
+                                    key={status}
+                                    className="rounded-xl border border-blue-100 overflow-hidden"
+                                >
                                     <button
                                         onClick={() => {
-                                            const newExpandedStacks = expandedStacks.has(status) 
-                                                ? new Set([...expandedStacks].filter(s => s !== status))
-                                                : new Set([...expandedStacks, status]);
-                                            setExpandedStacks(newExpandedStacks);
+                                            const newExpandedStacks =
+                                                expandedStacks.has(status)
+                                                    ? new Set(
+                                                          [
+                                                              ...expandedStacks,
+                                                          ].filter(
+                                                              (s) =>
+                                                                  s !== status
+                                                          )
+                                                      )
+                                                    : new Set([
+                                                          ...expandedStacks,
+                                                          status,
+                                                      ]);
+                                            setExpandedStacks(
+                                                newExpandedStacks
+                                            );
                                         }}
                                         className="w-full px-6 py-4 bg-blue-50 hover:bg-blue-100 transition-colors flex items-center justify-between group"
                                     >
                                         <div className="flex items-center gap-4">
-                                            <span className={`px-3 py-1 rounded-full text-sm font-semibold
-                                                ${status === 'Available' ? 'bg-green-100 text-green-800' : ''}
-                                                ${status === 'Borrowed' ? 'bg-yellow-100 text-yellow-800' : ''}
-                                                ${status === 'Damaged' ? 'bg-red-100 text-red-800' : ''}
-                                                ${status === 'Lost' ? 'bg-gray-100 text-gray-800' : ''}
-                                                ${status === 'Reserved' ? 'bg-purple-100 text-purple-800' : ''}
-                                                ${status === 'Distributed' ? 'bg-blue-100 text-blue-800' : ''}
-                                                ${status === 'Unavailable' ? 'bg-red-100 text-red-800' : ''}
-                                            `}>
+                                            <span
+                                                className={`px-3 py-1 rounded-full text-sm font-semibold
+                                                ${
+                                                    status === 'Available'
+                                                        ? 'bg-green-100 text-green-800'
+                                                        : ''
+                                                }
+                                                ${
+                                                    status === 'Borrowed'
+                                                        ? 'bg-yellow-100 text-yellow-800'
+                                                        : ''
+                                                }
+                                                ${
+                                                    status === 'Damaged'
+                                                        ? 'bg-red-100 text-red-800'
+                                                        : ''
+                                                }
+                                                ${
+                                                    status === 'Lost'
+                                                        ? 'bg-gray-100 text-gray-800'
+                                                        : ''
+                                                }
+                                                ${
+                                                    status === 'Reserved'
+                                                        ? 'bg-purple-100 text-purple-800'
+                                                        : ''
+                                                }
+                                                ${
+                                                    status === 'Distributed'
+                                                        ? 'bg-blue-100 text-blue-800'
+                                                        : ''
+                                                }
+                                                ${
+                                                    status === 'Unavailable'
+                                                        ? 'bg-red-100 text-red-800'
+                                                        : ''
+                                                }
+                                            `}
+                                            >
                                                 {status}
                                             </span>
                                             <span className="text-blue-700 font-medium">
                                                 Total Quantity: {totalQuantity}
                                             </span>
                                             <span className="text-blue-600 text-sm">
-                                                ({stacks.length} {stacks.length === 1 ? 'stack' : 'stacks'})
+                                                ({stacks.length}{' '}
+                                                {stacks.length === 1
+                                                    ? 'stack'
+                                                    : 'stacks'}
+                                                )
                                             </span>
                                         </div>
                                         <svg
                                             className={`w-5 h-5 text-blue-600 transition-transform ${
-                                                expandedStacks.has(status) ? 'rotate-180' : ''
+                                                expandedStacks.has(status)
+                                                    ? 'rotate-180'
+                                                    : ''
                                             }`}
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
                                         >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M19 9l-7 7-7-7"
+                                            />
                                         </svg>
                                     </button>
                                     {expandedStacks.has(status) && (
                                         <div className="divide-y divide-blue-100">
                                             {stacks.map((stack, index) => (
-                                                <div key={stack.id} className="px-6 py-4 hover:bg-blue-50 transition-colors">
+                                                <div
+                                                    key={stack.id}
+                                                    className="px-6 py-4 hover:bg-blue-50 transition-colors"
+                                                >
                                                     <div className="flex justify-between items-center">
-                                                        <span className="text-blue-900 font-medium">Stack #{index + 1}</span>
-                                                        <span className="text-blue-700">Quantity: {stack.quantity}</span>
+                                                        <span className="text-blue-900 font-medium">
+                                                            Stack #{index + 1}
+                                                        </span>
+                                                        <span className="text-blue-700">
+                                                            Quantity:{' '}
+                                                            {stack.quantity}
+                                                        </span>
                                                     </div>
                                                     <div className="mt-1 text-sm text-blue-600 flex gap-4">
-                                                        <span>Created: {new Date(stack.createdAt).toLocaleDateString()}</span>
-                                                        <span>Updated: {new Date(stack.updatedAt).toLocaleDateString()}</span>
+                                                        <span>
+                                                            Created:{' '}
+                                                            {new Date(
+                                                                stack.createdAt
+                                                            ).toLocaleDateString()}
+                                                        </span>
+                                                        <span>
+                                                            Updated:{' '}
+                                                            {new Date(
+                                                                stack.updatedAt
+                                                            ).toLocaleDateString()}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             ))}
@@ -732,77 +768,6 @@ function Content() {
                                     )}
                                 </div>
                             ))}
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {showStats && (
-                <div className="w-full max-w-6xl mt-4">
-                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-4 text-center tracking-tight">
-                        Inventory Statistics
-                    </h2>
-                    <div className="rounded-2xl shadow-lg bg-white/80 backdrop-blur-md border border-blue-100 p-4 flex flex-col gap-4">
-                        {/* Category Counts */}
-                        <div>
-                            <h3 className="text-md font-semibold text-blue-800 text-center">
-                                Category Distribution
-                            </h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mt-2">
-                                {Object.entries(stats.categoryCounts).length >
-                                0 ? (
-                                    Object.entries(stats.categoryCounts).map(
-                                        ([category, count]) => (
-                                            <div
-                                                key={category}
-                                                className="flex flex-col items-center p-2 rounded-md bg-blue-50 shadow-inner"
-                                            >
-                                                <span className="text-blue-700 font-semibold text-sm">
-                                                    {category}
-                                                </span>
-                                                <span className="text-blue-500 text-xs">
-                                                    ({count})
-                                                </span>
-                                            </div>
-                                        )
-                                    )
-                                ) : (
-                                    <p className="text-blue-700 text-center">
-                                        No category data available.
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                        {/* Status Counts */}
-                        <div>
-                            <h3 className="text-md font-semibold text-blue-800 text-center">
-                                Status Distribution
-                            </h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mt-2">
-                                {statuses.map((status) => {
-                                    const count =
-                                        stats.statusCounts[status] || 0;
-                                    let textColor = 'text-blue-700';
-                                    if (status === 'Out of Stock') {
-                                        textColor = 'text-red-700';
-                                    }
-                                    return (
-                                        <div
-                                            key={status}
-                                            className="flex flex-col items-center p-2 rounded-md bg-blue-50 shadow-inner"
-                                        >
-                                            <span
-                                                className={`${textColor} font-semibold text-sm`}
-                                            >
-                                                {status}
-                                            </span>
-                                            <span className="text-blue-500 text-xs">
-                                                ({count})
-                                            </span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
                         </div>
                     </div>
                 </div>

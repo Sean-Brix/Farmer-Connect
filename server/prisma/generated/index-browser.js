@@ -323,8 +323,7 @@ exports.item_status = exports.$Enums.item_status = {
   Unavailable: 'Unavailable',
   Lost: 'Lost',
   Damaged: 'Damaged',
-  Reserved: 'Reserved',
-  Borrowed: 'Borrowed',
+  EIC: 'EIC',
   Distributed: 'Distributed'
 };
 

@@ -54,7 +54,6 @@ enum item_status {
     Unavailable
     Lost
     Damaged
-    Reserved
-    Borrowed
+    EIC
     Distributed
 }

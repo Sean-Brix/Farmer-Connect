@@ -349,7 +349,7 @@ import { faker } from '@faker-js/faker';
 async function createItemStacks() {
   const inventoryItems = await prisma.inventoryItem.findMany();
 
-  const statuses = ['Available', 'Unavailable', 'Lost', 'Damaged', 'Reserved', 'Borrowed', 'Distributed'];
+  const statuses = ['Available', 'Unavailable', 'Lost', 'Damaged', 'EIC', 'Distributed'];
 
   for (const item of inventoryItems) {
     // Generate a random number of stacks for each item (1 to 5 stacks)
@@ -377,18 +377,31 @@ async function createItemStacks() {
         }
     }
 
-      // Generate a random number of "Borrowed" stacks (0 to 5)
-      const numberOfBorrowedStacks = Math.floor(Math.random() * 6);
-      for (let i = 0; i < numberOfBorrowedStacks; i++) {
-      const borrowedQuantity = faker.number.int({ min: 1, max: 15 });
+      // Generate a random number of "EIC" stacks (0 to 5)
+      const numberOfAvailableStacks = Math.floor(Math.random() * 4);
+      for (let i = 0; i < numberOfAvailableStacks; i++) {
+      const availableQuantity = faker.number.int({ min: 1, max: 10 });
       await prisma.itemStack.create({
         data: {
           itemId: item.id,
-          quantity: borrowedQuantity,
-          status: 'Borrowed',
+          quantity: availableQuantity,
+          status: 'EIC',
         },
       });
     }
+
+    // Generate a random number of "Borrowed" stacks (0 to 5)
+    const numberOfBorrowedStacks = Math.floor(Math.random() * 6);
+    for (let i = 0; i < numberOfBorrowedStacks; i++) {
+    const borrowedQuantity = faker.number.int({ min: 1, max: 15 });
+    await prisma.itemStack.create({
+      data: {
+        itemId: item.id,
+        quantity: borrowedQuantity,
+        status: 'EIC',
+      },
+    });
+  }
 
       // Generate a random number of "Distributed" stacks (0 to 5)
       const numberOfDistributedStacks = Math.floor(Math.random() * 6);
