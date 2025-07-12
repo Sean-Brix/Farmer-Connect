@@ -37,7 +37,6 @@ async function getAllSeminar(req, res) {
             if (where.OR.length === 0) {
                 delete where.OR;
             }
-
         }
 
         if (statusFilter === 'all') {
@@ -54,9 +53,9 @@ async function getAllSeminar(req, res) {
             where: where,
             orderBy: orderBy,
             include: {
-                _count: {
-                    select: { participants: true },
-                },
+                participants: {
+                    select: { status: true }
+                }
             },
         });
 
@@ -93,7 +92,7 @@ async function getAllSeminar(req, res) {
             photo: seminar.photo,
             createdAt: seminar.createdAt,
             updatedAt: seminar.updatedAt,
-            totalParticipants: seminar._count.participants,
+            totalParticipants: seminar.participants.filter(p => p.status !== 'Cancelled').length,
         }));
 
         return res.status(200).json({ list: seminarList });

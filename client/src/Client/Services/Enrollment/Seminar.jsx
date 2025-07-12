@@ -28,44 +28,82 @@ const fetchSeminars = async ({ queryKey }) => {
 };
 
 const fetchAppliedSeminars = async () => {
+    let user = {};
+    try {
+        const userRes = await fetch('/auth/is-authenticated');
+        user = await userRes.json();
+    } catch (err) {
+        user = { check: false };
+    }
+
+    if (!user.check) {
+        // User not authenticated, skip second API call
+        return [];
+    }
+
+    const res = await fetch(`/api/seminar/participants/user`);
+    const data = await res.json();
+
+    // Only include seminars where participant status is NOT 'Cancelled'
+    return Array.isArray(data)
+        ? data
+              .filter((participant) => participant.status !== 'Cancelled')
+              .map((participant) => participant.seminar?.id)
+              .filter(Boolean)
+        : [];
+};
+
+// NEW: Fetch user's registered seminars (full info)
+const fetchUserRegisteredSeminars = async () => {
     const userRes = await fetch('/auth/is-authenticated');
     const user = await userRes.json();
     if (!user.check) return [];
-    const res = await fetch(`/api/seminars/participants/user_applied`);
-    if (!res.ok) return [];
+
+    const res = await fetch('/api/seminar/participants/user');
     const data = await res.json();
-    return Array.isArray(data.payload) ? data.payload.map((s) => s.id) : [];
+
+    // Map to flatten seminar info and add participant status
+    return Array.isArray(data)
+        ? data
+              .map((item) =>
+                  item.seminar
+                      ? {
+                            ...item.seminar,
+                            participantStatus: item.status,
+                        }
+                      : null
+              )
+              .filter(Boolean)
+        : [];
 };
 
 const applySeminar = async (seminarId) => {
-    console.log("hello");
     const userRes = await fetch('/auth/is-authenticated');
     const user = await userRes.json();
 
-    console.log(user)
-
     if (!user.check) throw new Error('Login First');
-    if (user.payload.access !== 'User') throw new Error('Unauthorized');
 
     const res = await fetch(`/api/seminar/participants/apply/${seminarId}`, {
-        method: 'POST'
+        method: 'POST',
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Failed to apply');
+    if (!res.ok) throw new Error(data.message || 'Failed to apply, Try again later');
 
     return seminarId;
 };
 
 const cancelSeminar = async (seminarId) => {
-    const check = await fetch('/api/authentication/gotToken');
-    if (!check.ok) throw new Error('Login First');
-    const res = await fetch('/api/seminars/participants/user_cancel', {
+    const userRes = await fetch('/auth/is-authenticated');
+    const user = await userRes.json();
+
+    if (!user.check) throw new Error('Login First');
+
+    const res = await fetch(`/api/seminar/participants/cancel/${seminarId}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: seminarId }),
     });
-    if (!res.ok) throw new Error('Unable to cancel application');
+
+    if (!res.ok) throw new Error('Unable to Cancel application, Try again later');
     return seminarId;
 };
 
@@ -75,6 +113,9 @@ export default function Seminar() {
     const [filterBy, setFilterBy] = useState('Title');
     const [showFilter, setShowFilter] = useState(false);
     const [selectedSeminarId, setSelectedSeminarId] = useState(null);
+
+    // NEW: Modal state for user's registered seminars
+    const [showUserSeminarsModal, setShowUserSeminarsModal] = useState(false);
 
     // Pagination
     const ITEMS_PER_PAGE = 5;
@@ -94,10 +135,32 @@ export default function Seminar() {
         queryFn: fetchAppliedSeminars,
     });
 
+    // NEW: Query for user's registered seminars (full info)
+    const {
+        data: userRegisteredSeminars = [],
+        isLoading: isUserSeminarsLoading,
+    } = useQuery({
+        queryKey: ['userRegisteredSeminars'],
+        queryFn: fetchUserRegisteredSeminars,
+        enabled: showUserSeminarsModal, // Only fetch when modal is open
+    });
+
+    
     const applyMutation = useMutation({
+        
         mutationFn: applySeminar,
         onSuccess: (seminarId) => {
-            queryClient.setQueryData(['appliedSeminars'], (prev = []) => [...prev, seminarId]);
+            queryClient.setQueryData(['seminars', { search, filterBy }], (prev = []) =>
+                prev.map(s =>
+                    s.id === seminarId
+                        ? { ...s, totalParticipants: s.totalParticipants + 1 }
+                        : s
+                )
+            );
+            queryClient.setQueryData(['appliedSeminars'], (prev = []) => [
+                ...prev,
+                seminarId,
+            ]);
             showCustomAlert('Successfully applied!', 'success');
         },
         onError: (err) => {
@@ -113,7 +176,17 @@ export default function Seminar() {
     const cancelMutation = useMutation({
         mutationFn: cancelSeminar,
         onSuccess: (seminarId) => {
-            queryClient.setQueryData(['appliedSeminars'], (prev = []) => prev.filter((id) => id !== seminarId));
+            // In cancelMutation.onSuccess
+            queryClient.setQueryData(['seminars', { search, filterBy }], (prev = []) =>
+                prev.map(s =>
+                    s.id === seminarId
+                        ? { ...s, totalParticipants: Math.max(0, s.totalParticipants - 1) }
+                        : s
+                )
+            );
+            queryClient.setQueryData(['appliedSeminars'], (prev = []) =>
+                prev.filter((id) => id !== seminarId)
+            );
             showCustomAlert('Application cancelled.', 'success');
         },
         onError: (err) => {
@@ -126,22 +199,24 @@ export default function Seminar() {
         },
     });
 
-    // Helper to truncate description
     function truncate(str, n) {
         return str?.length > n ? str.slice(0, n - 1) + '…' : str;
     }
 
-    // Custom alert
     function showCustomAlert(message, type = 'success') {
         const existing = document.getElementById('seminar-custom-alert');
         if (existing) existing.remove();
         const alertDiv = document.createElement('div');
         alertDiv.id = 'seminar-custom-alert';
         alertDiv.className = `fixed top-8 left-1/2 transform -translate-x-1/2 z-[9999] px-6 py-3 rounded-xl shadow-lg flex items-center gap-3 text-base font-semibold transition-all duration-300 ${
-            type === 'success' ? 'bg-blue-700 text-white' : 'bg-red-600 text-white'
+            type === 'success'
+                ? 'bg-blue-700 text-white'
+                : 'bg-red-600 text-white'
         }`;
         alertDiv.innerHTML = `
-            <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i>
+            <i class="fa-solid ${
+                type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'
+            }"></i>
             <span>${message}</span>
         `;
         document.body.appendChild(alertDiv);
@@ -152,11 +227,12 @@ export default function Seminar() {
         }, 2000);
     }
 
-    // Pagination logic
     const totalPages = Math.ceil(seminars.length / ITEMS_PER_PAGE);
-    const paginatedPrograms = seminars.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+    const paginatedPrograms = seminars.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
-    // Filter options
     const filterOptions = [
         { label: 'Title', value: 'Title', icon: 'fa-heading' },
         { label: 'Speaker', value: 'Speaker', icon: 'fa-user' },
@@ -171,17 +247,22 @@ export default function Seminar() {
         Livestock: 'fa-solid fa-drumstick-bite',
     };
 
-    // Scroll to top when page changes
     React.useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [currentPage]);
 
-    const selectedSeminar = seminars.find((program) => program.id === selectedSeminarId);
+    const selectedSeminar = seminars.find(
+        (program) => program.id === selectedSeminarId
+    );
 
+    
     return (
         <>
             <Navbar />
-            <div className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative" style={{ overflow: 'hidden' }}>
+            <div
+                className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative"
+                style={{ overflow: 'hidden' }}
+            >
                 <main className="flex-1 w-full relative z-10 mt-30">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20">
                         {/* Header */}
@@ -189,11 +270,24 @@ export default function Seminar() {
                             <span className="uppercase tracking-widest text-blue-400 text-xs font-semibold mb-1 letter-spacing-wide">
                                 Welcome to
                             </span>
-                            <h1 className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title" style={{ color: '#1e3a8a' }}>
+                            <h1
+                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title"
+                                style={{ color: '#1e3a8a' }}
+                            >
                                 Seminar Enrollment
                             </h1>
                             <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200 opacity-90 shadow-lg"></div>
                         </header>
+                        {/* NEW: Button to open user's registered seminars modal */}
+                        <div className="w-full flex justify-end max-w-4xl mb-4">
+                            <button
+                                className="flex items-center gap-2 px-6 py-2 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 text-white font-bold shadow hover:from-blue-800 hover:to-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                onClick={() => setShowUserSeminarsModal(true)}
+                            >
+                                <i className="fa-solid fa-list-check"></i>
+                                My Registered Seminars
+                            </button>
+                        </div>
                         {/* Search and Filter */}
                         <div className="flex flex-col w-full max-w-4xl mt-4 mb-10 gap-4">
                             <div className="flex flex-wrap gap-4 justify-center">
@@ -226,7 +320,11 @@ export default function Seminar() {
                                     >
                                         <i className="fa-solid fa-filter text-blue-700"></i>
                                         <span>Search by: {filterBy}</span>
-                                        <i className={`fa-solid fa-chevron-${showFilter ? 'up' : 'down'} ml-2 text-blue-700`}></i>
+                                        <i
+                                            className={`fa-solid fa-chevron-${
+                                                showFilter ? 'up' : 'down'
+                                            } ml-2 text-blue-700`}
+                                        ></i>
                                     </button>
                                     {showFilter && (
                                         <div className="absolute left-0 right-0 translate-y-2 mt-2 bg-white/90 rounded-2xl shadow-2xl border border-blue-100 z-20 animate-fade-in py-2 px-2 backdrop-blur-md">
@@ -244,7 +342,9 @@ export default function Seminar() {
                                                         setCurrentPage(1);
                                                     }}
                                                 >
-                                                    <i className={`fa-solid ${opt.icon}`}></i>
+                                                    <i
+                                                        className={`fa-solid ${opt.icon}`}
+                                                    ></i>
                                                     {opt.label}
                                                 </button>
                                             ))}
@@ -265,7 +365,9 @@ export default function Seminar() {
                                 </div>
                             ) : (
                                 paginatedPrograms.map((program) => {
-                                    const isApplied = appliedSeminars.includes(program.id);
+                                    const isApplied = appliedSeminars.includes(
+                                        program.id
+                                    );
                                     return (
                                         <article
                                             key={program.id}
@@ -276,7 +378,10 @@ export default function Seminar() {
                                             <div className="flex-shrink-0 flex items-center justify-center w-full md:w-64 h-64 bg-gradient-to-br from-blue-100 to-blue-200">
                                                 <div className="w-56 h-56 sm:w-48 sm:h-48 md:w-44 md:h-44 rounded-2xl bg-white shadow-xl flex items-center justify-center overflow-hidden border-4 border-blue-400 outline outline-blue-100 transition-all duration-300 ease-in-out">
                                                     <img
-                                                        src={program.photo || default_seminar_pic}
+                                                        src={
+                                                            program.photo ||
+                                                            default_seminar_pic
+                                                        }
                                                         alt="Sample"
                                                         className="w-full h-full object-contain rounded-xl"
                                                     />
@@ -287,39 +392,64 @@ export default function Seminar() {
                                                 <div>
                                                     <div className="flex items-center gap-4 mb-3">
                                                         <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-200 to-blue-400 text-blue-900 text-xl shadow-lg border-2 border-blue-300">
-                                                            <i className={faIcons.All}></i>
+                                                            <i
+                                                                className={
+                                                                    faIcons.All
+                                                                }
+                                                            ></i>
                                                         </span>
                                                         <span
                                                             className="font-extrabold text-2xl text-blue-900 tracking-tight truncate"
-                                                            title={program.title}
+                                                            title={
+                                                                program.title
+                                                            }
                                                         >
                                                             {program.title}
                                                         </span>
                                                     </div>
                                                     <div
                                                         className="text-blue-900 text-base mb-5 line-clamp-2 truncate font-medium"
-                                                        title={program.description}
+                                                        title={
+                                                            program.description
+                                                        }
                                                     >
-                                                        {truncate(program.description, 80)}
+                                                        {truncate(
+                                                            program.description,
+                                                            80
+                                                        )}
                                                     </div>
                                                     <div className="flex flex-wrap gap-3 mt-2">
                                                         <span
                                                             className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm truncate"
-                                                            title={program.category}
+                                                            title={
+                                                                program.category
+                                                            }
                                                         >
-                                                            <i className={faIcons[program.category] || faIcons.All}></i>
+                                                            <i
+                                                                className={
+                                                                    faIcons[
+                                                                        program
+                                                                            .category
+                                                                    ] ||
+                                                                    faIcons.All
+                                                                }
+                                                            ></i>
                                                             {program.category}
                                                         </span>
                                                         <span
                                                             className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm truncate"
-                                                            title={program.location}
+                                                            title={
+                                                                program.location
+                                                            }
                                                         >
                                                             <i className="fa-solid fa-location-dot"></i>
                                                             {program.location}
                                                         </span>
                                                         <span
                                                             className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm truncate"
-                                                            title={program.speaker}
+                                                            title={
+                                                                program.speaker
+                                                            }
                                                         >
                                                             <i className="fa-solid fa-user"></i>
                                                             {program.speaker}
@@ -327,36 +457,48 @@ export default function Seminar() {
                                                         <span
                                                             className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-lg font-semibold border shadow-sm truncate
                                                                 ${
-                                                                    program.totalParticipants >= program.capacity
+                                                                    program.totalParticipants >=
+                                                                    program.capacity
                                                                         ? 'bg-red-100 text-red-900 border-red-200'
-                                                                        : program.totalParticipants >= program.capacity * 0.8
+                                                                        : program.totalParticipants >=
+                                                                          program.capacity *
+                                                                              0.8
                                                                         ? 'bg-yellow-100 text-yellow-900 border-yellow-200'
                                                                         : 'bg-green-100 text-green-900 border-green-200'
                                                                 }`}
                                                             title="Current participants / Total capacity"
                                                         >
                                                             <i className="fa-solid fa-users"></i>
-                                                            {program.totalParticipants} / {program.capacity}
+                                                            {
+                                                                program.totalParticipants
+                                                            }{' '}
+                                                            / {program.capacity}
                                                         </span>
                                                         <span
                                                             className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-lg font-semibold border shadow-sm truncate
                                                                 ${
-                                                                    program.status === 'Completed'
+                                                                    program.status ===
+                                                                    'Completed'
                                                                         ? 'bg-gray-100 text-gray-900 border-gray-200'
-                                                                        : program.status === 'Ongoing'
+                                                                        : program.status ===
+                                                                          'Ongoing'
                                                                         ? 'bg-blue-100 text-blue-900 border-blue-200'
-                                                                        : program.status === 'Cancelled'
+                                                                        : program.status ===
+                                                                          'Cancelled'
                                                                         ? 'bg-red-100 text-red-900 border-red-200'
                                                                         : 'bg-green-100 text-green-900 border-green-200'
                                                                 }`}
                                                         >
                                                             <i
                                                                 className={`fa-solid ${
-                                                                    program.status === 'Completed'
+                                                                    program.status ===
+                                                                    'Completed'
                                                                         ? 'fa-circle-check'
-                                                                        : program.status === 'Ongoing'
+                                                                        : program.status ===
+                                                                          'Ongoing'
                                                                         ? 'fa-circle-play'
-                                                                        : program.status === 'Cancelled'
+                                                                        : program.status ===
+                                                                          'Cancelled'
                                                                         ? 'fa-circle-xmark'
                                                                         : 'fa-clock'
                                                                 }`}
@@ -369,25 +511,41 @@ export default function Seminar() {
                                                 <div className="flex gap-4 w-full justify-end mt-8">
                                                     {isApplied ? (
                                                         <button
-                                                            onClick={() => cancelMutation.mutate(program.id)}
+                                                            onClick={() =>
+                                                                cancelMutation.mutate(
+                                                                    program.id
+                                                                )
+                                                            }
                                                             className="flex items-center gap-2 px-8 py-2 rounded-xl bg-white text-blue-900 font-bold shadow-lg hover:bg-blue-100 border border-blue-200 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                                            disabled={cancelMutation.isLoading}
+                                                            disabled={
+                                                                cancelMutation.isLoading
+                                                            }
                                                         >
                                                             <i className="fa-solid fa-xmark"></i>
                                                             Cancel
                                                         </button>
                                                     ) : (
                                                         <button
-                                                            onClick={() => applyMutation.mutate(program.id)}
+                                                            onClick={() =>
+                                                                applyMutation.mutate(
+                                                                    program.id
+                                                                )
+                                                            }
                                                             className="flex items-center gap-2 px-8 py-2 rounded-xl bg-gradient-to-r from-blue-800 to-blue-600 text-white font-bold shadow-lg hover:from-blue-900 hover:to-blue-700 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                                            disabled={applyMutation.isLoading}
+                                                            disabled={
+                                                                applyMutation.isLoading
+                                                            }
                                                         >
                                                             <i className="fa-solid fa-paper-plane"></i>
                                                             Apply
                                                         </button>
                                                     )}
                                                     <button
-                                                        onClick={() => setSelectedSeminarId(program.id)}
+                                                        onClick={() =>
+                                                            setSelectedSeminarId(
+                                                                program.id
+                                                            )
+                                                        }
                                                         className="flex items-center gap-2 px-8 py-2 rounded-xl border-2 border-blue-900 text-blue-900 bg-white font-bold shadow-lg hover:bg-blue-100 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
                                                     >
                                                         <i className="fa-solid fa-circle-info"></i>
@@ -402,10 +560,17 @@ export default function Seminar() {
                         </div>
                         {/* Pagination */}
                         {totalPages > 1 && (
-                            <nav className="flex justify-center mt-12 space-x-2 mb-8" aria-label="Pagination">
+                            <nav
+                                className="flex justify-center mt-12 space-x-2 mb-8"
+                                aria-label="Pagination"
+                            >
                                 <button
                                     className="px-4 py-2 rounded-xl bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 disabled:opacity-50 transition "
-                                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                                    onClick={() =>
+                                        setCurrentPage((p) =>
+                                            Math.max(1, p - 1)
+                                        )
+                                    }
                                     disabled={currentPage === 1}
                                     aria-label="Previous page"
                                 >
@@ -420,14 +585,22 @@ export default function Seminar() {
                                                 : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
                                         }`}
                                         onClick={() => setCurrentPage(i + 1)}
-                                        aria-current={currentPage === i + 1 ? 'page' : undefined}
+                                        aria-current={
+                                            currentPage === i + 1
+                                                ? 'page'
+                                                : undefined
+                                        }
                                     >
                                         {i + 1}
                                     </button>
                                 ))}
                                 <button
                                     className="px-4 py-2 rounded-xl bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 disabled:opacity-50 transition"
-                                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                                    onClick={() =>
+                                        setCurrentPage((p) =>
+                                            Math.min(totalPages, p + 1)
+                                        )
+                                    }
                                     disabled={currentPage === totalPages}
                                     aria-label="Next page"
                                 >
@@ -439,7 +612,18 @@ export default function Seminar() {
                 </main>
             </div>
             {selectedSeminar && (
-                <SeminarDetails seminar={selectedSeminar} onClose={() => setSelectedSeminarId(null)} />
+                <SeminarDetails
+                    seminar={selectedSeminar}
+                    onClose={() => setSelectedSeminarId(null)}
+                />
+            )}
+            {/* NEW: Modal for user's registered seminars */}
+            {showUserSeminarsModal && (
+                <UserSeminarsModal
+                    seminars={userRegisteredSeminars}
+                    isLoading={isUserSeminarsLoading}
+                    onClose={() => setShowUserSeminarsModal(false)}
+                />
             )}
         </>
     );
@@ -505,16 +689,19 @@ function SeminarDetails({ seminar, onClose }) {
                         <span
                             className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-lg font-semibold border shadow-sm
                                 ${
-                                    seminar.totalParticipants >= seminar.capacity
+                                    seminar.totalParticipants >=
+                                    seminar.capacity
                                         ? 'bg-red-100 text-red-900 border-red-200'
-                                        : seminar.totalParticipants >= seminar.capacity * 0.8
+                                        : seminar.totalParticipants >=
+                                          seminar.capacity * 0.8
                                         ? 'bg-yellow-100 text-yellow-900 border-yellow-200'
                                         : 'bg-green-100 text-green-900 border-green-200'
                                 }`}
                             title="Current participants / Total capacity"
                         >
                             <i className="fa-solid fa-users"></i>
-                            {seminar.totalParticipants} / {seminar.capacity} Participants
+                            {seminar.totalParticipants} / {seminar.capacity}{' '}
+                            Participants
                         </span>
                         <span
                             className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-lg font-semibold border shadow-sm
@@ -553,6 +740,153 @@ function SeminarDetails({ seminar, onClose }) {
                             Close
                         </button>
                     </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// NEW: Modal to show user's registered seminars
+function UserSeminarsModal({ seminars, isLoading, onClose }) {
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
+            <div className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full flex flex-col overflow-hidden animate-fade-in max-h-[90vh] border-2 border-blue-200">
+                <div className="flex items-center justify-between px-8 py-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-blue-100">
+                    <h2 className="text-2xl font-extrabold text-blue-900">
+                        Registered Seminars
+                    </h2>
+                    <button
+                        onClick={onClose}
+                        className="text-blue-400 hover:text-blue-700 text-2xl focus:outline-none"
+                        aria-label="Close"
+                    >
+                        <i className="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div className="flex-1 overflow-y-auto px-8 py-6">
+                    {isLoading ? (
+                        <div className="text-blue-400 text-center py-8 font-semibold">
+                            Loading...
+                        </div>
+                    ) : seminars.length === 0 ? (
+                        <div className="text-blue-400 text-center py-8 font-semibold">
+                            No registered seminars found.
+                        </div>
+                    ) : (
+                        <ul className="flex flex-col gap-6">
+                            {seminars.map((seminar) => (
+                                <li
+                                    key={seminar.id}
+                                    className="bg-blue-50 rounded-xl p-5 shadow border border-blue-100"
+                                >
+                                    <div className="flex flex-col gap-2">
+                                        <span className="font-bold text-blue-900 text-lg">
+                                            {seminar.title}
+                                        </span>
+                                        <div className="flex flex-wrap gap-3 mt-2">
+                                            <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
+                                                <i className="fa-solid fa-user"></i>
+                                                {seminar.speaker}
+                                            </span>
+                                            <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
+                                                <i className="fa-solid fa-location-dot"></i>
+                                                {seminar.location}
+                                            </span>
+                                            <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
+                                                <i className="fa-solid fa-clock"></i>
+                                                {new Date(
+                                                    seminar.start_date
+                                                ).toLocaleDateString('en-US', {
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                    year: 'numeric',
+                                                })}{' '}
+                                                {new Date(
+                                                    `2000-01-01T${seminar.start_time}`
+                                                ).toLocaleTimeString('en-US', {
+                                                    hour: 'numeric',
+                                                    minute: 'numeric',
+                                                    hour12: true,
+                                                })}{' '}
+                                                -{' '}
+                                                {new Date(
+                                                    seminar.end_date
+                                                ).toLocaleDateString('en-US', {
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                    year: 'numeric',
+                                                })}{' '}
+                                                {new Date(
+                                                    `2000-01-01T${seminar.end_time}`
+                                                ).toLocaleTimeString('en-US', {
+                                                    hour: 'numeric',
+                                                    minute: 'numeric',
+                                                    hour12: true,
+                                                })}
+                                            </span>
+                                            <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
+                                                <i className="fa-solid fa-users"></i>
+                                                Capacity: {seminar.capacity}
+                                            </span>
+                                            <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
+                                                <i className="fa-solid fa-calendar-day"></i>
+                                                Registration Deadline:{' '}
+                                                {new Date(
+                                                    seminar.registration_deadline
+                                                ).toLocaleDateString('en-US', {
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                    year: 'numeric',
+                                                    hour: 'numeric',
+                                                    minute: 'numeric',
+                                                    hour12: true,
+                                                })}
+                                            </span>
+                                            <span
+                                                className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-lg font-semibold border shadow-sm
+                                                ${
+                                                    seminar.status ===
+                                                    'Completed'
+                                                        ? 'bg-gray-100 text-gray-900 border-gray-200'
+                                                        : seminar.status ===
+                                                          'Ongoing'
+                                                        ? 'bg-blue-100 text-blue-900 border-blue-200'
+                                                        : seminar.status ===
+                                                          'Cancelled'
+                                                        ? 'bg-red-100 text-red-900 border-red-200'
+                                                        : 'bg-green-100 text-green-900 border-green-200'
+                                                }`}
+                                            >
+                                                <i
+                                                    className={`fa-solid ${
+                                                        seminar.status ===
+                                                        'Completed'
+                                                            ? 'fa-circle-check'
+                                                            : seminar.status ===
+                                                              'Ongoing'
+                                                            ? 'fa-circle-play'
+                                                            : seminar.status ===
+                                                              'Cancelled'
+                                                            ? 'fa-circle-xmark'
+                                                            : 'fa-clock'
+                                                    }`}
+                                                ></i>
+                                                {seminar.status}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+                <div className="flex justify-end px-8 py-4 border-t border-blue-100 bg-gradient-to-r from-blue-50 to-blue-100">
+                    <button
+                        onClick={onClose}
+                        className="px-8 py-2 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 text-white font-bold shadow hover:from-blue-800 hover:to-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    >
+                        Close
+                    </button>
                 </div>
             </div>
         </div>

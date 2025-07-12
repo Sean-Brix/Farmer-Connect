@@ -12,6 +12,12 @@ router.use(parseToken);
 import applySeminar from '../../../Controller/Seminar/applySeminar.js';
 router.post('/apply/:id', applySeminar);
 
+import getUserRegistration from '../../../Controller/Seminar/getUserRegistration.js';
+router.get('/user', getUserRegistration);
+
+import cancelUserRegistration from '../../../Controller/Seminar/cancelUserRegistration.js';
+router.post('/cancel/:id', cancelUserRegistration);
+
 //? ================================================================================================ ?//
 
 //? ======================================= AUTHORIZED ============================================= ?//
