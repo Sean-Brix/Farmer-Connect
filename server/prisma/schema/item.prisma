@@ -1,35 +1,18 @@
 //? ======================================= ITEM SCHEMA ======================================= ?//
 
 model InventoryItem {
-    id          String   @id @default(cuid())
-    name        String   @unique
+    id          String        @id @default(cuid())
+    name        String        @unique
     description String?
     picture     Bytes?
-    categoryId  String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
- 
+    category    item_category @default(Other)
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+
     // Relations
     item_stacks ItemStack[]
-    category    InventoryCategory @relation(fields: [categoryId], references: [id])
 
     @@map("inventory_items")
-}
-
-//? ===================================== CATEGORY SCHEMA ===================================== ?//
-
-model InventoryCategory {
-    id          String   @id @default(cuid())
-    name        String   @unique
-    icon        String?
-    description String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-
-    // Relations
-    items InventoryItem[]
-
-    @@map("inventory_categories")
 }
 
 //? ====================================== STACKS SCHEMA ====================================== ?//
@@ -56,4 +39,19 @@ enum item_status {
     Damaged
     EIC
     Distributed
+}
+
+enum item_category {
+    Farming_Equipment
+    Harvesting_Tools
+    Irrigation_Systems
+    Storage_Equipment
+    Processing_Equipment
+    Safety_Gear
+    Pest_Control
+    Livestock_Equipment
+    Measuring_Tools
+    Fisheries
+    Machinery
+    Other
 }

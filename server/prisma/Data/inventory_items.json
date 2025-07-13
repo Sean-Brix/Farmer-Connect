@@ -1,67 +1,67 @@
 [
     {
-        "name": "Laptop",
-        "description": "High-performance laptop for professional use",
-        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+        "name": "Tractor",
+        "description": "Powerful machine used for plowing and tilling fields",
+        "category": "Machinery"
     },
     {
-        "name": "Office Chair",
-        "description": "Ergonomic office chair with adjustable lumbar support",
-        "categoryId": "f8e7d6c5-b4a3-1029-8765-43210fedcba09"
+        "name": "Hoe",
+        "description": "Hand tool for weeding and soil cultivation",
+        "category": "Farming_Equipment"
     },
     {
-        "name": "T-Shirt",
-        "description": "Comfortable cotton t-shirt",
-        "categoryId": "b9c8d7e6-f5a4-3210-9876-543210fedcba"
+        "name": "Irrigation Pump",
+        "description": "Pump used to supply water to crops",
+        "category": "Irrigation_Systems"
     },
     {
-        "name": "Monitor",
-        "description": "27-inch 4K UHD monitor",
-        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+        "name": "Grain Storage Bin",
+        "description": "Large container for storing harvested grains",
+        "category": "Storage_Equipment"
     },
     {
-        "name": "Keyboard",
-        "description": "Mechanical keyboard with RGB lighting",
-        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+        "name": "Combine Harvester",
+        "description": "Machine for harvesting and threshing crops",
+        "category": "Harvesting_Tools"
     },
     {
-        "name": "Mouse",
-        "description": "Wireless ergonomic mouse",
-        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+        "name": "Protective Gloves",
+        "description": "Safety gloves for handling chemicals and equipment",
+        "category": "Safety_Gear"
     },
     {
-        "name": "Desk",
-        "description": "Large wooden desk with drawers",
-        "categoryId": "f8e7d6c5-b4a3-1029-8765-43210fedcba09"
+        "name": "Pesticide Sprayer",
+        "description": "Equipment for applying pesticides to crops",
+        "category": "Pest_Control"
     },
     {
-        "name": "Printer",
-        "description": "Color laser printer with Wi-Fi",
-        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+        "name": "Livestock Feeder",
+        "description": "Automatic feeder for farm animals",
+        "category": "Livestock_Equipment"
     },
     {
-        "name": "Projector",
-        "description": "Portable projector for presentations",
-        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+        "name": "Soil pH Meter",
+        "description": "Tool for measuring soil acidity",
+        "category": "Measuring_Tools"
     },
     {
-        "name": "Whiteboard",
-        "description": "Large magnetic whiteboard",
-        "categoryId": "8e7d6c5b-4a39-1028-7654-3210fedcba8e7"
+        "name": "Fishing Net",
+        "description": "Net used for catching fish in ponds or rivers",
+        "category": "Fisheries"
     },
     {
-        "name": "Stationery Set",
-        "description": "Complete stationery set with pens, pencils, and notebooks",
-        "categoryId": "8e7d6c5b-4a39-1028-7654-3210fedcba8e7"
+        "name": "Seed Drill",
+        "description": "Machine for planting seeds at uniform depth",
+        "category": "Machinery"
     },
     {
-        "name": "External Hard Drive",
-        "description": "1TB external hard drive for backup",
-        "categoryId": "c1a2b3d4-e5f6-7890-1234-567890abcdef"
+        "name": "Multi-purpose Farm Tool Set",
+        "description": "Set of essential tools for various farm tasks",
+        "category": "Other"
     },
     {
         "name": "The Lord of the Rings",
         "description": "Classic fantasy novel",
-        "categoryId": "a2b3c4d5-e6f7-8901-2345-67890abcdef0"
+        "category": "Other"
     }
 ]

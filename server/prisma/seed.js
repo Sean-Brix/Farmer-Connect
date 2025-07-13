@@ -317,27 +317,7 @@ async function createInventoryItems() {
       data: {
         name: item.name,
         description: item.description,
-        category: {
-          connect: { id: item.categoryId }
-        }
-      },
-    });
-  }
-}
-
-//? =============================== INVENTORY CATEGORIES =============================== ?//
-
-import inventoryCategoriesData from './Data/inventory_category.json' with { type: 'json' }
-
-async function createInventoryCategories() {
-  for (const category of inventoryCategoriesData) {
-
-    await prisma.inventoryCategory.create({
-      data: {
-        id: category.id,
-        name: category.name,
-        icon: null,
-        description: category.description,
+        category: item.category || 'Other'
       },
     });
   }
@@ -436,9 +416,6 @@ async function main() {
 
     await createSeminarParticipants();
     console.log('Seminar Participants created successfully.');
-    
-    await createInventoryCategories();
-    console.log('Inventory Categories created successfully.');
     
     await createInventoryItems();
     console.log('Inventory Items created successfully.');

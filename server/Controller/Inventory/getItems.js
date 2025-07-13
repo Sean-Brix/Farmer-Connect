@@ -10,7 +10,6 @@ async function getItems(req, res) {
                         createdAt: 'desc',
                     },
                 },
-                category: true,
             },
         });
 

@@ -165,16 +165,7 @@ exports.Prisma.InventoryItemScalarFieldEnum = {
   name: 'name',
   description: 'description',
   picture: 'picture',
-  categoryId: 'categoryId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.InventoryCategoryScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  icon: 'icon',
-  description: 'description',
+  category: 'category',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -260,14 +251,6 @@ exports.Prisma.AccountCommodityOrderByRelevanceFieldEnum = {
 exports.Prisma.InventoryItemOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
-  description: 'description',
-  categoryId: 'categoryId'
-};
-
-exports.Prisma.InventoryCategoryOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  icon: 'icon',
   description: 'description'
 };
 
@@ -318,6 +301,21 @@ exports.client_profile = exports.$Enums.client_profile = {
   Other: 'Other'
 };
 
+exports.item_category = exports.$Enums.item_category = {
+  Farming_Equipment: 'Farming_Equipment',
+  Harvesting_Tools: 'Harvesting_Tools',
+  Irrigation_Systems: 'Irrigation_Systems',
+  Storage_Equipment: 'Storage_Equipment',
+  Processing_Equipment: 'Processing_Equipment',
+  Safety_Gear: 'Safety_Gear',
+  Pest_Control: 'Pest_Control',
+  Livestock_Equipment: 'Livestock_Equipment',
+  Measuring_Tools: 'Measuring_Tools',
+  Fisheries: 'Fisheries',
+  Machinery: 'Machinery',
+  Other: 'Other'
+};
+
 exports.item_status = exports.$Enums.item_status = {
   Available: 'Available',
   Unavailable: 'Unavailable',
@@ -346,7 +344,6 @@ exports.Prisma.ModelName = {
   Commodity: 'Commodity',
   AccountCommodity: 'AccountCommodity',
   InventoryItem: 'InventoryItem',
-  InventoryCategory: 'InventoryCategory',
   ItemStack: 'ItemStack',
   Seminar: 'Seminar',
   SeminarParticipant: 'SeminarParticipant'

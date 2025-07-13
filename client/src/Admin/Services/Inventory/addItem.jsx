@@ -63,9 +63,17 @@ const AddItemModal = ({ isOpen, onClose, onSubmit, existingItems }) => {
             const exactMatch = existingItems.some(
                 (item) => item.name.toLowerCase() === nameInput.toLowerCase()
             );
-            setIsNewItem(!exactMatch);
+            const wasExistingItem = !isNewItem;
+            const willBeNewItem = !exactMatch;
+
+            setIsNewItem(willBeNewItem);
+
+            // Reset category to "Other" when switching from existing item to new item
+            if (wasExistingItem && willBeNewItem) {
+                setForm((prev) => ({ ...prev, category: 'Other' }));
+            }
         }
-    }, [nameInput, existingItems]);
+    }, [nameInput, existingItems, isNewItem]);
 
     // Update form when name input changes
     useEffect(() => {
@@ -194,6 +202,11 @@ const AddItemModal = ({ isOpen, onClose, onSubmit, existingItems }) => {
                                         {item.name}
                                     </div>
                                 ))}
+                            </div>
+                        )}
+                        {isNewItem && nameInput.trim() !== '' && (
+                            <div className="mt-1 text-xs text-green-600 font-medium">
+                                ✓ Creating a new item
                             </div>
                         )}
                     </div>

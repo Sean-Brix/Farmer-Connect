@@ -132,13 +132,29 @@ function Content() {
         }
     }, [items]);
 
+    // Separate useEffect to update selectedItemStacks when items change
+    useEffect(() => {
+        if (selectedItemStacks && items.length > 0) {
+            const updatedItem = items.find(
+                (item) => item.id === selectedItemStacks.id
+            );
+            if (
+                updatedItem &&
+                JSON.stringify(updatedItem.item_stacks) !==
+                    JSON.stringify(selectedItemStacks.item_stacks)
+            ) {
+                setSelectedItemStacks(updatedItem);
+            }
+        }
+    }, [items, selectedItemStacks]);
+
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (formData) => {
         try {
-            const response = await fetch('/api/inventory/addItem', {
+            const response = await fetch('/api/inventory/item/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -150,7 +166,7 @@ function Content() {
             }
 
             setShowModal(false);
-            fetchItems();
+            await fetchItems(); // Wait for items to be fetched
         } catch (error) {
             console.error('Failed to create item:', error);
             alert('Failed to add item');
@@ -678,7 +694,7 @@ function Content() {
                                                 </span>
                                             </td>
                                             <td className="py-2 px-2 border-b text-blue-700 max-w-[120px] truncate">
-                                                {item.category.name}
+                                                {item.category}
                                             </td>
                                             <td className="py-2 px-2 border-b text-blue-700">
                                                 <button
