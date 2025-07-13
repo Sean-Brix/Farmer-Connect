@@ -1,6 +1,6 @@
 import express from 'express';
 
-// Route: ('/api/inventory/item')
+// Route: ('/api/inventory/stack')
 const router = express.Router();
 
 //? ======================================= AUTHORIZED ============================================= ?//
@@ -12,13 +12,9 @@ router.use(parseToken);
 import authorize from '../../../Middlewares/Auth/authorize.js';
 router.use(authorize);
 
-// Add Item
-import addItem from '../../../Controller/Inventory/addItem.js';
-router.post('/add', addItem);
-
-// Delete Item
-import deleteItem from '../../../Controller/Inventory/deleteItem.js';
-router.delete('/delete/:id', deleteItem);
+// Delete Stack
+import deleteStack from '../../../Controller/Inventory/deleteStack.js';
+router.delete('/delete/:id', deleteStack);
 
 //? ================================================================================================ ?//
 

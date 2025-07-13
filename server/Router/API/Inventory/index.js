@@ -9,4 +9,7 @@ router.use('/all', all);
 import item from './item.js'
 router.use('/item', item);
 
+import stack from './stack.js'
+router.use('/stack', stack);
+
 export default router;
