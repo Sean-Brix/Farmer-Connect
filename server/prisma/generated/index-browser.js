@@ -174,7 +174,9 @@ exports.Prisma.ItemStackScalarFieldEnum = {
   id: 'id',
   itemId: 'itemId',
   quantity: 'quantity',
+  item_stack_type: 'item_stack_type',
   status: 'status',
+  adminId: 'adminId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -256,7 +258,8 @@ exports.Prisma.InventoryItemOrderByRelevanceFieldEnum = {
 
 exports.Prisma.ItemStackOrderByRelevanceFieldEnum = {
   id: 'id',
-  itemId: 'itemId'
+  itemId: 'itemId',
+  adminId: 'adminId'
 };
 
 exports.Prisma.SeminarOrderByRelevanceFieldEnum = {
@@ -314,6 +317,11 @@ exports.item_category = exports.$Enums.item_category = {
   Fisheries: 'Fisheries',
   Machinery: 'Machinery',
   Other: 'Other'
+};
+
+exports.item_stack_type = exports.$Enums.item_stack_type = {
+  added: 'added',
+  removed: 'removed'
 };
 
 exports.item_status = exports.$Enums.item_status = {

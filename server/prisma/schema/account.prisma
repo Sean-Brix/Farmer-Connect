@@ -25,7 +25,9 @@ model Account {
 
   // Relations
   seminars        SeminarParticipant[]
-  seminarsCreated Seminar[] @relation("SeminarsCreated")
+  items           ItemStack[]
+  seminarsCreated Seminar[]            @relation("SeminarsCreated")
+  inventoryLogs   InventoryLog[]       @relation("InventoryLogs")
 
   @@map("accounts")
 }

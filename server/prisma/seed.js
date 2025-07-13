@@ -328,70 +328,71 @@ async function createInventoryItems() {
 import { faker } from '@faker-js/faker';
 async function createItemStacks() {
   const inventoryItems = await prisma.inventoryItem.findMany();
+  const adminAccounts = await prisma.account.findMany({
+    where: {
+      access: {
+        in: ['Admin', 'Super_Admin'],
+      },
+    },
+  });
 
   const statuses = ['Available', 'Unavailable', 'Lost', 'Damaged', 'EIC', 'Distributed'];
+  const stackTypes = ['added', 'removed'];
 
   for (const item of inventoryItems) {
-    // Generate a random number of stacks for each item (1 to 5 stacks)
-    const numberOfStacks = Math.floor(Math.random() * 5) + 1;
-    let remainingQuantity = faker.number.int({ min: 1, max: 50 }); // Random initial quantity
+    // Generate a random number of stacks for each item (3 to 8 stacks to simulate transaction history)
+    const numberOfStacks = Math.floor(Math.random() * 6) + 3;
+    let currentQuantity = 0; // Track the current quantity based on added/removed operations
 
     for (let i = 0; i < numberOfStacks; i++) {
-      // Determine the quantity for this stack (up to the remaining quantity)
-      const stackQuantity = Math.min(faker.number.int({ min: 1, max: 20 }), remainingQuantity);
-      remainingQuantity -= stackQuantity;
+      // Randomly select an admin account
+      const randomAdminIndex = Math.floor(Math.random() * adminAccounts.length);
+      const adminId = adminAccounts[randomAdminIndex].id;
+
+      // Determine stack type (80% chance of 'added', 20% chance of 'removed')
+      const stackType = Math.random() < 0.8 ? 'added' : 'removed';
+      
+      // Generate quantity based on stack type
+      let stackQuantity;
+      if (stackType === 'added') {
+        stackQuantity = faker.number.int({ min: 1, max: 25 });
+        currentQuantity += stackQuantity;
+      } else {
+        // For removed, don't remove more than what's available
+        const maxRemoval = Math.min(currentQuantity, faker.number.int({ min: 1, max: 15 }));
+        stackQuantity = maxRemoval > 0 ? maxRemoval : 1;
+        currentQuantity = Math.max(0, currentQuantity - stackQuantity);
+      }
 
       // Randomly select a status for this stack
       const status = statuses[Math.floor(Math.random() * statuses.length)];
 
       await prisma.itemStack.create({
         data: {
-            itemId: item.id,
-            quantity: stackQuantity,
-            status: status,
+          itemId: item.id,
+          quantity: stackQuantity,
+          item_stack_type: stackType,
+          status: status,
+          adminId: adminId,
         },
       });
 
-        if (remainingQuantity <= 0) {
-          break; // No more quantity to distribute
-        }
+      await wait(50); // Small delay to avoid overwhelming the database
     }
 
-      // Generate a random number of "EIC" stacks (0 to 5)
-      const numberOfAvailableStacks = Math.floor(Math.random() * 4);
-      for (let i = 0; i < numberOfAvailableStacks; i++) {
-      const availableQuantity = faker.number.int({ min: 1, max: 10 });
+    // Ensure we have at least some positive quantity by adding a final "added" stack if needed
+    if (currentQuantity <= 0) {
+      const randomAdminIndex = Math.floor(Math.random() * adminAccounts.length);
+      const adminId = adminAccounts[randomAdminIndex].id;
+      const finalQuantity = faker.number.int({ min: 5, max: 20 });
+
       await prisma.itemStack.create({
         data: {
           itemId: item.id,
-          quantity: availableQuantity,
-          status: 'EIC',
-        },
-      });
-    }
-
-    // Generate a random number of "Borrowed" stacks (0 to 5)
-    const numberOfBorrowedStacks = Math.floor(Math.random() * 6);
-    for (let i = 0; i < numberOfBorrowedStacks; i++) {
-    const borrowedQuantity = faker.number.int({ min: 1, max: 15 });
-    await prisma.itemStack.create({
-      data: {
-        itemId: item.id,
-        quantity: borrowedQuantity,
-        status: 'EIC',
-      },
-    });
-  }
-
-      // Generate a random number of "Distributed" stacks (0 to 5)
-      const numberOfDistributedStacks = Math.floor(Math.random() * 6);
-      for (let i = 0; i < numberOfDistributedStacks; i++) {
-      const distributedQuantity = faker.number.int({ min: 1, max: 15 });
-      await prisma.itemStack.create({
-        data: {
-          itemId: item.id,
-          quantity: distributedQuantity,
-          status: 'Distributed',
+          quantity: finalQuantity,
+          item_stack_type: 'added',
+          status: 'Available',
+          adminId: adminId,
         },
       });
     }

@@ -52,6 +52,15 @@ function Content() {
     const [showEditModal, setShowEditModal] = useState(false);
     const [uiSize, setUiSize] = useState('md'); // 'sm', 'md', 'lg'
 
+    // Stack Edit Modal states
+    const [showStackEditModal, setShowStackEditModal] = useState(false);
+    const [stackEditData, setStackEditData] = useState(null);
+    const [stackEditForm, setStackEditForm] = useState({
+        action: 'reduce', // 'reduce', 'transfer', 'add'
+        quantity: '',
+        targetStatus: 'Available'
+    });
+
     // Modern Alert State
     const [alert, setAlert] = useState({
         show: false,
@@ -371,6 +380,134 @@ function Content() {
             showAlert(`Failed to delete stack: ${error.message}`, 'error');
             setShowDeleteStackModal(false);
             setStackToDelete(null);
+        }
+    };
+
+    const handleEditStack = (status, stacks, totalQuantity) => {
+        setStackEditData({
+            status,
+            stacks,
+            totalQuantity,
+            itemId: selectedItemStacks.id,
+            itemName: selectedItemStacks.name
+        });
+        setStackEditForm({
+            action: 'reduce',
+            quantity: '',
+            targetStatus: statuses.filter(s => s !== status)[0] || 'Available'
+        });
+        setShowStackEditModal(true);
+    };
+
+    const handleStackEditFormChange = (e) => {
+        setStackEditForm({
+            ...stackEditForm,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleStackEditSubmit = async (e) => {
+        e.preventDefault();
+        
+        if (!stackEditData || !stackEditForm.quantity || stackEditForm.quantity <= 0) {
+            showAlert('Please enter a valid quantity', 'error');
+            return;
+        }
+
+        const quantity = parseInt(stackEditForm.quantity);
+        
+        if (stackEditForm.action === 'reduce' && quantity > stackEditData.totalQuantity) {
+            showAlert(`Cannot reduce more than available quantity (${stackEditData.totalQuantity})`, 'error');
+            return;
+        }
+
+        if (stackEditForm.action === 'transfer' && quantity > stackEditData.totalQuantity) {
+            showAlert(`Cannot transfer more than available quantity (${stackEditData.totalQuantity})`, 'error');
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('authToken');
+            let endpoint = '';
+            let method = 'POST';
+            let body = {};
+
+            switch (stackEditForm.action) {
+                case 'reduce':
+                    endpoint = `/api/inventory/stack/reduce`;
+                    body = {
+                        itemId: stackEditData.itemId,
+                        status: stackEditData.status,
+                        quantity: quantity
+                    };
+                    break;
+                
+                case 'transfer':
+                    endpoint = `/api/inventory/stack/transfer`;
+                    body = {
+                        itemId: stackEditData.itemId,
+                        fromStatus: stackEditData.status,
+                        toStatus: stackEditForm.targetStatus,
+                        quantity: quantity
+                    };
+                    break;
+                
+                case 'add':
+                    endpoint = `/api/inventory/stack/add`;
+                    body = {
+                        itemId: stackEditData.itemId,
+                        status: stackEditData.status,
+                        quantity: quantity
+                    };
+                    break;
+            }
+
+            const response = await fetch(endpoint, {
+                method: method,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            // Refresh items and show success message
+            fetchItems();
+            
+            let successMessage = '';
+            switch (stackEditForm.action) {
+                case 'reduce':
+                    successMessage = `Successfully reduced ${quantity} items from ${stackEditData.status} status`;
+                    break;
+                case 'transfer':
+                    successMessage = `Successfully transferred ${quantity} items from ${stackEditData.status} to ${stackEditForm.targetStatus}`;
+                    break;
+                case 'add':
+                    successMessage = `Successfully added ${quantity} items to ${stackEditData.status} status`;
+                    break;
+            }
+            
+            showAlert(successMessage, 'success');
+            
+            // Close modal and reset state
+            setShowStackEditModal(false);
+            setStackEditData(null);
+            setStackEditForm({
+                action: 'reduce',
+                quantity: '',
+                targetStatus: 'Available'
+            });
+            
+        } catch (error) {
+            console.error('Failed to edit stack:', error);
+            showAlert(`Failed to edit stack: ${error.message}`, 'error');
         }
     };
 
@@ -741,6 +878,118 @@ function Content() {
                         </div>
                     </div>
                 )}
+                {/* Stack Edit Modal */}
+                {showStackEditModal && stackEditData && (
+                    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-xl shadow p-6 w-full max-w-md relative border border-blue-100 mx-2">
+                            <button
+                                className="absolute top-2 right-2 text-blue-400 hover:text-blue-700 text-xl transition"
+                                onClick={() => {
+                                    setShowStackEditModal(false);
+                                    setStackEditData(null);
+                                    setStackEditForm({
+                                        action: 'reduce',
+                                        quantity: '',
+                                        targetStatus: 'Available'
+                                    });
+                                }}
+                                aria-label="Close"
+                            >
+                                ×
+                            </button>
+                            <div className="text-center">
+                                <h2 className="text-lg font-bold mb-4 text-blue-800">
+                                    Edit Stack
+                                </h2>
+                                <div className="mb-4 text-sm text-gray-600">
+                                    <p><strong>Item:</strong> {stackEditData.itemName}</p>
+                                    <p><strong>Status:</strong> {stackEditData.status}</p>
+                                    <p><strong>Current Quantity:</strong> {stackEditData.totalQuantity}</p>
+                                </div>
+                                <form onSubmit={handleStackEditSubmit}>
+                                    <div className="mb-4">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Action
+                                        </label>
+                                        <select
+                                            name="action"
+                                            value={stackEditForm.action}
+                                            onChange={handleStackEditFormChange}
+                                            className="w-full border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50"
+                                        >
+                                            <option value="reduce">Reduce Quantity</option>
+                                            <option value="transfer">Transfer to Another Status</option>
+                                            <option value="add">Add New Items</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div className="mb-4">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Quantity
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="quantity"
+                                            value={stackEditForm.quantity}
+                                            onChange={handleStackEditFormChange}
+                                            min="1"
+                                            max={stackEditForm.action === 'add' ? undefined : stackEditData.totalQuantity}
+                                            className="w-full border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50"
+                                            placeholder="Enter quantity"
+                                            required
+                                        />
+                                    </div>
+                                    
+                                    {stackEditForm.action === 'transfer' && (
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Target Status
+                                            </label>
+                                            <select
+                                                name="targetStatus"
+                                                value={stackEditForm.targetStatus}
+                                                onChange={handleStackEditFormChange}
+                                                className="w-full border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50"
+                                            >
+                                                {statuses.filter(status => status !== stackEditData.status).map((status) => (
+                                                    <option key={status} value={status}>
+                                                        {status}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
+                                    
+                                    <div className="flex gap-3 justify-center">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setShowStackEditModal(false);
+                                                setStackEditData(null);
+                                                setStackEditForm({
+                                                    action: 'reduce',
+                                                    quantity: '',
+                                                    targetStatus: 'Available'
+                                                });
+                                            }}
+                                            className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium"
+                                        >
+                                            {stackEditForm.action === 'reduce' ? 'Reduce' : 
+                                             stackEditForm.action === 'transfer' ? 'Transfer' : 'Add'}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {showStacksModal &&
                     selectedItemStacks &&
                     selectedItemStacks.currentStacks && (
@@ -1007,6 +1256,9 @@ function Content() {
                                                                 <table className="min-w-full bg-white rounded shadow">
                                                                     <thead>
                                                                         <tr>
+                                                                            <th className="py-2 px-3 bg-blue-100 text-left font-semibold text-blue-800 w-[50px]">
+                                                                                Edit
+                                                                            </th>
                                                                             <th className="py-2 px-3 bg-blue-100 text-left font-semibold text-blue-800">
                                                                                 Status
                                                                             </th>
@@ -1077,6 +1329,28 @@ function Content() {
                                                                                             : 'border-b border-blue-100'
                                                                                     }
                                                                                 >
+                                                                                    <td className="py-2 px-3">
+                                                                                        <button
+                                                                                            onClick={() => handleEditStack(status, stacks, totalQuantity)}
+                                                                                            className="p-1 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded transition-colors"
+                                                                                            title="Edit Stack"
+                                                                                            aria-label={`Edit ${status} stack`}
+                                                                                        >
+                                                                                            <svg
+                                                                                                className="w-4 h-4"
+                                                                                                fill="none"
+                                                                                                stroke="currentColor"
+                                                                                                strokeWidth="2"
+                                                                                                viewBox="0 0 24 24"
+                                                                                            >
+                                                                                                <path
+                                                                                                    strokeLinecap="round"
+                                                                                                    strokeLinejoin="round"
+                                                                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                                                                />
+                                                                                            </svg>
+                                                                                        </button>
+                                                                                    </td>
                                                                                     <td className="py-2 px-3">
                                                                                         <span
                                                                                             className={`px-2 py-1 rounded font-semibold

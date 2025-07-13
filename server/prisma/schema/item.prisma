@@ -17,14 +17,17 @@ model InventoryItem {
 
 //? ====================================== STACKS SCHEMA ====================================== ?//
 model ItemStack {
-    id        String      @id @default(cuid())
-    itemId    String
-    quantity  Int         @default(1)
-    status    item_status @default(Available)
-    createdAt DateTime    @default(now())
-    updatedAt DateTime    @updatedAt
+    id              String          @id @default(cuid())
+    itemId          String
+    quantity        Int             @default(1)
+    item_stack_type item_stack_type @default(added)
+    status          item_status     @default(Available)
+    adminId         String?
+    createdAt       DateTime        @default(now())
+    updatedAt       DateTime        @updatedAt
 
     // Relations
+    admin          Account?          @relation(fields: [adminId], references: [id])
     item InventoryItem @relation(fields: [itemId], references: [id])
 
     @@map("item_stacks")
@@ -39,6 +42,11 @@ enum item_status {
     Damaged
     EIC
     Distributed
+}
+
+enum item_stack_type {
+    added
+    removed
 }
 
 enum item_category {

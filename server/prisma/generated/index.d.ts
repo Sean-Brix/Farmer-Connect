@@ -99,6 +99,14 @@ export const item_status: {
 export type item_status = (typeof item_status)[keyof typeof item_status]
 
 
+export const item_stack_type: {
+  added: 'added',
+  removed: 'removed'
+};
+
+export type item_stack_type = (typeof item_stack_type)[keyof typeof item_stack_type]
+
+
 export const item_category: {
   Farming_Equipment: 'Farming_Equipment',
   Harvesting_Tools: 'Harvesting_Tools',
@@ -153,6 +161,10 @@ export const gender: typeof $Enums.gender
 export type item_status = $Enums.item_status
 
 export const item_status: typeof $Enums.item_status
+
+export type item_stack_type = $Enums.item_stack_type
+
+export const item_stack_type: typeof $Enums.item_stack_type
 
 export type item_category = $Enums.item_category
 
@@ -1478,12 +1490,14 @@ export namespace Prisma {
   export type AccountCountOutputType = {
     commodity: number
     seminars: number
+    items: number
     seminarsCreated: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     commodity?: boolean | AccountCountOutputTypeCountCommodityArgs
     seminars?: boolean | AccountCountOutputTypeCountSeminarsArgs
+    items?: boolean | AccountCountOutputTypeCountItemsArgs
     seminarsCreated?: boolean | AccountCountOutputTypeCountSeminarsCreatedArgs
   }
 
@@ -1510,6 +1524,13 @@ export namespace Prisma {
    */
   export type AccountCountOutputTypeCountSeminarsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SeminarParticipantWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ItemStackWhereInput
   }
 
   /**
@@ -1903,6 +1924,7 @@ export namespace Prisma {
     updatedAt?: boolean
     commodity?: boolean | Account$commodityArgs<ExtArgs>
     seminars?: boolean | Account$seminarsArgs<ExtArgs>
+    items?: boolean | Account$itemsArgs<ExtArgs>
     seminarsCreated?: boolean | Account$seminarsCreatedArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
@@ -1936,6 +1958,7 @@ export namespace Prisma {
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     commodity?: boolean | Account$commodityArgs<ExtArgs>
     seminars?: boolean | Account$seminarsArgs<ExtArgs>
+    items?: boolean | Account$itemsArgs<ExtArgs>
     seminarsCreated?: boolean | Account$seminarsCreatedArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -1945,6 +1968,7 @@ export namespace Prisma {
     objects: {
       commodity: Prisma.$AccountCommodityPayload<ExtArgs>[]
       seminars: Prisma.$SeminarParticipantPayload<ExtArgs>[]
+      items: Prisma.$ItemStackPayload<ExtArgs>[]
       seminarsCreated: Prisma.$SeminarPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -2310,6 +2334,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     commodity<T extends Account$commodityArgs<ExtArgs> = {}>(args?: Subset<T, Account$commodityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     seminars<T extends Account$seminarsArgs<ExtArgs> = {}>(args?: Subset<T, Account$seminarsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeminarParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    items<T extends Account$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Account$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemStackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     seminarsCreated<T extends Account$seminarsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, Account$seminarsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeminarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2748,6 +2773,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SeminarParticipantScalarFieldEnum | SeminarParticipantScalarFieldEnum[]
+  }
+
+  /**
+   * Account.items
+   */
+  export type Account$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemStack
+     */
+    select?: ItemStackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ItemStack
+     */
+    omit?: ItemStackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ItemStackInclude<ExtArgs> | null
+    where?: ItemStackWhereInput
+    orderBy?: ItemStackOrderByWithRelationInput | ItemStackOrderByWithRelationInput[]
+    cursor?: ItemStackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ItemStackScalarFieldEnum | ItemStackScalarFieldEnum[]
   }
 
   /**
@@ -5693,7 +5742,9 @@ export namespace Prisma {
     id: string | null
     itemId: string | null
     quantity: number | null
+    item_stack_type: $Enums.item_stack_type | null
     status: $Enums.item_status | null
+    adminId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5702,7 +5753,9 @@ export namespace Prisma {
     id: string | null
     itemId: string | null
     quantity: number | null
+    item_stack_type: $Enums.item_stack_type | null
     status: $Enums.item_status | null
+    adminId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5711,7 +5764,9 @@ export namespace Prisma {
     id: number
     itemId: number
     quantity: number
+    item_stack_type: number
     status: number
+    adminId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5730,7 +5785,9 @@ export namespace Prisma {
     id?: true
     itemId?: true
     quantity?: true
+    item_stack_type?: true
     status?: true
+    adminId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5739,7 +5796,9 @@ export namespace Prisma {
     id?: true
     itemId?: true
     quantity?: true
+    item_stack_type?: true
     status?: true
+    adminId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5748,7 +5807,9 @@ export namespace Prisma {
     id?: true
     itemId?: true
     quantity?: true
+    item_stack_type?: true
     status?: true
+    adminId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5844,7 +5905,9 @@ export namespace Prisma {
     id: string
     itemId: string
     quantity: number
+    item_stack_type: $Enums.item_stack_type
     status: $Enums.item_status
+    adminId: string | null
     createdAt: Date
     updatedAt: Date
     _count: ItemStackCountAggregateOutputType | null
@@ -5872,9 +5935,12 @@ export namespace Prisma {
     id?: boolean
     itemId?: boolean
     quantity?: boolean
+    item_stack_type?: boolean
     status?: boolean
+    adminId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    admin?: boolean | ItemStack$adminArgs<ExtArgs>
     item?: boolean | InventoryItemDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["itemStack"]>
 
@@ -5884,26 +5950,32 @@ export namespace Prisma {
     id?: boolean
     itemId?: boolean
     quantity?: boolean
+    item_stack_type?: boolean
     status?: boolean
+    adminId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ItemStackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantity" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["itemStack"]>
+  export type ItemStackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantity" | "item_stack_type" | "status" | "adminId" | "createdAt" | "updatedAt", ExtArgs["result"]["itemStack"]>
   export type ItemStackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | ItemStack$adminArgs<ExtArgs>
     item?: boolean | InventoryItemDefaultArgs<ExtArgs>
   }
 
   export type $ItemStackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ItemStack"
     objects: {
+      admin: Prisma.$AccountPayload<ExtArgs> | null
       item: Prisma.$InventoryItemPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       itemId: string
       quantity: number
+      item_stack_type: $Enums.item_stack_type
       status: $Enums.item_status
+      adminId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["itemStack"]>
@@ -6246,6 +6318,7 @@ export namespace Prisma {
    */
   export interface Prisma__ItemStackClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    admin<T extends ItemStack$adminArgs<ExtArgs> = {}>(args?: Subset<T, ItemStack$adminArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     item<T extends InventoryItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryItemDefaultArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -6279,7 +6352,9 @@ export namespace Prisma {
     readonly id: FieldRef<"ItemStack", 'String'>
     readonly itemId: FieldRef<"ItemStack", 'String'>
     readonly quantity: FieldRef<"ItemStack", 'Int'>
+    readonly item_stack_type: FieldRef<"ItemStack", 'item_stack_type'>
     readonly status: FieldRef<"ItemStack", 'item_status'>
+    readonly adminId: FieldRef<"ItemStack", 'String'>
     readonly createdAt: FieldRef<"ItemStack", 'DateTime'>
     readonly updatedAt: FieldRef<"ItemStack", 'DateTime'>
   }
@@ -6622,6 +6697,25 @@ export namespace Prisma {
      * Limit how many ItemStacks to delete.
      */
     limit?: number
+  }
+
+  /**
+   * ItemStack.admin
+   */
+  export type ItemStack$adminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
   }
 
   /**
@@ -8792,7 +8886,9 @@ export namespace Prisma {
     id: 'id',
     itemId: 'itemId',
     quantity: 'quantity',
+    item_stack_type: 'item_stack_type',
     status: 'status',
+    adminId: 'adminId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -8901,7 +8997,8 @@ export namespace Prisma {
 
   export const ItemStackOrderByRelevanceFieldEnum: {
     id: 'id',
-    itemId: 'itemId'
+    itemId: 'itemId',
+    adminId: 'adminId'
   };
 
   export type ItemStackOrderByRelevanceFieldEnum = (typeof ItemStackOrderByRelevanceFieldEnum)[keyof typeof ItemStackOrderByRelevanceFieldEnum]
@@ -8993,6 +9090,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'item_stack_type'
+   */
+  export type Enumitem_stack_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'item_stack_type'>
+    
+
+
+  /**
    * Reference to a field of type 'item_status'
    */
   export type Enumitem_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'item_status'>
@@ -9049,6 +9153,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Account"> | Date | string
     commodity?: AccountCommodityListRelationFilter
     seminars?: SeminarParticipantListRelationFilter
+    items?: ItemStackListRelationFilter
     seminarsCreated?: SeminarListRelationFilter
   }
 
@@ -9075,6 +9180,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     commodity?: AccountCommodityOrderByRelationAggregateInput
     seminars?: SeminarParticipantOrderByRelationAggregateInput
+    items?: ItemStackOrderByRelationAggregateInput
     seminarsCreated?: SeminarOrderByRelationAggregateInput
     _relevance?: AccountOrderByRelevanceInput
   }
@@ -9105,6 +9211,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Account"> | Date | string
     commodity?: AccountCommodityListRelationFilter
     seminars?: SeminarParticipantListRelationFilter
+    items?: ItemStackListRelationFilter
     seminarsCreated?: SeminarListRelationFilter
   }, "id" | "username" | "email">
 
@@ -9354,9 +9461,12 @@ export namespace Prisma {
     id?: StringFilter<"ItemStack"> | string
     itemId?: StringFilter<"ItemStack"> | string
     quantity?: IntFilter<"ItemStack"> | number
+    item_stack_type?: Enumitem_stack_typeFilter<"ItemStack"> | $Enums.item_stack_type
     status?: Enumitem_statusFilter<"ItemStack"> | $Enums.item_status
+    adminId?: StringNullableFilter<"ItemStack"> | string | null
     createdAt?: DateTimeFilter<"ItemStack"> | Date | string
     updatedAt?: DateTimeFilter<"ItemStack"> | Date | string
+    admin?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     item?: XOR<InventoryItemScalarRelationFilter, InventoryItemWhereInput>
   }
 
@@ -9364,9 +9474,12 @@ export namespace Prisma {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
+    item_stack_type?: SortOrder
     status?: SortOrder
+    adminId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    admin?: AccountOrderByWithRelationInput
     item?: InventoryItemOrderByWithRelationInput
     _relevance?: ItemStackOrderByRelevanceInput
   }
@@ -9378,9 +9491,12 @@ export namespace Prisma {
     NOT?: ItemStackWhereInput | ItemStackWhereInput[]
     itemId?: StringFilter<"ItemStack"> | string
     quantity?: IntFilter<"ItemStack"> | number
+    item_stack_type?: Enumitem_stack_typeFilter<"ItemStack"> | $Enums.item_stack_type
     status?: Enumitem_statusFilter<"ItemStack"> | $Enums.item_status
+    adminId?: StringNullableFilter<"ItemStack"> | string | null
     createdAt?: DateTimeFilter<"ItemStack"> | Date | string
     updatedAt?: DateTimeFilter<"ItemStack"> | Date | string
+    admin?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     item?: XOR<InventoryItemScalarRelationFilter, InventoryItemWhereInput>
   }, "id">
 
@@ -9388,7 +9504,9 @@ export namespace Prisma {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
+    item_stack_type?: SortOrder
     status?: SortOrder
+    adminId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ItemStackCountOrderByAggregateInput
@@ -9405,7 +9523,9 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ItemStack"> | string
     itemId?: StringWithAggregatesFilter<"ItemStack"> | string
     quantity?: IntWithAggregatesFilter<"ItemStack"> | number
+    item_stack_type?: Enumitem_stack_typeWithAggregatesFilter<"ItemStack"> | $Enums.item_stack_type
     status?: Enumitem_statusWithAggregatesFilter<"ItemStack"> | $Enums.item_status
+    adminId?: StringNullableWithAggregatesFilter<"ItemStack"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ItemStack"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ItemStack"> | Date | string
   }
@@ -9619,6 +9739,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    items?: ItemStackCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
   }
 
@@ -9645,6 +9766,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    items?: ItemStackUncheckedCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
   }
 
@@ -9671,6 +9793,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    items?: ItemStackUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
   }
 
@@ -9697,6 +9820,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    items?: ItemStackUncheckedUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
@@ -9967,9 +10091,11 @@ export namespace Prisma {
   export type ItemStackCreateInput = {
     id?: string
     quantity?: number
+    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
     createdAt?: Date | string
     updatedAt?: Date | string
+    admin?: AccountCreateNestedOneWithoutItemsInput
     item: InventoryItemCreateNestedOneWithoutItem_stacksInput
   }
 
@@ -9977,7 +10103,9 @@ export namespace Prisma {
     id?: string
     itemId: string
     quantity?: number
+    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
+    adminId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9985,9 +10113,11 @@ export namespace Prisma {
   export type ItemStackUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AccountUpdateOneWithoutItemsNestedInput
     item?: InventoryItemUpdateOneRequiredWithoutItem_stacksNestedInput
   }
 
@@ -9995,7 +10125,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10004,7 +10136,9 @@ export namespace Prisma {
     id?: string
     itemId: string
     quantity?: number
+    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
+    adminId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10012,6 +10146,7 @@ export namespace Prisma {
   export type ItemStackUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10021,7 +10156,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10311,6 +10448,12 @@ export namespace Prisma {
     none?: SeminarParticipantWhereInput
   }
 
+  export type ItemStackListRelationFilter = {
+    every?: ItemStackWhereInput
+    some?: ItemStackWhereInput
+    none?: ItemStackWhereInput
+  }
+
   export type SeminarListRelationFilter = {
     every?: SeminarWhereInput
     some?: SeminarWhereInput
@@ -10327,6 +10470,10 @@ export namespace Prisma {
   }
 
   export type SeminarParticipantOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ItemStackOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -10584,16 +10731,6 @@ export namespace Prisma {
     not?: NestedEnumitem_categoryFilter<$PrismaModel> | $Enums.item_category
   }
 
-  export type ItemStackListRelationFilter = {
-    every?: ItemStackWhereInput
-    some?: ItemStackWhereInput
-    none?: ItemStackWhereInput
-  }
-
-  export type ItemStackOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type InventoryItemOrderByRelevanceInput = {
     fields: InventoryItemOrderByRelevanceFieldEnum | InventoryItemOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -10651,11 +10788,23 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type Enumitem_stack_typeFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_stack_type | Enumitem_stack_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.item_stack_type[]
+    notIn?: $Enums.item_stack_type[]
+    not?: NestedEnumitem_stack_typeFilter<$PrismaModel> | $Enums.item_stack_type
+  }
+
   export type Enumitem_statusFilter<$PrismaModel = never> = {
     equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
     in?: $Enums.item_status[]
     notIn?: $Enums.item_status[]
     not?: NestedEnumitem_statusFilter<$PrismaModel> | $Enums.item_status
+  }
+
+  export type AccountNullableScalarRelationFilter = {
+    is?: AccountWhereInput | null
+    isNot?: AccountWhereInput | null
   }
 
   export type InventoryItemScalarRelationFilter = {
@@ -10673,7 +10822,9 @@ export namespace Prisma {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
+    item_stack_type?: SortOrder
     status?: SortOrder
+    adminId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10686,7 +10837,9 @@ export namespace Prisma {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
+    item_stack_type?: SortOrder
     status?: SortOrder
+    adminId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10695,7 +10848,9 @@ export namespace Prisma {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
+    item_stack_type?: SortOrder
     status?: SortOrder
+    adminId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10718,6 +10873,16 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type Enumitem_stack_typeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_stack_type | Enumitem_stack_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.item_stack_type[]
+    notIn?: $Enums.item_stack_type[]
+    not?: NestedEnumitem_stack_typeWithAggregatesFilter<$PrismaModel> | $Enums.item_stack_type
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumitem_stack_typeFilter<$PrismaModel>
+    _max?: NestedEnumitem_stack_typeFilter<$PrismaModel>
   }
 
   export type Enumitem_statusWithAggregatesFilter<$PrismaModel = never> = {
@@ -10895,6 +11060,13 @@ export namespace Prisma {
     connect?: SeminarParticipantWhereUniqueInput | SeminarParticipantWhereUniqueInput[]
   }
 
+  export type ItemStackCreateNestedManyWithoutAdminInput = {
+    create?: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput> | ItemStackCreateWithoutAdminInput[] | ItemStackUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: ItemStackCreateOrConnectWithoutAdminInput | ItemStackCreateOrConnectWithoutAdminInput[]
+    createMany?: ItemStackCreateManyAdminInputEnvelope
+    connect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
+  }
+
   export type SeminarCreateNestedManyWithoutCreatorInput = {
     create?: XOR<SeminarCreateWithoutCreatorInput, SeminarUncheckedCreateWithoutCreatorInput> | SeminarCreateWithoutCreatorInput[] | SeminarUncheckedCreateWithoutCreatorInput[]
     connectOrCreate?: SeminarCreateOrConnectWithoutCreatorInput | SeminarCreateOrConnectWithoutCreatorInput[]
@@ -10914,6 +11086,13 @@ export namespace Prisma {
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
     createMany?: SeminarParticipantCreateManyAccountInputEnvelope
     connect?: SeminarParticipantWhereUniqueInput | SeminarParticipantWhereUniqueInput[]
+  }
+
+  export type ItemStackUncheckedCreateNestedManyWithoutAdminInput = {
+    create?: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput> | ItemStackCreateWithoutAdminInput[] | ItemStackUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: ItemStackCreateOrConnectWithoutAdminInput | ItemStackCreateOrConnectWithoutAdminInput[]
+    createMany?: ItemStackCreateManyAdminInputEnvelope
+    connect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
   }
 
   export type SeminarUncheckedCreateNestedManyWithoutCreatorInput = {
@@ -10979,6 +11158,20 @@ export namespace Prisma {
     deleteMany?: SeminarParticipantScalarWhereInput | SeminarParticipantScalarWhereInput[]
   }
 
+  export type ItemStackUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput> | ItemStackCreateWithoutAdminInput[] | ItemStackUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: ItemStackCreateOrConnectWithoutAdminInput | ItemStackCreateOrConnectWithoutAdminInput[]
+    upsert?: ItemStackUpsertWithWhereUniqueWithoutAdminInput | ItemStackUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: ItemStackCreateManyAdminInputEnvelope
+    set?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
+    disconnect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
+    delete?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
+    connect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
+    update?: ItemStackUpdateWithWhereUniqueWithoutAdminInput | ItemStackUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: ItemStackUpdateManyWithWhereWithoutAdminInput | ItemStackUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
+  }
+
   export type SeminarUpdateManyWithoutCreatorNestedInput = {
     create?: XOR<SeminarCreateWithoutCreatorInput, SeminarUncheckedCreateWithoutCreatorInput> | SeminarCreateWithoutCreatorInput[] | SeminarUncheckedCreateWithoutCreatorInput[]
     connectOrCreate?: SeminarCreateOrConnectWithoutCreatorInput | SeminarCreateOrConnectWithoutCreatorInput[]
@@ -11019,6 +11212,20 @@ export namespace Prisma {
     update?: SeminarParticipantUpdateWithWhereUniqueWithoutAccountInput | SeminarParticipantUpdateWithWhereUniqueWithoutAccountInput[]
     updateMany?: SeminarParticipantUpdateManyWithWhereWithoutAccountInput | SeminarParticipantUpdateManyWithWhereWithoutAccountInput[]
     deleteMany?: SeminarParticipantScalarWhereInput | SeminarParticipantScalarWhereInput[]
+  }
+
+  export type ItemStackUncheckedUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput> | ItemStackCreateWithoutAdminInput[] | ItemStackUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: ItemStackCreateOrConnectWithoutAdminInput | ItemStackCreateOrConnectWithoutAdminInput[]
+    upsert?: ItemStackUpsertWithWhereUniqueWithoutAdminInput | ItemStackUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: ItemStackCreateManyAdminInputEnvelope
+    set?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
+    disconnect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
+    delete?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
+    connect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
+    update?: ItemStackUpdateWithWhereUniqueWithoutAdminInput | ItemStackUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: ItemStackUpdateManyWithWhereWithoutAdminInput | ItemStackUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
   }
 
   export type SeminarUncheckedUpdateManyWithoutCreatorNestedInput = {
@@ -11151,6 +11358,12 @@ export namespace Prisma {
     deleteMany?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
   }
 
+  export type AccountCreateNestedOneWithoutItemsInput = {
+    create?: XOR<AccountCreateWithoutItemsInput, AccountUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutItemsInput
+    connect?: AccountWhereUniqueInput
+  }
+
   export type InventoryItemCreateNestedOneWithoutItem_stacksInput = {
     create?: XOR<InventoryItemCreateWithoutItem_stacksInput, InventoryItemUncheckedCreateWithoutItem_stacksInput>
     connectOrCreate?: InventoryItemCreateOrConnectWithoutItem_stacksInput
@@ -11165,8 +11378,22 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type Enumitem_stack_typeFieldUpdateOperationsInput = {
+    set?: $Enums.item_stack_type
+  }
+
   export type Enumitem_statusFieldUpdateOperationsInput = {
     set?: $Enums.item_status
+  }
+
+  export type AccountUpdateOneWithoutItemsNestedInput = {
+    create?: XOR<AccountCreateWithoutItemsInput, AccountUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutItemsInput
+    upsert?: AccountUpsertWithoutItemsInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutItemsInput, AccountUpdateWithoutItemsInput>, AccountUncheckedUpdateWithoutItemsInput>
   }
 
   export type InventoryItemUpdateOneRequiredWithoutItem_stacksNestedInput = {
@@ -11467,6 +11694,13 @@ export namespace Prisma {
     _max?: NestedEnumitem_categoryFilter<$PrismaModel>
   }
 
+  export type NestedEnumitem_stack_typeFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_stack_type | Enumitem_stack_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.item_stack_type[]
+    notIn?: $Enums.item_stack_type[]
+    not?: NestedEnumitem_stack_typeFilter<$PrismaModel> | $Enums.item_stack_type
+  }
+
   export type NestedEnumitem_statusFilter<$PrismaModel = never> = {
     equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
     in?: $Enums.item_status[]
@@ -11499,6 +11733,16 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumitem_stack_typeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_stack_type | Enumitem_stack_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.item_stack_type[]
+    notIn?: $Enums.item_stack_type[]
+    not?: NestedEnumitem_stack_typeWithAggregatesFilter<$PrismaModel> | $Enums.item_stack_type
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumitem_stack_typeFilter<$PrismaModel>
+    _max?: NestedEnumitem_stack_typeFilter<$PrismaModel>
   }
 
   export type NestedEnumitem_statusWithAggregatesFilter<$PrismaModel = never> = {
@@ -11592,6 +11836,36 @@ export namespace Prisma {
 
   export type SeminarParticipantCreateManyAccountInputEnvelope = {
     data: SeminarParticipantCreateManyAccountInput | SeminarParticipantCreateManyAccountInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ItemStackCreateWithoutAdminInput = {
+    id?: string
+    quantity?: number
+    item_stack_type?: $Enums.item_stack_type
+    status?: $Enums.item_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    item: InventoryItemCreateNestedOneWithoutItem_stacksInput
+  }
+
+  export type ItemStackUncheckedCreateWithoutAdminInput = {
+    id?: string
+    itemId: string
+    quantity?: number
+    item_stack_type?: $Enums.item_stack_type
+    status?: $Enums.item_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ItemStackCreateOrConnectWithoutAdminInput = {
+    where: ItemStackWhereUniqueInput
+    create: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput>
+  }
+
+  export type ItemStackCreateManyAdminInputEnvelope = {
+    data: ItemStackCreateManyAdminInput | ItemStackCreateManyAdminInput[]
     skipDuplicates?: boolean
   }
 
@@ -11698,6 +11972,36 @@ export namespace Prisma {
     status?: Enumparticipant_statusFilter<"SeminarParticipant"> | $Enums.participant_status
     createdAt?: DateTimeFilter<"SeminarParticipant"> | Date | string
     updatedAt?: DateTimeFilter<"SeminarParticipant"> | Date | string
+  }
+
+  export type ItemStackUpsertWithWhereUniqueWithoutAdminInput = {
+    where: ItemStackWhereUniqueInput
+    update: XOR<ItemStackUpdateWithoutAdminInput, ItemStackUncheckedUpdateWithoutAdminInput>
+    create: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput>
+  }
+
+  export type ItemStackUpdateWithWhereUniqueWithoutAdminInput = {
+    where: ItemStackWhereUniqueInput
+    data: XOR<ItemStackUpdateWithoutAdminInput, ItemStackUncheckedUpdateWithoutAdminInput>
+  }
+
+  export type ItemStackUpdateManyWithWhereWithoutAdminInput = {
+    where: ItemStackScalarWhereInput
+    data: XOR<ItemStackUpdateManyMutationInput, ItemStackUncheckedUpdateManyWithoutAdminInput>
+  }
+
+  export type ItemStackScalarWhereInput = {
+    AND?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
+    OR?: ItemStackScalarWhereInput[]
+    NOT?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
+    id?: StringFilter<"ItemStack"> | string
+    itemId?: StringFilter<"ItemStack"> | string
+    quantity?: IntFilter<"ItemStack"> | number
+    item_stack_type?: Enumitem_stack_typeFilter<"ItemStack"> | $Enums.item_stack_type
+    status?: Enumitem_statusFilter<"ItemStack"> | $Enums.item_status
+    adminId?: StringNullableFilter<"ItemStack"> | string | null
+    createdAt?: DateTimeFilter<"ItemStack"> | Date | string
+    updatedAt?: DateTimeFilter<"ItemStack"> | Date | string
   }
 
   export type SeminarUpsertWithWhereUniqueWithoutCreatorInput = {
@@ -11824,6 +12128,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    items?: ItemStackCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
   }
 
@@ -11849,6 +12154,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    items?: ItemStackUncheckedCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
   }
 
@@ -11919,6 +12225,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    items?: ItemStackUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
   }
 
@@ -11944,21 +12251,26 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    items?: ItemStackUncheckedUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type ItemStackCreateWithoutItemInput = {
     id?: string
     quantity?: number
+    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
     createdAt?: Date | string
     updatedAt?: Date | string
+    admin?: AccountCreateNestedOneWithoutItemsInput
   }
 
   export type ItemStackUncheckedCreateWithoutItemInput = {
     id?: string
     quantity?: number
+    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
+    adminId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11989,16 +12301,61 @@ export namespace Prisma {
     data: XOR<ItemStackUpdateManyMutationInput, ItemStackUncheckedUpdateManyWithoutItemInput>
   }
 
-  export type ItemStackScalarWhereInput = {
-    AND?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
-    OR?: ItemStackScalarWhereInput[]
-    NOT?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
-    id?: StringFilter<"ItemStack"> | string
-    itemId?: StringFilter<"ItemStack"> | string
-    quantity?: IntFilter<"ItemStack"> | number
-    status?: Enumitem_statusFilter<"ItemStack"> | $Enums.item_status
-    createdAt?: DateTimeFilter<"ItemStack"> | Date | string
-    updatedAt?: DateTimeFilter<"ItemStack"> | Date | string
+  export type AccountCreateWithoutItemsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    firstName: string
+    lastName: string
+    middleName?: string | null
+    gender: $Enums.gender
+    client_profile?: $Enums.client_profile
+    cellphone_no?: string | null
+    telephone_no?: string | null
+    occupation?: string | null
+    position?: string | null
+    institution?: string | null
+    address?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+  }
+
+  export type AccountUncheckedCreateWithoutItemsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    firstName: string
+    lastName: string
+    middleName?: string | null
+    gender: $Enums.gender
+    client_profile?: $Enums.client_profile
+    cellphone_no?: string | null
+    telephone_no?: string | null
+    occupation?: string | null
+    position?: string | null
+    institution?: string | null
+    address?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+  }
+
+  export type AccountCreateOrConnectWithoutItemsInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutItemsInput, AccountUncheckedCreateWithoutItemsInput>
   }
 
   export type InventoryItemCreateWithoutItem_stacksInput = {
@@ -12024,6 +12381,69 @@ export namespace Prisma {
   export type InventoryItemCreateOrConnectWithoutItem_stacksInput = {
     where: InventoryItemWhereUniqueInput
     create: XOR<InventoryItemCreateWithoutItem_stacksInput, InventoryItemUncheckedCreateWithoutItem_stacksInput>
+  }
+
+  export type AccountUpsertWithoutItemsInput = {
+    update: XOR<AccountUpdateWithoutItemsInput, AccountUncheckedUpdateWithoutItemsInput>
+    create: XOR<AccountCreateWithoutItemsInput, AccountUncheckedCreateWithoutItemsInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutItemsInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutItemsInput, AccountUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type AccountUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type InventoryItemUpsertWithoutItem_stacksInput = {
@@ -12106,6 +12526,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    items?: ItemStackCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsCreatedInput = {
@@ -12131,6 +12552,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    items?: ItemStackUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsCreatedInput = {
@@ -12188,6 +12610,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    items?: ItemStackUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsCreatedInput = {
@@ -12213,6 +12636,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    items?: ItemStackUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type SeminarCreateWithoutParticipantsInput = {
@@ -12282,6 +12706,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
+    items?: ItemStackCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
   }
 
@@ -12307,6 +12732,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
+    items?: ItemStackUncheckedCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
   }
 
@@ -12399,6 +12825,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
+    items?: ItemStackUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
   }
 
@@ -12424,6 +12851,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
+    items?: ItemStackUncheckedUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
@@ -12438,6 +12866,16 @@ export namespace Prisma {
     id?: string
     seminar_id: string
     status?: $Enums.participant_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ItemStackCreateManyAdminInput = {
+    id?: string
+    itemId: string
+    quantity?: number
+    item_stack_type?: $Enums.item_stack_type
+    status?: $Enums.item_status
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12502,6 +12940,36 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     seminar_id?: StringFieldUpdateOperationsInput | string
     status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ItemStackUpdateWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: InventoryItemUpdateOneRequiredWithoutItem_stacksNestedInput
+  }
+
+  export type ItemStackUncheckedUpdateWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ItemStackUncheckedUpdateManyWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12596,7 +13064,9 @@ export namespace Prisma {
   export type ItemStackCreateManyItemInput = {
     id?: string
     quantity?: number
+    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
+    adminId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12604,15 +13074,19 @@ export namespace Prisma {
   export type ItemStackUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AccountUpdateOneWithoutItemsNestedInput
   }
 
   export type ItemStackUncheckedUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12620,7 +13094,9 @@ export namespace Prisma {
   export type ItemStackUncheckedUpdateManyWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
