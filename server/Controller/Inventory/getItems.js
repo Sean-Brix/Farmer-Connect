@@ -7,31 +7,38 @@ async function getItems(req, res) {
             include: {
                 item_stacks: {
                     select: {
-                        quantity: true
-                    }
-                }
-            }
+                        id: true,
+                        quantity: true,
+                        status: true,
+                        createdAt: true,
+                        updatedAt: true,
+                    },
+                },
+            },
         });
 
         // Calculate total quantity for each item
-        const itemsWithTotalQuantity = items.map(item => {
-            const totalQuantity = item.item_stacks.reduce((sum, stack) => sum + stack.quantity, 0);
-            
+        const list = items.map((item) => {
+            const totalQuantity = item.item_stacks.reduce(
+                (sum, stack) => sum + stack.quantity,
+                0
+            );
+
             return {
                 id: item.id,
                 name: item.name,
                 description: item.description,
-                picture: item.picture,
+                picture: '/api/inventory/item/' + item.id + '/picture',
                 category: item.category,
                 totalQuantity: totalQuantity,
+                stacks: item.item_stacks,
                 createdAt: item.createdAt,
-                updatedAt: item.updatedAt
+                updatedAt: item.updatedAt,
             };
         });
 
-        res.status(200).json(itemsWithTotalQuantity);
-    } 
-    catch (error) {
+        res.status(200).json(list);
+    } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to retrieve items' });
     }
