@@ -39,6 +39,11 @@ export type InventoryItem = $Result.DefaultSelection<Prisma.$InventoryItemPayloa
  */
 export type ItemStack = $Result.DefaultSelection<Prisma.$ItemStackPayload>
 /**
+ * Model ItemTransaction
+ * 
+ */
+export type ItemTransaction = $Result.DefaultSelection<Prisma.$ItemTransactionPayload>
+/**
  * Model Seminar
  * 
  */
@@ -87,6 +92,15 @@ export const gender: {
 export type gender = (typeof gender)[keyof typeof gender]
 
 
+export const transaction_response: {
+  Pending: 'Pending',
+  Approved: 'Approved',
+  Rejected: 'Rejected'
+};
+
+export type transaction_response = (typeof transaction_response)[keyof typeof transaction_response]
+
+
 export const item_status: {
   Available: 'Available',
   Unavailable: 'Unavailable',
@@ -97,14 +111,6 @@ export const item_status: {
 };
 
 export type item_status = (typeof item_status)[keyof typeof item_status]
-
-
-export const item_stack_type: {
-  added: 'added',
-  removed: 'removed'
-};
-
-export type item_stack_type = (typeof item_stack_type)[keyof typeof item_stack_type]
 
 
 export const item_category: {
@@ -158,13 +164,13 @@ export type gender = $Enums.gender
 
 export const gender: typeof $Enums.gender
 
+export type transaction_response = $Enums.transaction_response
+
+export const transaction_response: typeof $Enums.transaction_response
+
 export type item_status = $Enums.item_status
 
 export const item_status: typeof $Enums.item_status
-
-export type item_stack_type = $Enums.item_stack_type
-
-export const item_stack_type: typeof $Enums.item_stack_type
 
 export type item_category = $Enums.item_category
 
@@ -352,6 +358,16 @@ export class PrismaClient<
     * ```
     */
   get itemStack(): Prisma.ItemStackDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.itemTransaction`: Exposes CRUD operations for the **ItemTransaction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ItemTransactions
+    * const itemTransactions = await prisma.itemTransaction.findMany()
+    * ```
+    */
+  get itemTransaction(): Prisma.ItemTransactionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.seminar`: Exposes CRUD operations for the **Seminar** model.
@@ -817,6 +833,7 @@ export namespace Prisma {
     AccountCommodity: 'AccountCommodity',
     InventoryItem: 'InventoryItem',
     ItemStack: 'ItemStack',
+    ItemTransaction: 'ItemTransaction',
     Seminar: 'Seminar',
     SeminarParticipant: 'SeminarParticipant'
   };
@@ -837,7 +854,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "commodity" | "accountCommodity" | "inventoryItem" | "itemStack" | "seminar" | "seminarParticipant"
+      modelProps: "account" | "commodity" | "accountCommodity" | "inventoryItem" | "itemStack" | "itemTransaction" | "seminar" | "seminarParticipant"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1171,6 +1188,72 @@ export namespace Prisma {
           }
         }
       }
+      ItemTransaction: {
+        payload: Prisma.$ItemTransactionPayload<ExtArgs>
+        fields: Prisma.ItemTransactionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ItemTransactionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ItemTransactionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ItemTransactionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ItemTransactionPayload>
+          }
+          findFirst: {
+            args: Prisma.ItemTransactionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ItemTransactionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ItemTransactionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ItemTransactionPayload>
+          }
+          findMany: {
+            args: Prisma.ItemTransactionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ItemTransactionPayload>[]
+          }
+          create: {
+            args: Prisma.ItemTransactionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ItemTransactionPayload>
+          }
+          createMany: {
+            args: Prisma.ItemTransactionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.ItemTransactionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ItemTransactionPayload>
+          }
+          update: {
+            args: Prisma.ItemTransactionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ItemTransactionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ItemTransactionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ItemTransactionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ItemTransactionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ItemTransactionPayload>
+          }
+          aggregate: {
+            args: Prisma.ItemTransactionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateItemTransaction>
+          }
+          groupBy: {
+            args: Prisma.ItemTransactionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ItemTransactionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ItemTransactionCountArgs<ExtArgs>
+            result: $Utils.Optional<ItemTransactionCountAggregateOutputType> | number
+          }
+        }
+      }
       Seminar: {
         payload: Prisma.$SeminarPayload<ExtArgs>
         fields: Prisma.SeminarFieldRefs
@@ -1392,6 +1475,7 @@ export namespace Prisma {
     accountCommodity?: AccountCommodityOmit
     inventoryItem?: InventoryItemOmit
     itemStack?: ItemStackOmit
+    itemTransaction?: ItemTransactionOmit
     seminar?: SeminarOmit
     seminarParticipant?: SeminarParticipantOmit
   }
@@ -1490,14 +1574,14 @@ export namespace Prisma {
   export type AccountCountOutputType = {
     commodity: number
     seminars: number
-    items: number
+    itemTransactions: number
     seminarsCreated: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     commodity?: boolean | AccountCountOutputTypeCountCommodityArgs
     seminars?: boolean | AccountCountOutputTypeCountSeminarsArgs
-    items?: boolean | AccountCountOutputTypeCountItemsArgs
+    itemTransactions?: boolean | AccountCountOutputTypeCountItemTransactionsArgs
     seminarsCreated?: boolean | AccountCountOutputTypeCountSeminarsCreatedArgs
   }
 
@@ -1529,8 +1613,8 @@ export namespace Prisma {
   /**
    * AccountCountOutputType without action
    */
-  export type AccountCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ItemStackWhereInput
+  export type AccountCountOutputTypeCountItemTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ItemTransactionWhereInput
   }
 
   /**
@@ -1600,6 +1684,37 @@ export namespace Prisma {
    */
   export type InventoryItemCountOutputTypeCountItem_stacksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ItemStackWhereInput
+  }
+
+
+  /**
+   * Count Type ItemStackCountOutputType
+   */
+
+  export type ItemStackCountOutputType = {
+    itemTransactions: number
+  }
+
+  export type ItemStackCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    itemTransactions?: boolean | ItemStackCountOutputTypeCountItemTransactionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ItemStackCountOutputType without action
+   */
+  export type ItemStackCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemStackCountOutputType
+     */
+    select?: ItemStackCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ItemStackCountOutputType without action
+   */
+  export type ItemStackCountOutputTypeCountItemTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ItemTransactionWhereInput
   }
 
 
@@ -1924,7 +2039,7 @@ export namespace Prisma {
     updatedAt?: boolean
     commodity?: boolean | Account$commodityArgs<ExtArgs>
     seminars?: boolean | Account$seminarsArgs<ExtArgs>
-    items?: boolean | Account$itemsArgs<ExtArgs>
+    itemTransactions?: boolean | Account$itemTransactionsArgs<ExtArgs>
     seminarsCreated?: boolean | Account$seminarsCreatedArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
@@ -1958,7 +2073,7 @@ export namespace Prisma {
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     commodity?: boolean | Account$commodityArgs<ExtArgs>
     seminars?: boolean | Account$seminarsArgs<ExtArgs>
-    items?: boolean | Account$itemsArgs<ExtArgs>
+    itemTransactions?: boolean | Account$itemTransactionsArgs<ExtArgs>
     seminarsCreated?: boolean | Account$seminarsCreatedArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -1968,7 +2083,7 @@ export namespace Prisma {
     objects: {
       commodity: Prisma.$AccountCommodityPayload<ExtArgs>[]
       seminars: Prisma.$SeminarParticipantPayload<ExtArgs>[]
-      items: Prisma.$ItemStackPayload<ExtArgs>[]
+      itemTransactions: Prisma.$ItemTransactionPayload<ExtArgs>[]
       seminarsCreated: Prisma.$SeminarPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -2334,7 +2449,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     commodity<T extends Account$commodityArgs<ExtArgs> = {}>(args?: Subset<T, Account$commodityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     seminars<T extends Account$seminarsArgs<ExtArgs> = {}>(args?: Subset<T, Account$seminarsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeminarParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    items<T extends Account$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Account$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemStackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    itemTransactions<T extends Account$itemTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Account$itemTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     seminarsCreated<T extends Account$seminarsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, Account$seminarsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeminarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2776,27 +2891,27 @@ export namespace Prisma {
   }
 
   /**
-   * Account.items
+   * Account.itemTransactions
    */
-  export type Account$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Account$itemTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ItemStack
+     * Select specific fields to fetch from the ItemTransaction
      */
-    select?: ItemStackSelect<ExtArgs> | null
+    select?: ItemTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ItemStack
+     * Omit specific fields from the ItemTransaction
      */
-    omit?: ItemStackOmit<ExtArgs> | null
+    omit?: ItemTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ItemStackInclude<ExtArgs> | null
-    where?: ItemStackWhereInput
-    orderBy?: ItemStackOrderByWithRelationInput | ItemStackOrderByWithRelationInput[]
-    cursor?: ItemStackWhereUniqueInput
+    include?: ItemTransactionInclude<ExtArgs> | null
+    where?: ItemTransactionWhereInput
+    orderBy?: ItemTransactionOrderByWithRelationInput | ItemTransactionOrderByWithRelationInput[]
+    cursor?: ItemTransactionWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ItemStackScalarFieldEnum | ItemStackScalarFieldEnum[]
+    distinct?: ItemTransactionScalarFieldEnum | ItemTransactionScalarFieldEnum[]
   }
 
   /**
@@ -5742,9 +5857,7 @@ export namespace Prisma {
     id: string | null
     itemId: string | null
     quantity: number | null
-    item_stack_type: $Enums.item_stack_type | null
     status: $Enums.item_status | null
-    adminId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5753,9 +5866,7 @@ export namespace Prisma {
     id: string | null
     itemId: string | null
     quantity: number | null
-    item_stack_type: $Enums.item_stack_type | null
     status: $Enums.item_status | null
-    adminId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5764,9 +5875,7 @@ export namespace Prisma {
     id: number
     itemId: number
     quantity: number
-    item_stack_type: number
     status: number
-    adminId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5785,9 +5894,7 @@ export namespace Prisma {
     id?: true
     itemId?: true
     quantity?: true
-    item_stack_type?: true
     status?: true
-    adminId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5796,9 +5903,7 @@ export namespace Prisma {
     id?: true
     itemId?: true
     quantity?: true
-    item_stack_type?: true
     status?: true
-    adminId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5807,9 +5912,7 @@ export namespace Prisma {
     id?: true
     itemId?: true
     quantity?: true
-    item_stack_type?: true
     status?: true
-    adminId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5905,9 +6008,7 @@ export namespace Prisma {
     id: string
     itemId: string
     quantity: number
-    item_stack_type: $Enums.item_stack_type
     status: $Enums.item_status
-    adminId: string | null
     createdAt: Date
     updatedAt: Date
     _count: ItemStackCountAggregateOutputType | null
@@ -5935,13 +6036,12 @@ export namespace Prisma {
     id?: boolean
     itemId?: boolean
     quantity?: boolean
-    item_stack_type?: boolean
     status?: boolean
-    adminId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    admin?: boolean | ItemStack$adminArgs<ExtArgs>
     item?: boolean | InventoryItemDefaultArgs<ExtArgs>
+    itemTransactions?: boolean | ItemStack$itemTransactionsArgs<ExtArgs>
+    _count?: boolean | ItemStackCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["itemStack"]>
 
 
@@ -5950,32 +6050,29 @@ export namespace Prisma {
     id?: boolean
     itemId?: boolean
     quantity?: boolean
-    item_stack_type?: boolean
     status?: boolean
-    adminId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ItemStackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantity" | "item_stack_type" | "status" | "adminId" | "createdAt" | "updatedAt", ExtArgs["result"]["itemStack"]>
+  export type ItemStackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantity" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["itemStack"]>
   export type ItemStackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    admin?: boolean | ItemStack$adminArgs<ExtArgs>
     item?: boolean | InventoryItemDefaultArgs<ExtArgs>
+    itemTransactions?: boolean | ItemStack$itemTransactionsArgs<ExtArgs>
+    _count?: boolean | ItemStackCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $ItemStackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ItemStack"
     objects: {
-      admin: Prisma.$AccountPayload<ExtArgs> | null
       item: Prisma.$InventoryItemPayload<ExtArgs>
+      itemTransactions: Prisma.$ItemTransactionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       itemId: string
       quantity: number
-      item_stack_type: $Enums.item_stack_type
       status: $Enums.item_status
-      adminId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["itemStack"]>
@@ -6318,8 +6415,8 @@ export namespace Prisma {
    */
   export interface Prisma__ItemStackClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    admin<T extends ItemStack$adminArgs<ExtArgs> = {}>(args?: Subset<T, ItemStack$adminArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     item<T extends InventoryItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryItemDefaultArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    itemTransactions<T extends ItemStack$itemTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, ItemStack$itemTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6352,9 +6449,7 @@ export namespace Prisma {
     readonly id: FieldRef<"ItemStack", 'String'>
     readonly itemId: FieldRef<"ItemStack", 'String'>
     readonly quantity: FieldRef<"ItemStack", 'Int'>
-    readonly item_stack_type: FieldRef<"ItemStack", 'item_stack_type'>
     readonly status: FieldRef<"ItemStack", 'item_status'>
-    readonly adminId: FieldRef<"ItemStack", 'String'>
     readonly createdAt: FieldRef<"ItemStack", 'DateTime'>
     readonly updatedAt: FieldRef<"ItemStack", 'DateTime'>
   }
@@ -6700,22 +6795,27 @@ export namespace Prisma {
   }
 
   /**
-   * ItemStack.admin
+   * ItemStack.itemTransactions
    */
-  export type ItemStack$adminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ItemStack$itemTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Account
+     * Select specific fields to fetch from the ItemTransaction
      */
-    select?: AccountSelect<ExtArgs> | null
+    select?: ItemTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Account
+     * Omit specific fields from the ItemTransaction
      */
-    omit?: AccountOmit<ExtArgs> | null
+    omit?: ItemTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: AccountInclude<ExtArgs> | null
-    where?: AccountWhereInput
+    include?: ItemTransactionInclude<ExtArgs> | null
+    where?: ItemTransactionWhereInput
+    orderBy?: ItemTransactionOrderByWithRelationInput | ItemTransactionOrderByWithRelationInput[]
+    cursor?: ItemTransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ItemTransactionScalarFieldEnum | ItemTransactionScalarFieldEnum[]
   }
 
   /**
@@ -6734,6 +6834,1006 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ItemStackInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ItemTransaction
+   */
+
+  export type AggregateItemTransaction = {
+    _count: ItemTransactionCountAggregateOutputType | null
+    _avg: ItemTransactionAvgAggregateOutputType | null
+    _sum: ItemTransactionSumAggregateOutputType | null
+    _min: ItemTransactionMinAggregateOutputType | null
+    _max: ItemTransactionMaxAggregateOutputType | null
+  }
+
+  export type ItemTransactionAvgAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type ItemTransactionSumAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type ItemTransactionMinAggregateOutputType = {
+    id: string | null
+    itemStackId: string | null
+    accountId: string | null
+    quantity: number | null
+    transactionType: string | null
+    status: $Enums.transaction_response | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ItemTransactionMaxAggregateOutputType = {
+    id: string | null
+    itemStackId: string | null
+    accountId: string | null
+    quantity: number | null
+    transactionType: string | null
+    status: $Enums.transaction_response | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ItemTransactionCountAggregateOutputType = {
+    id: number
+    itemStackId: number
+    accountId: number
+    quantity: number
+    transactionType: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ItemTransactionAvgAggregateInputType = {
+    quantity?: true
+  }
+
+  export type ItemTransactionSumAggregateInputType = {
+    quantity?: true
+  }
+
+  export type ItemTransactionMinAggregateInputType = {
+    id?: true
+    itemStackId?: true
+    accountId?: true
+    quantity?: true
+    transactionType?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ItemTransactionMaxAggregateInputType = {
+    id?: true
+    itemStackId?: true
+    accountId?: true
+    quantity?: true
+    transactionType?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ItemTransactionCountAggregateInputType = {
+    id?: true
+    itemStackId?: true
+    accountId?: true
+    quantity?: true
+    transactionType?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ItemTransactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ItemTransaction to aggregate.
+     */
+    where?: ItemTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ItemTransactions to fetch.
+     */
+    orderBy?: ItemTransactionOrderByWithRelationInput | ItemTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ItemTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ItemTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ItemTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ItemTransactions
+    **/
+    _count?: true | ItemTransactionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ItemTransactionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ItemTransactionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ItemTransactionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ItemTransactionMaxAggregateInputType
+  }
+
+  export type GetItemTransactionAggregateType<T extends ItemTransactionAggregateArgs> = {
+        [P in keyof T & keyof AggregateItemTransaction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateItemTransaction[P]>
+      : GetScalarType<T[P], AggregateItemTransaction[P]>
+  }
+
+
+
+
+  export type ItemTransactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ItemTransactionWhereInput
+    orderBy?: ItemTransactionOrderByWithAggregationInput | ItemTransactionOrderByWithAggregationInput[]
+    by: ItemTransactionScalarFieldEnum[] | ItemTransactionScalarFieldEnum
+    having?: ItemTransactionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ItemTransactionCountAggregateInputType | true
+    _avg?: ItemTransactionAvgAggregateInputType
+    _sum?: ItemTransactionSumAggregateInputType
+    _min?: ItemTransactionMinAggregateInputType
+    _max?: ItemTransactionMaxAggregateInputType
+  }
+
+  export type ItemTransactionGroupByOutputType = {
+    id: string
+    itemStackId: string
+    accountId: string
+    quantity: number
+    transactionType: string
+    status: $Enums.transaction_response
+    createdAt: Date
+    updatedAt: Date
+    _count: ItemTransactionCountAggregateOutputType | null
+    _avg: ItemTransactionAvgAggregateOutputType | null
+    _sum: ItemTransactionSumAggregateOutputType | null
+    _min: ItemTransactionMinAggregateOutputType | null
+    _max: ItemTransactionMaxAggregateOutputType | null
+  }
+
+  type GetItemTransactionGroupByPayload<T extends ItemTransactionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ItemTransactionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ItemTransactionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ItemTransactionGroupByOutputType[P]>
+            : GetScalarType<T[P], ItemTransactionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ItemTransactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    itemStackId?: boolean
+    accountId?: boolean
+    quantity?: boolean
+    transactionType?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    itemStack?: boolean | ItemStackDefaultArgs<ExtArgs>
+    account?: boolean | AccountDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["itemTransaction"]>
+
+
+
+  export type ItemTransactionSelectScalar = {
+    id?: boolean
+    itemStackId?: boolean
+    accountId?: boolean
+    quantity?: boolean
+    transactionType?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ItemTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemStackId" | "accountId" | "quantity" | "transactionType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["itemTransaction"]>
+  export type ItemTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    itemStack?: boolean | ItemStackDefaultArgs<ExtArgs>
+    account?: boolean | AccountDefaultArgs<ExtArgs>
+  }
+
+  export type $ItemTransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ItemTransaction"
+    objects: {
+      itemStack: Prisma.$ItemStackPayload<ExtArgs>
+      account: Prisma.$AccountPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      itemStackId: string
+      accountId: string
+      quantity: number
+      transactionType: string
+      status: $Enums.transaction_response
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["itemTransaction"]>
+    composites: {}
+  }
+
+  type ItemTransactionGetPayload<S extends boolean | null | undefined | ItemTransactionDefaultArgs> = $Result.GetResult<Prisma.$ItemTransactionPayload, S>
+
+  type ItemTransactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ItemTransactionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ItemTransactionCountAggregateInputType | true
+    }
+
+  export interface ItemTransactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ItemTransaction'], meta: { name: 'ItemTransaction' } }
+    /**
+     * Find zero or one ItemTransaction that matches the filter.
+     * @param {ItemTransactionFindUniqueArgs} args - Arguments to find a ItemTransaction
+     * @example
+     * // Get one ItemTransaction
+     * const itemTransaction = await prisma.itemTransaction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ItemTransactionFindUniqueArgs>(args: SelectSubset<T, ItemTransactionFindUniqueArgs<ExtArgs>>): Prisma__ItemTransactionClient<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ItemTransaction that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ItemTransactionFindUniqueOrThrowArgs} args - Arguments to find a ItemTransaction
+     * @example
+     * // Get one ItemTransaction
+     * const itemTransaction = await prisma.itemTransaction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ItemTransactionFindUniqueOrThrowArgs>(args: SelectSubset<T, ItemTransactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ItemTransactionClient<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ItemTransaction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ItemTransactionFindFirstArgs} args - Arguments to find a ItemTransaction
+     * @example
+     * // Get one ItemTransaction
+     * const itemTransaction = await prisma.itemTransaction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ItemTransactionFindFirstArgs>(args?: SelectSubset<T, ItemTransactionFindFirstArgs<ExtArgs>>): Prisma__ItemTransactionClient<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ItemTransaction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ItemTransactionFindFirstOrThrowArgs} args - Arguments to find a ItemTransaction
+     * @example
+     * // Get one ItemTransaction
+     * const itemTransaction = await prisma.itemTransaction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ItemTransactionFindFirstOrThrowArgs>(args?: SelectSubset<T, ItemTransactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ItemTransactionClient<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ItemTransactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ItemTransactionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ItemTransactions
+     * const itemTransactions = await prisma.itemTransaction.findMany()
+     * 
+     * // Get first 10 ItemTransactions
+     * const itemTransactions = await prisma.itemTransaction.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const itemTransactionWithIdOnly = await prisma.itemTransaction.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ItemTransactionFindManyArgs>(args?: SelectSubset<T, ItemTransactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ItemTransaction.
+     * @param {ItemTransactionCreateArgs} args - Arguments to create a ItemTransaction.
+     * @example
+     * // Create one ItemTransaction
+     * const ItemTransaction = await prisma.itemTransaction.create({
+     *   data: {
+     *     // ... data to create a ItemTransaction
+     *   }
+     * })
+     * 
+     */
+    create<T extends ItemTransactionCreateArgs>(args: SelectSubset<T, ItemTransactionCreateArgs<ExtArgs>>): Prisma__ItemTransactionClient<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ItemTransactions.
+     * @param {ItemTransactionCreateManyArgs} args - Arguments to create many ItemTransactions.
+     * @example
+     * // Create many ItemTransactions
+     * const itemTransaction = await prisma.itemTransaction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ItemTransactionCreateManyArgs>(args?: SelectSubset<T, ItemTransactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ItemTransaction.
+     * @param {ItemTransactionDeleteArgs} args - Arguments to delete one ItemTransaction.
+     * @example
+     * // Delete one ItemTransaction
+     * const ItemTransaction = await prisma.itemTransaction.delete({
+     *   where: {
+     *     // ... filter to delete one ItemTransaction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ItemTransactionDeleteArgs>(args: SelectSubset<T, ItemTransactionDeleteArgs<ExtArgs>>): Prisma__ItemTransactionClient<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ItemTransaction.
+     * @param {ItemTransactionUpdateArgs} args - Arguments to update one ItemTransaction.
+     * @example
+     * // Update one ItemTransaction
+     * const itemTransaction = await prisma.itemTransaction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ItemTransactionUpdateArgs>(args: SelectSubset<T, ItemTransactionUpdateArgs<ExtArgs>>): Prisma__ItemTransactionClient<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ItemTransactions.
+     * @param {ItemTransactionDeleteManyArgs} args - Arguments to filter ItemTransactions to delete.
+     * @example
+     * // Delete a few ItemTransactions
+     * const { count } = await prisma.itemTransaction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ItemTransactionDeleteManyArgs>(args?: SelectSubset<T, ItemTransactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ItemTransactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ItemTransactionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ItemTransactions
+     * const itemTransaction = await prisma.itemTransaction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ItemTransactionUpdateManyArgs>(args: SelectSubset<T, ItemTransactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ItemTransaction.
+     * @param {ItemTransactionUpsertArgs} args - Arguments to update or create a ItemTransaction.
+     * @example
+     * // Update or create a ItemTransaction
+     * const itemTransaction = await prisma.itemTransaction.upsert({
+     *   create: {
+     *     // ... data to create a ItemTransaction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ItemTransaction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ItemTransactionUpsertArgs>(args: SelectSubset<T, ItemTransactionUpsertArgs<ExtArgs>>): Prisma__ItemTransactionClient<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ItemTransactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ItemTransactionCountArgs} args - Arguments to filter ItemTransactions to count.
+     * @example
+     * // Count the number of ItemTransactions
+     * const count = await prisma.itemTransaction.count({
+     *   where: {
+     *     // ... the filter for the ItemTransactions we want to count
+     *   }
+     * })
+    **/
+    count<T extends ItemTransactionCountArgs>(
+      args?: Subset<T, ItemTransactionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ItemTransactionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ItemTransaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ItemTransactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ItemTransactionAggregateArgs>(args: Subset<T, ItemTransactionAggregateArgs>): Prisma.PrismaPromise<GetItemTransactionAggregateType<T>>
+
+    /**
+     * Group by ItemTransaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ItemTransactionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ItemTransactionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ItemTransactionGroupByArgs['orderBy'] }
+        : { orderBy?: ItemTransactionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ItemTransactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetItemTransactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ItemTransaction model
+   */
+  readonly fields: ItemTransactionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ItemTransaction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ItemTransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    itemStack<T extends ItemStackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ItemStackDefaultArgs<ExtArgs>>): Prisma__ItemStackClient<$Result.GetResult<Prisma.$ItemStackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    account<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ItemTransaction model
+   */
+  interface ItemTransactionFieldRefs {
+    readonly id: FieldRef<"ItemTransaction", 'String'>
+    readonly itemStackId: FieldRef<"ItemTransaction", 'String'>
+    readonly accountId: FieldRef<"ItemTransaction", 'String'>
+    readonly quantity: FieldRef<"ItemTransaction", 'Int'>
+    readonly transactionType: FieldRef<"ItemTransaction", 'String'>
+    readonly status: FieldRef<"ItemTransaction", 'transaction_response'>
+    readonly createdAt: FieldRef<"ItemTransaction", 'DateTime'>
+    readonly updatedAt: FieldRef<"ItemTransaction", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ItemTransaction findUnique
+   */
+  export type ItemTransactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemTransaction
+     */
+    select?: ItemTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ItemTransaction
+     */
+    omit?: ItemTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ItemTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which ItemTransaction to fetch.
+     */
+    where: ItemTransactionWhereUniqueInput
+  }
+
+  /**
+   * ItemTransaction findUniqueOrThrow
+   */
+  export type ItemTransactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemTransaction
+     */
+    select?: ItemTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ItemTransaction
+     */
+    omit?: ItemTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ItemTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which ItemTransaction to fetch.
+     */
+    where: ItemTransactionWhereUniqueInput
+  }
+
+  /**
+   * ItemTransaction findFirst
+   */
+  export type ItemTransactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemTransaction
+     */
+    select?: ItemTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ItemTransaction
+     */
+    omit?: ItemTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ItemTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which ItemTransaction to fetch.
+     */
+    where?: ItemTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ItemTransactions to fetch.
+     */
+    orderBy?: ItemTransactionOrderByWithRelationInput | ItemTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ItemTransactions.
+     */
+    cursor?: ItemTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ItemTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ItemTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ItemTransactions.
+     */
+    distinct?: ItemTransactionScalarFieldEnum | ItemTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * ItemTransaction findFirstOrThrow
+   */
+  export type ItemTransactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemTransaction
+     */
+    select?: ItemTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ItemTransaction
+     */
+    omit?: ItemTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ItemTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which ItemTransaction to fetch.
+     */
+    where?: ItemTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ItemTransactions to fetch.
+     */
+    orderBy?: ItemTransactionOrderByWithRelationInput | ItemTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ItemTransactions.
+     */
+    cursor?: ItemTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ItemTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ItemTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ItemTransactions.
+     */
+    distinct?: ItemTransactionScalarFieldEnum | ItemTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * ItemTransaction findMany
+   */
+  export type ItemTransactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemTransaction
+     */
+    select?: ItemTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ItemTransaction
+     */
+    omit?: ItemTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ItemTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which ItemTransactions to fetch.
+     */
+    where?: ItemTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ItemTransactions to fetch.
+     */
+    orderBy?: ItemTransactionOrderByWithRelationInput | ItemTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ItemTransactions.
+     */
+    cursor?: ItemTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ItemTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ItemTransactions.
+     */
+    skip?: number
+    distinct?: ItemTransactionScalarFieldEnum | ItemTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * ItemTransaction create
+   */
+  export type ItemTransactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemTransaction
+     */
+    select?: ItemTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ItemTransaction
+     */
+    omit?: ItemTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ItemTransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ItemTransaction.
+     */
+    data: XOR<ItemTransactionCreateInput, ItemTransactionUncheckedCreateInput>
+  }
+
+  /**
+   * ItemTransaction createMany
+   */
+  export type ItemTransactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ItemTransactions.
+     */
+    data: ItemTransactionCreateManyInput | ItemTransactionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ItemTransaction update
+   */
+  export type ItemTransactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemTransaction
+     */
+    select?: ItemTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ItemTransaction
+     */
+    omit?: ItemTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ItemTransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ItemTransaction.
+     */
+    data: XOR<ItemTransactionUpdateInput, ItemTransactionUncheckedUpdateInput>
+    /**
+     * Choose, which ItemTransaction to update.
+     */
+    where: ItemTransactionWhereUniqueInput
+  }
+
+  /**
+   * ItemTransaction updateMany
+   */
+  export type ItemTransactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ItemTransactions.
+     */
+    data: XOR<ItemTransactionUpdateManyMutationInput, ItemTransactionUncheckedUpdateManyInput>
+    /**
+     * Filter which ItemTransactions to update
+     */
+    where?: ItemTransactionWhereInput
+    /**
+     * Limit how many ItemTransactions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ItemTransaction upsert
+   */
+  export type ItemTransactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemTransaction
+     */
+    select?: ItemTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ItemTransaction
+     */
+    omit?: ItemTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ItemTransactionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ItemTransaction to update in case it exists.
+     */
+    where: ItemTransactionWhereUniqueInput
+    /**
+     * In case the ItemTransaction found by the `where` argument doesn't exist, create a new ItemTransaction with this data.
+     */
+    create: XOR<ItemTransactionCreateInput, ItemTransactionUncheckedCreateInput>
+    /**
+     * In case the ItemTransaction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ItemTransactionUpdateInput, ItemTransactionUncheckedUpdateInput>
+  }
+
+  /**
+   * ItemTransaction delete
+   */
+  export type ItemTransactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemTransaction
+     */
+    select?: ItemTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ItemTransaction
+     */
+    omit?: ItemTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ItemTransactionInclude<ExtArgs> | null
+    /**
+     * Filter which ItemTransaction to delete.
+     */
+    where: ItemTransactionWhereUniqueInput
+  }
+
+  /**
+   * ItemTransaction deleteMany
+   */
+  export type ItemTransactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ItemTransactions to delete
+     */
+    where?: ItemTransactionWhereInput
+    /**
+     * Limit how many ItemTransactions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ItemTransaction without action
+   */
+  export type ItemTransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ItemTransaction
+     */
+    select?: ItemTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ItemTransaction
+     */
+    omit?: ItemTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ItemTransactionInclude<ExtArgs> | null
   }
 
 
@@ -8886,14 +9986,26 @@ export namespace Prisma {
     id: 'id',
     itemId: 'itemId',
     quantity: 'quantity',
-    item_stack_type: 'item_stack_type',
     status: 'status',
-    adminId: 'adminId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type ItemStackScalarFieldEnum = (typeof ItemStackScalarFieldEnum)[keyof typeof ItemStackScalarFieldEnum]
+
+
+  export const ItemTransactionScalarFieldEnum: {
+    id: 'id',
+    itemStackId: 'itemStackId',
+    accountId: 'accountId',
+    quantity: 'quantity',
+    transactionType: 'transactionType',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ItemTransactionScalarFieldEnum = (typeof ItemTransactionScalarFieldEnum)[keyof typeof ItemTransactionScalarFieldEnum]
 
 
   export const SeminarScalarFieldEnum: {
@@ -8997,11 +10109,20 @@ export namespace Prisma {
 
   export const ItemStackOrderByRelevanceFieldEnum: {
     id: 'id',
-    itemId: 'itemId',
-    adminId: 'adminId'
+    itemId: 'itemId'
   };
 
   export type ItemStackOrderByRelevanceFieldEnum = (typeof ItemStackOrderByRelevanceFieldEnum)[keyof typeof ItemStackOrderByRelevanceFieldEnum]
+
+
+  export const ItemTransactionOrderByRelevanceFieldEnum: {
+    id: 'id',
+    itemStackId: 'itemStackId',
+    accountId: 'accountId',
+    transactionType: 'transactionType'
+  };
+
+  export type ItemTransactionOrderByRelevanceFieldEnum = (typeof ItemTransactionOrderByRelevanceFieldEnum)[keyof typeof ItemTransactionOrderByRelevanceFieldEnum]
 
 
   export const SeminarOrderByRelevanceFieldEnum: {
@@ -9090,16 +10211,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'item_stack_type'
+   * Reference to a field of type 'item_status'
    */
-  export type Enumitem_stack_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'item_stack_type'>
+  export type Enumitem_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'item_status'>
     
 
 
   /**
-   * Reference to a field of type 'item_status'
+   * Reference to a field of type 'transaction_response'
    */
-  export type Enumitem_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'item_status'>
+  export type Enumtransaction_responseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'transaction_response'>
     
 
 
@@ -9153,7 +10274,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Account"> | Date | string
     commodity?: AccountCommodityListRelationFilter
     seminars?: SeminarParticipantListRelationFilter
-    items?: ItemStackListRelationFilter
+    itemTransactions?: ItemTransactionListRelationFilter
     seminarsCreated?: SeminarListRelationFilter
   }
 
@@ -9180,7 +10301,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     commodity?: AccountCommodityOrderByRelationAggregateInput
     seminars?: SeminarParticipantOrderByRelationAggregateInput
-    items?: ItemStackOrderByRelationAggregateInput
+    itemTransactions?: ItemTransactionOrderByRelationAggregateInput
     seminarsCreated?: SeminarOrderByRelationAggregateInput
     _relevance?: AccountOrderByRelevanceInput
   }
@@ -9211,7 +10332,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Account"> | Date | string
     commodity?: AccountCommodityListRelationFilter
     seminars?: SeminarParticipantListRelationFilter
-    items?: ItemStackListRelationFilter
+    itemTransactions?: ItemTransactionListRelationFilter
     seminarsCreated?: SeminarListRelationFilter
   }, "id" | "username" | "email">
 
@@ -9461,26 +10582,22 @@ export namespace Prisma {
     id?: StringFilter<"ItemStack"> | string
     itemId?: StringFilter<"ItemStack"> | string
     quantity?: IntFilter<"ItemStack"> | number
-    item_stack_type?: Enumitem_stack_typeFilter<"ItemStack"> | $Enums.item_stack_type
     status?: Enumitem_statusFilter<"ItemStack"> | $Enums.item_status
-    adminId?: StringNullableFilter<"ItemStack"> | string | null
     createdAt?: DateTimeFilter<"ItemStack"> | Date | string
     updatedAt?: DateTimeFilter<"ItemStack"> | Date | string
-    admin?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     item?: XOR<InventoryItemScalarRelationFilter, InventoryItemWhereInput>
+    itemTransactions?: ItemTransactionListRelationFilter
   }
 
   export type ItemStackOrderByWithRelationInput = {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
-    item_stack_type?: SortOrder
     status?: SortOrder
-    adminId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    admin?: AccountOrderByWithRelationInput
     item?: InventoryItemOrderByWithRelationInput
+    itemTransactions?: ItemTransactionOrderByRelationAggregateInput
     _relevance?: ItemStackOrderByRelevanceInput
   }
 
@@ -9491,22 +10608,18 @@ export namespace Prisma {
     NOT?: ItemStackWhereInput | ItemStackWhereInput[]
     itemId?: StringFilter<"ItemStack"> | string
     quantity?: IntFilter<"ItemStack"> | number
-    item_stack_type?: Enumitem_stack_typeFilter<"ItemStack"> | $Enums.item_stack_type
     status?: Enumitem_statusFilter<"ItemStack"> | $Enums.item_status
-    adminId?: StringNullableFilter<"ItemStack"> | string | null
     createdAt?: DateTimeFilter<"ItemStack"> | Date | string
     updatedAt?: DateTimeFilter<"ItemStack"> | Date | string
-    admin?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     item?: XOR<InventoryItemScalarRelationFilter, InventoryItemWhereInput>
+    itemTransactions?: ItemTransactionListRelationFilter
   }, "id">
 
   export type ItemStackOrderByWithAggregationInput = {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
-    item_stack_type?: SortOrder
     status?: SortOrder
-    adminId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ItemStackCountOrderByAggregateInput
@@ -9523,11 +10636,85 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ItemStack"> | string
     itemId?: StringWithAggregatesFilter<"ItemStack"> | string
     quantity?: IntWithAggregatesFilter<"ItemStack"> | number
-    item_stack_type?: Enumitem_stack_typeWithAggregatesFilter<"ItemStack"> | $Enums.item_stack_type
     status?: Enumitem_statusWithAggregatesFilter<"ItemStack"> | $Enums.item_status
-    adminId?: StringNullableWithAggregatesFilter<"ItemStack"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ItemStack"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ItemStack"> | Date | string
+  }
+
+  export type ItemTransactionWhereInput = {
+    AND?: ItemTransactionWhereInput | ItemTransactionWhereInput[]
+    OR?: ItemTransactionWhereInput[]
+    NOT?: ItemTransactionWhereInput | ItemTransactionWhereInput[]
+    id?: StringFilter<"ItemTransaction"> | string
+    itemStackId?: StringFilter<"ItemTransaction"> | string
+    accountId?: StringFilter<"ItemTransaction"> | string
+    quantity?: IntFilter<"ItemTransaction"> | number
+    transactionType?: StringFilter<"ItemTransaction"> | string
+    status?: Enumtransaction_responseFilter<"ItemTransaction"> | $Enums.transaction_response
+    createdAt?: DateTimeFilter<"ItemTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"ItemTransaction"> | Date | string
+    itemStack?: XOR<ItemStackScalarRelationFilter, ItemStackWhereInput>
+    account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+  }
+
+  export type ItemTransactionOrderByWithRelationInput = {
+    id?: SortOrder
+    itemStackId?: SortOrder
+    accountId?: SortOrder
+    quantity?: SortOrder
+    transactionType?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    itemStack?: ItemStackOrderByWithRelationInput
+    account?: AccountOrderByWithRelationInput
+    _relevance?: ItemTransactionOrderByRelevanceInput
+  }
+
+  export type ItemTransactionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ItemTransactionWhereInput | ItemTransactionWhereInput[]
+    OR?: ItemTransactionWhereInput[]
+    NOT?: ItemTransactionWhereInput | ItemTransactionWhereInput[]
+    itemStackId?: StringFilter<"ItemTransaction"> | string
+    accountId?: StringFilter<"ItemTransaction"> | string
+    quantity?: IntFilter<"ItemTransaction"> | number
+    transactionType?: StringFilter<"ItemTransaction"> | string
+    status?: Enumtransaction_responseFilter<"ItemTransaction"> | $Enums.transaction_response
+    createdAt?: DateTimeFilter<"ItemTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"ItemTransaction"> | Date | string
+    itemStack?: XOR<ItemStackScalarRelationFilter, ItemStackWhereInput>
+    account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+  }, "id">
+
+  export type ItemTransactionOrderByWithAggregationInput = {
+    id?: SortOrder
+    itemStackId?: SortOrder
+    accountId?: SortOrder
+    quantity?: SortOrder
+    transactionType?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ItemTransactionCountOrderByAggregateInput
+    _avg?: ItemTransactionAvgOrderByAggregateInput
+    _max?: ItemTransactionMaxOrderByAggregateInput
+    _min?: ItemTransactionMinOrderByAggregateInput
+    _sum?: ItemTransactionSumOrderByAggregateInput
+  }
+
+  export type ItemTransactionScalarWhereWithAggregatesInput = {
+    AND?: ItemTransactionScalarWhereWithAggregatesInput | ItemTransactionScalarWhereWithAggregatesInput[]
+    OR?: ItemTransactionScalarWhereWithAggregatesInput[]
+    NOT?: ItemTransactionScalarWhereWithAggregatesInput | ItemTransactionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ItemTransaction"> | string
+    itemStackId?: StringWithAggregatesFilter<"ItemTransaction"> | string
+    accountId?: StringWithAggregatesFilter<"ItemTransaction"> | string
+    quantity?: IntWithAggregatesFilter<"ItemTransaction"> | number
+    transactionType?: StringWithAggregatesFilter<"ItemTransaction"> | string
+    status?: Enumtransaction_responseWithAggregatesFilter<"ItemTransaction"> | $Enums.transaction_response
+    createdAt?: DateTimeWithAggregatesFilter<"ItemTransaction"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ItemTransaction"> | Date | string
   }
 
   export type SeminarWhereInput = {
@@ -9739,7 +10926,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
-    items?: ItemStackCreateNestedManyWithoutAdminInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
   }
 
@@ -9766,7 +10953,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
-    items?: ItemStackUncheckedCreateNestedManyWithoutAdminInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
   }
 
@@ -9793,7 +10980,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
-    items?: ItemStackUpdateManyWithoutAdminNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
   }
 
@@ -9820,7 +11007,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
-    items?: ItemStackUncheckedUpdateManyWithoutAdminNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
@@ -10091,54 +11278,48 @@ export namespace Prisma {
   export type ItemStackCreateInput = {
     id?: string
     quantity?: number
-    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
     createdAt?: Date | string
     updatedAt?: Date | string
-    admin?: AccountCreateNestedOneWithoutItemsInput
     item: InventoryItemCreateNestedOneWithoutItem_stacksInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutItemStackInput
   }
 
   export type ItemStackUncheckedCreateInput = {
     id?: string
     itemId: string
     quantity?: number
-    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
-    adminId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutItemStackInput
   }
 
   export type ItemStackUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin?: AccountUpdateOneWithoutItemsNestedInput
     item?: InventoryItemUpdateOneRequiredWithoutItem_stacksNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutItemStackNestedInput
   }
 
   export type ItemStackUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
-    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutItemStackNestedInput
   }
 
   export type ItemStackCreateManyInput = {
     id?: string
     itemId: string
     quantity?: number
-    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
-    adminId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10146,7 +11327,6 @@ export namespace Prisma {
   export type ItemStackUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10156,9 +11336,82 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
-    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ItemTransactionCreateInput = {
+    id?: string
+    quantity?: number
+    transactionType: string
+    status?: $Enums.transaction_response
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    itemStack: ItemStackCreateNestedOneWithoutItemTransactionsInput
+    account: AccountCreateNestedOneWithoutItemTransactionsInput
+  }
+
+  export type ItemTransactionUncheckedCreateInput = {
+    id?: string
+    itemStackId: string
+    accountId: string
+    quantity?: number
+    transactionType: string
+    status?: $Enums.transaction_response
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ItemTransactionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    transactionType?: StringFieldUpdateOperationsInput | string
+    status?: Enumtransaction_responseFieldUpdateOperationsInput | $Enums.transaction_response
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    itemStack?: ItemStackUpdateOneRequiredWithoutItemTransactionsNestedInput
+    account?: AccountUpdateOneRequiredWithoutItemTransactionsNestedInput
+  }
+
+  export type ItemTransactionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemStackId?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    transactionType?: StringFieldUpdateOperationsInput | string
+    status?: Enumtransaction_responseFieldUpdateOperationsInput | $Enums.transaction_response
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ItemTransactionCreateManyInput = {
+    id?: string
+    itemStackId: string
+    accountId: string
+    quantity?: number
+    transactionType: string
+    status?: $Enums.transaction_response
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ItemTransactionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    transactionType?: StringFieldUpdateOperationsInput | string
+    status?: Enumtransaction_responseFieldUpdateOperationsInput | $Enums.transaction_response
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ItemTransactionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemStackId?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    transactionType?: StringFieldUpdateOperationsInput | string
+    status?: Enumtransaction_responseFieldUpdateOperationsInput | $Enums.transaction_response
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10448,10 +11701,10 @@ export namespace Prisma {
     none?: SeminarParticipantWhereInput
   }
 
-  export type ItemStackListRelationFilter = {
-    every?: ItemStackWhereInput
-    some?: ItemStackWhereInput
-    none?: ItemStackWhereInput
+  export type ItemTransactionListRelationFilter = {
+    every?: ItemTransactionWhereInput
+    some?: ItemTransactionWhereInput
+    none?: ItemTransactionWhereInput
   }
 
   export type SeminarListRelationFilter = {
@@ -10473,7 +11726,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type ItemStackOrderByRelationAggregateInput = {
+  export type ItemTransactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -10731,6 +11984,16 @@ export namespace Prisma {
     not?: NestedEnumitem_categoryFilter<$PrismaModel> | $Enums.item_category
   }
 
+  export type ItemStackListRelationFilter = {
+    every?: ItemStackWhereInput
+    some?: ItemStackWhereInput
+    none?: ItemStackWhereInput
+  }
+
+  export type ItemStackOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type InventoryItemOrderByRelevanceInput = {
     fields: InventoryItemOrderByRelevanceFieldEnum | InventoryItemOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -10788,23 +12051,11 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type Enumitem_stack_typeFilter<$PrismaModel = never> = {
-    equals?: $Enums.item_stack_type | Enumitem_stack_typeFieldRefInput<$PrismaModel>
-    in?: $Enums.item_stack_type[]
-    notIn?: $Enums.item_stack_type[]
-    not?: NestedEnumitem_stack_typeFilter<$PrismaModel> | $Enums.item_stack_type
-  }
-
   export type Enumitem_statusFilter<$PrismaModel = never> = {
     equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
     in?: $Enums.item_status[]
     notIn?: $Enums.item_status[]
     not?: NestedEnumitem_statusFilter<$PrismaModel> | $Enums.item_status
-  }
-
-  export type AccountNullableScalarRelationFilter = {
-    is?: AccountWhereInput | null
-    isNot?: AccountWhereInput | null
   }
 
   export type InventoryItemScalarRelationFilter = {
@@ -10822,9 +12073,7 @@ export namespace Prisma {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
-    item_stack_type?: SortOrder
     status?: SortOrder
-    adminId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10837,9 +12086,7 @@ export namespace Prisma {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
-    item_stack_type?: SortOrder
     status?: SortOrder
-    adminId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10848,9 +12095,7 @@ export namespace Prisma {
     id?: SortOrder
     itemId?: SortOrder
     quantity?: SortOrder
-    item_stack_type?: SortOrder
     status?: SortOrder
-    adminId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10875,16 +12120,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type Enumitem_stack_typeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.item_stack_type | Enumitem_stack_typeFieldRefInput<$PrismaModel>
-    in?: $Enums.item_stack_type[]
-    notIn?: $Enums.item_stack_type[]
-    not?: NestedEnumitem_stack_typeWithAggregatesFilter<$PrismaModel> | $Enums.item_stack_type
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumitem_stack_typeFilter<$PrismaModel>
-    _max?: NestedEnumitem_stack_typeFilter<$PrismaModel>
-  }
-
   export type Enumitem_statusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
     in?: $Enums.item_status[]
@@ -10893,6 +12128,75 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumitem_statusFilter<$PrismaModel>
     _max?: NestedEnumitem_statusFilter<$PrismaModel>
+  }
+
+  export type Enumtransaction_responseFilter<$PrismaModel = never> = {
+    equals?: $Enums.transaction_response | Enumtransaction_responseFieldRefInput<$PrismaModel>
+    in?: $Enums.transaction_response[]
+    notIn?: $Enums.transaction_response[]
+    not?: NestedEnumtransaction_responseFilter<$PrismaModel> | $Enums.transaction_response
+  }
+
+  export type ItemStackScalarRelationFilter = {
+    is?: ItemStackWhereInput
+    isNot?: ItemStackWhereInput
+  }
+
+  export type ItemTransactionOrderByRelevanceInput = {
+    fields: ItemTransactionOrderByRelevanceFieldEnum | ItemTransactionOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type ItemTransactionCountOrderByAggregateInput = {
+    id?: SortOrder
+    itemStackId?: SortOrder
+    accountId?: SortOrder
+    quantity?: SortOrder
+    transactionType?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ItemTransactionAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type ItemTransactionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    itemStackId?: SortOrder
+    accountId?: SortOrder
+    quantity?: SortOrder
+    transactionType?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ItemTransactionMinOrderByAggregateInput = {
+    id?: SortOrder
+    itemStackId?: SortOrder
+    accountId?: SortOrder
+    quantity?: SortOrder
+    transactionType?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ItemTransactionSumOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type Enumtransaction_responseWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.transaction_response | Enumtransaction_responseFieldRefInput<$PrismaModel>
+    in?: $Enums.transaction_response[]
+    notIn?: $Enums.transaction_response[]
+    not?: NestedEnumtransaction_responseWithAggregatesFilter<$PrismaModel> | $Enums.transaction_response
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumtransaction_responseFilter<$PrismaModel>
+    _max?: NestedEnumtransaction_responseFilter<$PrismaModel>
   }
 
   export type Enumseminar_statusFilter<$PrismaModel = never> = {
@@ -11060,11 +12364,11 @@ export namespace Prisma {
     connect?: SeminarParticipantWhereUniqueInput | SeminarParticipantWhereUniqueInput[]
   }
 
-  export type ItemStackCreateNestedManyWithoutAdminInput = {
-    create?: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput> | ItemStackCreateWithoutAdminInput[] | ItemStackUncheckedCreateWithoutAdminInput[]
-    connectOrCreate?: ItemStackCreateOrConnectWithoutAdminInput | ItemStackCreateOrConnectWithoutAdminInput[]
-    createMany?: ItemStackCreateManyAdminInputEnvelope
-    connect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
+  export type ItemTransactionCreateNestedManyWithoutAccountInput = {
+    create?: XOR<ItemTransactionCreateWithoutAccountInput, ItemTransactionUncheckedCreateWithoutAccountInput> | ItemTransactionCreateWithoutAccountInput[] | ItemTransactionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: ItemTransactionCreateOrConnectWithoutAccountInput | ItemTransactionCreateOrConnectWithoutAccountInput[]
+    createMany?: ItemTransactionCreateManyAccountInputEnvelope
+    connect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
   }
 
   export type SeminarCreateNestedManyWithoutCreatorInput = {
@@ -11088,11 +12392,11 @@ export namespace Prisma {
     connect?: SeminarParticipantWhereUniqueInput | SeminarParticipantWhereUniqueInput[]
   }
 
-  export type ItemStackUncheckedCreateNestedManyWithoutAdminInput = {
-    create?: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput> | ItemStackCreateWithoutAdminInput[] | ItemStackUncheckedCreateWithoutAdminInput[]
-    connectOrCreate?: ItemStackCreateOrConnectWithoutAdminInput | ItemStackCreateOrConnectWithoutAdminInput[]
-    createMany?: ItemStackCreateManyAdminInputEnvelope
-    connect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
+  export type ItemTransactionUncheckedCreateNestedManyWithoutAccountInput = {
+    create?: XOR<ItemTransactionCreateWithoutAccountInput, ItemTransactionUncheckedCreateWithoutAccountInput> | ItemTransactionCreateWithoutAccountInput[] | ItemTransactionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: ItemTransactionCreateOrConnectWithoutAccountInput | ItemTransactionCreateOrConnectWithoutAccountInput[]
+    createMany?: ItemTransactionCreateManyAccountInputEnvelope
+    connect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
   }
 
   export type SeminarUncheckedCreateNestedManyWithoutCreatorInput = {
@@ -11158,18 +12462,18 @@ export namespace Prisma {
     deleteMany?: SeminarParticipantScalarWhereInput | SeminarParticipantScalarWhereInput[]
   }
 
-  export type ItemStackUpdateManyWithoutAdminNestedInput = {
-    create?: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput> | ItemStackCreateWithoutAdminInput[] | ItemStackUncheckedCreateWithoutAdminInput[]
-    connectOrCreate?: ItemStackCreateOrConnectWithoutAdminInput | ItemStackCreateOrConnectWithoutAdminInput[]
-    upsert?: ItemStackUpsertWithWhereUniqueWithoutAdminInput | ItemStackUpsertWithWhereUniqueWithoutAdminInput[]
-    createMany?: ItemStackCreateManyAdminInputEnvelope
-    set?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
-    disconnect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
-    delete?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
-    connect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
-    update?: ItemStackUpdateWithWhereUniqueWithoutAdminInput | ItemStackUpdateWithWhereUniqueWithoutAdminInput[]
-    updateMany?: ItemStackUpdateManyWithWhereWithoutAdminInput | ItemStackUpdateManyWithWhereWithoutAdminInput[]
-    deleteMany?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
+  export type ItemTransactionUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<ItemTransactionCreateWithoutAccountInput, ItemTransactionUncheckedCreateWithoutAccountInput> | ItemTransactionCreateWithoutAccountInput[] | ItemTransactionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: ItemTransactionCreateOrConnectWithoutAccountInput | ItemTransactionCreateOrConnectWithoutAccountInput[]
+    upsert?: ItemTransactionUpsertWithWhereUniqueWithoutAccountInput | ItemTransactionUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: ItemTransactionCreateManyAccountInputEnvelope
+    set?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    disconnect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    delete?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    connect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    update?: ItemTransactionUpdateWithWhereUniqueWithoutAccountInput | ItemTransactionUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: ItemTransactionUpdateManyWithWhereWithoutAccountInput | ItemTransactionUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: ItemTransactionScalarWhereInput | ItemTransactionScalarWhereInput[]
   }
 
   export type SeminarUpdateManyWithoutCreatorNestedInput = {
@@ -11214,18 +12518,18 @@ export namespace Prisma {
     deleteMany?: SeminarParticipantScalarWhereInput | SeminarParticipantScalarWhereInput[]
   }
 
-  export type ItemStackUncheckedUpdateManyWithoutAdminNestedInput = {
-    create?: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput> | ItemStackCreateWithoutAdminInput[] | ItemStackUncheckedCreateWithoutAdminInput[]
-    connectOrCreate?: ItemStackCreateOrConnectWithoutAdminInput | ItemStackCreateOrConnectWithoutAdminInput[]
-    upsert?: ItemStackUpsertWithWhereUniqueWithoutAdminInput | ItemStackUpsertWithWhereUniqueWithoutAdminInput[]
-    createMany?: ItemStackCreateManyAdminInputEnvelope
-    set?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
-    disconnect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
-    delete?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
-    connect?: ItemStackWhereUniqueInput | ItemStackWhereUniqueInput[]
-    update?: ItemStackUpdateWithWhereUniqueWithoutAdminInput | ItemStackUpdateWithWhereUniqueWithoutAdminInput[]
-    updateMany?: ItemStackUpdateManyWithWhereWithoutAdminInput | ItemStackUpdateManyWithWhereWithoutAdminInput[]
-    deleteMany?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
+  export type ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<ItemTransactionCreateWithoutAccountInput, ItemTransactionUncheckedCreateWithoutAccountInput> | ItemTransactionCreateWithoutAccountInput[] | ItemTransactionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: ItemTransactionCreateOrConnectWithoutAccountInput | ItemTransactionCreateOrConnectWithoutAccountInput[]
+    upsert?: ItemTransactionUpsertWithWhereUniqueWithoutAccountInput | ItemTransactionUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: ItemTransactionCreateManyAccountInputEnvelope
+    set?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    disconnect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    delete?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    connect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    update?: ItemTransactionUpdateWithWhereUniqueWithoutAccountInput | ItemTransactionUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: ItemTransactionUpdateManyWithWhereWithoutAccountInput | ItemTransactionUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: ItemTransactionScalarWhereInput | ItemTransactionScalarWhereInput[]
   }
 
   export type SeminarUncheckedUpdateManyWithoutCreatorNestedInput = {
@@ -11358,16 +12662,24 @@ export namespace Prisma {
     deleteMany?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
   }
 
-  export type AccountCreateNestedOneWithoutItemsInput = {
-    create?: XOR<AccountCreateWithoutItemsInput, AccountUncheckedCreateWithoutItemsInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutItemsInput
-    connect?: AccountWhereUniqueInput
-  }
-
   export type InventoryItemCreateNestedOneWithoutItem_stacksInput = {
     create?: XOR<InventoryItemCreateWithoutItem_stacksInput, InventoryItemUncheckedCreateWithoutItem_stacksInput>
     connectOrCreate?: InventoryItemCreateOrConnectWithoutItem_stacksInput
     connect?: InventoryItemWhereUniqueInput
+  }
+
+  export type ItemTransactionCreateNestedManyWithoutItemStackInput = {
+    create?: XOR<ItemTransactionCreateWithoutItemStackInput, ItemTransactionUncheckedCreateWithoutItemStackInput> | ItemTransactionCreateWithoutItemStackInput[] | ItemTransactionUncheckedCreateWithoutItemStackInput[]
+    connectOrCreate?: ItemTransactionCreateOrConnectWithoutItemStackInput | ItemTransactionCreateOrConnectWithoutItemStackInput[]
+    createMany?: ItemTransactionCreateManyItemStackInputEnvelope
+    connect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+  }
+
+  export type ItemTransactionUncheckedCreateNestedManyWithoutItemStackInput = {
+    create?: XOR<ItemTransactionCreateWithoutItemStackInput, ItemTransactionUncheckedCreateWithoutItemStackInput> | ItemTransactionCreateWithoutItemStackInput[] | ItemTransactionUncheckedCreateWithoutItemStackInput[]
+    connectOrCreate?: ItemTransactionCreateOrConnectWithoutItemStackInput | ItemTransactionCreateOrConnectWithoutItemStackInput[]
+    createMany?: ItemTransactionCreateManyItemStackInputEnvelope
+    connect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -11378,22 +12690,8 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type Enumitem_stack_typeFieldUpdateOperationsInput = {
-    set?: $Enums.item_stack_type
-  }
-
   export type Enumitem_statusFieldUpdateOperationsInput = {
     set?: $Enums.item_status
-  }
-
-  export type AccountUpdateOneWithoutItemsNestedInput = {
-    create?: XOR<AccountCreateWithoutItemsInput, AccountUncheckedCreateWithoutItemsInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutItemsInput
-    upsert?: AccountUpsertWithoutItemsInput
-    disconnect?: AccountWhereInput | boolean
-    delete?: AccountWhereInput | boolean
-    connect?: AccountWhereUniqueInput
-    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutItemsInput, AccountUpdateWithoutItemsInput>, AccountUncheckedUpdateWithoutItemsInput>
   }
 
   export type InventoryItemUpdateOneRequiredWithoutItem_stacksNestedInput = {
@@ -11402,6 +12700,66 @@ export namespace Prisma {
     upsert?: InventoryItemUpsertWithoutItem_stacksInput
     connect?: InventoryItemWhereUniqueInput
     update?: XOR<XOR<InventoryItemUpdateToOneWithWhereWithoutItem_stacksInput, InventoryItemUpdateWithoutItem_stacksInput>, InventoryItemUncheckedUpdateWithoutItem_stacksInput>
+  }
+
+  export type ItemTransactionUpdateManyWithoutItemStackNestedInput = {
+    create?: XOR<ItemTransactionCreateWithoutItemStackInput, ItemTransactionUncheckedCreateWithoutItemStackInput> | ItemTransactionCreateWithoutItemStackInput[] | ItemTransactionUncheckedCreateWithoutItemStackInput[]
+    connectOrCreate?: ItemTransactionCreateOrConnectWithoutItemStackInput | ItemTransactionCreateOrConnectWithoutItemStackInput[]
+    upsert?: ItemTransactionUpsertWithWhereUniqueWithoutItemStackInput | ItemTransactionUpsertWithWhereUniqueWithoutItemStackInput[]
+    createMany?: ItemTransactionCreateManyItemStackInputEnvelope
+    set?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    disconnect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    delete?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    connect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    update?: ItemTransactionUpdateWithWhereUniqueWithoutItemStackInput | ItemTransactionUpdateWithWhereUniqueWithoutItemStackInput[]
+    updateMany?: ItemTransactionUpdateManyWithWhereWithoutItemStackInput | ItemTransactionUpdateManyWithWhereWithoutItemStackInput[]
+    deleteMany?: ItemTransactionScalarWhereInput | ItemTransactionScalarWhereInput[]
+  }
+
+  export type ItemTransactionUncheckedUpdateManyWithoutItemStackNestedInput = {
+    create?: XOR<ItemTransactionCreateWithoutItemStackInput, ItemTransactionUncheckedCreateWithoutItemStackInput> | ItemTransactionCreateWithoutItemStackInput[] | ItemTransactionUncheckedCreateWithoutItemStackInput[]
+    connectOrCreate?: ItemTransactionCreateOrConnectWithoutItemStackInput | ItemTransactionCreateOrConnectWithoutItemStackInput[]
+    upsert?: ItemTransactionUpsertWithWhereUniqueWithoutItemStackInput | ItemTransactionUpsertWithWhereUniqueWithoutItemStackInput[]
+    createMany?: ItemTransactionCreateManyItemStackInputEnvelope
+    set?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    disconnect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    delete?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    connect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
+    update?: ItemTransactionUpdateWithWhereUniqueWithoutItemStackInput | ItemTransactionUpdateWithWhereUniqueWithoutItemStackInput[]
+    updateMany?: ItemTransactionUpdateManyWithWhereWithoutItemStackInput | ItemTransactionUpdateManyWithWhereWithoutItemStackInput[]
+    deleteMany?: ItemTransactionScalarWhereInput | ItemTransactionScalarWhereInput[]
+  }
+
+  export type ItemStackCreateNestedOneWithoutItemTransactionsInput = {
+    create?: XOR<ItemStackCreateWithoutItemTransactionsInput, ItemStackUncheckedCreateWithoutItemTransactionsInput>
+    connectOrCreate?: ItemStackCreateOrConnectWithoutItemTransactionsInput
+    connect?: ItemStackWhereUniqueInput
+  }
+
+  export type AccountCreateNestedOneWithoutItemTransactionsInput = {
+    create?: XOR<AccountCreateWithoutItemTransactionsInput, AccountUncheckedCreateWithoutItemTransactionsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutItemTransactionsInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type Enumtransaction_responseFieldUpdateOperationsInput = {
+    set?: $Enums.transaction_response
+  }
+
+  export type ItemStackUpdateOneRequiredWithoutItemTransactionsNestedInput = {
+    create?: XOR<ItemStackCreateWithoutItemTransactionsInput, ItemStackUncheckedCreateWithoutItemTransactionsInput>
+    connectOrCreate?: ItemStackCreateOrConnectWithoutItemTransactionsInput
+    upsert?: ItemStackUpsertWithoutItemTransactionsInput
+    connect?: ItemStackWhereUniqueInput
+    update?: XOR<XOR<ItemStackUpdateToOneWithWhereWithoutItemTransactionsInput, ItemStackUpdateWithoutItemTransactionsInput>, ItemStackUncheckedUpdateWithoutItemTransactionsInput>
+  }
+
+  export type AccountUpdateOneRequiredWithoutItemTransactionsNestedInput = {
+    create?: XOR<AccountCreateWithoutItemTransactionsInput, AccountUncheckedCreateWithoutItemTransactionsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutItemTransactionsInput
+    upsert?: AccountUpsertWithoutItemTransactionsInput
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutItemTransactionsInput, AccountUpdateWithoutItemTransactionsInput>, AccountUncheckedUpdateWithoutItemTransactionsInput>
   }
 
   export type SeminarParticipantCreateNestedManyWithoutSeminarInput = {
@@ -11694,13 +13052,6 @@ export namespace Prisma {
     _max?: NestedEnumitem_categoryFilter<$PrismaModel>
   }
 
-  export type NestedEnumitem_stack_typeFilter<$PrismaModel = never> = {
-    equals?: $Enums.item_stack_type | Enumitem_stack_typeFieldRefInput<$PrismaModel>
-    in?: $Enums.item_stack_type[]
-    notIn?: $Enums.item_stack_type[]
-    not?: NestedEnumitem_stack_typeFilter<$PrismaModel> | $Enums.item_stack_type
-  }
-
   export type NestedEnumitem_statusFilter<$PrismaModel = never> = {
     equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
     in?: $Enums.item_status[]
@@ -11735,16 +13086,6 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedEnumitem_stack_typeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.item_stack_type | Enumitem_stack_typeFieldRefInput<$PrismaModel>
-    in?: $Enums.item_stack_type[]
-    notIn?: $Enums.item_stack_type[]
-    not?: NestedEnumitem_stack_typeWithAggregatesFilter<$PrismaModel> | $Enums.item_stack_type
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumitem_stack_typeFilter<$PrismaModel>
-    _max?: NestedEnumitem_stack_typeFilter<$PrismaModel>
-  }
-
   export type NestedEnumitem_statusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
     in?: $Enums.item_status[]
@@ -11753,6 +13094,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumitem_statusFilter<$PrismaModel>
     _max?: NestedEnumitem_statusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumtransaction_responseFilter<$PrismaModel = never> = {
+    equals?: $Enums.transaction_response | Enumtransaction_responseFieldRefInput<$PrismaModel>
+    in?: $Enums.transaction_response[]
+    notIn?: $Enums.transaction_response[]
+    not?: NestedEnumtransaction_responseFilter<$PrismaModel> | $Enums.transaction_response
+  }
+
+  export type NestedEnumtransaction_responseWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.transaction_response | Enumtransaction_responseFieldRefInput<$PrismaModel>
+    in?: $Enums.transaction_response[]
+    notIn?: $Enums.transaction_response[]
+    not?: NestedEnumtransaction_responseWithAggregatesFilter<$PrismaModel> | $Enums.transaction_response
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumtransaction_responseFilter<$PrismaModel>
+    _max?: NestedEnumtransaction_responseFilter<$PrismaModel>
   }
 
   export type NestedEnumseminar_statusFilter<$PrismaModel = never> = {
@@ -11839,33 +13197,33 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ItemStackCreateWithoutAdminInput = {
+  export type ItemTransactionCreateWithoutAccountInput = {
     id?: string
     quantity?: number
-    item_stack_type?: $Enums.item_stack_type
-    status?: $Enums.item_status
+    transactionType: string
+    status?: $Enums.transaction_response
     createdAt?: Date | string
     updatedAt?: Date | string
-    item: InventoryItemCreateNestedOneWithoutItem_stacksInput
+    itemStack: ItemStackCreateNestedOneWithoutItemTransactionsInput
   }
 
-  export type ItemStackUncheckedCreateWithoutAdminInput = {
+  export type ItemTransactionUncheckedCreateWithoutAccountInput = {
     id?: string
-    itemId: string
+    itemStackId: string
     quantity?: number
-    item_stack_type?: $Enums.item_stack_type
-    status?: $Enums.item_status
+    transactionType: string
+    status?: $Enums.transaction_response
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type ItemStackCreateOrConnectWithoutAdminInput = {
-    where: ItemStackWhereUniqueInput
-    create: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput>
+  export type ItemTransactionCreateOrConnectWithoutAccountInput = {
+    where: ItemTransactionWhereUniqueInput
+    create: XOR<ItemTransactionCreateWithoutAccountInput, ItemTransactionUncheckedCreateWithoutAccountInput>
   }
 
-  export type ItemStackCreateManyAdminInputEnvelope = {
-    data: ItemStackCreateManyAdminInput | ItemStackCreateManyAdminInput[]
+  export type ItemTransactionCreateManyAccountInputEnvelope = {
+    data: ItemTransactionCreateManyAccountInput | ItemTransactionCreateManyAccountInput[]
     skipDuplicates?: boolean
   }
 
@@ -11974,34 +13332,34 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"SeminarParticipant"> | Date | string
   }
 
-  export type ItemStackUpsertWithWhereUniqueWithoutAdminInput = {
-    where: ItemStackWhereUniqueInput
-    update: XOR<ItemStackUpdateWithoutAdminInput, ItemStackUncheckedUpdateWithoutAdminInput>
-    create: XOR<ItemStackCreateWithoutAdminInput, ItemStackUncheckedCreateWithoutAdminInput>
+  export type ItemTransactionUpsertWithWhereUniqueWithoutAccountInput = {
+    where: ItemTransactionWhereUniqueInput
+    update: XOR<ItemTransactionUpdateWithoutAccountInput, ItemTransactionUncheckedUpdateWithoutAccountInput>
+    create: XOR<ItemTransactionCreateWithoutAccountInput, ItemTransactionUncheckedCreateWithoutAccountInput>
   }
 
-  export type ItemStackUpdateWithWhereUniqueWithoutAdminInput = {
-    where: ItemStackWhereUniqueInput
-    data: XOR<ItemStackUpdateWithoutAdminInput, ItemStackUncheckedUpdateWithoutAdminInput>
+  export type ItemTransactionUpdateWithWhereUniqueWithoutAccountInput = {
+    where: ItemTransactionWhereUniqueInput
+    data: XOR<ItemTransactionUpdateWithoutAccountInput, ItemTransactionUncheckedUpdateWithoutAccountInput>
   }
 
-  export type ItemStackUpdateManyWithWhereWithoutAdminInput = {
-    where: ItemStackScalarWhereInput
-    data: XOR<ItemStackUpdateManyMutationInput, ItemStackUncheckedUpdateManyWithoutAdminInput>
+  export type ItemTransactionUpdateManyWithWhereWithoutAccountInput = {
+    where: ItemTransactionScalarWhereInput
+    data: XOR<ItemTransactionUpdateManyMutationInput, ItemTransactionUncheckedUpdateManyWithoutAccountInput>
   }
 
-  export type ItemStackScalarWhereInput = {
-    AND?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
-    OR?: ItemStackScalarWhereInput[]
-    NOT?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
-    id?: StringFilter<"ItemStack"> | string
-    itemId?: StringFilter<"ItemStack"> | string
-    quantity?: IntFilter<"ItemStack"> | number
-    item_stack_type?: Enumitem_stack_typeFilter<"ItemStack"> | $Enums.item_stack_type
-    status?: Enumitem_statusFilter<"ItemStack"> | $Enums.item_status
-    adminId?: StringNullableFilter<"ItemStack"> | string | null
-    createdAt?: DateTimeFilter<"ItemStack"> | Date | string
-    updatedAt?: DateTimeFilter<"ItemStack"> | Date | string
+  export type ItemTransactionScalarWhereInput = {
+    AND?: ItemTransactionScalarWhereInput | ItemTransactionScalarWhereInput[]
+    OR?: ItemTransactionScalarWhereInput[]
+    NOT?: ItemTransactionScalarWhereInput | ItemTransactionScalarWhereInput[]
+    id?: StringFilter<"ItemTransaction"> | string
+    itemStackId?: StringFilter<"ItemTransaction"> | string
+    accountId?: StringFilter<"ItemTransaction"> | string
+    quantity?: IntFilter<"ItemTransaction"> | number
+    transactionType?: StringFilter<"ItemTransaction"> | string
+    status?: Enumtransaction_responseFilter<"ItemTransaction"> | $Enums.transaction_response
+    createdAt?: DateTimeFilter<"ItemTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"ItemTransaction"> | Date | string
   }
 
   export type SeminarUpsertWithWhereUniqueWithoutCreatorInput = {
@@ -12128,7 +13486,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
-    items?: ItemStackCreateNestedManyWithoutAdminInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
   }
 
@@ -12154,7 +13512,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
-    items?: ItemStackUncheckedCreateNestedManyWithoutAdminInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
   }
 
@@ -12225,7 +13583,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
-    items?: ItemStackUpdateManyWithoutAdminNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
   }
 
@@ -12251,28 +13609,26 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
-    items?: ItemStackUncheckedUpdateManyWithoutAdminNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type ItemStackCreateWithoutItemInput = {
     id?: string
     quantity?: number
-    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
     createdAt?: Date | string
     updatedAt?: Date | string
-    admin?: AccountCreateNestedOneWithoutItemsInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutItemStackInput
   }
 
   export type ItemStackUncheckedCreateWithoutItemInput = {
     id?: string
     quantity?: number
-    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
-    adminId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutItemStackInput
   }
 
   export type ItemStackCreateOrConnectWithoutItemInput = {
@@ -12301,61 +13657,16 @@ export namespace Prisma {
     data: XOR<ItemStackUpdateManyMutationInput, ItemStackUncheckedUpdateManyWithoutItemInput>
   }
 
-  export type AccountCreateWithoutItemsInput = {
-    id?: string
-    access?: $Enums.access
-    username: string
-    email: string
-    firstName: string
-    lastName: string
-    middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
-    picture?: Uint8Array | null
-    mimeType?: string | null
-    password: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
-    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
-    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
-  }
-
-  export type AccountUncheckedCreateWithoutItemsInput = {
-    id?: string
-    access?: $Enums.access
-    username: string
-    email: string
-    firstName: string
-    lastName: string
-    middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
-    picture?: Uint8Array | null
-    mimeType?: string | null
-    password: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
-    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
-    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
-  }
-
-  export type AccountCreateOrConnectWithoutItemsInput = {
-    where: AccountWhereUniqueInput
-    create: XOR<AccountCreateWithoutItemsInput, AccountUncheckedCreateWithoutItemsInput>
+  export type ItemStackScalarWhereInput = {
+    AND?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
+    OR?: ItemStackScalarWhereInput[]
+    NOT?: ItemStackScalarWhereInput | ItemStackScalarWhereInput[]
+    id?: StringFilter<"ItemStack"> | string
+    itemId?: StringFilter<"ItemStack"> | string
+    quantity?: IntFilter<"ItemStack"> | number
+    status?: Enumitem_statusFilter<"ItemStack"> | $Enums.item_status
+    createdAt?: DateTimeFilter<"ItemStack"> | Date | string
+    updatedAt?: DateTimeFilter<"ItemStack"> | Date | string
   }
 
   export type InventoryItemCreateWithoutItem_stacksInput = {
@@ -12383,67 +13694,34 @@ export namespace Prisma {
     create: XOR<InventoryItemCreateWithoutItem_stacksInput, InventoryItemUncheckedCreateWithoutItem_stacksInput>
   }
 
-  export type AccountUpsertWithoutItemsInput = {
-    update: XOR<AccountUpdateWithoutItemsInput, AccountUncheckedUpdateWithoutItemsInput>
-    create: XOR<AccountCreateWithoutItemsInput, AccountUncheckedCreateWithoutItemsInput>
-    where?: AccountWhereInput
+  export type ItemTransactionCreateWithoutItemStackInput = {
+    id?: string
+    quantity?: number
+    transactionType: string
+    status?: $Enums.transaction_response
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    account: AccountCreateNestedOneWithoutItemTransactionsInput
   }
 
-  export type AccountUpdateToOneWithWhereWithoutItemsInput = {
-    where?: AccountWhereInput
-    data: XOR<AccountUpdateWithoutItemsInput, AccountUncheckedUpdateWithoutItemsInput>
+  export type ItemTransactionUncheckedCreateWithoutItemStackInput = {
+    id?: string
+    accountId: string
+    quantity?: number
+    transactionType: string
+    status?: $Enums.transaction_response
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type AccountUpdateWithoutItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
-    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
-    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+  export type ItemTransactionCreateOrConnectWithoutItemStackInput = {
+    where: ItemTransactionWhereUniqueInput
+    create: XOR<ItemTransactionCreateWithoutItemStackInput, ItemTransactionUncheckedCreateWithoutItemStackInput>
   }
 
-  export type AccountUncheckedUpdateWithoutItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
-    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
-    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+  export type ItemTransactionCreateManyItemStackInputEnvelope = {
+    data: ItemTransactionCreateManyItemStackInput | ItemTransactionCreateManyItemStackInput[]
+    skipDuplicates?: boolean
   }
 
   export type InventoryItemUpsertWithoutItem_stacksInput = {
@@ -12475,6 +13753,194 @@ export namespace Prisma {
     category?: Enumitem_categoryFieldUpdateOperationsInput | $Enums.item_category
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ItemTransactionUpsertWithWhereUniqueWithoutItemStackInput = {
+    where: ItemTransactionWhereUniqueInput
+    update: XOR<ItemTransactionUpdateWithoutItemStackInput, ItemTransactionUncheckedUpdateWithoutItemStackInput>
+    create: XOR<ItemTransactionCreateWithoutItemStackInput, ItemTransactionUncheckedCreateWithoutItemStackInput>
+  }
+
+  export type ItemTransactionUpdateWithWhereUniqueWithoutItemStackInput = {
+    where: ItemTransactionWhereUniqueInput
+    data: XOR<ItemTransactionUpdateWithoutItemStackInput, ItemTransactionUncheckedUpdateWithoutItemStackInput>
+  }
+
+  export type ItemTransactionUpdateManyWithWhereWithoutItemStackInput = {
+    where: ItemTransactionScalarWhereInput
+    data: XOR<ItemTransactionUpdateManyMutationInput, ItemTransactionUncheckedUpdateManyWithoutItemStackInput>
+  }
+
+  export type ItemStackCreateWithoutItemTransactionsInput = {
+    id?: string
+    quantity?: number
+    status?: $Enums.item_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    item: InventoryItemCreateNestedOneWithoutItem_stacksInput
+  }
+
+  export type ItemStackUncheckedCreateWithoutItemTransactionsInput = {
+    id?: string
+    itemId: string
+    quantity?: number
+    status?: $Enums.item_status
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ItemStackCreateOrConnectWithoutItemTransactionsInput = {
+    where: ItemStackWhereUniqueInput
+    create: XOR<ItemStackCreateWithoutItemTransactionsInput, ItemStackUncheckedCreateWithoutItemTransactionsInput>
+  }
+
+  export type AccountCreateWithoutItemTransactionsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    firstName: string
+    lastName: string
+    middleName?: string | null
+    gender: $Enums.gender
+    client_profile?: $Enums.client_profile
+    cellphone_no?: string | null
+    telephone_no?: string | null
+    occupation?: string | null
+    position?: string | null
+    institution?: string | null
+    address?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+  }
+
+  export type AccountUncheckedCreateWithoutItemTransactionsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    firstName: string
+    lastName: string
+    middleName?: string | null
+    gender: $Enums.gender
+    client_profile?: $Enums.client_profile
+    cellphone_no?: string | null
+    telephone_no?: string | null
+    occupation?: string | null
+    position?: string | null
+    institution?: string | null
+    address?: string | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+  }
+
+  export type AccountCreateOrConnectWithoutItemTransactionsInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutItemTransactionsInput, AccountUncheckedCreateWithoutItemTransactionsInput>
+  }
+
+  export type ItemStackUpsertWithoutItemTransactionsInput = {
+    update: XOR<ItemStackUpdateWithoutItemTransactionsInput, ItemStackUncheckedUpdateWithoutItemTransactionsInput>
+    create: XOR<ItemStackCreateWithoutItemTransactionsInput, ItemStackUncheckedCreateWithoutItemTransactionsInput>
+    where?: ItemStackWhereInput
+  }
+
+  export type ItemStackUpdateToOneWithWhereWithoutItemTransactionsInput = {
+    where?: ItemStackWhereInput
+    data: XOR<ItemStackUpdateWithoutItemTransactionsInput, ItemStackUncheckedUpdateWithoutItemTransactionsInput>
+  }
+
+  export type ItemStackUpdateWithoutItemTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: InventoryItemUpdateOneRequiredWithoutItem_stacksNestedInput
+  }
+
+  export type ItemStackUncheckedUpdateWithoutItemTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AccountUpsertWithoutItemTransactionsInput = {
+    update: XOR<AccountUpdateWithoutItemTransactionsInput, AccountUncheckedUpdateWithoutItemTransactionsInput>
+    create: XOR<AccountCreateWithoutItemTransactionsInput, AccountUncheckedCreateWithoutItemTransactionsInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutItemTransactionsInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutItemTransactionsInput, AccountUncheckedUpdateWithoutItemTransactionsInput>
+  }
+
+  export type AccountUpdateWithoutItemTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutItemTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
+    occupation?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    institution?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type SeminarParticipantCreateWithoutSeminarInput = {
@@ -12526,7 +13992,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
-    items?: ItemStackCreateNestedManyWithoutAdminInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsCreatedInput = {
@@ -12552,7 +14018,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
-    items?: ItemStackUncheckedCreateNestedManyWithoutAdminInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsCreatedInput = {
@@ -12610,7 +14076,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
-    items?: ItemStackUpdateManyWithoutAdminNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsCreatedInput = {
@@ -12636,7 +14102,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
-    items?: ItemStackUncheckedUpdateManyWithoutAdminNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type SeminarCreateWithoutParticipantsInput = {
@@ -12706,7 +14172,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
-    items?: ItemStackCreateNestedManyWithoutAdminInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
   }
 
@@ -12732,7 +14198,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
-    items?: ItemStackUncheckedCreateNestedManyWithoutAdminInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
   }
 
@@ -12825,7 +14291,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
-    items?: ItemStackUpdateManyWithoutAdminNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
   }
 
@@ -12851,7 +14317,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
-    items?: ItemStackUncheckedUpdateManyWithoutAdminNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
@@ -12870,12 +14336,12 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type ItemStackCreateManyAdminInput = {
+  export type ItemTransactionCreateManyAccountInput = {
     id?: string
-    itemId: string
+    itemStackId: string
     quantity?: number
-    item_stack_type?: $Enums.item_stack_type
-    status?: $Enums.item_status
+    transactionType: string
+    status?: $Enums.transaction_response
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12944,32 +14410,32 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ItemStackUpdateWithoutAdminInput = {
+  export type ItemTransactionUpdateWithoutAccountInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
-    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    transactionType?: StringFieldUpdateOperationsInput | string
+    status?: Enumtransaction_responseFieldUpdateOperationsInput | $Enums.transaction_response
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    item?: InventoryItemUpdateOneRequiredWithoutItem_stacksNestedInput
+    itemStack?: ItemStackUpdateOneRequiredWithoutItemTransactionsNestedInput
   }
 
-  export type ItemStackUncheckedUpdateWithoutAdminInput = {
+  export type ItemTransactionUncheckedUpdateWithoutAccountInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
+    itemStackId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
-    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    transactionType?: StringFieldUpdateOperationsInput | string
+    status?: Enumtransaction_responseFieldUpdateOperationsInput | $Enums.transaction_response
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ItemStackUncheckedUpdateManyWithoutAdminInput = {
+  export type ItemTransactionUncheckedUpdateManyWithoutAccountInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemId?: StringFieldUpdateOperationsInput | string
+    itemStackId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
-    status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    transactionType?: StringFieldUpdateOperationsInput | string
+    status?: Enumtransaction_responseFieldUpdateOperationsInput | $Enums.transaction_response
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13064,9 +14530,7 @@ export namespace Prisma {
   export type ItemStackCreateManyItemInput = {
     id?: string
     quantity?: number
-    item_stack_type?: $Enums.item_stack_type
     status?: $Enums.item_status
-    adminId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13074,29 +14538,65 @@ export namespace Prisma {
   export type ItemStackUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin?: AccountUpdateOneWithoutItemsNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutItemStackNestedInput
   }
 
   export type ItemStackUncheckedUpdateWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
-    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutItemStackNestedInput
   }
 
   export type ItemStackUncheckedUpdateManyWithoutItemInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
-    item_stack_type?: Enumitem_stack_typeFieldUpdateOperationsInput | $Enums.item_stack_type
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
-    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ItemTransactionCreateManyItemStackInput = {
+    id?: string
+    accountId: string
+    quantity?: number
+    transactionType: string
+    status?: $Enums.transaction_response
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ItemTransactionUpdateWithoutItemStackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    transactionType?: StringFieldUpdateOperationsInput | string
+    status?: Enumtransaction_responseFieldUpdateOperationsInput | $Enums.transaction_response
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    account?: AccountUpdateOneRequiredWithoutItemTransactionsNestedInput
+  }
+
+  export type ItemTransactionUncheckedUpdateWithoutItemStackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    transactionType?: StringFieldUpdateOperationsInput | string
+    status?: Enumtransaction_responseFieldUpdateOperationsInput | $Enums.transaction_response
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ItemTransactionUncheckedUpdateManyWithoutItemStackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    quantity?: IntFieldUpdateOperationsInput | number
+    transactionType?: StringFieldUpdateOperationsInput | string
+    status?: Enumtransaction_responseFieldUpdateOperationsInput | $Enums.transaction_response
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

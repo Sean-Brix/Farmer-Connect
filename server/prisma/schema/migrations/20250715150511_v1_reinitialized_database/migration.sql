@@ -56,7 +56,8 @@ CREATE TABLE `inventory_items` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
-    `categoryId` VARCHAR(191) NOT NULL,
+    `picture` LONGBLOB NULL,
+    `category` ENUM('Farming_Equipment', 'Harvesting_Tools', 'Irrigation_Systems', 'Storage_Equipment', 'Processing_Equipment', 'Safety_Gear', 'Pest_Control', 'Livestock_Equipment', 'Measuring_Tools', 'Fisheries', 'Machinery', 'Other') NOT NULL DEFAULT 'Other',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -65,24 +66,25 @@ CREATE TABLE `inventory_items` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `inventory_categories` (
-    `id` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191) NOT NULL,
-    `icon` VARCHAR(191) NULL,
-    `description` VARCHAR(191) NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    UNIQUE INDEX `inventory_categories_name_key`(`name`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `item_stacks` (
     `id` VARCHAR(191) NOT NULL,
     `itemId` VARCHAR(191) NOT NULL,
     `quantity` INTEGER NOT NULL DEFAULT 1,
-    `status` ENUM('Available', 'Unavailable', 'Lost', 'Damaged', 'Reserved', 'Borrowed', 'Distributed') NOT NULL DEFAULT 'Available',
+    `status` ENUM('Available', 'Unavailable', 'Lost', 'Damaged', 'EIC', 'Distributed') NOT NULL DEFAULT 'Available',
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `item_transactions` (
+    `id` VARCHAR(191) NOT NULL,
+    `itemStackId` VARCHAR(191) NOT NULL,
+    `accountId` VARCHAR(191) NOT NULL,
+    `quantity` INTEGER NOT NULL DEFAULT 1,
+    `transactionType` VARCHAR(191) NOT NULL,
+    `status` ENUM('Pending', 'Approved', 'Rejected') NOT NULL DEFAULT 'Pending',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -96,15 +98,16 @@ CREATE TABLE `seminars` (
     `description` TEXT NOT NULL,
     `location` VARCHAR(191) NOT NULL,
     `speaker` VARCHAR(191) NOT NULL,
-    `start_date` DATETIME(3) NOT NULL,
-    `end_date` DATETIME(3) NOT NULL,
-    `start_time` DATETIME(3) NOT NULL,
-    `end_time` DATETIME(3) NOT NULL,
+    `start_date` DATE NOT NULL,
+    `end_date` DATE NOT NULL,
+    `start_time` VARCHAR(191) NOT NULL,
+    `end_time` VARCHAR(191) NOT NULL,
     `capacity` INTEGER NOT NULL,
-    `registration_deadline` DATETIME(3) NOT NULL,
+    `registration_deadline` DATE NOT NULL,
     `status` ENUM('Upcoming', 'Ongoing', 'Completed', 'Cancelled') NOT NULL DEFAULT 'Upcoming',
     `picture` LONGBLOB NULL,
     `mimeType` VARCHAR(191) NULL,
+    `createdById` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -131,10 +134,16 @@ ALTER TABLE `accounts_commodities` ADD CONSTRAINT `accounts_commodities_commodit
 ALTER TABLE `accounts_commodities` ADD CONSTRAINT `accounts_commodities_account_id_fkey` FOREIGN KEY (`account_id`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `inventory_items` ADD CONSTRAINT `inventory_items_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `inventory_categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `item_stacks` ADD CONSTRAINT `item_stacks_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `inventory_items`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `item_stacks` ADD CONSTRAINT `item_stacks_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `inventory_items`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `item_transactions` ADD CONSTRAINT `item_transactions_itemStackId_fkey` FOREIGN KEY (`itemStackId`) REFERENCES `item_stacks`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `item_transactions` ADD CONSTRAINT `item_transactions_accountId_fkey` FOREIGN KEY (`accountId`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `seminars` ADD CONSTRAINT `seminars_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `seminar_participants` ADD CONSTRAINT `seminar_participants_seminar_id_fkey` FOREIGN KEY (`seminar_id`) REFERENCES `seminars`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
