@@ -17,20 +17,43 @@ model InventoryItem {
 
 //? ====================================== STACKS SCHEMA ====================================== ?//
 model ItemStack {
-    id              String          @id @default(cuid())
-    itemId          String
-    quantity        Int             @default(1)
-    item_stack_type item_stack_type @default(added)
-    status          item_status     @default(Available)
-    adminId         String?
-    createdAt       DateTime        @default(now())
-    updatedAt       DateTime        @updatedAt
+    id        String      @id @default(cuid())
+    itemId    String
+    quantity  Int         @default(1)
+    status    item_status @default(Available)
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
 
     // Relations
-    admin          Account?          @relation(fields: [adminId], references: [id])
-    item InventoryItem @relation(fields: [itemId], references: [id])
+    item             InventoryItem     @relation(fields: [itemId], references: [id])
+    itemTransactions ItemTransaction[]
 
     @@map("item_stacks")
+}
+
+//? ==================================== ITEM TRANSACTIONS ==================================== ?//
+
+model ItemTransaction {
+    id              String               @id @default(cuid())
+    itemStackId     String
+    accountId       String
+    quantity        Int                  @default(1)
+    transactionType String
+    status          transaction_response @default(Pending)
+    createdAt       DateTime             @default(now())
+    updatedAt       DateTime             @updatedAt
+
+    // Relations
+    itemStack ItemStack @relation(fields: [itemStackId], references: [id])
+    account   Account   @relation(fields: [accountId], references: [id])
+
+    @@map("item_transactions")
+}
+
+enum transaction_response {
+    Pending
+    Approved
+    Rejected
 }
 
 //? ========================================== ENUMS ========================================== ?//
@@ -42,11 +65,6 @@ enum item_status {
     Damaged
     EIC
     Distributed
-}
-
-enum item_stack_type {
-    added
-    removed
 }
 
 enum item_category {

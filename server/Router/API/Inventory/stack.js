@@ -16,6 +16,10 @@ router.use(authorize);
 import deleteStack from '../../../Controller/Inventory/deleteStack.js';
 router.delete('/delete/:id', deleteStack);
 
+// Reduce Item
+import reduceItem from '../../../Controller/Inventory/reduceItem.js';
+router.post('/reduce', reduceItem);
+
 //? ================================================================================================ ?//
 
 //? ====================================== SUPER ADMINS ============================================ ?//
