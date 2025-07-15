@@ -104,7 +104,6 @@ export type transaction_response = (typeof transaction_response)[keyof typeof tr
 export const item_status: {
   Available: 'Available',
   Unavailable: 'Unavailable',
-  Lost: 'Lost',
   Damaged: 'Damaged',
   EIC: 'EIC',
   Distributed: 'Distributed'

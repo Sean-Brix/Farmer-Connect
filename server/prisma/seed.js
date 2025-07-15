@@ -329,7 +329,7 @@ import { faker } from '@faker-js/faker';
 async function createItemStacks() {
   const inventoryItems = await prisma.inventoryItem.findMany();
   
-  const statuses = ['Available', 'Unavailable', 'Lost', 'Damaged', 'EIC', 'Distributed'];
+  const statuses = ['Available', 'Unavailable', 'Damaged', 'EIC', 'Distributed'];
 
   for (const item of inventoryItems) {
     // Generate a random number of stacks for each item (2 to 5 stacks)

@@ -151,7 +151,6 @@ enum transaction_response {
 enum item_status {
   Available
   Unavailable
-  Lost
   Damaged
   EIC
   Distributed

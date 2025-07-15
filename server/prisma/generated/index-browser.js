@@ -337,7 +337,6 @@ exports.item_category = exports.$Enums.item_category = {
 exports.item_status = exports.$Enums.item_status = {
   Available: 'Available',
   Unavailable: 'Unavailable',
-  Lost: 'Lost',
   Damaged: 'Damaged',
   EIC: 'EIC',
   Distributed: 'Distributed'

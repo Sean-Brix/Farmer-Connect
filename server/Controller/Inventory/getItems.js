@@ -6,22 +6,30 @@ async function getItems(req, res) {
         const items = await prisma.inventoryItem.findMany({
             include: {
                 item_stacks: {
-                    orderBy: {
-                        createdAt: 'desc',
-                    },
-                },
-            },
+                    select: {
+                        quantity: true
+                    }
+                }
+            }
         });
 
-        const updated = items.map((item) => ({
-            ...item,
-            total: item.item_stacks.reduce(
-                (sum, stack) => sum + stack.quantity,
-                0
-            ),
-        }));
+        // Calculate total quantity for each item
+        const itemsWithTotalQuantity = items.map(item => {
+            const totalQuantity = item.item_stacks.reduce((sum, stack) => sum + stack.quantity, 0);
+            
+            return {
+                id: item.id,
+                name: item.name,
+                description: item.description,
+                picture: item.picture,
+                category: item.category,
+                totalQuantity: totalQuantity,
+                createdAt: item.createdAt,
+                updatedAt: item.updatedAt
+            };
+        });
 
-        res.status(200).json(updated);
+        res.status(200).json(itemsWithTotalQuantity);
     } 
     catch (error) {
         console.error(error);
