@@ -22,7 +22,8 @@ async function getItems(req, res) {
         }));
 
         res.status(200).json(updated);
-    } catch (error) {
+    } 
+    catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to retrieve items' });
     }
