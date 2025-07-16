@@ -16,6 +16,8 @@ router.use(authorize);
 import getItems from '../../../Controller/Inventory/getItems.js';
 router.get('/items', getItems);
 
+import addItem from '../../../Controller/Inventory/addItem.js';
+router.post('/add', addItem);
 
 //? ================================================================================================ ?//
 

@@ -3,21 +3,18 @@ import express from 'express';
 // Route: ('/api/inventory/item/:id')
 const router = express.Router();
 
+//? ======================================= AUTHORIZED ============================================= ?//
+
 // Authentication middleware
 import parseToken from '../../../Middlewares/JWT/parseToken.js';
 router.use(parseToken);
 
-//? ========================================= ROUTES =============================================== ?//
-
-// Individual Item
-router.get('/picture', (req, res)=>{});
-
-
-//? ======================================= AUTHORIZED ============================================= ?//
-
 import authorize from '../../../Middlewares/Auth/authorize.js';
 router.use(authorize);
 
+
+// Individual Item
+router.get('/picture', (req, res)=>{});
 
 //? ================================================================================================ ?//
 
