@@ -266,7 +266,7 @@ export default function Seminar() {
                 <main className="flex-1 w-full relative z-10 mt-30">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20">
                         {/* Header */}
-                        <header className="flex flex-col items-center mb-12">
+                        <header className="flex flex-col items-center mb-12 w-full">
                             <span className="uppercase tracking-widest text-blue-400 text-xs font-semibold mb-1 letter-spacing-wide">
                                 Welcome to
                             </span>
@@ -278,62 +278,54 @@ export default function Seminar() {
                             </h1>
                             <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200 opacity-90 shadow-lg"></div>
                         </header>
-                        {/* NEW: Button to open user's registered seminars modal */}
-                        <div className="w-full flex justify-end max-w-4xl mb-4">
-                            <button
-                                className="flex items-center gap-2 px-6 py-2 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 text-white font-bold shadow hover:from-blue-800 hover:to-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                onClick={() => setShowUserSeminarsModal(true)}
-                            >
-                                <i className="fa-solid fa-list-check"></i>
-                                My Registered Seminars
-                            </button>
-                        </div>
-                        {/* Search and Filter */}
-                        <div className="flex flex-col w-full max-w-4xl mt-4 mb-10 gap-4">
-                            <div className="flex flex-wrap gap-4 justify-center">
+                        {/* Modernized: My Registered Seminars Button & Search/Filter Bar */}
+                        <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
+                            <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
+                                <button
+                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    onClick={() => setShowUserSeminarsModal(true)}
+                                >
+                                    <i className="fa-solid fa-list-check text-lg"></i>
+                                    My Registered Seminars
+                                </button>
+                            </div>
+                            <div className="flex gap-3 flex-wrap items-center justify-center w-full sm:w-auto order-1 sm:order-2">
                                 {/* Search Bar */}
-                                <div className="flex-1 min-w-[300px] bg-white/80 rounded-2xl shadow-xl px-5 py-2 border border-blue-100 h-14 backdrop-blur-md">
-                                    <div className="relative w-full h-full">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-                                            <i className="fa-solid fa-magnifying-glass"></i>
-                                        </span>
-                                        <input
-                                            type="text"
-                                            className="w-full h-full pl-10 pr-4 rounded-xl border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-200 text-blue-900 bg-transparent transition placeholder:text-blue-300 font-medium"
-                                            placeholder={`Search by ${filterBy.toLowerCase()}...`}
-                                            value={search}
-                                            onChange={(e) => {
-                                                setSearch(e.target.value);
-                                                setCurrentPage(1);
-                                            }}
-                                            style={{ boxShadow: 'none' }}
-                                        />
-                                    </div>
+                                <div className="relative w-full sm:w-auto flex justify-center">
+                                    <input
+                                        type="text"
+                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-blue-900 bg-white shadow transition placeholder:text-blue-400 font-medium"
+                                        placeholder={`Search by ${filterBy.toLowerCase()}...`}
+                                        value={search}
+                                        onChange={(e) => {
+                                            setSearch(e.target.value);
+                                            setCurrentPage(1);
+                                        }}
+                                    />
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 pointer-events-none">
+                                        <i className="fa-solid fa-magnifying-glass"></i>
+                                    </span>
                                 </div>
-                                {/* Search Filter */}
-                                <div className="relative h-14">
+                                {/* Filter Dropdown */}
+                                <div className="relative flex justify-center w-full sm:w-auto">
                                     <button
-                                        className="flex items-center gap-2 px-5 py-2 h-14 rounded-xl bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 font-bold border border-blue-200 shadow-lg transition-all duration-200 hover:bg-blue-50 focus:outline-none text-base"
+                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold border border-blue-200 shadow transition focus:outline-none"
                                         onClick={() => setShowFilter((f) => !f)}
                                         type="button"
                                         aria-label="Show filter options"
                                     >
-                                        <i className="fa-solid fa-filter text-blue-700"></i>
+                                        <i className="fa-solid fa-filter"></i>
                                         <span>Search by: {filterBy}</span>
-                                        <i
-                                            className={`fa-solid fa-chevron-${
-                                                showFilter ? 'up' : 'down'
-                                            } ml-2 text-blue-700`}
-                                        ></i>
+                                        <i className={`fa-solid fa-chevron-${showFilter ? 'up' : 'down'} ml-1`}></i>
                                     </button>
                                     {showFilter && (
-                                        <div className="absolute left-0 right-0 translate-y-2 mt-2 bg-white/90 rounded-2xl shadow-2xl border border-blue-100 z-20 animate-fade-in py-2 px-2 backdrop-blur-md">
+                                        <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-blue-100 z-20 animate-fade-in py-2">
                                             {filterOptions.map((opt) => (
                                                 <button
                                                     key={opt.value}
-                                                    className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-xl font-semibold transition text-base ${
+                                                    className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
                                                         filterBy === opt.value
-                                                            ? 'bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow'
+                                                            ? 'bg-blue-600 text-white shadow'
                                                             : 'text-blue-900 hover:bg-blue-50'
                                                     }`}
                                                     onClick={() => {
@@ -342,9 +334,7 @@ export default function Seminar() {
                                                         setCurrentPage(1);
                                                     }}
                                                 >
-                                                    <i
-                                                        className={`fa-solid ${opt.icon}`}
-                                                    ></i>
+                                                    <i className={`fa-solid ${opt.icon}`}></i>
                                                     {opt.label}
                                                 </button>
                                             ))}
@@ -354,7 +344,7 @@ export default function Seminar() {
                             </div>
                         </div>
                         {/* Seminar Cards */}
-                        <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                        <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
                             {isLoading ? (
                                 <div className="col-span-full text-center text-blue-300 py-16 text-lg font-semibold tracking-wide">
                                     Loading...
@@ -377,7 +367,7 @@ export default function Seminar() {
                                     return (
                                         <div
                                             key={program.id}
-                                            className="relative flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group"
+                                            className="relative flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group w-full sm:w-auto mx-auto"
                                         >
                                             <div className="relative">
                                                 <img
@@ -773,146 +763,228 @@ function SeminarDetails({ seminar, onClose }) {
 
 // NEW: Modal to show user's registered seminars
 function UserSeminarsModal({ seminars, isLoading, onClose }) {
+    const [currentModalPage, setCurrentModalPage] = useState(1);
+    const MODAL_ITEMS_PER_PAGE = 3;
+
+    const totalModalPages = Math.ceil(seminars.length / MODAL_ITEMS_PER_PAGE);
+    const paginatedModalSeminars = seminars.slice(
+        (currentModalPage - 1) * MODAL_ITEMS_PER_PAGE,
+        currentModalPage * MODAL_ITEMS_PER_PAGE
+    );
+
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
-            <div className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full flex flex-col overflow-hidden animate-fade-in max-h-[90vh] border-2 border-blue-200">
-                <div className="flex items-center justify-between px-8 py-6 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-blue-100">
-                    <h2 className="text-2xl font-extrabold text-blue-900">
-                        Registered Seminars
-                    </h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70  p-4">
+            <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full flex flex-col overflow-hidden max-h-[85vh] border border-gray-200">
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                            <i className="fa-solid fa-calendar-check text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-bold text-gray-900">My Registered Seminars</h2>
+                            <p className="text-sm text-gray-600">
+                                {seminars.length} {seminars.length === 1 ? 'seminar' : 'seminars'} enrolled
+                            </p>
+                        </div>
+                    </div>
                     <button
                         onClick={onClose}
-                        className="text-blue-400 hover:text-blue-700 text-2xl focus:outline-none"
+                        className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors"
                         aria-label="Close"
                     >
-                        <i className="fa-solid fa-xmark"></i>
+                        <i className="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
-                <div className="flex-1 overflow-y-auto px-8 py-6">
+
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto p-6">
                     {isLoading ? (
-                        <div className="text-blue-400 text-center py-8 font-semibold">
-                            Loading...
+                        <div className="flex flex-col items-center justify-center py-12">
+                            <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+                            <p className="text-gray-600 font-medium">Loading your seminars...</p>
                         </div>
                     ) : seminars.length === 0 ? (
-                        <div className="text-blue-400 text-center py-8 font-semibold">
-                            No registered seminars found.
+                        <div className="flex flex-col items-center justify-center py-12">
+                            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                                <i className="fa-solid fa-calendar-xmark text-2xl text-gray-400"></i>
+                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">No seminars registered</h3>
+                            <p className="text-gray-600 text-center max-w-md">
+                                You haven't registered for any seminars yet. Browse available seminars and start learning!
+                            </p>
                         </div>
                     ) : (
-                        <ul className="flex flex-col gap-6">
-                            {seminars.map((seminar) => (
-                                <li
+                        <div className="space-y-4">
+                            {paginatedModalSeminars.map((seminar, index) => (
+                                <div
                                     key={seminar.id}
-                                    className="bg-blue-50 rounded-xl p-5 shadow border border-blue-100"
+                                    className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-200"
                                 >
-                                    <div className="flex flex-col gap-2">
-                                        <span className="font-bold text-blue-900 text-lg">
-                                            {seminar.title}
-                                        </span>
-                                        <div className="flex flex-wrap gap-3 mt-2">
-                                            <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
-                                                <i className="fa-solid fa-user"></i>
-                                                {seminar.speaker}
-                                            </span>
-                                            <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
-                                                <i className="fa-solid fa-location-dot"></i>
-                                                {seminar.location}
-                                            </span>
-                                            <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
-                                                <i className="fa-solid fa-clock"></i>
-                                                {new Date(
-                                                    seminar.start_date
-                                                ).toLocaleDateString('en-US', {
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                    year: 'numeric',
-                                                })}{' '}
-                                                {new Date(
-                                                    `2000-01-01T${seminar.start_time}`
-                                                ).toLocaleTimeString('en-US', {
-                                                    hour: 'numeric',
-                                                    minute: 'numeric',
-                                                    hour12: true,
-                                                })}{' '}
-                                                -{' '}
-                                                {new Date(
-                                                    seminar.end_date
-                                                ).toLocaleDateString('en-US', {
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                    year: 'numeric',
-                                                })}{' '}
-                                                {new Date(
-                                                    `2000-01-01T${seminar.end_time}`
-                                                ).toLocaleTimeString('en-US', {
-                                                    hour: 'numeric',
-                                                    minute: 'numeric',
-                                                    hour12: true,
-                                                })}
-                                            </span>
-                                            <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
-                                                <i className="fa-solid fa-users"></i>
-                                                Capacity: {seminar.capacity}
-                                            </span>
-                                            <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
-                                                <i className="fa-solid fa-calendar-day"></i>
-                                                Registration Deadline:{' '}
-                                                {new Date(
-                                                    seminar.registration_deadline
-                                                ).toLocaleDateString('en-US', {
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                    year: 'numeric',
-                                                    hour: 'numeric',
-                                                    minute: 'numeric',
-                                                    hour12: true,
-                                                })}
-                                            </span>
-                                            <span
-                                                className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-lg font-semibold border shadow-sm
-                                                ${
-                                                    seminar.status ===
-                                                    'Completed'
-                                                        ? 'bg-gray-100 text-gray-900 border-gray-200'
-                                                        : seminar.status ===
-                                                          'Ongoing'
-                                                        ? 'bg-blue-100 text-blue-900 border-blue-200'
-                                                        : seminar.status ===
-                                                          'Cancelled'
-                                                        ? 'bg-red-100 text-red-900 border-red-200'
-                                                        : 'bg-green-100 text-green-900 border-green-200'
-                                                }`}
-                                            >
-                                                <i
-                                                    className={`fa-solid ${
-                                                        seminar.status ===
-                                                        'Completed'
-                                                            ? 'fa-circle-check'
-                                                            : seminar.status ===
-                                                              'Ongoing'
-                                                            ? 'fa-circle-play'
-                                                            : seminar.status ===
-                                                              'Cancelled'
-                                                            ? 'fa-circle-xmark'
-                                                            : 'fa-clock'
-                                                    }`}
-                                                ></i>
-                                                {seminar.status}
-                                            </span>
+                                    <div className="flex flex-col lg:flex-row gap-6">
+                                        {/* Seminar Image */}
+                                        <div className="flex-shrink-0">
+                                            <img
+                                                src={`/api/seminar/picture/${seminar.id}`}
+                                                alt={seminar.title}
+                                                className="w-full lg:w-32 h-32 lg:h-24 object-cover rounded-lg border border-gray-200"
+                                                onError={(e) => {
+                                                    e.target.src = default_seminar_pic;
+                                                }}
+                                            />
+                                        </div>
+
+                                        {/* Seminar Details */}
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+                                                <div className="flex-1 min-w-0">
+                                                    <h3 className="text-lg font-bold text-gray-900 mb-2 truncate">
+                                                        {seminar.title}
+                                                    </h3>
+                                                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
+                                                        {seminar.description}
+                                                    </p>
+                                                </div>
+                                                <div className="flex-shrink-0">
+                                                    <span
+                                                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
+                                                            seminar.status === 'Completed'
+                                                                ? 'bg-emerald-100 text-emerald-800'
+                                                                : seminar.status === 'Ongoing'
+                                                                ? 'bg-blue-100 text-blue-800'
+                                                                : seminar.status === 'Cancelled'
+                                                                ? 'bg-red-100 text-red-800'
+                                                                : 'bg-amber-100 text-amber-800'
+                                                        }`}
+                                                    >
+                                                        <i
+                                                            className={`fa-solid ${
+                                                                seminar.status === 'Completed'
+                                                                    ? 'fa-circle-check'
+                                                                    : seminar.status === 'Ongoing'
+                                                                    ? 'fa-circle-play'
+                                                                    : seminar.status === 'Cancelled'
+                                                                    ? 'fa-circle-xmark'
+                                                                    : 'fa-clock'
+                                                            }`}
+                                                        ></i>
+                                                        {seminar.status}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            {/* Meta Information Grid */}
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                                                <div className="flex items-center gap-2">
+                                                    <i className="fa-solid fa-user-tie text-gray-400 w-4"></i>
+                                                    <span className="text-gray-600">Speaker:</span>
+                                                    <span className="font-medium text-gray-900 truncate">{seminar.speaker}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <i className="fa-solid fa-location-dot text-gray-400 w-4"></i>
+                                                    <span className="text-gray-600">Location:</span>
+                                                    <span className="font-medium text-gray-900 truncate">{seminar.location}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <i className="fa-solid fa-users text-gray-400 w-4"></i>
+                                                    <span className="text-gray-600">Capacity:</span>
+                                                    <span className="font-medium text-gray-900">{seminar.capacity}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 sm:col-span-2 lg:col-span-3">
+                                                    <i className="fa-solid fa-calendar-days text-gray-400 w-4"></i>
+                                                    <span className="text-gray-600">Schedule:</span>
+                                                    <span className="font-medium text-gray-900 truncate">
+                                                        {new Date(seminar.start_date).toLocaleDateString('en-US', {
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                            year: 'numeric',
+                                                        })}{' '}
+                                                        at{' '}
+                                                        {new Date(`2000-01-01T${seminar.start_time}`).toLocaleTimeString('en-US', {
+                                                            hour: 'numeric',
+                                                            minute: '2-digit',
+                                                            hour12: true,
+                                                        })}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center gap-2 sm:col-span-2 lg:col-span-3">
+                                                    <i className="fa-solid fa-clock text-gray-400 w-4"></i>
+                                                    <span className="text-gray-600">Registration Deadline:</span>
+                                                    <span className="font-medium text-gray-900">
+                                                        {new Date(seminar.registration_deadline).toLocaleDateString('en-US', {
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                            year: 'numeric',
+                                                            hour: 'numeric',
+                                                            minute: '2-digit',
+                                                            hour12: true,
+                                                        })}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </li>
+                                </div>
                             ))}
-                        </ul>
+                        </div>
                     )}
                 </div>
-                <div className="flex justify-end px-8 py-4 border-t border-blue-100 bg-gradient-to-r from-blue-50 to-blue-100">
-                    <button
-                        onClick={onClose}
-                        className="px-8 py-2 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 text-white font-bold shadow hover:from-blue-800 hover:to-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    >
-                        Close
-                    </button>
-                </div>
+
+                {/* Footer with Pagination */}
+                {!isLoading && seminars.length > 0 && (
+                    <div className="border-t border-gray-200 px-6 py-4 bg-gray-50">
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div className="text-sm text-gray-600">
+                                Showing {((currentModalPage - 1) * MODAL_ITEMS_PER_PAGE) + 1} to{' '}
+                                {Math.min(currentModalPage * MODAL_ITEMS_PER_PAGE, seminars.length)} of{' '}
+                                {seminars.length} seminars
+                            </div>
+                            
+                            {totalModalPages > 1 && (
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setCurrentModalPage(p => Math.max(1, p - 1))}
+                                        disabled={currentModalPage === 1}
+                                        className="px-3 py-1.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <i className="fa-solid fa-chevron-left"></i>
+                                    </button>
+                                    
+                                    <div className="flex items-center gap-1">
+                                        {Array.from({ length: totalModalPages }, (_, i) => (
+                                            <button
+                                                key={i + 1}
+                                                onClick={() => setCurrentModalPage(i + 1)}
+                                                className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
+                                                    currentModalPage === i + 1
+                                                        ? 'bg-blue-600 text-white'
+                                                        : 'text-gray-700 hover:bg-gray-100'
+                                                }`}
+                                            >
+                                                {i + 1}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <button
+                                        onClick={() => setCurrentModalPage(p => Math.min(totalModalPages, p + 1))}
+                                        disabled={currentModalPage === totalModalPages}
+                                        className="px-3 py-1.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <i className="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            )}
+
+                            <button
+                                onClick={onClose}
+                                className="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
