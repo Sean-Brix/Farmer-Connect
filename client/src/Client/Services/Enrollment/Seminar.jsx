@@ -118,7 +118,7 @@ export default function Seminar() {
     const [showUserSeminarsModal, setShowUserSeminarsModal] = useState(false);
 
     // Pagination
-    const ITEMS_PER_PAGE = 5;
+    const ITEMS_PER_PAGE = 6;
     const [currentPage, setCurrentPage] = useState(1);
 
     // React Query
@@ -354,13 +354,13 @@ export default function Seminar() {
                             </div>
                         </div>
                         {/* Seminar Cards */}
-                        <div className="flex flex-col gap-10 w-full max-w-4xl mt-6">
+                        <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                             {isLoading ? (
-                                <div className="text-blue-300 text-center py-16 text-lg font-semibold tracking-wide">
+                                <div className="col-span-full text-center text-blue-300 py-16 text-lg font-semibold tracking-wide">
                                     Loading...
                                 </div>
                             ) : paginatedPrograms.length === 0 ? (
-                                <div className="text-blue-300 text-center py-16 text-lg font-semibold tracking-wide">
+                                <div className="col-span-full text-center text-blue-300 py-16 text-lg font-semibold tracking-wide">
                                     No programs found.
                                 </div>
                             ) : (
@@ -368,147 +368,65 @@ export default function Seminar() {
                                     const isApplied = appliedSeminars.includes(
                                         program.id
                                     );
+
+                                    const truncatedDescription =
+                                        program.description && program.description.length > 100
+                                            ? program.description.slice(0, 100) + '...'
+                                            : program.description;
+
                                     return (
-                                        <article
+                                        <div
                                             key={program.id}
-                                            className="relative flex flex-col md:flex-row gap-8 bg-white/90 rounded-3xl shadow-2xl border-2 border-blue-100 overflow-hidden group transition-transform duration-300 hover:scale-[1.025] hover:shadow-blue-200"
-                                            style={{ transition: '0.3s' }}
+                                            className="relative flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group"
                                         >
-                                            {/* Image */}
-                                            <div className="flex-shrink-0 flex items-center justify-center w-full md:w-64 h-64 bg-gradient-to-br from-blue-100 to-blue-200">
-                                                <div className="w-56 h-56 sm:w-48 sm:h-48 md:w-44 md:h-44 rounded-2xl bg-white shadow-xl flex items-center justify-center overflow-hidden border-4 border-blue-400 outline outline-blue-100 transition-all duration-300 ease-in-out">
-                                                    <img
-                                                        src={
-                                                            program.photo ||
-                                                            default_seminar_pic
-                                                        }
-                                                        alt="Sample"
-                                                        className="w-full h-full object-contain rounded-xl"
-                                                    />
-                                                </div>
+                                            <div className="relative">
+                                                <img
+                                                    src={program.photo || default_seminar_pic}
+                                                    alt={program.title}
+                                                    className="w-full h-40 sm:h-48 object-cover transition-all duration-300 group-hover:scale-105"
+                                                />
+                                                <span
+                                                    className={`absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm ${
+                                                        program.status === 'Ongoing'
+                                                            ? 'bg-yellow-50 text-yellow-700 border border-yellow-100'
+                                                            : program.status === 'Completed'
+                                                            ? 'bg-green-50 text-green-700 border border-green-100'
+                                                            : program.status === 'Cancelled'
+                                                            ? 'bg-red-50 text-red-600 border border-red-100'
+                                                            : 'bg-gray-100 text-gray-600 border border-gray-200'
+                                                    }`}
+                                                >
+                                                    {program.status}
+                                                </span>
                                             </div>
-                                            {/* Content */}
-                                            <div className="flex flex-col justify-between flex-1 px-8 py-8">
-                                                <div>
-                                                    <div className="flex items-center gap-4 mb-3">
-                                                        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-200 to-blue-400 text-blue-900 text-xl shadow-lg border-2 border-blue-300">
-                                                            <i
-                                                                className={
-                                                                    faIcons.All
-                                                                }
-                                                            ></i>
-                                                        </span>
-                                                        <span
-                                                            className="font-extrabold text-2xl text-blue-900 tracking-tight truncate"
-                                                            title={
-                                                                program.title
-                                                            }
-                                                        >
-                                                            {program.title}
-                                                        </span>
-                                                    </div>
-                                                    <div
-                                                        className="text-blue-900 text-base mb-5 line-clamp-2 truncate font-medium"
-                                                        title={
-                                                            program.description
-                                                        }
-                                                    >
-                                                        {truncate(
-                                                            program.description,
-                                                            80
-                                                        )}
-                                                    </div>
-                                                    <div className="flex flex-wrap gap-3 mt-2">
-                                                        <span
-                                                            className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm truncate"
-                                                            title={
-                                                                program.category
-                                                            }
-                                                        >
-                                                            <i
-                                                                className={
-                                                                    faIcons[
-                                                                        program
-                                                                            .category
-                                                                    ] ||
-                                                                    faIcons.All
-                                                                }
-                                                            ></i>
-                                                            {program.category}
-                                                        </span>
-                                                        <span
-                                                            className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm truncate"
-                                                            title={
-                                                                program.location
-                                                            }
-                                                        >
-                                                            <i className="fa-solid fa-location-dot"></i>
-                                                            {program.location}
-                                                        </span>
-                                                        <span
-                                                            className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm truncate"
-                                                            title={
-                                                                program.speaker
-                                                            }
-                                                        >
-                                                            <i className="fa-solid fa-user"></i>
-                                                            {program.speaker}
-                                                        </span>
-                                                        <span
-                                                            className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-lg font-semibold border shadow-sm truncate
-                                                                ${
-                                                                    program.totalParticipants >=
-                                                                    program.capacity
-                                                                        ? 'bg-red-100 text-red-900 border-red-200'
-                                                                        : program.totalParticipants >=
-                                                                          program.capacity *
-                                                                              0.8
-                                                                        ? 'bg-yellow-100 text-yellow-900 border-yellow-200'
-                                                                        : 'bg-green-100 text-green-900 border-green-200'
-                                                                }`}
-                                                            title="Current participants / Total capacity"
-                                                        >
-                                                            <i className="fa-solid fa-users"></i>
-                                                            {
-                                                                program.totalParticipants
-                                                            }{' '}
-                                                            / {program.capacity}
-                                                        </span>
-                                                        <span
-                                                            className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-lg font-semibold border shadow-sm truncate
-                                                                ${
-                                                                    program.status ===
-                                                                    'Completed'
-                                                                        ? 'bg-gray-100 text-gray-900 border-gray-200'
-                                                                        : program.status ===
-                                                                          'Ongoing'
-                                                                        ? 'bg-blue-100 text-blue-900 border-blue-200'
-                                                                        : program.status ===
-                                                                          'Cancelled'
-                                                                        ? 'bg-red-100 text-red-900 border-red-200'
-                                                                        : 'bg-green-100 text-green-900 border-green-200'
-                                                                }`}
-                                                        >
-                                                            <i
-                                                                className={`fa-solid ${
-                                                                    program.status ===
-                                                                    'Completed'
-                                                                        ? 'fa-circle-check'
-                                                                        : program.status ===
-                                                                          'Ongoing'
-                                                                        ? 'fa-circle-play'
-                                                                        : program.status ===
-                                                                          'Cancelled'
-                                                                        ? 'fa-circle-xmark'
-                                                                        : 'fa-clock'
-                                                                }`}
-                                                            ></i>
-                                                            {program.status}
-                                                        </span>
-                                                    </div>
+                                            <div className="flex-1 flex flex-col p-5">
+                                                <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">
+                                                    {program.title}
+                                                </h3>
+                                                <p className="text-gray-600 text-sm mb-2 flex-1 cursor-default line-clamp-3">
+                                                    {truncatedDescription}
+                                                </p>
+                                                <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
+                                                    <span>
+                                                        <span className="font-medium text-gray-700">
+                                                            Speaker:
+                                                        </span>{' '}
+                                                        {program.speaker}
+                                                    </span>
+                                                    <span>
+                                                        <span className="font-medium text-gray-700">
+                                                            Location:
+                                                        </span>{' '}
+                                                        {program.location}
+                                                    </span>
+                                                    <span>
+                                                        <span className="font-medium text-gray-700">
+                                                            Participants:
+                                                        </span>{' '}
+                                                        {program.totalParticipants} / {program.capacity}
+                                                    </span>
                                                 </div>
-                                                {/* Buttons */}
-                                                <div className="flex gap-4 w-full justify-end mt-8">
+                                                <div className="flex flex-col gap-2 mt-auto md:flex-row">
                                                     {isApplied ? (
                                                         <button
                                                             onClick={() =>
@@ -516,13 +434,12 @@ export default function Seminar() {
                                                                     program.id
                                                                 )
                                                             }
-                                                            className="flex items-center gap-2 px-8 py-2 rounded-xl bg-white text-blue-900 font-bold shadow-lg hover:bg-blue-100 border border-blue-200 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                            className="w-full md:w-auto bg-red-500 hover:bg-red-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
                                                             disabled={
                                                                 cancelMutation.isLoading
                                                             }
                                                         >
-                                                            <i className="fa-solid fa-xmark"></i>
-                                                            Cancel
+                                                            Cancel Application
                                                         </button>
                                                     ) : (
                                                         <button
@@ -531,13 +448,12 @@ export default function Seminar() {
                                                                     program.id
                                                                 )
                                                             }
-                                                            className="flex items-center gap-2 px-8 py-2 rounded-xl bg-gradient-to-r from-blue-800 to-blue-600 text-white font-bold shadow-lg hover:from-blue-900 hover:to-blue-700 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                            className="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
                                                             disabled={
                                                                 applyMutation.isLoading
                                                             }
                                                         >
-                                                            <i className="fa-solid fa-paper-plane"></i>
-                                                            Apply
+                                                            Apply Now
                                                         </button>
                                                     )}
                                                     <button
@@ -546,67 +462,152 @@ export default function Seminar() {
                                                                 program.id
                                                             )
                                                         }
-                                                        className="flex items-center gap-2 px-8 py-2 rounded-xl border-2 border-blue-900 text-blue-900 bg-white font-bold shadow-lg hover:bg-blue-100 transition text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                        className="w-full md:w-auto bg-gray-800 hover:bg-gray-700 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
                                                     >
-                                                        <i className="fa-solid fa-circle-info"></i>
-                                                        Details
+                                                        View Details
                                                     </button>
                                                 </div>
                                             </div>
-                                        </article>
+                                        </div>
                                     );
                                 })
                             )}
                         </div>
                         {/* Pagination */}
                         {totalPages > 1 && (
-                            <nav
-                                className="flex justify-center mt-12 space-x-2 mb-8"
-                                aria-label="Pagination"
-                            >
-                                <button
-                                    className="px-4 py-2 rounded-xl bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 disabled:opacity-50 transition "
-                                    onClick={() =>
-                                        setCurrentPage((p) =>
-                                            Math.max(1, p - 1)
-                                        )
-                                    }
-                                    disabled={currentPage === 1}
-                                    aria-label="Previous page"
+                            <div className="flex justify-center mt-6 mb-2">
+                                <nav
+                                    className="flex items-center gap-1 bg-white rounded-lg shadow px-3 py-1.5"
+                                    aria-label="Pagination"
                                 >
-                                    <i className="fa-solid fa-chevron-left"></i>
-                                </button>
-                                {Array.from({ length: totalPages }, (_, i) => (
                                     <button
-                                        key={i + 1}
-                                        className={`px-4 py-2 rounded-xl font-semibold transition ${
-                                            currentPage === i + 1
-                                                ? 'bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow'
-                                                : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-                                        }`}
-                                        onClick={() => setCurrentPage(i + 1)}
-                                        aria-current={
-                                            currentPage === i + 1
-                                                ? 'page'
-                                                : undefined
+                                        onClick={() =>
+                                            setCurrentPage((p) => Math.max(1, p - 1))
                                         }
+                                        disabled={currentPage === 1}
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-500 hover:bg-gray-200 hover:text-gray-700 ${
+                                            currentPage === 1
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
+                                        }`}
+                                        aria-label="Previous"
                                     >
-                                        {i + 1}
+                                        <svg
+                                            className="w-4 h-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                d="M15 19l-7-7 7-7"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
                                     </button>
-                                ))}
-                                <button
-                                    className="px-4 py-2 rounded-xl bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 disabled:opacity-50 transition"
-                                    onClick={() =>
-                                        setCurrentPage((p) =>
-                                            Math.min(totalPages, p + 1)
-                                        )
-                                    }
-                                    disabled={currentPage === totalPages}
-                                    aria-label="Next page"
-                                >
-                                    <i className="fa-solid fa-chevron-right"></i>
-                                </button>
-                            </nav>
+                                    {totalPages > 6 ? (
+                                        <>
+                                            <button
+                                                onClick={() => setCurrentPage(1)}
+                                                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                    currentPage === 1
+                                                        ? 'bg-blue-500 text-white'
+                                                        : 'text-gray-700 hover:bg-gray-200'
+                                                }`}
+                                            >
+                                                1
+                                            </button>
+                                            {currentPage > 3 && (
+                                                <span className="px-1 text-gray-400">
+                                                    ...
+                                                </span>
+                                            )}
+                                            {Array.from({ length: 3 }, (_, i) => {
+                                                const page = Math.max(
+                                                    2,
+                                                    Math.min(
+                                                        currentPage - 1 + i,
+                                                        totalPages - 2
+                                                    )
+                                                );
+                                                if (page <= 1 || page >= totalPages)
+                                                    return null;
+                                                return (
+                                                    <button
+                                                        key={page}
+                                                        onClick={() => setCurrentPage(page)}
+                                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                            currentPage === page
+                                                                ? 'bg-blue-500 text-white'
+                                                                : 'text-gray-700 hover:bg-gray-200'
+                                                        }`}
+                                                    >
+                                                        {page}
+                                                    </button>
+                                                );
+                                            })}
+                                            {currentPage < totalPages - 2 && (
+                                                <span className="px-1 text-gray-400">
+                                                    ...
+                                                </span>
+                                            )}
+                                            <button
+                                                onClick={() => setCurrentPage(totalPages)}
+                                                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                    currentPage === totalPages
+                                                        ? 'bg-blue-500 text-white'
+                                                        : 'text-gray-700 hover:bg-gray-200'
+                                                }`}
+                                            >
+                                                {totalPages}
+                                            </button>
+                                        </>
+                                    ) : (
+                                        Array.from({ length: totalPages }, (_, i) => (
+                                            <button
+                                                key={i + 1}
+                                                onClick={() => setCurrentPage(i + 1)}
+                                                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                    currentPage === i + 1
+                                                        ? 'bg-blue-500 text-white'
+                                                        : 'text-gray-700 hover:bg-gray-200'
+                                                }`}
+                                            >
+                                                {i + 1}
+                                            </button>
+                                        ))
+                                    )}
+                                    <button
+                                        onClick={() =>
+                                            setCurrentPage((p) =>
+                                                Math.min(totalPages, p + 1)
+                                            )
+                                        }
+                                        disabled={currentPage === totalPages}
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-500 hover:bg-gray-200 hover:text-gray-700 ${
+                                            currentPage === totalPages
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
+                                        }`}
+                                        aria-label="Next"
+                                    >
+                                        <svg
+                                            className="w-4 h-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                d="M9 5l7 7-7 7"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
+                                    </button>
+                                </nav>
+                            </div>
                         )}
                     </section>
                 </main>
@@ -625,6 +626,30 @@ export default function Seminar() {
                     onClose={() => setShowUserSeminarsModal(false)}
                 />
             )}
+
+            <style>
+                {`
+                @media (max-width: 1200px) {
+                    .max-w-5xl {
+                        max-width: 98vw !important;
+                    }
+                    .grid-cols-3 {
+                        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    }
+                }
+                @media (max-width: 900px) {
+                    .grid-cols-3, .grid-cols-2 {
+                        grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+                    }
+                }
+                @media (max-width: 600px) {
+                    .max-w-5xl {
+                        padding-left: 0 !important;
+                        padding-right: 0 !important;
+                    }
+                }
+                `}
+            </style>
         </>
     );
 }
