@@ -355,7 +355,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\KC Sean\\Desktop\\PROJECTS\\Capstone\\Farmer-Connect\\server\\prisma\\generated",
+      "value": "C:\\Users\\Sean Brix\\Desktop\\Code\\Capstone\\Farmer-Connect\\server\\prisma\\generated",
       "fromEnvVar": null
     },
     "config": {
@@ -369,7 +369,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\KC Sean\\Desktop\\PROJECTS\\Capstone\\Farmer-Connect\\server\\prisma\\schema\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Sean Brix\\Desktop\\Code\\Capstone\\Farmer-Connect\\server\\prisma\\schema\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

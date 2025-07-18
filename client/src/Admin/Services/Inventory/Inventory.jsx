@@ -58,7 +58,7 @@ function Content() {
     const [stackEditForm, setStackEditForm] = useState({
         action: 'reduce', // 'reduce', 'transfer', 'add'
         quantity: '',
-        targetStatus: 'Available'
+        targetStatus: 'Available',
     });
 
     // Modern Alert State
@@ -88,6 +88,7 @@ function Content() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
+            console.log('Fetched items data:', data); // Debug log
             setItems(data || []);
         } catch (error) {
             console.error('Failed to fetch inventory:', error);
@@ -95,70 +96,71 @@ function Content() {
         }
     };
 
-    useEffect(() => {
-        if (items.length > 0) {
-            items.forEach(async (item) => {
-                if (item.quantity === 0 && item.status !== 'Out of Stock') {
-                    try {
-                        const response = await fetch(
-                            '/api/inventory/editItem',
-                            {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    ...item,
-                                    status: 'Out of Stock',
-                                }),
-                            }
-                        );
-                        if (!response.ok) {
-                            throw new Error(
-                                `HTTP error! status: ${response.status}`
-                            );
-                        }
-                        fetchItems();
-                    } catch (error) {
-                        console.error(
-                            `Failed to update status for item ${item.id}:`,
-                            error
-                        );
-                    }
-                } else if (
-                    item.status === 'Out of Stock' &&
-                    item.quantity > 0
-                ) {
-                    try {
-                        const response = await fetch(
-                            '/api/inventory/editItem',
-                            {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    ...item,
-                                    status: 'Available',
-                                }),
-                            }
-                        );
-                        if (!response.ok) {
-                            throw new Error(
-                                `HTTP error! status: ${response.status}`
-                            );
-                        }
-                        fetchItems();
-                    } catch (error) {
-                        console.error(
-                            `Failed to update status for item ${item.id}:`,
-                            error
-                        );
-                    }
-                }
-            });
-        }
-    }, [items]);
+    // Commented out - needs to be updated for new data structure with stacks
+    // useEffect(() => {
+    //     if (items.length > 0) {
+    //         items.forEach(async (item) => {
+    //             if (item.quantity === 0 && item.status !== 'Out of Stock') {
+    //                 try {
+    //                     const response = await fetch(
+    //                         '/api/inventory/editItem',
+    //                         {
+    //                             method: 'POST',
+    //                             headers: {
+    //                                 'Content-Type': 'application/json',
+    //                             },
+    //                             body: JSON.stringify({
+    //                                 ...item,
+    //                                 status: 'Out of Stock',
+    //                             }),
+    //                         }
+    //                     );
+    //                     if (!response.ok) {
+    //                         throw new Error(
+    //                             `HTTP error! status: ${response.status}`
+    //                         );
+    //                     }
+    //                     fetchItems();
+    //                 } catch (error) {
+    //                     console.error(
+    //                         `Failed to update status for item ${item.id}:`,
+    //                         error
+    //                     );
+    //                 }
+    //             } else if (
+    //                 item.status === 'Out of Stock' &&
+    //                 item.quantity > 0
+    //             ) {
+    //                 try {
+    //                     const response = await fetch(
+    //                         '/api/inventory/editItem',
+    //                         {
+    //                             method: 'POST',
+    //                             headers: {
+    //                                 'Content-Type': 'application/json',
+    //                             },
+    //                             body: JSON.stringify({
+    //                                 ...item,
+    //                                 status: 'Available',
+    //                             }),
+    //                         }
+    //                     );
+    //                     if (!response.ok) {
+    //                         throw new Error(
+    //                             `HTTP error! status: ${response.status}`
+    //                         );
+    //                     }
+    //                     fetchItems();
+    //                 } catch (error) {
+    //                     console.error(
+    //                         `Failed to update status for item ${item.id}:`,
+    //                         error
+    //                     );
+    //                 }
+    //             }
+    //         });
+    //     }
+    // }, [items]);
 
     // Separate useEffect to update selectedItemStacks when items change
     useEffect(() => {
@@ -168,8 +170,8 @@ function Content() {
             );
             if (
                 updatedItem &&
-                JSON.stringify(updatedItem.item_stacks) !==
-                    JSON.stringify(selectedItemStacks.item_stacks)
+                JSON.stringify(updatedItem.stacks) !==
+                    JSON.stringify(selectedItemStacks.stacks)
             ) {
                 setSelectedItemStacks(updatedItem);
             }
@@ -208,10 +210,10 @@ function Content() {
         setForm({
             id: item.id,
             name: item.name,
-            quantity: item.quantity,
+            quantity: item.totalQuantity || 0,
             description: item.description,
             category: item.category,
-            status: item.status,
+            status: 'Available', // Default status for new items
         });
         setShowEditModal(true);
     };
@@ -262,7 +264,9 @@ function Content() {
         const matchesCategoryFilter =
             categoryFilter === 'All' || item.category === categoryFilter;
         const matchesStatusFilter =
-            statusFilter === 'All' || item.status === statusFilter;
+            statusFilter === 'All' ||
+            (item.stacks &&
+                item.stacks.some((stack) => stack.status === statusFilter));
         return matchesSearch && matchesCategoryFilter && matchesStatusFilter;
     });
 
@@ -389,12 +393,13 @@ function Content() {
             stacks,
             totalQuantity,
             itemId: selectedItemStacks.id,
-            itemName: selectedItemStacks.name
+            itemName: selectedItemStacks.name,
         });
         setStackEditForm({
             action: 'reduce',
             quantity: '',
-            targetStatus: statuses.filter(s => s !== status)[0] || 'Available'
+            targetStatus:
+                statuses.filter((s) => s !== status)[0] || 'Available',
         });
         setShowStackEditModal(true);
     };
@@ -402,27 +407,43 @@ function Content() {
     const handleStackEditFormChange = (e) => {
         setStackEditForm({
             ...stackEditForm,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     };
 
     const handleStackEditSubmit = async (e) => {
         e.preventDefault();
-        
-        if (!stackEditData || !stackEditForm.quantity || stackEditForm.quantity <= 0) {
+
+        if (
+            !stackEditData ||
+            !stackEditForm.quantity ||
+            stackEditForm.quantity <= 0
+        ) {
             showAlert('Please enter a valid quantity', 'error');
             return;
         }
 
         const quantity = parseInt(stackEditForm.quantity);
-        
-        if (stackEditForm.action === 'reduce' && quantity > stackEditData.totalQuantity) {
-            showAlert(`Cannot reduce more than available quantity (${stackEditData.totalQuantity})`, 'error');
+
+        if (
+            stackEditForm.action === 'reduce' &&
+            quantity > stackEditData.totalQuantity
+        ) {
+            showAlert(
+                `Cannot reduce more than available quantity (${stackEditData.totalQuantity})`,
+                'error'
+            );
             return;
         }
 
-        if (stackEditForm.action === 'transfer' && quantity > stackEditData.totalQuantity) {
-            showAlert(`Cannot transfer more than available quantity (${stackEditData.totalQuantity})`, 'error');
+        if (
+            stackEditForm.action === 'transfer' &&
+            quantity > stackEditData.totalQuantity
+        ) {
+            showAlert(
+                `Cannot transfer more than available quantity (${stackEditData.totalQuantity})`,
+                'error'
+            );
             return;
         }
 
@@ -438,26 +459,26 @@ function Content() {
                     body = {
                         itemId: stackEditData.itemId,
                         status: stackEditData.status,
-                        quantity: quantity
+                        quantity: quantity,
                     };
                     break;
-                
+
                 case 'transfer':
                     endpoint = `/api/inventory/stack/transfer`;
                     body = {
                         itemId: stackEditData.itemId,
                         fromStatus: stackEditData.status,
                         toStatus: stackEditForm.targetStatus,
-                        quantity: quantity
+                        quantity: quantity,
                     };
                     break;
-                
+
                 case 'add':
                     endpoint = `/api/inventory/stack/add`;
                     body = {
                         itemId: stackEditData.itemId,
                         status: stackEditData.status,
-                        quantity: quantity
+                        quantity: quantity,
                     };
                     break;
             }
@@ -465,22 +486,24 @@ function Content() {
             const response = await fetch(endpoint, {
                 method: method,
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(body)
+                body: JSON.stringify(body),
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                throw new Error(
+                    errorData.error || `HTTP error! status: ${response.status}`
+                );
             }
 
             const result = await response.json();
-            
+
             // Refresh items and show success message
             fetchItems();
-            
+
             let successMessage = '';
             switch (stackEditForm.action) {
                 case 'reduce':
@@ -493,18 +516,17 @@ function Content() {
                     successMessage = `Successfully added ${quantity} items to ${stackEditData.status} status`;
                     break;
             }
-            
+
             showAlert(successMessage, 'success');
-            
+
             // Close modal and reset state
             setShowStackEditModal(false);
             setStackEditData(null);
             setStackEditForm({
                 action: 'reduce',
                 quantity: '',
-                targetStatus: 'Available'
+                targetStatus: 'Available',
             });
-            
         } catch (error) {
             console.error('Failed to edit stack:', error);
             showAlert(`Failed to edit stack: ${error.message}`, 'error');
@@ -890,7 +912,7 @@ function Content() {
                                     setStackEditForm({
                                         action: 'reduce',
                                         quantity: '',
-                                        targetStatus: 'Available'
+                                        targetStatus: 'Available',
                                     });
                                 }}
                                 aria-label="Close"
@@ -902,9 +924,18 @@ function Content() {
                                     Edit Stack
                                 </h2>
                                 <div className="mb-4 text-sm text-gray-600">
-                                    <p><strong>Item:</strong> {stackEditData.itemName}</p>
-                                    <p><strong>Status:</strong> {stackEditData.status}</p>
-                                    <p><strong>Current Quantity:</strong> {stackEditData.totalQuantity}</p>
+                                    <p>
+                                        <strong>Item:</strong>{' '}
+                                        {stackEditData.itemName}
+                                    </p>
+                                    <p>
+                                        <strong>Status:</strong>{' '}
+                                        {stackEditData.status}
+                                    </p>
+                                    <p>
+                                        <strong>Current Quantity:</strong>{' '}
+                                        {stackEditData.totalQuantity}
+                                    </p>
                                 </div>
                                 <form onSubmit={handleStackEditSubmit}>
                                     <div className="mb-4">
@@ -917,12 +948,18 @@ function Content() {
                                             onChange={handleStackEditFormChange}
                                             className="w-full border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50"
                                         >
-                                            <option value="reduce">Reduce Quantity</option>
-                                            <option value="transfer">Transfer to Another Status</option>
-                                            <option value="add">Add New Items</option>
+                                            <option value="reduce">
+                                                Reduce Quantity
+                                            </option>
+                                            <option value="transfer">
+                                                Transfer to Another Status
+                                            </option>
+                                            <option value="add">
+                                                Add New Items
+                                            </option>
                                         </select>
                                     </div>
-                                    
+
                                     <div className="mb-4">
                                         <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Quantity
@@ -933,13 +970,17 @@ function Content() {
                                             value={stackEditForm.quantity}
                                             onChange={handleStackEditFormChange}
                                             min="1"
-                                            max={stackEditForm.action === 'add' ? undefined : stackEditData.totalQuantity}
+                                            max={
+                                                stackEditForm.action === 'add'
+                                                    ? undefined
+                                                    : stackEditData.totalQuantity
+                                            }
                                             className="w-full border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50"
                                             placeholder="Enter quantity"
                                             required
                                         />
                                     </div>
-                                    
+
                                     {stackEditForm.action === 'transfer' && (
                                         <div className="mb-4">
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -947,19 +988,32 @@ function Content() {
                                             </label>
                                             <select
                                                 name="targetStatus"
-                                                value={stackEditForm.targetStatus}
-                                                onChange={handleStackEditFormChange}
+                                                value={
+                                                    stackEditForm.targetStatus
+                                                }
+                                                onChange={
+                                                    handleStackEditFormChange
+                                                }
                                                 className="w-full border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50"
                                             >
-                                                {statuses.filter(status => status !== stackEditData.status).map((status) => (
-                                                    <option key={status} value={status}>
-                                                        {status}
-                                                    </option>
-                                                ))}
+                                                {statuses
+                                                    .filter(
+                                                        (status) =>
+                                                            status !==
+                                                            stackEditData.status
+                                                    )
+                                                    .map((status) => (
+                                                        <option
+                                                            key={status}
+                                                            value={status}
+                                                        >
+                                                            {status}
+                                                        </option>
+                                                    ))}
                                             </select>
                                         </div>
                                     )}
-                                    
+
                                     <div className="flex gap-3 justify-center">
                                         <button
                                             type="button"
@@ -969,7 +1023,7 @@ function Content() {
                                                 setStackEditForm({
                                                     action: 'reduce',
                                                     quantity: '',
-                                                    targetStatus: 'Available'
+                                                    targetStatus: 'Available',
                                                 });
                                             }}
                                             className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
@@ -980,8 +1034,12 @@ function Content() {
                                             type="submit"
                                             className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium"
                                         >
-                                            {stackEditForm.action === 'reduce' ? 'Reduce' : 
-                                             stackEditForm.action === 'transfer' ? 'Transfer' : 'Add'}
+                                            {stackEditForm.action === 'reduce'
+                                                ? 'Reduce'
+                                                : stackEditForm.action ===
+                                                  'transfer'
+                                                ? 'Transfer'
+                                                : 'Add'}
                                         </button>
                                     </div>
                                 </form>
@@ -1216,7 +1274,9 @@ function Content() {
                                                     {item.name}
                                                 </td>
                                                 <td className="py-2 px-2 border-b text-blue-700">
-                                                    <span>{item.total}</span>
+                                                    <span>
+                                                        {item.totalQuantity}
+                                                    </span>
                                                 </td>
                                                 <td className="py-2 px-2 border-b text-blue-700 max-w-[120px] truncate">
                                                     <span
@@ -1272,7 +1332,7 @@ function Content() {
                                                                     </thead>
                                                                     <tbody>
                                                                         {Object.entries(
-                                                                            selectedItemStacks.item_stacks.reduce(
+                                                                            selectedItemStacks.stacks.reduce(
                                                                                 (
                                                                                     acc,
                                                                                     stack
@@ -1331,7 +1391,13 @@ function Content() {
                                                                                 >
                                                                                     <td className="py-2 px-3">
                                                                                         <button
-                                                                                            onClick={() => handleEditStack(status, stacks, totalQuantity)}
+                                                                                            onClick={() =>
+                                                                                                handleEditStack(
+                                                                                                    status,
+                                                                                                    stacks,
+                                                                                                    totalQuantity
+                                                                                                )
+                                                                                            }
                                                                                             className="p-1 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded transition-colors"
                                                                                             title="Edit Stack"
                                                                                             aria-label={`Edit ${status} stack`}
