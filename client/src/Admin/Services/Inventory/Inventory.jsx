@@ -88,7 +88,6 @@ function Content() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            console.log('Fetched items data:', data); // Debug log
             setItems(data || []);
         } catch (error) {
             console.error('Failed to fetch inventory:', error);

@@ -1,38 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
-const categories = [
-    'Farming Equipment',
-    'Harvesting Tools',
-    'Irrigation Systems',
-    'Storage Equipment',
-    'Processing Equipment',
-    'Safety Gear',
-    'Pest Control',
-    'Livestock Equipment',
-    'Measuring Tools',
-    'Fisheries',
-    'Machinery',
-    'Other',
-];
-
-const statuses = [
-    'Available',
-    'Unavailable',
-    'Lost',
-    'Damaged',
-    'EIC',
-    'Distributed',
-];
-
-// Convert category to snake case with title case words
-const convertToSnakeCase = (category) => {
-    return category
-        .split(' ')
-        .map(
-            (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-        )
-        .join('_');
-};
+import { categories, statuses } from './constants';
+import { convertToSnakeCase } from './utils/helpers';
 
 const AddItemModal = ({ isOpen, onClose, onSubmit, existingItems }) => {
     const [form, setForm] = useState({
