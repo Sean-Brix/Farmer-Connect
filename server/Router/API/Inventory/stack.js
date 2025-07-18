@@ -1,6 +1,6 @@
 import express from 'express';
 
-// Route: ('/api/inventory/item')
+// Route: ('/api/inventory/stack')
 const router = express.Router();
 
 //? ======================================= AUTHORIZED ============================================= ?//
@@ -12,13 +12,9 @@ router.use(parseToken);
 import authorize from '../../../Middlewares/Auth/authorize.js';
 router.use(authorize);
 
-// Add Item
-import addItem from '../../../Controller/Inventory/addItem.js';
-router.post('/add', addItem);
-
-// Edit Item
-import editItem from '../../../Controller/Inventory/editItem.js';
-router.post('/edit', editItem);
+// Edit Stack
+import editStack from '../../../Controller/Inventory/editStack.js';
+router.post('/edit', editStack);
 
 
 
