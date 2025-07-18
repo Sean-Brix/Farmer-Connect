@@ -23,7 +23,7 @@ app.use(express.static(viewPath));
 app.use(
     cors({
         origin: '*',
-        allowedHeaders: ['POST', 'GET'],
+        allowedHeaders: ['POST', 'GET', 'DELETE', 'PUT'],
         credentials: true,
     })
 );

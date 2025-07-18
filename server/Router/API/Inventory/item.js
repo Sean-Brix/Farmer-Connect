@@ -16,6 +16,10 @@ router.use(authorize);
 import addItem from '../../../Controller/Inventory/addItem.js';
 router.post('/add', addItem);
 
+// Edit Item
+import editItem from '../../../Controller/Inventory/editItem.js';
+router.post('/edit', editItem);
+
 //? ================================================================================================ ?//
 
 //? ====================================== SUPER ADMINS ============================================ ?//

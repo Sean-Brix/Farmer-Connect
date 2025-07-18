@@ -30,14 +30,6 @@ function Content() {
     const [showStacksModal, setShowStacksModal] = useState(false);
     const [selectedItemStacks, setSelectedItemStacks] = useState(null);
     const [expandedStacks, setExpandedStacks] = useState(new Set());
-    const [form, setForm] = useState({
-        id: '',
-        name: '',
-        quantity: '',
-        description: '',
-        category: 'Other',
-        status: 'Available',
-    });
     const [showModal, setShowModal] = useState(false);
     const [search, setSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('All');
@@ -49,7 +41,7 @@ function Content() {
     const [showDeleteStackModal, setShowDeleteStackModal] = useState(false);
     const [stackToDelete, setStackToDelete] = useState(null);
     const [editItemId, setEditItemId] = useState(null);
-    const [showEditModal, setShowEditModal] = useState(false);
+    const [editForm, setEditForm] = useState({});
     const [uiSize, setUiSize] = useState('md'); // 'sm', 'md', 'lg'
 
     // Stack Edit Modal states
@@ -177,10 +169,6 @@ function Content() {
         }
     }, [items, selectedItemStacks]);
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
     const handleSubmit = async (formData) => {
         try {
             const response = await fetch('/api/inventory/item/add', {
@@ -206,50 +194,63 @@ function Content() {
 
     const handleEdit = (item) => {
         setEditItemId(item.id);
-        setForm({
-            id: item.id,
+        setEditForm({
             name: item.name,
-            quantity: item.totalQuantity || 0,
             description: item.description,
             category: item.category,
-            status: 'Available', // Default status for new items
         });
-        setShowEditModal(true);
     };
 
-    const handleUpdate = async (e) => {
-        e.preventDefault();
-        if (!form.name || !form.quantity) return;
+    const handleEditFormChange = (e) => {
+        setEditForm({
+            ...editForm,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSaveEdit();
+        } else if (e.key === 'Escape') {
+            handleCancelEdit();
+        }
+    };
+
+    const handleSaveEdit = async () => {
+        if (!editForm.name.trim()) {
+            showAlert('Item name is required', 'error');
+            return;
+        }
 
         try {
-            const response = await fetch(`/api/inventory/editItem`, {
+            const response = await fetch(`/api/inventory/item/edit`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(form),
+                body: JSON.stringify({
+                    id: editItemId,
+                    ...editForm,
+                }),
             });
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            setForm({
-                id: '',
-                name: '',
-                quantity: '',
-                description: '',
-                category: 'Other',
-                status: 'Available',
-            });
-            setShowEditModal(false);
             setEditItemId(null);
+            setEditForm({});
             fetchItems();
             showAlert('Item updated successfully', 'success');
         } catch (error) {
             console.error('Failed to update item:', error);
             showAlert('Failed to update item', 'error');
         }
+    };
+
+    const handleCancelEdit = () => {
+        setEditItemId(null);
+        setEditForm({});
     };
 
     const filteredItems = items.filter((item) => {
@@ -716,85 +717,6 @@ function Content() {
                     onSubmit={handleSubmit}
                     existingItems={items}
                 />
-
-                {showEditModal && (
-                    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-xl shadow p-6 w-full max-w-sm relative border border-blue-100 mx-2">
-                            <button
-                                className="absolute top-2 right-2 text-blue-400 hover:text-blue-700 text-xl transition"
-                                onClick={() => setShowEditModal(false)}
-                                aria-label="Close"
-                            >
-                                ×
-                            </button>
-                            <h2 className="text-base font-bold mb-4 text-blue-800 text-center">
-                                Edit Item
-                            </h2>
-                            <form
-                                className="flex flex-col gap-3"
-                                onSubmit={handleUpdate}
-                            >
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={form.name}
-                                    onChange={handleChange}
-                                    placeholder="Name"
-                                    className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
-                                    required
-                                />
-                                <input
-                                    type="number"
-                                    name="quantity"
-                                    value={form.quantity}
-                                    onChange={handleChange}
-                                    placeholder="Qty"
-                                    className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
-                                    min="0"
-                                    required
-                                />
-                                <input
-                                    type="text"
-                                    name="description"
-                                    value={form.description}
-                                    onChange={handleChange}
-                                    placeholder="Description"
-                                    className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
-                                />
-                                <select
-                                    name="category"
-                                    value={form.category}
-                                    onChange={handleChange}
-                                    className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
-                                >
-                                    {categories.map((cat) => (
-                                        <option key={cat} value={cat}>
-                                            {cat}
-                                        </option>
-                                    ))}
-                                </select>
-                                <select
-                                    name="status"
-                                    value={form.status}
-                                    onChange={handleChange}
-                                    className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
-                                >
-                                    {statuses.map((status) => (
-                                        <option key={status} value={status}>
-                                            {status}
-                                        </option>
-                                    ))}
-                                </select>
-                                <button
-                                    type="submit"
-                                    className="bg-blue-500 text-white font-bold py-2 rounded hover:bg-blue-600 transition mt-2 w-full"
-                                >
-                                    Update
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                )}
                 {/* Delete Confirmation Modal */}
                 {showDeleteModal && (
                     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -1269,37 +1191,137 @@ function Content() {
                                                         </button>
                                                     )}
                                                 </td>
-                                                <td className="py-2 px-2 border-b font-semibold text-blue-900 max-w-[120px] truncate">
-                                                    {item.name}
+                                                <td className="py-2 px-2 border-b font-semibold text-blue-900 max-w-[120px]">
+                                                    {editItemId === item.id ? (
+                                                        <input
+                                                            type="text"
+                                                            name="name"
+                                                            value={
+                                                                editForm.name ||
+                                                                ''
+                                                            }
+                                                            onChange={
+                                                                handleEditFormChange
+                                                            }
+                                                            onKeyDown={
+                                                                handleKeyPress
+                                                            }
+                                                            className="w-full border border-blue-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400 bg-white text-sm"
+                                                            required
+                                                            autoFocus
+                                                        />
+                                                    ) : (
+                                                        <span className="block truncate">
+                                                            {item.name}
+                                                        </span>
+                                                    )}
                                                 </td>
                                                 <td className="py-2 px-2 border-b text-blue-700">
                                                     <span>
                                                         {item.totalQuantity}
                                                     </span>
                                                 </td>
-                                                <td className="py-2 px-2 border-b text-blue-700 max-w-[120px] truncate">
-                                                    <span
-                                                        title={item.description}
-                                                        className="block truncate"
-                                                    >
-                                                        {truncate(
-                                                            item.description,
-                                                            24
-                                                        )}
-                                                    </span>
+                                                <td className="py-2 px-2 border-b text-blue-700 max-w-[120px]">
+                                                    {editItemId === item.id ? (
+                                                        <input
+                                                            type="text"
+                                                            name="description"
+                                                            value={
+                                                                editForm.description ||
+                                                                ''
+                                                            }
+                                                            onChange={
+                                                                handleEditFormChange
+                                                            }
+                                                            onKeyDown={
+                                                                handleKeyPress
+                                                            }
+                                                            className="w-full border border-blue-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400 bg-white text-sm"
+                                                            placeholder="Description"
+                                                        />
+                                                    ) : (
+                                                        <span
+                                                            title={
+                                                                item.description
+                                                            }
+                                                            className="block truncate"
+                                                        >
+                                                            {truncate(
+                                                                item.description,
+                                                                24
+                                                            )}
+                                                        </span>
+                                                    )}
                                                 </td>
-                                                <td className="py-2 px-2 border-b text-blue-700 max-w-[120px] truncate">
-                                                    {item.category}
+                                                <td className="py-2 px-2 border-b text-blue-700 max-w-[120px]">
+                                                    {editItemId === item.id ? (
+                                                        <select
+                                                            name="category"
+                                                            value={
+                                                                editForm.category ||
+                                                                item.category
+                                                            }
+                                                            onChange={
+                                                                handleEditFormChange
+                                                            }
+                                                            onKeyDown={
+                                                                handleKeyPress
+                                                            }
+                                                            className="w-full border border-blue-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400 bg-white text-sm"
+                                                        >
+                                                            {categories.map(
+                                                                (cat) => (
+                                                                    <option
+                                                                        key={
+                                                                            cat
+                                                                        }
+                                                                        value={
+                                                                            cat
+                                                                        }
+                                                                    >
+                                                                        {cat}
+                                                                    </option>
+                                                                )
+                                                            )}
+                                                        </select>
+                                                    ) : (
+                                                        <span className="block truncate">
+                                                            {item.category}
+                                                        </span>
+                                                    )}
                                                 </td>
                                                 <td className="py-2 px-2 border-b text-blue-700">
-                                                    <button
-                                                        onClick={() =>
-                                                            handleEdit(item)
-                                                        }
-                                                        className="bg-green-500 text-white font-bold px-3 py-1 rounded hover:bg-green-600 transition w-full sm:w-auto"
-                                                    >
-                                                        Edit
-                                                    </button>
+                                                    {editItemId === item.id ? (
+                                                        <div className="flex gap-1">
+                                                            <button
+                                                                onClick={
+                                                                    handleSaveEdit
+                                                                }
+                                                                className="bg-green-500 text-white font-bold px-2 py-1 rounded hover:bg-green-600 transition text-xs"
+                                                                title="Save changes"
+                                                            >
+                                                                ✓
+                                                            </button>
+                                                            <button
+                                                                onClick={
+                                                                    handleCancelEdit
+                                                                }
+                                                                className="bg-red-500 text-white font-bold px-2 py-1 rounded hover:bg-red-600 transition text-xs"
+                                                                title="Cancel editing"
+                                                            >
+                                                                ✕
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() =>
+                                                                handleEdit(item)
+                                                            }
+                                                            className="bg-green-500 text-white font-bold px-3 py-1 rounded hover:bg-green-600 transition w-full sm:w-auto"
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                    )}
                                                 </td>
                                             </tr>
                                             {expandedStacks.has(item.id) &&
