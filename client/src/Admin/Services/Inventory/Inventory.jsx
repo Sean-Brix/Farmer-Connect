@@ -16,19 +16,10 @@ const categories = [
     'Other',
 ];
 
-const statuses = [
-    'Available',
-    'Unavailable',
-    'Lost',
-    'Damaged',
-    'EIC',
-    'Distributed',
-];
+const statuses = ['Available', 'Unavailable', 'Damaged', 'EIC', 'Distributed'];
 
 function Content() {
     const [items, setItems] = useState([]);
-    const [showStacksModal, setShowStacksModal] = useState(false);
-    const [selectedItemStacks, setSelectedItemStacks] = useState(null);
     const [expandedStacks, setExpandedStacks] = useState(new Set());
     const [showModal, setShowModal] = useState(false);
     const [search, setSearch] = useState('');
@@ -44,14 +35,14 @@ function Content() {
     const [editForm, setEditForm] = useState({});
     const [uiSize, setUiSize] = useState('md'); // 'sm', 'md', 'lg'
 
-    // Stack Edit Modal states
-    const [showStackEditModal, setShowStackEditModal] = useState(false);
-    const [stackEditData, setStackEditData] = useState(null);
-    const [stackEditForm, setStackEditForm] = useState({
-        action: 'reduce', // 'reduce', 'transfer', 'add'
-        quantity: '',
-        targetStatus: 'Available',
-    });
+    // Stack Edit Modal states - REMOVED - using inline editing instead
+    // const [showStackEditModal, setShowStackEditModal] = useState(false);
+    // const [stackEditData, setStackEditData] = useState(null);
+    // const [stackEditForm, setStackEditForm] = useState({
+    //     action: 'reduce', // 'reduce', 'transfer', 'add'
+    //     quantity: '',
+    //     targetStatus: 'Available',
+    // });
 
     // Modern Alert State
     const [alert, setAlert] = useState({
@@ -59,6 +50,17 @@ function Content() {
         message: '',
         type: '',
     });
+
+    // Individual Stack Edit States
+    const [editingStacks, setEditingStacks] = useState(new Set());
+    const [stackEditValues, setStackEditValues] = useState({});
+
+    // Status row editing (for the main expandable table)
+    const [editingStatusRows, setEditingStatusRows] = useState(new Set());
+    const [statusEditValues, setStatusEditValues] = useState({});
+
+    // Selected item stacks for expanded view
+    const [selectedItemStacks, setSelectedItemStacks] = useState(null);
 
     // Helper to show alert
     const showAlert = (message, type = 'success') => {
@@ -377,7 +379,7 @@ function Content() {
             // Close modals and reset state
             setShowDeleteStackModal(false);
             setStackToDelete(null);
-            setShowStacksModal(false);
+            // setShowStacksModal(false); // Removed - logs modal no longer exists
             setSelectedItemStacks(null);
         } catch (error) {
             console.error('Failed to delete stack:', error);
@@ -387,150 +389,333 @@ function Content() {
         }
     };
 
-    const handleEditStack = (status, stacks, totalQuantity) => {
-        setStackEditData({
-            status,
-            stacks,
-            totalQuantity,
-            itemId: selectedItemStacks.id,
-            itemName: selectedItemStacks.name,
-        });
-        setStackEditForm({
-            action: 'reduce',
-            quantity: '',
-            targetStatus:
-                statuses.filter((s) => s !== status)[0] || 'Available',
-        });
-        setShowStackEditModal(true);
+    const handleToggleStatusRowEdit = (status, totalQuantity) => {
+        const statusKey = `${selectedItemStacks.id}-${status}`;
+        const newEditingStatusRows = new Set(editingStatusRows);
+        const newStatusEditValues = { ...statusEditValues };
+
+        if (editingStatusRows.has(statusKey)) {
+            // Stop editing
+            newEditingStatusRows.delete(statusKey);
+            delete newStatusEditValues[statusKey];
+        } else {
+            // Start editing
+            newEditingStatusRows.add(statusKey);
+            newStatusEditValues[statusKey] = totalQuantity;
+        }
+
+        setEditingStatusRows(newEditingStatusRows);
+        setStatusEditValues(newStatusEditValues);
     };
 
-    const handleStackEditFormChange = (e) => {
-        setStackEditForm({
-            ...stackEditForm,
-            [e.target.name]: e.target.value,
+    const handleStatusRowValueChange = (status, value) => {
+        const statusKey = `${selectedItemStacks.id}-${status}`;
+        setStatusEditValues({
+            ...statusEditValues,
+            [statusKey]: parseInt(value) || 0,
         });
     };
 
-    const handleStackEditSubmit = async (e) => {
-        e.preventDefault();
-
-        if (
-            !stackEditData ||
-            !stackEditForm.quantity ||
-            stackEditForm.quantity <= 0
-        ) {
-            showAlert('Please enter a valid quantity', 'error');
+    const handleIncreaseStatusRowQuantity = async (status, stacks) => {
+        if (stacks.length === 0) {
+            showAlert('No stacks available to increase', 'error');
             return;
         }
 
-        const quantity = parseInt(stackEditForm.quantity);
+        // Use the first stack for the operation (you could modify this logic)
+        const firstStackId = stacks[0]?.id;
+        if (firstStackId) {
+            await handleIncreaseStackQuantity(firstStackId, stacks[0].quantity);
+        }
+    };
 
-        if (
-            stackEditForm.action === 'reduce' &&
-            quantity > stackEditData.totalQuantity
-        ) {
+    const handleDecreaseStatusRowQuantity = async (
+        status,
+        stacks,
+        totalQuantity
+    ) => {
+        if (totalQuantity <= 1) {
             showAlert(
-                `Cannot reduce more than available quantity (${stackEditData.totalQuantity})`,
+                'Cannot decrease quantity below 1. Use delete instead.',
                 'error'
             );
             return;
         }
 
-        if (
-            stackEditForm.action === 'transfer' &&
-            quantity > stackEditData.totalQuantity
-        ) {
+        if (stacks.length === 0) {
+            showAlert('No stacks available to decrease', 'error');
+            return;
+        }
+
+        // Use the first stack for the operation (you could modify this logic)
+        const firstStackId = stacks[0]?.id;
+        if (firstStackId) {
+            await handleDecreaseStackQuantity(firstStackId, stacks[0].quantity);
+        }
+    };
+
+    const handleSaveStatusRowEdit = async (status, stacks, currentQuantity) => {
+        const statusKey = `${selectedItemStacks.id}-${status}`;
+        const newQuantity = statusEditValues[statusKey];
+
+        if (newQuantity !== currentQuantity && stacks.length > 0) {
+            // Use the first stack for bulk change (you could modify this logic)
+            const firstStackId = stacks[0]?.id;
+            if (firstStackId) {
+                await handleBulkStackQuantityChange(
+                    firstStackId,
+                    newQuantity,
+                    currentQuantity
+                );
+            }
+        }
+
+        // Stop editing mode
+        const newEditingStatusRows = new Set(editingStatusRows);
+        const newStatusEditValues = { ...statusEditValues };
+        newEditingStatusRows.delete(statusKey);
+        delete newStatusEditValues[statusKey];
+        setEditingStatusRows(newEditingStatusRows);
+        setStatusEditValues(newStatusEditValues);
+    };
+
+    const handleCancelStatusRowEdit = (status) => {
+        const statusKey = `${selectedItemStacks.id}-${status}`;
+        const newEditingStatusRows = new Set(editingStatusRows);
+        const newStatusEditValues = { ...statusEditValues };
+        newEditingStatusRows.delete(statusKey);
+        delete newStatusEditValues[statusKey];
+        setEditingStatusRows(newEditingStatusRows);
+        setStatusEditValues(newStatusEditValues);
+    };
+
+    // handleStackEditSubmit function removed - using simpler inline editing instead
+
+    // Placeholder functions for quantity adjustment
+    const handleIncreaseQuantity = async (status, stacks) => {
+        // TODO: Implement API call to increase quantity
+        console.log('Increasing quantity for status:', status);
+        showAlert(`TODO: Increase quantity for ${status}`, 'info');
+
+        // Placeholder API structure:
+        // const response = await fetch('/api/inventory/stack/adjust', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        //     },
+        //     body: JSON.stringify({
+        //         itemId: selectedItemStacks.id,
+        //         status: status,
+        //         action: 'increase',
+        //         quantity: 1
+        //     }),
+        // });
+    };
+
+    const handleDecreaseQuantity = async (status, stacks, currentQuantity) => {
+        if (currentQuantity <= 0) {
+            showAlert('Cannot decrease quantity below 0', 'error');
+            return;
+        }
+
+        // TODO: Implement API call to decrease quantity
+        console.log('Decreasing quantity for status:', status);
+        showAlert(`TODO: Decrease quantity for ${status}`, 'info');
+
+        // Placeholder API structure:
+        // const response = await fetch('/api/inventory/stack/adjust', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        //     },
+        //     body: JSON.stringify({
+        //         itemId: selectedItemStacks.id,
+        //         status: status,
+        //         action: 'decrease',
+        //         quantity: 1
+        //     }),
+        // });
+    };
+
+    // Individual stack quantity adjustment functions
+    const handleIncreaseStackQuantity = async (stackId, stackQuantity) => {
+        try {
+            // TODO: Replace with actual API call
+            console.log('Increasing stack quantity:', stackId, stackQuantity);
+            showAlert('TODO: Increase stack quantity API call', 'info');
+
+            // Placeholder API structure:
+            // const token = localStorage.getItem('authToken');
+            // const response = await fetch('/api/inventory/stack/adjust', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         Authorization: `Bearer ${token}`,
+            //     },
+            //     body: JSON.stringify({
+            //         stackId: stackId,
+            //         action: 'increase',
+            //         quantity: 1
+            //     }),
+            // });
+            //
+            // if (!response.ok) {
+            //     throw new Error(`HTTP error! status: ${response.status}`);
+            // }
+            //
+            // fetchItems();
+        } catch (error) {
+            console.error('Failed to increase stack quantity:', error);
+            showAlert('Failed to increase stack quantity', 'error');
+        }
+    };
+
+    const handleDecreaseStackQuantity = async (stackId, stackQuantity) => {
+        if (stackQuantity <= 1) {
             showAlert(
-                `Cannot transfer more than available quantity (${stackEditData.totalQuantity})`,
+                'Cannot decrease quantity below 1. Use delete instead.',
                 'error'
             );
             return;
         }
 
         try {
-            const token = localStorage.getItem('authToken');
-            let endpoint = '';
-            let method = 'POST';
-            let body = {};
+            // TODO: Replace with actual API call
+            console.log('Decreasing stack quantity:', stackId, stackQuantity);
+            showAlert('TODO: Decrease stack quantity API call', 'info');
 
-            switch (stackEditForm.action) {
-                case 'reduce':
-                    endpoint = `/api/inventory/stack/reduce`;
-                    body = {
-                        itemId: stackEditData.itemId,
-                        status: stackEditData.status,
-                        quantity: quantity,
-                    };
-                    break;
-
-                case 'transfer':
-                    endpoint = `/api/inventory/stack/transfer`;
-                    body = {
-                        itemId: stackEditData.itemId,
-                        fromStatus: stackEditData.status,
-                        toStatus: stackEditForm.targetStatus,
-                        quantity: quantity,
-                    };
-                    break;
-
-                case 'add':
-                    endpoint = `/api/inventory/stack/add`;
-                    body = {
-                        itemId: stackEditData.itemId,
-                        status: stackEditData.status,
-                        quantity: quantity,
-                    };
-                    break;
-            }
-
-            const response = await fetch(endpoint, {
-                method: method,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(
-                    errorData.error || `HTTP error! status: ${response.status}`
-                );
-            }
-
-            const result = await response.json();
-
-            // Refresh items and show success message
-            fetchItems();
-
-            let successMessage = '';
-            switch (stackEditForm.action) {
-                case 'reduce':
-                    successMessage = `Successfully reduced ${quantity} items from ${stackEditData.status} status`;
-                    break;
-                case 'transfer':
-                    successMessage = `Successfully transferred ${quantity} items from ${stackEditData.status} to ${stackEditForm.targetStatus}`;
-                    break;
-                case 'add':
-                    successMessage = `Successfully added ${quantity} items to ${stackEditData.status} status`;
-                    break;
-            }
-
-            showAlert(successMessage, 'success');
-
-            // Close modal and reset state
-            setShowStackEditModal(false);
-            setStackEditData(null);
-            setStackEditForm({
-                action: 'reduce',
-                quantity: '',
-                targetStatus: 'Available',
-            });
+            // Placeholder API structure:
+            // const token = localStorage.getItem('authToken');
+            // const response = await fetch('/api/inventory/stack/adjust', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         Authorization: `Bearer ${token}`,
+            //     },
+            //     body: JSON.stringify({
+            //         stackId: stackId,
+            //         action: 'decrease',
+            //         quantity: 1
+            //     }),
+            // });
+            //
+            // if (!response.ok) {
+            //     throw new Error(`HTTP error! status: ${response.status}`);
+            // }
+            //
+            // fetchItems();
         } catch (error) {
-            console.error('Failed to edit stack:', error);
-            showAlert(`Failed to edit stack: ${error.message}`, 'error');
+            console.error('Failed to decrease stack quantity:', error);
+            showAlert('Failed to decrease stack quantity', 'error');
         }
+    };
+
+    const handleBulkStackQuantityChange = async (
+        stackId,
+        newQuantity,
+        currentQuantity
+    ) => {
+        if (newQuantity < 0) {
+            showAlert('Quantity cannot be negative', 'error');
+            return;
+        }
+
+        if (newQuantity === 0) {
+            showAlert('Use delete button to remove stack completely', 'error');
+            return;
+        }
+
+        try {
+            // TODO: Replace with actual API call
+            console.log(
+                'Bulk changing stack quantity:',
+                stackId,
+                'from',
+                currentQuantity,
+                'to',
+                newQuantity
+            );
+            showAlert('TODO: Bulk quantity change API call', 'info');
+
+            // Placeholder API structure:
+            // const token = localStorage.getItem('authToken');
+            // const response = await fetch('/api/inventory/stack/set-quantity', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         Authorization: `Bearer ${token}`,
+            //     },
+            //     body: JSON.stringify({
+            //         stackId: stackId,
+            //         quantity: newQuantity
+            //     }),
+            // });
+            //
+            // if (!response.ok) {
+            //     throw new Error(`HTTP error! status: ${response.status}`);
+            // }
+            //
+            // fetchItems();
+        } catch (error) {
+            console.error('Failed to change stack quantity:', error);
+            showAlert('Failed to change stack quantity', 'error');
+        }
+    };
+
+    const handleToggleStackEdit = (stackId, currentQuantity) => {
+        const newEditingStacks = new Set(editingStacks);
+        const newStackEditValues = { ...stackEditValues };
+
+        if (editingStacks.has(stackId)) {
+            // Stop editing
+            newEditingStacks.delete(stackId);
+            delete newStackEditValues[stackId];
+        } else {
+            // Start editing
+            newEditingStacks.add(stackId);
+            newStackEditValues[stackId] = currentQuantity;
+        }
+
+        setEditingStacks(newEditingStacks);
+        setStackEditValues(newStackEditValues);
+    };
+
+    const handleStackEditValueChange = (stackId, value) => {
+        setStackEditValues({
+            ...stackEditValues,
+            [stackId]: parseInt(value) || 0,
+        });
+    };
+
+    const handleSaveStackEdit = async (stackId, currentQuantity) => {
+        const newQuantity = stackEditValues[stackId];
+
+        if (newQuantity !== currentQuantity) {
+            await handleBulkStackQuantityChange(
+                stackId,
+                newQuantity,
+                currentQuantity
+            );
+        }
+
+        // Stop editing mode
+        const newEditingStacks = new Set(editingStacks);
+        const newStackEditValues = { ...stackEditValues };
+        newEditingStacks.delete(stackId);
+        delete newStackEditValues[stackId];
+        setEditingStacks(newEditingStacks);
+        setStackEditValues(newStackEditValues);
+    };
+
+    const handleCancelStackEdit = (stackId) => {
+        const newEditingStacks = new Set(editingStacks);
+        const newStackEditValues = { ...stackEditValues };
+        newEditingStacks.delete(stackId);
+        delete newStackEditValues[stackId];
+        setEditingStacks(newEditingStacks);
+        setStackEditValues(newStackEditValues);
     };
 
     const handleSelectAll = (e) => {
@@ -822,153 +1007,9 @@ function Content() {
                     </div>
                 )}
                 {/* Stack Edit Modal */}
-                {showStackEditModal && stackEditData && (
-                    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-xl shadow p-6 w-full max-w-md relative border border-blue-100 mx-2">
-                            <button
-                                className="absolute top-2 right-2 text-blue-400 hover:text-blue-700 text-xl transition"
-                                onClick={() => {
-                                    setShowStackEditModal(false);
-                                    setStackEditData(null);
-                                    setStackEditForm({
-                                        action: 'reduce',
-                                        quantity: '',
-                                        targetStatus: 'Available',
-                                    });
-                                }}
-                                aria-label="Close"
-                            >
-                                ×
-                            </button>
-                            <div className="text-center">
-                                <h2 className="text-lg font-bold mb-4 text-blue-800">
-                                    Edit Stack
-                                </h2>
-                                <div className="mb-4 text-sm text-gray-600">
-                                    <p>
-                                        <strong>Item:</strong>{' '}
-                                        {stackEditData.itemName}
-                                    </p>
-                                    <p>
-                                        <strong>Status:</strong>{' '}
-                                        {stackEditData.status}
-                                    </p>
-                                    <p>
-                                        <strong>Current Quantity:</strong>{' '}
-                                        {stackEditData.totalQuantity}
-                                    </p>
-                                </div>
-                                <form onSubmit={handleStackEditSubmit}>
-                                    <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Action
-                                        </label>
-                                        <select
-                                            name="action"
-                                            value={stackEditForm.action}
-                                            onChange={handleStackEditFormChange}
-                                            className="w-full border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50"
-                                        >
-                                            <option value="reduce">
-                                                Reduce Quantity
-                                            </option>
-                                            <option value="transfer">
-                                                Transfer to Another Status
-                                            </option>
-                                            <option value="add">
-                                                Add New Items
-                                            </option>
-                                        </select>
-                                    </div>
+                {/* Stack Edit Modal removed - using inline editing instead */}
 
-                                    <div className="mb-4">
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Quantity
-                                        </label>
-                                        <input
-                                            type="number"
-                                            name="quantity"
-                                            value={stackEditForm.quantity}
-                                            onChange={handleStackEditFormChange}
-                                            min="1"
-                                            max={
-                                                stackEditForm.action === 'add'
-                                                    ? undefined
-                                                    : stackEditData.totalQuantity
-                                            }
-                                            className="w-full border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50"
-                                            placeholder="Enter quantity"
-                                            required
-                                        />
-                                    </div>
-
-                                    {stackEditForm.action === 'transfer' && (
-                                        <div className="mb-4">
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Target Status
-                                            </label>
-                                            <select
-                                                name="targetStatus"
-                                                value={
-                                                    stackEditForm.targetStatus
-                                                }
-                                                onChange={
-                                                    handleStackEditFormChange
-                                                }
-                                                className="w-full border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50"
-                                            >
-                                                {statuses
-                                                    .filter(
-                                                        (status) =>
-                                                            status !==
-                                                            stackEditData.status
-                                                    )
-                                                    .map((status) => (
-                                                        <option
-                                                            key={status}
-                                                            value={status}
-                                                        >
-                                                            {status}
-                                                        </option>
-                                                    ))}
-                                            </select>
-                                        </div>
-                                    )}
-
-                                    <div className="flex gap-3 justify-center">
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setShowStackEditModal(false);
-                                                setStackEditData(null);
-                                                setStackEditForm({
-                                                    action: 'reduce',
-                                                    quantity: '',
-                                                    targetStatus: 'Available',
-                                                });
-                                            }}
-                                            className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium"
-                                        >
-                                            {stackEditForm.action === 'reduce'
-                                                ? 'Reduce'
-                                                : stackEditForm.action ===
-                                                  'transfer'
-                                                ? 'Transfer'
-                                                : 'Add'}
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
+                {/* Removed logs modal - stack editing is now inline
                 {showStacksModal &&
                     selectedItemStacks &&
                     selectedItemStacks.currentStacks && (
@@ -1002,64 +1043,224 @@ function Content() {
                                                         <span className="text-blue-900 font-medium">
                                                             Stack #{index + 1}
                                                         </span>
-                                                        <span className="text-blue-700">
-                                                            Qty:{' '}
-                                                            {stack.quantity}
+                                                        {editingStacks.has(
+                                                            stack.id
+                                                        ) ? (
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-blue-700">
+                                                                    Qty:
+                                                                </span>
+                                                                <div className="flex items-center gap-1">
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            handleDecreaseStackQuantity(
+                                                                                stack.id,
+                                                                                stackEditValues[
+                                                                                    stack
+                                                                                        .id
+                                                                                ] ||
+                                                                                    stack.quantity
+                                                                            )
+                                                                        }
+                                                                        className="w-6 h-6 bg-red-500 text-white rounded hover:bg-red-600 transition flex items-center justify-center text-sm font-bold"
+                                                                        disabled={
+                                                                            stackEditValues[
+                                                                                stack
+                                                                                    .id
+                                                                            ] <=
+                                                                            1
+                                                                        }
+                                                                        title="Decrease quantity"
+                                                                    >
+                                                                        -
+                                                                    </button>
+                                                                    <input
+                                                                        type="number"
+                                                                        value={
+                                                                            stackEditValues[
+                                                                                stack
+                                                                                    .id
+                                                                            ] ||
+                                                                            stack.quantity
+                                                                        }
+                                                                        onChange={(
+                                                                            e
+                                                                        ) =>
+                                                                            handleStackEditValueChange(
+                                                                                stack.id,
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            )
+                                                                        }
+                                                                        className="w-16 px-1 py-0.5 border border-blue-200 rounded text-center text-xs"
+                                                                        min="1"
+                                                                    />
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            handleIncreaseStackQuantity(
+                                                                                stack.id,
+                                                                                stackEditValues[
+                                                                                    stack
+                                                                                        .id
+                                                                                ] ||
+                                                                                    stack.quantity
+                                                                            )
+                                                                        }
+                                                                        className="w-6 h-6 bg-green-500 text-white rounded hover:bg-green-600 transition flex items-center justify-center text-sm font-bold"
+                                                                        title="Increase quantity"
+                                                                    >
+                                                                        +
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-blue-700">
+                                                                Qty:{' '}
+                                                                {stack.quantity}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex items-center gap-1">
+                                                        {editingStacks.has(
+                                                            stack.id
+                                                        ) ? (
+                                                            <>
+                                                                <button
+                                                                    onClick={() =>
+                                                                        handleSaveStackEdit(
+                                                                            stack.id,
+                                                                            stack.quantity
+                                                                        )
+                                                                    }
+                                                                    className="p-1 text-green-500 hover:text-green-700 hover:bg-green-50 rounded transition-colors"
+                                                                    title="Save changes"
+                                                                >
+                                                                    <svg
+                                                                        className="w-4 h-4"
+                                                                        fill="none"
+                                                                        stroke="currentColor"
+                                                                        strokeWidth="2"
+                                                                        viewBox="0 0 24 24"
+                                                                    >
+                                                                        <path
+                                                                            strokeLinecap="round"
+                                                                            strokeLinejoin="round"
+                                                                            d="M5 13l4 4L19 7"
+                                                                        />
+                                                                    </svg>
+                                                                </button>
+                                                                <button
+                                                                    onClick={() =>
+                                                                        handleCancelStackEdit(
+                                                                            stack.id
+                                                                        )
+                                                                    }
+                                                                    className="p-1 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded transition-colors"
+                                                                    title="Cancel edit"
+                                                                >
+                                                                    <svg
+                                                                        className="w-4 h-4"
+                                                                        fill="none"
+                                                                        stroke="currentColor"
+                                                                        strokeWidth="2"
+                                                                        viewBox="0 0 24 24"
+                                                                    >
+                                                                        <path
+                                                                            strokeLinecap="round"
+                                                                            strokeLinejoin="round"
+                                                                            d="M6 18L18 6M6 6l12 12"
+                                                                        />
+                                                                    </svg>
+                                                                </button>
+                                                            </>
+                                                        ) : (
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleToggleStackEdit(
+                                                                        stack.id,
+                                                                        stack.quantity
+                                                                    )
+                                                                }
+                                                                className="p-1 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded transition-colors"
+                                                                title="Edit Stack"
+                                                                aria-label={`Edit Stack #${
+                                                                    index + 1
+                                                                }`}
+                                                            >
+                                                                <svg
+                                                                    className="w-4 h-4"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    strokeWidth="2"
+                                                                    viewBox="0 0 24 24"
+                                                                >
+                                                                    <path
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                                    />
+                                                                </svg>
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            onClick={() =>
+                                                                handleDeleteStack(
+                                                                    stack.id,
+                                                                    {
+                                                                        index,
+                                                                        quantity:
+                                                                            stack.quantity,
+                                                                    }
+                                                                )
+                                                            }
+                                                            className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+                                                            title="Delete Stack"
+                                                            aria-label={`Delete Stack #${
+                                                                index + 1
+                                                            }`}
+                                                        >
+                                                            <svg
+                                                                className="w-4 h-4"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                strokeWidth="2"
+                                                                viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                                />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                {!editingStacks.has(
+                                                    stack.id
+                                                ) && (
+                                                    <div className="mt-1 text-xs text-blue-600 flex gap-2 flex-wrap">
+                                                        <span>
+                                                            Created:{' '}
+                                                            {new Date(
+                                                                stack.createdAt
+                                                            ).toLocaleDateString()}
+                                                        </span>
+                                                        <span>
+                                                            Updated:{' '}
+                                                            {new Date(
+                                                                stack.updatedAt
+                                                            ).toLocaleDateString()}
                                                         </span>
                                                     </div>
-                                                    <button
-                                                        onClick={() =>
-                                                            handleDeleteStack(
-                                                                stack.id,
-                                                                {
-                                                                    index,
-                                                                    quantity:
-                                                                        stack.quantity,
-                                                                }
-                                                            )
-                                                        }
-                                                        className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
-                                                        title="Delete Stack"
-                                                        aria-label={`Delete Stack #${
-                                                            index + 1
-                                                        }`}
-                                                    >
-                                                        <svg
-                                                            className="w-4 h-4"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                                <div className="mt-1 text-xs text-blue-600 flex gap-2 flex-wrap">
-                                                    <span>
-                                                        Created:{' '}
-                                                        {new Date(
-                                                            stack.createdAt
-                                                        ).toLocaleDateString()}
-                                                    </span>
-                                                    <span>
-                                                        Updated:{' '}
-                                                        {new Date(
-                                                            stack.updatedAt
-                                                        ).toLocaleDateString()}
-                                                    </span>
-                                                </div>
+                                                )}
                                             </div>
                                         )
                                     )}
                                 </div>
                             </div>
                         </div>
-                    )}
+                    )} */}
 
                 <div className="w-full mt-2">
                     <div className="overflow-x-auto rounded-xl shadow bg-white border border-blue-50 p-2 sm:p-4 w-full">
@@ -1331,28 +1532,36 @@ function Content() {
                                                     <tr>
                                                         <td
                                                             colSpan={6}
-                                                            className="bg-blue-50"
+                                                            className="p-0 bg-gradient-to-r from-blue-50 to-indigo-50"
                                                         >
-                                                            <div className="px-2 py-2 w-full overflow-x-auto">
-                                                                <table className="min-w-full bg-white rounded shadow">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th className="py-2 px-3 bg-blue-100 text-left font-semibold text-blue-800 w-[50px]">
-                                                                                Edit
-                                                                            </th>
-                                                                            <th className="py-2 px-3 bg-blue-100 text-left font-semibold text-blue-800">
-                                                                                Status
-                                                                            </th>
-                                                                            <th className="py-2 px-3 bg-blue-100 text-left font-semibold text-blue-800">
-                                                                                Qty
-                                                                            </th>
-                                                                            <th className="py-2 px-3 bg-blue-100 text-left font-semibold text-blue-800">
-                                                                                Actions
-                                                                            </th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        {Object.entries(
+                                                            <div className="p-4">
+                                                                <div className="mb-3">
+                                                                    <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                                        <svg
+                                                                            className="w-4 h-4 text-blue-500"
+                                                                            fill="none"
+                                                                            stroke="currentColor"
+                                                                            strokeWidth="2"
+                                                                            viewBox="0 0 24 24"
+                                                                        >
+                                                                            <path
+                                                                                strokeLinecap="round"
+                                                                                strokeLinejoin="round"
+                                                                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                                                                            />
+                                                                        </svg>
+                                                                        Inventory
+                                                                        Stacks
+                                                                        for{' '}
+                                                                        {
+                                                                            item.name
+                                                                        }
+                                                                    </h4>
+                                                                </div>
+                                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+                                                                    {(() => {
+                                                                        // Group existing stacks by status
+                                                                        const groupedStacks =
                                                                             selectedItemStacks.stacks.reduce(
                                                                                 (
                                                                                     acc,
@@ -1385,135 +1594,333 @@ function Content() {
                                                                                     return acc;
                                                                                 },
                                                                                 {}
-                                                                            )
-                                                                        ).map(
+                                                                            );
+
+                                                                        // Create entries for all statuses, including those without stacks
+                                                                        return statuses.map(
                                                                             (
-                                                                                [
-                                                                                    status,
-                                                                                    {
-                                                                                        stacks,
-                                                                                        totalQuantity,
-                                                                                    },
-                                                                                ],
-                                                                                index,
-                                                                                array
-                                                                            ) => (
-                                                                                <tr
-                                                                                    key={
+                                                                                status
+                                                                            ) => {
+                                                                                const statusData =
+                                                                                    groupedStacks[
                                                                                         status
-                                                                                    }
-                                                                                    className={
-                                                                                        index ===
-                                                                                        array.length -
-                                                                                            1
-                                                                                            ? ''
-                                                                                            : 'border-b border-blue-100'
-                                                                                    }
-                                                                                >
-                                                                                    <td className="py-2 px-3">
-                                                                                        <button
-                                                                                            onClick={() =>
-                                                                                                handleEditStack(
-                                                                                                    status,
-                                                                                                    stacks,
-                                                                                                    totalQuantity
-                                                                                                )
-                                                                                            }
-                                                                                            className="p-1 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded transition-colors"
-                                                                                            title="Edit Stack"
-                                                                                            aria-label={`Edit ${status} stack`}
-                                                                                        >
-                                                                                            <svg
-                                                                                                className="w-4 h-4"
-                                                                                                fill="none"
-                                                                                                stroke="currentColor"
-                                                                                                strokeWidth="2"
-                                                                                                viewBox="0 0 24 24"
-                                                                                            >
-                                                                                                <path
-                                                                                                    strokeLinecap="round"
-                                                                                                    strokeLinejoin="round"
-                                                                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                                                                />
-                                                                                            </svg>
-                                                                                        </button>
-                                                                                    </td>
-                                                                                    <td className="py-2 px-3">
-                                                                                        <span
-                                                                                            className={`px-2 py-1 rounded font-semibold
-                                                                                ${
-                                                                                    status ===
-                                                                                    'Available'
-                                                                                        ? 'bg-green-100 text-green-800'
-                                                                                        : ''
-                                                                                }
-                                                                                ${
-                                                                                    status ===
-                                                                                    'Unavailable'
-                                                                                        ? 'bg-red-100 text-red-800'
-                                                                                        : ''
-                                                                                }
-                                                                                ${
-                                                                                    status ===
-                                                                                    'Damaged'
-                                                                                        ? 'bg-red-100 text-red-800'
-                                                                                        : ''
-                                                                                }
-                                                                                ${
-                                                                                    status ===
-                                                                                    'Lost'
-                                                                                        ? 'bg-gray-100 text-gray-800'
-                                                                                        : ''
-                                                                                }
-                                                                                ${
-                                                                                    status ===
-                                                                                    'EIC'
-                                                                                        ? 'bg-purple-100 text-purple-800'
-                                                                                        : ''
-                                                                                }
-                                                                                ${
-                                                                                    status ===
-                                                                                    'Distributed'
-                                                                                        ? 'bg-blue-100 text-blue-800'
-                                                                                        : ''
-                                                                                }`}
-                                                                                        >
-                                                                                            {
-                                                                                                status
-                                                                                            }
-                                                                                        </span>
-                                                                                    </td>
-                                                                                    <td className="py-2 px-3 text-blue-700">
-                                                                                        {
-                                                                                            totalQuantity
+                                                                                    ] || {
+                                                                                        stacks: [],
+                                                                                        totalQuantity: 0,
+                                                                                    };
+
+                                                                                const getStatusStyles =
+                                                                                    (
+                                                                                        status
+                                                                                    ) => {
+                                                                                        switch (
+                                                                                            status
+                                                                                        ) {
+                                                                                            case 'Available':
+                                                                                                return {
+                                                                                                    bg: 'bg-gradient-to-br from-green-50 to-emerald-100',
+                                                                                                    border: 'border-green-200',
+                                                                                                    badge: 'bg-green-500 text-white',
+                                                                                                    icon: 'text-green-600',
+                                                                                                };
+                                                                                            case 'Unavailable':
+                                                                                                return {
+                                                                                                    bg: 'bg-gradient-to-br from-red-50 to-rose-100',
+                                                                                                    border: 'border-red-200',
+                                                                                                    badge: 'bg-red-500 text-white',
+                                                                                                    icon: 'text-red-600',
+                                                                                                };
+                                                                                            case 'Damaged':
+                                                                                                return {
+                                                                                                    bg: 'bg-gradient-to-br from-orange-50 to-red-100',
+                                                                                                    border: 'border-orange-200',
+                                                                                                    badge: 'bg-orange-500 text-white',
+                                                                                                    icon: 'text-orange-600',
+                                                                                                };
+                                                                                            case 'EIC':
+                                                                                                return {
+                                                                                                    bg: 'bg-gradient-to-br from-purple-50 to-violet-100',
+                                                                                                    border: 'border-purple-200',
+                                                                                                    badge: 'bg-purple-500 text-white',
+                                                                                                    icon: 'text-purple-600',
+                                                                                                };
+                                                                                            case 'Distributed':
+                                                                                                return {
+                                                                                                    bg: 'bg-gradient-to-br from-blue-50 to-cyan-100',
+                                                                                                    border: 'border-blue-200',
+                                                                                                    badge: 'bg-blue-500 text-white',
+                                                                                                    icon: 'text-blue-600',
+                                                                                                };
+                                                                                            default:
+                                                                                                return {
+                                                                                                    bg: 'bg-gradient-to-br from-gray-50 to-slate-100',
+                                                                                                    border: 'border-gray-200',
+                                                                                                    badge: 'bg-gray-500 text-white',
+                                                                                                    icon: 'text-gray-600',
+                                                                                                };
                                                                                         }
-                                                                                    </td>
-                                                                                    <td className="py-2 px-3">
-                                                                                        <button
-                                                                                            onClick={() => {
-                                                                                                setSelectedItemStacks(
-                                                                                                    {
-                                                                                                        ...selectedItemStacks,
-                                                                                                        currentStatus:
+                                                                                    };
+
+                                                                                const styles =
+                                                                                    getStatusStyles(
+                                                                                        status
+                                                                                    );
+                                                                                const statusKey = `${selectedItemStacks.id}-${status}`;
+                                                                                const isEditing =
+                                                                                    editingStatusRows.has(
+                                                                                        statusKey
+                                                                                    );
+
+                                                                                return (
+                                                                                    <div
+                                                                                        key={
+                                                                                            status
+                                                                                        }
+                                                                                        className={`${styles.bg} ${styles.border} border-2 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 transform hover:-translate-y-1`}
+                                                                                    >
+                                                                                        <div className="flex items-center justify-between mb-3">
+                                                                                            <span
+                                                                                                className={`${styles.badge} px-2 py-1 rounded-full text-xs font-semibold tracking-wide`}
+                                                                                            >
+                                                                                                {
+                                                                                                    status
+                                                                                                }
+                                                                                            </span>
+                                                                                            <div
+                                                                                                className={`${styles.icon} p-1`}
+                                                                                            >
+                                                                                                {status ===
+                                                                                                    'Available' && (
+                                                                                                    <svg
+                                                                                                        className="w-5 h-5"
+                                                                                                        fill="currentColor"
+                                                                                                        viewBox="0 0 20 20"
+                                                                                                    >
+                                                                                                        <path
+                                                                                                            fillRule="evenodd"
+                                                                                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                                                                            clipRule="evenodd"
+                                                                                                        />
+                                                                                                    </svg>
+                                                                                                )}
+                                                                                                {status ===
+                                                                                                    'Unavailable' && (
+                                                                                                    <svg
+                                                                                                        className="w-5 h-5"
+                                                                                                        fill="currentColor"
+                                                                                                        viewBox="0 0 20 20"
+                                                                                                    >
+                                                                                                        <path
+                                                                                                            fillRule="evenodd"
+                                                                                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                                                                            clipRule="evenodd"
+                                                                                                        />
+                                                                                                    </svg>
+                                                                                                )}
+                                                                                                {status ===
+                                                                                                    'Damaged' && (
+                                                                                                    <svg
+                                                                                                        className="w-5 h-5"
+                                                                                                        fill="currentColor"
+                                                                                                        viewBox="0 0 20 20"
+                                                                                                    >
+                                                                                                        <path
+                                                                                                            fillRule="evenodd"
+                                                                                                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                                                                                            clipRule="evenodd"
+                                                                                                        />
+                                                                                                    </svg>
+                                                                                                )}
+                                                                                                {status ===
+                                                                                                    'EIC' && (
+                                                                                                    <svg
+                                                                                                        className="w-5 h-5"
+                                                                                                        fill="currentColor"
+                                                                                                        viewBox="0 0 20 20"
+                                                                                                    >
+                                                                                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                                                    </svg>
+                                                                                                )}
+                                                                                                {status ===
+                                                                                                    'Distributed' && (
+                                                                                                    <svg
+                                                                                                        className="w-5 h-5"
+                                                                                                        fill="currentColor"
+                                                                                                        viewBox="0 0 20 20"
+                                                                                                    >
+                                                                                                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                                                                                                    </svg>
+                                                                                                )}
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <div className="text-center mb-3">
+                                                                                            <div className="text-2xl font-bold text-gray-800 mb-1">
+                                                                                                {
+                                                                                                    statusData.totalQuantity
+                                                                                                }
+                                                                                            </div>
+                                                                                            <div className="text-xs text-gray-600 font-medium">
+                                                                                                {statusData.totalQuantity ===
+                                                                                                1
+                                                                                                    ? 'unit'
+                                                                                                    : 'units'}
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <div className="flex justify-center">
+                                                                                            {isEditing ? (
+                                                                                                <div className="flex flex-col gap-2 w-full">
+                                                                                                    <div className="flex items-center gap-1 bg-white rounded-lg p-2 shadow-sm">
+                                                                                                        <button
+                                                                                                            onClick={() =>
+                                                                                                                handleDecreaseStatusRowQuantity(
+                                                                                                                    status,
+                                                                                                                    statusData.stacks,
+                                                                                                                    statusEditValues[
+                                                                                                                        statusKey
+                                                                                                                    ] ||
+                                                                                                                        statusData.totalQuantity
+                                                                                                                )
+                                                                                                            }
+                                                                                                            className="w-7 h-7 bg-red-500 text-white rounded-full hover:bg-red-600 transition flex items-center justify-center text-sm font-bold disabled:bg-red-300"
+                                                                                                            disabled={
+                                                                                                                (statusEditValues[
+                                                                                                                    statusKey
+                                                                                                                ] ||
+                                                                                                                    statusData.totalQuantity) <=
+                                                                                                                1
+                                                                                                            }
+                                                                                                            title="Decrease quantity"
+                                                                                                        >
+                                                                                                            −
+                                                                                                        </button>
+                                                                                                        <input
+                                                                                                            type="number"
+                                                                                                            value={
+                                                                                                                statusEditValues[
+                                                                                                                    statusKey
+                                                                                                                ] ||
+                                                                                                                statusData.totalQuantity
+                                                                                                            }
+                                                                                                            onChange={(
+                                                                                                                e
+                                                                                                            ) =>
+                                                                                                                handleStatusRowValueChange(
+                                                                                                                    status,
+                                                                                                                    e
+                                                                                                                        .target
+                                                                                                                        .value
+                                                                                                                )
+                                                                                                            }
+                                                                                                            className="flex-1 px-2 py-1 border border-gray-200 rounded text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                                                                                            min="1"
+                                                                                                        />
+                                                                                                        <button
+                                                                                                            onClick={() =>
+                                                                                                                handleIncreaseStatusRowQuantity(
+                                                                                                                    status,
+                                                                                                                    statusData.stacks
+                                                                                                                )
+                                                                                                            }
+                                                                                                            className="w-7 h-7 bg-green-500 text-white rounded-full hover:bg-green-600 transition flex items-center justify-center text-sm font-bold"
+                                                                                                            title="Increase quantity"
+                                                                                                        >
+                                                                                                            +
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                    <div className="flex gap-1">
+                                                                                                        <button
+                                                                                                            onClick={() =>
+                                                                                                                handleSaveStatusRowEdit(
+                                                                                                                    status,
+                                                                                                                    statusData.stacks,
+                                                                                                                    statusData.totalQuantity
+                                                                                                                )
+                                                                                                            }
+                                                                                                            className="flex-1 p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-1"
+                                                                                                            title="Save changes"
+                                                                                                        >
+                                                                                                            <svg
+                                                                                                                className="w-4 h-4"
+                                                                                                                fill="none"
+                                                                                                                stroke="currentColor"
+                                                                                                                strokeWidth="2"
+                                                                                                                viewBox="0 0 24 24"
+                                                                                                            >
+                                                                                                                <path
+                                                                                                                    strokeLinecap="round"
+                                                                                                                    strokeLinejoin="round"
+                                                                                                                    d="M5 13l4 4L19 7"
+                                                                                                                />
+                                                                                                            </svg>
+                                                                                                            <span className="text-xs font-medium">
+                                                                                                                Save
+                                                                                                            </span>
+                                                                                                        </button>
+                                                                                                        <button
+                                                                                                            onClick={() =>
+                                                                                                                handleCancelStatusRowEdit(
+                                                                                                                    status
+                                                                                                                )
+                                                                                                            }
+                                                                                                            className="flex-1 p-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors flex items-center justify-center gap-1"
+                                                                                                            title="Cancel edit"
+                                                                                                        >
+                                                                                                            <svg
+                                                                                                                className="w-4 h-4"
+                                                                                                                fill="none"
+                                                                                                                stroke="currentColor"
+                                                                                                                strokeWidth="2"
+                                                                                                                viewBox="0 0 24 24"
+                                                                                                            >
+                                                                                                                <path
+                                                                                                                    strokeLinecap="round"
+                                                                                                                    strokeLinejoin="round"
+                                                                                                                    d="M6 18L18 6M6 6l12 12"
+                                                                                                                />
+                                                                                                            </svg>
+                                                                                                            <span className="text-xs font-medium">
+                                                                                                                Cancel
+                                                                                                            </span>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            ) : (
+                                                                                                <button
+                                                                                                    onClick={() =>
+                                                                                                        handleToggleStatusRowEdit(
                                                                                                             status,
-                                                                                                        currentStacks:
-                                                                                                            stacks,
+                                                                                                            statusData.totalQuantity
+                                                                                                        )
                                                                                                     }
-                                                                                                );
-                                                                                                setShowStacksModal(
-                                                                                                    true
-                                                                                                );
-                                                                                            }}
-                                                                                            className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition w-full sm:w-auto"
-                                                                                        >
-                                                                                            Logs
-                                                                                        </button>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            )
-                                                                        )}
-                                                                    </tbody>
-                                                                </table>
+                                                                                                    className="px-4 py-2 bg-white/80 hover:bg-white text-gray-700 rounded-lg hover:shadow-md transition-all duration-200 flex items-center gap-2 font-medium text-sm border border-gray-200"
+                                                                                                    title="Edit Stack"
+                                                                                                    aria-label={`Edit ${status} stack`}
+                                                                                                >
+                                                                                                    <svg
+                                                                                                        className="w-4 h-4"
+                                                                                                        fill="none"
+                                                                                                        stroke="currentColor"
+                                                                                                        strokeWidth="2"
+                                                                                                        viewBox="0 0 24 24"
+                                                                                                    >
+                                                                                                        <path
+                                                                                                            strokeLinecap="round"
+                                                                                                            strokeLinejoin="round"
+                                                                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                                                                        />
+                                                                                                    </svg>
+                                                                                                    Edit
+                                                                                                </button>
+                                                                                            )}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                );
+                                                                            }
+                                                                        );
+                                                                    })()}
+                                                                </div>
                                                             </div>
                                                         </td>
                                                     </tr>

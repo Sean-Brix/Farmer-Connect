@@ -16,7 +16,6 @@ export const categories = [
 export const statuses = [
     'Available',
     'Unavailable',
-    'Lost',
     'Damaged',
     'EIC',
     'Distributed',
