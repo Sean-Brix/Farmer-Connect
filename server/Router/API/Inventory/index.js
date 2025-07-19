@@ -13,4 +13,7 @@ router.use('/item', itemOperations);
 import item from './item.js';
 router.use('/item/:id', item);
 
+import stack from './stack.js';
+router.use('/stack', stack);
+
 export default router;

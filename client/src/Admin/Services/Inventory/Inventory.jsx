@@ -418,14 +418,17 @@ function Content() {
 
     const handleIncreaseStatusRowQuantity = async (status, stacks) => {
         if (stacks.length === 0) {
-            showAlert('No stacks available to increase', 'error');
-            return;
-        }
-
-        // Use the first stack for the operation (you could modify this logic)
-        const firstStackId = stacks[0]?.id;
-        if (firstStackId) {
-            await handleIncreaseStackQuantity(firstStackId, stacks[0].quantity);
+            // Create new stack with status
+            await handleIncreaseQuantity(status, stacks);
+        } else {
+            // Use the first stack for the operation
+            const firstStackId = stacks[0]?.id;
+            if (firstStackId) {
+                await handleIncreaseStackQuantity(
+                    firstStackId,
+                    stacks[0].quantity
+                );
+            }
         }
     };
 
@@ -447,7 +450,7 @@ function Content() {
             return;
         }
 
-        // Use the first stack for the operation (you could modify this logic)
+        // Use the first stack for the operation
         const firstStackId = stacks[0]?.id;
         if (firstStackId) {
             await handleDecreaseStackQuantity(firstStackId, stacks[0].quantity);
@@ -458,15 +461,44 @@ function Content() {
         const statusKey = `${selectedItemStacks.id}-${status}`;
         const newQuantity = statusEditValues[statusKey];
 
-        if (newQuantity !== currentQuantity && stacks.length > 0) {
-            // Use the first stack for bulk change (you could modify this logic)
-            const firstStackId = stacks[0]?.id;
-            if (firstStackId) {
-                await handleBulkStackQuantityChange(
-                    firstStackId,
-                    newQuantity,
-                    currentQuantity
-                );
+        if (newQuantity !== currentQuantity) {
+            try {
+                const token = localStorage.getItem('authToken');
+
+                // Determine if we're updating an existing stack or creating a new one
+                const requestBody = {
+                    quantity: newQuantity,
+                };
+
+                if (stacks.length > 0) {
+                    // Update existing stack using stackId
+                    requestBody.stackId = stacks[0].id;
+                } else {
+                    // Create new stack using itemId and status
+                    requestBody.itemId = selectedItemStacks.id;
+                    requestBody.status = status;
+                }
+
+                const response = await fetch('/api/inventory/stack/edit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(requestBody),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                showAlert('Stack quantity updated successfully', 'success');
+                fetchItems(); // Refresh the data
+            } catch (error) {
+                console.error('Failed to update status quantity:', error);
+                showAlert('Failed to update status quantity', 'error');
+                return; // Don't clear editing state if there was an error
             }
         }
 
@@ -493,24 +525,55 @@ function Content() {
 
     // Placeholder functions for quantity adjustment
     const handleIncreaseQuantity = async (status, stacks) => {
-        // TODO: Implement API call to increase quantity
-        console.log('Increasing quantity for status:', status);
-        showAlert(`TODO: Increase quantity for ${status}`, 'info');
+        try {
+            const token = localStorage.getItem('authToken');
 
-        // Placeholder API structure:
-        // const response = await fetch('/api/inventory/stack/adjust', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-        //     },
-        //     body: JSON.stringify({
-        //         itemId: selectedItemStacks.id,
-        //         status: status,
-        //         action: 'increase',
-        //         quantity: 1
-        //     }),
-        // });
+            if (stacks.length > 0) {
+                // Increase existing stack
+                const firstStackId = stacks[0]?.id;
+                const response = await fetch('/api/inventory/stack/edit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        stackId: firstStackId,
+                        action: 'add',
+                        quantity: 1,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            } else {
+                // Create new stack
+                const response = await fetch('/api/inventory/stack/edit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        itemId: selectedItemStacks.id,
+                        status: status,
+                        action: 'add',
+                        quantity: 1,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            }
+
+            showAlert(`Increased quantity for ${status}`, 'success');
+            fetchItems(); // Refresh the data
+        } catch (error) {
+            console.error('Failed to increase quantity:', error);
+            showAlert(`Failed to increase quantity for ${status}`, 'error');
+        }
     };
 
     const handleDecreaseQuantity = async (status, stacks, currentQuantity) => {
@@ -519,53 +582,63 @@ function Content() {
             return;
         }
 
-        // TODO: Implement API call to decrease quantity
-        console.log('Decreasing quantity for status:', status);
-        showAlert(`TODO: Decrease quantity for ${status}`, 'info');
+        try {
+            const token = localStorage.getItem('authToken');
 
-        // Placeholder API structure:
-        // const response = await fetch('/api/inventory/stack/adjust', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-        //     },
-        //     body: JSON.stringify({
-        //         itemId: selectedItemStacks.id,
-        //         status: status,
-        //         action: 'decrease',
-        //         quantity: 1
-        //     }),
-        // });
+            if (stacks.length > 0) {
+                const firstStackId = stacks[0]?.id;
+                const response = await fetch('/api/inventory/stack/edit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        stackId: firstStackId,
+                        action: 'reduce',
+                        quantity: 1,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                showAlert(`Decreased quantity for ${status}`, 'success');
+                fetchItems(); // Refresh the data
+            } else {
+                showAlert('No stack available to decrease', 'error');
+            }
+        } catch (error) {
+            console.error('Failed to decrease quantity:', error);
+            showAlert(`Failed to decrease quantity for ${status}`, 'error');
+        }
     };
 
     // Individual stack quantity adjustment functions
     const handleIncreaseStackQuantity = async (stackId, stackQuantity) => {
         try {
-            // TODO: Replace with actual API call
-            console.log('Increasing stack quantity:', stackId, stackQuantity);
-            showAlert('TODO: Increase stack quantity API call', 'info');
+            const token = localStorage.getItem('authToken');
+            const response = await fetch('/api/inventory/stack/edit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    stackId: stackId,
+                    action: 'add',
+                    quantity: 1,
+                }),
+            });
 
-            // Placeholder API structure:
-            // const token = localStorage.getItem('authToken');
-            // const response = await fetch('/api/inventory/stack/adjust', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         Authorization: `Bearer ${token}`,
-            //     },
-            //     body: JSON.stringify({
-            //         stackId: stackId,
-            //         action: 'increase',
-            //         quantity: 1
-            //     }),
-            // });
-            //
-            // if (!response.ok) {
-            //     throw new Error(`HTTP error! status: ${response.status}`);
-            // }
-            //
-            // fetchItems();
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            showAlert('Stack quantity increased successfully', 'success');
+            fetchItems(); // Refresh the data
         } catch (error) {
             console.error('Failed to increase stack quantity:', error);
             showAlert('Failed to increase stack quantity', 'error');
@@ -582,30 +655,27 @@ function Content() {
         }
 
         try {
-            // TODO: Replace with actual API call
-            console.log('Decreasing stack quantity:', stackId, stackQuantity);
-            showAlert('TODO: Decrease stack quantity API call', 'info');
+            const token = localStorage.getItem('authToken');
+            const response = await fetch('/api/inventory/stack/edit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    stackId: stackId,
+                    action: 'reduce',
+                    quantity: 1,
+                }),
+            });
 
-            // Placeholder API structure:
-            // const token = localStorage.getItem('authToken');
-            // const response = await fetch('/api/inventory/stack/adjust', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         Authorization: `Bearer ${token}`,
-            //     },
-            //     body: JSON.stringify({
-            //         stackId: stackId,
-            //         action: 'decrease',
-            //         quantity: 1
-            //     }),
-            // });
-            //
-            // if (!response.ok) {
-            //     throw new Error(`HTTP error! status: ${response.status}`);
-            // }
-            //
-            // fetchItems();
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            showAlert('Stack quantity decreased successfully', 'success');
+            fetchItems(); // Refresh the data
         } catch (error) {
             console.error('Failed to decrease stack quantity:', error);
             showAlert('Failed to decrease stack quantity', 'error');
@@ -628,36 +698,27 @@ function Content() {
         }
 
         try {
-            // TODO: Replace with actual API call
-            console.log(
-                'Bulk changing stack quantity:',
-                stackId,
-                'from',
-                currentQuantity,
-                'to',
-                newQuantity
-            );
-            showAlert('TODO: Bulk quantity change API call', 'info');
+            const token = localStorage.getItem('authToken');
+            const response = await fetch('/api/inventory/stack/edit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    stackId: stackId,
+                    action: 'set',
+                    quantity: newQuantity,
+                }),
+            });
 
-            // Placeholder API structure:
-            // const token = localStorage.getItem('authToken');
-            // const response = await fetch('/api/inventory/stack/set-quantity', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         Authorization: `Bearer ${token}`,
-            //     },
-            //     body: JSON.stringify({
-            //         stackId: stackId,
-            //         quantity: newQuantity
-            //     }),
-            // });
-            //
-            // if (!response.ok) {
-            //     throw new Error(`HTTP error! status: ${response.status}`);
-            // }
-            //
-            // fetchItems();
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            showAlert('Stack quantity updated successfully', 'success');
+            fetchItems(); // Refresh the data
         } catch (error) {
             console.error('Failed to change stack quantity:', error);
             showAlert('Failed to change stack quantity', 'error');
@@ -1771,30 +1832,7 @@ function Content() {
                                                                                         <div className="flex justify-center">
                                                                                             {isEditing ? (
                                                                                                 <div className="flex flex-col gap-2 w-full">
-                                                                                                    <div className="flex items-center gap-1 bg-white rounded-lg p-2 shadow-sm">
-                                                                                                        <button
-                                                                                                            onClick={() =>
-                                                                                                                handleDecreaseStatusRowQuantity(
-                                                                                                                    status,
-                                                                                                                    statusData.stacks,
-                                                                                                                    statusEditValues[
-                                                                                                                        statusKey
-                                                                                                                    ] ||
-                                                                                                                        statusData.totalQuantity
-                                                                                                                )
-                                                                                                            }
-                                                                                                            className="w-7 h-7 bg-red-500 text-white rounded-full hover:bg-red-600 transition flex items-center justify-center text-sm font-bold disabled:bg-red-300"
-                                                                                                            disabled={
-                                                                                                                (statusEditValues[
-                                                                                                                    statusKey
-                                                                                                                ] ||
-                                                                                                                    statusData.totalQuantity) <=
-                                                                                                                1
-                                                                                                            }
-                                                                                                            title="Decrease quantity"
-                                                                                                        >
-                                                                                                            −
-                                                                                                        </button>
+                                                                                                    <div className="bg-white rounded-lg p-2 shadow-sm">
                                                                                                         <input
                                                                                                             type="number"
                                                                                                             value={
@@ -1813,21 +1851,10 @@ function Content() {
                                                                                                                         .value
                                                                                                                 )
                                                                                                             }
-                                                                                                            className="flex-1 px-2 py-1 border border-gray-200 rounded text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-300"
-                                                                                                            min="1"
+                                                                                                            className="w-full px-2 py-1 border border-gray-200 rounded text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                                                                                            min="0"
+                                                                                                            placeholder="Enter quantity"
                                                                                                         />
-                                                                                                        <button
-                                                                                                            onClick={() =>
-                                                                                                                handleIncreaseStatusRowQuantity(
-                                                                                                                    status,
-                                                                                                                    statusData.stacks
-                                                                                                                )
-                                                                                                            }
-                                                                                                            className="w-7 h-7 bg-green-500 text-white rounded-full hover:bg-green-600 transition flex items-center justify-center text-sm font-bold"
-                                                                                                            title="Increase quantity"
-                                                                                                        >
-                                                                                                            +
-                                                                                                        </button>
                                                                                                     </div>
                                                                                                     <div className="flex gap-1">
                                                                                                         <button

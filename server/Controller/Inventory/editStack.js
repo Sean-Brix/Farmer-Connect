@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function editStack(req, res) {
     try {
-        const { stackId, itemId, status, quantity, action } = req.body;
+        const { stackId, itemId, status, quantity } = req.body;
 
         // Validate required fields
         if (!stackId && (!itemId || !status)) {
@@ -12,15 +12,9 @@ async function editStack(req, res) {
             });
         }
 
-        if (!quantity || quantity <= 0) {
+        if (quantity === undefined || quantity < 0) {
             return res.status(400).json({
-                error: 'Quantity must be a positive number',
-            });
-        }
-
-        if (!action || !['add', 'set', 'reduce'].includes(action)) {
-            return res.status(400).json({
-                error: 'Action must be one of: add, set, reduce',
+                error: 'Quantity must be a non-negative number',
             });
         }
 
@@ -39,7 +33,7 @@ async function editStack(req, res) {
                 });
             }
         } else {
-            // If itemId and status are provided, find or create stack
+            // If itemId and status are provided, find existing stack
             const item = await prisma.inventoryItem.findUnique({
                 where: { id: itemId },
             });
@@ -57,102 +51,61 @@ async function editStack(req, res) {
                     status: status,
                 },
                 include: { item: true },
+
             });
         }
 
-        let newQuantity;
+        // Handle quantity update
+        if (quantity === 0) {
+            // If quantity is 0, delete the stack if it exists
+            if (targetStack) {
+                await prisma.itemStack.delete({
+                    where: { id: targetStack.id },
+                });
 
-        switch (action) {
-            case 'add':
-                if (targetStack) {
-                    // Add to existing stack
-                    newQuantity = targetStack.quantity + quantity;
-                    targetStack = await prisma.itemStack.update({
-                        where: { id: targetStack.id },
-                        data: { quantity: newQuantity },
-                        include: { item: true },
-                    });
-                } else {
-                    // Create new stack if no existing stack with this status
-                    if (!itemId || !status) {
-                        return res.status(400).json({
-                            error: 'itemId and status are required to create new stack',
-                        });
-                    }
-
-                    targetStack = await prisma.itemStack.create({
-                        data: {
-                            itemId: itemId,
-                            status: status,
-                            quantity: quantity,
-                        },
-                        include: { item: true },
-                    });
-                }
-                break;
-
-            case 'set':
-                if (targetStack) {
-                    // Set exact quantity
-                    targetStack = await prisma.itemStack.update({
-                        where: { id: targetStack.id },
-                        data: { quantity: quantity },
-                        include: { item: true },
-                    });
-                } else {
-                    // Create new stack if doesn't exist
-                    if (!itemId || !status) {
-                        return res.status(400).json({
-                            error: 'itemId and status are required to create new stack',
-                        });
-                    }
-
-                    targetStack = await prisma.itemStack.create({
-                        data: {
-                            itemId: itemId,
-                            status: status,
-                            quantity: quantity,
-                        },
-                        include: { item: true },
-                    });
-                }
-                break;
-
-            case 'reduce':
-                if (!targetStack) {
-                    return res.status(404).json({
-                        error: 'Cannot reduce quantity: stack not found',
+                return res.status(200).json({
+                    message: 'Stack deleted successfully',
+                    deleted: true,
+                    stackId: targetStack.id,
+                });
+            } else {
+                return res.status(200).json({
+                    message: 'No stack to delete',
+                    deleted: false,
+                });
+            }
+        } else {
+            // If quantity > 0, update existing stack or create new one
+            if (targetStack) {
+                // Update existing stack
+                targetStack = await prisma.itemStack.update({
+                    where: { id: targetStack.id },
+                    data: { quantity: quantity },
+                    include: { item: true },
+                });
+            } else {
+                // Create new stack
+                if (!itemId || !status) {
+                    return res.status(400).json({
+                        error: 'itemId and status are required to create new stack',
                     });
                 }
 
-                newQuantity = targetStack.quantity - quantity;
+                targetStack = await prisma.itemStack.create({
+                    data: {
+                        itemId: itemId,
+                        status: status,
+                        quantity: quantity,
+                    },
+                    include: { item: true },
+                });
+            }
 
-                if (newQuantity <= 0) {
-                    // Delete the stack if quantity becomes 0 or negative
-                    await prisma.itemStack.delete({
-                        where: { id: targetStack.id },
-                    });
-
-                    return res.status(200).json({
-                        message: 'Stack deleted successfully',
-                        deleted: true,
-                        stackId: targetStack.id,
-                    });
-                } else {
-                    // Update with reduced quantity
-                    targetStack = await prisma.itemStack.update({
-                        where: { id: targetStack.id },
-                        data: { quantity: newQuantity },
-                        include: { item: true },
-                    });
-                }
-                break;
+            return res.status(200).json({
+                message: 'Stack updated successfully',
+                stack: targetStack,
+            });
         }
-
-        res.status(200).json({
-            message: 'Stack updated successfully',
-            stack: targetStack,
-        });
     } catch (error) {
         console.error('Error in editStack:', error);
         res.status(500).json({
