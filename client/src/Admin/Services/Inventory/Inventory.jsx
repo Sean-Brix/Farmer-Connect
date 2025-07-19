@@ -62,6 +62,10 @@ function Content() {
     // Selected item stacks for expanded view
     const [selectedItemStacks, setSelectedItemStacks] = useState(null);
 
+    // Drag and drop states
+    const [draggedItem, setDraggedItem] = useState(null);
+    const [dragOverIndex, setDragOverIndex] = useState(null);
+
     // Helper to show alert
     const showAlert = (message, type = 'success') => {
         setAlert({ show: true, message, type });
@@ -88,72 +92,6 @@ function Content() {
             setItems([]);
         }
     };
-
-    // Commented out - needs to be updated for new data structure with stacks
-    // useEffect(() => {
-    //     if (items.length > 0) {
-    //         items.forEach(async (item) => {
-    //             if (item.quantity === 0 && item.status !== 'Out of Stock') {
-    //                 try {
-    //                     const response = await fetch(
-    //                         '/api/inventory/editItem',
-    //                         {
-    //                             method: 'POST',
-    //                             headers: {
-    //                                 'Content-Type': 'application/json',
-    //                             },
-    //                             body: JSON.stringify({
-    //                                 ...item,
-    //                                 status: 'Out of Stock',
-    //                             }),
-    //                         }
-    //                     );
-    //                     if (!response.ok) {
-    //                         throw new Error(
-    //                             `HTTP error! status: ${response.status}`
-    //                         );
-    //                     }
-    //                     fetchItems();
-    //                 } catch (error) {
-    //                     console.error(
-    //                         `Failed to update status for item ${item.id}:`,
-    //                         error
-    //                     );
-    //                 }
-    //             } else if (
-    //                 item.status === 'Out of Stock' &&
-    //                 item.quantity > 0
-    //             ) {
-    //                 try {
-    //                     const response = await fetch(
-    //                         '/api/inventory/editItem',
-    //                         {
-    //                             method: 'POST',
-    //                             headers: {
-    //                                 'Content-Type': 'application/json',
-    //                             },
-    //                             body: JSON.stringify({
-    //                                 ...item,
-    //                                 status: 'Available',
-    //                             }),
-    //                         }
-    //                     );
-    //                     if (!response.ok) {
-    //                         throw new Error(
-    //                             `HTTP error! status: ${response.status}`
-    //                         );
-    //                     }
-    //                     fetchItems();
-    //                 } catch (error) {
-    //                     console.error(
-    //                         `Failed to update status for item ${item.id}:`,
-    //                         error
-    //                     );
-    //                 }
-    //             }
-    //         });
-    //     }
-    // }, [items]);
 
     // Separate useEffect to update selectedItemStacks when items change
     useEffect(() => {
@@ -802,6 +740,58 @@ function Content() {
         }
     };
 
+    // Drag and drop handlers
+    const handleDragStart = (e, item, index) => {
+        setDraggedItem({ item, index });
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', e.target.outerHTML);
+        e.target.style.opacity = '0.5';
+    };
+
+    const handleDragEnd = (e) => {
+        e.target.style.opacity = '';
+        setDraggedItem(null);
+        setDragOverIndex(null);
+    };
+
+    const handleDragOver = (e, index) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        setDragOverIndex(index);
+    };
+
+    const handleDragLeave = (e) => {
+        // Only clear dragOverIndex if we're leaving the entire row
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+            setDragOverIndex(null);
+        }
+    };
+
+    const handleDrop = (e, dropIndex) => {
+        e.preventDefault();
+        setDragOverIndex(null);
+
+        if (!draggedItem || draggedItem.index === dropIndex) {
+            return;
+        }
+
+        const newItems = [...filteredItems];
+        const draggedItemData = newItems[draggedItem.index];
+
+        // Remove the dragged item from its original position
+        newItems.splice(draggedItem.index, 1);
+
+        // Insert the dragged item at the new position
+        newItems.splice(dropIndex, 0, draggedItemData);
+
+        // Update the items state with the new order
+        // Note: This reorders only the filtered view. If you want to persist
+        // the order permanently, you'd need to update the backend as well
+        setItems(newItems);
+
+        showAlert('Item order updated successfully!', 'success');
+    };
+
     const handleSelectItem = (id) => {
         if (selectedItems.includes(id)) {
             setSelectedItems(selectedItems.filter((itemId) => itemId !== id));
@@ -878,6 +868,21 @@ function Content() {
                     <h1 className="text-lg sm:text-xl font-bold text-blue-800 mb-4 text-center tracking-tight">
                         Inventory Management
                     </h1>
+                    {!showDelete && (
+                        <div className="text-center mb-3">
+                            <p className="text-sm text-blue-600 font-medium flex items-center justify-center gap-2">
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <path d="M7 2a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 14a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 2a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 14a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
+                                </svg>
+                                Drag items to reorder • Click arrows to view
+                                stacks
+                            </p>
+                        </div>
+                    )}
                     <div className="flex flex-wrap gap-2 w-full mx-auto justify-center mb-2">
                         <input
                             type="text"
@@ -1328,7 +1333,7 @@ function Content() {
                         <table className="min-w-full bg-transparent rounded-xl">
                             <thead>
                                 <tr>
-                                    <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold w-[40px]">
+                                    <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold w-[60px]">
                                         {/* Show select all checkbox only if delete mode is active, else empty for expand icon */}
                                         {showDelete ? (
                                             <input
@@ -1340,7 +1345,11 @@ function Content() {
                                                 onChange={handleSelectAll}
                                                 aria-label="Select all"
                                             />
-                                        ) : null}
+                                        ) : (
+                                            <span className="text-xs text-blue-500 font-medium">
+                                                Actions
+                                            </span>
+                                        )}
                                     </th>
                                     <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold">
                                         Name
@@ -1373,8 +1382,40 @@ function Content() {
                                 ) : (
                                     filteredItems.map((item, index) => (
                                         <React.Fragment key={item.id + index}>
-                                            <tr className="hover:bg-blue-50 transition">
-                                                <td className="py-2 px-2 border-b w-[40px]">
+                                            <tr
+                                                className={`hover:bg-blue-50 transition cursor-move ${
+                                                    dragOverIndex === index
+                                                        ? 'border-t-4 border-blue-500 bg-blue-100'
+                                                        : ''
+                                                }`}
+                                                draggable={
+                                                    !showDelete &&
+                                                    editItemId !== item.id
+                                                }
+                                                onDragStart={(e) =>
+                                                    handleDragStart(
+                                                        e,
+                                                        item,
+                                                        index
+                                                    )
+                                                }
+                                                onDragEnd={handleDragEnd}
+                                                onDragOver={(e) =>
+                                                    handleDragOver(e, index)
+                                                }
+                                                onDragLeave={handleDragLeave}
+                                                onDrop={(e) =>
+                                                    handleDrop(e, index)
+                                                }
+                                                style={{
+                                                    opacity:
+                                                        draggedItem?.index ===
+                                                        index
+                                                            ? 0.5
+                                                            : 1,
+                                                }}
+                                            >
+                                                <td className="py-2 px-2 border-b w-[60px]">
                                                     {/* Show checkbox if delete mode, else expand button */}
                                                     {showDelete ? (
                                                         <input
@@ -1390,67 +1431,83 @@ function Content() {
                                                             aria-label={`Select ${item.name}`}
                                                         />
                                                     ) : (
-                                                        <button
-                                                            onClick={() =>
-                                                                handleViewStacks(
-                                                                    item
-                                                                )
-                                                            }
-                                                            className="p-1 rounded transition hover:bg-blue-100 focus:outline-none"
-                                                            aria-label={
-                                                                expandedStacks.has(
+                                                        <div className="flex items-center gap-1">
+                                                            {/* Drag handle */}
+                                                            <div
+                                                                className="drag-handle text-gray-400 hover:text-gray-600 cursor-move p-1"
+                                                                title="Drag to reorder"
+                                                            >
+                                                                <svg
+                                                                    width="12"
+                                                                    height="12"
+                                                                    viewBox="0 0 20 20"
+                                                                    fill="currentColor"
+                                                                >
+                                                                    <path d="M7 2a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 14a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 2a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 14a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
+                                                                </svg>
+                                                            </div>
+                                                            {/* Expand/Collapse button */}
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleViewStacks(
+                                                                        item
+                                                                    )
+                                                                }
+                                                                className="p-1 rounded transition hover:bg-blue-100 focus:outline-none"
+                                                                aria-label={
+                                                                    expandedStacks.has(
+                                                                        item.id
+                                                                    )
+                                                                        ? 'Collapse Stacks'
+                                                                        : 'Expand Stacks'
+                                                                }
+                                                                style={{
+                                                                    display:
+                                                                        'flex',
+                                                                    alignItems:
+                                                                        'center',
+                                                                    justifyContent:
+                                                                        'center',
+                                                                    background:
+                                                                        'none',
+                                                                    border: 'none',
+                                                                }}
+                                                            >
+                                                                {expandedStacks.has(
                                                                     item.id
-                                                                )
-                                                                    ? 'Collapse Stacks'
-                                                                    : 'Expand Stacks'
-                                                            }
-                                                            style={{
-                                                                display: 'flex',
-                                                                alignItems:
-                                                                    'center',
-                                                                justifyContent:
-                                                                    'center',
-                                                                background:
-                                                                    'none',
-                                                                border: 'none',
-                                                            }}
-                                                        >
-                                                            {expandedStacks.has(
-                                                                item.id
-                                                            ) ? (
-                                                                // Minimal modern expand icon (chevron down)
-                                                                <svg
-                                                                    width="18"
-                                                                    height="18"
-                                                                    viewBox="0 0 20 20"
-                                                                    fill="none"
-                                                                >
-                                                                    <path
-                                                                        d="M6 8l4 4 4-4"
-                                                                        stroke="#2563eb"
-                                                                        strokeWidth="2"
-                                                                        strokeLinecap="round"
-                                                                        strokeLinejoin="round"
-                                                                    />
-                                                                </svg>
-                                                            ) : (
-                                                                // Minimal modern collapse icon (chevron up)
-                                                                <svg
-                                                                    width="18"
-                                                                    height="18"
-                                                                    viewBox="0 0 20 20"
-                                                                    fill="none"
-                                                                >
-                                                                    <path
-                                                                        d="M6 12l4-4 4 4"
-                                                                        stroke="#2563eb"
-                                                                        strokeWidth="2"
-                                                                        strokeLinecap="round"
-                                                                        strokeLinejoin="round"
-                                                                    />
-                                                                </svg>
-                                                            )}
-                                                        </button>
+                                                                ) ? (
+                                                                    <svg
+                                                                        width="18"
+                                                                        height="18"
+                                                                        viewBox="0 0 20 20"
+                                                                        fill="none"
+                                                                    >
+                                                                        <path
+                                                                            d="M6 8l4 4 4-4"
+                                                                            stroke="#2563eb"
+                                                                            strokeWidth="2"
+                                                                            strokeLinecap="round"
+                                                                            strokeLinejoin="round"
+                                                                        />
+                                                                    </svg>
+                                                                ) : (
+                                                                    <svg
+                                                                        width="18"
+                                                                        height="18"
+                                                                        viewBox="0 0 20 20"
+                                                                        fill="none"
+                                                                    >
+                                                                        <path
+                                                                            d="M6 12l4-4 4 4"
+                                                                            stroke="#2563eb"
+                                                                            strokeWidth="2"
+                                                                            strokeLinecap="round"
+                                                                            strokeLinejoin="round"
+                                                                        />
+                                                                    </svg>
+                                                                )}
+                                                            </button>
+                                                        </div>
                                                     )}
                                                 </td>
                                                 <td className="py-2 px-2 border-b font-semibold text-blue-900 max-w-[120px]">

@@ -20,6 +20,9 @@ router.post('/add', addItem);
 import editItem from '../../../Controller/Inventory/editItem.js';
 router.post('/edit', editItem);
 
+// Delete Item
+import deleteItem from '../../../Controller/Inventory/deleteItem.js';
+router.delete('/delete/:id', deleteItem);
 
 
 //? ================================================================================================ ?//
