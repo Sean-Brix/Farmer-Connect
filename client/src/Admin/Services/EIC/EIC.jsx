@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import default_image from '../../../Assets/eic_default.png';
 // SUB COMPONENTS
 import EIC_Request from './Components/Request/EIC_Request.jsx';
+import AddEICItemModal from './addEICItem.jsx';
 
 export default function EIC() {
     const [activeSection, setActiveSection] = useState('items');
@@ -13,13 +14,54 @@ export default function EIC() {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [searchFilter, setSearchFilter] = useState('name');
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [allItems, setAllItems] = useState([]); // For existing items in the modal
+
+    // Alert state for success/error messages
+    const [alert, setAlert] = useState({
+        show: false,
+        message: '',
+        type: '',
+    });
+
+    // Helper to show alert
+    const showAlert = (message, type = 'success') => {
+        setAlert({ show: true, message, type });
+        setTimeout(
+            () => setAlert({ show: false, message: '', type: '' }),
+            3000
+        );
+    };
 
     // Fetch EIC items when component mounts or section changes
     useEffect(() => {
         if (activeSection === 'items') {
             fetchEICStacks();
+            fetchAllItems(); // Fetch all items for the dropdown
         }
     }, [activeSection]);
+
+    const fetchAllItems = async () => {
+        try {
+            const response = await fetch('/api/inventory/all/items', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(
+                    `Failed to fetch all items: ${response.status}`
+                );
+            }
+
+            const result = await response.json();
+            setAllItems(result || []);
+        } catch (err) {
+            console.error('Error fetching all items:', err);
+        }
+    };
 
     const fetchEICStacks = async () => {
         setIsLoading(true);
@@ -73,6 +115,30 @@ export default function EIC() {
         return matchesSearch && matchesStatus;
     });
 
+    const handleAddEICItem = async (formData) => {
+        try {
+            const response = await fetch('/api/inventory/item/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            setShowAddModal(false);
+            await fetchEICStacks(); // Refresh EIC items
+            await fetchAllItems(); // Refresh all items for dropdown
+            showAlert('EIC item added successfully', 'success');
+        } catch (error) {
+            console.error('Failed to create EIC item:', error);
+            showAlert('Failed to add EIC item', 'error');
+        }
+    };
+
     if (isLoading)
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -88,6 +154,17 @@ export default function EIC() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 py-8 px-2 md:px-6">
+            {/* Alert Component */}
+            {alert.show && (
+                <div
+                    className={`fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white font-medium z-50 transition-all ${
+                        alert.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+                    }`}
+                >
+                    {alert.message}
+                </div>
+            )}
+
             {/* Header */}
             <div className="relative mt-16 mb-8 flex flex-col md:flex-row items-center justify-between max-w-5xl mx-auto gap-4">
                 <span className="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
@@ -204,6 +281,25 @@ export default function EIC() {
                             </svg>
                             Refresh
                         </button>
+                        <button
+                            onClick={() => setShowAddModal(true)}
+                            className="flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white transition-all"
+                        >
+                            <svg
+                                className="w-4 h-4 mr-1"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M12 4v16m8-8H4"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                            Add EIC Item
+                        </button>
                     </div>
 
                     {/* Items Grid */}
@@ -220,6 +316,15 @@ export default function EIC() {
                     </div>
                 </>
             )}
+
+            {/* Add EIC Item Modal */}
+            <AddEICItemModal
+                isOpen={showAddModal}
+                onClose={() => setShowAddModal(false)}
+                onSubmit={handleAddEICItem}
+                existingItems={allItems}
+                eicItems={eicStacks}
+            />
         </div>
     );
 }
