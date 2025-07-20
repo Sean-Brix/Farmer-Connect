@@ -20,9 +20,7 @@ async function getAll(req, res) {
             ...stack,
             item: {
                 ...stack.item,
-                picture: stack.item.picture
-                    ? `/api/eic/photo/${stack.item.id}`
-                    : null,
+                picture: `/api/eic/photo/${stack.itemId}`
             },
             count: stack.count,
         }));

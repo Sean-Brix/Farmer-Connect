@@ -12,7 +12,7 @@ async function getPhoto(req, res) {
     try {
         const defaultImagePath = path.join(
             __dirname,
-            '../../public/default_picture.png'
+            '../../public/eic_default.png'
         );
 
         // Fetch the item by ID

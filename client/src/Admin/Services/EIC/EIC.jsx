@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 
 // ASSETS
-import default_image from './Assets/default_image.png';
-
+import default_image from '../../../Assets/eic_default.png';
 // SUB COMPONENTS
 import EIC_Request from './Components/Request/EIC_Request.jsx';
 
@@ -44,6 +43,7 @@ export default function EIC() {
 
             // The API now returns a direct array instead of wrapped object
             setEicStacks(result || []);
+            console.log(result);
         } catch (err) {
             console.error('Error fetching EIC stacks:', err);
             setError(
@@ -259,9 +259,7 @@ function EICItemCard({ stack }) {
         <div className="relative flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group">
             <div className="relative">
                 <img
-                    src={
-                        stack.item?.picture ? stack.item.picture : default_image
-                    }
+                    src={stack.item?.picture || default_image}
                     alt={stack.item?.name || 'EIC Item'}
                     className="w-full h-40 sm:h-48 object-cover transition-all duration-300 group-hover:scale-105"
                 />
