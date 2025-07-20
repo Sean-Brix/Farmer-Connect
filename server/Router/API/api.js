@@ -12,4 +12,7 @@ router.use('/seminar', seminar);
 import inventory from './Inventory/index.js'
 router.use('/inventory', inventory);
 
+import eic from './EIC/index.js';
+router.use('/eic', eic);
+
 export default router;

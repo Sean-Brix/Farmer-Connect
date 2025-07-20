@@ -9,6 +9,19 @@ export default function Login() {
     const navigate = useNavigate();
     const username = useRef(null);
     const password = useRef(null);
+    const [rememberMe, setRememberMe] = useState(false);
+
+    useEffect(() => {
+        // Check for saved credentials
+        const savedUsername = localStorage.getItem('rememberedUsername');
+        const savedPassword = localStorage.getItem('rememberedPassword');
+
+        if (savedUsername && savedPassword) {
+            if (username.current) username.current.value = savedUsername;
+            if (password.current) password.current.value = savedPassword;
+            setRememberMe(true);
+        }
+    }, []);
 
     useEffect(() => {
         const checkAuthentication = async () => {
@@ -23,8 +36,7 @@ export default function Login() {
                 if (data.check) {
                     navigate('/');
                 }
-            } 
-            catch (error) {
+            } catch (error) {
                 console.error('Error checking authentication:', error);
             }
         };
@@ -46,6 +58,16 @@ export default function Login() {
             () => setAlert({ show: false, message: '', type: '' }),
             2000
         );
+    };
+
+    // Handle remember me change
+    const handleRememberMeChange = (checked) => {
+        setRememberMe(checked);
+        if (!checked) {
+            // Clear saved credentials when unchecking remember me
+            localStorage.removeItem('rememberedUsername');
+            localStorage.removeItem('rememberedPassword');
+        }
     };
 
     return (
@@ -122,13 +144,15 @@ export default function Login() {
                                     body: JSON.stringify({
                                         username: username.current.value,
                                         password: password.current.value,
+                                        rememberMe: rememberMe,
                                     }),
                                 });
-                            } 
-                            catch (error) {
-
+                            } catch (error) {
                                 // UNABLE TO CONNECT TO SERVER
-                                showAlert('Network error, please try again later.', 'error');
+                                showAlert(
+                                    'Network error, please try again later.',
+                                    'error'
+                                );
                                 return;
                             }
 
@@ -138,14 +162,17 @@ export default function Login() {
                                 // USER ERROR
                                 if (response.status === 400) {
                                     // 'username or password required'
-                                    showAlert('Username and password are required.', 'error');  
+                                    showAlert(
+                                        'Username and password are required.',
+                                        'error'
+                                    );
                                     return;
                                 }
 
                                 // USER ERROR
                                 if (response.status === 404) {
                                     // 'User not found' ( Username does not exist );
-                                    showAlert('Username not found', 'error');  
+                                    showAlert('Username not found', 'error');
                                     return;
                                 }
 
@@ -159,13 +186,35 @@ export default function Login() {
                                 // SERVER ERROR HANDLING
                                 if (response.status === 500) {
                                     // 'Internal server error' ( Something went wrong );
-                                    showAlert('Something went wrong, please try again later.', 'error');
+                                    showAlert(
+                                        'Something went wrong, please try again later.',
+                                        'error'
+                                    );
                                     return;
                                 }
                             }
 
                             if (data.user.access == 'User') {
                                 // SUCCESSFUL LOGIN
+
+                                // Handle remember me functionality
+                                if (rememberMe) {
+                                    localStorage.setItem(
+                                        'rememberedUsername',
+                                        username.current.value
+                                    );
+                                    localStorage.setItem(
+                                        'rememberedPassword',
+                                        password.current.value
+                                    );
+                                } else {
+                                    localStorage.removeItem(
+                                        'rememberedUsername'
+                                    );
+                                    localStorage.removeItem(
+                                        'rememberedPassword'
+                                    );
+                                }
 
                                 navigate('/');
                                 return;
@@ -177,10 +226,30 @@ export default function Login() {
                             ) {
                                 // SUCCESSFUL ADMIN LOGIN
 
+                                // Handle remember me functionality
+                                if (rememberMe) {
+                                    localStorage.setItem(
+                                        'rememberedUsername',
+                                        username.current.value
+                                    );
+                                    localStorage.setItem(
+                                        'rememberedPassword',
+                                        password.current.value
+                                    );
+                                } else {
+                                    localStorage.removeItem(
+                                        'rememberedUsername'
+                                    );
+                                    localStorage.removeItem(
+                                        'rememberedPassword'
+                                    );
+                                }
+
                                 navigate('/admin');
                                 return;
                             }
                         }}
+                        autoComplete="on"
                     >
                         <div>
                             <label
@@ -195,6 +264,7 @@ export default function Login() {
                                 name="username"
                                 required
                                 ref={username}
+                                autoComplete="username"
                                 className="w-full px-4 py-2 mt-1 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-black-300"
                             />
                         </div>
@@ -202,6 +272,7 @@ export default function Login() {
                         <div>
                             <label
                                 htmlFor="password"
+                                autoComplete="current-password"
                                 className="block text-sm font-medium text-gray-700"
                             >
                                 Password
@@ -220,6 +291,10 @@ export default function Login() {
                             <label className="flex items-center">
                                 <input
                                     type="checkbox"
+                                    checked={rememberMe}
+                                    onChange={(e) =>
+                                        handleRememberMeChange(e.target.checked)
+                                    }
                                     className="w-4 h-4 text-blue-600 border-black-300 rounded focus:ring-blue-500"
                                 />
                                 <span className="ml-2 text-sm text-gray-600">
