@@ -332,15 +332,10 @@ async function createItemStacks() {
   const statuses = ['Available', 'Unavailable', 'Damaged', 'EIC', 'Distributed'];
 
   for (const item of inventoryItems) {
-    // Generate a random number of stacks for each item (2 to 5 stacks)
-    const numberOfStacks = Math.floor(Math.random() * 4) + 2;
-
-    for (let i = 0; i < numberOfStacks; i++) {
+    // Create exactly one stack for each status for every item
+    for (const status of statuses) {
       // Generate random quantity for each stack
       const quantity = faker.number.int({ min: 1, max: 50 });
-      
-      // Randomly select a status for this stack
-      const status = statuses[Math.floor(Math.random() * statuses.length)];
 
       await prisma.itemStack.create({
         data: {
@@ -350,7 +345,7 @@ async function createItemStacks() {
         },
       });
 
-      await wait(50); // Small delay to avoid overwhelming the database
+      await wait(50);
     }
   }
 }

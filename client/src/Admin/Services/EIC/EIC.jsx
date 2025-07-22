@@ -85,7 +85,6 @@ export default function EIC() {
 
             // The API now returns a direct array instead of wrapped object
             setEicStacks(result || []);
-            console.log(result);
         } catch (err) {
             console.error('Error fetching EIC stacks:', err);
             setError(

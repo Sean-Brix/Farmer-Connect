@@ -27,7 +27,8 @@ async function getAll(req, res) {
 
         // Return success response with the EIC stacks data
         return res.status(200).json(list);
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('Error retrieving EIC stacks:', error);
         return res.status(500).json({
             success: false,

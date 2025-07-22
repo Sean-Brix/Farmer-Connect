@@ -19,85 +19,83 @@ import Sidebar from './sub/Sidebar.jsx';
 import Audit from '../../Services/Logs/Audit.jsx';
 
 export default function Dashboard() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const navigate = useNavigate();
 
+    // User Account Details
+    const [details, setDetails] = useState({
+        username: 'Guest Account',
+        position: 'User Admin',
+        picture: default_picture,
+    });
 
-  // User Account Details
-  const [details, setDetails] = useState({
-    username: "Guest Account", 
-    position: "User Admin",
-    picture: default_picture
-  });
+    // Content State
+    const elements = useRef({
+        // SERVICES
+        analytics: () => Analytics,
+        profiles: () => Profiles,
+        enrollment: () => Seminar,
+        eic: () => EIC,
+        content: () => Content,
+        distribution: () => Distribution,
+        audit: () => Audit,
+        survey: () => Survey,
+        settings: () => Settings,
 
-  
-  // Content State
-  const elements = useRef({
+        // GLOBAL
+        account: () => AccountProfile,
+    });
 
-    // SERVICES
-    analytics: () => Analytics,
-    profiles: () => Profiles,
-    enrollment: () => Seminar,
-    eic: () => EIC,
-    content: () => Content,
-    distribution: () => Distribution,
-    audit: () => Audit,
-    survey: () => Survey,
-    settings: () => Settings,
+    const [Page, setPage] = useState(elements.current.analytics); // [ analytics, enrollment, profiles, eic, settings, audit, survey, content, distribution ]
+    const admin_navigate = (page) => {
+        setPage(elements.current[page]);
+    };
 
-    // GLOBAL
-    account: ()=> AccountProfile,
-  });
+    //Initial Request on Mount
+    useEffect(() => {
+        (async () => {
+            try {
+                // Get Account Details
+                const response = await fetch('/api/account/details/me');
+                const data = await response.json();
 
-  const [Page, setPage] = useState(elements.current.analytics); // [ analytics, enrollment, profiles, eic, settings, audit, survey, content, distribution ]
-  const admin_navigate = (page)=>{
-    setPage(elements.current[page]);
-  }
+                if (!response.ok) {
+                    throw new Error(data.error);
+                }
+                if (data.access === 'User') {
+                    throw new Error(data.error);
+                }
 
-  //Initial Request on Mount
-  useEffect(()=>{
+                // Render State
+                setDetails({
+                    username: data.username,
+                    position: data.position,
+                    picture:
+                        '/api/account/picture/me?refresh=' +
+                        new Date().getTime(),
+                    setProfile: setDetails,
+                    access: data.access,
+                });
+            } catch (err) {
+                // Prevent multiple 401 containers and listeners
+                if (document.getElementById('unauthorized-401-container'))
+                    return;
 
-    (async()=>{
+                const container = document.createElement('div');
+                container.id = 'unauthorized-401-container';
+                container.style.position = 'fixed';
+                container.style.top = '0';
+                container.style.left = '0';
+                container.style.width = '100vw';
+                container.style.height = '100vh';
+                container.style.background =
+                    'linear-gradient(135deg, #2563eb 0%, #1e293b 100%)';
+                container.style.display = 'flex';
+                container.style.alignItems = 'center';
+                container.style.justifyContent = 'center';
+                container.style.zIndex = '99999';
 
-        try {
-          // Get Account Details
-          const response = await fetch("/api/account/details/me");
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(data.error);
-          }
-          if(data.access === "User"){
-            throw new Error(data.error);
-          }
-
-          // Render State
-          setDetails({
-            username: data.username,
-            position: data.position,
-            picture: '/api/account/picture/me?refresh=' + new Date().getTime(),
-            setProfile: setDetails,
-            access: data.access
-          });
-
-        } catch (err) {
-          // Prevent multiple 401 containers and listeners
-          if (document.getElementById('unauthorized-401-container')) return;
-
-          const container = document.createElement('div');
-          container.id = 'unauthorized-401-container';
-          container.style.position = 'fixed';
-          container.style.top = '0';
-          container.style.left = '0';
-          container.style.width = '100vw';
-          container.style.height = '100vh';
-          container.style.background = 'linear-gradient(135deg, #2563eb 0%, #1e293b 100%)';
-          container.style.display = 'flex';
-          container.style.alignItems = 'center';
-          container.style.justifyContent = 'center';
-          container.style.zIndex = '99999';
-
-          container.innerHTML = `
+                container.innerHTML = `
             <div style="
               background: rgba(255,255,255,0.97);
               border-radius: 1.5rem;
@@ -159,60 +157,54 @@ export default function Dashboard() {
             </style>
           `;
 
-          document.body.appendChild(container);
+                document.body.appendChild(container);
 
-          const remove401 = () => {
-            if (document.getElementById('unauthorized-401-container')) {
-              document.body.removeChild(container);
-              window.removeEventListener('keydown', escListener);
+                const remove401 = () => {
+                    if (document.getElementById('unauthorized-401-container')) {
+                        document.body.removeChild(container);
+                        window.removeEventListener('keydown', escListener);
+                    }
+                };
+
+                container.querySelector('#go-login-btn').onclick = () => {
+                    remove401();
+                    navigate('/login');
+                };
+
+                // Remove on ESC
+                const escListener = (e) => {
+                    if (e.key === 'Escape') {
+                        remove401();
+                        navigate('/login');
+                    }
+                };
+                window.addEventListener('keydown', escListener);
+
+                return;
             }
-          };
+        })();
+    }, []);
 
-          container.querySelector('#go-login-btn').onclick = () => {
-            remove401();
-            navigate('/login');
-          };
+    // Switch Between Logout and Login
+    const logging = async () => {
+        // Ultra-modern logout confirmation modal (glassmorphism, animated, no alert/confirm, no blur bg)
+        const confirmed = await new Promise((resolve) => {
+            // Create modal container
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100vw';
+            modal.style.height = '100vh';
+            modal.style.background = 'rgba(30,41,59,0.25)'; // Lighter, minimalist overlay
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.zIndex = '9999';
+            modal.style.transition = 'background 0.3s';
 
-          // Remove on ESC
-          const escListener = (e) => {
-            if (e.key === 'Escape') {
-              remove401();
-              navigate('/login');
-            }
-          };
-          window.addEventListener('keydown', escListener);
-
-          return;
-        }
-
-    })()
-
-
-  }, []);
-
-
-  // Switch Between Logout and Login
-  const logging = async()=>{
-
-    
-    // Ultra-modern logout confirmation modal (glassmorphism, animated, no alert/confirm, no blur bg)
-    const confirmed = await new Promise((resolve) => {
-      // Create modal container
-      const modal = document.createElement('div');
-      modal.style.position = 'fixed';
-      modal.style.top = '0';
-      modal.style.left = '0';
-      modal.style.width = '100vw';
-      modal.style.height = '100vh';
-      modal.style.background = 'rgba(30,41,59,0.25)'; // Lighter, minimalist overlay
-      modal.style.display = 'flex';
-      modal.style.alignItems = 'center';
-      modal.style.justifyContent = 'center';
-      modal.style.zIndex = '9999';
-      modal.style.transition = 'background 0.3s';
-
-      // Minimalist modal content, animated
-      modal.innerHTML = `
+            // Minimalist modal content, animated
+            modal.innerHTML = `
       <div style="
         background: #fff;
         border-radius: 1rem;
@@ -302,329 +294,390 @@ export default function Dashboard() {
       </style>
       `;
 
-      document.body.appendChild(modal);
+            document.body.appendChild(modal);
 
-      modal.querySelector('#modern-logout-yes').onclick = () => {
-      document.body.removeChild(modal);
-      resolve(true);
-      };
-      modal.querySelector('#modern-logout-no').onclick = () => {
-      document.body.removeChild(modal);
-      resolve(false);
-      };
+            modal.querySelector('#modern-logout-yes').onclick = () => {
+                document.body.removeChild(modal);
+                resolve(true);
+            };
+            modal.querySelector('#modern-logout-no').onclick = () => {
+                document.body.removeChild(modal);
+                resolve(false);
+            };
 
-      // Allow ESC to close
-      const escListener = (e) => {
-      if (e.key === 'Escape') {
-        document.body.removeChild(modal);
-        resolve(false);
-        window.removeEventListener('keydown', escListener);
-      }
-      };
-      window.addEventListener('keydown', escListener);
-    });
+            // Allow ESC to close
+            const escListener = (e) => {
+                if (e.key === 'Escape') {
+                    document.body.removeChild(modal);
+                    resolve(false);
+                    window.removeEventListener('keydown', escListener);
+                }
+            };
+            window.addEventListener('keydown', escListener);
+        });
 
-    if (confirmed) {
-      await fetch('/api/authentication/logout');
-      return navigate('/login');
-    }
+        if (confirmed) {
+            try {
+                const response = await fetch('/auth/logout', {
+                    method: 'DELETE',
+                    credentials: 'include', // Include cookies for authentication
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
 
-  }
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log(result.message); // "Logout successful"
 
-  // Track the current page key for highlighting
-  const [currentPageKey, setCurrentPageKey] = useState('analytics');
+                    // Clear any local storage or session storage if needed
+                    localStorage.clear();
+                    sessionStorage.clear();
 
-  // Update setPage to also update currentPageKey
-  const handleSetPage = (key) => {
-    setPage(elements.current[key]);
-    setCurrentPageKey(key);
-  };
+                    // Navigate to login page
+                    navigate('/login');
+                } else {
+                    // Handle error response
+                    const errorData = await response.json();
+                    console.error('Logout failed:', errorData.message);
 
-  // Scroll to top on route change
-  const { pathname } = window.location;
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+                    // Still navigate to login even if logout fails on server
+                    navigate('/login');
+                }
+            } catch (error) {
+                console.error('Network error during logout:', error);
 
-  return (
-  <>
-    <div className="flex min-h-screen h-screen bg-gray-50">
-      {/* DESKTOP SIDEBAR */}
-      <Sidebar
-        logging={logging}
-        details={details}
-        setPage={setPage}
-        elements={elements}
-        currentPageKey={currentPageKey}
-        handleSetPage={handleSetPage}
-      />
+                // Still navigate to login even if there's a network error
+                navigate('/login');
+            }
+        }
+    };
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen h-screen ml-0 transition-all dashboard-main-content">
-        <header className="bg-white/80 backdrop-blur-md shadow-sm px-4 flex justify-between md:justify-center items-center w-full fixed top-0 left-0 z-20 dashboard-header h-16 border-b border-gray-200">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="Logo" className="h-9 w-9 rounded-full shadow-sm" />
-            <h1
-              className="text-base md:text-lg font-semibold text-gray-800 tracking-tight cursor-pointer"
-              onClick={() => navigate('/')}
-              style={{ userSelect: 'none' }}
-            >
-              FITS Tanza - Municipal Agriculture Office
-            </h1>
-          </div>
-          <button
-            className="md:hidden text-gray-600 hover:text-blue-600 transition ml-2"
-            onClick={() => setMobileMenuOpen(true)}
-            aria-label="Open menu"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-7 w-7"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
-          </button>
-        </header>
-        {/* Render children below the header */}
-        <main className="flex-1 p-2 sm:p-6 overflow-auto pt-20 h-0 min-h-0 minimalist-scrollbar bg-white/70">
-          <Page admin_navigate={admin_navigate} details={details} />
-        </main>
-      </div>
-    </div>
+    // Track the current page key for highlighting
+    const [currentPageKey, setCurrentPageKey] = useState('analytics');
 
-    {/* Mobile menu overlay */}
-    {mobileMenuOpen && (
-      <div
-        className="fixed inset-0 bg-black/30 z-40 md:hidden"
-        onClick={() => setMobileMenuOpen(false)}
-        aria-label="Close menu overlay"
-      />
-    )}
-    {/* Mobile sidebar */}
-    <aside
-      className={`fixed inset-y-0 left-0 bg-white/95 backdrop-blur-md border-r border-gray-200 w-64 z-50 transform transition-transform duration-300 ${
-        mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-      } md:hidden flex flex-col h-screen max-h-screen shadow-lg`}
-      id="mobile-menu"
-    >
-      <div className="flex flex-col h-full max-h-screen">
-        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-gray-800 pl-2">Dashboard</h1>
-          <button
-            className="text-gray-500 hover:text-blue-600 transition"
-            onClick={() => setMobileMenuOpen(false)}
-            aria-label="Close menu"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-        <div className="flex-1 min-h-0 flex flex-col">
-          <nav className="mt-2 flex-1 overflow-y-auto minimalist-scrollbar">
-            <ul className="space-y-1 px-2 max-h-[70vh] overflow-y-auto">
-              {/* Analytics */}
-              <li
-                className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
-                  currentPageKey === 'analytics' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
-                }`}
-                onClick={() => {
-                  handleSetPage('analytics');
-                  setMobileMenuOpen(false);
-                }}
-                style={{ minHeight: '4rem' }}
-              >
-                <span>
-                  <i className="fas fa-chart-line h-6 w-6"></i>
-                </span>
-                <span>Analytics</span>
-              </li>
-              {/* User Profiles */}
-              <li
-                className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
-                  currentPageKey === 'profiles' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
-                }`}
-                onClick={() => {
-                  handleSetPage('profiles');
-                  setMobileMenuOpen(false);
-                }}
-                style={{ minHeight: '4rem' }}
-              >
-                <span>
-                  <i className="fas fa-user-circle h-6 w-6"></i>
-                </span>
-                <span>User Profiles</span>
-              </li>
-              {/* Seminar Programs */}
-              <li
-                className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
-                  currentPageKey === 'enrollment' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
-                }`}
-                onClick={() => {
-                  handleSetPage('enrollment');
-                  setMobileMenuOpen(false);
-                }}
-                style={{ minHeight: '4rem' }}
-              >
-                <span>
-                  <i className="fas fa-user-plus h-6 w-6"></i>
-                </span>
-                <span>Seminar Programs</span>
-              </li>
-              {/* EIC */}
-              <li
-                className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
-                  currentPageKey === 'eic' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
-                }`}
-                onClick={() => {
-                  handleSetPage('eic');
-                  setMobileMenuOpen(false);
-                }}
-                style={{ minHeight: '4rem' }}
-              >
-                <span>
-                  <i className="fas fa-id-card h-6 w-6"></i>
-                </span>
-                <span>EIC - Item Panel</span>
-              </li>
-              {/* Distribution */}
-              <li
-                className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
-                  currentPageKey === 'distribution' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
-                }`}
-                onClick={() => {
-                  handleSetPage('distribution');
-                  setMobileMenuOpen(false);
-                }}
-                style={{ minHeight: '4rem' }}
-              >
-                <span>
-                  <i className="fas fa-box-open h-6 w-6"></i>
-                </span>
-                <span>Distributions</span>
-              </li>
-              {/* Content Management */}
-              <li
-                className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
-                  currentPageKey === 'content' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
-                }`}
-                onClick={() => {
-                  handleSetPage('content');
-                  setMobileMenuOpen(false);
-                }}
-                style={{ minHeight: '4rem' }}
-              >
-                <span>
-                  <i className="fas fa-archive h-6 w-6"></i>
-                </span>
-                <span>Inventory</span>
-              </li>
-              {/* Audit */}
-              <li
-                className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
-                  currentPageKey === 'audit' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
-                }`}
-                onClick={() => {
-                  handleSetPage('audit');
-                  setMobileMenuOpen(false);
-                }}
-                style={{ minHeight: '4rem' }}
-              >
-                <span>
-                  <i className="fas fa-clipboard-list h-6 w-6"></i>
-                </span>
-                <span>Logs / Audit Trail</span>
-              </li>
-              {/* Survey */}
-              <li
-                className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
-                  currentPageKey === 'survey' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
-                }`}
-                onClick={() => {
-                  handleSetPage('survey');
-                  setMobileMenuOpen(false);
-                }}
-                style={{ minHeight: '4rem' }}
-              >
-                <span>
-                  <i className="fas fa-poll h-6 w-6"></i>
-                </span>
-                <span>Survey Forms</span>
-              </li>
-              {/* Settings */}
-              <li
-                className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
-                  currentPageKey === 'settings' ? 'bg-gray-200 font-semibold text-blue-700' : 'text-gray-700'
-                }`}
-                onClick={() => {
-                  handleSetPage('settings');
-                  setMobileMenuOpen(false);
-                }}
-                style={{ minHeight: '4rem' }}
-              >
-                <span>
-                  <i className="fas fa-cog h-6 w-6"></i>
-                </span>
-                <span>Settings</span>
-              </li>
-            </ul>
-          </nav>
-          {/* Profile and Logout at the bottom, styled like desktop */}
-          <div className="p-4 border-t border-gray-200 flex flex-col items-center mt-auto bg-white/80">
-            <div
-              className="flex items-center mb-4 w-full gap-3 cursor-pointer hover:bg-gray-100 rounded-lg p-2 transition sidebar-profile"
-              onClick={() => {
-                setPage(elements.current["account"]);
-              }}
-            >
-              <div className="relative rounded-full border-2 border-blue-100 shadow-sm sidebar-profile-picture">
-                <img
-                  src={details.picture}
-                  alt="Profile"
-                  className="h-10 w-10 rounded-full object-cover"
+    // Update setPage to also update currentPageKey
+    const handleSetPage = (key) => {
+        setPage(elements.current[key]);
+        setCurrentPageKey(key);
+    };
+
+    // Scroll to top on route change
+    const { pathname } = window.location;
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return (
+        <>
+            <div className="flex min-h-screen h-screen bg-gray-50">
+                {/* DESKTOP SIDEBAR */}
+                <Sidebar
+                    logging={logging}
+                    details={details}
+                    setPage={setPage}
+                    elements={elements}
+                    currentPageKey={currentPageKey}
+                    handleSetPage={handleSetPage}
                 />
-              </div>
-              <div className="flex flex-col sidebar-profile-info">
-                <span className="font-semibold text-gray-800">{details.username}</span>
-                <span className="text-xs text-gray-500">{details.position}</span>
-              </div>
-            </div>
-            {/* Logout button (mobile sidebar, bottom) */}
-            <button
-              className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-700 w-full border border-gray-200 font-semibold"
-              onClick={logging}
-            >
-              <span>
-                <i className="fas fa-sign-out-alt h-5 w-5"></i>
-              </span>
-              <span>Logout</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </aside>
 
-    {/* Minimalist scrollbar utility and sidebar icon-only mode */}
-    <style>{`
+                {/* Main Content */}
+                <div className="flex-1 flex flex-col min-h-screen h-screen ml-0 transition-all dashboard-main-content">
+                    <header className="bg-white/80 backdrop-blur-md shadow-sm px-4 flex justify-between md:justify-center items-center w-full fixed top-0 left-0 z-20 dashboard-header h-16 border-b border-gray-200">
+                        <div className="flex items-center gap-3">
+                            <img
+                                src={logo}
+                                alt="Logo"
+                                className="h-9 w-9 rounded-full shadow-sm"
+                            />
+                            <h1
+                                className="text-base md:text-lg font-semibold text-gray-800 tracking-tight cursor-pointer"
+                                onClick={() => navigate('/')}
+                                style={{ userSelect: 'none' }}
+                            >
+                                FITS Tanza - Municipal Agriculture Office
+                            </h1>
+                        </div>
+                        <button
+                            className="md:hidden text-gray-600 hover:text-blue-600 transition ml-2"
+                            onClick={() => setMobileMenuOpen(true)}
+                            aria-label="Open menu"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-7 w-7"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M4 6h16M4 12h16m-7 6h7"
+                                />
+                            </svg>
+                        </button>
+                    </header>
+                    {/* Render children below the header */}
+                    <main className="flex-1 p-2 sm:p-6 overflow-auto pt-20 h-0 min-h-0 minimalist-scrollbar bg-white/70">
+                        <Page
+                            admin_navigate={admin_navigate}
+                            details={details}
+                        />
+                    </main>
+                </div>
+            </div>
+
+            {/* Mobile menu overlay */}
+            {mobileMenuOpen && (
+                <div
+                    className="fixed inset-0 bg-black/30 z-40 md:hidden"
+                    onClick={() => setMobileMenuOpen(false)}
+                    aria-label="Close menu overlay"
+                />
+            )}
+            {/* Mobile sidebar */}
+            <aside
+                className={`fixed inset-y-0 left-0 bg-white/95 backdrop-blur-md border-r border-gray-200 w-64 z-50 transform transition-transform duration-300 ${
+                    mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+                } md:hidden flex flex-col h-screen max-h-screen shadow-lg`}
+                id="mobile-menu"
+            >
+                <div className="flex flex-col h-full max-h-screen">
+                    <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                        <h1 className="text-xl font-bold text-gray-800 pl-2">
+                            Dashboard
+                        </h1>
+                        <button
+                            className="text-gray-500 hover:text-blue-600 transition"
+                            onClick={() => setMobileMenuOpen(false)}
+                            aria-label="Close menu"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="flex-1 min-h-0 flex flex-col">
+                        <nav className="mt-2 flex-1 overflow-y-auto minimalist-scrollbar">
+                            <ul className="space-y-1 px-2 max-h-[70vh] overflow-y-auto">
+                                {/* Analytics */}
+                                <li
+                                    className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
+                                        currentPageKey === 'analytics'
+                                            ? 'bg-gray-200 font-semibold text-blue-700'
+                                            : 'text-gray-700'
+                                    }`}
+                                    onClick={() => {
+                                        handleSetPage('analytics');
+                                        setMobileMenuOpen(false);
+                                    }}
+                                    style={{ minHeight: '4rem' }}
+                                >
+                                    <span>
+                                        <i className="fas fa-chart-line h-6 w-6"></i>
+                                    </span>
+                                    <span>Analytics</span>
+                                </li>
+                                {/* User Profiles */}
+                                <li
+                                    className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
+                                        currentPageKey === 'profiles'
+                                            ? 'bg-gray-200 font-semibold text-blue-700'
+                                            : 'text-gray-700'
+                                    }`}
+                                    onClick={() => {
+                                        handleSetPage('profiles');
+                                        setMobileMenuOpen(false);
+                                    }}
+                                    style={{ minHeight: '4rem' }}
+                                >
+                                    <span>
+                                        <i className="fas fa-user-circle h-6 w-6"></i>
+                                    </span>
+                                    <span>User Profiles</span>
+                                </li>
+                                {/* Seminar Programs */}
+                                <li
+                                    className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
+                                        currentPageKey === 'enrollment'
+                                            ? 'bg-gray-200 font-semibold text-blue-700'
+                                            : 'text-gray-700'
+                                    }`}
+                                    onClick={() => {
+                                        handleSetPage('enrollment');
+                                        setMobileMenuOpen(false);
+                                    }}
+                                    style={{ minHeight: '4rem' }}
+                                >
+                                    <span>
+                                        <i className="fas fa-user-plus h-6 w-6"></i>
+                                    </span>
+                                    <span>Seminar Programs</span>
+                                </li>
+                                {/* EIC */}
+                                <li
+                                    className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
+                                        currentPageKey === 'eic'
+                                            ? 'bg-gray-200 font-semibold text-blue-700'
+                                            : 'text-gray-700'
+                                    }`}
+                                    onClick={() => {
+                                        handleSetPage('eic');
+                                        setMobileMenuOpen(false);
+                                    }}
+                                    style={{ minHeight: '4rem' }}
+                                >
+                                    <span>
+                                        <i className="fas fa-id-card h-6 w-6"></i>
+                                    </span>
+                                    <span>EIC - Item Panel</span>
+                                </li>
+                                {/* Distribution */}
+                                <li
+                                    className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
+                                        currentPageKey === 'distribution'
+                                            ? 'bg-gray-200 font-semibold text-blue-700'
+                                            : 'text-gray-700'
+                                    }`}
+                                    onClick={() => {
+                                        handleSetPage('distribution');
+                                        setMobileMenuOpen(false);
+                                    }}
+                                    style={{ minHeight: '4rem' }}
+                                >
+                                    <span>
+                                        <i className="fas fa-box-open h-6 w-6"></i>
+                                    </span>
+                                    <span>Distributions</span>
+                                </li>
+                                {/* Content Management */}
+                                <li
+                                    className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
+                                        currentPageKey === 'content'
+                                            ? 'bg-gray-200 font-semibold text-blue-700'
+                                            : 'text-gray-700'
+                                    }`}
+                                    onClick={() => {
+                                        handleSetPage('content');
+                                        setMobileMenuOpen(false);
+                                    }}
+                                    style={{ minHeight: '4rem' }}
+                                >
+                                    <span>
+                                        <i className="fas fa-archive h-6 w-6"></i>
+                                    </span>
+                                    <span>Inventory</span>
+                                </li>
+                                {/* Audit */}
+                                <li
+                                    className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
+                                        currentPageKey === 'audit'
+                                            ? 'bg-gray-200 font-semibold text-blue-700'
+                                            : 'text-gray-700'
+                                    }`}
+                                    onClick={() => {
+                                        handleSetPage('audit');
+                                        setMobileMenuOpen(false);
+                                    }}
+                                    style={{ minHeight: '4rem' }}
+                                >
+                                    <span>
+                                        <i className="fas fa-clipboard-list h-6 w-6"></i>
+                                    </span>
+                                    <span>Logs / Audit Trail</span>
+                                </li>
+                                {/* Survey */}
+                                <li
+                                    className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
+                                        currentPageKey === 'survey'
+                                            ? 'bg-gray-200 font-semibold text-blue-700'
+                                            : 'text-gray-700'
+                                    }`}
+                                    onClick={() => {
+                                        handleSetPage('survey');
+                                        setMobileMenuOpen(false);
+                                    }}
+                                    style={{ minHeight: '4rem' }}
+                                >
+                                    <span>
+                                        <i className="fas fa-poll h-6 w-6"></i>
+                                    </span>
+                                    <span>Survey Forms</span>
+                                </li>
+                                {/* Settings */}
+                                <li
+                                    className={`flex items-center gap-4 p-4 text-lg hover:bg-gray-100 rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] ${
+                                        currentPageKey === 'settings'
+                                            ? 'bg-gray-200 font-semibold text-blue-700'
+                                            : 'text-gray-700'
+                                    }`}
+                                    onClick={() => {
+                                        handleSetPage('settings');
+                                        setMobileMenuOpen(false);
+                                    }}
+                                    style={{ minHeight: '4rem' }}
+                                >
+                                    <span>
+                                        <i className="fas fa-cog h-6 w-6"></i>
+                                    </span>
+                                    <span>Settings</span>
+                                </li>
+                            </ul>
+                        </nav>
+                        {/* Profile and Logout at the bottom, styled like desktop */}
+                        <div className="p-4 border-t border-gray-200 flex flex-col items-center mt-auto bg-white/80">
+                            <div
+                                className="flex items-center mb-4 w-full gap-3 cursor-pointer hover:bg-gray-100 rounded-lg p-2 transition sidebar-profile"
+                                onClick={() => {
+                                    setPage(elements.current['account']);
+                                }}
+                            >
+                                <div className="relative rounded-full border-2 border-blue-100 shadow-sm sidebar-profile-picture">
+                                    <img
+                                        src={details.picture}
+                                        alt="Profile"
+                                        className="h-10 w-10 rounded-full object-cover"
+                                    />
+                                </div>
+                                <div className="flex flex-col sidebar-profile-info">
+                                    <span className="font-semibold text-gray-800">
+                                        {details.username}
+                                    </span>
+                                    <span className="text-xs text-gray-500">
+                                        {details.position}
+                                    </span>
+                                </div>
+                            </div>
+                            {/* Logout button (mobile sidebar, bottom) */}
+                            <button
+                                className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition text-gray-700 w-full border border-gray-200 font-semibold"
+                                onClick={logging}
+                            >
+                                <span>
+                                    <i className="fas fa-sign-out-alt h-5 w-5"></i>
+                                </span>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            {/* Minimalist scrollbar utility and sidebar icon-only mode */}
+            <style>{`
       .minimalist-scrollbar::-webkit-scrollbar {
         width: 8px;
         background: transparent;
@@ -689,6 +742,6 @@ export default function Dashboard() {
         align-items: center !important;
       }
     `}</style>
-  </>
-  );
+        </>
+    );
 }
