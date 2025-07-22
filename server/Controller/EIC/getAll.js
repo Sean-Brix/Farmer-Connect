@@ -12,7 +12,7 @@ async function getAll(req, res) {
                 item: true,
             },
             orderBy: {
-                createdAt: 'desc',
+                quantity: 'desc',
             },
         });
 

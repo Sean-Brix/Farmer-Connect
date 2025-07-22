@@ -29,14 +29,33 @@ async function addItem(req, res) {
         });
 
         if (existingItem) {
-            // If item exists, create a new stack for it
-            const newStack = await prisma.itemStack.create({
-                data: {
+            // If item exists, find the stack with the specified status and add to it
+            const targetStatus = status || 'Available';
+            const existingStack = await prisma.itemStack.findFirst({
+                where: {
                     itemId: existingItem.id,
-                    quantity: parsedQuantity,
-                    status: status || 'Available',
+                    status: targetStatus,
                 },
             });
+
+            if (existingStack) {
+                // Update the existing stack by adding the quantity
+                await prisma.itemStack.update({
+                    where: { id: existingStack.id },
+                    data: {
+                        quantity: existingStack.quantity + parsedQuantity,
+                    },
+                });
+            } else {
+                // If stack with this status doesn't exist, create it
+                await prisma.itemStack.create({
+                    data: {
+                        itemId: existingItem.id,
+                        quantity: parsedQuantity,
+                        status: targetStatus,
+                    },
+                });
+            }
 
             // Return the updated item with all stacks
             const updatedItem = await prisma.inventoryItem.findUnique({
@@ -47,21 +66,33 @@ async function addItem(req, res) {
             });
 
             return res.status(200).json({
-                message: 'Stack added to existing item successfully',
+                message: 'Quantity added to existing item stack successfully',
                 item: updatedItem,
             });
         } else {
-            // Create new item with initial stack
+            // Create new item with stacks for all statuses
+            const allStatuses = [
+                'Available',
+                'Unavailable',
+                'Damaged',
+                'EIC',
+                'Distributed',
+            ];
+            const targetStatus = status || 'Available';
+
+            const stacksToCreate = allStatuses.map((stackStatus) => ({
+                quantity: stackStatus === targetStatus ? parsedQuantity : 0,
+                status: stackStatus,
+            }));
+
             const newItem = await prisma.inventoryItem.create({
                 data: {
                     name: name.trim(),
-                    description: description?.trim() || "No description provided",
+                    description:
+                        description?.trim() || 'No description provided',
                     category: categoryEnum,
                     item_stacks: {
-                        create: {
-                            quantity: parsedQuantity,
-                            status: status || 'Available',
-                        },
+                        create: stacksToCreate,
                     },
                 },
                 include: {
@@ -70,7 +101,7 @@ async function addItem(req, res) {
             });
 
             return res.status(201).json({
-                message: 'Item created successfully',
+                message: 'Item created successfully with all status stacks',
                 item: newItem,
             });
         }

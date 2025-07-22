@@ -12,7 +12,7 @@ export default function EIC() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState('');
-    const [statusFilter, setStatusFilter] = useState('all');
+    const [sortBy, setSortBy] = useState('quantity');
     const [searchFilter, setSearchFilter] = useState('name');
     const [showAddModal, setShowAddModal] = useState(false);
     const [allItems, setAllItems] = useState([]); // For existing items in the modal
@@ -95,24 +95,43 @@ export default function EIC() {
         }
     };
 
-    // Filter stacks based on search and filters
-    const filteredStacks = eicStacks.filter((stack) => {
-        const searchValue = search.toLowerCase();
-        const matchesSearch =
-            searchFilter === 'name'
-                ? stack.item?.name?.toLowerCase().includes(searchValue) || false
-                : searchFilter === 'category'
-                ? stack.item?.category?.toLowerCase().includes(searchValue) ||
-                  false
-                : stack.item?.description
-                      ?.toLowerCase()
-                      .includes(searchValue) || false;
+    // Filter and sort stacks based on search and sort options
+    const filteredStacks = eicStacks
+        .filter((stack) => {
+            const searchValue = search.toLowerCase();
+            const matchesSearch =
+                searchFilter === 'name'
+                    ? stack.item?.name?.toLowerCase().includes(searchValue) ||
+                      false
+                    : searchFilter === 'category'
+                    ? stack.item?.category
+                          ?.toLowerCase()
+                          .includes(searchValue) || false
+                    : stack.item?.description
+                          ?.toLowerCase()
+                          .includes(searchValue) || false;
 
-        const matchesStatus =
-            statusFilter === 'all' || stack.status === statusFilter;
-
-        return matchesSearch && matchesStatus;
-    });
+            return matchesSearch;
+        })
+        .sort((a, b) => {
+            switch (sortBy) {
+                case 'name':
+                    return (a.item?.name || '').localeCompare(
+                        b.item?.name || ''
+                    );
+                case 'category':
+                    return (a.item?.category || '').localeCompare(
+                        b.item?.category || ''
+                    );
+                case 'quantity':
+                    return b.quantity - a.quantity; // Descending order
+                case 'date':
+                    return new Date(b.createdAt) - new Date(a.createdAt); // Newest first
+                case 'default':
+                default:
+                    return 0; // Keep original server order
+            }
+        });
 
     const handleAddEICItem = async (formData) => {
         try {
@@ -251,15 +270,14 @@ export default function EIC() {
                         </select>
                         <select
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full md:w-auto p-2"
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
                         >
-                            <option value="all">All Status</option>
-                            <option value="EIC">EIC</option>
-                            <option value="Available">Available</option>
-                            <option value="Unavailable">Unavailable</option>
-                            <option value="Damaged">Damaged</option>
-                            <option value="Distributed">Distributed</option>
+                            <option value="default">Default Order</option>
+                            <option value="name">Sort by Name</option>
+                            <option value="category">Sort by Category</option>
+                            <option value="quantity">Sort by Quantity</option>
+                            <option value="date">Sort by Date</option>
                         </select>
                         <button
                             onClick={fetchEICStacks}
@@ -341,19 +359,6 @@ function EICItemCard({ stack }) {
         });
     };
 
-    const getStatusColor = (status) => {
-        const colors = {
-            EIC: 'bg-orange-50 text-orange-700 border border-orange-100',
-            Available: 'bg-green-50 text-green-700 border border-green-100',
-            Unavailable: 'bg-red-50 text-red-600 border border-red-100',
-            Damaged: 'bg-red-50 text-red-600 border border-red-100',
-            Distributed: 'bg-blue-50 text-blue-700 border border-blue-100',
-        };
-        return (
-            colors[status] || 'bg-gray-100 text-gray-600 border border-gray-200'
-        );
-    };
-
     const truncatedDescription =
         stack.item?.description && stack.item.description.length > 100
             ? stack.item.description.slice(0, 100) + '...'
@@ -367,12 +372,8 @@ function EICItemCard({ stack }) {
                     alt={stack.item?.name || 'EIC Item'}
                     className="w-full h-40 sm:h-48 object-cover transition-all duration-300 group-hover:scale-105"
                 />
-                <span
-                    className={`absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm ${getStatusColor(
-                        stack.status
-                    )}`}
-                >
-                    {stack.status}
+                <span className="absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm bg-orange-50 text-orange-700 border border-orange-100">
+                    EIC
                 </span>
             </div>
             <div className="flex-1 flex flex-col p-5">
@@ -391,19 +392,13 @@ function EICItemCard({ stack }) {
                     </span>
                     <span>
                         <span className="font-medium text-gray-700">
-                            Count:
-                        </span>{' '}
-                        {stack.count}
-                    </span>
-                    <span>
-                        <span className="font-medium text-gray-700">
                             Category:
                         </span>{' '}
                         {stack.item?.category?.replace('_', ' ') || 'N/A'}
                     </span>
                     <span>
                         <span className="font-medium text-gray-700">
-                            Distributed:
+                            Date Added:
                         </span>{' '}
                         {formatDate(stack.createdAt)}
                     </span>
@@ -413,7 +408,7 @@ function EICItemCard({ stack }) {
                         View Details
                     </button>
                     <button className="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm">
-                        Update Status
+                        Update Quantity
                     </button>
                 </div>
             </div>

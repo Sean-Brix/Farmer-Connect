@@ -51,27 +51,43 @@ async function editStack(req, res) {
                     status: status,
                 },
                 include: { item: true },
-
             });
         }
 
         // Handle quantity update
         if (quantity === 0) {
-            // If quantity is 0, delete the stack if it exists
+            // If quantity is 0, set stack quantity to 0 but don't delete (maintain all status stacks)
             if (targetStack) {
-                await prisma.itemStack.delete({
+                targetStack = await prisma.itemStack.update({
                     where: { id: targetStack.id },
+                    data: { quantity: 0 },
+                    include: { item: true },
                 });
 
                 return res.status(200).json({
-                    message: 'Stack deleted successfully',
-                    deleted: true,
-                    stackId: targetStack.id,
+                    message: 'Stack quantity set to 0 successfully',
+                    stack: targetStack,
                 });
             } else {
+                // If stack doesn't exist and quantity is 0, create it with 0 quantity
+                if (!itemId || !status) {
+                    return res.status(400).json({
+                        error: 'itemId and status are required to create new stack',
+                    });
+                }
+
+                targetStack = await prisma.itemStack.create({
+                    data: {
+                        itemId: itemId,
+                        status: status,
+                        quantity: 0,
+                    },
+                    include: { item: true },
+                });
+
                 return res.status(200).json({
-                    message: 'No stack to delete',
-                    deleted: false,
+                    message: 'New stack created with 0 quantity',
+                    stack: targetStack,
                 });
             }
         } else {

@@ -332,10 +332,17 @@ async function createItemStacks() {
   const statuses = ['Available', 'Unavailable', 'Damaged', 'EIC', 'Distributed'];
 
   for (const item of inventoryItems) {
+    // Randomly select 1-3 statuses that will have quantities > 0
+    const numberOfActiveStatuses = faker.number.int({ min: 1, max: 3 });
+    const shuffledStatuses = [...statuses].sort(() => Math.random() - 0.5);
+    const activeStatuses = shuffledStatuses.slice(0, numberOfActiveStatuses);
+
     // Create exactly one stack for each status for every item
     for (const status of statuses) {
-      // Generate random quantity for each stack
-      const quantity = faker.number.int({ min: 1, max: 50 });
+      // Generate quantity based on whether this status is active
+      const quantity = activeStatuses.includes(status) 
+        ? faker.number.int({ min: 1, max: 50 }) 
+        : 0;
 
       await prisma.itemStack.create({
         data: {
@@ -360,6 +367,11 @@ async function createItemTransactions() {
   const transactionStatuses = ['Pending', 'Approved', 'Rejected'];
 
   for (const stack of itemStacks) {
+    // Skip creating transactions for stacks with 0 quantity
+    if (stack.quantity === 0) {
+      continue;
+    }
+
     // Generate 0 to 3 transactions per stack (some stacks might have no transactions)
     const numberOfTransactions = Math.floor(Math.random() * 4);
 
