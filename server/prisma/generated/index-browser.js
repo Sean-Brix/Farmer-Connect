@@ -184,8 +184,10 @@ exports.Prisma.ItemTransactionScalarFieldEnum = {
   itemStackId: 'itemStackId',
   accountId: 'accountId',
   quantity: 'quantity',
-  transactionType: 'transactionType',
   status: 'status',
+  pickupDate: 'pickupDate',
+  returnDate: 'returnDate',
+  dateLimit: 'dateLimit',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -273,8 +275,7 @@ exports.Prisma.ItemStackOrderByRelevanceFieldEnum = {
 exports.Prisma.ItemTransactionOrderByRelevanceFieldEnum = {
   id: 'id',
   itemStackId: 'itemStackId',
-  accountId: 'accountId',
-  transactionType: 'transactionType'
+  accountId: 'accountId'
 };
 
 exports.Prisma.SeminarOrderByRelevanceFieldEnum = {
@@ -342,10 +343,15 @@ exports.item_status = exports.$Enums.item_status = {
   Distributed: 'Distributed'
 };
 
-exports.transaction_response = exports.$Enums.transaction_response = {
+exports.transaction_status = exports.$Enums.transaction_status = {
   Pending: 'Pending',
   Approved: 'Approved',
-  Rejected: 'Rejected'
+  Rejected: 'Rejected',
+  Returned: 'Returned',
+  No_Return: 'No_Return',
+  late_return: 'late_return',
+  No_Pickup: 'No_Pickup',
+  Cancelled: 'Cancelled'
 };
 
 exports.seminar_status = exports.$Enums.seminar_status = {
