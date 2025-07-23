@@ -16,6 +16,10 @@ export default function EIC() {
     const [searchFilter, setSearchFilter] = useState('name');
     const [showAddModal, setShowAddModal] = useState(false);
     const [allItems, setAllItems] = useState([]); // For existing items in the modal
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [selectedStack, setSelectedStack] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editingStack, setEditingStack] = useState(null);
 
     // Alert state for success/error messages
     const [alert, setAlert] = useState({
@@ -154,6 +158,66 @@ export default function EIC() {
         } catch (error) {
             console.error('Failed to create EIC item:', error);
             showAlert('Failed to add EIC item', 'error');
+        }
+    };
+
+    // Handle opening detail modal
+    const handleViewDetails = (stack) => {
+        setSelectedStack(stack);
+        setShowDetailModal(true);
+    };
+
+    // Handle closing detail modal
+    const handleCloseDetailModal = () => {
+        setShowDetailModal(false);
+        setSelectedStack(null);
+    };
+
+    // Handle opening edit modal
+    const handleEditStack = (stack) => {
+        setEditingStack(stack);
+        setShowEditModal(true);
+    };
+
+    // Handle closing edit modal
+    const handleCloseEditModal = () => {
+        setShowEditModal(false);
+        setEditingStack(null);
+    };
+
+    // Handle edit form submission
+    const handleEditSubmit = async (formData, hasNameOrDescriptionChange) => {
+        // Show confirmation if name or description changed
+        if (hasNameOrDescriptionChange) {
+            const confirmed = window.confirm(
+                'You have changed the name, description, or category. This will update the item in the entire inventory system. Do you want to continue?'
+            );
+            if (!confirmed) {
+                return;
+            }
+        }
+
+        try {
+            // TODO: Replace with actual endpoint when ready
+            const response = await fetch(`/api/eic/edit/${editingStack.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            setShowEditModal(false);
+            setEditingStack(null);
+            await fetchEICStacks(); // Refresh EIC items
+            showAlert('EIC item updated successfully', 'success');
+        } catch (error) {
+            console.error('Failed to update EIC item:', error);
+            showAlert('Failed to update EIC item', 'error');
         }
     };
 
@@ -322,7 +386,12 @@ export default function EIC() {
                     {/* Items Grid */}
                     <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                         {filteredStacks.map((stack) => (
-                            <EICItemCard key={stack.id} stack={stack} />
+                            <EICItemCard
+                                key={stack.id}
+                                stack={stack}
+                                onViewDetails={handleViewDetails}
+                                onEdit={handleEditStack}
+                            />
                         ))}
 
                         {filteredStacks.length === 0 && (
@@ -342,6 +411,23 @@ export default function EIC() {
                 existingItems={allItems}
                 eicItems={eicStacks}
             />
+
+            {/* Detail Modal */}
+            {showDetailModal && selectedStack && (
+                <EICDetailModal
+                    stack={selectedStack}
+                    onClose={handleCloseDetailModal}
+                />
+            )}
+
+            {/* Edit Modal */}
+            {showEditModal && editingStack && (
+                <EICEditModal
+                    stack={editingStack}
+                    onClose={handleCloseEditModal}
+                    onSubmit={handleEditSubmit}
+                />
+            )}
         </div>
     );
 }
@@ -350,7 +436,7 @@ export default function EIC() {
 /* EIC ITEM CARD COMPONENT - Matching Seminar Design Style */
 /* ================================================================================== */
 
-function EICItemCard({ stack }) {
+function EICItemCard({ stack, onViewDetails, onEdit }) {
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -404,13 +490,443 @@ function EICItemCard({ stack }) {
                     </span>
                 </div>
                 <div className="flex flex-col gap-2 mt-auto md:flex-row">
-                    <button className="w-full md:w-auto bg-gray-800 hover:bg-gray-700 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm">
+                    <button
+                        onClick={() => onViewDetails(stack)}
+                        className="w-full md:w-auto bg-gray-800 hover:bg-gray-700 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
+                    >
                         View Details
                     </button>
-                    <button className="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm">
-                        Update Quantity
+                    <button
+                        onClick={() => onEdit(stack)}
+                        className="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
+                    >
+                        Edit
                     </button>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+/* ================================================================================== */
+/* EIC DETAIL MODAL COMPONENT */
+/* ================================================================================== */
+
+function EICDetailModal({ stack, onClose }) {
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
+    };
+
+    const formatDateTime = (dateString) => {
+        return new Date(dateString).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col mx-4">
+                {/* HEADER */}
+                <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-orange-50 to-orange-100">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs text-orange-600 font-medium">
+                            EIC Item Details
+                        </span>
+                    </div>
+                    <button
+                        className="text-2xl text-gray-400 hover:text-gray-700 transition-colors"
+                        onClick={onClose}
+                        aria-label="Close"
+                    >
+                        &times;
+                    </button>
+                </div>
+
+                {/* IMAGE */}
+                <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+                    {stack.item?.picture ? (
+                        <img
+                            className="object-cover w-full h-full"
+                            src={stack.item.picture}
+                            alt={stack.item?.name || 'EIC Item'}
+                        />
+                    ) : (
+                        <div className="text-gray-400 text-3xl flex flex-col items-center">
+                            <svg
+                                className="w-16 h-16 mb-2"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                            No Image Available
+                        </div>
+                    )}
+                </div>
+
+                {/* DETAILS */}
+                <div className="px-6 py-6 bg-white">
+                    <div className="mb-4">
+                        <span className="text-xs uppercase tracking-widest text-gray-400 font-semibold">
+                            Item Name
+                        </span>
+                        <h1 className="text-2xl font-bold text-gray-900 mt-1">
+                            {stack.item?.name || 'Unknown Item'}
+                        </h1>
+                    </div>
+
+                    <div className="mb-6">
+                        <span className="text-xs uppercase tracking-widest text-gray-400 font-semibold">
+                            Description
+                        </span>
+                        <p className="text-gray-600 mt-1 leading-relaxed">
+                            {stack.item?.description ||
+                                'No description available'}
+                        </p>
+                    </div>
+
+                    {/* PROPERTIES */}
+                    <div className="flex flex-wrap gap-3 mb-6">
+                        {/* CATEGORY */}
+                        <span
+                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default
+                                ${
+                                    stack.item?.category === 'Farming Equipment'
+                                        ? 'bg-blue-100 text-blue-800'
+                                        : stack.item?.category ===
+                                          'Harvesting Tools'
+                                        ? 'bg-pink-100 text-pink-800'
+                                        : stack.item?.category ===
+                                          'Irrigation Systems'
+                                        ? 'bg-purple-100 text-purple-800'
+                                        : stack.item?.category ===
+                                          'Storage Equipment'
+                                        ? 'bg-yellow-100 text-yellow-800'
+                                        : stack.item?.category ===
+                                          'Processing Equipment'
+                                        ? 'bg-green-100 text-green-800'
+                                        : stack.item?.category === 'Safety Gear'
+                                        ? 'bg-red-100 text-red-800'
+                                        : stack.item?.category ===
+                                          'Pest Control'
+                                        ? 'bg-indigo-100 text-indigo-800'
+                                        : stack.item?.category ===
+                                          'Livestock Equipment'
+                                        ? 'bg-orange-100 text-orange-800'
+                                        : stack.item?.category ===
+                                          'Measuring Tools'
+                                        ? 'bg-teal-100 text-teal-800'
+                                        : stack.item?.category === 'Fisheries'
+                                        ? 'bg-lime-100 text-lime-800'
+                                        : stack.item?.category === 'Machinery'
+                                        ? 'bg-cyan-100 text-cyan-800'
+                                        : 'bg-gray-100 text-gray-800'
+                                }`}
+                            title="Category"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                aria-hidden="true"
+                            >
+                                <rect x="3" y="3" width="7" height="7" />
+                                <rect x="14" y="3" width="7" height="7" />
+                                <rect x="14" y="14" width="7" height="7" />
+                                <rect x="3" y="14" width="7" height="7" />
+                            </svg>
+                            {stack.item?.category?.replace('_', ' ') || 'N/A'}
+                        </span>
+
+                        {/* QUANTITY */}
+                        <span
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-orange-100 text-orange-800 text-xs font-semibold cursor-default"
+                            title="Available Quantity"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <rect
+                                    x="4"
+                                    y="4"
+                                    width="16"
+                                    height="16"
+                                    rx="2"
+                                    ry="2"
+                                />
+                                <line x1="12" y1="8" x2="12" y2="16" />
+                                <line x1="8" y1="12" x2="16" y2="12" />
+                            </svg>
+                            {stack.quantity} Available
+                        </span>
+
+                        {/* STATUS */}
+                        <span
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-green-100 text-green-800 text-xs font-semibold cursor-default"
+                            title="EIC Status"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                            Equipment in Circulation
+                        </span>
+                    </div>
+                </div>
+
+                {/* DATES */}
+                <div className="flex justify-between items-center px-6 py-4 bg-gray-50 border-t">
+                    {/* CREATED AT */}
+                    <div>
+                        <span className="block text-xs text-gray-400 font-medium">
+                            Added to EIC
+                        </span>
+                        <span className="block text-sm text-gray-700">
+                            {formatDateTime(stack.createdAt)}
+                        </span>
+                    </div>
+                    {/* UPDATED AT */}
+                    <div className="text-right">
+                        <span className="block text-xs text-gray-400 font-medium">
+                            Last Updated
+                        </span>
+                        <span className="block text-sm text-gray-700">
+                            {stack.updatedAt
+                                ? formatDateTime(stack.updatedAt)
+                                : formatDateTime(stack.createdAt)}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/* ================================================================================== */
+/* EIC EDIT MODAL COMPONENT */
+/* ================================================================================== */
+
+function EICEditModal({ stack, onClose, onSubmit }) {
+    const [formData, setFormData] = useState({
+        name: stack.item?.name || '',
+        description: stack.item?.description || '',
+        category: stack.item?.category || 'Other',
+        quantity: stack.quantity || 1,
+    });
+
+    const [originalData] = useState({
+        name: stack.item?.name || '',
+        description: stack.item?.description || '',
+        category: stack.item?.category || 'Other',
+        quantity: stack.quantity || 1,
+    });
+
+    const categories = [
+        'Farming Equipment',
+        'Harvesting Tools',
+        'Irrigation Systems',
+        'Storage Equipment',
+        'Processing Equipment',
+        'Safety Gear',
+        'Pest Control',
+        'Livestock Equipment',
+        'Measuring Tools',
+        'Fisheries',
+        'Machinery',
+        'Other',
+    ];
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: name === 'quantity' ? parseInt(value) || 0 : value,
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // Check if name or description changed
+        const hasNameOrDescriptionChange =
+            formData.name !== originalData.name ||
+            formData.description !== originalData.description ||
+            formData.category !== originalData.category;
+
+        onSubmit(formData, hasNameOrDescriptionChange);
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col mx-4">
+                {/* HEADER */}
+                <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-blue-100">
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-blue-600 font-medium">
+                            Edit EIC Item
+                        </span>
+                    </div>
+                    <button
+                        className="text-2xl text-gray-400 hover:text-gray-700 transition-colors"
+                        onClick={onClose}
+                        aria-label="Close"
+                    >
+                        &times;
+                    </button>
+                </div>
+
+                {/* FORM */}
+                <form onSubmit={handleSubmit} className="px-6 py-6 space-y-4">
+                    {/* Item Name */}
+                    <div>
+                        <label
+                            htmlFor="name"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                        >
+                            Item Name
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            required
+                        />
+                        {formData.name !== originalData.name && (
+                            <p className="text-xs text-amber-600 mt-1">
+                                ⚠️ Changing the name will update the item in
+                                inventory
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Description */}
+                    <div>
+                        <label
+                            htmlFor="description"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                        >
+                            Description
+                        </label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            rows="3"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                        />
+                        {formData.description !== originalData.description && (
+                            <p className="text-xs text-amber-600 mt-1">
+                                ⚠️ Changing the description will update the item
+                                in inventory
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Category */}
+                    <div>
+                        <label
+                            htmlFor="category"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                        >
+                            Category
+                        </label>
+                        <select
+                            id="category"
+                            name="category"
+                            value={formData.category}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            {categories.map((cat) => (
+                                <option key={cat} value={cat}>
+                                    {cat}
+                                </option>
+                            ))}
+                        </select>
+                        {formData.category !== originalData.category && (
+                            <p className="text-xs text-amber-600 mt-1">
+                                ⚠️ Changing the category will update the item in
+                                inventory
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Quantity */}
+                    <div>
+                        <label
+                            htmlFor="quantity"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                        >
+                            Available Quantity
+                        </label>
+                        <input
+                            type="number"
+                            id="quantity"
+                            name="quantity"
+                            value={formData.quantity}
+                            onChange={handleChange}
+                            min="0"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            required
+                        />
+                    </div>
+
+                    {/* Buttons */}
+                    <div className="flex justify-end gap-3 pt-4">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-md transition-colors"
+                        >
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );
