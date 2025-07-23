@@ -5,7 +5,7 @@ const router = express.Router();
 
 //? ========================================= ROUTES =============================================== ?//
 
-// LIST
+// LIST - Public endpoint for viewing EIC items
 import getAllEIC from '../../../Controller/EIC/getAll.js';
 router.get('/', getAllEIC);
 
@@ -13,23 +13,14 @@ router.get('/', getAllEIC);
 
 //? ======================================= AUTHORIZED ============================================= ?//
 
-// Authorization middleware
+// Authorization middleware for protected routes
 import parseToken from '../../../Middlewares/JWT/parseToken.js';
-router.use(parseToken);
 import authorize from '../../../Middlewares/Auth/authorize.js';
-router.use(authorize);
-
-
-
-
-//? ================================================================================================ ?//
-
-//? ====================================== SUPER ADMINS ============================================ ?//
-
 import super_admin from '../../../Middlewares/Auth/super_admin.js';
-router.use(super_admin)
+
+// Apply middleware to protected routes only
+// If you need protected routes, add them here after middleware
 
 //? ================================================================================================ ?//
-
 
 export default router;

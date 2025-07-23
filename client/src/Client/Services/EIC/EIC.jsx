@@ -73,56 +73,39 @@ export default function Eic() {
     useEffect(() => {
         const fetchEquipment = async () => {
             try {
-                const response = await fetch(
-                    `/api/eic/getAll?status=Available`
-                );
+                const response = await fetch('/api/eic/all');
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-                const { payload } = await response.json();
+                const eicItems = await response.json();
 
-                if (Array.isArray(payload)) {
-                    const equipmentWithImages = await Promise.all(
-                        payload.map(async (item) => {
-                            try {
-                                const imageResponse = await fetch(
-                                    `/api/eic/getImage?id=${item.id}`
-                                );
-                                if (imageResponse.ok) {
-                                    const imageBlob =
-                                        await imageResponse.blob();
-                                    if (imageBlob.size > 0) {
-                                        const imageURL =
-                                            URL.createObjectURL(imageBlob);
-                                        return { ...item, img: imageURL };
-                                    } else {
-                                        return { ...item, img: default_image };
-                                    }
-                                } else {
-                                    console.error(
-                                        `Failed to fetch image for item ${item.id}: ${imageResponse.statusText}`
-                                    );
-                                    return { ...item, img: default_image };
-                                }
-                            } catch (imageError) {
-                                console.error(
-                                    `Error fetching image for item ${item.id}:`,
-                                    imageError
-                                );
-                                return { ...item, img: default_image };
-                            }
-                        })
-                    );
-                    setEquipmentList(equipmentWithImages);
+                if (Array.isArray(eicItems)) {
+                    // Transform the data to match the expected structure
+                    const transformedItems = eicItems.map((stack) => ({
+                        id: stack.itemId,
+                        stackId: stack.id,
+                        Name: stack.item.name, // Fixed: use lowercase 'name' from Prisma schema
+                        category: stack.item.category,
+                        description: stack.item.description,
+                        quantity: stack.quantity,
+                        status: stack.status,
+                        img: stack.item.picture || default_image, // Use the picture URL from controller
+                        // Include all original item properties
+                        ...stack.item,
+                        // Override with stack-specific data
+                        availableQuantity: stack.quantity,
+                    }));
+
+                    setEquipmentList(transformedItems);
                 } else {
                     console.warn(
-                        'Payload is not an array or is empty:',
-                        payload
+                        'Response is not an array or is empty:',
+                        eicItems
                     );
                     setEquipmentList([]);
                 }
             } catch (error) {
-                console.error('Failed to fetch equipment:', error);
+                console.error('Failed to fetch EIC equipment:', error);
                 setEquipmentList([]);
             }
         };
@@ -552,250 +535,336 @@ export default function Eic() {
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-white relative"
-                style={{
-                    backgroundColor: '#fff',
-                    overflow: 'hidden',
-                }}
+                className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative"
+                style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
-                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-16 ">
-                        <header className="flex flex-col items-center mb-10">
-                            <span className="uppercase tracking-widest text-gray-400 text-xs font-medium mb-1 letter-spacing-wide">
+                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20">
+                        <header className="flex flex-col items-center mb-12 w-full">
+                            <span className="uppercase tracking-widest text-blue-400 text-xs font-semibold mb-1 letter-spacing-wide">
                                 Welcome to
                             </span>
-                            <h1 className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title">
-                                Equipments, Inputs & Commodities
+                            <h1
+                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title"
+                                style={{ color: '#1e3a8a' }}
+                            >
+                                Equipment, Inputs & Commodities
                             </h1>
-                            <div className="mt-3 w-16 sm:w-24 h-2 rounded-full bg-gray-200 opacity-80"></div>
+                            <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200 opacity-90 shadow-lg"></div>
                         </header>
-                        <div className="flex flex-row items-center w-full max-w-3xl mt-4 mb-8 gap-3 justify-center">
-                            <div className="flex flex-none min-w-1/2 max-w-xs gap-2 bg-white rounded-2xl shadow-lg px-4 py-1 items-center border</div> border-gray-200 h-12">
-                                <div className="relative w-full">
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                        <i className="fa-solid fa-magnifying-glass"></i>
-                                    </span>
+
+                        <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
+                            <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
+                                <button
+                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    onClick={handleMyRequestsClick}
+                                >
+                                    <i className="fa-solid fa-list-check text-lg"></i>
+                                    My Requests
+                                </button>
+                            </div>
+                            <div className="flex gap-3 flex-wrap items-center justify-center w-full sm:w-auto order-1 sm:order-2">
+                                <div className="relative w-full sm:w-auto flex justify-center">
                                     <input
                                         type="text"
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-transparent focus:outline-none focus:ring-0 text-gray-900 bg-transparent transition placeholder:text-gray-400"
+                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-blue-900 bg-white shadow transition placeholder:text-blue-400 font-medium"
                                         placeholder="Search by name, category, description..."
                                         value={search}
                                         onChange={(e) =>
                                             setSearch(e.target.value)
                                         }
-                                        style={{ boxShadow: 'none' }}
                                     />
-                                </div>
-                            </div>
-                            <div className="relative h-12 flex items-center">
-                                <button
-                                    id="modernFilterButton"
-                                    className="flex items-center gap-2 px-4 sm:px-5 py-2 h-12 rounded-xl bg-white text-blue-900 font-semibold border border-gray-200 shadow transition-all duration-200 hover:bg-gray-50 focus:outline-none text-base sm:text-lg"
-                                    onClick={() => setShowFilter((f) => !f)}
-                                    type="button"
-                                    aria-label="Show filter options"
-                                    style={{ minHeight: '3rem' }}
-                                >
-                                    <i className="fa-solid fa-filter text-blue-900 text-base sm:text-lg"></i>
-                                    <span className="hidden sm:inline">
-                                        {filterBy}
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 pointer-events-none">
+                                        <i className="fa-solid fa-magnifying-glass"></i>
                                     </span>
-                                    <i
-                                        className={`fa-solid fa-chevron-${
-                                            showFilter ? 'up' : 'down'
-                                        } ml-2 text-blue-900`}
-                                    ></i>
-                                </button>
-                                {showFilter && (
-                                    <div
-                                        id="modernFilterDropdown"
-                                        className="absolute left-0 top-full mt-2 w-44 sm:w-48 bg-white rounded-2xl shadow-2xl border border-gray-100 z-20 animate-fade-in py-2 px-2"
-                                        style={{ minWidth: '100%' }}
+                                </div>
+                                <div className="relative flex justify-center w-full sm:w-auto">
+                                    <button
+                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold border border-blue-200 shadow transition focus:outline-none"
+                                        onClick={() => setShowFilter((f) => !f)}
+                                        type="button"
+                                        aria-label="Show filter options"
                                     >
-                                        {filterOptions.map((opt) => (
-                                            <button
-                                                key={opt.value}
-                                                className={`flex items-center gap-3 w-full text-left px-3 sm:px-4 py-2 rounded-xl font-semibold transition text-sm sm:text-base ${
-                                                    filterBy === opt.value
-                                                        ? 'bg-gray-800 text-white'
-                                                        : 'text-gray-700 hover:bg-gray-50'
-                                                }`}
-                                                onClick={() => {
-                                                    setFilter(opt.value);
-                                                    setShowFilter(false);
-                                                }}
-                                            >
-                                                {typeIcon(opt.value)}
-                                                {opt.label}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                                <div className="sm:hidden absolute left-0 top-0 w-full h-full pointer-events-none">
-                                    <select
-                                        className="opacity-0 absolute w-full h-full pointer-events-auto"
-                                        value={filter}
-                                        onChange={(e) =>
-                                            setFilter(e.target.value)
-                                        }
-                                        aria-label="Filter by category"
-                                    >
-                                        {categories.map((c) => (
-                                            <option key={c} value={c}>
-                                                {c}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        <i className="fa-solid fa-filter"></i>
+                                        <span>Filter by: {filter}</span>
+                                        <i
+                                            className={`fa-solid fa-chevron-${
+                                                showFilter ? 'up' : 'down'
+                                            } ml-1`}
+                                        ></i>
+                                    </button>
+                                    {showFilter && (
+                                        <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-blue-100 z-20 animate-fade-in py-2">
+                                            {filterOptions.map((opt) => (
+                                                <button
+                                                    key={opt.value}
+                                                    className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
+                                                        filter === opt.value
+                                                            ? 'bg-blue-600 text-white shadow'
+                                                            : 'text-blue-900 hover:bg-blue-50'
+                                                    }`}
+                                                    onClick={() => {
+                                                        setFilter(opt.value);
+                                                        setShowFilter(false);
+                                                    }}
+                                                >
+                                                    {typeIcon(opt.value)}
+                                                    {opt.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                            <button
-                                className="flex items-center gap-2 px-4 sm:px-5 py-2 h-12 rounded-xl bg-white text-blue-900 font-semibold border border-gray-200 shadow transition-all duration-200 hover:bg-gray-50 focus:outline-none text-base sm:text-lg"
-                                onClick={handleMyRequestsClick}
-                                type="button"
-                                aria-label="View your requests"
-                                style={{ minHeight: '3rem' }}
-                            >
-                                <i className="fa-solid fa-list text-blue-900 text-base sm:text-lg"></i>
-                                <span className="hidden sm:inline">
-                                    My Requests
-                                </span>
-                            </button>
                         </div>
-                        <div className="w-full max-w-7xl grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 px-2">
-                            {paginatedItems.map((item) => {
-                                // Status color mapping
-                                let statusColor = 'bg-gray-400';
-                                switch (item.status) {
-                                    case 'Available':
-                                        statusColor = 'bg-green-300';
-                                        break;
-                                    case 'Borrowed':
-                                        statusColor = 'bg-borrowed-500';
-                                        break;
-                                    case 'Reserved':
-                                        statusColor = 'bg-yellow-400';
-                                        break;
-                                    case 'Returned':
-                                        statusColor = 'bg-green-500';
-                                        break;
-                                    case 'Maintenance':
-                                        statusColor = 'bg-orange-500';
-                                        break;
-                                    default:
-                                        statusColor = 'bg-gray-400';
-                                }
-                                return (
-                                    <div
-                                        key={item.id}
-                                        className="max-w-full max-h-[370px]  overflow-hidden shadow-2xl hover:shadow-[0_8px_32px_0_rgba(60,60,60,0.25)] bg-blue-100 m-4 border-2 border-blue-200 transition duration-200 hover:border-blue-300 hover:scale-[1.025] backdrop-blur-lg"
-                                    >
-                                        <div className="relative">
-                                            <img
-                                                className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
-                                                src={item.img}
-                                                alt={item.name}
-                                            />
-                                            <span
-                                                className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold shadow-sm
-                                            ${
-                                                item.category ===
-                                                'Farming Equipment'
-                                                    ? 'bg-gray-700'
-                                                    : item.category ===
-                                                      'Harvesting Tools'
-                                                    ? 'bg-gray-500'
-                                                    : item.category ===
-                                                      'Machinery'
-                                                    ? 'bg-gray-900'
-                                                    : 'bg-gray-400'
-                                            } text-white`}
-                                                style={{
-                                                    boxShadow:
-                                                        '0 2px 8px 0 rgba(60,60,60,0.12)',
-                                                }}
-                                            >
-                                                {item.category}
-                                            </span>
-                                        </div>
-                                        <div className="p-5 flex flex-col h-[170px]">
-                                            <h3 className="text-xl font-bold mb-1 truncate text-blue-900">
-                                                {item.Name}
-                                            </h3>
-                                            <p
-                                                className="text-gray-700 text-sm mb-4 truncate"
-                                                title={item.description}
-                                            >
-                                                {item.description}
-                                            </p>
-                                            <div className="flex items-center justify-between mt-auto">
-                                                <span className="text-xs text-gray-700 flex items-center gap-1">
-                                                    <span
-                                                        className={`inline-block w-2 h-2 rounded-full mr-1 ${statusColor}`}
-                                                    ></span>
-                                                    {item.status}
+                        <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
+                            {filteredItems.length === 0 ? (
+                                <div className="col-span-full text-center text-blue-300 py-16 text-lg font-semibold tracking-wide">
+                                    No equipment found.
+                                </div>
+                            ) : (
+                                paginatedItems.map((item) => {
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-xl border border-blue-100 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]"
+                                        >
+                                            <div className="relative">
+                                                <img
+                                                    className="w-full h-48 object-cover"
+                                                    src={item.img}
+                                                    alt={item.Name}
+                                                    style={{
+                                                        background: '#eff6ff',
+                                                    }}
+                                                />
+                                                <span
+                                                    className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg
+                                                    ${
+                                                        item.category ===
+                                                        'Farming Equipment'
+                                                            ? 'bg-green-500'
+                                                            : item.category ===
+                                                              'Harvesting Tools'
+                                                            ? 'bg-yellow-500'
+                                                            : item.category ===
+                                                              'Machinery'
+                                                            ? 'bg-gray-700'
+                                                            : item.category ===
+                                                              'Irrigation Systems'
+                                                            ? 'bg-blue-500'
+                                                            : item.category ===
+                                                              'Storage Equipment'
+                                                            ? 'bg-purple-500'
+                                                            : item.category ===
+                                                              'Processing Equipment'
+                                                            ? 'bg-red-500'
+                                                            : item.category ===
+                                                              'Safety Gear'
+                                                            ? 'bg-orange-500'
+                                                            : item.category ===
+                                                              'Pest Control'
+                                                            ? 'bg-pink-500'
+                                                            : item.category ===
+                                                              'Livestock Equipment'
+                                                            ? 'bg-indigo-500'
+                                                            : item.category ===
+                                                              'Measuring Tools'
+                                                            ? 'bg-teal-500'
+                                                            : item.category ===
+                                                              'Fisheries'
+                                                            ? 'bg-cyan-500'
+                                                            : 'bg-gray-500'
+                                                    }`}
+                                                >
+                                                    {item.category}
                                                 </span>
-                                                <div className="flex gap-2">
-                                                    <button
-                                                        className="bg-white hover:bg-blue-700 text-blue-900 hover:text-white font-bold py-2 px-5 rounded-2xl text-base border-2 border-blue-700 transition-colors shadow-lg"
-                                                        onClick={() =>
-                                                            handleRequestClick(
-                                                                item
-                                                            )
-                                                        }
-                                                    >
-                                                        Request
-                                                    </button>
+                                            </div>
+                                            <div className="p-5 flex flex-col flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-blue-900 line-clamp-1 min-h-[28px]">
+                                                    {item.Name}
+                                                </h3>
+                                                <p
+                                                    className="text-gray-600 text-sm mb-3 line-clamp-2 min-h-[40px] flex-grow"
+                                                    title={item.description}
+                                                >
+                                                    {item.description}
+                                                </p>
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <span className="text-sm text-blue-700 font-semibold">
+                                                        Qty: {item.quantity}
+                                                    </span>
+                                                    <div className="flex items-center gap-1">
+                                                        {typeIcon(
+                                                            item.category
+                                                        )}
+                                                    </div>
                                                 </div>
+                                                <button
+                                                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mt-auto"
+                                                    onClick={() =>
+                                                        handleRequestClick(item)
+                                                    }
+                                                >
+                                                    <i className="fa-solid fa-paper-plane mr-2"></i>
+                                                    Request Equipment
+                                                </button>
                                             </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })
+                            )}
                         </div>
-                        {filteredItems.length === 0 && (
-                            <div className="text-center text-gray-400 py-10 sm:py-16 text-base sm:text-lg font-medium">
-                                No items found for this category.
-                            </div>
-                        )}
                         {totalPages > 1 && (
-                            <div className="flex flex-wrap justify-center mt-10 gap-2 items-center mb-6">
-                                <button
-                                    className="px-3 py-1.5 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 disabled:opacity-50 transition"
-                                    onClick={() =>
-                                        setCurrentPage((p) =>
-                                            Math.max(1, p - 1)
-                                        )
-                                    }
-                                    disabled={currentPage === 1}
-                                    aria-label="Previous page"
+                            <div className="flex justify-center mt-6 mb-2">
+                                <nav
+                                    className="flex items-center gap-1 bg-white rounded-lg shadow px-3 py-1.5"
+                                    aria-label="Pagination"
                                 >
-                                    <i className="fa-solid fa-chevron-left"></i>
-                                </button>
-                                {Array.from({ length: totalPages }, (_, i) => (
                                     <button
-                                        key={i}
-                                        className={`px-4 py-2 rounded-lg font-semibold ${
-                                            currentPage === i + 1
-                                                ? 'bg-blue-700 text-white'
-                                                : 'bg-gray-200 text-blue-700 hover:bg-blue-300'
+                                        onClick={() =>
+                                            setCurrentPage((p) =>
+                                                Math.max(1, p - 1)
+                                            )
+                                        }
+                                        disabled={currentPage === 1}
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-500 hover:bg-gray-200 hover:text-gray-700 ${
+                                            currentPage === 1
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
                                         }`}
-                                        onClick={() => setCurrentPage(i + 1)}
+                                        aria-label="Previous"
                                     >
-                                        {i + 1}
+                                        <svg
+                                            className="w-4 h-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                d="M15 19l-7-7 7-7"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
                                     </button>
-                                ))}
-                                <button
-                                    className="px-3 py-1.5 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 disabled:opacity-50 transition"
-                                    onClick={() =>
-                                        setCurrentPage((p) =>
-                                            Math.min(totalPages, p + 1)
+                                    {totalPages > 6 ? (
+                                        <>
+                                            <button
+                                                onClick={() =>
+                                                    setCurrentPage(1)
+                                                }
+                                                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                    currentPage === 1
+                                                        ? 'bg-blue-500 text-white'
+                                                        : 'text-gray-700 hover:bg-gray-200'
+                                                }`}
+                                            >
+                                                1
+                                            </button>
+                                            {currentPage > 3 && (
+                                                <span className="px-1 text-gray-400">
+                                                    ...
+                                                </span>
+                                            )}
+                                            {Array.from(
+                                                { length: 3 },
+                                                (_, i) => {
+                                                    const page =
+                                                        currentPage - 1 + i;
+                                                    if (
+                                                        page <= 1 ||
+                                                        page >= totalPages
+                                                    )
+                                                        return null;
+                                                    return (
+                                                        <button
+                                                            key={page}
+                                                            onClick={() =>
+                                                                setCurrentPage(
+                                                                    page
+                                                                )
+                                                            }
+                                                            className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                                currentPage ===
+                                                                page
+                                                                    ? 'bg-blue-500 text-white'
+                                                                    : 'text-gray-700 hover:bg-gray-200'
+                                                            }`}
+                                                        >
+                                                            {page}
+                                                        </button>
+                                                    );
+                                                }
+                                            )}
+                                            {currentPage < totalPages - 2 && (
+                                                <span className="px-1 text-gray-400">
+                                                    ...
+                                                </span>
+                                            )}
+                                            <button
+                                                onClick={() =>
+                                                    setCurrentPage(totalPages)
+                                                }
+                                                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                    currentPage === totalPages
+                                                        ? 'bg-blue-500 text-white'
+                                                        : 'text-gray-700 hover:bg-gray-200'
+                                                }`}
+                                            >
+                                                {totalPages}
+                                            </button>
+                                        </>
+                                    ) : (
+                                        Array.from(
+                                            { length: totalPages },
+                                            (_, i) => (
+                                                <button
+                                                    key={i + 1}
+                                                    onClick={() =>
+                                                        setCurrentPage(i + 1)
+                                                    }
+                                                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                        currentPage === i + 1
+                                                            ? 'bg-blue-500 text-white'
+                                                            : 'text-gray-700 hover:bg-gray-200'
+                                                    }`}
+                                                >
+                                                    {i + 1}
+                                                </button>
+                                            )
                                         )
-                                    }
-                                    disabled={currentPage === totalPages}
-                                    aria-label="Next page"
-                                >
-                                    <i className="fa-solid fa-chevron-right"></i>
-                                </button>
+                                    )}
+                                    <button
+                                        onClick={() =>
+                                            setCurrentPage((p) =>
+                                                Math.min(totalPages, p + 1)
+                                            )
+                                        }
+                                        disabled={currentPage === totalPages}
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-500 hover:bg-gray-200 hover:text-gray-700 ${
+                                            currentPage === totalPages
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
+                                        }`}
+                                        aria-label="Next"
+                                    >
+                                        <svg
+                                            className="w-4 h-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                d="M9 5l7 7-7 7"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
+                                    </button>
+                                </nav>
                             </div>
                         )}
                     </section>
@@ -1043,10 +1112,39 @@ export default function Eic() {
                 .eic-title {
                     color: #1e3a8a !important;
                 }
+                .line-clamp-1 {
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 1;
+                }
+                .line-clamp-2 {
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                }
+                @media (max-width: 1200px) {
+                    .max-w-5xl {
+                        max-width: 98vw !important;
+                    }
+                    .lg\\:grid-cols-3 {
+                        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    }
+                }
+                @media (max-width: 900px) {
+                    .lg\\:grid-cols-3, .sm\\:grid-cols-2 {
+                        grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+                    }
+                }
                 @media (max-width: 640px) {
                     .text-4xl, .md\\:text-5xl { font-size: 1.7rem !important; }
                     .text-2xl, .sm\\:text-2xl { font-size: 1.2rem !important; }
                     .text-3xl, .sm\\:text-3xl { font-size: 1.5rem !important; }
+                    .max-w-5xl {
+                        padding-left: 0 !important;
+                        padding-right: 0 !important;
+                    }
                 }
                 .animate-fade-in {
                     animation: fadeIn 0.2s;

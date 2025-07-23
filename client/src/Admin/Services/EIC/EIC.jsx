@@ -20,7 +20,9 @@ export default function EIC() {
     const [selectedStack, setSelectedStack] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [editingStack, setEditingStack] = useState(null);
-    const [imageUpdateTimestamp, setImageUpdateTimestamp] = useState(Date.now());
+    const [imageUpdateTimestamp, setImageUpdateTimestamp] = useState(
+        Date.now()
+    );
 
     // Alert state for success/error messages
     const [alert, setAlert] = useState({
@@ -806,7 +808,9 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
     // Load current image when modal opens
     React.useEffect(() => {
         if (stack?.item?.id) {
-            setCurrentImageUrl(`/api/eic/photo/${stack.item.id}?t=${imageUpdateTimestamp}`);
+            setCurrentImageUrl(
+                `/api/eic/photo/${stack.item.id}?t=${imageUpdateTimestamp}`
+            );
         }
     }, [stack?.item?.id, imageUpdateTimestamp]);
 

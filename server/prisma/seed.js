@@ -360,11 +360,16 @@ async function createItemStacks() {
 //? ================================== ITEM TRANSACTIONS ================================== ?//
 
 async function createItemTransactions() {
-  const itemStacks = await prisma.itemStack.findMany();
+  const itemStacks = await prisma.itemStack.findMany({
+    where: {
+      status: {
+        in: ['EIC', 'Distributed'] // Only create transactions for EIC and Distributed stacks
+      }
+    }
+  });
   const accounts = await prisma.account.findMany();
   
-  const transactionTypes = ['Request', 'Return', 'Maintenance', 'Damage_Report'];
-  const transactionStatuses = ['Pending', 'Approved', 'Rejected'];
+  const transactionStatuses = ['Pending', 'Approved', 'Rejected', 'Returned', 'No_Return', 'late_return', 'No_Pickup', 'Cancelled'];
 
   for (const stack of itemStacks) {
     // Skip creating transactions for stacks with 0 quantity
@@ -384,17 +389,37 @@ async function createItemTransactions() {
       const maxQuantity = Math.min(stack.quantity, 10); // Cap at 10 for reasonable transactions
       const quantity = faker.number.int({ min: 1, max: maxQuantity });
 
-      // Select random transaction type and status
-      const transactionType = transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
+      // Select random transaction status
       const status = transactionStatuses[Math.floor(Math.random() * transactionStatuses.length)];
+
+      // Generate pickup date (between 30 days ago and 30 days from now)
+      const pickupDate = faker.date.between({
+        from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+        to: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)    // 30 days from now
+      });
+
+      // Generate return date (only if status indicates item was returned)
+      let returnDate = null;
+      if (['Returned', 'late_return'].includes(status)) {
+        // Return date should be after pickup date
+        returnDate = faker.date.between({
+          from: pickupDate,
+          to: new Date(pickupDate.getTime() + 14 * 24 * 60 * 60 * 1000) // Up to 14 days after pickup
+        });
+      }
+
+      // Generate date limit (admin-set borrowing limit in days)
+      const dateLimit = faker.number.int({ min: 1, max: 14 }); // 1 to 14 days borrowing limit
 
       await prisma.itemTransaction.create({
         data: {
           itemStackId: stack.id,
           accountId: accountId,
           quantity: quantity,
-          transactionType: transactionType,
           status: status,
+          pickupDate: pickupDate,
+          returnDate: returnDate,
+          dateLimit: dateLimit,
         },
       });
 
