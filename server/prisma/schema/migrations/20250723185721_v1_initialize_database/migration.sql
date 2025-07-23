@@ -70,7 +70,7 @@ CREATE TABLE `item_stacks` (
     `id` VARCHAR(191) NOT NULL,
     `itemId` VARCHAR(191) NOT NULL,
     `quantity` INTEGER NOT NULL DEFAULT 1,
-    `status` ENUM('Available', 'Unavailable', 'Lost', 'Damaged', 'EIC', 'Distributed') NOT NULL DEFAULT 'Available',
+    `status` ENUM('Available', 'Unavailable', 'Damaged', 'EIC', 'Distributed') NOT NULL DEFAULT 'Available',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -82,9 +82,12 @@ CREATE TABLE `item_transactions` (
     `id` VARCHAR(191) NOT NULL,
     `itemStackId` VARCHAR(191) NOT NULL,
     `accountId` VARCHAR(191) NOT NULL,
+    `adminId` VARCHAR(191) NULL,
     `quantity` INTEGER NOT NULL DEFAULT 1,
-    `transactionType` VARCHAR(191) NOT NULL,
-    `status` ENUM('Pending', 'Approved', 'Rejected') NOT NULL DEFAULT 'Pending',
+    `status` ENUM('Pending', 'Approved', 'Rejected', 'Returned', 'No_Return', 'late_return', 'No_Pickup', 'Cancelled') NOT NULL DEFAULT 'Pending',
+    `pickupDate` DATETIME(3) NOT NULL,
+    `returnDate` DATETIME(3) NULL,
+    `dateLimit` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -141,6 +144,9 @@ ALTER TABLE `item_transactions` ADD CONSTRAINT `item_transactions_itemStackId_fk
 
 -- AddForeignKey
 ALTER TABLE `item_transactions` ADD CONSTRAINT `item_transactions_accountId_fkey` FOREIGN KEY (`accountId`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `item_transactions` ADD CONSTRAINT `item_transactions_adminId_fkey` FOREIGN KEY (`adminId`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `seminars` ADD CONSTRAINT `seminars_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

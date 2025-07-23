@@ -37,6 +37,7 @@ model ItemTransaction {
     id          String             @id @default(cuid())
     itemStackId String
     accountId   String
+    adminId     String? // Admin who approved/rejected/responded to the transaction
     quantity    Int                @default(1)
     status      transaction_status @default(Pending)
     pickupDate  DateTime
@@ -48,6 +49,7 @@ model ItemTransaction {
     // Relations
     itemStack ItemStack @relation(fields: [itemStackId], references: [id])
     account   Account   @relation(fields: [accountId], references: [id])
+    admin     Account?  @relation("AdminTransactions", fields: [adminId], references: [id])
 
     @@map("item_transactions")
 }

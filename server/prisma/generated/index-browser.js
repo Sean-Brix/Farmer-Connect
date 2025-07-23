@@ -183,6 +183,7 @@ exports.Prisma.ItemTransactionScalarFieldEnum = {
   id: 'id',
   itemStackId: 'itemStackId',
   accountId: 'accountId',
+  adminId: 'adminId',
   quantity: 'quantity',
   status: 'status',
   pickupDate: 'pickupDate',
@@ -275,7 +276,8 @@ exports.Prisma.ItemStackOrderByRelevanceFieldEnum = {
 exports.Prisma.ItemTransactionOrderByRelevanceFieldEnum = {
   id: 'id',
   itemStackId: 'itemStackId',
-  accountId: 'accountId'
+  accountId: 'accountId',
+  adminId: 'adminId'
 };
 
 exports.Prisma.SeminarOrderByRelevanceFieldEnum = {

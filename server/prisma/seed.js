@@ -368,6 +368,13 @@ async function createItemTransactions() {
     }
   });
   const accounts = await prisma.account.findMany();
+  const adminAccounts = await prisma.account.findMany({
+    where: {
+      access: {
+        in: ['Admin', 'Super_Admin']
+      }
+    }
+  });
   
   const transactionStatuses = ['Pending', 'Approved', 'Rejected', 'Returned', 'No_Return', 'late_return', 'No_Pickup', 'Cancelled'];
 
@@ -411,10 +418,18 @@ async function createItemTransactions() {
       // Generate date limit (admin-set borrowing limit in days)
       const dateLimit = faker.number.int({ min: 1, max: 14 }); // 1 to 14 days borrowing limit
 
+      // Assign admin ID if transaction has been processed (not Pending)
+      let adminId = null;
+      if (status !== 'Pending' && adminAccounts.length > 0) {
+        const randomAdminIndex = Math.floor(Math.random() * adminAccounts.length);
+        adminId = adminAccounts[randomAdminIndex].id;
+      }
+
       await prisma.itemTransaction.create({
         data: {
           itemStackId: stack.id,
           accountId: accountId,
+          adminId: adminId,
           quantity: quantity,
           status: status,
           pickupDate: pickupDate,

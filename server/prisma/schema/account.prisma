@@ -24,9 +24,10 @@ model Account {
   updatedAt      DateTime           @updatedAt
 
   // Relations
-  seminars        SeminarParticipant[]
-  itemTransactions ItemTransaction[]
-  seminarsCreated Seminar[]            @relation("SeminarsCreated")
+  seminars          SeminarParticipant[]
+  itemTransactions  ItemTransaction[]
+  adminTransactions ItemTransaction[]    @relation("AdminTransactions")
+  seminarsCreated   Seminar[]            @relation("SeminarsCreated")
 
   @@map("accounts")
 }
