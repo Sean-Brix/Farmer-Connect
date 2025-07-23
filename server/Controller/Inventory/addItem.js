@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 async function addItem(req, res) {
     try {
         const { name, description, category, quantity, status } = req.body;
+        const file = req.file; // Get uploaded image file
 
         // Validate required fields
         if (!name || !quantity) {
@@ -18,6 +19,28 @@ async function addItem(req, res) {
             return res.status(400).json({
                 error: 'Quantity must be a positive number',
             });
+        }
+
+        // Validate image file if provided
+        if (file) {
+            const allowedTypes = [
+                'image/jpeg',
+                'image/jpg',
+                'image/png',
+                'image/gif',
+            ];
+            if (!allowedTypes.includes(file.mimetype)) {
+                return res.status(400).json({
+                    error: 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.',
+                });
+            }
+
+            const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+            if (file.size > maxSize) {
+                return res.status(400).json({
+                    error: 'File size too large. Maximum size is 5MB.',
+                });
+            }
         }
 
         // Convert category format (replace spaces with underscores for enum)
@@ -57,6 +80,17 @@ async function addItem(req, res) {
                 });
             }
 
+            // If a new image is provided, update the existing item's image
+            if (file) {
+                await prisma.inventoryItem.update({
+                    where: { id: existingItem.id },
+                    data: {
+                        picture: file.buffer,
+                        updatedAt: new Date(),
+                    },
+                });
+            }
+
             // Return the updated item with all stacks
             const updatedItem = await prisma.inventoryItem.findUnique({
                 where: { id: existingItem.id },
@@ -91,6 +125,7 @@ async function addItem(req, res) {
                     description:
                         description?.trim() || 'No description provided',
                     category: categoryEnum,
+                    picture: file ? file.buffer : null, // Add image if provided
                     item_stacks: {
                         create: stacksToCreate,
                     },

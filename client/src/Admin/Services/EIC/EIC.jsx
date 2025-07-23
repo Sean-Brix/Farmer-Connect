@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // ASSETS
 import default_image from '../../../Assets/eic_default.png';
@@ -20,6 +20,7 @@ export default function EIC() {
     const [selectedStack, setSelectedStack] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [editingStack, setEditingStack] = useState(null);
+    const [imageUpdateTimestamp, setImageUpdateTimestamp] = useState(Date.now());
 
     // Alert state for success/error messages
     const [alert, setAlert] = useState({
@@ -141,10 +142,7 @@ export default function EIC() {
         try {
             const response = await fetch('/api/inventory/item/add', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
+                body: formData, // Send FormData directly for file upload
             });
 
             if (!response.ok) {
@@ -152,6 +150,7 @@ export default function EIC() {
             }
 
             setShowAddModal(false);
+            setImageUpdateTimestamp(Date.now()); // Force image refresh
             await fetchEICStacks(); // Refresh EIC items
             await fetchAllItems(); // Refresh all items for dropdown
             showAlert('EIC item added successfully', 'success');
@@ -198,26 +197,38 @@ export default function EIC() {
         }
 
         try {
-            // TODO: Replace with actual endpoint when ready
-            const response = await fetch(`/api/eic/edit/${editingStack.id}`, {
+            const response = await fetch(`/api/eic/item/${editingStack.id}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
+                body: formData, // Send FormData directly for file upload
             });
 
+            const responseData = await response.json();
+
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(
+                    responseData.error ||
+                        `HTTP error! status: ${response.status}`
+                );
             }
 
-            setShowEditModal(false);
-            setEditingStack(null);
-            await fetchEICStacks(); // Refresh EIC items
-            showAlert('EIC item updated successfully', 'success');
+            // Check for success response
+            if (responseData.success) {
+                setShowEditModal(false);
+                setEditingStack(null);
+                setImageUpdateTimestamp(Date.now()); // Force image refresh
+                await fetchEICStacks(); // Refresh EIC items
+                showAlert(
+                    responseData.message || 'EIC item updated successfully',
+                    'success'
+                );
+            } else {
+                throw new Error(
+                    responseData.error || 'Failed to update EIC item'
+                );
+            }
         } catch (error) {
             console.error('Failed to update EIC item:', error);
-            showAlert('Failed to update EIC item', 'error');
+            showAlert(error.message || 'Failed to update EIC item', 'error');
         }
     };
 
@@ -391,6 +402,7 @@ export default function EIC() {
                                 stack={stack}
                                 onViewDetails={handleViewDetails}
                                 onEdit={handleEditStack}
+                                imageUpdateTimestamp={imageUpdateTimestamp}
                             />
                         ))}
 
@@ -417,6 +429,7 @@ export default function EIC() {
                 <EICDetailModal
                     stack={selectedStack}
                     onClose={handleCloseDetailModal}
+                    imageUpdateTimestamp={imageUpdateTimestamp}
                 />
             )}
 
@@ -426,6 +439,7 @@ export default function EIC() {
                     stack={editingStack}
                     onClose={handleCloseEditModal}
                     onSubmit={handleEditSubmit}
+                    imageUpdateTimestamp={imageUpdateTimestamp}
                 />
             )}
         </div>
@@ -436,7 +450,7 @@ export default function EIC() {
 /* EIC ITEM CARD COMPONENT - Matching Seminar Design Style */
 /* ================================================================================== */
 
-function EICItemCard({ stack, onViewDetails, onEdit }) {
+function EICItemCard({ stack, onViewDetails, onEdit, imageUpdateTimestamp }) {
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -454,9 +468,16 @@ function EICItemCard({ stack, onViewDetails, onEdit }) {
         <div className="relative flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group">
             <div className="relative">
                 <img
-                    src={stack.item?.picture || default_image}
+                    src={
+                        stack.item?.id
+                            ? `/api/eic/photo/${stack.item.id}?t=${imageUpdateTimestamp}`
+                            : default_image
+                    }
                     alt={stack.item?.name || 'EIC Item'}
                     className="w-full h-40 sm:h-48 object-cover transition-all duration-300 group-hover:scale-105"
+                    onError={(e) => {
+                        e.target.src = default_image;
+                    }}
                 />
                 <span className="absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm bg-orange-50 text-orange-700 border border-orange-100">
                     EIC
@@ -512,7 +533,7 @@ function EICItemCard({ stack, onViewDetails, onEdit }) {
 /* EIC DETAIL MODAL COMPONENT */
 /* ================================================================================== */
 
-function EICDetailModal({ stack, onClose }) {
+function EICDetailModal({ stack, onClose, imageUpdateTimestamp }) {
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -552,30 +573,37 @@ function EICDetailModal({ stack, onClose }) {
 
                 {/* IMAGE */}
                 <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
-                    {stack.item?.picture ? (
+                    {stack.item?.id ? (
                         <img
                             className="object-cover w-full h-full"
-                            src={stack.item.picture}
+                            src={`/api/eic/photo/${stack.item.id}?t=${imageUpdateTimestamp}`}
                             alt={stack.item?.name || 'EIC Item'}
+                            onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextElementSibling.style.display =
+                                    'flex';
+                            }}
                         />
-                    ) : (
-                        <div className="text-gray-400 text-3xl flex flex-col items-center">
-                            <svg
-                                className="w-16 h-16 mb-2"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                            </svg>
-                            No Image Available
-                        </div>
-                    )}
+                    ) : null}
+                    <div
+                        className="text-gray-400 text-3xl flex flex-col items-center"
+                        style={{ display: stack.item?.id ? 'none' : 'flex' }}
+                    >
+                        <svg
+                            className="w-16 h-16 mb-2"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                        No Image Available
+                    </div>
                 </div>
 
                 {/* DETAILS */}
@@ -741,7 +769,7 @@ function EICDetailModal({ stack, onClose }) {
 /* EIC EDIT MODAL COMPONENT */
 /* ================================================================================== */
 
-function EICEditModal({ stack, onClose, onSubmit }) {
+function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
     const [formData, setFormData] = useState({
         name: stack.item?.name || '',
         description: stack.item?.description || '',
@@ -755,6 +783,10 @@ function EICEditModal({ stack, onClose, onSubmit }) {
         category: stack.item?.category || 'Other',
         quantity: stack.quantity || 1,
     });
+
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [currentImageUrl, setCurrentImageUrl] = useState(null);
 
     const categories = [
         'Farming Equipment',
@@ -771,12 +803,57 @@ function EICEditModal({ stack, onClose, onSubmit }) {
         'Other',
     ];
 
+    // Load current image when modal opens
+    React.useEffect(() => {
+        if (stack?.item?.id) {
+            setCurrentImageUrl(`/api/eic/photo/${stack.item.id}?t=${imageUpdateTimestamp}`);
+        }
+    }, [stack?.item?.id, imageUpdateTimestamp]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
             [name]: name === 'quantity' ? parseInt(value) || 0 : value,
         }));
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type
+            const allowedTypes = [
+                'image/jpeg',
+                'image/jpg',
+                'image/png',
+                'image/gif',
+            ];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Please select a valid image file (JPEG, PNG, or GIF)');
+                return;
+            }
+
+            // Validate file size (5MB limit)
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) {
+                alert('File size must be less than 5MB');
+                return;
+            }
+
+            setSelectedImage(file);
+
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImagePreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const removeImage = () => {
+        setSelectedImage(null);
+        setImagePreview(null);
     };
 
     const handleSubmit = (e) => {
@@ -788,7 +865,19 @@ function EICEditModal({ stack, onClose, onSubmit }) {
             formData.description !== originalData.description ||
             formData.category !== originalData.category;
 
-        onSubmit(formData, hasNameOrDescriptionChange);
+        // Create FormData for file upload
+        const submitData = new FormData();
+        submitData.append('name', formData.name);
+        submitData.append('description', formData.description);
+        submitData.append('category', formData.category);
+        submitData.append('quantity', formData.quantity);
+
+        // Add image if selected
+        if (selectedImage) {
+            submitData.append('image', selectedImage);
+        }
+
+        onSubmit(submitData, hasNameOrDescriptionChange);
     };
 
     return (
@@ -908,6 +997,90 @@ function EICEditModal({ stack, onClose, onSubmit }) {
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             required
                         />
+                    </div>
+
+                    {/* Image Upload */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Item Image
+                        </label>
+
+                        {/* Current Image Display */}
+                        {currentImageUrl && !imagePreview && (
+                            <div className="mb-3">
+                                <p className="text-xs text-gray-600 mb-2">
+                                    Current Image:
+                                </p>
+                                <img
+                                    src={currentImageUrl}
+                                    alt="Current item"
+                                    className="w-20 h-20 object-cover rounded border-2 border-gray-200"
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                    }}
+                                />
+                            </div>
+                        )}
+
+                        {/* Image Preview */}
+                        {imagePreview && (
+                            <div className="mb-3">
+                                <p className="text-xs text-gray-600 mb-2">
+                                    New Image Preview:
+                                </p>
+                                <img
+                                    src={imagePreview}
+                                    alt="Preview"
+                                    className="w-20 h-20 object-cover rounded border-2 border-blue-200"
+                                />
+                            </div>
+                        )}
+
+                        {/* Upload Controls */}
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                className="hidden"
+                                id="edit-image-upload"
+                            />
+                            <label
+                                htmlFor="edit-image-upload"
+                                className="flex items-center px-3 py-2 bg-blue-100 text-blue-700 rounded cursor-pointer hover:bg-blue-200 transition text-sm"
+                            >
+                                <svg
+                                    className="w-4 h-4 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                    />
+                                </svg>
+                                {currentImageUrl || imagePreview
+                                    ? 'Change Image'
+                                    : 'Add Image'}
+                            </label>
+                            {selectedImage && (
+                                <button
+                                    type="button"
+                                    onClick={removeImage}
+                                    className="px-2 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 transition"
+                                >
+                                    Remove
+                                </button>
+                            )}
+                        </div>
+
+                        <p className="text-xs text-gray-500 mt-1">
+                            Optional. Supported formats: JPEG, PNG, GIF. Max
+                            size: 5MB.
+                        </p>
                     </div>
 
                     {/* Buttons */}

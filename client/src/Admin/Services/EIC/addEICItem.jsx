@@ -21,6 +21,8 @@ const AddEICItemModal = ({
     const [showDropdown, setShowDropdown] = useState(false);
     const [filteredItems, setFilteredItems] = useState([]);
     const [isNewItem, setIsNewItem] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
 
     // Combine existing items and EIC items for the dropdown
     const allAvailableItems = [
@@ -113,19 +115,62 @@ const AddEICItemModal = ({
         setForm((prev) => ({ ...prev, quantity: quantity.toString() }));
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type
+            const allowedTypes = [
+                'image/jpeg',
+                'image/jpg',
+                'image/png',
+                'image/gif',
+            ];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Please select a valid image file (JPEG, PNG, or GIF)');
+                return;
+            }
+
+            // Validate file size (5MB limit)
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) {
+                alert('File size must be less than 5MB');
+                return;
+            }
+
+            setSelectedImage(file);
+
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImagePreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const removeImage = () => {
+        setSelectedImage(null);
+        setImagePreview(null);
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!form.name || !form.quantity) return;
 
-        // Convert category to snake case for submission
-        const submissionData = {
-            ...form,
-            category: convertToSnakeCase(form.category),
-            quantity: parseInt(form.quantity),
-            status: 'EIC', // Ensure status is always EIC
-        };
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append('name', form.name);
+        formData.append('quantity', parseInt(form.quantity));
+        formData.append('description', form.description);
+        formData.append('category', convertToSnakeCase(form.category));
+        formData.append('status', 'EIC');
 
-        onSubmit(submissionData);
+        // Add image if selected
+        if (selectedImage) {
+            formData.append('image', selectedImage);
+        }
+
+        onSubmit(formData);
 
         // Reset form
         setForm({
@@ -137,6 +182,8 @@ const AddEICItemModal = ({
         });
         setNameInput('');
         setIsNewItem(false);
+        setSelectedImage(null);
+        setImagePreview(null);
     };
 
     const handleClose = () => {
@@ -151,6 +198,8 @@ const AddEICItemModal = ({
         setNameInput('');
         setIsNewItem(false);
         setShowDropdown(false);
+        setSelectedImage(null);
+        setImagePreview(null);
         onClose();
     };
 
@@ -244,6 +293,59 @@ const AddEICItemModal = ({
                                     </option>
                                 ))}
                             </select>
+
+                            {/* Image Upload */}
+                            <div className="space-y-2">
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Item Image (Optional)
+                                </label>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageChange}
+                                        className="hidden"
+                                        id="image-upload"
+                                    />
+                                    <label
+                                        htmlFor="image-upload"
+                                        className="flex items-center px-3 py-2 bg-orange-100 text-orange-700 rounded cursor-pointer hover:bg-orange-200 transition text-sm"
+                                    >
+                                        <svg
+                                            className="w-4 h-4 mr-2"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                            />
+                                        </svg>
+                                        Choose Image
+                                    </label>
+                                    {selectedImage && (
+                                        <button
+                                            type="button"
+                                            onClick={removeImage}
+                                            className="px-2 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 transition"
+                                        >
+                                            Remove
+                                        </button>
+                                    )}
+                                </div>
+                                {imagePreview && (
+                                    <div className="mt-2">
+                                        <img
+                                            src={imagePreview}
+                                            alt="Preview"
+                                            className="w-20 h-20 object-cover rounded border-2 border-orange-200"
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </>
                     )}
 

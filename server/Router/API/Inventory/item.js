@@ -1,4 +1,5 @@
 import express from 'express';
+import upload from '../../../Utils/multer_upload.js';
 
 // Route: ('/api/inventory/item')
 const router = express.Router();
@@ -14,7 +15,7 @@ router.use(authorize);
 
 // Add Item
 import addItem from '../../../Controller/Inventory/addItem.js';
-router.post('/add', addItem);
+router.post('/add', upload.single('image'), addItem);
 
 // Edit Item
 import editItem from '../../../Controller/Inventory/editItem.js';
@@ -23,7 +24,6 @@ router.post('/edit', editItem);
 // Delete Item
 import deleteItem from '../../../Controller/Inventory/deleteItem.js';
 router.delete('/delete/:id', deleteItem);
-
 
 //? ================================================================================================ ?//
 

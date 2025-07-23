@@ -5,6 +5,7 @@ async function editItem(req, res) {
     try {
         const stackId = req.params.id;
         const { name, description, category, quantity } = req.body;
+        const file = req.file; // Get uploaded image file
 
         // Validate required fields
         if (!stackId) {
@@ -26,6 +27,30 @@ async function editItem(req, res) {
                 success: false,
                 error: 'Quantity must be a non-negative number',
             });
+        }
+
+        // Validate image file if provided
+        if (file) {
+            const allowedTypes = [
+                'image/jpeg',
+                'image/jpg',
+                'image/png',
+                'image/gif',
+            ];
+            if (!allowedTypes.includes(file.mimetype)) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.',
+                });
+            }
+
+            const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+            if (file.size > maxSize) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'File size too large. Maximum size is 5MB.',
+                });
+            }
         }
 
         // Validate category enum
@@ -86,15 +111,23 @@ async function editItem(req, res) {
 
         // Start a transaction to update both item and stack
         const result = await prisma.$transaction(async (tx) => {
+            // Prepare the update data for the inventory item
+            const itemUpdateData = {
+                name: name.trim(),
+                description: description ? description.trim() : null,
+                category: categoryEnum,
+                updatedAt: new Date(),
+            };
+
+            // Add image to update data if provided
+            if (file) {
+                itemUpdateData.picture = file.buffer;
+            }
+
             // Update the inventory item
             const updatedItem = await tx.inventoryItem.update({
                 where: { id: existingStack.item.id },
-                data: {
-                    name: name.trim(),
-                    description: description ? description.trim() : null,
-                    category: categoryEnum,
-                    updatedAt: new Date(),
-                },
+                data: itemUpdateData,
             });
 
             // Update the stack quantity
