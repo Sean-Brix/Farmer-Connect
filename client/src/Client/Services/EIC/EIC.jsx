@@ -515,36 +515,238 @@ export default function Eic() {
 
     const handleMyRequestsClick = async () => {
         try {
-            //Check if user is logged in
-            const response = await fetch('/api/authentication/gotToken');
-            if (!response.ok) {
-                if (confirm('Login first?')) {
+            // Fetch user requests using the correct endpoint
+            const requestsResponse = await fetch('/api/eic/request/me');
+
+            if (requestsResponse.status === 401) {
+                // Show custom login prompt when unauthorized
+                const alertDiv = document.createElement('div');
+                alertDiv.innerHTML = `
+                    <div id="custom-login-alert" style="
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) scale(0.95);
+                        z-index: 9999;
+                        background: rgba(37,99,235,0.98);
+                        background: linear-gradient(100deg, #2563eb 0%, #3b82f6 100%);
+                        color: #fff;
+                        padding: 2rem 3rem;
+                        border-radius: 2rem;
+                        box-shadow: 0 12px 40px 0 rgba(59,130,246,0.22);
+                        font-size: 1.18rem;
+                        font-weight: 700;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 1.5rem;
+                        min-width: 350px;
+                        max-width: 90vw;
+                        animation: loginAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                        overflow: hidden;
+                        text-align: center;
+                    ">
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: rgba(255,255,255,0.13);
+                            border-radius: 50%;
+                            width: 3rem;
+                            height: 3rem;
+                            box-shadow: 0 2px 8px 0 rgba(59,130,246,0.10);
+                        ">
+                            <i class="fa-solid fa-user-lock" style="font-size:1.5rem; color: #fff; filter: drop-shadow(0 2px 8px #3b82f688);"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.3rem; margin-bottom: 0.5rem;">Login Required</div>
+                            <div style="font-size: 1rem; font-weight: 400; opacity: 0.9; line-height: 1.4;">
+                                You need to login first to view your requests
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                            <button id="login-btn" style="
+                                background: rgba(255,255,255,0.2);
+                                border: 2px solid rgba(255,255,255,0.3);
+                                color: #fff;
+                                padding: 0.75rem 1.5rem;
+                                border-radius: 1rem;
+                                font-weight: 600;
+                                cursor: pointer;
+                                transition: all 0.2s;
+                                font-size: 1rem;
+                            ">Go to Login</button>
+                            <button id="cancel-btn" style="
+                                background: transparent;
+                                border: 2px solid rgba(255,255,255,0.3);
+                                color: #fff;
+                                padding: 0.75rem 1.5rem;
+                                border-radius: 1rem;
+                                font-weight: 600;
+                                cursor: pointer;
+                                transition: all 0.2s;
+                                font-size: 1rem;
+                            ">Cancel</button>
+                        </div>
+                        <span class="login-alert-bar" style="
+                            position: absolute;
+                            bottom: 0; left: 0;
+                            height: 4px;
+                            width: 100%;
+                            background: linear-gradient(90deg, #dbeafe 0%, #3b82f6 100%);
+                        "></span>
+                    </div>
+                    <style>
+                        @keyframes loginAlertPopIn {
+                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                        }
+                        #login-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+                        #cancel-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+                    </style>
+                `;
+                document.body.appendChild(alertDiv);
+
+                // Handle button clicks
+                document.getElementById('login-btn').onclick = () => {
+                    document.body.removeChild(alertDiv);
                     navigate('/login');
-                    return;
-                }
+                };
+
+                document.getElementById('cancel-btn').onclick = () => {
+                    document.body.removeChild(alertDiv);
+                };
+
                 return;
             }
 
-            // TODO do
-            const requestsResponse = await fetch('/api/eic/myRequest');
             if (requestsResponse.ok) {
                 const requestsData = await requestsResponse.json();
                 setMyRequests(
-                    Array.isArray(requestsData.payload)
-                        ? requestsData.payload
+                    Array.isArray(requestsData.requests)
+                        ? requestsData.requests
                         : []
                 );
                 setShowMyRequestsModal(true);
             } else {
+                // Show error alert for other errors
+                const alertDiv = document.createElement('div');
+                alertDiv.innerHTML = `
+                    <div id="custom-error-alert" style="
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) scale(0.95);
+                        z-index: 9999;
+                        background: #dc2626;
+                        background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
+                        color: #fff;
+                        padding: 1.5rem 2.8rem;
+                        border-radius: 2rem;
+                        box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
+                        font-size: 1.18rem;
+                        font-weight: 700;
+                        display: flex;
+                        align-items: center;
+                        gap: 1.1rem;
+                        min-width: 320px;
+                        max-width: 90vw;
+                        animation: errorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                        overflow: hidden;
+                    ">
+                        <span style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: rgba(255,255,255,0.13);
+                            border-radius: 50%;
+                            width: 2.8rem;
+                            height: 2.8rem;
+                            box-shadow: 0 2px 8px 0 rgba(239,68,68,0.10);
+                        ">
+                            <i class="fa-solid fa-circle-exclamation" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
+                        </span>
+                        <span style="letter-spacing:0.01em;">Failed to fetch your requests</span>
+                    </div>
+                    <style>
+                        @keyframes errorAlertPopIn {
+                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                        }
+                    </style>
+                `;
+                document.body.appendChild(alertDiv);
+
+                setTimeout(() => {
+                    if (document.getElementById('custom-error-alert')) {
+                        document.body.removeChild(alertDiv);
+                    }
+                }, 3000);
+
                 console.error(
                     'Failed to fetch user requests:',
                     requestsResponse.statusText
                 );
-                alert('Failed to fetch your requests.');
             }
         } catch (error) {
+            // Show error alert for network issues
+            const alertDiv = document.createElement('div');
+            alertDiv.innerHTML = `
+                <div id="custom-network-error-alert" style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(0.95);
+                    z-index: 9999;
+                    background: #dc2626;
+                    background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
+                    color: #fff;
+                    padding: 1.5rem 2.8rem;
+                    border-radius: 2rem;
+                    box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
+                    font-size: 1.18rem;
+                    font-weight: 700;
+                    display: flex;
+                    align-items: center;
+                    gap: 1.1rem;
+                    min-width: 320px;
+                    max-width: 90vw;
+                    animation: networkErrorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                    overflow: hidden;
+                ">
+                    <span style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255,255,255,0.13);
+                        border-radius: 50%;
+                        width: 2.8rem;
+                        height: 2.8rem;
+                        box-shadow: 0 2px 8px 0 rgba(239,68,68,0.10);
+                    ">
+                        <i class="fa-solid fa-wifi" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
+                    </span>
+                    <span style="letter-spacing:0.01em;">Network error. Please try again.</span>
+                </div>
+                <style>
+                    @keyframes networkErrorAlertPopIn {
+                        0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                        60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                        100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                    }
+                </style>
+            `;
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => {
+                if (document.getElementById('custom-network-error-alert')) {
+                    document.body.removeChild(alertDiv);
+                }
+            }, 3000);
+
             console.error('Error fetching user requests:', error);
-            alert('Error fetching your requests.');
         }
     };
 
@@ -1173,9 +1375,9 @@ export default function Eic() {
             )}
             {showMyRequestsModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
-                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-2xl w-full relative overflow-hidden animate-fade-in">
+                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-4 relative overflow-hidden animate-fade-in max-h-[90vh] flex flex-col">
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-700 to-blue-600">
+                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-700 to-blue-600 flex-shrink-0">
                             <h2 className="text-xl font-bold text-white">
                                 <i className="fa-solid fa-list mr-2"></i>
                                 My Requests
@@ -1189,46 +1391,194 @@ export default function Eic() {
                             </button>
                         </div>
                         {/* Modal Body */}
-                        <div className="px-8 py-6 space-y-5">
+                        <div className="px-8 py-6 space-y-5 overflow-y-auto flex-1">
                             {myRequests.length > 0 ? (
-                                <table className="w-full">
-                                    <thead>
-                                        <tr className="text-left text-gray-600">
-                                            <th className="py-2">Item</th>
-                                            <th className="py-2">
-                                                Borrow Date
-                                            </th>
-                                            <th className="py-2">
-                                                Return Date
-                                            </th>
-                                            <th className="py-2">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {myRequests.map((request) => (
-                                            <tr
-                                                key={request.id}
-                                                className="border-b border-gray-100"
-                                            >
-                                                <td className="py-3">
-                                                    {request.item_name}
-                                                </td>
-                                                <td className="py-3">
-                                                    {request.borrow_date}
-                                                </td>
-                                                <td className="py-3">
-                                                    {request.return_date}
-                                                </td>
-                                                <td className="py-3">
-                                                    {request.status}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                <div>
+                                    <div className="mb-6 text-sm text-gray-600 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                                        <i className="fa-solid fa-info-circle mr-2 text-blue-600"></i>
+                                        <span className="font-medium">
+                                            Found {myRequests.length} request
+                                            {myRequests.length !== 1 ? 's' : ''}
+                                        </span>
+                                        <span className="ml-2 text-gray-500">
+                                            • Sorted by most recent first
+                                        </span>
+                                    </div>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full border-collapse bg-white shadow-sm rounded-xl overflow-hidden">
+                                            <thead>
+                                                <tr className="bg-gradient-to-r from-gray-50 to-gray-100 text-left text-gray-700">
+                                                    <th className="py-4 px-6 font-semibold border-b border-gray-200 min-w-[280px]">
+                                                        Item Details
+                                                    </th>
+                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 text-center min-w-[80px]">
+                                                        Quantity
+                                                    </th>
+                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 min-w-[120px]">
+                                                        Pickup Date
+                                                    </th>
+                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 min-w-[120px]">
+                                                        Return Date
+                                                    </th>
+                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 text-center min-w-[100px]">
+                                                        Status
+                                                    </th>
+                                                    <th className="py-4 px-6 font-semibold border-b border-gray-200 text-center min-w-[100px]">
+                                                        Requested
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {myRequests.map(
+                                                    (request, index) => (
+                                                        <tr
+                                                            key={request.id}
+                                                            className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${
+                                                                index % 2 === 0
+                                                                    ? 'bg-white'
+                                                                    : 'bg-gray-25'
+                                                            }`}
+                                                        >
+                                                            <td className="py-5 px-6">
+                                                                <div className="space-y-2">
+                                                                    <div className="font-semibold text-gray-800 text-base leading-tight">
+                                                                        {
+                                                                            request.itemName
+                                                                        }
+                                                                    </div>
+                                                                    <div className="text-sm text-gray-500 font-medium">
+                                                                        <i className="fa-solid fa-tag mr-1"></i>
+                                                                        {
+                                                                            request.itemCategory
+                                                                        }
+                                                                    </div>
+                                                                    {request.itemDateLimit && (
+                                                                        <div className="text-xs text-blue-600 bg-blue-50 inline-block px-2 py-1 rounded-full">
+                                                                            <i className="fa-solid fa-clock mr-1"></i>
+                                                                            Max:{' '}
+                                                                            {
+                                                                                request.itemDateLimit
+                                                                            }{' '}
+                                                                            days
+                                                                        </div>
+                                                                    )}
+                                                                    {request.requestNote && (
+                                                                        <div className="text-xs text-gray-600 mt-2 p-2 bg-gray-50 rounded-lg border-l-2 border-gray-300">
+                                                                            <i className="fa-solid fa-note-sticky mr-1"></i>
+                                                                            <span className="font-medium">
+                                                                                Note:
+                                                                            </span>{' '}
+                                                                            {
+                                                                                request.requestNote
+                                                                            }
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                            <td className="py-5 px-4 text-center">
+                                                                <span className="bg-blue-100 text-blue-800 px-3 py-2 rounded-full text-sm font-bold min-w-[50px] inline-block">
+                                                                    {
+                                                                        request.quantity
+                                                                    }
+                                                                </span>
+                                                            </td>
+                                                            <td className="py-5 px-4">
+                                                                <div className="text-sm font-medium text-gray-700">
+                                                                    <i className="fa-solid fa-calendar-plus mr-2 text-green-600"></i>
+                                                                    {new Date(
+                                                                        request.pickupDate
+                                                                    ).toLocaleDateString(
+                                                                        'en-US',
+                                                                        {
+                                                                            year: 'numeric',
+                                                                            month: 'short',
+                                                                            day: 'numeric',
+                                                                        }
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                            <td className="py-5 px-4">
+                                                                <div className="text-sm font-medium text-gray-700">
+                                                                    {request.returnDate ? (
+                                                                        <>
+                                                                            <i className="fa-solid fa-calendar-minus mr-2 text-red-600"></i>
+                                                                            {new Date(
+                                                                                request.returnDate
+                                                                            ).toLocaleDateString(
+                                                                                'en-US',
+                                                                                {
+                                                                                    year: 'numeric',
+                                                                                    month: 'short',
+                                                                                    day: 'numeric',
+                                                                                }
+                                                                            )}
+                                                                        </>
+                                                                    ) : (
+                                                                        <span className="text-gray-400 italic">
+                                                                            <i className="fa-solid fa-minus mr-2"></i>
+                                                                            Not
+                                                                            specified
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                            <td className="py-5 px-4 text-center">
+                                                                <span
+                                                                    className={`px-3 py-2 rounded-full text-xs font-bold min-w-[80px] inline-block ${
+                                                                        request.status ===
+                                                                        'Pending'
+                                                                            ? 'bg-yellow-100 text-yellow-800 border border-yellow-200'
+                                                                            : request.status ===
+                                                                              'Approved'
+                                                                            ? 'bg-green-100 text-green-800 border border-green-200'
+                                                                            : request.status ===
+                                                                              'Rejected'
+                                                                            ? 'bg-red-100 text-red-800 border border-red-200'
+                                                                            : request.status ===
+                                                                              'Returned'
+                                                                            ? 'bg-gray-100 text-gray-800 border border-gray-200'
+                                                                            : 'bg-blue-100 text-blue-800 border border-blue-200'
+                                                                    }`}
+                                                                >
+                                                                    {
+                                                                        request.status
+                                                                    }
+                                                                </span>
+                                                            </td>
+                                                            <td className="py-5 px-6 text-center">
+                                                                <div className="text-xs text-gray-500 font-medium">
+                                                                    <i className="fa-solid fa-clock mr-1"></i>
+                                                                    {new Date(
+                                                                        request.createdAt
+                                                                    ).toLocaleDateString(
+                                                                        'en-US',
+                                                                        {
+                                                                            year: 'numeric',
+                                                                            month: 'short',
+                                                                            day: 'numeric',
+                                                                        }
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             ) : (
-                                <div className="text-center text-gray-500 py-10">
-                                    No requests found.
+                                <div className="text-center py-16">
+                                    <div className="mb-4">
+                                        <i className="fa-solid fa-inbox text-6xl text-gray-300"></i>
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                                        No Requests Found
+                                    </h3>
+                                    <p className="text-gray-500">
+                                        You haven't made any equipment requests
+                                        yet.
+                                    </p>
                                 </div>
                             )}
                         </div>

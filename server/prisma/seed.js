@@ -372,7 +372,15 @@ async function createItemTransactions() {
       }
     }
   });
-  const accounts = await prisma.account.findMany();
+  
+  // Get all accounts except admins for borrowing (only regular users can borrow)
+  const regularAccounts = await prisma.account.findMany({
+    where: {
+      access: 'User' // Only regular users can borrow items
+    }
+  });
+  
+  // Get admin accounts for approving/rejecting
   const adminAccounts = await prisma.account.findMany({
     where: {
       access: {
@@ -380,6 +388,12 @@ async function createItemTransactions() {
       }
     }
   });
+  
+  // If no regular users exist, skip creating transactions
+  if (regularAccounts.length === 0) {
+    console.log('No regular users found, skipping item transaction creation.');
+    return;
+  }
   
   const transactionStatuses = ['Pending', 'Approved', 'Rejected', 'Returned', 'No_Return', 'late_return', 'No_Pickup', 'Cancelled'];
 
@@ -393,9 +407,9 @@ async function createItemTransactions() {
     const numberOfTransactions = Math.floor(Math.random() * 4);
 
     for (let i = 0; i < numberOfTransactions; i++) {
-      // Select a random account for this transaction
-      const randomAccountIndex = Math.floor(Math.random() * accounts.length);
-      const accountId = accounts[randomAccountIndex].id;
+      // Select a random REGULAR USER account for this transaction (not admin)
+      const randomAccountIndex = Math.floor(Math.random() * regularAccounts.length);
+      const accountId = regularAccounts[randomAccountIndex].id;
 
       // Generate transaction quantity (should not exceed stack quantity)
       const maxQuantity = Math.min(stack.quantity, 10); // Cap at 10 for reasonable transactions
@@ -419,9 +433,6 @@ async function createItemTransactions() {
           to: new Date(pickupDate.getTime() + 14 * 24 * 60 * 60 * 1000) // Up to 14 days after pickup
         });
       }
-
-      // Generate date limit (admin-set borrowing limit in days) for the stack
-      const dateLimit = faker.number.int({ min: 1, max: 14 }); // 1 to 14 days borrowing limit
 
       // Assign admin ID if transaction has been processed (not Pending)
       let adminId = null;

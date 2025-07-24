@@ -10,8 +10,11 @@ const router = express.Router();
 import parseToken from '../../../Middlewares/JWT/parseToken.js';
 router.use(parseToken);
 
-import addRequest from '../../../Controller/EIC/request/addRequest.js'
+import addRequest from '../../../Controller/EIC/request/addRequest.js';
 router.post('/', addRequest);
+
+import getMyRequest from '../../../Controller/EIC/request/getMyRequest.js';
+router.get('/me', getMyRequest);
 
 //? ======================================= AUTHORIZED ============================================= ?//
 
