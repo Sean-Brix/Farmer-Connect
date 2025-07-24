@@ -175,6 +175,7 @@ exports.Prisma.ItemStackScalarFieldEnum = {
   itemId: 'itemId',
   quantity: 'quantity',
   status: 'status',
+  date_limit: 'date_limit',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -188,7 +189,6 @@ exports.Prisma.ItemTransactionScalarFieldEnum = {
   status: 'status',
   pickupDate: 'pickupDate',
   returnDate: 'returnDate',
-  dateLimit: 'dateLimit',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

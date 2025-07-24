@@ -5888,10 +5888,12 @@ export namespace Prisma {
 
   export type ItemStackAvgAggregateOutputType = {
     quantity: number | null
+    date_limit: number | null
   }
 
   export type ItemStackSumAggregateOutputType = {
     quantity: number | null
+    date_limit: number | null
   }
 
   export type ItemStackMinAggregateOutputType = {
@@ -5899,6 +5901,7 @@ export namespace Prisma {
     itemId: string | null
     quantity: number | null
     status: $Enums.item_status | null
+    date_limit: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5908,6 +5911,7 @@ export namespace Prisma {
     itemId: string | null
     quantity: number | null
     status: $Enums.item_status | null
+    date_limit: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5917,6 +5921,7 @@ export namespace Prisma {
     itemId: number
     quantity: number
     status: number
+    date_limit: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5925,10 +5930,12 @@ export namespace Prisma {
 
   export type ItemStackAvgAggregateInputType = {
     quantity?: true
+    date_limit?: true
   }
 
   export type ItemStackSumAggregateInputType = {
     quantity?: true
+    date_limit?: true
   }
 
   export type ItemStackMinAggregateInputType = {
@@ -5936,6 +5943,7 @@ export namespace Prisma {
     itemId?: true
     quantity?: true
     status?: true
+    date_limit?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5945,6 +5953,7 @@ export namespace Prisma {
     itemId?: true
     quantity?: true
     status?: true
+    date_limit?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5954,6 +5963,7 @@ export namespace Prisma {
     itemId?: true
     quantity?: true
     status?: true
+    date_limit?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -6050,6 +6060,7 @@ export namespace Prisma {
     itemId: string
     quantity: number
     status: $Enums.item_status
+    date_limit: number | null
     createdAt: Date
     updatedAt: Date
     _count: ItemStackCountAggregateOutputType | null
@@ -6078,6 +6089,7 @@ export namespace Prisma {
     itemId?: boolean
     quantity?: boolean
     status?: boolean
+    date_limit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     item?: boolean | InventoryItemDefaultArgs<ExtArgs>
@@ -6092,11 +6104,12 @@ export namespace Prisma {
     itemId?: boolean
     quantity?: boolean
     status?: boolean
+    date_limit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ItemStackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantity" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["itemStack"]>
+  export type ItemStackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "quantity" | "status" | "date_limit" | "createdAt" | "updatedAt", ExtArgs["result"]["itemStack"]>
   export type ItemStackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | InventoryItemDefaultArgs<ExtArgs>
     itemTransactions?: boolean | ItemStack$itemTransactionsArgs<ExtArgs>
@@ -6114,6 +6127,7 @@ export namespace Prisma {
       itemId: string
       quantity: number
       status: $Enums.item_status
+      date_limit: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["itemStack"]>
@@ -6491,6 +6505,7 @@ export namespace Prisma {
     readonly itemId: FieldRef<"ItemStack", 'String'>
     readonly quantity: FieldRef<"ItemStack", 'Int'>
     readonly status: FieldRef<"ItemStack", 'item_status'>
+    readonly date_limit: FieldRef<"ItemStack", 'Int'>
     readonly createdAt: FieldRef<"ItemStack", 'DateTime'>
     readonly updatedAt: FieldRef<"ItemStack", 'DateTime'>
   }
@@ -6892,12 +6907,10 @@ export namespace Prisma {
 
   export type ItemTransactionAvgAggregateOutputType = {
     quantity: number | null
-    dateLimit: number | null
   }
 
   export type ItemTransactionSumAggregateOutputType = {
     quantity: number | null
-    dateLimit: number | null
   }
 
   export type ItemTransactionMinAggregateOutputType = {
@@ -6909,7 +6922,6 @@ export namespace Prisma {
     status: $Enums.transaction_status | null
     pickupDate: Date | null
     returnDate: Date | null
-    dateLimit: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6923,7 +6935,6 @@ export namespace Prisma {
     status: $Enums.transaction_status | null
     pickupDate: Date | null
     returnDate: Date | null
-    dateLimit: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6937,7 +6948,6 @@ export namespace Prisma {
     status: number
     pickupDate: number
     returnDate: number
-    dateLimit: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -6946,12 +6956,10 @@ export namespace Prisma {
 
   export type ItemTransactionAvgAggregateInputType = {
     quantity?: true
-    dateLimit?: true
   }
 
   export type ItemTransactionSumAggregateInputType = {
     quantity?: true
-    dateLimit?: true
   }
 
   export type ItemTransactionMinAggregateInputType = {
@@ -6963,7 +6971,6 @@ export namespace Prisma {
     status?: true
     pickupDate?: true
     returnDate?: true
-    dateLimit?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6977,7 +6984,6 @@ export namespace Prisma {
     status?: true
     pickupDate?: true
     returnDate?: true
-    dateLimit?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6991,7 +6997,6 @@ export namespace Prisma {
     status?: true
     pickupDate?: true
     returnDate?: true
-    dateLimit?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7092,7 +7097,6 @@ export namespace Prisma {
     status: $Enums.transaction_status
     pickupDate: Date
     returnDate: Date | null
-    dateLimit: number | null
     createdAt: Date
     updatedAt: Date
     _count: ItemTransactionCountAggregateOutputType | null
@@ -7125,7 +7129,6 @@ export namespace Prisma {
     status?: boolean
     pickupDate?: boolean
     returnDate?: boolean
-    dateLimit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     itemStack?: boolean | ItemStackDefaultArgs<ExtArgs>
@@ -7144,12 +7147,11 @@ export namespace Prisma {
     status?: boolean
     pickupDate?: boolean
     returnDate?: boolean
-    dateLimit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ItemTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemStackId" | "accountId" | "adminId" | "quantity" | "status" | "pickupDate" | "returnDate" | "dateLimit" | "createdAt" | "updatedAt", ExtArgs["result"]["itemTransaction"]>
+  export type ItemTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemStackId" | "accountId" | "adminId" | "quantity" | "status" | "pickupDate" | "returnDate" | "createdAt" | "updatedAt", ExtArgs["result"]["itemTransaction"]>
   export type ItemTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     itemStack?: boolean | ItemStackDefaultArgs<ExtArgs>
     account?: boolean | AccountDefaultArgs<ExtArgs>
@@ -7172,7 +7174,6 @@ export namespace Prisma {
       status: $Enums.transaction_status
       pickupDate: Date
       returnDate: Date | null
-      dateLimit: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["itemTransaction"]>
@@ -7555,7 +7556,6 @@ export namespace Prisma {
     readonly status: FieldRef<"ItemTransaction", 'transaction_status'>
     readonly pickupDate: FieldRef<"ItemTransaction", 'DateTime'>
     readonly returnDate: FieldRef<"ItemTransaction", 'DateTime'>
-    readonly dateLimit: FieldRef<"ItemTransaction", 'Int'>
     readonly createdAt: FieldRef<"ItemTransaction", 'DateTime'>
     readonly updatedAt: FieldRef<"ItemTransaction", 'DateTime'>
   }
@@ -10088,6 +10088,7 @@ export namespace Prisma {
     itemId: 'itemId',
     quantity: 'quantity',
     status: 'status',
+    date_limit: 'date_limit',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -10104,7 +10105,6 @@ export namespace Prisma {
     status: 'status',
     pickupDate: 'pickupDate',
     returnDate: 'returnDate',
-    dateLimit: 'dateLimit',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -10690,6 +10690,7 @@ export namespace Prisma {
     itemId?: StringFilter<"ItemStack"> | string
     quantity?: IntFilter<"ItemStack"> | number
     status?: Enumitem_statusFilter<"ItemStack"> | $Enums.item_status
+    date_limit?: IntNullableFilter<"ItemStack"> | number | null
     createdAt?: DateTimeFilter<"ItemStack"> | Date | string
     updatedAt?: DateTimeFilter<"ItemStack"> | Date | string
     item?: XOR<InventoryItemScalarRelationFilter, InventoryItemWhereInput>
@@ -10701,6 +10702,7 @@ export namespace Prisma {
     itemId?: SortOrder
     quantity?: SortOrder
     status?: SortOrder
+    date_limit?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     item?: InventoryItemOrderByWithRelationInput
@@ -10716,6 +10718,7 @@ export namespace Prisma {
     itemId?: StringFilter<"ItemStack"> | string
     quantity?: IntFilter<"ItemStack"> | number
     status?: Enumitem_statusFilter<"ItemStack"> | $Enums.item_status
+    date_limit?: IntNullableFilter<"ItemStack"> | number | null
     createdAt?: DateTimeFilter<"ItemStack"> | Date | string
     updatedAt?: DateTimeFilter<"ItemStack"> | Date | string
     item?: XOR<InventoryItemScalarRelationFilter, InventoryItemWhereInput>
@@ -10727,6 +10730,7 @@ export namespace Prisma {
     itemId?: SortOrder
     quantity?: SortOrder
     status?: SortOrder
+    date_limit?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ItemStackCountOrderByAggregateInput
@@ -10744,6 +10748,7 @@ export namespace Prisma {
     itemId?: StringWithAggregatesFilter<"ItemStack"> | string
     quantity?: IntWithAggregatesFilter<"ItemStack"> | number
     status?: Enumitem_statusWithAggregatesFilter<"ItemStack"> | $Enums.item_status
+    date_limit?: IntNullableWithAggregatesFilter<"ItemStack"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"ItemStack"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ItemStack"> | Date | string
   }
@@ -10760,7 +10765,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFilter<"ItemTransaction"> | $Enums.transaction_status
     pickupDate?: DateTimeFilter<"ItemTransaction"> | Date | string
     returnDate?: DateTimeNullableFilter<"ItemTransaction"> | Date | string | null
-    dateLimit?: IntNullableFilter<"ItemTransaction"> | number | null
     createdAt?: DateTimeFilter<"ItemTransaction"> | Date | string
     updatedAt?: DateTimeFilter<"ItemTransaction"> | Date | string
     itemStack?: XOR<ItemStackScalarRelationFilter, ItemStackWhereInput>
@@ -10777,7 +10781,6 @@ export namespace Prisma {
     status?: SortOrder
     pickupDate?: SortOrder
     returnDate?: SortOrderInput | SortOrder
-    dateLimit?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     itemStack?: ItemStackOrderByWithRelationInput
@@ -10798,7 +10801,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFilter<"ItemTransaction"> | $Enums.transaction_status
     pickupDate?: DateTimeFilter<"ItemTransaction"> | Date | string
     returnDate?: DateTimeNullableFilter<"ItemTransaction"> | Date | string | null
-    dateLimit?: IntNullableFilter<"ItemTransaction"> | number | null
     createdAt?: DateTimeFilter<"ItemTransaction"> | Date | string
     updatedAt?: DateTimeFilter<"ItemTransaction"> | Date | string
     itemStack?: XOR<ItemStackScalarRelationFilter, ItemStackWhereInput>
@@ -10815,7 +10817,6 @@ export namespace Prisma {
     status?: SortOrder
     pickupDate?: SortOrder
     returnDate?: SortOrderInput | SortOrder
-    dateLimit?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ItemTransactionCountOrderByAggregateInput
@@ -10837,7 +10838,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusWithAggregatesFilter<"ItemTransaction"> | $Enums.transaction_status
     pickupDate?: DateTimeWithAggregatesFilter<"ItemTransaction"> | Date | string
     returnDate?: DateTimeNullableWithAggregatesFilter<"ItemTransaction"> | Date | string | null
-    dateLimit?: IntNullableWithAggregatesFilter<"ItemTransaction"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"ItemTransaction"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ItemTransaction"> | Date | string
   }
@@ -11408,6 +11408,7 @@ export namespace Prisma {
     id?: string
     quantity?: number
     status?: $Enums.item_status
+    date_limit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     item: InventoryItemCreateNestedOneWithoutItem_stacksInput
@@ -11419,6 +11420,7 @@ export namespace Prisma {
     itemId: string
     quantity?: number
     status?: $Enums.item_status
+    date_limit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutItemStackInput
@@ -11428,6 +11430,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    date_limit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item?: InventoryItemUpdateOneRequiredWithoutItem_stacksNestedInput
@@ -11439,6 +11442,7 @@ export namespace Prisma {
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    date_limit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutItemStackNestedInput
@@ -11449,6 +11453,7 @@ export namespace Prisma {
     itemId: string
     quantity?: number
     status?: $Enums.item_status
+    date_limit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11457,6 +11462,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    date_limit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11466,6 +11472,7 @@ export namespace Prisma {
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    date_limit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11476,7 +11483,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     itemStack: ItemStackCreateNestedOneWithoutItemTransactionsInput
@@ -11493,7 +11499,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11504,7 +11509,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     itemStack?: ItemStackUpdateOneRequiredWithoutItemTransactionsNestedInput
@@ -11521,7 +11525,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11535,7 +11538,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11546,7 +11548,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11560,7 +11561,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12207,6 +12207,17 @@ export namespace Prisma {
     not?: NestedEnumitem_statusFilter<$PrismaModel> | $Enums.item_status
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type InventoryItemScalarRelationFilter = {
     is?: InventoryItemWhereInput
     isNot?: InventoryItemWhereInput
@@ -12223,12 +12234,14 @@ export namespace Prisma {
     itemId?: SortOrder
     quantity?: SortOrder
     status?: SortOrder
+    date_limit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ItemStackAvgOrderByAggregateInput = {
     quantity?: SortOrder
+    date_limit?: SortOrder
   }
 
   export type ItemStackMaxOrderByAggregateInput = {
@@ -12236,6 +12249,7 @@ export namespace Prisma {
     itemId?: SortOrder
     quantity?: SortOrder
     status?: SortOrder
+    date_limit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12245,12 +12259,14 @@ export namespace Prisma {
     itemId?: SortOrder
     quantity?: SortOrder
     status?: SortOrder
+    date_limit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ItemStackSumOrderByAggregateInput = {
     quantity?: SortOrder
+    date_limit?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -12279,6 +12295,22 @@ export namespace Prisma {
     _max?: NestedEnumitem_statusFilter<$PrismaModel>
   }
 
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type Enumtransaction_statusFilter<$PrismaModel = never> = {
     equals?: $Enums.transaction_status | Enumtransaction_statusFieldRefInput<$PrismaModel>
     in?: $Enums.transaction_status[]
@@ -12295,17 +12327,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type ItemStackScalarRelationFilter = {
@@ -12333,14 +12354,12 @@ export namespace Prisma {
     status?: SortOrder
     pickupDate?: SortOrder
     returnDate?: SortOrder
-    dateLimit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ItemTransactionAvgOrderByAggregateInput = {
     quantity?: SortOrder
-    dateLimit?: SortOrder
   }
 
   export type ItemTransactionMaxOrderByAggregateInput = {
@@ -12352,7 +12371,6 @@ export namespace Prisma {
     status?: SortOrder
     pickupDate?: SortOrder
     returnDate?: SortOrder
-    dateLimit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12366,14 +12384,12 @@ export namespace Prisma {
     status?: SortOrder
     pickupDate?: SortOrder
     returnDate?: SortOrder
-    dateLimit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ItemTransactionSumOrderByAggregateInput = {
     quantity?: SortOrder
-    dateLimit?: SortOrder
   }
 
   export type Enumtransaction_statusWithAggregatesFilter<$PrismaModel = never> = {
@@ -12398,22 +12414,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type Enumseminar_statusFilter<$PrismaModel = never> = {
@@ -12953,6 +12953,14 @@ export namespace Prisma {
     set?: $Enums.item_status
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type InventoryItemUpdateOneRequiredWithoutItem_stacksNestedInput = {
     create?: XOR<InventoryItemCreateWithoutItem_stacksInput, InventoryItemUncheckedCreateWithoutItem_stacksInput>
     connectOrCreate?: InventoryItemCreateOrConnectWithoutItem_stacksInput
@@ -13013,14 +13021,6 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type ItemStackUpdateOneRequiredWithoutItemTransactionsNestedInput = {
@@ -13383,6 +13383,33 @@ export namespace Prisma {
     _max?: NestedEnumitem_statusFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumtransaction_statusFilter<$PrismaModel = never> = {
     equals?: $Enums.transaction_status | Enumtransaction_statusFieldRefInput<$PrismaModel>
     in?: $Enums.transaction_status[]
@@ -13423,33 +13450,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumseminar_statusFilter<$PrismaModel = never> = {
@@ -13542,7 +13542,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     itemStack: ItemStackCreateNestedOneWithoutItemTransactionsInput
@@ -13557,7 +13556,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13578,7 +13576,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     itemStack: ItemStackCreateNestedOneWithoutItemTransactionsInput
@@ -13593,7 +13590,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13741,7 +13737,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFilter<"ItemTransaction"> | $Enums.transaction_status
     pickupDate?: DateTimeFilter<"ItemTransaction"> | Date | string
     returnDate?: DateTimeNullableFilter<"ItemTransaction"> | Date | string | null
-    dateLimit?: IntNullableFilter<"ItemTransaction"> | number | null
     createdAt?: DateTimeFilter<"ItemTransaction"> | Date | string
     updatedAt?: DateTimeFilter<"ItemTransaction"> | Date | string
   }
@@ -14021,6 +14016,7 @@ export namespace Prisma {
     id?: string
     quantity?: number
     status?: $Enums.item_status
+    date_limit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     itemTransactions?: ItemTransactionCreateNestedManyWithoutItemStackInput
@@ -14030,6 +14026,7 @@ export namespace Prisma {
     id?: string
     quantity?: number
     status?: $Enums.item_status
+    date_limit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutItemStackInput
@@ -14069,6 +14066,7 @@ export namespace Prisma {
     itemId?: StringFilter<"ItemStack"> | string
     quantity?: IntFilter<"ItemStack"> | number
     status?: Enumitem_statusFilter<"ItemStack"> | $Enums.item_status
+    date_limit?: IntNullableFilter<"ItemStack"> | number | null
     createdAt?: DateTimeFilter<"ItemStack"> | Date | string
     updatedAt?: DateTimeFilter<"ItemStack"> | Date | string
   }
@@ -14104,7 +14102,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     account: AccountCreateNestedOneWithoutItemTransactionsInput
@@ -14119,7 +14116,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14185,6 +14181,7 @@ export namespace Prisma {
     id?: string
     quantity?: number
     status?: $Enums.item_status
+    date_limit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     item: InventoryItemCreateNestedOneWithoutItem_stacksInput
@@ -14195,6 +14192,7 @@ export namespace Prisma {
     itemId: string
     quantity?: number
     status?: $Enums.item_status
+    date_limit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14337,6 +14335,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    date_limit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     item?: InventoryItemUpdateOneRequiredWithoutItem_stacksNestedInput
@@ -14347,6 +14346,7 @@ export namespace Prisma {
     itemId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    date_limit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14890,7 +14890,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14903,7 +14902,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14978,7 +14976,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     itemStack?: ItemStackUpdateOneRequiredWithoutItemTransactionsNestedInput
@@ -14993,7 +14990,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15006,7 +15002,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15017,7 +15012,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     itemStack?: ItemStackUpdateOneRequiredWithoutItemTransactionsNestedInput
@@ -15032,7 +15026,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15045,7 +15038,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15141,6 +15133,7 @@ export namespace Prisma {
     id?: string
     quantity?: number
     status?: $Enums.item_status
+    date_limit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15149,6 +15142,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    date_limit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     itemTransactions?: ItemTransactionUpdateManyWithoutItemStackNestedInput
@@ -15158,6 +15152,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    date_limit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutItemStackNestedInput
@@ -15167,6 +15162,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
     status?: Enumitem_statusFieldUpdateOperationsInput | $Enums.item_status
+    date_limit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15179,7 +15175,6 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
-    dateLimit?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15190,7 +15185,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     account?: AccountUpdateOneRequiredWithoutItemTransactionsNestedInput
@@ -15205,7 +15199,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15218,7 +15211,6 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dateLimit?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
