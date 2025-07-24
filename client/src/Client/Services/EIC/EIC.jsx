@@ -1,31 +1,3 @@
-// Replace all green color classes and hex codes with blue equivalents
-
-// 1. Tailwind classes:
-// - green-700 -> blue-700
-// - green-800 -> blue-800
-// - green-900 -> blue-900
-// - green-600 -> blue-600
-// - green-400 -> blue-400
-// - green-200 -> blue-200
-// - green-100 -> blue-100
-// - green-50  -> blue-50
-// - green-500 -> blue-500
-
-// 2. Inline styles and gradients:
-// - #16a34a (green-600) -> #2563eb (blue-600)
-// - #22c55e (green-500) -> #3b82f6 (blue-500)
-// - #14532d (green-900) -> #1e3a8a (blue-900)
-// - #bbf7d0 (green-100) -> #dbeafe (blue-100)
-// - #14532d (green-900) -> #1e3a8a (blue-900)
-// - #22c55e (green-500) -> #3b82f6 (blue-500)
-// - #14532d (green-900) -> #1e3a8a (blue-900)
-// - #14532d (green-900) -> #1e3a8a (blue-900)
-// - #22c55e (green-500) -> #3b82f6 (blue-500)
-// - #16a34a (green-600) -> #2563eb (blue-600)
-// - #bbf7d0 (green-100) -> #dbeafe (blue-100)
-
-// The following is your code with all green colors replaced with blue:
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../Components/Navbar';
@@ -45,13 +17,14 @@ export default function Eic() {
     const [selectedItem, setSelectedItem] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [requestData, setRequestData] = useState({
-        borrow_date: '',
-        return_date: '',
+        pickupDate: '',
+        returnDate: '',
         request_note: '',
         quantity: 1,
     });
     const [myRequests, setMyRequests] = useState([]);
     const [showMyRequestsModal, setShowMyRequestsModal] = useState(false);
+    const [formErrors, setFormErrors] = useState({});
 
     const categories = [
         'All',
@@ -198,14 +171,14 @@ export default function Eic() {
     const handleRequestClick = async (item) => {
         try {
             //Check if user is logged in
-            const response = await fetch('/api/authentication/gotToken');
-            if (!response.ok) {
-                if (confirm('Login first?')) {
-                    navigate('/login');
-                    return;
-                }
-                return;
-            }
+            // const response = await fetch('/api/authentication/gotToken');
+            // if (!response.ok) {
+            //     if (confirm('Login first?')) {
+            //         navigate('/login');
+            //         return;
+            //     }
+            //     return;
+            // }
 
             setSelectedItem(item);
             setModalOpen(true);
@@ -216,6 +189,7 @@ export default function Eic() {
 
     const handleCloseModal = () => {
         setModalOpen(false);
+        setFormErrors({});
     };
 
     const handleInputChange = (e) => {
@@ -224,11 +198,56 @@ export default function Eic() {
             ...prevData,
             [name]: value,
         }));
+
+        // Clear specific error when user starts typing
+        if (formErrors[name]) {
+            setFormErrors((prev) => ({
+                ...prev,
+                [name]: '',
+            }));
+        }
+    };
+
+    // Form validation function
+    const validateForm = () => {
+        const errors = {};
+
+        if (!requestData.pickupDate) {
+            errors.pickupDate = 'Pickup date is required';
+        } else if (
+            new Date(requestData.pickupDate) < new Date().setHours(0, 0, 0, 0)
+        ) {
+            errors.pickupDate = 'Pickup date cannot be in the past';
+        }
+
+        if (requestData.returnDate) {
+            if (requestData.returnDate < requestData.pickupDate) {
+                errors.returnDate = 'Return date must be after pickup date';
+            } else if (requestData.returnDate === requestData.pickupDate) {
+                errors.returnDate =
+                    'Return date cannot be the same as pickup date';
+            }
+        }
+
+        if (!requestData.quantity || requestData.quantity < 1) {
+            errors.quantity = 'Quantity must be at least 1';
+        } else if (requestData.quantity > selectedItem?.quantity) {
+            errors.quantity = 'Quantity exceeds available stock';
+        }
+
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
     };
 
     // SUBMIT REQUEST
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate form before submission
+        if (!validateForm()) {
+            return;
+        }
+
         try {
             const response = await fetch('/api/eic/request_item', {
                 method: 'POST',
@@ -237,10 +256,10 @@ export default function Eic() {
                 },
                 body: JSON.stringify({
                     item_id: selectedItem.id,
-                    borrow_date: requestData.borrow_date,
-                    return_date: requestData.return_date,
+                    pickupDate: requestData.pickupDate,
+                    returnDate: requestData.returnDate || null,
                     request_note: requestData.request_note,
-                    quantity: requestData.quantity,
+                    quantity: parseInt(requestData.quantity),
                 }),
             });
 
@@ -322,11 +341,12 @@ export default function Eic() {
 
                 setModalOpen(false);
                 setRequestData({
-                    borrow_date: '',
-                    return_date: '',
+                    pickupDate: '',
+                    returnDate: '',
                     request_note: '',
                     quantity: 1,
                 });
+                setFormErrors({});
             } else {
                 await response.json();
                 // Custom alert for admin cannot borrow
@@ -406,11 +426,12 @@ export default function Eic() {
 
                 setModalOpen(false);
                 setRequestData({
-                    borrow_date: '',
-                    return_date: '',
+                    pickupDate: '',
+                    returnDate: '',
                     request_note: '',
                     quantity: 1,
                 });
+                setFormErrors({});
                 return;
             }
         } catch (error) {
@@ -892,13 +913,13 @@ export default function Eic() {
                             onSubmit={handleSubmit}
                             className="px-8 py-6 space-y-5"
                         >
-                            <div className="flex items-center gap-4 mb-2">
+                            <div className="flex items-center gap-4 mb-4">
                                 <img
                                     src={selectedItem?.img}
                                     alt={selectedItem?.Name}
                                     className="w-16 h-16 rounded-xl object-cover border-2 border-blue-700 shadow"
                                 />
-                                <div>
+                                <div className="flex-1">
                                     <div className="text-lg font-semibold text-blue-900 truncate">
                                         {selectedItem?.Name}
                                     </div>
@@ -906,25 +927,39 @@ export default function Eic() {
                                         {selectedItem?.category}
                                     </div>
                                     <div className="text-xs text-gray-500">
-                                        Stock: {selectedItem?.quantity}
+                                        Available Stock:{' '}
+                                        {selectedItem?.quantity}
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                                <p className="text-sm text-blue-800">
+                                    <i className="fa-solid fa-info-circle mr-2"></i>
+                                    <span className="text-red-500">*</span>{' '}
+                                    indicates required fields
+                                </p>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label
-                                        htmlFor="borrow_date"
+                                        htmlFor="pickupDate"
                                         className="block text-gray-700 text-sm font-medium mb-1"
                                     >
-                                        Borrow Date
+                                        Pickup Date{' '}
+                                        <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="date"
-                                        id="borrow_date"
-                                        name="borrow_date"
-                                        value={requestData.borrow_date}
+                                        id="pickupDate"
+                                        name="pickupDate"
+                                        value={requestData.pickupDate}
                                         onChange={handleInputChange}
-                                        className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
+                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition ${
+                                            formErrors.pickupDate
+                                                ? 'border-red-300 bg-red-50'
+                                                : 'border-gray-200'
+                                        }`}
                                         required
                                         min={
                                             new Date()
@@ -932,58 +967,79 @@ export default function Eic() {
                                                 .split('T')[0]
                                         }
                                     />
+                                    {formErrors.pickupDate && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {formErrors.pickupDate}
+                                        </p>
+                                    )}
                                 </div>
                                 <div>
                                     <label
-                                        htmlFor="return_date"
+                                        htmlFor="returnDate"
                                         className="block text-gray-700 text-sm font-medium mb-1"
                                     >
-                                        Return Date
+                                        Expected Return Date
+                                        <span className="text-gray-400 text-xs ml-1">
+                                            (Optional)
+                                        </span>
                                     </label>
                                     <input
                                         type="date"
-                                        id="return_date"
-                                        name="return_date"
-                                        value={requestData.return_date}
+                                        id="returnDate"
+                                        name="returnDate"
+                                        value={requestData.returnDate}
                                         onChange={(e) => {
                                             handleInputChange(e);
                                             if (
+                                                e.target.value &&
                                                 e.target.value <
-                                                requestData.borrow_date
+                                                    requestData.pickupDate
                                             ) {
                                                 setRequestData((prevData) => ({
                                                     ...prevData,
-                                                    borrow_date: e.target.value,
-                                                    return_date: e.target.value,
+                                                    pickupDate: e.target.value,
+                                                    returnDate: e.target.value,
                                                 }));
                                             }
                                         }}
-                                        className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
-                                        required
+                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition ${
+                                            formErrors.returnDate
+                                                ? 'border-red-300 bg-red-50'
+                                                : 'border-gray-200'
+                                        }`}
                                         min={
-                                            requestData.borrow_date
-                                                ? requestData.borrow_date
+                                            requestData.pickupDate
+                                                ? requestData.pickupDate
                                                 : new Date()
                                                       .toISOString()
                                                       .split('T')[0]
                                         }
                                     />
-                                    {requestData.return_date <
-                                        requestData.borrow_date && (
+                                    {formErrors.returnDate && (
                                         <p className="text-red-500 text-xs mt-1">
-                                            Return date must be after borrow
-                                            date.
+                                            {formErrors.returnDate}
                                         </p>
                                     )}
+                                    {!formErrors.returnDate &&
+                                        requestData.returnDate &&
+                                        requestData.returnDate <
+                                            requestData.pickupDate && (
+                                            <p className="text-red-500 text-xs mt-1">
+                                                Return date must be after pickup
+                                                date.
+                                            </p>
+                                        )}
                                 </div>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                            <div>
                                 <div>
                                     <label
                                         htmlFor="quantity"
                                         className="block text-gray-700 text-sm font-medium mb-1"
                                     >
-                                        Quantity
+                                        Quantity{' '}
+                                        <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="number"
@@ -991,37 +1047,101 @@ export default function Eic() {
                                         name="quantity"
                                         value={requestData.quantity}
                                         onChange={handleInputChange}
-                                        className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
+                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition ${
+                                            formErrors.quantity
+                                                ? 'border-red-300 bg-red-50'
+                                                : 'border-gray-200'
+                                        }`}
                                         required
                                         min="1"
                                         max={selectedItem?.quantity}
                                         title=""
                                     />
-                                    {requestData.quantity >
-                                        selectedItem?.quantity && (
+                                    {formErrors.quantity && (
                                         <p className="text-red-500 text-xs mt-1">
-                                            Quantity exceeds available stock.
+                                            {formErrors.quantity}
                                         </p>
                                     )}
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor="request_note"
-                                        className="block text-gray-700 text-sm font-medium mb-1"
-                                    >
-                                        Notes
-                                    </label>
-                                    <textarea
-                                        id="request_note"
-                                        name="request_note"
-                                        value={requestData.request_note}
-                                        onChange={handleInputChange}
-                                        rows="2"
-                                        className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition resize-none"
-                                        placeholder="Optional"
-                                    ></textarea>
+                                    {!formErrors.quantity &&
+                                        requestData.quantity >
+                                            selectedItem?.quantity && (
+                                            <p className="text-red-500 text-xs mt-1">
+                                                Quantity exceeds available
+                                                stock.
+                                            </p>
+                                        )}
                                 </div>
                             </div>
+
+                            <div>
+                                <label
+                                    htmlFor="request_note"
+                                    className="block text-gray-700 text-sm font-medium mb-1"
+                                >
+                                    Purpose & Additional Notes
+                                    <span className="text-gray-400 text-xs ml-1">
+                                        (Optional)
+                                    </span>
+                                </label>
+                                <textarea
+                                    id="request_note"
+                                    name="request_note"
+                                    value={requestData.request_note}
+                                    onChange={handleInputChange}
+                                    rows="3"
+                                    className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition resize-none"
+                                    placeholder="Describe the purpose of borrowing this equipment and any special requirements..."
+                                ></textarea>
+                            </div>
+
+                            {/* Request Summary */}
+                            {requestData.pickupDate && requestData.quantity && (
+                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                    <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                                        <i className="fa-solid fa-clipboard-check mr-2"></i>
+                                        Request Summary
+                                    </h4>
+                                    <div className="space-y-1 text-sm text-gray-600">
+                                        <div className="flex justify-between">
+                                            <span>Pickup Date:</span>
+                                            <span className="font-medium">
+                                                {new Date(
+                                                    requestData.pickupDate
+                                                ).toLocaleDateString('en-US', {
+                                                    weekday: 'short',
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                })}
+                                            </span>
+                                        </div>
+                                        {requestData.returnDate && (
+                                            <div className="flex justify-between">
+                                                <span>Expected Return:</span>
+                                                <span className="font-medium">
+                                                    {new Date(
+                                                        requestData.returnDate
+                                                    ).toLocaleDateString(
+                                                        'en-US',
+                                                        {
+                                                            weekday: 'short',
+                                                            year: 'numeric',
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                        }
+                                                    )}
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div className="flex justify-between">
+                                            <span>Quantity:</span>
+                                            <span className="font-medium">
+                                                {requestData.quantity} unit(s)
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                             <div className="flex justify-end gap-3 pt-2">
                                 <button
                                     type="button"
@@ -1032,8 +1152,18 @@ export default function Eic() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-2 rounded-xl shadow transition focus:outline-none"
+                                    disabled={
+                                        !requestData.pickupDate ||
+                                        !requestData.quantity
+                                    }
+                                    className={`font-semibold px-6 py-2 rounded-xl shadow transition focus:outline-none ${
+                                        !requestData.pickupDate ||
+                                        !requestData.quantity
+                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                            : 'bg-blue-700 hover:bg-blue-800 text-white'
+                                    }`}
                                 >
+                                    <i className="fa-solid fa-paper-plane mr-2"></i>
                                     Submit Request
                                 </button>
                             </div>

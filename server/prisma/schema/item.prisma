@@ -17,12 +17,13 @@ model InventoryItem {
 
 //? ====================================== STACKS SCHEMA ====================================== ?//
 model ItemStack {
-    id        String      @id @default(cuid())
-    itemId    String
-    quantity  Int         @default(1)
-    status    item_status @default(Available)
-    createdAt DateTime    @default(now())
-    updatedAt DateTime    @updatedAt
+    id         String      @id @default(cuid())
+    itemId     String
+    quantity   Int         @default(1)
+    status     item_status @default(Available)
+    date_limit Int? // Number of days the item can be borrowed/distributed (hold by user)
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
 
     // Relations
     item             InventoryItem     @relation(fields: [itemId], references: [id])
@@ -42,7 +43,6 @@ model ItemTransaction {
     status      transaction_status @default(Pending)
     pickupDate  DateTime
     returnDate  DateTime?
-    dateLimit   Int?
     createdAt   DateTime           @default(now())
     updatedAt   DateTime           @updatedAt
 

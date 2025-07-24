@@ -12,11 +12,7 @@ router.use('/photo', photo);
 import item from './item.js';
 router.use('/item', item);
 
-// Direct edit route for frontend compatibility
-import editItem from '../../../Controller/EIC/editItem.js';
-import parseToken from '../../../Middlewares/JWT/parseToken.js';
-import authorize from '../../../Middlewares/Auth/authorize.js';
-
-router.put('/edit/:id', parseToken, authorize, editItem);
+import request from './request.js';
+router.use('/request', request);
 
 export default router;
