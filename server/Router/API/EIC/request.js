@@ -16,11 +16,17 @@ router.post('/', addRequest);
 import getMyRequest from '../../../Controller/EIC/request/getMyRequest.js';
 router.get('/me', getMyRequest);
 
+import setStatus from '../../../Controller/EIC/request/setStatus.js';
+router.post('/cancel', setStatus);
+
 //? ======================================= AUTHORIZED ============================================= ?//
 
 // Authorization middleware
 import authorize from '../../../Middlewares/Auth/authorize.js';
 router.use(authorize);
+
+import adminSetStatus from '../../../Controller/EIC/request/setStatus.js';
+router.post('/respond', adminSetStatus);
 
 //? ================================================================================================ ?//
 

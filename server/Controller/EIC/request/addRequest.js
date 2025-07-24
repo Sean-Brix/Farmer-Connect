@@ -159,11 +159,6 @@ async function addRequest(req, res) {
             },
         });
 
-        // Log the transaction creation
-        console.log(
-            `New EIC request created: ${transaction.id} by user ${user.firstName} ${user.lastName}`
-        );
-
         return res.status(201).json({
             success: true,
             message: 'Request submitted successfully',

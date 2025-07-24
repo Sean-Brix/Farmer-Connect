@@ -754,6 +754,338 @@ export default function Eic() {
         setShowMyRequestsModal(false);
     };
 
+    const handleCancelRequest = async (requestId, itemName) => {
+        try {
+            // Show confirmation dialog
+            const alertDiv = document.createElement('div');
+            alertDiv.innerHTML = `
+                <div id="custom-confirm-alert" style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(0.95);
+                    z-index: 9999;
+                    background: rgba(37,99,235,0.98);
+                    background: linear-gradient(100deg, #2563eb 0%, #3b82f6 100%);
+                    color: #fff;
+                    padding: 2rem 3rem;
+                    border-radius: 2rem;
+                    box-shadow: 0 12px 40px 0 rgba(59,130,246,0.22);
+                    font-size: 1.18rem;
+                    font-weight: 700;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 1.5rem;
+                    min-width: 400px;
+                    max-width: 90vw;
+                    animation: confirmAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                    overflow: hidden;
+                    text-align: center;
+                ">
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255,255,255,0.13);
+                        border-radius: 50%;
+                        width: 3rem;
+                        height: 3rem;
+                        box-shadow: 0 2px 8px 0 rgba(59,130,246,0.10);
+                    ">
+                        <i class="fa-solid fa-exclamation-triangle" style="font-size:1.5rem; color: #fff; filter: drop-shadow(0 2px 8px #3b82f688);"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.4rem;">Cancel Request</h3>
+                        <p style="margin: 0; font-weight: 400; opacity: 0.9; font-size: 1rem;">
+                            Are you sure you want to cancel your request for <strong>"${itemName}"</strong>?
+                            <br><br>This action cannot be undone.
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 1rem; width: 100%;">
+                        <button id="confirm-cancel-btn" style="
+                            flex: 1;
+                            background: #dc2626;
+                            border: none;
+                            color: #fff;
+                            padding: 0.75rem 1.5rem;
+                            border-radius: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-size: 1rem;
+                        ">Yes, Cancel Request</button>
+                        <button id="keep-request-btn" style="
+                            flex: 1;
+                            background: transparent;
+                            border: 2px solid rgba(255,255,255,0.3);
+                            color: #fff;
+                            padding: 0.75rem 1.5rem;
+                            border-radius: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-size: 1rem;
+                        ">Keep Request</button>
+                    </div>
+                    <span class="confirm-alert-bar" style="
+                        position: absolute;
+                        bottom: 0; left: 0;
+                        height: 4px;
+                        width: 100%;
+                        background: linear-gradient(90deg, #dbeafe 0%, #3b82f6 100%);
+                    "></span>
+                </div>
+                <style>
+                    @keyframes confirmAlertPopIn {
+                        0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                        60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                        100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                    }
+                    #confirm-cancel-btn:hover { background: #b91c1c; transform: translateY(-2px); }
+                    #keep-request-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+                </style>
+            `;
+            document.body.appendChild(alertDiv);
+
+            // Create a promise to handle the user's choice
+            const userChoice = await new Promise((resolve) => {
+                document.getElementById('confirm-cancel-btn').onclick = () => {
+                    document.body.removeChild(alertDiv);
+                    resolve(true);
+                };
+
+                document.getElementById('keep-request-btn').onclick = () => {
+                    document.body.removeChild(alertDiv);
+                    resolve(false);
+                };
+            });
+
+            if (!userChoice) {
+                return; // User chose to keep the request
+            }
+
+            // Make the cancel request
+            const response = await fetch('/api/eic/request/cancel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    transactionId: requestId,
+                    status: 'Cancelled',
+                }),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+
+                // Show success message
+                const successDiv = document.createElement('div');
+                successDiv.innerHTML = `
+                    <div id="custom-success-alert" style="
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) scale(0.95);
+                        z-index: 9999;
+                        background: #059669;
+                        background: linear-gradient(100deg, #059669 0%, #10b981 100%);
+                        color: #fff;
+                        padding: 1.5rem 2.8rem;
+                        border-radius: 2rem;
+                        box-shadow: 0 12px 40px 0 rgba(16,185,129,0.22);
+                        font-size: 1.18rem;
+                        font-weight: 700;
+                        display: flex;
+                        align-items: center;
+                        gap: 1.1rem;
+                        min-width: 320px;
+                        max-width: 90vw;
+                        animation: successAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                        overflow: hidden;
+                    ">
+                        <span style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: rgba(255,255,255,0.2);
+                            border-radius: 50%;
+                            width: 2.2rem;
+                            height: 2.2rem;
+                        ">
+                            <i class="fa-solid fa-check" style="font-size:1.2rem; color: #fff;"></i>
+                        </span>
+                        <span>Request cancelled successfully!</span>
+                        <span class="success-alert-bar" style="
+                            position: absolute;
+                            bottom: 0; left: 0;
+                            height: 4px;
+                            width: 100%;
+                            background: linear-gradient(90deg, #d1fae5 0%, #10b981 100%);
+                        "></span>
+                    </div>
+                    <style>
+                        @keyframes successAlertPopIn {
+                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                        }
+                    </style>
+                `;
+                document.body.appendChild(successDiv);
+
+                // Auto-remove success alert after 3 seconds
+                setTimeout(() => {
+                    if (document.body.contains(successDiv)) {
+                        document.body.removeChild(successDiv);
+                    }
+                }, 3000);
+
+                // Refresh the requests list
+                const requestsResponse = await fetch('/api/eic/request/me');
+                if (requestsResponse.ok) {
+                    const requestsData = await requestsResponse.json();
+                    setMyRequests(
+                        Array.isArray(requestsData.requests)
+                            ? requestsData.requests
+                            : []
+                    );
+                }
+            } else {
+                const errorData = await response.json();
+
+                // Show error message
+                const errorDiv = document.createElement('div');
+                errorDiv.innerHTML = `
+                    <div id="custom-error-alert" style="
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) scale(0.95);
+                        z-index: 9999;
+                        background: #dc2626;
+                        background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
+                        color: #fff;
+                        padding: 1.5rem 2.8rem;
+                        border-radius: 2rem;
+                        box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
+                        font-size: 1.18rem;
+                        font-weight: 700;
+                        display: flex;
+                        align-items: center;
+                        gap: 1.1rem;
+                        min-width: 320px;
+                        max-width: 90vw;
+                        animation: errorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                        overflow: hidden;
+                    ">
+                        <span style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: rgba(255,255,255,0.2);
+                            border-radius: 50%;
+                            width: 2.2rem;
+                            height: 2.2rem;
+                        ">
+                            <i class="fa-solid fa-times" style="font-size:1.2rem; color: #fff;"></i>
+                        </span>
+                        <span>Failed to cancel request: ${
+                            errorData.message || 'Unknown error'
+                        }</span>
+                        <span class="error-alert-bar" style="
+                            position: absolute;
+                            bottom: 0; left: 0;
+                            height: 4px;
+                            width: 100%;
+                            background: linear-gradient(90deg, #fee2e2 0%, #f87171 100%);
+                        "></span>
+                    </div>
+                    <style>
+                        @keyframes errorAlertPopIn {
+                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                        }
+                    </style>
+                `;
+                document.body.appendChild(errorDiv);
+
+                // Auto-remove error alert after 5 seconds
+                setTimeout(() => {
+                    if (document.body.contains(errorDiv)) {
+                        document.body.removeChild(errorDiv);
+                    }
+                }, 5000);
+            }
+        } catch (error) {
+            console.error('Error cancelling request:', error);
+
+            // Show error message
+            const errorDiv = document.createElement('div');
+            errorDiv.innerHTML = `
+                <div id="custom-error-alert" style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(0.95);
+                    z-index: 9999;
+                    background: #dc2626;
+                    background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
+                    color: #fff;
+                    padding: 1.5rem 2.8rem;
+                    border-radius: 2rem;
+                    box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
+                    font-size: 1.18rem;
+                    font-weight: 700;
+                    display: flex;
+                    align-items: center;
+                    gap: 1.1rem;
+                    min-width: 320px;
+                    max-width: 90vw;
+                    animation: errorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                    overflow: hidden;
+                ">
+                    <span style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255,255,255,0.2);
+                        border-radius: 50%;
+                        width: 2.2rem;
+                        height: 2.2rem;
+                    ">
+                        <i class="fa-solid fa-times" style="font-size:1.2rem; color: #fff;"></i>
+                    </span>
+                    <span>Network error. Please try again later.</span>
+                    <span class="error-alert-bar" style="
+                        position: absolute;
+                        bottom: 0; left: 0;
+                        height: 4px;
+                        width: 100%;
+                        background: linear-gradient(90deg, #fee2e2 0%, #f87171 100%);
+                    "></span>
+                </div>
+                <style>
+                    @keyframes errorAlertPopIn {
+                        0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                        60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                        100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                    }
+                </style>
+            `;
+            document.body.appendChild(errorDiv);
+
+            // Auto-remove error alert after 5 seconds
+            setTimeout(() => {
+                if (document.body.contains(errorDiv)) {
+                    document.body.removeChild(errorDiv);
+                }
+            }, 5000);
+        }
+    };
+
     return (
         <>
             <Navbar />
@@ -1426,6 +1758,9 @@ export default function Eic() {
                                                     <th className="py-4 px-6 font-semibold border-b border-gray-200 text-center min-w-[100px]">
                                                         Requested
                                                     </th>
+                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 text-center min-w-[120px]">
+                                                        Actions
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -1559,6 +1894,34 @@ export default function Eic() {
                                                                         }
                                                                     )}
                                                                 </div>
+                                                            </td>
+                                                            <td className="py-5 px-4 text-center">
+                                                                {[
+                                                                    'Pending',
+                                                                    'Approved',
+                                                                ].includes(
+                                                                    request.status
+                                                                ) ? (
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            handleCancelRequest(
+                                                                                request.id,
+                                                                                request.itemName
+                                                                            )
+                                                                        }
+                                                                        className="bg-red-100 hover:bg-red-200 text-red-800 hover:text-red-900 px-4 py-2 rounded-lg text-sm font-semibold border border-red-200 hover:border-red-300 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                                                                        title="Cancel this request"
+                                                                    >
+                                                                        <i className="fa-solid fa-times mr-2"></i>
+                                                                        Cancel
+                                                                    </button>
+                                                                ) : (
+                                                                    <span className="text-gray-400 text-sm italic">
+                                                                        No
+                                                                        actions
+                                                                        available
+                                                                    </span>
+                                                                )}
                                                             </td>
                                                         </tr>
                                                     )
