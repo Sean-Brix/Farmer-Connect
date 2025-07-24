@@ -43,6 +43,7 @@ model ItemTransaction {
     status      transaction_status @default(Pending)
     pickupDate  DateTime
     returnDate  DateTime?
+    requestNote String?
     createdAt   DateTime           @default(now())
     updatedAt   DateTime           @updatedAt
 

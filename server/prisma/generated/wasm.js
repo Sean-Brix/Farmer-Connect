@@ -189,6 +189,7 @@ exports.Prisma.ItemTransactionScalarFieldEnum = {
   status: 'status',
   pickupDate: 'pickupDate',
   returnDate: 'returnDate',
+  requestNote: 'requestNote',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -277,7 +278,8 @@ exports.Prisma.ItemTransactionOrderByRelevanceFieldEnum = {
   id: 'id',
   itemStackId: 'itemStackId',
   accountId: 'accountId',
-  adminId: 'adminId'
+  adminId: 'adminId',
+  requestNote: 'requestNote'
 };
 
 exports.Prisma.SeminarOrderByRelevanceFieldEnum = {

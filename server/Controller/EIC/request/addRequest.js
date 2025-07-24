@@ -3,7 +3,8 @@ const prisma = new PrismaClient();
 
 async function addRequest(req, res) {
     try {
-        const { item_id, pickupDate, returnDate, request_note, quantity } = req.body;
+        const { item_id, pickupDate, returnDate, request_note, quantity } =
+            req.body;
         const accountId = req.user.id; // From JWT token
 
         // Validate required fields
@@ -46,7 +47,27 @@ async function addRequest(req, res) {
         }
 
         // Check if user is admin (admins cannot borrow items)
-        if (req.user.access === 'Admin' || req.user.access === 'Super_Admin') {
+        const user = await prisma.account.findUnique({
+            where: {
+                id: accountId,
+            },
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                access: true,
+            },
+        });
+
+        if (!user) {
+            return res.status(404).json({
+                error: 'User not found',
+                message: 'User account not found',
+            });
+        }
+
+        if (user.access === 'Admin' || user.access === 'Super_Admin') {
             return res.status(403).json({
                 error: 'Access denied',
                 message: 'Admin cannot borrow an EIC item',
@@ -95,6 +116,21 @@ async function addRequest(req, res) {
             });
         }
 
+        // Validate against stack's date_limit if set
+        if (itemStack.date_limit && returnDate) {
+            const pickup = new Date(pickupDate);
+            const returnD = new Date(returnDate);
+            const diffTime = Math.abs(returnD - pickup);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays > itemStack.date_limit) {
+                return res.status(400).json({
+                    error: 'Borrowing period exceeds limit',
+                    message: `This item has a maximum borrowing period of ${itemStack.date_limit} days. Your requested period is ${diffDays} days.`,
+                });
+            }
+        }
+
         // Create the transaction request
         const transaction = await prisma.itemTransaction.create({
             data: {
@@ -104,8 +140,7 @@ async function addRequest(req, res) {
                 status: 'Pending',
                 pickupDate: new Date(pickupDate),
                 returnDate: returnDate ? new Date(returnDate) : null,
-                // Note: request_note is sent from frontend but not in ItemTransaction schema
-                // If you want to store notes, add a 'notes' field to the ItemTransaction model
+                requestNote: request_note || null, // Now we can store the request note
             },
             include: {
                 itemStack: {
@@ -126,7 +161,7 @@ async function addRequest(req, res) {
 
         // Log the transaction creation
         console.log(
-            `New EIC request created: ${transaction.id} by user ${req.user.firstName} ${req.user.lastName}`
+            `New EIC request created: ${transaction.id} by user ${user.firstName} ${user.lastName}`
         );
 
         return res.status(201).json({
@@ -138,8 +173,10 @@ async function addRequest(req, res) {
                 quantity: transaction.quantity,
                 pickupDate: transaction.pickupDate,
                 returnDate: transaction.returnDate,
+                requestNote: transaction.requestNote,
                 status: transaction.status,
                 createdAt: transaction.createdAt,
+                itemDateLimit: transaction.itemStack.date_limit, // Include the stack's date limit for frontend reference
             },
         });
     } catch (error) {

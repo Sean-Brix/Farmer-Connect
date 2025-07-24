@@ -344,11 +344,16 @@ async function createItemStacks() {
         ? faker.number.int({ min: 1, max: 50 }) 
         : 0;
 
+      // Generate date_limit for some stacks (30% chance of having a limit)
+      const hasDateLimit = Math.random() < 0.3;
+      const dateLimit = hasDateLimit ? faker.number.int({ min: 1, max: 30 }) : null;
+
       await prisma.itemStack.create({
         data: {
           itemId: item.id,
           quantity: quantity,
           status: status,
+          date_limit: dateLimit,
         },
       });
 
@@ -415,7 +420,7 @@ async function createItemTransactions() {
         });
       }
 
-      // Generate date limit (admin-set borrowing limit in days)
+      // Generate date limit (admin-set borrowing limit in days) for the stack
       const dateLimit = faker.number.int({ min: 1, max: 14 }); // 1 to 14 days borrowing limit
 
       // Assign admin ID if transaction has been processed (not Pending)
@@ -424,6 +429,10 @@ async function createItemTransactions() {
         const randomAdminIndex = Math.floor(Math.random() * adminAccounts.length);
         adminId = adminAccounts[randomAdminIndex].id;
       }
+
+      // Generate random request note (50% chance of having a note)
+      const hasRequestNote = Math.random() < 0.5;
+      const requestNote = hasRequestNote ? faker.lorem.sentence() : null;
 
       await prisma.itemTransaction.create({
         data: {
@@ -434,7 +443,7 @@ async function createItemTransactions() {
           status: status,
           pickupDate: pickupDate,
           returnDate: returnDate,
-          dateLimit: dateLimit,
+          requestNote: requestNote,
         },
       });
 

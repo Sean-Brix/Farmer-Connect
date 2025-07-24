@@ -6922,6 +6922,7 @@ export namespace Prisma {
     status: $Enums.transaction_status | null
     pickupDate: Date | null
     returnDate: Date | null
+    requestNote: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6935,6 +6936,7 @@ export namespace Prisma {
     status: $Enums.transaction_status | null
     pickupDate: Date | null
     returnDate: Date | null
+    requestNote: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6948,6 +6950,7 @@ export namespace Prisma {
     status: number
     pickupDate: number
     returnDate: number
+    requestNote: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -6971,6 +6974,7 @@ export namespace Prisma {
     status?: true
     pickupDate?: true
     returnDate?: true
+    requestNote?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6984,6 +6988,7 @@ export namespace Prisma {
     status?: true
     pickupDate?: true
     returnDate?: true
+    requestNote?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6997,6 +7002,7 @@ export namespace Prisma {
     status?: true
     pickupDate?: true
     returnDate?: true
+    requestNote?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7097,6 +7103,7 @@ export namespace Prisma {
     status: $Enums.transaction_status
     pickupDate: Date
     returnDate: Date | null
+    requestNote: string | null
     createdAt: Date
     updatedAt: Date
     _count: ItemTransactionCountAggregateOutputType | null
@@ -7129,6 +7136,7 @@ export namespace Prisma {
     status?: boolean
     pickupDate?: boolean
     returnDate?: boolean
+    requestNote?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     itemStack?: boolean | ItemStackDefaultArgs<ExtArgs>
@@ -7147,11 +7155,12 @@ export namespace Prisma {
     status?: boolean
     pickupDate?: boolean
     returnDate?: boolean
+    requestNote?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ItemTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemStackId" | "accountId" | "adminId" | "quantity" | "status" | "pickupDate" | "returnDate" | "createdAt" | "updatedAt", ExtArgs["result"]["itemTransaction"]>
+  export type ItemTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemStackId" | "accountId" | "adminId" | "quantity" | "status" | "pickupDate" | "returnDate" | "requestNote" | "createdAt" | "updatedAt", ExtArgs["result"]["itemTransaction"]>
   export type ItemTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     itemStack?: boolean | ItemStackDefaultArgs<ExtArgs>
     account?: boolean | AccountDefaultArgs<ExtArgs>
@@ -7174,6 +7183,7 @@ export namespace Prisma {
       status: $Enums.transaction_status
       pickupDate: Date
       returnDate: Date | null
+      requestNote: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["itemTransaction"]>
@@ -7556,6 +7566,7 @@ export namespace Prisma {
     readonly status: FieldRef<"ItemTransaction", 'transaction_status'>
     readonly pickupDate: FieldRef<"ItemTransaction", 'DateTime'>
     readonly returnDate: FieldRef<"ItemTransaction", 'DateTime'>
+    readonly requestNote: FieldRef<"ItemTransaction", 'String'>
     readonly createdAt: FieldRef<"ItemTransaction", 'DateTime'>
     readonly updatedAt: FieldRef<"ItemTransaction", 'DateTime'>
   }
@@ -10105,6 +10116,7 @@ export namespace Prisma {
     status: 'status',
     pickupDate: 'pickupDate',
     returnDate: 'returnDate',
+    requestNote: 'requestNote',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -10223,7 +10235,8 @@ export namespace Prisma {
     id: 'id',
     itemStackId: 'itemStackId',
     accountId: 'accountId',
-    adminId: 'adminId'
+    adminId: 'adminId',
+    requestNote: 'requestNote'
   };
 
   export type ItemTransactionOrderByRelevanceFieldEnum = (typeof ItemTransactionOrderByRelevanceFieldEnum)[keyof typeof ItemTransactionOrderByRelevanceFieldEnum]
@@ -10765,6 +10778,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFilter<"ItemTransaction"> | $Enums.transaction_status
     pickupDate?: DateTimeFilter<"ItemTransaction"> | Date | string
     returnDate?: DateTimeNullableFilter<"ItemTransaction"> | Date | string | null
+    requestNote?: StringNullableFilter<"ItemTransaction"> | string | null
     createdAt?: DateTimeFilter<"ItemTransaction"> | Date | string
     updatedAt?: DateTimeFilter<"ItemTransaction"> | Date | string
     itemStack?: XOR<ItemStackScalarRelationFilter, ItemStackWhereInput>
@@ -10781,6 +10795,7 @@ export namespace Prisma {
     status?: SortOrder
     pickupDate?: SortOrder
     returnDate?: SortOrderInput | SortOrder
+    requestNote?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     itemStack?: ItemStackOrderByWithRelationInput
@@ -10801,6 +10816,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFilter<"ItemTransaction"> | $Enums.transaction_status
     pickupDate?: DateTimeFilter<"ItemTransaction"> | Date | string
     returnDate?: DateTimeNullableFilter<"ItemTransaction"> | Date | string | null
+    requestNote?: StringNullableFilter<"ItemTransaction"> | string | null
     createdAt?: DateTimeFilter<"ItemTransaction"> | Date | string
     updatedAt?: DateTimeFilter<"ItemTransaction"> | Date | string
     itemStack?: XOR<ItemStackScalarRelationFilter, ItemStackWhereInput>
@@ -10817,6 +10833,7 @@ export namespace Prisma {
     status?: SortOrder
     pickupDate?: SortOrder
     returnDate?: SortOrderInput | SortOrder
+    requestNote?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ItemTransactionCountOrderByAggregateInput
@@ -10838,6 +10855,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusWithAggregatesFilter<"ItemTransaction"> | $Enums.transaction_status
     pickupDate?: DateTimeWithAggregatesFilter<"ItemTransaction"> | Date | string
     returnDate?: DateTimeNullableWithAggregatesFilter<"ItemTransaction"> | Date | string | null
+    requestNote?: StringNullableWithAggregatesFilter<"ItemTransaction"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ItemTransaction"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ItemTransaction"> | Date | string
   }
@@ -11483,6 +11501,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     itemStack: ItemStackCreateNestedOneWithoutItemTransactionsInput
@@ -11499,6 +11518,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11509,6 +11529,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     itemStack?: ItemStackUpdateOneRequiredWithoutItemTransactionsNestedInput
@@ -11525,6 +11546,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11538,6 +11560,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11548,6 +11571,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11561,6 +11585,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12354,6 +12379,7 @@ export namespace Prisma {
     status?: SortOrder
     pickupDate?: SortOrder
     returnDate?: SortOrder
+    requestNote?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12371,6 +12397,7 @@ export namespace Prisma {
     status?: SortOrder
     pickupDate?: SortOrder
     returnDate?: SortOrder
+    requestNote?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12384,6 +12411,7 @@ export namespace Prisma {
     status?: SortOrder
     pickupDate?: SortOrder
     returnDate?: SortOrder
+    requestNote?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13542,6 +13570,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     itemStack: ItemStackCreateNestedOneWithoutItemTransactionsInput
@@ -13556,6 +13585,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13576,6 +13606,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     itemStack: ItemStackCreateNestedOneWithoutItemTransactionsInput
@@ -13590,6 +13621,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -13737,6 +13769,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFilter<"ItemTransaction"> | $Enums.transaction_status
     pickupDate?: DateTimeFilter<"ItemTransaction"> | Date | string
     returnDate?: DateTimeNullableFilter<"ItemTransaction"> | Date | string | null
+    requestNote?: StringNullableFilter<"ItemTransaction"> | string | null
     createdAt?: DateTimeFilter<"ItemTransaction"> | Date | string
     updatedAt?: DateTimeFilter<"ItemTransaction"> | Date | string
   }
@@ -14102,6 +14135,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     account: AccountCreateNestedOneWithoutItemTransactionsInput
@@ -14116,6 +14150,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14890,6 +14925,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14902,6 +14938,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14976,6 +15013,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     itemStack?: ItemStackUpdateOneRequiredWithoutItemTransactionsNestedInput
@@ -14990,6 +15028,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15002,6 +15041,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15012,6 +15052,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     itemStack?: ItemStackUpdateOneRequiredWithoutItemTransactionsNestedInput
@@ -15026,6 +15067,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15038,6 +15080,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15175,6 +15218,7 @@ export namespace Prisma {
     status?: $Enums.transaction_status
     pickupDate: Date | string
     returnDate?: Date | string | null
+    requestNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15185,6 +15229,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     account?: AccountUpdateOneRequiredWithoutItemTransactionsNestedInput
@@ -15199,6 +15244,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15211,6 +15257,7 @@ export namespace Prisma {
     status?: Enumtransaction_statusFieldUpdateOperationsInput | $Enums.transaction_status
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requestNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

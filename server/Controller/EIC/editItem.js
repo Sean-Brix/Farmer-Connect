@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 async function editItem(req, res) {
     try {
         const stackId = req.params.id;
-        const { name, description, category, quantity } = req.body;
+        const { name, description, category, quantity, date_limit } = req.body;
         const file = req.file; // Get uploaded image file
 
         // Validate required fields
@@ -26,6 +26,18 @@ async function editItem(req, res) {
             return res.status(400).json({
                 success: false,
                 error: 'Quantity must be a non-negative number',
+            });
+        }
+
+        // Validate date_limit if provided
+        if (
+            date_limit !== undefined &&
+            date_limit !== null &&
+            (date_limit < 1 || date_limit > 365)
+        ) {
+            return res.status(400).json({
+                success: false,
+                error: 'Date limit must be between 1 and 365 days, or null for no limit',
             });
         }
 
@@ -130,11 +142,17 @@ async function editItem(req, res) {
                 data: itemUpdateData,
             });
 
-            // Update the stack quantity
+            // Update the stack quantity and date_limit
             const updatedStack = await tx.itemStack.update({
                 where: { id: stackId },
                 data: {
                     quantity: parseInt(quantity),
+                    date_limit:
+                        date_limit !== undefined
+                            ? date_limit === null
+                                ? null
+                                : parseInt(date_limit)
+                            : undefined,
                     updatedAt: new Date(),
                 },
                 include: {

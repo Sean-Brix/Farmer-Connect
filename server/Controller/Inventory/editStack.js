@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function editStack(req, res) {
     try {
-        const { stackId, itemId, status, quantity } = req.body;
+        const { stackId, itemId, status, quantity, date_limit } = req.body;
 
         // Validate required fields
         if (!stackId && (!itemId || !status)) {
@@ -15,6 +15,17 @@ async function editStack(req, res) {
         if (quantity === undefined || quantity < 0) {
             return res.status(400).json({
                 error: 'Quantity must be a non-negative number',
+            });
+        }
+
+        // Validate date_limit if provided
+        if (
+            date_limit !== undefined &&
+            date_limit !== null &&
+            (date_limit < 1 || date_limit > 365)
+        ) {
+            return res.status(400).json({
+                error: 'Date limit must be between 1 and 365 days, or null for no limit',
             });
         }
 
@@ -60,7 +71,15 @@ async function editStack(req, res) {
             if (targetStack) {
                 targetStack = await prisma.itemStack.update({
                     where: { id: targetStack.id },
-                    data: { quantity: 0 },
+                    data: {
+                        quantity: 0,
+                        date_limit:
+                            date_limit !== undefined
+                                ? date_limit === null
+                                    ? null
+                                    : parseInt(date_limit)
+                                : undefined,
+                    },
                     include: { item: true },
                 });
 
@@ -81,6 +100,12 @@ async function editStack(req, res) {
                         itemId: itemId,
                         status: status,
                         quantity: 0,
+                        date_limit:
+                            date_limit !== undefined
+                                ? date_limit === null
+                                    ? null
+                                    : parseInt(date_limit)
+                                : null,
                     },
                     include: { item: true },
                 });
@@ -96,7 +121,15 @@ async function editStack(req, res) {
                 // Update existing stack
                 targetStack = await prisma.itemStack.update({
                     where: { id: targetStack.id },
-                    data: { quantity: quantity },
+                    data: {
+                        quantity: quantity,
+                        date_limit:
+                            date_limit !== undefined
+                                ? date_limit === null
+                                    ? null
+                                    : parseInt(date_limit)
+                                : undefined,
+                    },
                     include: { item: true },
                 });
             } else {
@@ -112,6 +145,12 @@ async function editStack(req, res) {
                         itemId: itemId,
                         status: status,
                         quantity: quantity,
+                        date_limit:
+                            date_limit !== undefined
+                                ? date_limit === null
+                                    ? null
+                                    : parseInt(date_limit)
+                                : null,
                     },
                     include: { item: true },
                 });

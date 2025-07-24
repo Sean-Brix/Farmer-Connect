@@ -249,7 +249,7 @@ export default function Eic() {
         }
 
         try {
-            const response = await fetch('/api/eic/request_item', {
+            const response = await fetch('/api/eic/request', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
