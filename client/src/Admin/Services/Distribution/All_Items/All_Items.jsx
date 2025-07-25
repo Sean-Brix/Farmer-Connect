@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Item_Card from './Item_Card.jsx';
 import default_image from '../Assets/default_image.png';
+
 export default function All_Items() {
     const [items, setItems] = useState([]);
     const [statusFilter, setStatusFilter] = useState('');
@@ -14,7 +15,7 @@ export default function All_Items() {
         description: '',
         quantity: 1,
         status: 'Available',
-        category: 'Seeds',
+        category: 'Farming_Equipment',
         image: null,
         imagePreview: null,
     });
@@ -36,13 +37,13 @@ export default function All_Items() {
 
         if (categoryFilter) {
             filteredItems = filteredItems.filter(
-                (item) => item.category === categoryFilter
+                (item) => item.item.category === categoryFilter
             );
         }
 
         if (search) {
             filteredItems = filteredItems.filter((item) =>
-                item.name.toLowerCase().includes(search.toLowerCase())
+                item.item.name.toLowerCase().includes(search.toLowerCase())
             );
         }
 
@@ -51,21 +52,20 @@ export default function All_Items() {
 
     const fetchItems = async () => {
         try {
-            const response = await fetch(
-                `/api/distribution/getAll?status=${statusFilter}&category=${categoryFilter}&search=${search}`
-            );
+            const response = await fetch('/api/dist/all');
             const data = await response.json();
 
-            if (!data.payload || data.payload.length === 0) {
+            if (!data || data.length === 0) {
                 setItems([]);
+                setOriginalItems([]);
                 return;
             }
 
             const itemsWithImages = await Promise.all(
-                data.payload.map(async (item) => {
+                data.map(async (item) => {
                     try {
                         const imageResponse = await fetch(
-                            `/api/distribution/getImage?id=${item.id}`
+                            `/api/dist/photo/${item.itemId}`
                         );
 
                         if (imageResponse.ok) {
@@ -89,8 +89,9 @@ export default function All_Items() {
             setItems(itemsWithImages);
             setOriginalItems(itemsWithImages);
         } catch (error) {
-            console.error('Error fetching items:', error);
+            console.error('Error fetching distribution items:', error);
             setItems([]);
+            setOriginalItems([]);
         }
     };
 
@@ -101,45 +102,11 @@ export default function All_Items() {
         }
 
         try {
-            const deletePromises = selectedItems.map(async (id) => {
-                const response = await fetch(
-                    `/api/distribution/deleteDist?id=${id}`
-                );
-                const data = await response.json();
-                console.log(data);
-
-                if (response.ok && data.status === 'Success') {
-                    return true;
-                } else {
-                    console.error(
-                        `Failed to delete item with id ${id}: ${
-                            data.message || 'Unknown error'
-                        }`
-                    );
-                    return false;
-                }
-            });
-
-            const results = await Promise.all(deletePromises);
-
-            if (results.every((result) => result)) {
-                alert('Items deleted successfully.');
-                const updatedItems = items.filter(
-                    (item) => !selectedItems.includes(item.id)
-                );
-                setItems(updatedItems);
-                setOriginalItems(
-                    originalItems.filter(
-                        (item) => !selectedItems.includes(item.id)
-                    )
-                );
-                setSelectedItems([]);
-                setIsDeleting(false);
-            } else {
-                alert(
-                    'Some items failed to delete. Please check the console for errors.'
-                );
-            }
+            // Distribution items don't have a delete endpoint in this implementation
+            // Remove delete functionality or implement if needed
+            alert(
+                'Delete functionality not implemented for distribution items.'
+            );
         } catch (error) {
             console.error('Error deleting items:', error);
             alert('Failed to delete items. Please try again.');
@@ -176,7 +143,7 @@ export default function All_Items() {
             description: '',
             quantity: 1,
             status: 'Available',
-            category: 'Seeds',
+            category: 'Farming_Equipment',
             image: null,
             imagePreview: null,
         });
@@ -413,8 +380,18 @@ export default function All_Items() {
                         disabled={currentPage === 1}
                         aria-label="Previous page"
                     >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                        <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M15 19l-7-7 7-7"
+                            />
                         </svg>
                     </button>
                     {Array.from({ length: totalPages }, (_, i) => {
@@ -441,10 +418,14 @@ export default function All_Items() {
                         // Ellipsis logic
                         if (
                             (i === 1 && currentPage > 3) ||
-                            (i === totalPages - 2 && currentPage < totalPages - 2)
+                            (i === totalPages - 2 &&
+                                currentPage < totalPages - 2)
                         ) {
                             return (
-                                <span key={i} className="px-2 text-gray-400 select-none">
+                                <span
+                                    key={i}
+                                    className="px-2 text-gray-400 select-none"
+                                >
                                     ...
                                 </span>
                             );
@@ -461,8 +442,18 @@ export default function All_Items() {
                         disabled={currentPage === totalPages}
                         aria-label="Next page"
                     >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M9 5l7 7-7 7"
+                            />
                         </svg>
                     </button>
                 </div>
@@ -476,14 +467,26 @@ export default function All_Items() {
                                 onClick={handleCloseNewItemModal}
                                 aria-label="Close"
                             >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                <svg
+                                    className="w-6 h-6"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
                                 </svg>
                             </button>
-                            <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">Add New Item</h2>
+                            <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">
+                                Add New Item
+                            </h2>
                             <form
                                 className="space-y-4"
-                                onSubmit={e => {
+                                onSubmit={(e) => {
                                     e.preventDefault();
                                     handleCreateNewItem();
                                 }}
@@ -554,10 +557,18 @@ export default function All_Items() {
                                             onChange={handleNewItemInputChange}
                                             className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
                                         >
-                                            <option value="Available">Available</option>
-                                            <option value="Out of Stock">Out of Stock</option>
-                                            <option value="Scheduled">Scheduled</option>
-                                            <option value="Discontinued">Discontinued</option>
+                                            <option value="Available">
+                                                Available
+                                            </option>
+                                            <option value="Out of Stock">
+                                                Out of Stock
+                                            </option>
+                                            <option value="Scheduled">
+                                                Scheduled
+                                            </option>
+                                            <option value="Discontinued">
+                                                Discontinued
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -576,10 +587,18 @@ export default function All_Items() {
                                         className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
                                     >
                                         <option value="Seeds">Seeds</option>
-                                        <option value="Fertilizers">Fertilizers</option>
-                                        <option value="Livestock">Livestock</option>
-                                        <option value="Fish Fingerlings">Fish Fingerlings</option>
-                                        <option value="Organic Inputs">Organic Inputs</option>
+                                        <option value="Fertilizers">
+                                            Fertilizers
+                                        </option>
+                                        <option value="Livestock">
+                                            Livestock
+                                        </option>
+                                        <option value="Fish Fingerlings">
+                                            Fish Fingerlings
+                                        </option>
+                                        <option value="Organic Inputs">
+                                            Organic Inputs
+                                        </option>
                                         <option value="Tools">Tools</option>
                                         <option value="Plants">Plants</option>
                                         <option value="Compost">Compost</option>

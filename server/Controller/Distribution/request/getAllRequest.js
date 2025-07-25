@@ -1,0 +1,117 @@
+import { PrismaClient } from '../../../prisma/generated/client.js';
+const prisma = new PrismaClient();
+
+async function getAllRequest(req, res) {
+    try {
+        // Get all item transactions with related data - ONLY for Distribution stacks
+        const requests = await prisma.itemTransaction.findMany({
+            where: {
+                itemStack: {
+                    status: 'Distributed', // Only get transactions for Distributed stacks
+                },
+            },
+            include: {
+                itemStack: {
+                    include: {
+                        item: {
+                            select: {
+                                id: true,
+                                name: true,
+                                description: true,
+                                category: true,
+                                picture: true,
+                            },
+                        },
+                    },
+                },
+                account: {
+                    select: {
+                        id: true,
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                        username: true,
+                        cellphone_no: true,
+                        access: true,
+                        client_profile: true,
+                    },
+                },
+                admin: {
+                    select: {
+                        id: true,
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                    },
+                },
+            },
+            orderBy: [
+                {
+                    status: 'asc', // Order by status first (Pending, Approved, etc.)
+                },
+                {
+                    createdAt: 'desc', // Then by creation date (newest first)
+                },
+            ],
+        });
+
+        // Transform the data to match the expected format
+        const transformedRequests = requests.map((request) => ({
+            id: request.id,
+            itemStackId: request.itemStackId,
+            accountId: request.accountId,
+            adminId: request.adminId,
+            quantity: request.quantity,
+            status: request.status,
+            pickupDate: request.pickupDate,
+            returnDate: null, // Always null for distribution items
+            requestNote: request.requestNote,
+            createdAt: request.createdAt,
+            updatedAt: request.updatedAt,
+            // Item information
+            itemName: request.itemStack.item.name,
+            itemDescription: request.itemStack.item.description,
+            itemCategory: request.itemStack.item.category,
+            itemPicture: request.itemStack.item.picture,
+            itemDateLimit: request.itemStack.date_limit,
+            // Stack inventory information
+            currentStock: request.itemStack.quantity,
+            // User information
+            requestorName: `${request.account.firstName} ${request.account.lastName}`,
+            requestorEmail: request.account.email,
+            requestorUsername: request.account.username,
+            requestorPhone: request.account.cellphone_no,
+            requestorAccess: request.account.access,
+            requestorProfile: request.account.client_profile,
+            // Admin information (if any)
+            adminName: request.admin
+                ? `${request.admin.firstName} ${request.admin.lastName}`
+                : null,
+            adminEmail: request.admin ? request.admin.email : null,
+        }));
+
+        return res.status(200).json({
+            success: true,
+            message: 'Distribution requests retrieved successfully',
+            count: transformedRequests.length,
+            requests: transformedRequests,
+        });
+    } catch (error) {
+        console.error('Error fetching all distribution requests:', error);
+
+        // Handle specific Prisma errors
+        if (error.code === 'P2002') {
+            return res.status(409).json({
+                error: 'Conflict',
+                message: 'A conflict occurred while fetching requests',
+            });
+        }
+
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: 'Failed to fetch requests. Please try again later.',
+        });
+    }
+}
+
+export default getAllRequest;

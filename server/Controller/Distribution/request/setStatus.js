@@ -63,14 +63,11 @@ async function setStatus(req, res) {
             });
         }
 
-        // Define valid statuses
+        // Define valid statuses for Distribution (no return-related statuses)
         const validStatuses = [
             'Pending',
             'Approved',
             'Rejected',
-            'Returned',
-            'No_Return',
-            'late_return',
             'No_Pickup',
             'Cancelled',
         ];
@@ -110,11 +107,7 @@ async function setStatus(req, res) {
             // Admins can set any status, but let's add some business logic validation
 
             // Prevent changing already completed transactions
-            if (
-                ['Returned', 'No_Return', 'late_return', 'No_Pickup'].includes(
-                    transaction.status
-                )
-            ) {
+            if (['No_Pickup'].includes(transaction.status)) {
                 return res.status(400).json({
                     error: 'Invalid operation',
                     message: 'Cannot modify completed transactions',
@@ -151,20 +144,21 @@ async function setStatus(req, res) {
         const currentStatus = transaction.status;
         const newStatus = status;
 
+        // Distribution-specific logic:
+        // Approved - Subtract (items are distributed out)
+        // Rejected - None (request denied, no items moved)
+        // Cancelled - (Approved? Add back) (Pending? None)
+        // No_Pickup - Add back (items not picked up, return to stock)
+
         if (newStatus === 'Approved') {
-            // Subtract quantity when approved (items are taken out of circulation)
+            // Subtract quantity when approved (items are distributed out)
             stackQuantityChange = -transaction.quantity;
         } else if (newStatus === 'Rejected') {
             // No change for rejected
             stackQuantityChange = 0;
-        } else if (
-            ['Returned', 'late_return', 'No_Pickup'].includes(newStatus)
-        ) {
-            // Add quantity back when returned, late return, or no pickup
+        } else if (newStatus === 'No_Pickup') {
+            // Add quantity back when no pickup (items return to stock)
             stackQuantityChange = transaction.quantity;
-        } else if (newStatus === 'No_Return') {
-            // No change for no return (items are permanently lost)
-            stackQuantityChange = 0;
         } else if (newStatus === 'Cancelled') {
             // Handle cancellation logic
             if (currentStatus === 'Approved') {
@@ -235,7 +229,6 @@ async function setStatus(req, res) {
                         updatedAt: new Date(),
                     },
                 });
-
             }
 
             return updatedTransaction;
@@ -243,7 +236,7 @@ async function setStatus(req, res) {
 
         return res.status(200).json({
             success: true,
-            message: 'Transaction status updated successfully',
+            message: 'Distribution transaction status updated successfully',
             transaction: {
                 id: result.id,
                 itemName: result.itemStack.item.name,
@@ -251,7 +244,7 @@ async function setStatus(req, res) {
                 quantity: result.quantity,
                 status: result.status,
                 pickupDate: result.pickupDate,
-                returnDate: result.returnDate,
+                returnDate: null, // Always null for distribution items
                 requestNote: result.requestNote,
                 updatedBy: result.admin
                     ? `${result.admin.firstName} ${result.admin.lastName}`
@@ -261,7 +254,7 @@ async function setStatus(req, res) {
             },
         });
     } catch (error) {
-        console.error('Error updating transaction status:', error);
+        console.error('Error updating distribution transaction status:', error);
 
         // Handle specific Prisma errors
         if (error.code === 'P2025') {

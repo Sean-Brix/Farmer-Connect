@@ -28,37 +28,39 @@ export default function Distribution() {
 
     const categories = [
         'All',
-        ...Array.from(new Set(distributionItems.map((i) => i.category))),
+        ...Array.from(new Set(distributionItems.map((i) => i.item?.category))),
     ];
 
     const filteredItems = distributionItems.filter(
         (i) =>
-            (filter === 'All' || i.category === filter) &&
+            (filter === 'All' || i.item?.category === filter) &&
             (search === '' ||
-                (i.name &&
-                    i.name.toLowerCase().includes(search.toLowerCase())) ||
-                (i.category &&
-                    i.category.toLowerCase().includes(search.toLowerCase())) ||
-                (i.description &&
-                    i.description.toLowerCase().includes(search.toLowerCase())))
+                (i.item?.name &&
+                    i.item.name.toLowerCase().includes(search.toLowerCase())) ||
+                (i.item?.category &&
+                    i.item.category
+                        .toLowerCase()
+                        .includes(search.toLowerCase())) ||
+                (i.item?.description &&
+                    i.item.description
+                        .toLowerCase()
+                        .includes(search.toLowerCase())))
     );
 
     useEffect(() => {
         const fetchDistributionItems = async () => {
             try {
-                const response = await fetch(
-                    `/api/distribution/getAll?status=Available`
-                );
+                const response = await fetch('/api/dist/all');
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-                const { payload } = await response.json();
-                if (Array.isArray(payload)) {
+                const data = await response.json();
+                if (Array.isArray(data)) {
                     const itemsWithImages = await Promise.all(
-                        payload.map(async (item) => {
+                        data.map(async (item) => {
                             try {
                                 const imageResponse = await fetch(
-                                    `/api/distribution/getImage?id=${item.id}`
+                                    `/api/dist/photo/${item.itemId}`
                                 );
                                 if (imageResponse.ok) {
                                     const imageBlob =
@@ -72,13 +74,13 @@ export default function Distribution() {
                                     }
                                 } else {
                                     console.error(
-                                        `Failed to fetch image for item ${item.id}: ${imageResponse.statusText}`
+                                        `Failed to fetch image for item ${item.itemId}: ${imageResponse.statusText}`
                                     );
                                     return { ...item, img: default_image };
                                 }
                             } catch (imageError) {
                                 console.error(
-                                    `Error fetching image for item ${item.id}:`,
+                                    `Error fetching image for item ${item.itemId}:`,
                                     imageError
                                 );
                                 return { ...item, img: default_image };
@@ -87,10 +89,7 @@ export default function Distribution() {
                     );
                     setDistributionItems(itemsWithImages);
                 } else {
-                    console.warn(
-                        'Payload is not an array or is empty:',
-                        payload
-                    );
+                    console.warn('Data is not an array or is empty:', data);
                     setDistributionItems([]);
                 }
             } catch (error) {
@@ -197,12 +196,16 @@ export default function Distribution() {
     const cancelRequest = async (request) => {
         if (!confirm('Are you sure you want to cancel this request?')) return;
 
-        const response = await fetch(
-            `/api/distribution/deleteRequest?id=${request.id}`,
-            {
-                method: 'GET',
-            }
-        );
+        const response = await fetch('/api/dist/request/cancel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                transactionId: request.id,
+                status: 'Cancelled',
+            }),
+        });
 
         if (response.ok) {
             setMyRequests(myRequests.filter((req) => req.id !== request.id));
@@ -227,16 +230,16 @@ export default function Distribution() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('/api/distribution/request_item', {
+            const response = await fetch('/api/dist/request', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    item_id: selectedItem.id,
+                    item_id: selectedItem.itemId,
                     quantity: requestData.quantity,
                     request_note: requestData.request_note,
-                    schedule_date: requestData.schedule_date,
+                    pickupDate: requestData.schedule_date,
                 }),
             });
 
@@ -492,10 +495,12 @@ export default function Distribution() {
                 return;
             }
 
-            const requestsResponse = await fetch('/api/distribution/myRequest');
+            const requestsResponse = await fetch('/api/dist/request/me');
             if (requestsResponse.ok) {
                 const data = await requestsResponse.json();
-                setMyRequests(Array.isArray(data.payload) ? data.payload : []);
+                setMyRequests(
+                    Array.isArray(data.requests) ? data.requests : []
+                );
                 setShowMyRequestsModal(true);
             } else {
                 console.error(
@@ -654,16 +659,20 @@ export default function Distribution() {
                                             }}
                                         >
                                             {typeIcon(item.category)}
-                                            <span className="ml-2">{item.category}</span>
+                                            <span className="ml-2">
+                                                {item.category}
+                                            </span>
                                         </span>
                                         <span
                                             className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-semibold shadow-sm
                                                 ${
                                                     item.status === 'Available'
                                                         ? 'bg-green-100 text-green-700 border border-green-200'
-                                                        : item.status === 'Out of Stock'
+                                                        : item.status ===
+                                                          'Out of Stock'
                                                         ? 'bg-yellow-100 text-yellow-700 border border-yellow-200'
-                                                        : item.status === 'Scheduled'
+                                                        : item.status ===
+                                                          'Scheduled'
                                                         ? 'bg-red-100 text-red-700 border border-red-200'
                                                         : 'bg-gray-100 text-gray-700 border border-gray-200'
                                                 }`}
@@ -808,7 +817,11 @@ export default function Distribution() {
                                         onChange={handleInputChange}
                                         className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
                                         required
-                                        min={new Date().toISOString().split('T')[0]}
+                                        min={
+                                            new Date()
+                                                .toISOString()
+                                                .split('T')[0]
+                                        }
                                     />
                                 </div>
                                 <div>

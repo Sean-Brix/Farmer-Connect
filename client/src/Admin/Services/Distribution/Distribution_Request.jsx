@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Distribution_Request() {
     const navigate = useNavigate();
     const [requests, setRequests] = useState([]);
-    const [eicItems, setEicItems] = useState([]);
+    const [distributionItems, setDistributionItems] = useState([]);
     const [accounts, setAccounts] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
@@ -12,25 +12,23 @@ export default function Distribution_Request() {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const response = await fetch(
-                    '/api/distribution/getAll_Request'
-                );
+                const response = await fetch('/api/dist/request/all');
                 const data = await response.json();
-                setRequests(data?.payload || []);
+                setRequests(data?.requests || []);
             } catch (error) {
-                console.error('Error fetching requests:', error);
+                console.error('Error fetching distribution requests:', error);
                 alert('Unauthorized, Only Admin Account');
                 navigate('/login');
             }
         };
 
-        const fetchEicItems = async () => {
+        const fetchDistributionItems = async () => {
             try {
-                const response = await fetch('/api/distribution/getAll');
+                const response = await fetch('/api/dist/all');
                 const data = await response.json();
-                setEicItems(data?.payload || []);
+                setDistributionItems(data || []);
             } catch (error) {
-                console.error('Error fetching items:', error);
+                console.error('Error fetching distribution items:', error);
                 alert('Unauthorized, Only Admin Account');
                 navigate('/login');
             }
@@ -49,26 +47,23 @@ export default function Distribution_Request() {
         };
 
         fetchRequests();
-        fetchEicItems();
+        fetchDistributionItems();
         fetchAccounts();
     }, [navigate]);
 
     const filteredRequests =
         requests?.filter((request) => {
             const account = accounts?.find(
-                (account) => account.id === request.account_id
-            );
-            const eicItem = eicItems?.find(
-                (item) => item.id === request.distribution_item_id
+                (account) => account.id === request.accountId
             );
             const searchMatch =
-                request.request_note
+                request.requestNote
                     ?.toLowerCase()
                     .includes(searchQuery.toLowerCase()) ||
-                account?.username
+                request.requestorName
                     ?.toLowerCase()
                     .includes(searchQuery.toLowerCase()) ||
-                eicItem?.name
+                request.itemName
                     ?.toLowerCase()
                     .includes(searchQuery.toLowerCase());
 
@@ -85,182 +80,127 @@ export default function Distribution_Request() {
         setStatusFilter(e.target.value);
     };
 
-    const updateItemStock = async (itemId, quantityChange) => {
+    // Remove updateItemStock function as it's handled automatically by the backend
+    // Remove handleClaimed function as it's not needed for distribution items
+
+    const handleApprove = async (requestId) => {
         try {
-            const response = await fetch('/api/distribution/updateItem', {
+            const response = await fetch('/api/dist/request/respond', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    id: itemId,
-                    quantity: quantityChange,
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            setEicItems((prevItems) =>
-                prevItems.map((item) =>
-                    item.id === itemId
-                        ? { ...item, quantity: item.quantity + quantityChange }
-                        : item
-                )
-            );
-        } catch (error) {
-            console.error('Error updating item stock:', error);
-            alert('Failed to update item stock.');
-        }
-    };
-
-    const handleApprove = async (id, distribution_item_id, quantity) => {
-        try {
-            const response = await fetch(`/api/distribution/approve_request`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    request_id: id,
+                    transactionId: requestId,
                     status: 'Approved',
                 }),
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(
+                    data.message || `HTTP error! Status: ${response.status}`
+                );
             }
 
-            await updateItemStock(distribution_item_id, -quantity);
-
+            // Update the requests list
             setRequests((prevRequests) =>
                 prevRequests.map((request) =>
-                    request.id === id
+                    request.id === requestId
                         ? { ...request, status: 'Approved' }
                         : request
                 )
             );
+
+            alert('Request approved successfully');
         } catch (error) {
             console.error('Error approving request:', error);
-            alert('Unauthorized, Only Admin Account');
-            navigate('/login');
+            alert('Failed to approve request: ' + error.message);
         }
     };
 
-    const handleReject = async (id, distribution_item_id, quantity) => {
+    const handleReject = async (requestId) => {
         try {
-            const response = await fetch(`/api/distribution/approve_request`, {
+            const response = await fetch('/api/dist/request/respond', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    request_id: id,
+                    transactionId: requestId,
                     status: 'Rejected',
                 }),
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(
+                    data.message || `HTTP error! Status: ${response.status}`
+                );
             }
 
-            await updateItemStock(distribution_item_id, +quantity);
-
-
+            // Update the requests list
             setRequests((prevRequests) =>
                 prevRequests.map((request) =>
-                    request.id === id
+                    request.id === requestId
                         ? { ...request, status: 'Rejected' }
                         : request
                 )
             );
+
+            alert('Request rejected successfully');
         } catch (error) {
             console.error('Error rejecting request:', error);
-            alert('Unauthorized, Only Admin Account');
-            navigate('/login');
+            alert('Failed to reject request: ' + error.message);
         }
     };
 
-    const handleProcessing = async (id) => {
+    const handleNoPickup = async (requestId) => {
         try {
-            const response = await fetch(`/api/distribution/approve_request`, {
+            const response = await fetch('/api/dist/request/respond', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    request_id: id,
-                    status: 'Processing',
+                    transactionId: requestId,
+                    status: 'No_Pickup',
                 }),
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(
+                    data.message || `HTTP error! Status: ${response.status}`
+                );
             }
 
+            // Update the requests list
             setRequests((prevRequests) =>
                 prevRequests.map((request) =>
-                    request.id === id
-                        ? { ...request, status: 'Processing' }
+                    request.id === requestId
+                        ? { ...request, status: 'No_Pickup' }
                         : request
                 )
             );
+
+            alert('Request marked as No Pickup successfully');
         } catch (error) {
-            console.error('Error approving request:', error);
-            alert('Unauthorized, Only Admin Account');
-            navigate('/login');
-        }
-    };
-
-    const handleClaimed = async (id, quantity, distribution_item_id) => {
-        try {
-            const response = await fetch(`/api/distribution/approve_request`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    request_id: id,
-                    status: 'Claimed',
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            await updateItemStock(distribution_item_id, +quantity);
-
-
-            setRequests((prevRequests) =>
-                prevRequests.map((request) =>
-                    request.id === id
-                        ? { ...request, status: 'Claimed' }
-                        : request
-                )
-            );
-        } catch (error) {
-            console.error('Error rejecting request:', error);
-            alert('Unauthorized, Only Admin Account');
-            navigate('/login');
+            console.error('Error updating request:', error);
+            alert('Failed to update request: ' + error.message);
         }
     };
 
     const RequestCard = ({ request }) => {
-        const account = accounts?.find(
-            (account) => account.id === request.account_id
-        );
-        const eicItem = eicItems?.find(
-            (item) => item.id === request.distribution_item_id
-        );
-
         return (
             <div className="w-full p-6 rounded-3xl shadow-xl bg-white flex flex-col justify-between h-[400px] border border-gray-100 transition-all hover:shadow-2xl group relative overflow-hidden">
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="text-xl font-semibold text-gray-900 truncate">
-                            {eicItem?.name}
+                            {request.itemName}
                         </h3>
                         <span
                             className={`font-medium px-3 py-1 rounded-full text-xs border transition ${
@@ -268,11 +208,11 @@ export default function Distribution_Request() {
                                     ? 'bg-green-50 text-green-600 border-green-100'
                                     : request.status === 'Rejected'
                                     ? 'bg-red-50 text-red-500 border-red-100'
-                                    : request.status === 'Processing'
-                                    ? 'bg-yellow-50 text-yellow-600 border-yellow-100'
-                                    : request.status === 'Claimed'
-                                    ? 'bg-blue-50 text-blue-600 border-blue-100'
-                                    : 'bg-gray-50 text-gray-600 border-gray-100'
+                                    : request.status === 'No_Pickup'
+                                    ? 'bg-orange-50 text-orange-600 border-orange-100'
+                                    : request.status === 'Cancelled'
+                                    ? 'bg-gray-50 text-gray-600 border-gray-100'
+                                    : 'bg-blue-50 text-blue-600 border-blue-100'
                             }`}
                         >
                             {request.status}
@@ -281,42 +221,41 @@ export default function Distribution_Request() {
                     <p className="text-xs text-gray-400 mb-6">
                         Requested by{' '}
                         <span className="font-semibold text-gray-700">
-                            {account?.firstname} {account?.lastname}
+                            {request.requestorName}
                         </span>
                     </p>
                     <div className="space-y-2">
                         <div className="flex justify-between text-xs text-gray-500">
-                            <span className="font-medium">Item ID</span>
-                            <span>{eicItem?.id}</span>
+                            <span className="font-medium">Item Category</span>
+                            <span>{request.itemCategory}</span>
                         </div>
                         <div className="flex justify-between text-xs text-gray-500">
                             <span className="font-medium">Quantity</span>
                             <span>{request.quantity}</span>
                         </div>
                         <div className="flex justify-between text-xs text-gray-500">
-                            <span className="font-medium">Schedule</span>
-                            <span>{request.schedule_date}</span>
+                            <span className="font-medium">Pickup Date</span>
+                            <span>
+                                {new Date(
+                                    request.pickupDate
+                                ).toLocaleDateString()}
+                            </span>
                         </div>
-                        {eicItem && (
-                            <>
-                                <div className="flex justify-between text-xs text-gray-500">
-                                    <span className="font-medium">Stock</span>
-                                    <span>{eicItem?.quantity}</span>
-                                </div>
-                                <div className="flex justify-between text-xs text-gray-500">
-                                    <span className="font-medium">
-                                        Category
-                                    </span>
-                                    <span>{eicItem?.category}</span>
-                                </div>
-                            </>
-                        )}
+                        <div className="flex justify-between text-xs text-gray-500">
+                            <span className="font-medium">Current Stock</span>
+                            <span>{request.currentStock}</span>
+                        </div>
                         <div className="flex justify-between text-xs text-gray-500">
                             <span className="font-medium">Note</span>
                             <button
-                                className="text-gray-400 hover:text-green-600 focus:outline-none transition"
+                                className="text-gray-400 hover:text-blue-600 focus:outline-none transition"
                                 title="View note"
-                                onClick={() => alert(request.request_note)}
+                                onClick={() =>
+                                    alert(
+                                        request.requestNote ||
+                                            'No note provided'
+                                    )
+                                }
                                 type="button"
                             >
                                 <svg
@@ -339,33 +278,23 @@ export default function Distribution_Request() {
                 </div>
                 <div className="flex justify-end mt-4">
                     <select
-                        className="w-full md:w-auto px-4 py-2 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-700 shadow-sm transition-all duration-200 cursor-pointer"
+                        className="w-full md:w-auto px-4 py-2 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 shadow-sm transition-all duration-200 cursor-pointer"
                         defaultValue={request.status}
                         onChange={(e) => {
                             if (e.target.value === 'Approved') {
-                                handleApprove(
-                                    request.id,
-                                    request.distribution_item_id,
-                                    request.quantity
-                                );
+                                handleApprove(request.id);
                             } else if (e.target.value === 'Rejected') {
-                                handleReject(
-                                    request.id,
-                                    request.distribution_item_id,
-                                    request.quantity
-                                );
-                            } else if (e.target.value === 'Processing') {
-                                handleProcessing(request.id);
-                            } else if (e.target.value === 'Claimed') {
-                                handleClaimed(request.id, request.quantity, request.distribution_item_id,);
+                                handleReject(request.id);
+                            } else if (e.target.value === 'No_Pickup') {
+                                handleNoPickup(request.id);
                             }
                         }}
                     >
                         <option
-                            value="Waiting"
-                            disabled={request.status !== 'Waiting'}
+                            value="Pending"
+                            disabled={request.status !== 'Pending'}
                         >
-                            Waiting
+                            Pending
                         </option>
                         <option
                             value="Approved"
@@ -380,16 +309,10 @@ export default function Distribution_Request() {
                             Reject
                         </option>
                         <option
-                            value="Processing"
-                            disabled={request.status === 'Processing'}
+                            value="No_Pickup"
+                            disabled={request.status === 'No_Pickup'}
                         >
-                            Processing
-                        </option>
-                        <option
-                            value="Claimed"
-                            disabled={request.status === 'Claimed'}
-                        >
-                            Claimed
+                            No Pickup
                         </option>
                     </select>
                 </div>
@@ -425,15 +348,15 @@ export default function Distribution_Request() {
                     <div className="relative w-full md:w-48">
                         <select
                             onChange={handleStatusChange}
-                            className="appearance-none w-full px-4 py-3 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-700 shadow-sm transition-all duration-200 cursor-pointer"
+                            className="appearance-none w-full px-4 py-3 border border-gray-200 rounded-2xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 shadow-sm transition-all duration-200 cursor-pointer"
                             value={statusFilter}
                         >
                             <option value="">All Statuses</option>
-                            <option value="Waiting">Waiting</option>
+                            <option value="Pending">Pending</option>
                             <option value="Approved">Approved</option>
                             <option value="Rejected">Rejected</option>
-                            <option value="Processing">Processing</option>
-                            <option value="Claimed">Claimed</option>
+                            <option value="No_Pickup">No Pickup</option>
+                            <option value="Cancelled">Cancelled</option>
                         </select>
                         <span className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
                             <svg
@@ -474,15 +397,15 @@ export default function Distribution_Request() {
                             case 'Rejected':
                                 indicatorColor = 'bg-red-500';
                                 break;
-                            case 'Processing':
-                                indicatorColor = 'bg-yellow-400';
+                            case 'No_Pickup':
+                                indicatorColor = 'bg-orange-500';
                                 break;
-                            case 'Claimed':
-                                indicatorColor = 'bg-blue-400';
+                            case 'Cancelled':
+                                indicatorColor = 'bg-gray-500';
                                 break;
-                            case 'Waiting':
+                            case 'Pending':
                             default:
-                                indicatorColor = 'bg-gray-400';
+                                indicatorColor = 'bg-blue-400';
                                 break;
                         }
                         return (
