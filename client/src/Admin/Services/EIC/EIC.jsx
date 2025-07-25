@@ -270,6 +270,26 @@ export default function EIC() {
         }
     };
 
+    // Handle view requests - redirect to requests section with search filter
+    const handleViewRequests = (itemName) => {
+        setActiveSection('requests');
+        setRequestSearch(itemName);
+        // Ensure we fetch the latest requests data
+        setTimeout(() => {
+            fetchRequests();
+        }, 100);
+    };
+
+    // Handle requests button click - reset all filters and go to requests section
+    const handleRequestsButtonClick = () => {
+        // Reset all request filters
+        setRequestSearch('');
+        setRequestStatusFilter('all');
+        setRequestSortBy('status');
+        // Switch to requests section
+        setActiveSection('requests');
+    };
+
     // Handle request status change
     const handleStatusChange = async (
         requestId,
@@ -845,7 +865,7 @@ export default function EIC() {
                             </button>
 
                             <button
-                                onClick={() => setActiveSection('requests')}
+                                onClick={handleRequestsButtonClick}
                                 className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-all"
                             >
                                 <svg
@@ -922,6 +942,7 @@ export default function EIC() {
                     stack={selectedStack}
                     onClose={handleCloseDetailModal}
                     imageUpdateTimestamp={imageUpdateTimestamp}
+                    onViewRequests={handleViewRequests}
                 />
             )}
 
@@ -1537,7 +1558,12 @@ function EICItemCard({ stack, onViewDetails, onEdit, imageUpdateTimestamp }) {
 /* EIC DETAIL MODAL COMPONENT */
 /* ================================================================================== */
 
-function EICDetailModal({ stack, onClose, imageUpdateTimestamp }) {
+function EICDetailModal({
+    stack,
+    onClose,
+    imageUpdateTimestamp,
+    onViewRequests,
+}) {
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -1554,6 +1580,13 @@ function EICDetailModal({ stack, onClose, imageUpdateTimestamp }) {
             hour: '2-digit',
             minute: '2-digit',
         });
+    };
+
+    const handleViewRequests = () => {
+        if (onViewRequests && stack.item?.name) {
+            onViewRequests(stack.item.name);
+            onClose(); // Close the modal
+        }
     };
 
     return (
@@ -1738,6 +1771,29 @@ function EICDetailModal({ stack, onClose, imageUpdateTimestamp }) {
                             </svg>
                             Equipment in Circulation
                         </span>
+                    </div>
+
+                    {/* VIEW REQUESTS BUTTON */}
+                    <div className="mt-4">
+                        <button
+                            onClick={handleViewRequests}
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                            View Requests
+                        </button>
                     </div>
                 </div>
 

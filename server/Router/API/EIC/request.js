@@ -31,6 +31,9 @@ router.get('/all', getAllRequest);
 import adminSetStatus from '../../../Controller/EIC/request/setStatus.js';
 router.post('/respond', adminSetStatus);
 
+import getStackRequests from '../../../Controller/EIC/request/getStackRequest.js';
+router.get('/stack/:itemID', getStackRequests);
+
 //? ================================================================================================ ?//
 
 //? ====================================== SUPER ADMINS ============================================ ?//
