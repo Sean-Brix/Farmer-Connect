@@ -146,57 +146,125 @@ async function setStatus(req, res) {
             updateData.adminId = userId;
         }
 
-        // Update the transaction
-        const updatedTransaction = await prisma.itemTransaction.update({
-            where: {
-                id: transactionId,
-            },
-            data: updateData,
-            include: {
-                itemStack: {
-                    include: {
-                        item: true,
-                    },
-                },
-                account: {
-                    select: {
-                        id: true,
-                        firstName: true,
-                        lastName: true,
-                        email: true,
-                    },
-                },
-                admin: {
-                    select: {
-                        id: true,
-                        firstName: true,
-                        lastName: true,
-                    },
-                },
-            },
-        });
+        // Handle stack quantity adjustments based on status change
+        let stackQuantityChange = 0;
+        const currentStatus = transaction.status;
+        const newStatus = status;
 
-        // Log the status change
-        console.log(
-            `Transaction ${transactionId} status changed to ${status} by ${user.firstName} ${user.lastName} (${user.access})`
-        );
+        if (newStatus === 'Approved') {
+            // Subtract quantity when approved (items are taken out of circulation)
+            stackQuantityChange = -transaction.quantity;
+        } else if (newStatus === 'Rejected') {
+            // No change for rejected
+            stackQuantityChange = 0;
+        } else if (
+            ['Returned', 'late_return', 'No_Pickup'].includes(newStatus)
+        ) {
+            // Add quantity back when returned, late return, or no pickup
+            stackQuantityChange = transaction.quantity;
+        } else if (newStatus === 'No_Return') {
+            // No change for no return (items are permanently lost)
+            stackQuantityChange = 0;
+        } else if (newStatus === 'Cancelled') {
+            // Handle cancellation logic
+            if (currentStatus === 'Approved') {
+                // If cancelling an approved transaction, add quantity back
+                stackQuantityChange = transaction.quantity;
+            } else if (currentStatus === 'Pending') {
+                // If cancelling a pending transaction, no quantity change needed
+                stackQuantityChange = 0;
+            } else {
+                // For other statuses, no change
+                stackQuantityChange = 0;
+            }
+        }
+
+        // Update the transaction and stack quantity in a transaction
+        const result = await prisma.$transaction(async (prisma) => {
+            // Update the transaction status
+            const updatedTransaction = await prisma.itemTransaction.update({
+                where: {
+                    id: transactionId,
+                },
+                data: updateData,
+                include: {
+                    itemStack: {
+                        include: {
+                            item: true,
+                        },
+                    },
+                    account: {
+                        select: {
+                            id: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                        },
+                    },
+                    admin: {
+                        select: {
+                            id: true,
+                            firstName: true,
+                            lastName: true,
+                        },
+                    },
+                },
+            });
+
+            // Update stack quantity if there's a change
+            if (stackQuantityChange !== 0) {
+                const currentStackQuantity = transaction.itemStack.quantity;
+                const newStackQuantity =
+                    currentStackQuantity + stackQuantityChange;
+
+                // Ensure quantity doesn't go negative
+                if (newStackQuantity < 0) {
+                    throw new Error(
+                        `Insufficient stock. Current quantity: ${currentStackQuantity}, Requested: ${Math.abs(
+                            stackQuantityChange
+                        )}`
+                    );
+                }
+
+                await prisma.itemStack.update({
+                    where: {
+                        id: transaction.itemStackId,
+                    },
+                    data: {
+                        quantity: newStackQuantity,
+                        updatedAt: new Date(),
+                    },
+                });
+
+                console.log(
+                    `Stack quantity updated: ${currentStackQuantity} → ${newStackQuantity} (${
+                        stackQuantityChange > 0 ? '+' : ''
+                    }${stackQuantityChange}) for item: ${
+                        transaction.itemStack.item.name
+                    }`
+                );
+            }
+
+            return updatedTransaction;
+        });
 
         return res.status(200).json({
             success: true,
             message: 'Transaction status updated successfully',
             transaction: {
-                id: updatedTransaction.id,
-                itemName: updatedTransaction.itemStack.item.name,
-                requestor: `${updatedTransaction.account.firstName} ${updatedTransaction.account.lastName}`,
-                quantity: updatedTransaction.quantity,
-                status: updatedTransaction.status,
-                pickupDate: updatedTransaction.pickupDate,
-                returnDate: updatedTransaction.returnDate,
-                requestNote: updatedTransaction.requestNote,
-                updatedBy: updatedTransaction.admin
-                    ? `${updatedTransaction.admin.firstName} ${updatedTransaction.admin.lastName}`
+                id: result.id,
+                itemName: result.itemStack.item.name,
+                requestor: `${result.account.firstName} ${result.account.lastName}`,
+                quantity: result.quantity,
+                status: result.status,
+                pickupDate: result.pickupDate,
+                returnDate: result.returnDate,
+                requestNote: result.requestNote,
+                updatedBy: result.admin
+                    ? `${result.admin.firstName} ${result.admin.lastName}`
                     : 'User',
-                updatedAt: updatedTransaction.updatedAt,
+                updatedAt: result.updatedAt,
+                stackQuantityChange: stackQuantityChange, // Include the quantity change for debugging
             },
         });
     } catch (error) {

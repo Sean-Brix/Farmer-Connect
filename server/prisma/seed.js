@@ -424,14 +424,19 @@ async function createItemTransactions() {
         to: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)    // 30 days from now
       });
 
-      // Generate return date (only if status indicates item was returned)
+      // Generate return date logic based on stack status
       let returnDate = null;
-      if (['Returned', 'late_return'].includes(status)) {
-        // Return date should be after pickup date
+      
+      if (stack.status === 'EIC') {
+        // ALL EIC transactions should have a return date
+        // Return date should be after pickup date (1 to 30 days later)
         returnDate = faker.date.between({
-          from: pickupDate,
-          to: new Date(pickupDate.getTime() + 14 * 24 * 60 * 60 * 1000) // Up to 14 days after pickup
+          from: new Date(pickupDate.getTime() + 24 * 60 * 60 * 1000), // At least 1 day after pickup
+          to: new Date(pickupDate.getTime() + 30 * 24 * 60 * 60 * 1000) // Up to 30 days after pickup
         });
+      } else if (stack.status === 'Distributed') {
+        // Distributed items don't need to be returned, so no return date
+        returnDate = null;
       }
 
       // Assign admin ID if transaction has been processed (not Pending)

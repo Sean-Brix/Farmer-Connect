@@ -25,6 +25,9 @@ router.post('/cancel', setStatus);
 import authorize from '../../../Middlewares/Auth/authorize.js';
 router.use(authorize);
 
+import getAllRequest from '../../../Controller/EIC/request/getAllRequest.js';
+router.get('/all', getAllRequest);
+
 import adminSetStatus from '../../../Controller/EIC/request/setStatus.js';
 router.post('/respond', adminSetStatus);
 
