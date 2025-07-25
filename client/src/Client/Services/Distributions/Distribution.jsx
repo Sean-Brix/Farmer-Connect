@@ -1,10 +1,8 @@
-// All green color classes and hex codes are replaced with blue equivalents.
-
-import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../Components/Navbar';
 
+// ASSETS
 import default_image from './Assets/default_image.jpg';
 
 const ITEMS_PER_PAGE = 8;
@@ -19,32 +17,29 @@ export default function Distribution() {
     const [selectedItem, setSelectedItem] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [requestData, setRequestData] = useState({
-        quantity: 1,
+        pickupDate: '',
         request_note: '',
-        schedule_date: '',
+        quantity: 1,
     });
     const [myRequests, setMyRequests] = useState([]);
     const [showMyRequestsModal, setShowMyRequestsModal] = useState(false);
+    const [formErrors, setFormErrors] = useState({});
 
     const categories = [
         'All',
-        ...Array.from(new Set(distributionItems.map((i) => i.item?.category))),
+        ...Array.from(new Set(distributionItems.map((i) => i.category))),
     ];
 
     const filteredItems = distributionItems.filter(
         (i) =>
-            (filter === 'All' || i.item?.category === filter) &&
+            (filter === 'All' || i.category === filter) &&
             (search === '' ||
-                (i.item?.name &&
-                    i.item.name.toLowerCase().includes(search.toLowerCase())) ||
-                (i.item?.category &&
-                    i.item.category
-                        .toLowerCase()
-                        .includes(search.toLowerCase())) ||
-                (i.item?.description &&
-                    i.item.description
-                        .toLowerCase()
-                        .includes(search.toLowerCase())))
+                (i.Name &&
+                    i.Name.toLowerCase().includes(search.toLowerCase())) ||
+                (i.category &&
+                    i.category.toLowerCase().includes(search.toLowerCase())) ||
+                (i.description &&
+                    i.description.toLowerCase().includes(search.toLowerCase())))
     );
 
     useEffect(() => {
@@ -54,42 +49,32 @@ export default function Distribution() {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-                const data = await response.json();
-                if (Array.isArray(data)) {
-                    const itemsWithImages = await Promise.all(
-                        data.map(async (item) => {
-                            try {
-                                const imageResponse = await fetch(
-                                    `/api/dist/photo/${item.itemId}`
-                                );
-                                if (imageResponse.ok) {
-                                    const imageBlob =
-                                        await imageResponse.blob();
-                                    if (imageBlob.size > 0) {
-                                        const imageURL =
-                                            URL.createObjectURL(imageBlob);
-                                        return { ...item, img: imageURL };
-                                    } else {
-                                        return { ...item, img: default_image };
-                                    }
-                                } else {
-                                    console.error(
-                                        `Failed to fetch image for item ${item.itemId}: ${imageResponse.statusText}`
-                                    );
-                                    return { ...item, img: default_image };
-                                }
-                            } catch (imageError) {
-                                console.error(
-                                    `Error fetching image for item ${item.itemId}:`,
-                                    imageError
-                                );
-                                return { ...item, img: default_image };
-                            }
-                        })
-                    );
-                    setDistributionItems(itemsWithImages);
+                const distributionData = await response.json();
+
+                if (Array.isArray(distributionData)) {
+                    // Transform the data to match the expected structure
+                    const transformedItems = distributionData.map((stack) => ({
+                        id: stack.itemId,
+                        stackId: stack.id,
+                        Name: stack.item.name,
+                        name: stack.item.name, // Add lowercase version for consistency
+                        category: stack.item.category,
+                        description: stack.item.description,
+                        quantity: stack.quantity,
+                        status: stack.status,
+                        img: stack.item.picture || default_image,
+                        // Include all original item properties
+                        ...stack.item,
+                        // Override with stack-specific data
+                        availableQuantity: stack.quantity,
+                    }));
+
+                    setDistributionItems(transformedItems);
                 } else {
-                    console.warn('Data is not an array or is empty:', data);
+                    console.warn(
+                        'Response is not an array or is empty:',
+                        distributionData
+                    );
                     setDistributionItems([]);
                 }
             } catch (error) {
@@ -158,13 +143,13 @@ export default function Distribution() {
     useEffect(() => {
         const style = document.createElement('style');
         style.innerHTML = `
-            ::-webkit-scrollbar {
-                display: none;
-            }
-            html, body {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
+          ::-webkit-scrollbar {
+            display: none;
+          }
+          html, body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
         `;
         document.head.appendChild(style);
         return () => {
@@ -176,47 +161,29 @@ export default function Distribution() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [currentPage]);
 
+    // SEND REQUEST
     const handleRequestClick = async (item) => {
         try {
-            const response = await fetch('/api/authentication/gotToken');
-            if (!response.ok) {
-                if (confirm('Login first?')) {
-                    navigate('/login');
-                    return;
-                }
-                return;
-            }
+            //Check if user is logged in
+            // const response = await fetch('/api/authentication/gotToken');
+            // if (!response.ok) {
+            //     if (confirm('Login first?')) {
+            //         navigate('/login');
+            //         return;
+            //     }
+            //     return;
+            // }
+
             setSelectedItem(item);
             setModalOpen(true);
         } catch (e) {
-            console.log('Request Distribution Item: ' + e);
-        }
-    };
-
-    const cancelRequest = async (request) => {
-        if (!confirm('Are you sure you want to cancel this request?')) return;
-
-        const response = await fetch('/api/dist/request/cancel', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                transactionId: request.id,
-                status: 'Cancelled',
-            }),
-        });
-
-        if (response.ok) {
-            setMyRequests(myRequests.filter((req) => req.id !== request.id));
-            alert('Request cancelled successfully!');
-        } else {
-            alert('Failed to cancel request.');
+            console.log('Request Distribution Item:  ' + e);
         }
     };
 
     const handleCloseModal = () => {
         setModalOpen(false);
+        setFormErrors({});
     };
 
     const handleInputChange = (e) => {
@@ -225,10 +192,47 @@ export default function Distribution() {
             ...prevData,
             [name]: value,
         }));
+
+        // Clear specific error when user starts typing
+        if (formErrors[name]) {
+            setFormErrors((prev) => ({
+                ...prev,
+                [name]: '',
+            }));
+        }
     };
 
+    // Form validation function
+    const validateForm = () => {
+        const errors = {};
+
+        if (!requestData.pickupDate) {
+            errors.pickupDate = 'Pickup date is required';
+        } else if (
+            new Date(requestData.pickupDate) < new Date().setHours(0, 0, 0, 0)
+        ) {
+            errors.pickupDate = 'Pickup date cannot be in the past';
+        }
+
+        if (!requestData.quantity || requestData.quantity < 1) {
+            errors.quantity = 'Quantity must be at least 1';
+        } else if (requestData.quantity > selectedItem?.quantity) {
+            errors.quantity = 'Quantity exceeds available stock';
+        }
+
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
+    // SUBMIT REQUEST
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate form before submission
+        if (!validateForm()) {
+            return;
+        }
+
         try {
             const response = await fetch('/api/dist/request', {
                 method: 'POST',
@@ -236,17 +240,18 @@ export default function Distribution() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    item_id: selectedItem.itemId,
-                    quantity: requestData.quantity,
+                    item_id: selectedItem.id,
+                    pickupDate: requestData.pickupDate,
                     request_note: requestData.request_note,
-                    pickupDate: requestData.schedule_date,
+                    quantity: parseInt(requestData.quantity),
                 }),
             });
 
             if (response.ok) {
+                // Show custom animated alert centered on screen
                 const alertDiv = document.createElement('div');
                 alertDiv.innerHTML = `
-                    <div id="custom-eic-alert" style="
+                    <div id="custom-dist-alert" style="
                         position: fixed;
                         top: 50%;
                         left: 50%;
@@ -265,7 +270,7 @@ export default function Distribution() {
                         gap: 1.1rem;
                         min-width: 320px;
                         max-width: 90vw;
-                        animation: eicAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                        animation: distAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
                         overflow: hidden;
                     ">
                         <span style="
@@ -281,30 +286,31 @@ export default function Distribution() {
                             <i class="fa-solid fa-circle-check" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #3b82f688);"></i>
                         </span>
                         <span style="letter-spacing:0.01em;">Request submitted successfully!</span>
-                        <span class="eic-alert-bar" style="
+                        <span class="dist-alert-bar" style="
                             position: absolute;
                             bottom: 0; left: 0;
                             height: 4px;
                             width: 100%;
-                            background: linear-gradient(90deg, #dbeafe 0%, #2563eb 100%);
-                            animation: eicAlertBar 2.1s linear;
+                            background: linear-gradient(90deg, #dbeafe 0%, #3b82f6 100%);
+                            animation: distAlertBar 2.1s linear;
                         "></span>
                     </div>
                     <style>
-                        @keyframes eicAlertPopIn {
+                        @keyframes distAlertPopIn {
                             0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
                             60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
                             100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
                         }
-                        @keyframes eicAlertBar {
+                        @keyframes distAlertBar {
                             from { width: 0%; }
                             to { width: 100%; }
                         }
                     </style>
                 `;
                 document.body.appendChild(alertDiv);
+
                 setTimeout(() => {
-                    const el = document.getElementById('custom-eic-alert');
+                    const el = document.getElementById('custom-dist-alert');
                     if (el) {
                         el.style.transition = 'opacity 0.35s, transform 0.35s';
                         el.style.opacity = '0';
@@ -319,18 +325,17 @@ export default function Distribution() {
 
                 setModalOpen(false);
                 setRequestData({
-                    quantity: 1,
+                    pickupDate: '',
                     request_note: '',
-                    schedule_date: '',
+                    quantity: 1,
                 });
+                setFormErrors({});
             } else {
-                const errorData = await response.json();
-                const errorMessage =
-                    errorData.message || 'Error submitting request';
-
+                await response.json();
+                // Custom alert for admin cannot request distribution items
                 const alertDiv = document.createElement('div');
                 alertDiv.innerHTML = `
-                    <div id="custom-eic-alert" style="
+                    <div id="custom-dist-alert" style="
                         position: fixed;
                         top: 50%;
                         left: 50%;
@@ -349,7 +354,7 @@ export default function Distribution() {
                         gap: 1.1rem;
                         min-width: 320px;
                         max-width: 90vw;
-                        animation: eicAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                        animation: distAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
                         overflow: hidden;
                     ">
                         <span style="
@@ -362,33 +367,34 @@ export default function Distribution() {
                             height: 2.8rem;
                             box-shadow: 0 2px 8px 0 rgba(239,68,68,0.10);
                         ">
-                            <i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
+                            <i class="fa-solid fa-circle-xmark" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
                         </span>
-                        <span style="letter-spacing:0.01em;">${errorMessage}</span>
-                        <span class="eic-alert-bar" style="
+                        <span style="letter-spacing:0.01em;">Admin cannot request distribution items</span>
+                        <span class="dist-alert-bar" style="
                             position: absolute;
                             bottom: 0; left: 0;
                             height: 4px;
                             width: 100%;
                             background: linear-gradient(90deg, #fecaca 0%, #dc2626 100%);
-                            animation: eicAlertBar 2.1s linear;
+                            animation: distAlertBar 2.1s linear;
                         "></span>
                     </div>
                     <style>
-                        @keyframes eicAlertPopIn {
+                        @keyframes distAlertPopIn {
                             0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
                             60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
                             100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
                         }
-                        @keyframes eicAlertBar {
+                        @keyframes distAlertBar {
                             from { width: 0%; }
                             to { width: 100%; }
                         }
                     </style>
                 `;
                 document.body.appendChild(alertDiv);
+
                 setTimeout(() => {
-                    const el = document.getElementById('custom-eic-alert');
+                    const el = document.getElementById('custom-dist-alert');
                     if (el) {
                         el.style.transition = 'opacity 0.35s, transform 0.35s';
                         el.style.opacity = '0';
@@ -403,15 +409,18 @@ export default function Distribution() {
 
                 setModalOpen(false);
                 setRequestData({
-                    quantity: 1,
+                    pickupDate: '',
                     request_note: '',
-                    schedule_date: '',
+                    quantity: 1,
                 });
+                setFormErrors({});
+                return;
             }
         } catch (error) {
+            // Custom alert for error submitting request
             const alertDiv = document.createElement('div');
             alertDiv.innerHTML = `
-                <div id="custom-eic-alert" style="
+                <div id="custom-dist-alert" style="
                     position: fixed;
                     top: 50%;
                     left: 50%;
@@ -426,16 +435,16 @@ export default function Distribution() {
                     font-size: 1.18rem;
                     font-weight: 700;
                     display: flex;
-                    align-items: center ;
+                    align-items: center;
                     gap: 1.1rem;
                     min-width: 320px;
                     max-width: 90vw;
-                    animation: eicAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                    animation: distAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
                     overflow: hidden;
                 ">
                     <span style="
                         display: flex;
-                        align-items: center ;
+                        align-items: center;
                         justify-content: center;
                         background: rgba(255,255,255,0.13);
                         border-radius: 50%;
@@ -446,30 +455,31 @@ export default function Distribution() {
                         <i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
                     </span>
                     <span style="letter-spacing:0.01em;">Error submitting request</span>
-                    <span class="eic-alert-bar" style="
+                    <span class="dist-alert-bar" style="
                         position: absolute;
                         bottom: 0; left: 0;
                         height: 4px;
                         width: 100%;
                         background: linear-gradient(90deg, #fecaca 0%, #dc2626 100%);
-                        animation: eicAlertBar 2.1s linear;
+                        animation: distAlertBar 2.1s linear;
                     "></span>
-
+                </div>
                 <style>
-                    @keyframes eicAlertPopIn {
+                    @keyframes distAlertPopIn {
                         0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
                         60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
                         100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
                     }
-                    @keyframes eicAlertBar {
+                    @keyframes distAlertBar {
                         from { width: 0%; }
                         to { width: 100%; }
                     }
                 </style>
             `;
             document.body.appendChild(alertDiv);
+
             setTimeout(() => {
-                const el = document.getElementById('custom-eic-alert');
+                const el = document.getElementById('custom-dist-alert');
                 if (el) {
                     el.style.transition = 'opacity 0.35s, transform 0.35s';
                     el.style.opacity = '0';
@@ -480,38 +490,245 @@ export default function Distribution() {
                     }, 350);
                 }
             }, 2100);
+
             console.error('Error submitting request:', error);
         }
     };
 
     const handleMyRequestsClick = async () => {
         try {
-            const response = await fetch('/api/authentication/gotToken');
-            if (!response.ok) {
-                if (confirm('Login first?')) {
+            // Fetch user requests using the correct endpoint
+            const requestsResponse = await fetch('/api/dist/request/me');
+
+            if (requestsResponse.status === 401) {
+                // Show custom login prompt when unauthorized
+                const alertDiv = document.createElement('div');
+                alertDiv.innerHTML = `
+                    <div id="custom-login-alert" style="
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) scale(0.95);
+                        z-index: 9999;
+                        background: rgba(37,99,235,0.98);
+                        background: linear-gradient(100deg, #2563eb 0%, #3b82f6 100%);
+                        color: #fff;
+                        padding: 2rem 3rem;
+                        border-radius: 2rem;
+                        box-shadow: 0 12px 40px 0 rgba(59,130,246,0.22);
+                        font-size: 1.18rem;
+                        font-weight: 700;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 1.5rem;
+                        min-width: 350px;
+                        max-width: 90vw;
+                        animation: loginAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                        overflow: hidden;
+                        text-align: center;
+                    ">
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: rgba(255,255,255,0.13);
+                            border-radius: 50%;
+                            width: 3rem;
+                            height: 3rem;
+                            box-shadow: 0 2px 8px 0 rgba(59,130,246,0.10);
+                        ">
+                            <i class="fa-solid fa-user-lock" style="font-size:1.5rem; color: #fff; filter: drop-shadow(0 2px 8px #3b82f688);"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.3rem; margin-bottom: 0.5rem;">Login Required</div>
+                            <div style="font-size: 1rem; font-weight: 400; opacity: 0.9; line-height: 1.4;">
+                                You need to login first to view your requests
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                            <button id="login-btn" style="
+                                background: rgba(255,255,255,0.2);
+                                border: 2px solid rgba(255,255,255,0.3);
+                                color: #fff;
+                                padding: 0.75rem 1.5rem;
+                                border-radius: 1rem;
+                                font-weight: 600;
+                                cursor: pointer;
+                                transition: all 0.2s;
+                                font-size: 1rem;
+                            ">Go to Login</button>
+                            <button id="cancel-btn" style="
+                                background: transparent;
+                                border: 2px solid rgba(255,255,255,0.3);
+                                color: #fff;
+                                padding: 0.75rem 1.5rem;
+                                border-radius: 1rem;
+                                font-weight: 600;
+                                cursor: pointer;
+                                transition: all 0.2s;
+                                font-size: 1rem;
+                            ">Cancel</button>
+                        </div>
+                        <span class="login-alert-bar" style="
+                            position: absolute;
+                            bottom: 0; left: 0;
+                            height: 4px;
+                            width: 100%;
+                            background: linear-gradient(90deg, #dbeafe 0%, #3b82f6 100%);
+                        "></span>
+                    </div>
+                    <style>
+                        @keyframes loginAlertPopIn {
+                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                        }
+                        #login-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+                        #cancel-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+                    </style>
+                `;
+                document.body.appendChild(alertDiv);
+
+                // Handle button clicks
+                document.getElementById('login-btn').onclick = () => {
+                    document.body.removeChild(alertDiv);
                     navigate('/login');
-                    return;
-                }
+                };
+
+                document.getElementById('cancel-btn').onclick = () => {
+                    document.body.removeChild(alertDiv);
+                };
+
                 return;
             }
 
-            const requestsResponse = await fetch('/api/dist/request/me');
             if (requestsResponse.ok) {
-                const data = await requestsResponse.json();
+                const requestsData = await requestsResponse.json();
                 setMyRequests(
-                    Array.isArray(data.requests) ? data.requests : []
+                    Array.isArray(requestsData.requests)
+                        ? requestsData.requests
+                        : []
                 );
                 setShowMyRequestsModal(true);
             } else {
+                // Show error alert for other errors
+                const alertDiv = document.createElement('div');
+                alertDiv.innerHTML = `
+                    <div id="custom-error-alert" style="
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) scale(0.95);
+                        z-index: 9999;
+                        background: #dc2626;
+                        background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
+                        color: #fff;
+                        padding: 1.5rem 2.8rem;
+                        border-radius: 2rem;
+                        box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
+                        font-size: 1.18rem;
+                        font-weight: 700;
+                        display: flex;
+                        align-items: center;
+                        gap: 1.1rem;
+                        min-width: 320px;
+                        max-width: 90vw;
+                        animation: errorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                        overflow: hidden;
+                    ">
+                        <span style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: rgba(255,255,255,0.13);
+                            border-radius: 50%;
+                            width: 2.8rem;
+                            height: 2.8rem;
+                            box-shadow: 0 2px 8px 0 rgba(239,68,68,0.10);
+                        ">
+                            <i class="fa-solid fa-circle-exclamation" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
+                        </span>
+                        <span style="letter-spacing:0.01em;">Failed to fetch your requests</span>
+                    </div>
+                    <style>
+                        @keyframes errorAlertPopIn {
+                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                        }
+                    </style>
+                `;
+                document.body.appendChild(alertDiv);
+
+                setTimeout(() => {
+                    if (document.getElementById('custom-error-alert')) {
+                        document.body.removeChild(alertDiv);
+                    }
+                }, 3000);
+
                 console.error(
                     'Failed to fetch user requests:',
                     requestsResponse.statusText
                 );
-                alert('Failed to fetch your requests.');
             }
         } catch (error) {
+            // Show error alert for network issues
+            const alertDiv = document.createElement('div');
+            alertDiv.innerHTML = `
+                <div id="custom-network-error-alert" style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(0.95);
+                    z-index: 9999;
+                    background: #dc2626;
+                    background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
+                    color: #fff;
+                    padding: 1.5rem 2.8rem;
+                    border-radius: 2rem;
+                    box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
+                    font-size: 1.18rem;
+                    font-weight: 700;
+                    display: flex;
+                    align-items: center;
+                    gap: 1.1rem;
+                    min-width: 320px;
+                    max-width: 90vw;
+                    animation: networkErrorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                    overflow: hidden;
+                ">
+                    <span style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255,255,255,0.13);
+                        border-radius: 50%;
+                        width: 2.8rem;
+                        height: 2.8rem;
+                        box-shadow: 0 2px 8px 0 rgba(239,68,68,0.10);
+                    ">
+                        <i class="fa-solid fa-wifi" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
+                    </span>
+                    <span style="letter-spacing:0.01em;">Network error. Please try again.</span>
+                </div>
+                <style>
+                    @keyframes networkErrorAlertPopIn {
+                        0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                        60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                        100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                    }
+                </style>
+            `;
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => {
+                if (document.getElementById('custom-network-error-alert')) {
+                    document.body.removeChild(alertDiv);
+                }
+            }, 3000);
+
             console.error('Error fetching user requests:', error);
-            alert('Error fetching your requests.');
         }
     };
 
@@ -519,251 +736,717 @@ export default function Distribution() {
         setShowMyRequestsModal(false);
     };
 
+    const handleCancelRequest = async (requestId, itemName) => {
+        try {
+            // Show confirmation dialog
+            const alertDiv = document.createElement('div');
+            alertDiv.innerHTML = `
+                <div id="custom-confirm-alert" style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(0.95);
+                    z-index: 9999;
+                    background: rgba(37,99,235,0.98);
+                    background: linear-gradient(100deg, #2563eb 0%, #3b82f6 100%);
+                    color: #fff;
+                    padding: 2rem 3rem;
+                    border-radius: 2rem;
+                    box-shadow: 0 12px 40px 0 rgba(59,130,246,0.22);
+                    font-size: 1.18rem;
+                    font-weight: 700;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 1.5rem;
+                    min-width: 400px;
+                    max-width: 90vw;
+                    animation: confirmAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                    overflow: hidden;
+                    text-align: center;
+                ">
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255,255,255,0.13);
+                        border-radius: 50%;
+                        width: 3rem;
+                        height: 3rem;
+                        box-shadow: 0 2px 8px 0 rgba(59,130,246,0.10);
+                    ">
+                        <i class="fa-solid fa-exclamation-triangle" style="font-size:1.5rem; color: #fff; filter: drop-shadow(0 2px 8px #3b82f688);"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.4rem;">Cancel Request</h3>
+                        <p style="margin: 0; font-weight: 400; opacity: 0.9; font-size: 1rem;">
+                            Are you sure you want to cancel your request for "<strong>${itemName}</strong>"?
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                        <button id="confirm-cancel-btn" style="
+                            background: rgba(220,38,38,0.9);
+                            border: 2px solid rgba(220,38,38,0.8);
+                            color: #fff;
+                            padding: 0.75rem 1.5rem;
+                            border-radius: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-size: 1rem;
+                        ">Yes, Cancel</button>
+                        <button id="keep-request-btn" style="
+                            background: transparent;
+                            border: 2px solid rgba(255,255,255,0.3);
+                            color: #fff;
+                            padding: 0.75rem 1.5rem;
+                            border-radius: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            font-size: 1rem;
+                        ">Keep Request</button>
+                    </div>
+                </div>
+                <style>
+                    @keyframes confirmAlertPopIn {
+                        0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                        60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                        100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                    }
+                    #confirm-cancel-btn:hover { background: rgba(220,38,38,1); transform: translateY(-2px); }
+                    #keep-request-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+                </style>
+            `;
+            document.body.appendChild(alertDiv);
+
+            // Handle confirmation
+            document.getElementById('confirm-cancel-btn').onclick =
+                async () => {
+                    document.body.removeChild(alertDiv);
+
+                    try {
+                        const response = await fetch(
+                            '/api/dist/request/cancel',
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    transactionId: requestId,
+                                    status: 'Cancelled',
+                                }),
+                            }
+                        );
+
+                        if (response.ok) {
+                            // Remove from UI
+                            setMyRequests((prev) =>
+                                prev.filter((req) => req.id !== requestId)
+                            );
+
+                            // Show success message
+                            const successDiv = document.createElement('div');
+                            successDiv.innerHTML = `
+                            <div id="custom-success-alert" style="
+                                position: fixed;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%) scale(0.95);
+                                z-index: 9999;
+                                background: #10b981;
+                                background: linear-gradient(100deg, #10b981 0%, #34d399 100%);
+                                color: #fff;
+                                padding: 1.5rem 2.8rem;
+                                border-radius: 2rem;
+                                box-shadow: 0 12px 40px 0 rgba(16,185,129,0.22);
+                                font-size: 1.18rem;
+                                font-weight: 700;
+                                display: flex;
+                                align-items: center;
+                                gap: 1.1rem;
+                                min-width: 320px;
+                                max-width: 90vw;
+                                animation: successAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                                overflow: hidden;
+                            ">
+                                <span style="
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    background: rgba(255,255,255,0.2);
+                                    border-radius: 50%;
+                                    width: 2.2rem;
+                                    height: 2.2rem;
+                                ">
+                                    <i class="fa-solid fa-check" style="font-size:1.2rem; color: #fff;"></i>
+                                </span>
+                                <span>Request cancelled successfully!</span>
+                                <span class="success-alert-bar" style="
+                                    position: absolute;
+                                    bottom: 0; left: 0;
+                                    height: 4px;
+                                    width: 100%;
+                                    background: linear-gradient(90deg, #a7f3d0 0%, #34d399 100%);
+                                    animation: successAlertBar 2.1s linear;
+                                "></span>
+                            </div>
+                            <style>
+                                @keyframes successAlertPopIn {
+                                    0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                                    60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                                    100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                                }
+                                @keyframes successAlertBar {
+                                    from { width: 0%; }
+                                    to { width: 100%; }
+                                }
+                            </style>
+                        `;
+                            document.body.appendChild(successDiv);
+
+                            // Auto-remove success alert after 2.1 seconds
+                            setTimeout(() => {
+                                if (document.body.contains(successDiv)) {
+                                    document.body.removeChild(successDiv);
+                                }
+                            }, 2100);
+                        } else {
+                            // Show error message
+                            const errorDiv = document.createElement('div');
+                            errorDiv.innerHTML = `
+                            <div id="custom-error-alert" style="
+                                position: fixed;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%) scale(0.95);
+                                z-index: 9999;
+                                background: #dc2626;
+                                background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
+                                color: #fff;
+                                padding: 1.5rem 2.8rem;
+                                border-radius: 2rem;
+                                box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
+                                font-size: 1.18rem;
+                                font-weight: 700;
+                                display: flex;
+                                align-items: center;
+                                gap: 1.1rem;
+                                min-width: 320px;
+                                max-width: 90vw;
+                                animation: errorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                                overflow: hidden;
+                            ">
+                                <span style="
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    background: rgba(255,255,255,0.2);
+                                    border-radius: 50%;
+                                    width: 2.2rem;
+                                    height: 2.2rem;
+                                ">
+                                    <i class="fa-solid fa-times" style="font-size:1.2rem; color: #fff;"></i>
+                                </span>
+                                <span>Failed to cancel request. Please try again.</span>
+                                <span class="error-alert-bar" style="
+                                    position: absolute;
+                                    bottom: 0; left: 0;
+                                    height: 4px;
+                                    width: 100%;
+                                    background: linear-gradient(90deg, #fee2e2 0%, #f87171 100%);
+                                "></span>
+                            </div>
+                            <style>
+                                @keyframes errorAlertPopIn {
+                                    0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                                    60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                                    100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                                }
+                            </style>
+                        `;
+                            document.body.appendChild(errorDiv);
+
+                            // Auto-remove error alert after 5 seconds
+                            setTimeout(() => {
+                                if (document.body.contains(errorDiv)) {
+                                    document.body.removeChild(errorDiv);
+                                }
+                            }, 5000);
+                        }
+                    } catch (error) {
+                        console.error('Error cancelling request:', error);
+
+                        // Show error message
+                        const errorDiv = document.createElement('div');
+                        errorDiv.innerHTML = `
+                        <div id="custom-error-alert" style="
+                            position: fixed;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%) scale(0.95);
+                            z-index: 9999;
+                            background: #dc2626;
+                            background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
+                            color: #fff;
+                            padding: 1.5rem 2.8rem;
+                            border-radius: 2rem;
+                            box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
+                            font-size: 1.18rem;
+                            font-weight: 700;
+                            display: flex;
+                            align-items: center;
+                            gap: 1.1rem;
+                            min-width: 320px;
+                            max-width: 90vw;
+                            animation: errorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                            overflow: hidden;
+                        ">
+                            <span style="
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                background: rgba(255,255,255,0.2);
+                                border-radius: 50%;
+                                width: 2.2rem;
+                                height: 2.2rem;
+                            ">
+                                <i class="fa-solid fa-times" style="font-size:1.2rem; color: #fff;"></i>
+                            </span>
+                            <span>Network error. Please try again later.</span>
+                            <span class="error-alert-bar" style="
+                                position: absolute;
+                                bottom: 0; left: 0;
+                                height: 4px;
+                                width: 100%;
+                                background: linear-gradient(90deg, #fee2e2 0%, #f87171 100%);
+                            "></span>
+                        </div>
+                        <style>
+                            @keyframes errorAlertPopIn {
+                                0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                                60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                                100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                            }
+                        </style>
+                    `;
+                        document.body.appendChild(errorDiv);
+
+                        // Auto-remove error alert after 5 seconds
+                        setTimeout(() => {
+                            if (document.body.contains(errorDiv)) {
+                                document.body.removeChild(errorDiv);
+                            }
+                        }, 5000);
+                    }
+                };
+
+            // Handle cancel
+            document.getElementById('keep-request-btn').onclick = () => {
+                document.body.removeChild(alertDiv);
+            };
+        } catch (error) {
+            console.error('Error cancelling request:', error);
+
+            // Show error message
+            const errorDiv = document.createElement('div');
+            errorDiv.innerHTML = `
+                <div id="custom-error-alert" style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(0.95);
+                    z-index: 9999;
+                    background: #dc2626;
+                    background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
+                    color: #fff;
+                    padding: 1.5rem 2.8rem;
+                    border-radius: 2rem;
+                    box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
+                    font-size: 1.18rem;
+                    font-weight: 700;
+                    display: flex;
+                    align-items: center;
+                    gap: 1.1rem;
+                    min-width: 320px;
+                    max-width: 90vw;
+                    animation: errorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
+                    overflow: hidden;
+                ">
+                    <span style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255,255,255,0.2);
+                        border-radius: 50%;
+                        width: 2.2rem;
+                        height: 2.2rem;
+                    ">
+                        <i class="fa-solid fa-times" style="font-size:1.2rem; color: #fff;"></i>
+                    </span>
+                    <span>Network error. Please try again later.</span>
+                    <span class="error-alert-bar" style="
+                        position: absolute;
+                        bottom: 0; left: 0;
+                        height: 4px;
+                        width: 100%;
+                        background: linear-gradient(90deg, #fee2e2 0%, #f87171 100%);
+                    "></span>
+                </div>
+                <style>
+                    @keyframes errorAlertPopIn {
+                        0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
+                        60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
+                        100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
+                    }
+                </style>
+            `;
+            document.body.appendChild(errorDiv);
+
+            // Auto-remove error alert after 5 seconds
+            setTimeout(() => {
+                if (document.body.contains(errorDiv)) {
+                    document.body.removeChild(errorDiv);
+                }
+            }, 5000);
+        }
+    };
+
     return (
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 relative"
-                style={{
-                    overflow: 'hidden',
-                }}
+                className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative"
+                style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
-                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-16">
-                        <header className="flex flex-col items-center mb-10">
-                            <span className="uppercase tracking-widest text-gray-400 text-xs font-medium mb-1 letter-spacing-wide">
+                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20">
+                        <header className="flex flex-col items-center mb-12 w-full">
+                            <span className="uppercase tracking-widest text-blue-400 text-xs font-semibold mb-1 letter-spacing-wide">
                                 Welcome to
                             </span>
-                            <h1 className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title">
+                            <h1
+                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center dist-title"
+                                style={{ color: '#1e3a8a' }}
+                            >
                                 Distribution Center
                             </h1>
-                            <div className="mt-3 w-16 sm:w-24 h-2 rounded-full bg-blue-300 opacity-80"></div>
+                            <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200 opacity-90 shadow-lg"></div>
                         </header>
-                        <div className="flex flex-row items-center w-full max-w-3xl mt-4 mb-8 gap-3 justify-center">
-                            {/* Search */}
-                            <div className="flex flex-none min-w-1/2 max-w-xs gap-2 bg-white rounded-2xl shadow-lg px-4 py-1 items-center border border-gray-200 h-12">
-                                <div className="relative w-full">
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                        <i className="fa-solid fa-magnifying-glass"></i>
-                                    </span>
+
+                        <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
+                            <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
+                                <button
+                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    onClick={handleMyRequestsClick}
+                                >
+                                    <i className="fa-solid fa-list-check text-lg"></i>
+                                    My Requests
+                                </button>
+                            </div>
+                            <div className="flex gap-3 flex-wrap items-center justify-center w-full sm:w-auto order-1 sm:order-2">
+                                <div className="relative w-full sm:w-auto flex justify-center">
                                     <input
                                         type="text"
-                                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-transparent focus:outline-none focus:ring-0 text-gray-900 bg-transparent transition placeholder:text-gray-400"
+                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-blue-900 bg-white shadow transition placeholder:text-blue-400 font-medium"
                                         placeholder="Search by name, category, description..."
                                         value={search}
                                         onChange={(e) =>
                                             setSearch(e.target.value)
                                         }
-                                        style={{ boxShadow: 'none' }}
                                     />
-                                </div>
-                            </div>
-                            {/* Filter */}
-                            <div className="relative h-12 flex items-center">
-                                <button
-                                    id="modernFilterButton"
-                                    className="flex items-center gap-2 px-4 sm:px-5 py-2 h-12 rounded-xl bg-white text-blue-900 font-semibold border border-gray-200 shadow transition-all duration-200 hover:bg-gray-50 focus:outline-none text-base sm:text-lg"
-                                    onClick={() => setShowFilter((f) => !f)}
-                                    type="button"
-                                    aria-label="Show filter options"
-                                    style={{ minHeight: '3rem' }}
-                                >
-                                    <i className="fa-solid fa-filter text-blue-900 text-base sm:text-lg"></i>
-                                    <span className="hidden sm:inline">
-                                        {filterBy}
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 pointer-events-none">
+                                        <i className="fa-solid fa-magnifying-glass"></i>
                                     </span>
-                                    <i
-                                        className={`fa-solid fa-chevron-${
-                                            showFilter ? 'up' : 'down'
-                                        } ml-2 text-blue-900`}
-                                    ></i>
-                                </button>
-                                {showFilter && (
-                                    <div
-                                        id="modernFilterDropdown"
-                                        className="absolute left-0 top-full mt-2 w-44 sm:w-48 bg-white rounded-2xl shadow-2xl border border-gray-100 z-20 animate-fade-in py-2 px-2"
-                                        style={{ minWidth: '100%' }}
+                                </div>
+                                <div className="relative flex justify-center w-full sm:w-auto">
+                                    <button
+                                        id="modernFilterButton"
+                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold border border-blue-200 shadow transition focus:outline-none"
+                                        onClick={() => setShowFilter((f) => !f)}
+                                        type="button"
+                                        aria-label="Show filter options"
                                     >
-                                        {filterOptions.map((opt) => (
-                                            <button
-                                                key={opt.value}
-                                                className={`flex items-center gap-3 w-full text-left px-3 sm:px-4 py-2 rounded-xl font-semibold transition text-sm sm:text-base ${
-                                                    filterBy === opt.value
-                                                        ? 'bg-blue-700 text-white'
-                                                        : 'text-gray-700 hover:bg-blue-50'
-                                                }`}
-                                                onClick={() => {
-                                                    setFilter(opt.value);
-                                                    setShowFilter(false);
-                                                }}
-                                            >
-                                                {typeIcon(opt.value)}
-                                                {opt.label}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                                <div className="sm:hidden absolute left-0 top-0 w-full h-full pointer-events-none">
-                                    <select
-                                        className="opacity-0 absolute w-full h-full pointer-events-auto"
-                                        value={filter}
-                                        onChange={(e) =>
-                                            setFilter(e.target.value)
-                                        }
-                                        aria-label="Filter by category"
-                                    >
-                                        {categories.map((c) => (
-                                            <option key={c} value={c}>
-                                                {c}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        <i className="fa-solid fa-filter"></i>
+                                        <span>Filter by: {filter}</span>
+                                        <i
+                                            className={`fa-solid fa-chevron-${
+                                                showFilter ? 'up' : 'down'
+                                            } ml-1`}
+                                        ></i>
+                                    </button>
+                                    {showFilter && (
+                                        <div
+                                            id="modernFilterDropdown"
+                                            className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-blue-100 z-20 animate-fade-in py-2"
+                                        >
+                                            {filterOptions.map((opt) => (
+                                                <button
+                                                    key={opt.value}
+                                                    className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
+                                                        filter === opt.value
+                                                            ? 'bg-blue-600 text-white shadow'
+                                                            : 'text-blue-900 hover:bg-blue-50'
+                                                    }`}
+                                                    onClick={() => {
+                                                        setFilter(opt.value);
+                                                        setShowFilter(false);
+                                                    }}
+                                                >
+                                                    {typeIcon(opt.value)}
+                                                    {opt.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                            {/* My Requests */}
-                            <button
-                                className="flex items-center gap-2 px-4 sm:px-5 py-2 h-12 rounded-xl bg-white text-blue-900 font-semibold border border-gray-200 shadow transition-all duration-200 hover:bg-gray-50 focus:outline-none text-base sm:text-lg"
-                                onClick={handleMyRequestsClick}
-                                type="button"
-                                aria-label="View your requests"
-                                style={{ minHeight: '3rem' }}
-                            >
-                                <i className="fa-solid fa-list text-blue-900 text-base sm:text-lg"></i>
-                                <span className="hidden sm:inline">
-                                    My Requests
-                                </span>
-                            </button>
                         </div>
-                        {/* Modern Card Grid */}
-                        <div className="w-full max-w-7xl grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 px-2">
-                            {paginatedItems.map((item) => (
-                                <div
-                                    key={item.id}
-                                    className="group relative bg-white shadow-xl border border-blue-100 hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 flex flex-col overflow-hidden"
-                                    style={{
-                                        minHeight: 370,
-                                    }}
-                                >
-                                    {/* Image */}
-                                    <div className="relative">
-                                        <img
-                                            className="w-full h-44 object-cover transition-transform duration-300 group-hover:scale-105"
-                                            src={item.img}
-                                            alt={item.name}
-                                        />
-                                        <span
-                                            className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold shadow-sm bg-white/80 text-blue-900 border border-blue-200 backdrop-blur-sm`}
-                                            style={{
-                                                boxShadow:
-                                                    '0 2px 8px 0 rgba(60,60,60,0.10)',
-                                            }}
+                        <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
+                            {filteredItems.length === 0 ? (
+                                <div className="col-span-full text-center text-blue-300 py-16 text-lg font-semibold tracking-wide">
+                                    No distribution items found.
+                                </div>
+                            ) : (
+                                paginatedItems.map((item) => {
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-xl border border-blue-100 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]"
                                         >
-                                            {typeIcon(item.category)}
-                                            <span className="ml-2">
-                                                {item.category}
-                                            </span>
-                                        </span>
-                                        <span
-                                            className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-semibold shadow-sm
-                                                ${
-                                                    item.status === 'Available'
-                                                        ? 'bg-green-100 text-green-700 border border-green-200'
-                                                        : item.status ===
-                                                          'Out of Stock'
-                                                        ? 'bg-yellow-100 text-yellow-700 border border-yellow-200'
-                                                        : item.status ===
-                                                          'Scheduled'
-                                                        ? 'bg-red-100 text-red-700 border border-red-200'
-                                                        : 'bg-gray-100 text-gray-700 border border-gray-200'
-                                                }`}
-                                        >
-                                            {item.status}
-                                        </span>
-                                    </div>
-                                    {/* Card Body */}
-                                    <div className="flex-1 flex flex-col px-6 py-5">
-                                        <h3 className="text-lg font-bold mb-1 text-blue-900 truncate">
-                                            {item.name}
-                                        </h3>
-                                        <p
-                                            className="text-gray-600 text-sm mb-3 line-clamp-2"
-                                            title={item.description}
-                                        >
-                                            {item.description}
-                                        </p>
-                                        <div className="flex items-end justify-between mt-auto pt-2">
-                                            <div className="flex flex-col">
-                                                <span className="text-xs text-gray-400">
-                                                    Quantity
-                                                </span>
-                                                <span className="font-semibold text-blue-700">
-                                                    {item.quantity ?? '-'}
+                                            <div className="relative">
+                                                <img
+                                                    className="w-full h-48 object-cover"
+                                                    src={item.img}
+                                                    alt={item.Name}
+                                                    style={{
+                                                        background: '#eff6ff',
+                                                    }}
+                                                />
+                                                <span
+                                                    className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg
+                                                    ${
+                                                        item.category ===
+                                                        'Seeds'
+                                                            ? 'bg-green-500'
+                                                            : item.category ===
+                                                              'Fertilizers'
+                                                            ? 'bg-blue-500'
+                                                            : item.category ===
+                                                              'Livestock'
+                                                            ? 'bg-yellow-500'
+                                                            : item.category ===
+                                                              'Fish Fingerlings'
+                                                            ? 'bg-blue-500'
+                                                            : item.category ===
+                                                              'Organic Inputs'
+                                                            ? 'bg-blue-700'
+                                                            : item.category ===
+                                                              'Tools'
+                                                            ? 'bg-gray-500'
+                                                            : item.category ===
+                                                              'Plants'
+                                                            ? 'bg-blue-900'
+                                                            : item.category ===
+                                                              'Compost'
+                                                            ? 'bg-orange-500'
+                                                            : 'bg-gray-500'
+                                                    }`}
+                                                >
+                                                    {item.category}
                                                 </span>
                                             </div>
-                                            <button
-                                                className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold py-2 px-6 rounded-2xl text-base shadow-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                                onClick={() =>
-                                                    handleRequestClick(item)
-                                                }
-                                            >
-                                                <i className="fa-solid fa-paper-plane mr-2"></i>
-                                                Request
-                                            </button>
+                                            <div className="p-5 flex flex-col flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-blue-900 line-clamp-1 min-h-[28px]">
+                                                    {item.Name}
+                                                </h3>
+                                                <p
+                                                    className="text-gray-600 text-sm mb-3 line-clamp-2 min-h-[40px] flex-grow"
+                                                    title={item.description}
+                                                >
+                                                    {item.description}
+                                                </p>
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <span className="text-sm text-blue-700 font-semibold">
+                                                        Qty: {item.quantity}
+                                                    </span>
+                                                    <div className="flex items-center gap-1">
+                                                        {typeIcon(
+                                                            item.category
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mt-auto"
+                                                    onClick={() =>
+                                                        handleRequestClick(item)
+                                                    }
+                                                >
+                                                    <i className="fa-solid fa-paper-plane mr-2"></i>
+                                                    Request Item
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            ))}
+                                    );
+                                })
+                            )}
                         </div>
-                        {filteredItems.length === 0 && (
-                            <div className="text-center text-gray-400 py-10 sm:py-16 text-base sm:text-lg font-medium">
-                                No items found for this category.
-                            </div>
-                        )}
                         {totalPages > 1 && (
-                            <div className="flex flex-wrap justify-center mt-10 gap-2 items-center mb-6">
-                                <button
-                                    className="px-3 py-1.5 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 disabled:opacity-50 transition"
-                                    onClick={() =>
-                                        setCurrentPage((p) =>
-                                            Math.max(1, p - 1)
-                                        )
-                                    }
-                                    disabled={currentPage === 1}
-                                    aria-label="Previous page"
+                            <div className="flex justify-center mt-6 mb-2">
+                                <nav
+                                    className="flex items-center gap-1 bg-white rounded-lg shadow px-3 py-1.5"
+                                    aria-label="Pagination"
                                 >
-                                    <i className="fa-solid fa-chevron-left"></i>
-                                </button>
-                                {Array.from({ length: totalPages }, (_, i) => (
                                     <button
-                                        key={i}
-                                        className={`px-4 py-2 rounded-lg font-semibold ${
-                                            currentPage === i + 1
-                                                ? 'bg-blue-700 text-white'
-                                                : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                                        onClick={() =>
+                                            setCurrentPage((p) =>
+                                                Math.max(1, p - 1)
+                                            )
+                                        }
+                                        disabled={currentPage === 1}
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-500 hover:bg-gray-200 hover:text-gray-700 ${
+                                            currentPage === 1
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
                                         }`}
-                                        onClick={() => setCurrentPage(i + 1)}
+                                        aria-label="Previous"
                                     >
-                                        {i + 1}
+                                        <svg
+                                            className="w-4 h-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                d="M15 19l-7-7 7-7"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
                                     </button>
-                                ))}
-                                <button
-                                    className="px-3 py-1.5 rounded-xl bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 disabled:opacity-50 transition"
-                                    onClick={() =>
-                                        setCurrentPage((p) =>
-                                            Math.min(totalPages, p + 1)
+                                    {totalPages > 6 ? (
+                                        <>
+                                            <button
+                                                onClick={() =>
+                                                    setCurrentPage(1)
+                                                }
+                                                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                    currentPage === 1
+                                                        ? 'bg-blue-500 text-white'
+                                                        : 'text-gray-700 hover:bg-gray-200'
+                                                }`}
+                                            >
+                                                1
+                                            </button>
+                                            {currentPage > 3 && (
+                                                <span className="px-1 text-gray-400">
+                                                    ...
+                                                </span>
+                                            )}
+                                            {Array.from(
+                                                { length: 3 },
+                                                (_, i) => {
+                                                    const page =
+                                                        currentPage - 1 + i;
+                                                    if (
+                                                        page <= 1 ||
+                                                        page >= totalPages
+                                                    )
+                                                        return null;
+                                                    return (
+                                                        <button
+                                                            key={page}
+                                                            onClick={() =>
+                                                                setCurrentPage(
+                                                                    page
+                                                                )
+                                                            }
+                                                            className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                                currentPage ===
+                                                                page
+                                                                    ? 'bg-blue-500 text-white'
+                                                                    : 'text-gray-700 hover:bg-gray-200'
+                                                            }`}
+                                                        >
+                                                            {page}
+                                                        </button>
+                                                    );
+                                                }
+                                            )}
+                                            {currentPage < totalPages - 2 && (
+                                                <span className="px-1 text-gray-400">
+                                                    ...
+                                                </span>
+                                            )}
+                                            <button
+                                                onClick={() =>
+                                                    setCurrentPage(totalPages)
+                                                }
+                                                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                    currentPage === totalPages
+                                                        ? 'bg-blue-500 text-white'
+                                                        : 'text-gray-700 hover:bg-gray-200'
+                                                }`}
+                                            >
+                                                {totalPages}
+                                            </button>
+                                        </>
+                                    ) : (
+                                        Array.from(
+                                            { length: totalPages },
+                                            (_, i) => (
+                                                <button
+                                                    key={i + 1}
+                                                    onClick={() =>
+                                                        setCurrentPage(i + 1)
+                                                    }
+                                                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
+                                                        currentPage === i + 1
+                                                            ? 'bg-blue-500 text-white'
+                                                            : 'text-gray-700 hover:bg-gray-200'
+                                                    }`}
+                                                >
+                                                    {i + 1}
+                                                </button>
+                                            )
                                         )
-                                    }
-                                    disabled={currentPage === totalPages}
-                                    aria-label="Next page"
-                                >
-                                    <i className="fa-solid fa-chevron-right"></i>
-                                </button>
+                                    )}
+                                    <button
+                                        onClick={() =>
+                                            setCurrentPage((p) =>
+                                                Math.min(totalPages, p + 1)
+                                            )
+                                        }
+                                        disabled={currentPage === totalPages}
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-500 hover:bg-gray-200 hover:text-gray-700 ${
+                                            currentPage === totalPages
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
+                                        }`}
+                                        aria-label="Next"
+                                    >
+                                        <svg
+                                            className="w-4 h-4"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                d="M9 5l7 7-7 7"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
+                                    </button>
+                                </nav>
                             </div>
                         )}
                     </section>
                 </main>
             </div>
-            {/* Request Modal */}
             {modalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
                     <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in">
@@ -771,7 +1454,7 @@ export default function Distribution() {
                         <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-700 to-blue-600">
                             <h2 className="text-xl font-bold text-white">
                                 <i className="fa-solid fa-paper-plane mr-2"></i>
-                                Request Item
+                                Request Distribution Item
                             </h2>
                             <button
                                 className="text-white text-2xl hover:text-blue-200 transition"
@@ -786,36 +1469,53 @@ export default function Distribution() {
                             onSubmit={handleSubmit}
                             className="px-8 py-6 space-y-5"
                         >
-                            <div className="flex items-center gap-4 mb-2">
+                            <div className="flex items-center gap-4 mb-4">
                                 <img
                                     src={selectedItem?.img}
-                                    alt={selectedItem?.name}
+                                    alt={selectedItem?.Name}
                                     className="w-16 h-16 rounded-xl object-cover border-2 border-blue-700 shadow"
                                 />
-                                <div>
+                                <div className="flex-1">
                                     <div className="text-lg font-semibold text-blue-900 truncate">
-                                        {selectedItem?.name}
+                                        {selectedItem?.Name}
                                     </div>
                                     <div className="text-xs text-gray-500">
                                         {selectedItem?.category}
                                     </div>
+                                    <div className="text-xs text-gray-500">
+                                        Available Stock:{' '}
+                                        {selectedItem?.quantity}
+                                    </div>
                                 </div>
+                            </div>
+
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                                <p className="text-sm text-blue-800">
+                                    <i className="fa-solid fa-info-circle mr-2"></i>
+                                    <span className="text-red-500">*</span>{' '}
+                                    indicates required fields
+                                </p>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label
-                                        htmlFor="schedule_date"
+                                        htmlFor="pickupDate"
                                         className="block text-gray-700 text-sm font-medium mb-1"
                                     >
-                                        Pickup Date
+                                        Pickup Date{' '}
+                                        <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="date"
-                                        id="schedule_date"
-                                        name="schedule_date"
-                                        value={requestData.schedule_date}
+                                        id="pickupDate"
+                                        name="pickupDate"
+                                        value={requestData.pickupDate}
                                         onChange={handleInputChange}
-                                        className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
+                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition ${
+                                            formErrors.pickupDate
+                                                ? 'border-red-300 bg-red-50'
+                                                : 'border-gray-200'
+                                        }`}
                                         required
                                         min={
                                             new Date()
@@ -823,13 +1523,19 @@ export default function Distribution() {
                                                 .split('T')[0]
                                         }
                                     />
+                                    {formErrors.pickupDate && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {formErrors.pickupDate}
+                                        </p>
+                                    )}
                                 </div>
                                 <div>
                                     <label
                                         htmlFor="quantity"
                                         className="block text-gray-700 text-sm font-medium mb-1"
                                     >
-                                        Quantity
+                                        Quantity{' '}
+                                        <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="number"
@@ -837,18 +1543,41 @@ export default function Distribution() {
                                         name="quantity"
                                         value={requestData.quantity}
                                         onChange={handleInputChange}
-                                        className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition"
+                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition ${
+                                            formErrors.quantity
+                                                ? 'border-red-300 bg-red-50'
+                                                : 'border-gray-200'
+                                        }`}
                                         required
                                         min="1"
+                                        max={selectedItem?.quantity}
+                                        title=""
                                     />
+                                    {formErrors.quantity && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {formErrors.quantity}
+                                        </p>
+                                    )}
+                                    {!formErrors.quantity &&
+                                        requestData.quantity >
+                                            selectedItem?.quantity && (
+                                            <p className="text-red-500 text-xs mt-1">
+                                                Quantity exceeds available
+                                                stock.
+                                            </p>
+                                        )}
                                 </div>
                             </div>
+
                             <div>
                                 <label
                                     htmlFor="request_note"
                                     className="block text-gray-700 text-sm font-medium mb-1"
                                 >
-                                    Notes
+                                    Purpose & Additional Notes
+                                    <span className="text-gray-400 text-xs ml-1">
+                                        (Optional)
+                                    </span>
                                 </label>
                                 <textarea
                                     id="request_note"
@@ -857,9 +1586,45 @@ export default function Distribution() {
                                     onChange={handleInputChange}
                                     rows="3"
                                     className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition resize-none"
-                                    placeholder="Optional"
+                                    placeholder="Describe the purpose for this distribution item and any special requirements..."
                                 ></textarea>
                             </div>
+
+                            {/* Request Summary */}
+                            {requestData.pickupDate && requestData.quantity && (
+                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                    <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                                        <i className="fa-solid fa-clipboard-check mr-2"></i>
+                                        Request Summary
+                                    </h4>
+                                    <div className="space-y-1 text-sm text-gray-600">
+                                        <div className="flex justify-between">
+                                            <span>Pickup Date:</span>
+                                            <span className="font-medium">
+                                                {new Date(
+                                                    requestData.pickupDate
+                                                ).toLocaleDateString('en-US', {
+                                                    weekday: 'short',
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                })}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>Quantity:</span>
+                                            <span className="font-medium">
+                                                {requestData.quantity} unit(s)
+                                            </span>
+                                        </div>
+                                        <div className="text-xs text-blue-600 mt-2 p-2 bg-blue-50 rounded border">
+                                            <i className="fa-solid fa-info-circle mr-1"></i>
+                                            Distribution items do not require
+                                            return
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                             <div className="flex justify-end gap-3 pt-2">
                                 <button
                                     type="button"
@@ -870,8 +1635,18 @@ export default function Distribution() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-800 hover:to-blue-700 text-white font-semibold px-6 py-2 rounded-xl shadow transition focus:outline-none"
+                                    disabled={
+                                        !requestData.pickupDate ||
+                                        !requestData.quantity
+                                    }
+                                    className={`font-semibold px-6 py-2 rounded-xl shadow transition focus:outline-none ${
+                                        !requestData.pickupDate ||
+                                        !requestData.quantity
+                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                            : 'bg-blue-700 hover:bg-blue-800 text-white'
+                                    }`}
                                 >
+                                    <i className="fa-solid fa-paper-plane mr-2"></i>
                                     Submit Request
                                 </button>
                             </div>
@@ -879,15 +1654,14 @@ export default function Distribution() {
                     </div>
                 </div>
             )}
-            {/* My Requests Modal */}
             {showMyRequestsModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
-                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-3xl w-full relative overflow-hidden animate-fade-in">
+                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-4 relative overflow-hidden animate-fade-in max-h-[90vh] flex flex-col">
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-700 to-blue-600">
+                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-700 to-blue-600 flex-shrink-0">
                             <h2 className="text-xl font-bold text-white">
                                 <i className="fa-solid fa-list mr-2"></i>
-                                My Requests
+                                My Distribution Requests
                             </h2>
                             <button
                                 className="text-white text-2xl hover:text-blue-200 transition"
@@ -898,66 +1672,191 @@ export default function Distribution() {
                             </button>
                         </div>
                         {/* Modal Body */}
-                        <div className="px-8 py-6 space-y-5">
+                        <div className="px-8 py-6 space-y-5 overflow-y-auto flex-1">
                             {myRequests.length > 0 ? (
-                                <table className="w-full">
-                                    <thead>
-                                        <tr className="text-left text-gray-600">
-                                            <th className="py-2">Item</th>
-                                            <th className="py-2">
-                                                Pickup Date
-                                            </th>
-                                            <th className="py-2">Quantity</th>
-                                            <th className="py-2">Status</th>
-                                            <th className="py-2">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {myRequests.map((request) => (
-                                            <tr
-                                                key={request.id}
-                                                className="border-b border-gray-100"
-                                            >
-                                                <td className="py-3">
-                                                    {request.item_name}
-                                                </td>
-                                                <td className="py-3">
-                                                    {new Date(
-                                                        request.schedule_date
-                                                    ).toLocaleDateString(
-                                                        'en-US',
-                                                        {
-                                                            year: 'numeric',
-                                                            month: 'long',
-                                                            day: 'numeric',
-                                                        }
-                                                    )}
-                                                </td>
-                                                <td className="py-3">
-                                                    {request.quantity}
-                                                </td>
-                                                <td className="py-3">
-                                                    {request.status}
-                                                </td>
-                                                <td className="py-3">
-                                                    <button
-                                                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                                        onClick={() =>
-                                                            cancelRequest(
-                                                                request
-                                                            )
-                                                        }
-                                                    >
-                                                        Cancel Request
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                <div>
+                                    <div className="mb-6 text-sm text-gray-600 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                                        <i className="fa-solid fa-info-circle mr-2 text-blue-600"></i>
+                                        <span className="font-medium">
+                                            Found {myRequests.length} request
+                                            {myRequests.length !== 1 ? 's' : ''}
+                                        </span>
+                                        <span className="ml-2 text-gray-500">
+                                            • Sorted by most recent first
+                                        </span>
+                                    </div>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full border-collapse bg-white shadow-sm rounded-xl overflow-hidden">
+                                            <thead>
+                                                <tr className="bg-gradient-to-r from-gray-50 to-gray-100 text-left text-gray-700">
+                                                    <th className="py-4 px-6 font-semibold border-b border-gray-200 min-w-[280px]">
+                                                        Item Details
+                                                    </th>
+                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 text-center min-w-[80px]">
+                                                        Quantity
+                                                    </th>
+                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 min-w-[120px]">
+                                                        Pickup Date
+                                                    </th>
+                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 text-center min-w-[100px]">
+                                                        Status
+                                                    </th>
+                                                    <th className="py-4 px-6 font-semibold border-b border-gray-200 text-center min-w-[100px]">
+                                                        Requested
+                                                    </th>
+                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 text-center min-w-[120px]">
+                                                        Actions
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {myRequests.map(
+                                                    (request, index) => (
+                                                        <tr
+                                                            key={request.id}
+                                                            className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${
+                                                                index % 2 === 0
+                                                                    ? 'bg-white'
+                                                                    : 'bg-gray-25'
+                                                            }`}
+                                                        >
+                                                            <td className="py-5 px-6">
+                                                                <div className="space-y-2">
+                                                                    <div className="font-semibold text-gray-800 text-base leading-tight">
+                                                                        {
+                                                                            request.itemName
+                                                                        }
+                                                                    </div>
+                                                                    <div className="text-sm text-gray-500 font-medium">
+                                                                        <i className="fa-solid fa-tag mr-1"></i>
+                                                                        {
+                                                                            request.itemCategory
+                                                                        }
+                                                                    </div>
+                                                                    {request.requestNote && (
+                                                                        <div className="text-xs text-gray-600 mt-2 p-2 bg-gray-50 rounded-lg border-l-2 border-gray-300">
+                                                                            <i className="fa-solid fa-note-sticky mr-1"></i>
+                                                                            <span className="font-medium">
+                                                                                Note:
+                                                                            </span>{' '}
+                                                                            {
+                                                                                request.requestNote
+                                                                            }
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                            <td className="py-5 px-4 text-center">
+                                                                <span className="bg-blue-100 text-blue-800 px-3 py-2 rounded-full text-sm font-bold min-w-[50px] inline-block">
+                                                                    {
+                                                                        request.quantity
+                                                                    }
+                                                                </span>
+                                                            </td>
+                                                            <td className="py-5 px-4">
+                                                                <div className="text-sm font-medium text-gray-700">
+                                                                    <i className="fa-solid fa-calendar-plus mr-2 text-green-600"></i>
+                                                                    {new Date(
+                                                                        request.pickupDate
+                                                                    ).toLocaleDateString(
+                                                                        'en-US',
+                                                                        {
+                                                                            year: 'numeric',
+                                                                            month: 'short',
+                                                                            day: 'numeric',
+                                                                        }
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                            <td className="py-5 px-4 text-center">
+                                                                <span
+                                                                    className={`px-3 py-2 rounded-full text-xs font-bold min-w-[80px] inline-block ${
+                                                                        request.status ===
+                                                                        'Pending'
+                                                                            ? 'bg-yellow-100 text-yellow-800 border border-yellow-200'
+                                                                            : request.status ===
+                                                                              'Approved'
+                                                                            ? 'bg-green-100 text-green-800 border border-green-200'
+                                                                            : request.status ===
+                                                                              'Rejected'
+                                                                            ? 'bg-red-100 text-red-800 border border-red-200'
+                                                                            : request.status ===
+                                                                              'No_Pickup'
+                                                                            ? 'bg-orange-100 text-orange-800 border border-orange-200'
+                                                                            : request.status ===
+                                                                              'Cancelled'
+                                                                            ? 'bg-gray-100 text-gray-800 border border-gray-200'
+                                                                            : 'bg-blue-100 text-blue-800 border border-blue-200'
+                                                                    }`}
+                                                                >
+                                                                    {request.status ===
+                                                                    'No_Pickup'
+                                                                        ? 'No Pickup'
+                                                                        : request.status}
+                                                                </span>
+                                                            </td>
+                                                            <td className="py-5 px-6 text-center">
+                                                                <div className="text-xs text-gray-500 font-medium">
+                                                                    <i className="fa-solid fa-clock mr-1"></i>
+                                                                    {new Date(
+                                                                        request.createdAt
+                                                                    ).toLocaleDateString(
+                                                                        'en-US',
+                                                                        {
+                                                                            year: 'numeric',
+                                                                            month: 'short',
+                                                                            day: 'numeric',
+                                                                        }
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                            <td className="py-5 px-4 text-center">
+                                                                {[
+                                                                    'Pending',
+                                                                    'Approved',
+                                                                ].includes(
+                                                                    request.status
+                                                                ) ? (
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            handleCancelRequest(
+                                                                                request.id,
+                                                                                request.itemName
+                                                                            )
+                                                                        }
+                                                                        className="bg-red-100 hover:bg-red-200 text-red-800 hover:text-red-900 px-4 py-2 rounded-lg text-sm font-semibold border border-red-200 hover:border-red-300 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                                                                        title="Cancel this request"
+                                                                    >
+                                                                        <i className="fa-solid fa-times mr-2"></i>
+                                                                        Cancel
+                                                                    </button>
+                                                                ) : (
+                                                                    <span className="text-gray-400 text-sm italic">
+                                                                        No
+                                                                        actions
+                                                                        available
+                                                                    </span>
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             ) : (
-                                <div className="text-center text-gray-500 py-10">
-                                    No requests found.
+                                <div className="text-center py-16">
+                                    <div className="mb-4">
+                                        <i className="fa-solid fa-inbox text-6xl text-gray-300"></i>
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                                        No Requests Found
+                                    </h3>
+                                    <p className="text-gray-500">
+                                        You haven't made any distribution
+                                        requests yet.
+                                    </p>
                                 </div>
                             )}
                         </div>
@@ -968,48 +1867,55 @@ export default function Distribution() {
                 .letter-spacing-wide {
                     letter-spacing: 0.15em;
                 }
-                .eic-title {
+                .dist-title {
                     color: #1e3a8a !important;
                 }
+                .line-clamp-1 {
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 1;
+                }
+                .line-clamp-2 {
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                }
+                @media (max-width: 1200px) {
+                    .max-w-5xl {
+                        max-width: 98vw !important;
+                    }
+                    .lg\\:grid-cols-3 {
+                        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                    }
+                }
+                @media (max-width: 900px) {
+                    .lg\\:grid-cols-3, .sm\\:grid-cols-2 {
+                        grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+                    }
+                }
                 @media (max-width: 640px) {
-                    .text-4xl, .md\\:text-5xl {
-                        font-size: 1.7rem !important;
-                    }
-                    .text-2xl, .sm\\:text-2xl {
-                        font-size: 1.2rem !important;
-                    }
-                    .text-3xl, .sm\\:text-3xl {
-                        font-size: 1.5rem !important;
+                    .text-4xl, .md\\:text-5xl { font-size: 1.7rem !important; }
+                    .text-2xl, .sm\\:text-2xl { font-size: 1.2rem !important; }
+                    .text-3xl, .sm\\:text-3xl { font-size: 1.5rem !important; }
+                    .max-w-5xl {
+                        padding-left: 0 !important;
+                        padding-right: 0 !important;
                     }
                 }
                 .animate-fade-in {
                     animation: fadeIn 0.2s;
                 }
                 @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(10px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+                    from { opacity: 0; transform: translateY(10px);}
+                    to { opacity: 1; transform: translateY(0);}
                 }
-                .line-clamp-2 {
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                }
-                html,
-                body,
-                #root {
+                html, body, #root {
                     scrollbar-width: none;
                     -ms-overflow-style: none;
                 }
-                html::-webkit-scrollbar,
-                body::-webkit-scrollbar,
-                #root::-webkit-scrollbar {
+                html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar {
                     display: none;
                 }
             `}</style>

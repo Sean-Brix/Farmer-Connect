@@ -1,63 +1,1728 @@
-import { useState } from 'react';
-// ASSETS
-import default_image from './Assets/default_image.png';
+import React, { useState, useEffect } from 'react';
 
-// SUB COMPONENTS
-import All_Items from './All_Items/All_Items.jsx';
-import Distribution_Request from './Distribution_Request.jsx';
+// ASSETS
+import default_image from '../../../Assets/eic_default.png';
+
 export default function Distribution() {
-    const [section, setSection] = useState('all');
+    const [activeSection, setActiveSection] = useState('items');
+    const [distributionStacks, setDistributionStacks] = useState([]);
+    const [requests, setRequests] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [search, setSearch] = useState('');
+    const [sortBy, setSortBy] = useState('quantity');
+    const [searchFilter, setSearchFilter] = useState('name');
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [allItems, setAllItems] = useState([]); // For existing items in the modal
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [selectedStack, setSelectedStack] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editingStack, setEditingStack] = useState(null);
+    const [imageUpdateTimestamp, setImageUpdateTimestamp] = useState(
+        Date.now()
+    );
+
+    // Request section states
+    const [requestSearch, setRequestSearch] = useState('');
+    const [requestStatusFilter, setRequestStatusFilter] = useState('all');
+    const [requestSortBy, setRequestSortBy] = useState('status');
+
+    // Alert state for success/error messages
+    const [alert, setAlert] = useState({
+        show: false,
+        message: '',
+        type: '',
+    });
+
+    // Helper to show alert
+    const showAlert = (message, type = 'success') => {
+        setAlert({ show: true, message, type });
+        setTimeout(
+            () => setAlert({ show: false, message: '', type: '' }),
+            3000
+        );
+    };
+
+    // Fetch Distribution items when component mounts or section changes
+    useEffect(() => {
+        if (activeSection === 'items') {
+            fetchDistributionStacks();
+            fetchAllItems(); // Fetch all items for the dropdown
+        } else if (activeSection === 'requests') {
+            fetchRequests();
+        }
+    }, [activeSection]);
+
+    const fetchRequests = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch('/api/dist/request/all', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch requests: ${response.status}`);
+            }
+
+            const result = await response.json();
+            setRequests(result.requests || []);
+        } catch (err) {
+            console.error('Error fetching requests:', err);
+            setError(
+                'Unable to load request data. Please check your connection and try again.'
+            );
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const fetchAllItems = async () => {
+        try {
+            const response = await fetch('/api/inventory/all/items', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(
+                    `Failed to fetch all items: ${response.status}`
+                );
+            }
+
+            const result = await response.json();
+            setAllItems(result || []);
+        } catch (err) {
+            console.error('Error fetching all items:', err);
+        }
+    };
+
+    const fetchDistributionStacks = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch('/api/dist/all', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(
+                    `Failed to fetch Distribution stacks: ${response.status}`
+                );
+            }
+
+            const result = await response.json();
+
+            // The API returns a direct array
+            setDistributionStacks(result || []);
+        } catch (err) {
+            console.error('Error fetching Distribution stacks:', err);
+            setError(
+                'Unable to load Distribution data. Please check your connection and try again.'
+            );
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Filter and sort stacks based on search and sort options
+    const filteredStacks = distributionStacks
+        .filter((stack) => {
+            const searchValue = search.toLowerCase();
+            const matchesSearch =
+                searchFilter === 'name'
+                    ? stack.item?.name?.toLowerCase().includes(searchValue) ||
+                      false
+                    : searchFilter === 'category'
+                    ? stack.item?.category
+                          ?.toLowerCase()
+                          .includes(searchValue) || false
+                    : stack.item?.description
+                          ?.toLowerCase()
+                          .includes(searchValue) || false;
+
+            return matchesSearch;
+        })
+        .sort((a, b) => {
+            switch (sortBy) {
+                case 'name':
+                    return (a.item?.name || '').localeCompare(
+                        b.item?.name || ''
+                    );
+                case 'category':
+                    return (a.item?.category || '').localeCompare(
+                        b.item?.category || ''
+                    );
+                case 'quantity':
+                    return b.quantity - a.quantity; // Descending order
+                case 'date':
+                    return new Date(b.createdAt) - new Date(a.createdAt); // Newest first
+                case 'default':
+                default:
+                    return 0; // Keep original server order
+            }
+        });
+
+    const handleAddDistributionItem = async (formData) => {
+        try {
+            const response = await fetch('/api/inventory/item/add', {
+                method: 'POST',
+                body: formData, // Send FormData directly for file upload
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            setShowAddModal(false);
+            setImageUpdateTimestamp(Date.now()); // Force image refresh
+            await fetchDistributionStacks(); // Refresh Distribution items
+            await fetchAllItems(); // Refresh all items for dropdown
+            showAlert('Distribution item added successfully', 'success');
+        } catch (error) {
+            console.error('Failed to create Distribution item:', error);
+            showAlert('Failed to add Distribution item', 'error');
+        }
+    };
+
+    // Handle opening detail modal
+    const handleViewDetails = (stack) => {
+        setSelectedStack(stack);
+        setShowDetailModal(true);
+    };
+
+    // Handle closing detail modal
+    const handleCloseDetailModal = () => {
+        setShowDetailModal(false);
+        setSelectedStack(null);
+    };
+
+    // Handle opening edit modal
+    const handleEditStack = (stack) => {
+        setEditingStack(stack);
+        setShowEditModal(true);
+    };
+
+    // Handle closing edit modal
+    const handleCloseEditModal = () => {
+        setShowEditModal(false);
+        setEditingStack(null);
+    };
+
+    // Handle edit form submission
+    const handleEditSubmit = async (formData, hasNameOrDescriptionChange) => {
+        // Show confirmation if name or description changed
+        if (hasNameOrDescriptionChange) {
+            const confirmed = window.confirm(
+                'You have changed the name, description, or category. This will update the item in the entire inventory system. Do you want to continue?'
+            );
+            if (!confirmed) {
+                return;
+            }
+        }
+
+        try {
+            const response = await fetch(`/api/dist/item/${editingStack.id}`, {
+                method: 'PUT',
+                body: formData, // Send FormData directly for file upload
+            });
+
+            const responseData = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    responseData.error ||
+                        `HTTP error! status: ${response.status}`
+                );
+            }
+
+            // Check for success response
+            if (responseData.success) {
+                setShowEditModal(false);
+                setEditingStack(null);
+                setImageUpdateTimestamp(Date.now()); // Force image refresh
+                await fetchDistributionStacks(); // Refresh Distribution items
+                showAlert(
+                    responseData.message ||
+                        'Distribution item updated successfully',
+                    'success'
+                );
+            } else {
+                throw new Error(
+                    responseData.error || 'Failed to update Distribution item'
+                );
+            }
+        } catch (error) {
+            console.error('Failed to update Distribution item:', error);
+            showAlert(
+                error.message || 'Failed to update Distribution item',
+                'error'
+            );
+        }
+    };
+
+    // Handle view requests - redirect to requests section with search filter
+    const handleViewRequests = (itemName) => {
+        setActiveSection('requests');
+        setRequestSearch(itemName);
+        // Ensure we fetch the latest requests data
+        setTimeout(() => {
+            fetchRequests();
+        }, 100);
+    };
+
+    // Handle requests button click - reset all filters and go to requests section
+    const handleRequestsButtonClick = () => {
+        // Reset all request filters
+        setRequestSearch('');
+        setRequestStatusFilter('all');
+        setRequestSortBy('status');
+        // Switch to requests section
+        setActiveSection('requests');
+    };
+
+    // Handle request status change
+    const handleStatusChange = async (
+        requestId,
+        newStatus,
+        itemName,
+        requestorName,
+        requestQuantity,
+        currentStock
+    ) => {
+        try {
+            // Create custom alert with item details
+            const alertDiv = document.createElement('div');
+            alertDiv.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                backdrop-filter: blur(8px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                animation: fadeIn 0.3s ease-out;
+            `;
+
+            alertDiv.innerHTML = `
+                <div style="
+                    background: white;
+                    border-radius: 1rem;
+                    padding: 2rem;
+                    max-width: 500px;
+                    width: 90%;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                    animation: slideUp 0.3s ease-out;
+                ">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <h2 style="
+                            font-size: 1.5rem;
+                            font-weight: 700;
+                            color: #1e293b;
+                            margin-bottom: 0.5rem;
+                        ">Confirm Status Change</h2>
+                        <p style="color: #64748b; font-size: 0.875rem;">
+                            Please review the request details before proceeding
+                        </p>
+                    </div>
+                    
+                    <div style="
+                        background: #f8fafc;
+                        border: 1px solid #e2e8f0;
+                        border-radius: 0.75rem;
+                        padding: 1.5rem;
+                        margin-bottom: 1.5rem;
+                    ">
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            gap: 1rem;
+                            margin-bottom: 1rem;
+                        ">
+                            <div style="
+                                width: 3rem;
+                                height: 3rem;
+                                background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+                                border-radius: 0.75rem;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: white;
+                                font-weight: 700;
+                                font-size: 1.125rem;
+                                flex-shrink: 0;
+                            ">${itemName.charAt(0).toUpperCase()}</div>
+                            <div style="flex: 1;">
+                                <div style="
+                                    font-weight: 600;
+                                    color: #1e293b;
+                                    font-size: 1.125rem;
+                                    margin-bottom: 0.25rem;
+                                ">${itemName}</div>
+                                <div style="
+                                    color: #64748b;
+                                    font-size: 0.875rem;
+                                ">Requested by ${requestorName}</div>
+                            </div>
+                        </div>
+                        
+                        <div style="
+                            display: flex;
+                            background: white;
+                            border: 1px solid #e2e8f0;
+                            border-radius: 0.75rem;
+                            overflow: hidden;
+                        ">
+                            <div style="
+                                flex: 1;
+                                text-align: center;
+                                padding: 1rem;
+                            ">
+                                <div style="color: #64748b; font-weight: 500; font-size: 0.875rem;">Requested</div>
+                                <div style="color: #1e293b; font-weight: 700; font-size: 1.25rem;">${requestQuantity}</div>
+                            </div>
+                            <div style="
+                                width: 1px;
+                                background: #cbd5e1;
+                            "></div>
+                            <div style="
+                                flex: 1;
+                                text-align: center;
+                                padding: 1rem;
+                            ">
+                                <div style="color: #64748b; font-weight: 500; font-size: 0.875rem;">Available</div>
+                                <div style="
+                                    color: ${
+                                        currentStock === 0
+                                            ? '#dc2626'
+                                            : currentStock < 5
+                                            ? '#d97706'
+                                            : '#16a34a'
+                                    };
+                                    font-weight: 700;
+                                    font-size: 1.25rem;
+                                ">${currentStock}</div>
+                            </div>
+                        </div>
+                        
+                        ${
+                            requestQuantity > currentStock
+                                ? `
+                        <div style="
+                            margin-top: 0.75rem;
+                            padding: 0.75rem;
+                            background: #fef2f2;
+                            border: 1px solid #fecaca;
+                            border-radius: 0.5rem;
+                            color: #dc2626;
+                            font-size: 0.875rem;
+                            font-weight: 500;
+                            text-align: center;
+                        ">
+                            ⚠️ Warning: Insufficient stock for this request
+                        </div>
+                        `
+                                : ''
+                        }
+                    </div>
+                    
+                    <div style="
+                        border-top: 1px solid #e2e8f0;
+                        padding-top: 1rem;
+                        text-align: center;
+                    ">
+                        <div style="
+                            font-size: 1rem;
+                            color: #374151;
+                            line-height: 1.5;
+                        ">
+                            You are about to change the request status to:
+                            <br>
+                            <span style="
+                                display: inline-block;
+                                margin-top: 0.5rem;
+                                padding: 0.5rem 1rem;
+                                background: ${
+                                    newStatus === 'Approved'
+                                        ? '#dcfce7'
+                                        : newStatus === 'Rejected'
+                                        ? '#fee2e2'
+                                        : newStatus === 'No_Pickup'
+                                        ? '#fef3c7'
+                                        : '#f3f4f6'
+                                };
+                                color: ${
+                                    newStatus === 'Approved'
+                                        ? '#166534'
+                                        : newStatus === 'Rejected'
+                                        ? '#dc2626'
+                                        : newStatus === 'No_Pickup'
+                                        ? '#92400e'
+                                        : '#374151'
+                                };
+                                border-radius: 0.5rem;
+                                font-weight: 600;
+                                font-size: 1.125rem;
+                            ">${newStatus.replace('_', ' ')}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="
+                        display: flex;
+                        gap: 0.75rem;
+                        justify-content: center;
+                        margin-top: 1.5rem;
+                    ">
+                        <button id="admin-cancel-btn" style="
+                            flex: 1;
+                            background: #f1f5f9;
+                            border: 2px solid #e2e8f0;
+                            color: #64748b;
+                            padding: 0.875rem 1.5rem;
+                            border-radius: 0.75rem;
+                            font-weight: 600;
+                            font-size: 1rem;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 0.5rem;
+                        ">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </button>
+                        <button id="admin-confirm-btn" style="
+                            flex: 1;
+                            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+                            border: none;
+                            color: white;
+                            padding: 0.875rem 1.5rem;
+                            border-radius: 0.75rem;
+                            font-weight: 600;
+                            font-size: 1rem;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 0.5rem;
+                            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.3);
+                        ">
+                            <i class="fas fa-check"></i>
+                            Confirm Response
+                        </button>
+                    </div>
+                </div>
+                <style>
+                    @keyframes fadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    @keyframes slideUp {
+                        from { 
+                            opacity: 0; 
+                            transform: translateY(40px) scale(0.95); 
+                        }
+                        to { 
+                            opacity: 1; 
+                            transform: translateY(0) scale(1); 
+                        }
+                    }
+                    #admin-cancel-btn:hover {
+                        background: #e2e8f0;
+                        border-color: #cbd5e1;
+                        color: #475569;
+                        transform: translateY(-1px);
+                    }
+                    #admin-confirm-btn:hover {
+                        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                        transform: translateY(-1px);
+                        box-shadow: 0 8px 25px 0 rgba(59, 130, 246, 0.4);
+                    }
+                </style>
+            `;
+            document.body.appendChild(alertDiv);
+
+            // Create a promise to handle the user's choice
+            const userChoice = await new Promise((resolve) => {
+                document.getElementById('admin-confirm-btn').onclick = () => {
+                    document.body.removeChild(alertDiv);
+                    resolve(true);
+                };
+
+                document.getElementById('admin-cancel-btn').onclick = () => {
+                    document.body.removeChild(alertDiv);
+                    resolve(false);
+                };
+
+                // Close on backdrop click
+                alertDiv.onclick = (e) => {
+                    if (e.target === alertDiv) {
+                        document.body.removeChild(alertDiv);
+                        resolve(false);
+                    }
+                };
+            });
+
+            if (!userChoice) {
+                return; // User cancelled
+            }
+
+            const response = await fetch('/api/dist/request/respond', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    transactionId: requestId,
+                    status: newStatus,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(
+                    errorData.message ||
+                        `HTTP error! status: ${response.status}`
+                );
+            }
+
+            const responseData = await response.json();
+
+            // Update the requests list
+            setRequests((prevRequests) =>
+                prevRequests.map((request) =>
+                    request.id === requestId
+                        ? { ...request, status: newStatus }
+                        : request
+                )
+            );
+
+            showAlert(
+                responseData.message || 'Request status updated successfully',
+                'success'
+            );
+
+            // Refresh data
+            await fetchRequests();
+        } catch (error) {
+            console.error('Failed to update request status:', error);
+            showAlert(
+                error.message || 'Failed to update request status',
+                'error'
+            );
+        }
+    };
+
+    if (isLoading)
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="text-lg">Loading...</div>
+            </div>
+        );
+    if (error)
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="text-lg text-red-600">Error: {error}</div>
+            </div>
+        );
+
     return (
-        <>
-            {/* TITLE */}
-            <div className="flex flex-col items-start mt-8 ml-8">
-                <h1 className="text-3xl font-bold text-blue-700 tracking-tight mb-2 mt-10">
-                    Distribution Management
-                </h1>
-                <p className="text-gray-500 text-base">
-                    Manage all items and distribution requests efficiently.
-                </p>
+        <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 py-8 px-2 md:px-6">
+            {/* Alert Component */}
+            {alert.show && (
+                <div
+                    className={`fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white font-medium z-50 transition-all ${
+                        alert.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+                    }`}
+                >
+                    {alert.message}
+                </div>
+            )}
+
+            {/* Header */}
+            <div className="relative mt-16 mb-8 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-4">
+                <span className="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
+                    <svg
+                        className="w-7 h-7 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </svg>
+                    {activeSection === 'items'
+                        ? 'Distribution Management'
+                        : 'Distribution Requests Management'}
+                </span>
             </div>
-            {/* HEADER SECTIONS */}
-            {Section_Buttons(section, setSection)}
-            {/* SECTION CONTAINER */}
-            <div className="mt-[21vh] bg-gradient-to-br from-blue-200 via-blue-100 to-white w-full shadow-lg p-6">
-                {/* NAVIGATION */}
-                {section === 'requests' ? (
-                    <Distribution_Request />
-                ) : (
-                    <All_Items />
-                )}
-            </div>
-        </>
+
+            {activeSection === 'requests' ? (
+                <div className="max-w-7xl mx-auto">
+                    {/* Request Search and Filters */}
+                    <div className="flex flex-col lg:flex-row items-center gap-4 w-full mb-6">
+                        <div className="relative flex-1 max-w-md">
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg
+                                    className="w-5 h-5 text-gray-500"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </div>
+                            <input
+                                type="search"
+                                placeholder="Search by item name, requestor, or note..."
+                                className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                                value={requestSearch}
+                                onChange={(e) =>
+                                    setRequestSearch(e.target.value)
+                                }
+                            />
+                        </div>
+
+                        <div className="flex flex-wrap gap-2">
+                            <select
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3"
+                                value={requestStatusFilter}
+                                onChange={(e) =>
+                                    setRequestStatusFilter(e.target.value)
+                                }
+                            >
+                                <option value="all">All Statuses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="No_Pickup">No Pickup</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+
+                            <select
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3"
+                                value={requestSortBy}
+                                onChange={(e) =>
+                                    setRequestSortBy(e.target.value)
+                                }
+                            >
+                                <option value="status">Sort by Status</option>
+                                <option value="date">Sort by Date</option>
+                                <option value="item">Sort by Item</option>
+                                <option value="client">Sort by Client</option>
+                            </select>
+
+                            <button
+                                onClick={fetchRequests}
+                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
+                            >
+                                <svg
+                                    className="w-4 h-4 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                                Refresh
+                            </button>
+
+                            <button
+                                onClick={() => setActiveSection('items')}
+                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-gray-500 hover:bg-gray-600 text-white transition-all"
+                            >
+                                <svg
+                                    className="w-4 h-4 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                                Back to Items
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Requests Table */}
+                    <RequestsTable
+                        requests={requests}
+                        search={requestSearch}
+                        statusFilter={requestStatusFilter}
+                        sortBy={requestSortBy}
+                        onStatusChange={handleStatusChange}
+                    />
+                </div>
+            ) : (
+                <>
+                    {/* Search and Filters */}
+                    <div className="flex flex-col lg:flex-row items-center gap-4 w-full max-w-7xl mx-auto mb-6">
+                        <div className="relative flex-1 max-w-md">
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg
+                                    className="w-5 h-5 text-gray-500"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </div>
+                            <input
+                                type="search"
+                                placeholder="Search..."
+                                className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="flex flex-wrap gap-2">
+                            <select
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3"
+                                value={searchFilter}
+                                onChange={(e) =>
+                                    setSearchFilter(e.target.value)
+                                }
+                            >
+                                <option value="name">Item Name</option>
+                                <option value="category">Category</option>
+                                <option value="description">Description</option>
+                            </select>
+
+                            <select
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3"
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                            >
+                                <option value="default">Default Order</option>
+                                <option value="name">Sort by Name</option>
+                                <option value="category">
+                                    Sort by Category
+                                </option>
+                                <option value="quantity">
+                                    Sort by Quantity
+                                </option>
+                                <option value="date">Sort by Date</option>
+                            </select>
+
+                            <button
+                                onClick={fetchDistributionStacks}
+                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
+                            >
+                                <svg
+                                    className="w-4 h-4 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                                Refresh
+                            </button>
+
+                            <button
+                                onClick={handleRequestsButtonClick}
+                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-all"
+                            >
+                                <svg
+                                    className="w-4 h-4 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                                Requests
+                            </button>
+
+                            <button
+                                onClick={() => setShowAddModal(true)}
+                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white transition-all"
+                            >
+                                <svg
+                                    className="w-4 h-4 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M12 4v16m8-8H4"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                                Add Distribution Item
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Items Grid */}
+                    <div className="w-full max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                        {filteredStacks.map((stack) => (
+                            <DistributionItemCard
+                                key={stack.id}
+                                stack={stack}
+                                onViewDetails={handleViewDetails}
+                                onEdit={handleEditStack}
+                                imageUpdateTimestamp={imageUpdateTimestamp}
+                            />
+                        ))}
+
+                        {filteredStacks.length === 0 && (
+                            <div className="col-span-full text-center text-gray-400 py-16 text-base font-medium">
+                                No Distribution items found.
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
+
+            {/* Add Distribution Item Modal */}
+            <AddDistributionItemModal
+                isOpen={showAddModal}
+                onClose={() => setShowAddModal(false)}
+                onSubmit={handleAddDistributionItem}
+                existingItems={allItems}
+                distributionItems={distributionStacks}
+            />
+
+            {/* Detail Modal */}
+            {showDetailModal && selectedStack && (
+                <DistributionDetailModal
+                    stack={selectedStack}
+                    onClose={handleCloseDetailModal}
+                    imageUpdateTimestamp={imageUpdateTimestamp}
+                    onViewRequests={handleViewRequests}
+                />
+            )}
+
+            {/* Edit Modal */}
+            {showEditModal && editingStack && (
+                <DistributionEditModal
+                    stack={editingStack}
+                    onClose={handleCloseEditModal}
+                    onSubmit={handleEditSubmit}
+                    imageUpdateTimestamp={imageUpdateTimestamp}
+                />
+            )}
+        </div>
     );
 }
-/* ________________________________________________________________________________________________________________________________________________ */
-// SECTION CONTROL
-function Section_Buttons(section, setSection) {
+
+/* ================================================================================== */
+/* REQUESTS TABLE COMPONENT */
+/* ================================================================================== */
+
+function RequestsTable({
+    requests,
+    search,
+    statusFilter,
+    sortBy,
+    onStatusChange,
+}) {
+    const statusOrder = {
+        Pending: 1,
+        Approved: 2,
+        Rejected: 3,
+        No_Pickup: 4,
+        Cancelled: 5,
+    };
+
+    // Filter and sort requests
+    const filteredRequests = requests
+        .filter((request) => {
+            const searchLower = search.toLowerCase();
+            const matchesSearch =
+                request.itemName?.toLowerCase().includes(searchLower) ||
+                request.requestorName?.toLowerCase().includes(searchLower) ||
+                request.requestNote?.toLowerCase().includes(searchLower) ||
+                request.requestorEmail?.toLowerCase().includes(searchLower);
+
+            const matchesStatus =
+                statusFilter === 'all' || request.status === statusFilter;
+
+            return matchesSearch && matchesStatus;
+        })
+        .sort((a, b) => {
+            switch (sortBy) {
+                case 'status':
+                    const statusA = statusOrder[a.status] || 999;
+                    const statusB = statusOrder[b.status] || 999;
+                    if (statusA !== statusB) return statusA - statusB;
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+
+                case 'date':
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+
+                case 'item':
+                    return a.itemName?.localeCompare(b.itemName) || 0;
+
+                case 'client':
+                    return a.requestorName?.localeCompare(b.requestorName) || 0;
+
+                default:
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+            }
+        });
+
+    const getStatusBadge = (status) => {
+        const statusStyles = {
+            Pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+            Approved: 'bg-green-100 text-green-800 border-green-200',
+            Rejected: 'bg-red-100 text-red-800 border-red-200',
+            No_Pickup: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+            Cancelled: 'bg-gray-100 text-gray-600 border-gray-200',
+        };
+
+        return (
+            <span
+                className={`px-3 py-1 rounded-full text-xs font-semibold border ${
+                    statusStyles[status] ||
+                    'bg-gray-100 text-gray-800 border-gray-200'
+                }`}
+            >
+                {status.replace('_', ' ')}
+            </span>
+        );
+    };
+
+    const getStatusOptions = (currentStatus) => {
+        switch (currentStatus) {
+            case 'Pending':
+                return ['Approved', 'Rejected'];
+            case 'Approved':
+                return ['No_Pickup'];
+            case 'Rejected':
+                return ['Approved', 'Rejected'];
+            case 'Cancelled':
+                return []; // No actions available for cancelled requests
+            default:
+                return [];
+        }
+    };
+
+    if (filteredRequests.length === 0) {
+        return (
+            <div className="text-center py-16">
+                <div className="mb-4">
+                    <svg
+                        className="w-16 h-16 text-gray-300 mx-auto"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                    No Requests Found
+                </h3>
+                <p className="text-gray-500">
+                    No requests match your current filters.
+                </p>
+            </div>
+        );
+    }
+
     return (
-        <div className="flex mt-[12vh] ml-8 space-x-4 justify-center fixed z-10 ">
-            {[
-                { key: 'all', label: 'All Items' },
-                { key: 'requests', label: 'Requests' },
-            ].map(({ key, label }) => (
-                <button
-                    key={key}
-                    className={`relative px-6 py-2 font-semibold rounded-full transition-all duration-200
-                    ${
-                        section === key
-                            ? 'bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow-lg scale-105'
-                            : 'bg-white text-blue-600 border border-blue-400 hover:bg-blue-50'
+        <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+            <div className="overflow-x-auto">
+                <table className="w-full">
+                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                        <tr>
+                            <th className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-1/4">
+                                Item Details
+                            </th>
+                            <th className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Requestor
+                            </th>
+                            <th className="py-4 px-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Quantity
+                            </th>
+                            <th className="py-4 px-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Stock
+                            </th>
+                            <th className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Pickup Date
+                            </th>
+                            <th className="py-4 px-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th className="py-4 px-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {filteredRequests.map((request, index) => (
+                            <tr
+                                key={request.id}
+                                className={`${
+                                    index % 2 === 0 ? 'bg-white' : 'bg-gray-25'
+                                } hover:bg-blue-50 transition-colors`}
+                            >
+                                <td className="py-5 px-4">
+                                    <div className="space-y-2">
+                                        <div className="font-semibold text-gray-900 text-base truncate">
+                                            {request.itemName}
+                                        </div>
+                                        <div className="text-sm text-gray-600 flex items-center">
+                                            <svg
+                                                className="w-4 h-4 mr-1"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                            {request.itemCategory}
+                                        </div>
+                                        {request.requestNote && (
+                                            <div className="text-xs text-gray-600 mt-2 p-2 bg-gray-50 rounded-lg border-l-2 border-blue-300">
+                                                <svg
+                                                    className="w-3 h-3 inline mr-1"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                                <span className="font-medium">
+                                                    Note:
+                                                </span>{' '}
+                                                {request.requestNote}
+                                            </div>
+                                        )}
+                                    </div>
+                                </td>
+                                <td className="py-5 px-4">
+                                    <div className="space-y-1">
+                                        <div className="font-medium text-gray-900">
+                                            {request.requestorName}
+                                        </div>
+                                        <div className="text-sm text-gray-600">
+                                            {request.requestorEmail}
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                            @{request.requestorUsername}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className="py-5 px-4 text-center">
+                                    <span className="bg-blue-100 text-blue-800 px-3 py-2 rounded-full text-sm font-bold">
+                                        {request.quantity}
+                                    </span>
+                                </td>
+                                <td className="py-5 px-4 text-center">
+                                    <div className="space-y-1">
+                                        <div
+                                            className={`px-3 py-2 rounded-full text-sm font-bold ${
+                                                request.currentStock === 0
+                                                    ? 'bg-red-100 text-red-800'
+                                                    : request.currentStock < 5
+                                                    ? 'bg-yellow-100 text-yellow-800'
+                                                    : 'bg-green-100 text-green-800'
+                                            }`}
+                                        >
+                                            {request.currentStock || 0}
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                            available
+                                        </div>
+                                        {request.quantity >
+                                            request.currentStock && (
+                                            <div className="text-xs text-red-600 font-medium">
+                                                ⚠️ Insufficient
+                                            </div>
+                                        )}
+                                    </div>
+                                </td>
+                                <td className="py-5 px-4">
+                                    <div className="space-y-2">
+                                        <div className="text-sm">
+                                            <div className="flex items-center text-green-600">
+                                                <svg
+                                                    className="w-4 h-4 mr-1"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                                {new Date(
+                                                    request.pickupDate
+                                                ).toLocaleDateString()}
+                                            </div>
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                            <svg
+                                                className="w-3 h-3 inline mr-1"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                            Requested:{' '}
+                                            {new Date(
+                                                request.createdAt
+                                            ).toLocaleDateString()}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className="py-5 px-4 text-center">
+                                    <div className="flex flex-col items-center space-y-2">
+                                        {getStatusBadge(request.status)}
+                                    </div>
+                                </td>
+                                <td className="py-5 px-4 text-center">
+                                    <div className="flex flex-col gap-2">
+                                        {getStatusOptions(request.status).map(
+                                            (status) => (
+                                                <button
+                                                    key={status}
+                                                    onClick={() =>
+                                                        onStatusChange(
+                                                            request.id,
+                                                            status,
+                                                            request.itemName,
+                                                            request.requestorName,
+                                                            request.quantity,
+                                                            request.currentStock
+                                                        )
+                                                    }
+                                                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+                                                        status === 'Approved'
+                                                            ? 'bg-green-500 hover:bg-green-600 text-white'
+                                                            : status ===
+                                                              'Rejected'
+                                                            ? 'bg-red-500 hover:bg-red-600 text-white'
+                                                            : status ===
+                                                              'No_Pickup'
+                                                            ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                                                            : 'bg-gray-500 hover:bg-gray-600 text-white'
+                                                    }`}
+                                                >
+                                                    {status.replace('_', ' ')}
+                                                </button>
+                                            )
+                                        )}
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}
+
+/* ================================================================================== */
+/* DISTRIBUTION ITEM CARD COMPONENT */
+/* ================================================================================== */
+
+function DistributionItemCard({
+    stack,
+    onViewDetails,
+    onEdit,
+    imageUpdateTimestamp,
+}) {
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+        });
+    };
+
+    const truncatedDescription =
+        stack.item?.description && stack.item.description.length > 100
+            ? stack.item.description.slice(0, 100) + '...'
+            : stack.item?.description;
+
+    return (
+        <div className="relative flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group">
+            <div className="relative">
+                <img
+                    src={
+                        stack.item?.id
+                            ? `/api/dist/photo/${stack.item.id}?t=${imageUpdateTimestamp}`
+                            : default_image
                     }
-                    focus:outline-none focus:ring-2 focus:ring-blue-300`}
-                    onClick={() => setSection(key)}
-                >
-                    {label}
-                    {section === key && (
-                        <span className="absolute left-1/2 -bottom-2 -translate-x-1/2 w-3 h-3 bg-blue-400 rounded-full border-2 border-white shadow"></span>
-                    )}
-                </button>
-            ))}
+                    alt={stack.item?.name || 'Distribution Item'}
+                    className="w-full h-40 sm:h-48 object-cover transition-all duration-300 group-hover:scale-105"
+                    onError={(e) => {
+                        e.target.src = default_image;
+                    }}
+                />
+                <span className="absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm bg-blue-50 text-blue-700 border border-blue-100">
+                    Distribution
+                </span>
+            </div>
+            <div className="flex-1 flex flex-col p-5">
+                <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">
+                    {stack.item?.name || 'Unknown Item'}
+                </h3>
+                <p className="text-gray-600 text-sm mb-2 flex-1 cursor-default line-clamp-3">
+                    {truncatedDescription || 'No description available'}
+                </p>
+                <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
+                    <span>
+                        <span className="font-medium text-gray-700">
+                            Quantity:
+                        </span>{' '}
+                        {stack.quantity}
+                    </span>
+                    <span>
+                        <span className="font-medium text-gray-700">
+                            Category:
+                        </span>{' '}
+                        {stack.item?.category?.replace('_', ' ') || 'N/A'}
+                    </span>
+                    <span>
+                        <span className="font-medium text-gray-700">
+                            Date Added:
+                        </span>{' '}
+                        {formatDate(stack.createdAt)}
+                    </span>
+                </div>
+                <div className="flex flex-col gap-2 mt-auto md:flex-row">
+                    <button
+                        onClick={() => onViewDetails(stack)}
+                        className="w-full md:w-auto bg-gray-800 hover:bg-gray-700 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
+                    >
+                        View Details
+                    </button>
+                    <button
+                        onClick={() => onEdit(stack)}
+                        className="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
+                    >
+                        Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/* ================================================================================== */
+/* DISTRIBUTION DETAIL MODAL COMPONENT */
+/* ================================================================================== */
+
+function DistributionDetailModal({
+    stack,
+    onClose,
+    imageUpdateTimestamp,
+    onViewRequests,
+}) {
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
+    };
+
+    const handleViewRequests = () => {
+        if (onViewRequests && stack.item?.name) {
+            onViewRequests(stack.item.name);
+            onClose(); // Close the modal
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col mx-4">
+                {/* HEADER */}
+                <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-blue-100">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs text-blue-600 font-medium">
+                            Distribution Item Details
+                        </span>
+                    </div>
+                    <button
+                        className="text-2xl text-gray-400 hover:text-gray-700 transition-colors"
+                        onClick={onClose}
+                        aria-label="Close"
+                    >
+                        &times;
+                    </button>
+                </div>
+
+                {/* IMAGE */}
+                <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+                    {stack.item?.id ? (
+                        <img
+                            className="object-cover w-full h-full"
+                            src={`/api/dist/photo/${stack.item.id}?t=${imageUpdateTimestamp}`}
+                            alt={stack.item?.name || 'Distribution Item'}
+                            onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextElementSibling.style.display =
+                                    'flex';
+                            }}
+                        />
+                    ) : null}
+                    <div
+                        className="text-gray-400 text-3xl flex flex-col items-center"
+                        style={{ display: stack.item?.id ? 'none' : 'flex' }}
+                    >
+                        <svg
+                            className="w-16 h-16 mb-2"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </svg>
+                        No Image Available
+                    </div>
+                </div>
+
+                {/* DETAILS */}
+                <div className="px-6 py-6 bg-white">
+                    <div className="mb-4">
+                        <span className="text-xs uppercase tracking-widest text-gray-400 font-semibold">
+                            Item Name
+                        </span>
+                        <h1 className="text-2xl font-bold text-gray-900 mt-1">
+                            {stack.item?.name || 'Unknown Item'}
+                        </h1>
+                    </div>
+
+                    <div className="mb-6">
+                        <span className="text-xs uppercase tracking-widest text-gray-400 font-semibold">
+                            Description
+                        </span>
+                        <p className="text-gray-600 mt-1 leading-relaxed">
+                            {stack.item?.description ||
+                                'No description available'}
+                        </p>
+                    </div>
+
+                    {/* PROPERTIES */}
+                    <div className="flex flex-wrap gap-3 mb-6">
+                        {/* CATEGORY */}
+                        <span
+                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default
+                                ${
+                                    stack.item?.category === 'Farming_Equipment'
+                                        ? 'bg-blue-100 text-blue-800'
+                                        : stack.item?.category ===
+                                          'Harvesting_Tools'
+                                        ? 'bg-pink-100 text-pink-800'
+                                        : stack.item?.category ===
+                                          'Irrigation_Systems'
+                                        ? 'bg-purple-100 text-purple-800'
+                                        : stack.item?.category ===
+                                          'Storage_Equipment'
+                                        ? 'bg-yellow-100 text-yellow-800'
+                                        : stack.item?.category ===
+                                          'Processing_Equipment'
+                                        ? 'bg-green-100 text-green-800'
+                                        : stack.item?.category === 'Safety_Gear'
+                                        ? 'bg-red-100 text-red-800'
+                                        : stack.item?.category ===
+                                          'Pest_Control'
+                                        ? 'bg-indigo-100 text-indigo-800'
+                                        : stack.item?.category ===
+                                          'Livestock_Equipment'
+                                        ? 'bg-orange-100 text-orange-800'
+                                        : stack.item?.category ===
+                                          'Measuring_Tools'
+                                        ? 'bg-teal-100 text-teal-800'
+                                        : stack.item?.category === 'Fisheries'
+                                        ? 'bg-lime-100 text-lime-800'
+                                        : stack.item?.category === 'Machinery'
+                                        ? 'bg-cyan-100 text-cyan-800'
+                                        : 'bg-gray-100 text-gray-800'
+                                }`}
+                            title="Category"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                aria-hidden="true"
+                            >
+                                <rect x="3" y="3" width="7" height="7" />
+                                <rect x="14" y="3" width="7" height="7" />
+                                <rect x="14" y="14" width="7" height="7" />
+                                <rect x="3" y="14" width="7" height="7" />
+                            </svg>
+                            {stack.item?.category?.replace('_', ' ') || 'N/A'}
+                        </span>
+
+                        {/* QUANTITY */}
+                        <span
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold cursor-default"
+                            title="Available Quantity"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <rect
+                                    x="4"
+                                    y="4"
+                                    width="16"
+                                    height="16"
+                                    rx="2"
+                                    ry="2"
+                                />
+                                <line x1="12" y1="8" x2="12" y2="16" />
+                                <line x1="8" y1="12" x2="16" y2="12" />
+                            </svg>
+                            {stack.quantity} Available
+                        </span>
+
+                        {/* STATUS */}
+                        <span
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-green-100 text-green-800 text-xs font-semibold cursor-default"
+                            title="Distribution Status"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                                />
+                            </svg>
+                            Available for Distribution
+                        </span>
+                    </div>
+
+                    {/* VIEW REQUESTS BUTTON */}
+                    <div className="mt-4">
+                        <button
+                            onClick={handleViewRequests}
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                            View Requests
+                        </button>
+                    </div>
+                </div>
+
+                {/* DATES */}
+                <div className="bg-gray-50 px-6 py-4 border-t">
+                    <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+                        <span>
+                            <span className="font-medium">Added:</span>{' '}
+                            {formatDate(stack.createdAt)}
+                        </span>
+                        {stack.updatedAt &&
+                            stack.updatedAt !== stack.createdAt && (
+                                <span>
+                                    <span className="font-medium">
+                                        Updated:
+                                    </span>{' '}
+                                    {formatDate(stack.updatedAt)}
+                                </span>
+                            )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/* ================================================================================== */
+/* DISTRIBUTION EDIT MODAL COMPONENT */
+/* ================================================================================== */
+
+function DistributionEditModal({
+    stack,
+    onClose,
+    onSubmit,
+    imageUpdateTimestamp,
+}) {
+    // For now, let's use a simple placeholder modal
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col mx-4">
+                <div className="flex items-center justify-between px-6 py-4 border-b">
+                    <h2 className="text-lg font-semibold">
+                        Edit Distribution Item
+                    </h2>
+                    <button
+                        className="text-2xl text-gray-400 hover:text-gray-700 transition-colors"
+                        onClick={onClose}
+                        aria-label="Close"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div className="p-6">
+                    <p className="text-gray-600 mb-4">
+                        Edit functionality will be implemented soon.
+                    </p>
+                    <button
+                        onClick={onClose}
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/* ================================================================================== */
+/* ADD DISTRIBUTION ITEM MODAL COMPONENT */
+/* ================================================================================== */
+
+function AddDistributionItemModal({
+    isOpen,
+    onClose,
+    onSubmit,
+    existingItems,
+    distributionItems,
+}) {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col mx-4">
+                <div className="flex items-center justify-between px-6 py-4 border-b">
+                    <h2 className="text-lg font-semibold">
+                        Add Distribution Item
+                    </h2>
+                    <button
+                        className="text-2xl text-gray-400 hover:text-gray-700 transition-colors"
+                        onClick={onClose}
+                        aria-label="Close"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div className="p-6">
+                    <p className="text-gray-600 mb-4">
+                        Add item functionality will be implemented soon.
+                    </p>
+                    <button
+                        onClick={onClose}
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }
