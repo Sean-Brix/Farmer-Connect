@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react';
-
-// ASSETS
 import default_image from '../../../Assets/eic_default.png';
-// SUB COMPONENTS
-import EIC_Request from './Components/Request/EIC_Request.jsx';
 import AddEICItemModal from './addEICItem.jsx';
+import {
+    useEICStacks,
+    useEICRequests,
+    useAllItems,
+    useAddEICItem,
+    useEditEICItem,
+    useUpdateRequestStatus,
+} from './hooks/useEICQueries.js';
 
 export default function EIC() {
     const [activeSection, setActiveSection] = useState('items');
-    const [eicStacks, setEicStacks] = useState([]);
-    const [requests, setRequests] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState('quantity');
     const [searchFilter, setSearchFilter] = useState('name');
     const [showAddModal, setShowAddModal] = useState(false);
-    const [allItems, setAllItems] = useState([]); // For existing items in the modal
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [selectedStack, setSelectedStack] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -37,6 +36,35 @@ export default function EIC() {
         type: '',
     });
 
+    // TanStack Query hooks
+    const {
+        data: eicStacks = [],
+        isLoading: stacksLoading,
+        error: stacksError,
+        refetch: refetchStacks,
+    } = useEICStacks();
+
+    const {
+        data: requests = [],
+        isLoading: requestsLoading,
+        error: requestsError,
+        refetch: refetchRequests,
+    } = useEICRequests();
+
+    const {
+        data: allItems = [],
+        isLoading: allItemsLoading,
+        error: allItemsError,
+    } = useAllItems();
+
+    const addEICItemMutation = useAddEICItem();
+    const editEICItemMutation = useEditEICItem();
+    const updateRequestStatusMutation = useUpdateRequestStatus();
+
+    // Derived loading and error states
+    const isLoading = stacksLoading || requestsLoading;
+    const error = stacksError || requestsError || allItemsError;
+
     // Helper to show alert
     const showAlert = (message, type = 'success') => {
         setAlert({ show: true, message, type });
@@ -44,98 +72,6 @@ export default function EIC() {
             () => setAlert({ show: false, message: '', type: '' }),
             3000
         );
-    };
-
-    // Fetch EIC items when component mounts or section changes
-    useEffect(() => {
-        if (activeSection === 'items') {
-            fetchEICStacks();
-            fetchAllItems(); // Fetch all items for the dropdown
-        } else if (activeSection === 'requests') {
-            fetchRequests();
-        }
-    }, [activeSection]);
-
-    const fetchRequests = async () => {
-        setIsLoading(true);
-        setError(null);
-
-        try {
-            const response = await fetch('/api/eic/request/all', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch requests: ${response.status}`);
-            }
-
-            const result = await response.json();
-            setRequests(result.requests || []);
-        } catch (err) {
-            console.error('Error fetching requests:', err);
-            setError(
-                'Unable to load request data. Please check your connection and try again.'
-            );
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const fetchAllItems = async () => {
-        try {
-            const response = await fetch('/api/inventory/all/items', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(
-                    `Failed to fetch all items: ${response.status}`
-                );
-            }
-
-            const result = await response.json();
-            setAllItems(result || []);
-        } catch (err) {
-            console.error('Error fetching all items:', err);
-        }
-    };
-
-    const fetchEICStacks = async () => {
-        setIsLoading(true);
-        setError(null);
-
-        try {
-            const response = await fetch('/api/eic/all', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(
-                    `Failed to fetch EIC stacks: ${response.status}`
-                );
-            }
-
-            const result = await response.json();
-
-            // The API now returns a direct array instead of wrapped object
-            setEicStacks(result || []);
-        } catch (err) {
-            console.error('Error fetching EIC stacks:', err);
-            setError(
-                'Unable to load EIC data. Please check your connection and try again.'
-            );
-        } finally {
-            setIsLoading(false);
-        }
     };
 
     // Filter and sort stacks based on search and sort options
@@ -178,23 +114,13 @@ export default function EIC() {
 
     const handleAddEICItem = async (formData) => {
         try {
-            const response = await fetch('/api/inventory/item/add', {
-                method: 'POST',
-                body: formData, // Send FormData directly for file upload
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
+            await addEICItemMutation.mutateAsync(formData);
             setShowAddModal(false);
             setImageUpdateTimestamp(Date.now()); // Force image refresh
-            await fetchEICStacks(); // Refresh EIC items
-            await fetchAllItems(); // Refresh all items for dropdown
             showAlert('EIC item added successfully', 'success');
         } catch (error) {
             console.error('Failed to create EIC item:', error);
-            showAlert('Failed to add EIC item', 'error');
+            showAlert(error.message || 'Failed to add EIC item', 'error');
         }
     };
 
@@ -235,35 +161,16 @@ export default function EIC() {
         }
 
         try {
-            const response = await fetch(`/api/eic/item/${editingStack.id}`, {
-                method: 'PUT',
-                body: formData, // Send FormData directly for file upload
+            await editEICItemMutation.mutateAsync({
+                stackId: editingStack.id,
+                formData,
+                hasNameOrDescriptionChange,
             });
 
-            const responseData = await response.json();
-
-            if (!response.ok) {
-                throw new Error(
-                    responseData.error ||
-                        `HTTP error! status: ${response.status}`
-                );
-            }
-
-            // Check for success response
-            if (responseData.success) {
-                setShowEditModal(false);
-                setEditingStack(null);
-                setImageUpdateTimestamp(Date.now()); // Force image refresh
-                await fetchEICStacks(); // Refresh EIC items
-                showAlert(
-                    responseData.message || 'EIC item updated successfully',
-                    'success'
-                );
-            } else {
-                throw new Error(
-                    responseData.error || 'Failed to update EIC item'
-                );
-            }
+            setShowEditModal(false);
+            setEditingStack(null);
+            setImageUpdateTimestamp(Date.now()); // Force image refresh
+            showAlert('EIC item updated successfully', 'success');
         } catch (error) {
             console.error('Failed to update EIC item:', error);
             showAlert(error.message || 'Failed to update EIC item', 'error');
@@ -274,10 +181,6 @@ export default function EIC() {
     const handleViewRequests = (itemName) => {
         setActiveSection('requests');
         setRequestSearch(itemName);
-        // Ensure we fetch the latest requests data
-        setTimeout(() => {
-            fetchRequests();
-        }, 100);
     };
 
     // Handle requests button click - reset all filters and go to requests section
@@ -592,29 +495,19 @@ export default function EIC() {
                 return; // User cancelled
             }
 
-            const response = await fetch('/api/eic/request/respond', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    transactionId: requestId,
-                    status: newStatus,
-                }),
+            await updateRequestStatusMutation.mutateAsync({
+                requestId,
+                status: newStatus,
+                itemName,
+                requestorName,
+                requestQuantity,
+                currentStock,
             });
 
-            const result = await response.json();
-
-            if (response.ok) {
-                showAlert(
-                    `Request status successfully changed to ${newStatus}`,
-                    'success'
-                );
-                // Refresh the requests list
-                fetchRequests();
-            } else {
-                throw new Error(result.message || 'Failed to update status');
-            }
+            showAlert(
+                `Request status successfully changed to ${newStatus}`,
+                'success'
+            );
         } catch (error) {
             console.error('Error updating request status:', error);
             showAlert(
@@ -736,7 +629,7 @@ export default function EIC() {
                             </select>
 
                             <button
-                                onClick={fetchRequests}
+                                onClick={refetchRequests}
                                 className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
                             >
                                 <svg
@@ -845,7 +738,7 @@ export default function EIC() {
                             </select>
 
                             <button
-                                onClick={fetchEICStacks}
+                                onClick={refetchStacks}
                                 className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
                             >
                                 <svg
@@ -959,9 +852,9 @@ export default function EIC() {
     );
 }
 
-/* ================================================================================== */
-/* REQUESTS TABLE COMPONENT */
-/* ================================================================================== */
+// =================================================================
+// REQUESTS TABLE COMPONENT
+// =================================================================
 
 function RequestsTable({
     requests,
@@ -1471,9 +1364,9 @@ function RequestsTable({
     );
 }
 
-/* ================================================================================== */
-/* EIC ITEM CARD COMPONENT - Matching Seminar Design Style */
-/* ================================================================================== */
+// =================================================================
+// EIC ITEM CARD COMPONENT
+// =================================================================
 
 function EICItemCard({ stack, onViewDetails, onEdit, imageUpdateTimestamp }) {
     const formatDate = (dateString) => {
@@ -1554,9 +1447,9 @@ function EICItemCard({ stack, onViewDetails, onEdit, imageUpdateTimestamp }) {
     );
 }
 
-/* ================================================================================== */
-/* EIC DETAIL MODAL COMPONENT */
-/* ================================================================================== */
+// =================================================================
+// EIC DETAIL MODAL COMPONENT
+// =================================================================
 
 function EICDetailModal({
     stack,
@@ -1825,9 +1718,9 @@ function EICDetailModal({
     );
 }
 
-/* ================================================================================== */
-/* EIC EDIT MODAL COMPONENT */
-/* ================================================================================== */
+// =================================================================
+// EIC EDIT MODAL COMPONENT
+// =================================================================
 
 function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
     const [formData, setFormData] = useState({
@@ -2167,4 +2060,4 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
     );
 }
 
-/* ================================================================================== */
+// =================================================================
