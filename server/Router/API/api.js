@@ -15,4 +15,7 @@ router.use('/inventory', inventory);
 import eic from './EIC/index.js';
 router.use('/eic', eic);
 
+import distribution from './Distribution/index.js';
+router.use('/dist', distribution);
+
 export default router;
