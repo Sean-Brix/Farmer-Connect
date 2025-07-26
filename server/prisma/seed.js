@@ -468,6 +468,283 @@ async function createItemTransactions() {
   }
 }
 
+//? ===================================== AUDIT LOGS ===================================== ?//
+
+async function createAuditLogs() {
+  // Get all admin accounts for creating audit logs
+  const adminAccounts = await prisma.account.findMany({
+    where: {
+      access: {
+        in: ['Admin', 'Super_Admin']
+      }
+    }
+  });
+
+  if (adminAccounts.length === 0) {
+    console.log('No admin accounts found, skipping audit log creation.');
+    return;
+  }
+
+  // Get some existing entities for realistic audit logs
+  const accounts = await prisma.account.findMany({ take: 10 });
+  const inventoryItems = await prisma.inventoryItem.findMany({ take: 10 });
+  const seminars = await prisma.seminar.findMany({ take: 5 });
+  const itemStacks = await prisma.itemStack.findMany({ 
+    include: { item: true },
+    take: 10 
+  });
+
+  // Sample IP addresses for variety
+  const sampleIPs = [
+    '192.168.1.10', '192.168.1.15', '10.0.0.5', '172.16.0.20',
+    '192.168.0.100', '10.1.1.50', '172.20.10.2', '192.168.1.25'
+  ];
+
+  // Sample User Agents
+  const sampleUserAgents = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15'
+  ];
+
+  // Define audit log templates with realistic scenarios
+  const auditLogTemplates = [
+    // Authentication Actions
+    {
+      action: 'LOGIN',
+      targetType: null,
+      getDetails: (admin) => `Admin ${admin.username} logged in successfully`,
+      getMetadata: (admin) => ({ loginMethod: 'password', sessionDuration: null })
+    },
+    {
+      action: 'LOGOUT',
+      targetType: null,
+      getDetails: (admin) => `Admin ${admin.username} logged out`,
+      getMetadata: (admin) => ({ sessionDuration: faker.number.int({ min: 300, max: 7200 }) })
+    },
+    
+    // Account Management Actions
+    {
+      action: 'ACCOUNT_CREATE',
+      targetType: 'Account',
+      getTarget: () => faker.helpers.arrayElement(accounts),
+      getDetails: (admin, target) => `Created new user account for ${target.firstName} ${target.lastName}`,
+      getMetadata: (admin, target) => ({
+        newUserRole: target.access,
+        email: target.email,
+        clientProfile: target.client_profile
+      })
+    },
+    {
+      action: 'ACCOUNT_UPDATE',
+      targetType: 'Account',
+      getTarget: () => faker.helpers.arrayElement(accounts),
+      getDetails: (admin, target) => `Updated account information for ${target.firstName} ${target.lastName}`,
+      getMetadata: (admin, target) => ({
+        updatedFields: faker.helpers.arrayElements(['email', 'phone', 'address', 'position'], { min: 1, max: 3 }),
+        targetUserId: target.id
+      })
+    },
+    {
+      action: 'ACCOUNT_ROLE_CHANGE',
+      targetType: 'Account',
+      getTarget: () => faker.helpers.arrayElement(accounts),
+      getDetails: (admin, target) => `Changed role for ${target.firstName} ${target.lastName} from User to ${faker.helpers.arrayElement(['Admin', 'User'])}`,
+      getMetadata: (admin, target) => ({
+        previousRole: 'User',
+        newRole: faker.helpers.arrayElement(['Admin', 'User']),
+        targetUserId: target.id
+      })
+    },
+
+    // Inventory Management Actions
+    {
+      action: 'INVENTORY_CREATE',
+      targetType: 'InventoryItem',
+      getTarget: () => faker.helpers.arrayElement(inventoryItems),
+      getDetails: (admin, target) => `Created new inventory item: ${target.name}`,
+      getMetadata: (admin, target) => ({
+        category: target.category,
+        description: target.description,
+        initialQuantity: faker.number.int({ min: 1, max: 100 })
+      })
+    },
+    {
+      action: 'INVENTORY_UPDATE',
+      targetType: 'InventoryItem',
+      getTarget: () => faker.helpers.arrayElement(inventoryItems),
+      getDetails: (admin, target) => `Updated inventory item: ${target.name}`,
+      getMetadata: (admin, target) => ({
+        updatedFields: faker.helpers.arrayElements(['description', 'category', 'quantity'], { min: 1, max: 2 }),
+        previousValues: { quantity: faker.number.int({ min: 0, max: 50 }) },
+        newValues: { quantity: faker.number.int({ min: 0, max: 100 }) }
+      })
+    },
+    {
+      action: 'INVENTORY_STATUS_CHANGE',
+      targetType: 'InventoryItem',
+      getTarget: () => faker.helpers.arrayElement(itemStacks),
+      getDetails: (admin, target) => `Changed status of ${target.item.name} from Available to ${faker.helpers.arrayElement(['EIC', 'Distributed', 'Unavailable'])}`,
+      getMetadata: (admin, target) => ({
+        previousStatus: 'Available',
+        newStatus: faker.helpers.arrayElement(['EIC', 'Distributed', 'Unavailable']),
+        quantity: target.quantity
+      })
+    },
+
+    // Distribution Management Actions
+    {
+      action: 'DISTRIBUTION_REQUEST_APPROVE',
+      targetType: 'Distribution',
+      getTarget: () => {
+        const stack = faker.helpers.arrayElement(itemStacks);
+        return { ...stack, name: stack.item.name };
+      },
+      getDetails: (admin, target) => `Approved distribution request for ${target.name}`,
+      getMetadata: (admin, target) => ({
+        requestedQuantity: faker.number.int({ min: 1, max: 10 }),
+        availableStock: target.quantity,
+        requestorInfo: faker.helpers.arrayElement(accounts).username
+      })
+    },
+    {
+      action: 'DISTRIBUTION_REQUEST_REJECT',
+      targetType: 'Distribution',
+      getTarget: () => {
+        const stack = faker.helpers.arrayElement(itemStacks);
+        return { ...stack, name: stack.item.name };
+      },
+      getDetails: (admin, target) => `Rejected distribution request for ${target.name}`,
+      getMetadata: (admin, target) => ({
+        requestedQuantity: faker.number.int({ min: 1, max: 10 }),
+        availableStock: target.quantity,
+        rejectionReason: faker.helpers.arrayElement(['Insufficient stock', 'Item not available', 'Invalid request'])
+      })
+    },
+
+    // Seminar Management Actions
+    {
+      action: 'SEMINAR_CREATE',
+      targetType: 'Seminar',
+      getTarget: () => faker.helpers.arrayElement(seminars),
+      getDetails: (admin, target) => `Created new seminar: ${target.title}`,
+      getMetadata: (admin, target) => ({
+        speaker: target.speaker,
+        location: target.location,
+        capacity: target.capacity,
+        startDate: target.start_date
+      })
+    },
+    {
+      action: 'SEMINAR_UPDATE',
+      targetType: 'Seminar',
+      getTarget: () => faker.helpers.arrayElement(seminars),
+      getDetails: (admin, target) => `Updated seminar details: ${target.title}`,
+      getMetadata: (admin, target) => ({
+        updatedFields: faker.helpers.arrayElements(['description', 'location', 'capacity', 'speaker'], { min: 1, max: 3 }),
+        seminarId: target.id
+      })
+    },
+    {
+      action: 'SEMINAR_STATUS_CHANGE',
+      targetType: 'Seminar',
+      getTarget: () => faker.helpers.arrayElement(seminars),
+      getDetails: (admin, target) => `Changed seminar status: ${target.title} to ${faker.helpers.arrayElement(['Completed', 'Cancelled', 'Ongoing'])}`,
+      getMetadata: (admin, target) => ({
+        previousStatus: target.status,
+        newStatus: faker.helpers.arrayElement(['Completed', 'Cancelled', 'Ongoing']),
+        participantCount: faker.number.int({ min: 5, max: 50 })
+      })
+    },
+
+    // System and Profile Actions
+    {
+      action: 'PROFILE_UPDATE',
+      targetType: 'Account',
+      getTarget: () => faker.helpers.arrayElement(adminAccounts),
+      getDetails: (admin, target) => `Updated admin profile information`,
+      getMetadata: (admin, target) => ({
+        updatedFields: faker.helpers.arrayElements(['firstName', 'lastName', 'email', 'position'], { min: 1, max: 2 }),
+        selfUpdate: target.id === admin.id
+      })
+    },
+    {
+      action: 'SETTINGS_UPDATE',
+      targetType: null,
+      getDetails: (admin) => `Updated system settings`,
+      getMetadata: (admin) => ({
+        settingsUpdated: faker.helpers.arrayElements(['notifications', 'security', 'backup', 'maintenance'], { min: 1, max: 3 }),
+        previousValues: { notifications: true, security: 'medium' },
+        newValues: { notifications: false, security: 'high' }
+      })
+    }
+  ];
+
+  // Generate audit logs over the past 90 days
+  const now = new Date();
+  const startDate = new Date(now.getTime() - (90 * 24 * 60 * 60 * 1000)); // 90 days ago
+
+  // Generate 200-500 audit logs for realistic data
+  const numberOfLogs = faker.number.int({ min: 200, max: 500 });
+
+  for (let i = 0; i < numberOfLogs; i++) {
+    // Select random admin
+    const admin = faker.helpers.arrayElement(adminAccounts);
+    
+    // Select random audit log template
+    const template = faker.helpers.arrayElement(auditLogTemplates);
+    
+    // Get target if template requires one
+    let target = null;
+    let targetId = null;
+    let targetName = null;
+    
+    if (template.getTarget) {
+      target = template.getTarget();
+      targetId = target.id;
+      targetName = target.name || `${target.firstName} ${target.lastName}` || target.title;
+    }
+
+    // Generate timestamp within the last 90 days
+    const createdAt = faker.date.between({ from: startDate, to: now });
+    
+    // Generate details and metadata
+    const details = template.getDetails(admin, target);
+    const metadata = template.getMetadata ? template.getMetadata(admin, target) : null;
+    
+    // Select random IP and User Agent
+    const ipAddress = faker.helpers.arrayElement(sampleIPs);
+    const userAgent = faker.helpers.arrayElement(sampleUserAgents);
+
+    try {
+      await prisma.auditLog.create({
+        data: {
+          adminId: admin.id,
+          action: template.action,
+          targetType: template.targetType,
+          targetId: targetId,
+          targetName: targetName,
+          details: details,
+          metadata: metadata ? JSON.stringify(metadata) : null,
+          ipAddress: ipAddress,
+          userAgent: userAgent,
+          createdAt: createdAt
+        }
+      });
+
+      // Small delay to avoid overwhelming the database
+      if (i % 50 === 0) {
+        await wait(100);
+      }
+    } catch (error) {
+      console.error(`Error creating audit log ${i}:`, error);
+    }
+  }
+
+  console.log(`Created ${numberOfLogs} audit log entries.`);
+}
+
 //? ====================================== EXECUTE SEEDS ====================================== ?//
 
 async function main() {
@@ -495,6 +772,9 @@ async function main() {
     
     await createItemTransactions();
     console.log('Item Transactions created successfully.');
+    
+    await createAuditLogs();
+    console.log('Audit Logs created successfully.');
   } 
 
   catch (error) {

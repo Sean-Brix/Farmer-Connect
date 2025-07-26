@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../../prisma/generated/client.js';
+import auditLogger from '../../../Services/auditLogger.js';
 const prisma = new PrismaClient();
 
 async function setStatus(req, res) {
@@ -204,6 +205,33 @@ async function setStatus(req, res) {
                     },
                 },
             });
+
+            // Log the distribution request status change only for admin actions
+            if (user.access === 'Admin' || user.access === 'Super_Admin') {
+                const auditAction = status === 'Approved' ? 'DISTRIBUTION_REQUEST_APPROVE' : 'DISTRIBUTION_REQUEST_REJECT';
+                const isApproval = status === 'Approved';
+                
+                await auditLogger.log(
+                    userId,
+                    auditAction,
+                    'Distribution',
+                    updatedTransaction.id,
+                    updatedTransaction.itemStack.item.name,
+                    `${isApproval ? 'Approved' : 'Rejected'} distribution request for ${updatedTransaction.itemStack.item.name}`,
+                    {
+                        action: isApproval ? 'request_approved' : 'request_rejected',
+                        itemName: updatedTransaction.itemStack.item.name,
+                        requestedQuantity: updatedTransaction.quantity,
+                        availableStock: transaction.itemStack.quantity,
+                        requestorInfo: `${updatedTransaction.account.firstName} ${updatedTransaction.account.lastName}`,
+                        previousStatus: currentStatus,
+                        newStatus: newStatus,
+                        rejectionReason: !isApproval ? 'Admin rejection' : undefined
+                    },
+                    req.ip,
+                    req.get('User-Agent')
+                );
+            }
 
             // Update stack quantity if there's a change
             if (stackQuantityChange !== 0) {
