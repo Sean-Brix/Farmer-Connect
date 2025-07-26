@@ -16,6 +16,9 @@ router.use(authorize);
 import editItem from '../../../Controller/Distribution/editItem.js';
 router.put('/:id', upload.single('image'), editItem);
 
+import addItem from '../../../Controller/Distribution/addItem.js';
+router.post('/', upload.single('image'), addItem);
+
 //? ================================================================================================ ?//
 
 //? ====================================== SUPER ADMINS ============================================ ?//

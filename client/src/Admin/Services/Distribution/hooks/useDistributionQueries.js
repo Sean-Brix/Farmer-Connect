@@ -96,27 +96,45 @@ export const useAddDistributionItem = () => {
 
     return useMutation({
         mutationFn: async (formData) => {
-            const response = await fetch('/api/dist/item', {
-                method: 'POST',
-                body: formData, // Send FormData directly for file upload
-            });
+            try {
+                const response = await fetch('/api/dist/item', {
+                    method: 'POST',
+                    body: formData, // Send FormData directly for file upload
+                });
 
-            const responseData = await response.json();
+                // Check if response is HTML (error page) instead of JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const htmlText = await response.text();
+                    console.error(
+                        'Server returned HTML instead of JSON:',
+                        htmlText.substring(0, 200)
+                    );
+                    throw new Error(
+                        'Server error: Expected JSON response but received HTML. Check if the API endpoint exists.'
+                    );
+                }
 
-            if (!response.ok) {
-                throw new Error(
-                    responseData.error ||
-                        `HTTP error! status: ${response.status}`
-                );
+                const responseData = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        responseData.error ||
+                            `HTTP error! status: ${response.status}`
+                    );
+                }
+
+                if (!responseData.success) {
+                    throw new Error(
+                        responseData.error || 'Failed to add distribution item'
+                    );
+                }
+
+                return responseData;
+            } catch (error) {
+                console.error('Error in addDistributionItem mutation:', error);
+                throw error;
             }
-
-            if (!responseData.success) {
-                throw new Error(
-                    responseData.error || 'Failed to add distribution item'
-                );
-            }
-
-            return responseData;
         },
         onSuccess: () => {
             // Invalidate and refetch distribution stacks

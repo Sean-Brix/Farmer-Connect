@@ -121,16 +121,31 @@ export default function Distribution() {
 
     const handleAddDistributionItem = async (formData) => {
         try {
+            console.log('Submitting distribution item...');
             await addDistributionItemMutation.mutateAsync(formData);
             setShowAddModal(false);
             setImageUpdateTimestamp(Date.now()); // Force image refresh
             showAlert('Distribution item added successfully', 'success');
         } catch (error) {
             console.error('Failed to create distribution item:', error);
-            showAlert(
-                error.message || 'Failed to add distribution item',
-                'error'
-            );
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+            });
+
+            let errorMessage = 'Failed to add distribution item';
+            if (
+                error.message.includes(
+                    'Expected JSON response but received HTML'
+                )
+            ) {
+                errorMessage =
+                    'Server error: API endpoint not found. Please check if the server is running correctly.';
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+
+            showAlert(errorMessage, 'error');
         }
     };
 
