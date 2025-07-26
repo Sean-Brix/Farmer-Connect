@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../prisma/generated/client.js';
+import auditLogger from '../../Services/auditLogger.js';
 const prisma = new PrismaClient();
 
 async function addItem(req, res) {
@@ -99,6 +100,27 @@ async function addItem(req, res) {
                 },
             });
 
+            // Log the inventory update action
+            await auditLogger.log(
+                req.user?.id, // Admin ID from auth middleware
+                'INVENTORY_UPDATE',
+                'InventoryItem',
+                existingItem.id,
+                existingItem.name,
+                `Added ${parsedQuantity} units to existing inventory item: ${existingItem.name} (${targetStatus})`,
+                {
+                    action: 'quantity_added',
+                    itemName: existingItem.name,
+                    quantityAdded: parsedQuantity,
+                    status: targetStatus,
+                    previousQuantity: existingStack?.quantity || 0,
+                    newQuantity: (existingStack?.quantity || 0) + parsedQuantity,
+                    imageUpdated: !!file
+                },
+                req.ip,
+                req.get('User-Agent')
+            );
+
             return res.status(200).json({
                 message: 'Quantity added to existing item stack successfully',
                 item: updatedItem,
@@ -134,6 +156,27 @@ async function addItem(req, res) {
                     item_stacks: true,
                 },
             });
+
+            // Log the inventory creation action
+            await auditLogger.log(
+                req.user?.id, // Admin ID from auth middleware
+                'INVENTORY_CREATE',
+                'InventoryItem',
+                newItem.id,
+                newItem.name,
+                `Created new inventory item: ${newItem.name} with ${parsedQuantity} units (${targetStatus})`,
+                {
+                    action: 'item_created',
+                    itemName: newItem.name,
+                    description: newItem.description,
+                    category: newItem.category,
+                    initialQuantity: parsedQuantity,
+                    initialStatus: targetStatus,
+                    hasImage: !!file
+                },
+                req.ip,
+                req.get('User-Agent')
+            );
 
             return res.status(201).json({
                 message: 'Item created successfully with all status stacks',

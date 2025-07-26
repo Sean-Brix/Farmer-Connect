@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../prisma/generated/client.js';
+import auditLogger from '../../Services/auditLogger.js';
 const prisma = new PrismaClient();
 
 async function deleteItem(req, res) {
@@ -47,6 +48,26 @@ async function deleteItem(req, res) {
                 id: id,
             },
         });
+
+        // Log the inventory deletion action
+        await auditLogger.log(
+            req.user?.id,
+            'INVENTORY_DELETE',
+            'InventoryItem',
+            item.id,
+            item.name,
+            `Deleted inventory item: ${item.name} and all associated stacks/transactions`,
+            {
+                action: 'item_deleted',
+                itemName: item.name,
+                description: item.description,
+                category: item.category,
+                stacksDeleted: item.item_stacks.length,
+                transactionsDeleted: item.item_stacks.reduce((total, stack) => total + stack.itemTransactions.length, 0)
+            },
+            req.ip,
+            req.get('User-Agent')
+        );
 
         res.status(200).json({
             message: 'Item and all associated stacks deleted successfully',

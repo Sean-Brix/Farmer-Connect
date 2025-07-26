@@ -1,373 +1,818 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import { useAuditLogs, useAuditLogStats, useAuditLogFilters, useRefreshAuditLogs } from './hooks/useAuditQueries.js';
 
-export default function Audit({admin_navigate}) {
-  return (
-    <>
-      <div className="relative mt-6 md:mt-20 mb-8 flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-blue-900 tracking-tight flex items-center gap-3">
-          <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="7" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          Audit Trail
-        </h2>
-        <div className="flex-1 mx-6 border-t border-blue-200" />
-      </div>
-      <AuditLogsTable admin_navigate={admin_navigate} />
-    </>
-  )
+export default function Audit({ admin_navigate }) {
+    const [activeView, setActiveView] = useState('logs');
+    const [timeRange, setTimeRange] = useState('30d');
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-100 py-8 px-2 md:px-6">
+            {/* Header */}
+            <div className="relative mt-16 mb-8 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-4">
+                <span className="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
+                    <svg
+                        className="w-7 h-7 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </svg>
+                    Logs / Audit Trail
+                </span>
+
+                {/* View Toggle */}
+                <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg">
+                    <button
+                        onClick={() => setActiveView('logs')}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                            activeView === 'logs'
+                                ? 'bg-white text-blue-600 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                    >
+                        Activity Logs
+                    </button>
+                    <button
+                        onClick={() => setActiveView('analytics')}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                            activeView === 'analytics'
+                                ? 'bg-white text-blue-600 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                    >
+                        Analytics
+                    </button>
+                </div>
+            </div>
+
+            {/* Content */}
+            <div className="max-w-7xl mx-auto">
+                {activeView === 'logs' ? (
+                    <AuditLogsTable admin_navigate={admin_navigate} />
+                ) : (
+                    <AuditAnalytics 
+                        timeRange={timeRange}
+                        setTimeRange={setTimeRange}
+                        admin_navigate={admin_navigate} 
+                    />
+                )}
+            </div>
+        </div>
+    );
 }
 
+/* ================================================================================== */
+/* AUDIT LOGS TABLE COMPONENT */
+/* ================================================================================== */
+
 function AuditLogsTable({ admin_navigate }) {
-  const [logs] = useState([
-    {
-      id: 1,
-      user: 'lance',
-      action: 'Created new user',
-      timestamp: '2024-06-10 14:23:45',
-      details: 'User: johndoe, Role: Editor'
-    },
-    {
-      id: 2,
-      user: 'franz',
-      action: 'Updated profile',
-      timestamp: '2024-06-10 15:01:12',
-      details: 'Changed email address'
-    },
-    {
-      id: 3,
-      user: 'christian',
-      action: 'Deleted record',
-      timestamp: '2024-06-11 09:12:30',
-      details: 'Record ID: 12345'
-    },
-    {
-      id: 4,
-      user: 'george',
-      action: 'Logged in',
-      timestamp: '2024-06-11 10:05:00',
-      details: 'IP: 192.168.1.10'
-    },
-    {
-      id: 5,
-      user: 'israel',
-      action: 'Changed password',
-      timestamp: '2024-06-12 08:30:00',
-      details: 'Password updated successfully'
-    },
-    {
-      id: 6,
-      user: 'kc',
-      action: 'Logged out',
-      timestamp: '2024-06-12 09:00:00',
-      details: 'Session ended'
-    },
-    {
-      id: 7,
-      user: 'kurt',
-      action: 'Viewed report',
-      timestamp: '2024-06-12 09:15:00',
-      details: 'Report: Sales Q2'
-    },
-    {
-      id: 8,
-      user: 'admin',
-      action: 'Updated settings',
-      timestamp: '2024-06-12 10:00:00',
-      details: 'Enabled 2FA'
-    },
-    {
-      id: 9,
-      user: 'kristoffer',
-      action: 'Created new post',
-      timestamp: '2024-06-12 11:00:00',
-      details: 'Post ID: 67890'
-    },
-    {
-      id: 10,
-      user: 'rhenzy',
-      action: 'Deleted comment',
-      timestamp: '2024-06-12 12:00:00',
-      details: 'Comment ID: 54321'
+    // Filter and pagination states
+    const [page, setPage] = useState(1);
+    const [search, setSearch] = useState('');
+    const [sortBy, setSortBy] = useState('createdAt');
+    const [sortOrder, setSortOrder] = useState('desc');
+    
+    // Advanced filter states
+    const [adminId, setAdminId] = useState('');
+    const [action, setAction] = useState('');
+    const [targetType, setTargetType] = useState('');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
+    const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+
+    // Prepare filters object
+    const filters = {
+        page,
+        limit: 25,
+        search,
+        adminId,
+        action,
+        targetType,
+        dateFrom,
+        dateTo,
+        sortBy,
+        sortOrder
+    };
+
+    // Hooks
+    const { 
+        data: auditData, 
+        isLoading, 
+        error, 
+        isFetching 
+    } = useAuditLogs(filters);
+
+    const { 
+        data: filterData, 
+        isLoading: isLoadingFilters 
+    } = useAuditLogFilters();
+
+    const { refreshLogs } = useRefreshAuditLogs();
+
+    // Handle sort change
+    const handleSort = (column) => {
+        if (sortBy === column) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortBy(column);
+            setSortOrder('asc');
+        }
+        setPage(1); // Reset to first page when sorting changes
+    };
+
+    // Handle search change
+    const handleSearchChange = (value) => {
+        setSearch(value);
+        setPage(1); // Reset to first page when search changes
+    };
+
+    // Handle filter changes
+    const handleFilterChange = (filterType, value) => {
+        switch (filterType) {
+            case 'adminId':
+                setAdminId(value);
+                break;
+            case 'action':
+                setAction(value);
+                break;
+            case 'targetType':
+                setTargetType(value);
+                break;
+            case 'dateFrom':
+                setDateFrom(value);
+                break;
+            case 'dateTo':
+                setDateTo(value);
+                break;
+        }
+        setPage(1); // Reset to first page when filters change
+    };
+
+    // Clear all filters
+    const clearFilters = () => {
+        setSearch('');
+        setAdminId('');
+        setAction('');
+        setTargetType('');
+        setDateFrom('');
+        setDateTo('');
+        setPage(1);
+    };
+
+    // Get action display name
+    const getActionDisplayName = (actionCode) => {
+        return actionCode
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+    };
+
+    // Get action badge color
+    const getActionBadgeColor = (actionCode) => {
+        if (actionCode.includes('CREATE')) return 'bg-green-100 text-green-800 border-green-200';
+        if (actionCode.includes('UPDATE')) return 'bg-blue-100 text-blue-800 border-blue-200';
+        if (actionCode.includes('DELETE')) return 'bg-red-100 text-red-800 border-red-200';
+        if (actionCode.includes('LOGIN') || actionCode.includes('LOGOUT')) return 'bg-purple-100 text-purple-800 border-purple-200';
+        if (actionCode.includes('APPROVE')) return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+        if (actionCode.includes('REJECT')) return 'bg-orange-100 text-orange-800 border-orange-200';
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+    };
+
+    // Format timestamp
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+        if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        
+        return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined,
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center min-h-96">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <div className="text-lg text-gray-600">Loading audit logs...</div>
+                </div>
+            </div>
+        );
     }
-  ]);
 
-  const [search, setSearch] = useState('');
-  const [sortBy, setSortBy] = useState('timestamp');
-  const [sortOrder, setSortOrder] = useState('desc');
-  const [filterUser, setFilterUser] = useState('');
-  const [showFilter, setShowFilter] = useState(false);
-
-  // Get unique users for filter dropdown
-  const uniqueUsers = Array.from(new Set(logs.map(log => log.user)));
-
-  // Filter and sort logs
-  // (removed duplicate filteredLogs declaration)
-
-  const handleSort = col => {
-    if (sortBy === col) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(col);
-      setSortOrder('asc');
+    // Error state
+    if (error) {
+        return (
+            <div className="flex justify-center items-center min-h-96">
+                <div className="text-center">
+                    <div className="text-lg text-red-600 mb-4">Error loading audit logs</div>
+                    <div className="text-gray-600 mb-4">{error.message}</div>
+                    <button
+                        onClick={refreshLogs}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
     }
-  };
 
-  // Add filterColumn state to select which column to filter
-  const [filterColumn, setFilterColumn] = useState('user');
+    const { logs = [], pagination = {} } = auditData || {};
 
-  // Get unique values for the selected filter column
-  const uniqueFilterValues = Array.from(
-    new Set(logs.map(log => String(log[filterColumn])))
-  );
+    return (
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            {/* Filters Section */}
+            <div className="p-6 border-b border-gray-200 bg-gray-50">
+                {/* Search and Basic Controls */}
+                <div className="flex flex-col lg:flex-row gap-4 mb-4">
+                    {/* Search Input */}
+                    <div className="relative flex-1 max-w-md">
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg
+                                className="w-5 h-5 text-gray-500"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                        </div>
+                        <input
+                            type="search"
+                            placeholder="Search admins, actions, targets, or details..."
+                            className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"
+                            value={search}
+                            onChange={(e) => handleSearchChange(e.target.value)}
+                        />
+                    </div>
 
-  // Add more log items to exceed 30
-  const extendedLogs = [
-    ...logs,
-    ...Array.from({ length: 25 }, (_, i) => ({
-      id: 11 + i,
-      user: `user${i + 1}`,
-      action: ['Created', 'Updated', 'Deleted', 'Viewed', 'Logged in', 'Logged out'][i % 6] + ' item',
-      timestamp: `2024-06-${13 + Math.floor(i / 10)} ${String(8 + (i % 12)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}:00`,
-      details: `Details for log ${i + 11}`
-    }))
-  ];
+                    {/* Control Buttons */}
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                            className={`flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                                showAdvancedFilters || adminId || action || targetType || dateFrom || dateTo
+                                    ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                            }`}
+                        >
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a2 2 0 0 1-.553 1.382l-5.894 6.183A2 2 0 0 0 14 15.118V19a1 1 0 0 1-1.447.894l-2-1A1 1 0 0 1 10 18v-2.882a2 2 0 0 0-.553-1.382L3.553 7.382A2 2 0 0 1 3 6V4Z" />
+                            </svg>
+                            Advanced Filters
+                        </button>
 
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 30;
+                        <button
+                            onClick={clearFilters}
+                            className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all"
+                        >
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Clear
+                        </button>
 
-  // Filter and sort logs (use extendedLogs)
-  const filteredLogs = extendedLogs
-    .filter(
-      log =>
-        (filterUser === '' || String(log[filterColumn]) === filterUser) &&
-        (
-          log.user.toLowerCase().includes(search.toLowerCase()) ||
-          log.action.toLowerCase().includes(search.toLowerCase()) ||
-          log.details.toLowerCase().includes(search.toLowerCase()) ||
-          log.timestamp.toLowerCase().includes(search.toLowerCase())
-        )
-    )
-    .sort((a, b) => {
-      if (sortBy === 'timestamp') {
-        return sortOrder === 'asc'
-          ? new Date(a.timestamp) - new Date(b.timestamp)
-          : new Date(b.timestamp) - new Date(a.timestamp);
-      } else if (sortBy === 'id') {
-        return sortOrder === 'asc'
-          ? a.id - b.id
-          : b.id - a.id;
-      } else {
-        return sortOrder === 'asc'
-          ? String(a[sortBy]).localeCompare(String(b[sortBy]))
-          : String(b[sortBy]).localeCompare(String(a[sortBy]));
-      }
-    });
+                        <button
+                            onClick={refreshLogs}
+                            disabled={isFetching}
+                            className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-all"
+                        >
+                            <svg className={`w-4 h-4 mr-2 ${isFetching ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
 
-  const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
-  const paginatedLogs = filteredLogs.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+                {/* Advanced Filters */}
+                {showAdvancedFilters && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 p-4 bg-white rounded-lg border border-gray-200">
+                        {/* Admin Filter */}
+                        <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Admin</label>
+                            <select
+                                value={adminId}
+                                onChange={(e) => handleFilterChange('adminId', e.target.value)}
+                                className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                disabled={isLoadingFilters}
+                            >
+                                <option value="">All Admins</option>
+                                {filterData?.admins?.map(admin => (
+                                    <option key={admin.id} value={admin.id}>
+                                        {admin.fullName} (@{admin.username})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-  return (
-    <>
-      <div
-        className="mt-10 p-2 sm:p-6 md:p-10 bg-gradient-to-br from-blue-50 to-white rounded-2xl shadow-xl"
-      >
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-          <div className="text-2xl sm:text-3xl font-extrabold text-blue-900 tracking-tight flex items-center gap-2">
-            <svg className="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="7" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            Recent Activities
-          </div>
-          <div className="relative w-full md:w-1/3 flex items-center gap-2">
-            <input
-              type="text"
-              placeholder="Search logs..."
-              className="w-full pl-10 pr-3 py-2 border border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm bg-white shadow-sm transition"
-              value={search}
-              onChange={e => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-            />
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 pointer-events-none">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="7" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </span>
-            <button
-              type="button"
-              className="ml-2 px-3 py-2 rounded-xl border border-blue-200 bg-white text-blue-700 hover:bg-blue-100 transition-colors flex items-center gap-1 shadow-sm"
-              title="Filter options"
-              onClick={() => setShowFilter((prev) => !prev)}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a2 2 0 0 1-.553 1.382l-5.894 6.183A2 2 0 0 0 14 15.118V19a1 1 0 0 1-1.447.894l-2-1A1 1 0 0 1 10 18v-2.882a2 2 0 0 0-.553-1.382L3.553 7.382A2 2 0 0 1 3 6V4Z" />
-              </svg>
-              <span className="hidden sm:inline text-xs font-semibold">Filter</span>
-            </button>
-            {showFilter && (
-              <div className="absolute right-0 top-12 z-20 bg-white border border-blue-200 rounded-2xl shadow-2xl p-4 w-64 animate-fade-in">
-                <div className="mb-2 font-semibold text-blue-800 text-xs">Filter by Column</div>
-                <select
-                  className="w-full border border-gray-200 rounded-lg px-2 py-1 text-xs mb-2 focus:ring-2 focus:ring-blue-200"
-                  value={filterColumn}
-                  onChange={e => {
-                    setFilterColumn(e.target.value);
-                    setFilterUser('');
-                    setPage(1);
-                  }}
-                >
-                  <option value="user">User</option>
-                  <option value="id">User ID</option>
-                  <option value="action">Action</option>
-                  <option value="timestamp">Timestamp</option>
-                </select>
-                <div className="mb-2 font-semibold text-blue-800 text-xs">Filter Value</div>
-                <select
-                  className="w-full border border-gray-200 rounded-lg px-2 py-1 text-xs focus:ring-2 focus:ring-blue-200"
-                  value={filterUser}
-                  onChange={e => {
-                    setFilterUser(e.target.value);
-                    setPage(1);
-                  }}
-                >
-                  <option value="">All</option>
-                  {Array.from(new Set(extendedLogs.map(log => String(log[filterColumn])))).map(val => (
-                    <option key={val} value={val}>{val}</option>
-                  ))}
-                </select>
-                <button
-                  className="mt-3 w-full bg-blue-100 text-blue-700 rounded-lg px-2 py-1 text-xs hover:bg-blue-200 font-semibold"
-                  onClick={() => setShowFilter(false)}
-                >
-                  Close
-                </button>
-              </div>
+                        {/* Action Filter */}
+                        <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Action</label>
+                            <select
+                                value={action}
+                                onChange={(e) => handleFilterChange('action', e.target.value)}
+                                className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                disabled={isLoadingFilters}
+                            >
+                                <option value="">All Actions</option>
+                                {filterData?.actions?.map(actionOption => (
+                                    <option key={actionOption} value={actionOption}>
+                                        {getActionDisplayName(actionOption)}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Target Type Filter */}
+                        <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">Target Type</label>
+                            <select
+                                value={targetType}
+                                onChange={(e) => handleFilterChange('targetType', e.target.value)}
+                                className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                disabled={isLoadingFilters}
+                            >
+                                <option value="">All Types</option>
+                                {filterData?.targetTypes?.map(type => (
+                                    <option key={type} value={type}>
+                                        {type}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Date From */}
+                        <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">From Date</label>
+                            <input
+                                type="date"
+                                value={dateFrom}
+                                onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
+                                className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+
+                        {/* Date To */}
+                        <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">To Date</label>
+                            <input
+                                type="date"
+                                value={dateTo}
+                                onChange={(e) => handleFilterChange('dateTo', e.target.value)}
+                                className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+                    </div>
+                )}
+
+                {/* Results Summary */}
+                <div className="flex items-center justify-between text-sm text-gray-600 mt-4">
+                    <div>
+                        Showing {logs.length} of {pagination.totalCount || 0} entries
+                        {(search || adminId || action || targetType || dateFrom || dateTo) && (
+                            <span className="ml-2 text-blue-600">(filtered)</span>
+                        )}
+                    </div>
+                    {isFetching && (
+                        <div className="text-blue-600 flex items-center">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                            Updating...
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Table */}
+            <div className="overflow-x-auto">
+                <table className="w-full">
+                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                        <tr>
+                            <th 
+                                className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
+                                onClick={() => handleSort('createdAt')}
+                            >
+                                <div className="flex items-center gap-1">
+                                    Time
+                                    {sortBy === 'createdAt' && (
+                                        <span className="text-blue-500">
+                                            {sortOrder === 'asc' ? '▲' : '▼'}
+                                        </span>
+                                    )}
+                                </div>
+                            </th>
+                            <th 
+                                className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
+                                onClick={() => handleSort('admin')}
+                            >
+                                <div className="flex items-center gap-1">
+                                    Admin
+                                    {sortBy === 'admin' && (
+                                        <span className="text-blue-500">
+                                            {sortOrder === 'asc' ? '▲' : '▼'}
+                                        </span>
+                                    )}
+                                </div>
+                            </th>
+                            <th 
+                                className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
+                                onClick={() => handleSort('action')}
+                            >
+                                <div className="flex items-center gap-1">
+                                    Action
+                                    {sortBy === 'action' && (
+                                        <span className="text-blue-500">
+                                            {sortOrder === 'asc' ? '▲' : '▼'}
+                                        </span>
+                                    )}
+                                </div>
+                            </th>
+                            <th 
+                                className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
+                                onClick={() => handleSort('targetType')}
+                            >
+                                <div className="flex items-center gap-1">
+                                    Target
+                                    {sortBy === 'targetType' && (
+                                        <span className="text-blue-500">
+                                            {sortOrder === 'asc' ? '▲' : '▼'}
+                                        </span>
+                                    )}
+                                </div>
+                            </th>
+                            <th className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Details
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {logs.length === 0 ? (
+                            <tr>
+                                <td colSpan={5} className="text-center py-16 text-gray-400 text-base font-medium">
+                                    {search || adminId || action || targetType || dateFrom || dateTo 
+                                        ? 'No logs found matching your filters.' 
+                                        : 'No audit logs available.'
+                                    }
+                                </td>
+                            </tr>
+                        ) : (
+                            logs.map((log, index) => (
+                                <tr
+                                    key={log.id}
+                                    className={`${
+                                        index % 2 === 0 ? 'bg-white' : 'bg-gray-25'
+                                    } hover:bg-blue-50 transition-colors`}
+                                >
+                                    {/* Timestamp */}
+                                    <td className="py-4 px-4">
+                                        <div className="text-sm text-gray-900 font-medium">
+                                            {formatTimestamp(log.createdAt)}
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                            {new Date(log.createdAt).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })}
+                                        </div>
+                                    </td>
+
+                                    {/* Admin */}
+                                    <td className="py-4 px-4">
+                                        <div className="flex items-center">
+                                            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">
+                                                {log.admin.fullName.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div>
+                                                <div className="text-sm font-medium text-gray-900">
+                                                    {log.admin.fullName}
+                                                </div>
+                                                <div className="text-xs text-gray-500">
+                                                    @{log.admin.username}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    {/* Action */}
+                                    <td className="py-4 px-4">
+                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getActionBadgeColor(log.action)}`}>
+                                            {getActionDisplayName(log.action)}
+                                        </span>
+                                    </td>
+
+                                    {/* Target */}
+                                    <td className="py-4 px-4">
+                                        <div className="text-sm text-gray-900">
+                                            {log.targetName || 'N/A'}
+                                        </div>
+                                        {log.targetType && (
+                                            <div className="text-xs text-gray-500">
+                                                {log.targetType}
+                                            </div>
+                                        )}
+                                    </td>
+
+                                    {/* Details */}
+                                    <td className="py-4 px-4">
+                                        <div className="text-sm text-gray-700 max-w-xs truncate">
+                                            {log.details || 'No additional details'}
+                                        </div>
+                                        {log.ipAddress && (
+                                            <div className="text-xs text-gray-500">
+                                                IP: {log.ipAddress}
+                                            </div>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Pagination */}
+            {pagination.totalPages > 1 && (
+                <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                    <div className="flex items-center justify-between">
+                        <div className="text-sm text-gray-700">
+                            Page {pagination.currentPage} of {pagination.totalPages}
+                            <span className="text-gray-500 ml-2">
+                                ({pagination.totalCount} total entries)
+                            </span>
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setPage(Math.max(1, page - 1))}
+                                disabled={!pagination.hasPrevPage || isFetching}
+                                className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Previous
+                            </button>
+                            
+                            {/* Page Numbers */}
+                            {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                                const pageNum = Math.max(1, pagination.currentPage - 2) + i;
+                                if (pageNum > pagination.totalPages) return null;
+                                
+                                return (
+                                    <button
+                                        key={pageNum}
+                                        onClick={() => setPage(pageNum)}
+                                        disabled={isFetching}
+                                        className={`px-3 py-1 text-sm font-medium rounded-md disabled:cursor-not-allowed ${
+                                            pageNum === pagination.currentPage
+                                                ? 'bg-blue-600 text-white'
+                                                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                        }`}
+                                    >
+                                        {pageNum}
+                                    </button>
+                                );
+                            })}
+                            
+                            <button
+                                onClick={() => setPage(Math.min(pagination.totalPages, page + 1))}
+                                disabled={!pagination.hasNextPage || isFetching}
+                                className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
-          </div>
         </div>
-        {/* Only the table is horizontally scrollable on small screens */}
-        <div className="rounded-2xl shadow-lg border border-blue-100 bg-white p-0 overflow-x-auto">
-          <table className="min-w-[700px] w-full text-sm table-fixed">
-            <thead className="bg-gradient-to-r from-blue-100 to-blue-50">
-              <tr>
-                <th
-                  className="px-4 py-4 text-left font-bold text-blue-900 cursor-pointer select-none whitespace-nowrap transition hover:bg-blue-100"
-                  onClick={() => { handleSort('timestamp'); setPage(1); }}
-                  style={{ minWidth: 140 }}
+    );
+}
+
+/* ================================================================================== */
+/* AUDIT ANALYTICS COMPONENT */
+/* ================================================================================== */
+
+function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
+    const { 
+        data: statsData, 
+        isLoading, 
+        error 
+    } = useAuditLogStats(timeRange);
+
+    const { refreshStats } = useRefreshAuditLogs();
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center min-h-96">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <div className="text-lg text-gray-600">Loading analytics...</div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex justify-center items-center min-h-96">
+                <div className="text-center">
+                    <div className="text-lg text-red-600 mb-4">Error loading analytics</div>
+                    <div className="text-gray-600 mb-4">{error.message}</div>
+                    <button
+                        onClick={refreshStats}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    const {
+        totalLogs = 0,
+        actionDistribution = [],
+        adminActivity = [],
+        targetTypeDistribution = [],
+        dailyActivity = []
+    } = statsData || {};
+
+    return (
+        <div className="space-y-6">
+            {/* Time Range Selector */}
+            <div className="flex items-center justify-between bg-white rounded-lg p-4 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900">Audit Analytics</h3>
+                <select
+                    value={timeRange}
+                    onChange={(e) => setTimeRange(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 >
-                  Timestamp
-                  {sortBy === 'timestamp' && (
-                    <span className="ml-1 text-blue-500">{sortOrder === 'asc' ? '▲' : '▼'}</span>
-                  )}
-                </th>
-                <th
-                  className="px-4 py-4 text-center font-bold text-blue-900 cursor-pointer select-none whitespace-nowrap transition hover:bg-blue-100"
-                  onClick={() => { handleSort('id'); setPage(1); }}
-                  style={{ minWidth: 70 }}
-                >
-                  User ID
-                  {sortBy === 'id' && (
-                    <span className="ml-1 text-blue-500">{sortOrder === 'asc' ? '▲' : '▼'}</span>
-                  )}
-                </th>
-                <th
-                  className="px-4 py-4 text-left font-bold text-blue-900 cursor-pointer select-none whitespace-nowrap transition hover:bg-blue-100"
-                  onClick={() => { handleSort('user'); setPage(1); }}
-                  style={{ minWidth: 110 }}
-                >
-                  User
-                  {sortBy === 'user' && (
-                    <span className="ml-1 text-blue-500">{sortOrder === 'asc' ? '▲' : '▼'}</span>
-                  )}
-                </th>
-                <th
-                  className="px-4 py-4 text-left font-bold text-blue-900 cursor-pointer select-none whitespace-nowrap transition hover:bg-blue-100"
-                  onClick={() => { handleSort('action'); setPage(1); }}
-                  style={{ minWidth: 130 }}
-                >
-                  Action
-                  {sortBy === 'action' && (
-                    <span className="ml-1 text-blue-500">{sortOrder === 'asc' ? '▲' : '▼'}</span>
-                  )}
-                </th>
-                <th
-                  className="px-4 py-4 text-left font-bold text-blue-900 whitespace-nowrap"
-                  style={{ minWidth: 140 }}
-                >
-                  Details
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedLogs.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="text-center py-16 text-gray-400 text-base font-medium">
-                    No logs found.
-                  </td>
-                </tr>
-              ) : (
-                paginatedLogs.map(log => (
-                  <tr
-                    key={log.id}
-                    className="hover:bg-blue-50 transition group"
-                    style={{ height: '3.2rem' }}
-                  >
-                    <td className="px-4 py-4 border-b border-blue-50 text-blue-900 whitespace-nowrap align-middle">{log.timestamp}</td>
-                    <td className="px-4 py-4 border-b border-blue-50 text-blue-900 whitespace-nowrap align-middle text-center">{log.id}</td>
-                    <td className="px-4 py-4 border-b border-blue-50 text-blue-900 whitespace-nowrap align-middle">
-                      <span className="inline-flex items-center gap-2">
-                        <span className="bg-blue-100 text-blue-700 rounded-full px-2 py-1 text-xs font-semibold">{log.user}</span>
-                      </span>
-                    </td>
-                    <td className="px-4 py-4 border-b border-blue-50 text-blue-900 whitespace-nowrap align-middle">{log.action}</td>
-                    <td className="px-4 py-4 border-b border-blue-50 text-blue-700 align-middle">
-                      <span className="block max-w-[120px] truncate group-hover:whitespace-normal group-hover:truncate-none">
-                        {log.details}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                    <option value="7d">Last 7 days</option>
+                    <option value="30d">Last 30 days</option>
+                    <option value="90d">Last 90 days</option>
+                    <option value="1y">Last year</option>
+                </select>
+            </div>
+
+            {/* Summary Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <div className="flex items-center">
+                        <div className="p-3 rounded-lg bg-blue-100 mr-4">
+                            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div className="text-2xl font-bold text-gray-900">{totalLogs.toLocaleString()}</div>
+                            <div className="text-sm text-gray-600">Total Activities</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <div className="flex items-center">
+                        <div className="p-3 rounded-lg bg-green-100 mr-4">
+                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div className="text-2xl font-bold text-gray-900">{adminActivity.length}</div>
+                            <div className="text-sm text-gray-600">Active Admins</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <div className="flex items-center">
+                        <div className="p-3 rounded-lg bg-purple-100 mr-4">
+                            <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div className="text-2xl font-bold text-gray-900">{actionDistribution.length}</div>
+                            <div className="text-sm text-gray-600">Action Types</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <div className="flex items-center">
+                        <div className="p-3 rounded-lg bg-orange-100 mr-4">
+                            <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div className="text-2xl font-bold text-gray-900">{targetTypeDistribution.length}</div>
+                            <div className="text-sm text-gray-600">Target Types</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Charts Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Top Actions */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Top Actions</h4>
+                    <div className="space-y-3">
+                        {actionDistribution.slice(0, 8).map((item, index) => (
+                            <div key={item.action} className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                                        <span className="text-xs font-semibold text-blue-600">{index + 1}</span>
+                                    </div>
+                                    <span className="text-sm font-medium text-gray-900">
+                                        {item.action.split('_').map(word => 
+                                            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                                        ).join(' ')}
+                                    </span>
+                                </div>
+                                <span className="text-sm text-gray-600">{item.count}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Most Active Admins */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Most Active Admins</h4>
+                    <div className="space-y-3">
+                        {adminActivity.slice(0, 8).map((item, index) => (
+                            <div key={item.admin.id} className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center mr-3">
+                                        <span className="text-xs font-semibold text-white">
+                                            {item.admin.fullName.charAt(0).toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-medium text-gray-900">
+                                            {item.admin.fullName}
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                            @{item.admin.username}
+                                        </div>
+                                    </div>
+                                </div>
+                                <span className="text-sm text-gray-600">{item.count}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Daily Activity Chart */}
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h4 className="text-lg font-semibold text-gray-900 mb-4">Daily Activity (Last 30 Days)</h4>
+                <div className="h-64 flex items-end space-x-1">
+                    {dailyActivity.map((day, index) => {
+                        const maxCount = Math.max(...dailyActivity.map(d => d.count));
+                        const height = maxCount > 0 ? (day.count / maxCount) * 100 : 0;
+                        
+                        return (
+                            <div key={day.date} className="flex-1 flex flex-col items-center">
+                                <div 
+                                    className="w-full bg-blue-500 rounded-t min-h-[4px] transition-all hover:bg-blue-600"
+                                    style={{ height: `${Math.max(4, height)}%` }}
+                                    title={`${day.date}: ${day.count} activities`}
+                                ></div>
+                                {index % 5 === 0 && (
+                                    <div className="text-xs text-gray-500 mt-1 transform -rotate-45 origin-top-left">
+                                        {new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
         </div>
-      </div>
-      {/* Pagination controls OUTSIDE the table container and not scrollable */}
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-6">
-          <button
-            className="px-3 py-2 rounded-xl border bg-white text-blue-700 hover:bg-blue-100 text-xs font-semibold shadow-sm disabled:opacity-50"
-            disabled={page === 1}
-            onClick={() => setPage(page - 1)}
-          >
-            Prev
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              className={`px-3 py-2 rounded-xl border text-xs font-semibold shadow-sm ${
-                page === i + 1
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white text-blue-700 hover:bg-blue-100 border-blue-200'
-              }`}
-              onClick={() => setPage(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="px-3 py-2 rounded-xl border bg-white text-blue-700 hover:bg-blue-100 text-xs font-semibold shadow-sm disabled:opacity-50"
-            disabled={page === totalPages}
-            onClick={() => setPage(page + 1)}
-          >
-            Next
-          </button>
-        </div>
-      )}
-    </>
-  );
+    );
 }

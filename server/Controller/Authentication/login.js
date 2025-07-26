@@ -2,6 +2,7 @@ import { PrismaClient } from '../../prisma/generated/client.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import auditLogger from '../../Services/auditLogger.js';
 
 dotenv.config();
 const prisma = new PrismaClient();
@@ -59,6 +60,26 @@ async function login(req, res) {
         user.password = undefined;
         user.picture = undefined;
         user.mimeType = undefined;
+
+        // Log the login action only for admin/super admin users
+        if (user.access === 'Admin' || user.access === 'Super_Admin') {
+            await auditLogger.log(
+                user.id,
+                'LOGIN',
+                null,
+                null,
+                null,
+                `Admin ${user.username} logged in successfully`,
+                {
+                    loginMethod: 'password',
+                    rememberMe: rememberMe,
+                    tokenExpiration: tokenExpiration,
+                    userRole: user.access
+                },
+                req.ip,
+                req.get('User-Agent')
+            );
+        }
 
         // Send response
         return res.status(200).json({
