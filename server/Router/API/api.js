@@ -18,4 +18,7 @@ router.use('/eic', eic);
 import distribution from './Distribution/index.js';
 router.use('/dist', distribution);
 
+import analytics from './Analytics/index.js';
+router.use('/analytics', analytics);
+
 export default router;
