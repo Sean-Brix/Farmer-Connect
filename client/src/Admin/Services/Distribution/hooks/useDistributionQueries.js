@@ -183,28 +183,33 @@ export const useUpdateRequestStatus = () => {
             requestQuantity,
             currentStock,
         }) => {
-            const response = await fetch(`/api/dist/request/${requestId}`, {
-                method: 'PUT',
+            const response = await fetch(`/api/dist/request/respond`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    transactionId: requestId,
                     status,
-                    itemName,
-                    requestorName,
-                    requestQuantity,
-                    currentStock,
                 }),
             });
 
-            const responseData = await response.json();
-
+            // Check if response is ok first
             if (!response.ok) {
-                throw new Error(
-                    responseData.error ||
-                        `HTTP error! status: ${response.status}`
-                );
+                // Try to parse error response, but handle cases where it's not JSON
+                let errorMessage = `HTTP error! status: ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    errorMessage =
+                        errorData.error || errorData.message || errorMessage;
+                } catch (e) {
+                    // If response is not JSON (like HTML error page), use status text
+                    errorMessage = `${response.status} ${response.statusText}`;
+                }
+                throw new Error(errorMessage);
             }
+
+            const responseData = await response.json();
 
             if (!responseData.success) {
                 throw new Error(

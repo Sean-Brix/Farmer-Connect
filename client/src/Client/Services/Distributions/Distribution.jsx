@@ -62,7 +62,9 @@ export default function Distribution() {
                         description: stack.item.description,
                         quantity: stack.quantity,
                         status: stack.status,
-                        img: stack.item.picture || default_image,
+                        img: stack.item.picture
+                            ? `/api/dist/photo/${stack.itemId}`
+                            : default_image,
                         // Include all original item properties
                         ...stack.item,
                         // Override with stack-specific data
@@ -1220,6 +1222,10 @@ export default function Distribution() {
                                                     className="w-full h-48 object-cover"
                                                     src={item.img}
                                                     alt={item.Name}
+                                                    onError={(e) => {
+                                                        e.target.src =
+                                                            default_image;
+                                                    }}
                                                     style={{
                                                         background: '#eff6ff',
                                                     }}
@@ -1473,6 +1479,9 @@ export default function Distribution() {
                                 <img
                                     src={selectedItem?.img}
                                     alt={selectedItem?.Name}
+                                    onError={(e) => {
+                                        e.target.src = default_image;
+                                    }}
                                     className="w-16 h-16 rounded-xl object-cover border-2 border-blue-700 shadow"
                                 />
                                 <div className="flex-1">
