@@ -13,6 +13,8 @@ import {
     BarElement,
     ArcElement,
     DoughnutController,
+    PieController,
+    RadialLinearScale,
     Filler,
 } from 'chart.js';
 
@@ -29,502 +31,772 @@ Chart.register(
     BarElement,
     ArcElement,
     DoughnutController,
+    PieController,
+    RadialLinearScale,
     Filler
 );
 
+// Analytics Components
+const OverviewCard = ({
+    title,
+    value,
+    change,
+    icon,
+    color,
+    onClick,
+    isActive,
+}) => (
+    <div
+        className={`bg-white rounded-xl shadow-md p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
+            isActive ? 'ring-2 ring-blue-500 bg-blue-50' : ''
+        }`}
+        onClick={onClick}
+    >
+        <div className="flex items-center justify-between mb-4">
+            <div className={`p-3 rounded-lg bg-gradient-to-r ${color}`}>
+                <div className="w-6 h-6 text-white">{icon}</div>
+            </div>
+            <div
+                className={`text-sm font-medium px-2 py-1 rounded-full ${
+                    change >= 0
+                        ? 'text-green-700 bg-green-100'
+                        : 'text-red-700 bg-red-100'
+                }`}
+            >
+                {change >= 0 ? '+' : ''}
+                {change}%
+            </div>
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 mb-1">
+            {value.toLocaleString()}
+        </h3>
+        <p className="text-gray-600 text-sm">{title}</p>
+    </div>
+);
+
+const FeatureCard = ({
+    title,
+    description,
+    icon,
+    color,
+    onClick,
+    isActive,
+    stats,
+}) => (
+    <div
+        className={`bg-white rounded-xl shadow-md p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
+            isActive ? 'ring-2 ring-blue-500 bg-blue-50' : ''
+        }`}
+        onClick={onClick}
+    >
+        <div className="flex items-center mb-4">
+            <div className={`p-3 rounded-lg bg-gradient-to-r ${color} mr-4`}>
+                <div className="w-6 h-6 text-white">{icon}</div>
+            </div>
+            <div>
+                <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+                <p className="text-gray-600 text-sm">{description}</p>
+            </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+            {stats.map((stat, idx) => (
+                <div key={idx} className="text-center">
+                    <div className="text-xl font-bold text-gray-900">
+                        {stat.value}
+                    </div>
+                    <div className="text-xs text-gray-600">{stat.label}</div>
+                </div>
+            ))}
+        </div>
+    </div>
+);
+
+const ChartContainer = ({ title, children, className = '' }) => (
+    <div className={`bg-white rounded-xl shadow-md p-6 ${className}`}>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
+        {children}
+    </div>
+);
+
 function Analytics() {
-    const [userStats, setUserStats] = useState([]);
-    const [seminarStats, setSeminarStats] = useState([]);
-    const [eicStats, setEicStats] = useState([]);
-    const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
+    const [activeView, setActiveView] = useState('overview');
+    const [timeRange, setTimeRange] = useState('7d');
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Data states
+    const [overviewData, setOverviewData] = useState({});
+    const [usersData, setUsersData] = useState({});
+    const [seminarsData, setSeminarsData] = useState({});
+    const [eicData, setEicData] = useState({});
+    const [distributionData, setDistributionData] = useState({});
+    const [inventoryData, setInventoryData] = useState({});
+
+    // Chart refs
+    const overviewChartRef = useRef(null);
+    const featureChartRef = useRef(null);
+
+    // Feature definitions
+    const features = [
+        {
+            id: 'users',
+            title: 'User Management',
+            description: 'Track user registrations, activity, and demographics',
+            icon: (
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                </svg>
+            ),
+            color: 'from-blue-500 to-blue-600',
+            stats: [
+                { value: '1,234', label: 'Total Users' },
+                { value: '89', label: 'Active Today' },
+                { value: '15%', label: 'Growth Rate' },
+                { value: '456', label: 'New This Month' },
+            ],
+        },
+        {
+            id: 'seminars',
+            title: 'Seminar Analytics',
+            description:
+                'Monitor seminar performance, attendance, and feedback',
+            icon: (
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        fillRule="evenodd"
+                        d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                        clipRule="evenodd"
+                    />
+                </svg>
+            ),
+            color: 'from-green-500 to-green-600',
+            stats: [
+                { value: '45', label: 'Total Seminars' },
+                { value: '12', label: 'This Month' },
+                { value: '87%', label: 'Completion Rate' },
+                { value: '4.8', label: 'Avg Rating' },
+            ],
+        },
+        {
+            id: 'eic',
+            title: 'EIC Management',
+            description: 'Track EIC distribution, categories, and utilization',
+            icon: (
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" />
+                </svg>
+            ),
+            color: 'from-yellow-500 to-orange-500',
+            stats: [
+                { value: '2,456', label: 'Available EIC' },
+                { value: '789', label: 'Distributed' },
+                { value: '67%', label: 'Utilization' },
+                { value: '8', label: 'Categories' },
+            ],
+        },
+        {
+            id: 'distribution',
+            title: 'Distribution Analytics',
+            description: 'Monitor distribution requests and fulfillment rates',
+            icon: (
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                    <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1V8a1 1 0 00-1-1h-3z" />
+                </svg>
+            ),
+            color: 'from-purple-500 to-purple-600',
+            stats: [
+                { value: '156', label: 'Pending Requests' },
+                { value: '543', label: 'Completed' },
+                { value: '92%', label: 'Success Rate' },
+                { value: '2.3d', label: 'Avg Time' },
+            ],
+        },
+        {
+            id: 'inventory',
+            title: 'Inventory Tracking',
+            description: 'Monitor stock levels, movements, and optimization',
+            icon: (
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        fillRule="evenodd"
+                        d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5zM6 9a1 1 0 112 0v6a1 1 0 11-2 0V9zm6 0a1 1 0 112 0v6a1 1 0 11-2 0V9z"
+                        clipRule="evenodd"
+                    />
+                </svg>
+            ),
+            color: 'from-indigo-500 to-indigo-600',
+            stats: [
+                { value: '1,892', label: 'Items in Stock' },
+                { value: '234', label: 'Low Stock' },
+                { value: '45', label: 'Out of Stock' },
+                { value: '₱125k', label: 'Total Value' },
+            ],
+        },
     ];
-    const [totalUsers, setTotalUsers] = useState(0);
-    const [totalSeminars, setTotalSeminars] = useState(0);
-    const [availableEIC, setAvailableEIC] = useState(0);
-    const [waitingDistributionRequests, setWaitingDistributionRequests] =
-        useState(0);
-    const [topClientProfile, setTopClientProfile] = useState('');
-    const [clientProfileCounts, setClientProfileCounts] = useState({});
-    const [topEICCategory, setTopEICCategory] = useState('');
-    const [eicCategoryCounts, setEICCategoryCounts] = useState({});
-    const [analyticsData, setAnalyticsData] = useState({});
 
-    const userChartRef = useRef(null);
-    const seminarChartRef = useRef(null);
-    const eicChartRef = useRef(null);
-    const monthlyUserGrowthChartRef = useRef(null);
-
+    // Mock data for development
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchAnalyticsData = async () => {
+            setIsLoading(true);
             try {
-                const userRes = await fetch('/api/accounts/getCount');
-                let usercount = await userRes.json();
-                const semRes = await fetch('/api/seminars/getCount');
-                let semcount = await semRes.json();
-                const eicRes = await fetch('/api/eic/getCount');
-                let eiccount = await eicRes.json();
-                const waitRes = await fetch(
-                    '/api/distribution/getWaitingCount'
-                );
-                let waitcount = await waitRes.json();
-                const data = {
-                    payload: {
-                        total_users: usercount.payload,
-                        total_seminars: semcount.payload,
-                        available_eic: eiccount.payload,
-                        waiting_distributions: waitcount.payload,
-                        top_client_profile: 'Pechay Seeds',
-                        client_profile_counts: {
-                            'Pechay Seeds': 450,
-                            'Mangroove Seeds': 300,
-                            Shovel: 250,
-                            'Fertilizer ': 250,
+                // Simulate API calls - replace with actual endpoints later
+                const endpoints = [
+                    '/api/analytics/overview',
+                    '/api/analytics/users',
+                    '/api/analytics/seminars',
+                    '/api/analytics/eic',
+                    '/api/analytics/distribution',
+                    '/api/analytics/inventory',
+                ];
+
+                // Mock data for now
+                setTimeout(() => {
+                    setOverviewData({
+                        totalUsers: 1234,
+                        totalSeminars: 45,
+                        totalEIC: 2456,
+                        totalDistributions: 699,
+                        totalInventoryItems: 1892,
+                        userGrowth: 15.5,
+                        seminarGrowth: 8.2,
+                        eicGrowth: -2.3,
+                        distributionGrowth: 12.8,
+                        inventoryGrowth: 5.1,
+                    });
+
+                    setUsersData({
+                        monthlyRegistrations: [
+                            120, 135, 145, 160, 180, 195, 210,
+                        ],
+                        activeUsers: 856,
+                        userTypes: { farmers: 890, admins: 12, staff: 332 },
+                        topRegions: ['Region 1', 'Region 2', 'Region 3'],
+                    });
+
+                    setSeminarsData({
+                        monthlyCompletions: [5, 8, 12, 15, 18, 20, 22],
+                        averageRating: 4.8,
+                        categories: {
+                            farming: 25,
+                            technology: 12,
+                            business: 8,
                         },
-                        top_eic_category: 'Category A',
-                        eic_category_counts: {
-                            'Category A': 6000,
-                            'Category B': 3000,
-                            'Category C': 2200,
-                        },
-                    },
-                };
+                        attendance: 87,
+                    });
 
-                setAnalyticsData(data.payload);
-                setTotalUsers(data.payload.total_users);
-                setTotalSeminars(data.payload.total_seminars);
-                setAvailableEIC(data.payload.available_eic);
-                setWaitingDistributionRequests(
-                    data.payload.waiting_distributions
-                );
-                setTopClientProfile(data.payload.top_client_profile || 'N/A');
-                setClientProfileCounts(data.payload.client_profile_counts);
-                setTopEICCategory(data.payload.top_eic_category || 'N/A');
-                setEICCategoryCounts(data.payload.eic_category_counts);
+                    setEicData({
+                        monthlyDistribution: [
+                            150, 180, 200, 220, 250, 280, 300,
+                        ],
+                        categories: { seeds: 45, tools: 30, fertilizer: 25 },
+                        utilization: 67,
+                        topItems: ['Pechay Seeds', 'Mangrove Seeds', 'Shovel'],
+                    });
 
-                const userStatsData = [
-                    data.payload.total_users - 10,
-                    data.payload.total_users - 12,
-                    data.payload.total_users - 8,
-                    data.payload.total_users - 7,
-                    data.payload.total_users - 3,
-                    data.payload.total_users - 6,
-                    data.payload.total_users - 7,
-                    data.payload.total_users - 5,
-                    data.payload.total_users - 4,
-                    data.payload.total_users - 6,
-                    data.payload.total_users - 5,
-                    data.payload.total_users,
-                ];
-                const seminarStatsData = [
-                    data.payload.total_seminars - 10,
-                    data.payload.total_seminars - 12,
-                    data.payload.total_seminars - 8,
-                    data.payload.total_seminars - 7,
-                    data.payload.total_seminars - 3,
-                    data.payload.total_seminars - 5,
-                    data.payload.total_seminars - 5,
-                    data.payload.total_seminars - 5,
-                    data.payload.total_seminars - 5,
-                    data.payload.total_seminars - 5,
-                    data.payload.total_seminars - 5,
-                    data.payload.total_seminars,
-                ];
-                const eicStatsData = [
-                    data.payload.available_eic - 6,
-                    data.payload.available_eic - 80,
-                    data.payload.available_eic - 60,
-                    data.payload.available_eic - 50,
-                    data.payload.available_eic - 40,
-                    data.payload.available_eic - 30,
-                    data.payload.available_eic - 20,
-                    data.payload.available_eic - 15,
-                    data.payload.available_eic - 10,
-                    data.payload.available_eic - 5,
-                    data.payload.available_eic - 2,
-                    data.payload.available_eic,
-                ];
+                    setDistributionData({
+                        monthlyRequests: [80, 95, 110, 125, 140, 155, 170],
+                        fulfillmentRate: 92,
+                        averageTime: 2.3,
+                        regions: { region1: 45, region2: 35, region3: 20 },
+                    });
 
-                setUserStats(userStatsData);
-                setSeminarStats(seminarStatsData);
-                setEicStats(eicStatsData);
+                    setInventoryData({
+                        stockLevels: [1800, 1850, 1900, 1950, 2000, 1950, 1892],
+                        categories: { seeds: 40, tools: 35, fertilizer: 25 },
+                        turnover: 3.2,
+                        lowStock: 234,
+                    });
+
+                    setIsLoading(false);
+                }, 1000);
             } catch (error) {
                 console.error('Error fetching analytics data:', error);
+                setIsLoading(false);
             }
         };
 
-        fetchData();
-    }, []);
+        fetchAnalyticsData();
+    }, [timeRange]);
 
-    useEffect(() => {
-        if (userChartRef.current) {
-            const ctx = userChartRef.current.getContext('2d');
-            if (window.myLine) {
-                window.myLine.destroy();
-            }
-            window.myLine = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [
-                        {
-                            label: 'Total Users',
-                            data: userStats,
-                            fill: false,
-                            borderColor: '#3b82f6',
-                            tension: 0.1,
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                        },
-                    },
-                    plugins: {
-                        legend: {
-                            display: false,
-                        },
-                    },
-                },
-            });
-        }
-        if (seminarChartRef.current) {
-            const ctx = seminarChartRef.current.getContext('2d');
-            if (window.myArea) {
-                window.myArea.destroy();
-            }
-            const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
-            gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
-
-            window.myArea = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [
-                        {
-                            label: 'Total Seminars',
-                            data: seminarStats,
-                            fill: true,
-                            backgroundColor: gradient,
-                            borderColor: '#3b82f6',
-                            tension: 0.1,
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                        },
-                    },
-                    plugins: {
-                        legend: {
-                            display: false,
-                        },
-                    },
-                },
-            });
-        }
-
-        if (eicChartRef.current) {
-            const ctx = eicChartRef.current.getContext('2d');
-            if (window.myDoughnut) {
-                window.myDoughnut.destroy();
-            }
-            window.myDoughnut = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Available EIC', 'Remaining'],
-                    datasets: [
-                        {
-                            label: 'EIC Distribution',
-                            data: [
-                                availableEIC,
-                                analyticsData.available_eic * 2 - availableEIC,
-                            ],
-                            backgroundColor: ['#3b82f6', '#e5e7eb'],
-                            borderWidth: 0,
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                        legend: {
-                            display: false,
-                            position: 'bottom',
-                        },
-                    },
-                },
-            });
-        }
-
-        if (monthlyUserGrowthChartRef.current) {
-            const ctx = monthlyUserGrowthChartRef.current.getContext('2d');
-            if (window.myBar) {
-                window.myBar.destroy();
-            }
-            window.myBar = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: months,
-                    datasets: [
-                        {
-                            label: 'Monthly User Growth',
-                            data: userStats,
-                            backgroundColor: '#2563eb',
-                            borderWidth: 0,
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                        },
-                    },
-                    plugins: {
-                        legend: {
-                            display: false,
-                        },
-                    },
-                },
-            });
-        }
-    }, [userStats, seminarStats, eicStats, availableEIC, analyticsData]);
-
-    return (
-        <div className="w-full mx-auto px-2 sm:mt-10 sm:px-4 py-8 bg-gradient-to-br from-gray-50 via-white to-gray-100 min-h-screen">
-            <div className="mb-10">
-                <div className="flex items-center w-full">
-                    <hr className="flex-grow border-t border-gray-200" />
-                    <h1 className="mx-3 text-2xl sm:text-3xl font-bold text-gray-800 bg-white/80 px-6 py-1 rounded-full shadow whitespace-nowrap tracking-tight">
-                        Analytics Dashboard
-                    </h1>
-                    <hr className="flex-grow border-t border-gray-200" />
-                </div>
+    const renderOverview = () => (
+        <div className="space-y-6">
+            {/* Overview Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <OverviewCard
+                    title="Total Users"
+                    value={overviewData.totalUsers || 0}
+                    change={overviewData.userGrowth || 0}
+                    icon={
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                        </svg>
+                    }
+                    color="from-blue-500 to-blue-600"
+                />
+                <OverviewCard
+                    title="Total Seminars"
+                    value={overviewData.totalSeminars || 0}
+                    change={overviewData.seminarGrowth || 0}
+                    icon={
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                fillRule="evenodd"
+                                d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                    }
+                    color="from-green-500 to-green-600"
+                />
+                <OverviewCard
+                    title="Available EIC"
+                    value={overviewData.totalEIC || 0}
+                    change={overviewData.eicGrowth || 0}
+                    icon={
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" />
+                        </svg>
+                    }
+                    color="from-yellow-500 to-orange-500"
+                />
+                <OverviewCard
+                    title="Distributions"
+                    value={overviewData.totalDistributions || 0}
+                    change={overviewData.distributionGrowth || 0}
+                    icon={
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                            <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1V8a1 1 0 00-1-1h-3z" />
+                        </svg>
+                    }
+                    color="from-purple-500 to-purple-600"
+                />
+                <OverviewCard
+                    title="Inventory Items"
+                    value={overviewData.totalInventoryItems || 0}
+                    change={overviewData.inventoryGrowth || 0}
+                    icon={
+                        <svg fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                fillRule="evenodd"
+                                d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5zM6 9a1 1 0 112 0v6a1 1 0 11-2 0V9zm6 0a1 1 0 112 0v6a1 1 0 11-2 0V9z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                    }
+                    color="from-indigo-500 to-indigo-600"
+                />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center hover:shadow-lg transition">
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100">
-                            {/* Users icon: User Group */}
-                            <svg
-                                className="w-5 h-5 text-blue-500"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M16 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                        </span>
-                        <span className="text-xs font-medium text-gray-500">
-                            Total Users
-                        </span>
-                    </div>
-                    <span className="text-2xl font-semibold text-gray-800 mb-1">
-                        {totalUsers}
-                    </span>
-                    <span className="text-xs text-gray-400 font-medium mb-2">
-                        +
-                        {userStats.length > 1
-                            ? userStats[userStats.length - 1] -
-                              userStats[userStats.length - 2]
-                            : 0}{' '}
-                        this month
-                    </span>
-                    <div className="w-full h-20">
-                        <canvas ref={userChartRef} />
-                    </div>
+            {/* Overview Chart */}
+            <ChartContainer
+                title="Platform Growth Overview"
+                className="col-span-full"
+            >
+                <div className="h-80">
+                    <canvas ref={overviewChartRef} />
                 </div>
-                <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center hover:shadow-lg transition">
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100">
-                            {/* Seminar icon: Presentation Chart Bar */}
-                            <svg
-                                className="w-5 h-5 text-green-500"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 6h18M9 16v-4m3 4v-2m3 2v-6" />
-                            </svg>
-                        </span>
-                        <span className="text-xs font-medium text-gray-500">
-                            Total Seminars
-                        </span>
-                    </div>
-                    <span className="text-2xl font-semibold text-gray-800 mb-1">
-                        {totalSeminars}
-                    </span>
-                    <span className="text-xs text-gray-400 font-medium mb-2">
-                        +
-                        {seminarStats.length > 1
-                            ? seminarStats[seminarStats.length - 1] -
-                              seminarStats[seminarStats.length - 2]
-                            : 0}{' '}
-                        this month
-                    </span>
-                    <div className="w-full h-20">
-                        <canvas ref={seminarChartRef} />
-                    </div>
-                </div>
-                <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center hover:shadow-lg transition">
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100">
-                            {/* EIC icon: Currency Dollar */}
-                            <svg
-                                className="w-5 h-5 text-yellow-500"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
-                            </svg>
-                        </span>
-                        <span className="text-xs font-medium text-gray-500">
-                            Available EIC
-                        </span>
-                    </div>
-                    <span className="text-2xl font-semibold text-gray-800 mb-1">
-                        {availableEIC}
-                    </span>
-                    <span className="text-xs text-gray-400 font-medium mb-2">
-                        +
-                        {eicStats.length > 1
-                            ? eicStats[eicStats.length - 1] -
-                              eicStats[eicStats.length - 2]
-                            : 0}{' '}
-                        this month
-                    </span>
-                    <div className="w-full h-20">
-                        <canvas ref={eicChartRef} />
-                    </div>
-                </div>
-            </div>
+            </ChartContainer>
+        </div>
+    );
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-                <div className="bg-white rounded-xl shadow-md p-6 flex flex-col">
-                    <h2 className="text-base font-semibold text-gray-700 mb-3 text-center tracking-wide">
-                        Monthly User Growth
-                    </h2>
-                    <div className="w-full">
-                        <canvas ref={monthlyUserGrowthChartRef} />
+    const renderFeatureAnalytics = () => {
+        const currentFeature = features.find((f) => f.id === activeView);
+
+        return (
+            <div className="space-y-6">
+                <div className="bg-white rounded-xl shadow-md p-6">
+                    <div className="flex items-center mb-6">
+                        <div
+                            className={`p-4 rounded-lg bg-gradient-to-r ${currentFeature.color} mr-4`}
+                        >
+                            <div className="w-8 h-8 text-white">
+                                {currentFeature.icon}
+                            </div>
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-bold text-gray-900">
+                                {currentFeature.title}
+                            </h2>
+                            <p className="text-gray-600">
+                                {currentFeature.description}
+                            </p>
+                        </div>
                     </div>
-                    <div className="flex justify-between mt-3 text-xs text-gray-400 font-medium">
-                        {months.map((m, i) => (
-                            <span key={i} className="text-center w-1/12">
-                                {m}
-                            </span>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {currentFeature.stats.map((stat, idx) => (
+                            <div
+                                key={idx}
+                                className="text-center p-4 bg-gray-50 rounded-lg"
+                            >
+                                <div className="text-2xl font-bold text-gray-900 mb-1">
+                                    {stat.value}
+                                </div>
+                                <div className="text-sm text-gray-600">
+                                    {stat.label}
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>
-                <div className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center">
-                    <h2 className="text-base font-semibold text-gray-700 mb-3 text-center tracking-wide">
-                        Key Metrics
-                    </h2>
-                    <div className="grid grid-cols-2 gap-4 w-full">
-                        <div className="bg-gray-50 rounded-lg shadow-sm p-4 flex flex-col items-center">
-                            <span className="text-gray-600 font-medium text-xs">
-                                Waiting Distribution Requests
-                            </span>
-                            <span className="text-lg font-bold text-gray-800 mt-1">
-                                {waitingDistributionRequests}
-                            </span>
-                        </div>
-                        <div className="bg-gray-50 rounded-lg shadow-sm p-4 flex flex-col items-center">
-                            <span className="text-gray-600 font-medium text-xs">
-                                Top Client Profile
-                            </span>
-                            <span className="text-lg font-bold text-gray-800 mt-1">
-                                {topClientProfile}
-                            </span>
-                        </div>
-                        <div className="bg-gray-50 rounded-lg shadow-sm p-4 flex flex-col items-center col-span-2">
-                            <span className="text-gray-600 font-medium text-xs">
-                                Top EIC Category
-                            </span>
-                            <span className="text-lg font-bold text-gray-800 mt-1">
-                                {topEICCategory}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white rounded-xl shadow-md p-5">
-                    <h2 className="text-base font-semibold text-gray-700 mb-3 text-center">
-                        Client Profile Distribution
-                    </h2>
-                    <ul className="divide-y divide-gray-100">
-                        {Object.entries(clientProfileCounts)
-                            .sort(([, a], [, b]) => b - a)
-                            .map(([profile, count], idx) => (
-                                <li
-                                    key={idx}
-                                    className="flex justify-between py-2 px-1"
-                                >
-                                    <span className="font-medium text-gray-700">
-                                        {profile}
-                                    </span>
-                                    <span className="text-gray-500">
-                                        <span className="font-semibold">
-                                            {count}
-                                        </span>
-                                    </span>
-                                </li>
-                            ))}
-                    </ul>
-                </div>
-                <div className="bg-white rounded-xl shadow-md p-5 flex flex-col items-center">
-                    <h2 className="text-base font-semibold text-gray-700 mb-3 text-center">
-                        User Growth Rate
-                    </h2>
-                    <div className="flex flex-col items-center">
-                        <span className="text-3xl font-extrabold text-gray-700">
-                            {userStats.length > 1
-                                ? (
-                                      ((userStats[userStats.length - 1] -
-                                          userStats[0]) /
-                                          userStats[0]) *
-                                      100
-                                  ).toFixed(1)
-                                : 0}
-                            %
-                        </span>
-                        <span className="text-xs text-gray-400 mt-1">
-                            Since {months[0]}
-                        </span>
+                <ChartContainer
+                    title={`${currentFeature.title} Detailed Analytics`}
+                    className="col-span-full"
+                >
+                    <div className="h-80">
+                        <canvas ref={featureChartRef} />
+                    </div>
+                </ChartContainer>
+            </div>
+        );
+    };
+
+    // Chart initialization and cleanup
+    const initializeCharts = (chartRef, type, data, options) => {
+        if (chartRef.current) {
+            const ctx = chartRef.current.getContext('2d');
+
+            // Destroy existing chart
+            if (chartRef.current.chart) {
+                chartRef.current.chart.destroy();
+            }
+
+            // Create new chart
+            chartRef.current.chart = new Chart(ctx, {
+                type,
+                data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    ...options,
+                },
+            });
+        }
+    };
+
+    // Chart effects
+    useEffect(() => {
+        if (activeView === 'overview' && !isLoading) {
+            // Overview combined chart
+            const chartData = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [
+                    {
+                        label: 'Users',
+                        data: usersData.monthlyRegistrations || [],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                    },
+                    {
+                        label: 'Seminars',
+                        data: seminarsData.monthlyCompletions || [],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                    },
+                    {
+                        label: 'Distributions',
+                        data: distributionData.monthlyRequests || [],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                    },
+                ],
+            };
+
+            initializeCharts(overviewChartRef, 'line', chartData, {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)',
+                        },
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)',
+                        },
+                    },
+                },
+            });
+        }
+    }, [activeView, isLoading, usersData, seminarsData, distributionData]);
+
+    useEffect(() => {
+        if (activeView !== 'overview' && !isLoading) {
+            let chartData,
+                chartType,
+                chartOptions = {};
+
+            switch (activeView) {
+                case 'users':
+                    chartData = {
+                        labels: [
+                            'Jan',
+                            'Feb',
+                            'Mar',
+                            'Apr',
+                            'May',
+                            'Jun',
+                            'Jul',
+                        ],
+                        datasets: [
+                            {
+                                label: 'User Registrations',
+                                data: usersData.monthlyRegistrations || [],
+                                backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                                borderColor: '#3b82f6',
+                                borderWidth: 2,
+                            },
+                        ],
+                    };
+                    chartType = 'bar';
+                    break;
+
+                case 'seminars':
+                    chartData = {
+                        labels: [
+                            'Farming',
+                            'Technology',
+                            'Business',
+                            'Marketing',
+                            'Others',
+                        ],
+                        datasets: [
+                            {
+                                data: [25, 12, 8, 6, 4],
+                                backgroundColor: [
+                                    '#10b981',
+                                    '#3b82f6',
+                                    '#f59e0b',
+                                    '#ef4444',
+                                    '#8b5cf6',
+                                ],
+                            },
+                        ],
+                    };
+                    chartType = 'doughnut';
+                    chartOptions = {
+                        cutout: '60%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            },
+                        },
+                    };
+                    break;
+
+                case 'eic':
+                    chartData = {
+                        labels: [
+                            'Jan',
+                            'Feb',
+                            'Mar',
+                            'Apr',
+                            'May',
+                            'Jun',
+                            'Jul',
+                        ],
+                        datasets: [
+                            {
+                                label: 'EIC Distribution',
+                                data: eicData.monthlyDistribution || [],
+                                backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                                borderColor: '#f59e0b',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                            },
+                        ],
+                    };
+                    chartType = 'line';
+                    break;
+
+                case 'distribution':
+                    chartData = {
+                        labels: [
+                            'Pending',
+                            'Processing',
+                            'Completed',
+                            'Cancelled',
+                        ],
+                        datasets: [
+                            {
+                                data: [156, 89, 543, 23],
+                                backgroundColor: [
+                                    '#ef4444',
+                                    '#f59e0b',
+                                    '#10b981',
+                                    '#6b7280',
+                                ],
+                            },
+                        ],
+                    };
+                    chartType = 'pie';
+                    chartOptions = {
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            },
+                        },
+                    };
+                    break;
+
+                case 'inventory':
+                    chartData = {
+                        labels: [
+                            'Jan',
+                            'Feb',
+                            'Mar',
+                            'Apr',
+                            'May',
+                            'Jun',
+                            'Jul',
+                        ],
+                        datasets: [
+                            {
+                                label: 'Stock Levels',
+                                data: inventoryData.stockLevels || [],
+                                backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                                borderColor: '#6366f1',
+                                borderWidth: 2,
+                            },
+                        ],
+                    };
+                    chartType = 'bar';
+                    break;
+
+                default:
+                    return;
+            }
+
+            initializeCharts(
+                featureChartRef,
+                chartType,
+                chartData,
+                chartOptions
+            );
+        }
+    }, [
+        activeView,
+        isLoading,
+        usersData,
+        seminarsData,
+        eicData,
+        distributionData,
+        inventoryData,
+    ]);
+
+    // Cleanup on unmount
+    useEffect(() => {
+        return () => {
+            if (overviewChartRef.current?.chart) {
+                overviewChartRef.current.chart.destroy();
+            }
+            if (featureChartRef.current?.chart) {
+                featureChartRef.current.chart.destroy();
+            }
+        };
+    }, []);
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6">
+            <div className="max-w-7xl mx-auto">
+                {/* Header */}
+                <div className="mb-8">
+                    <div className="flex items-center justify-between mb-6">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900">
+                                Analytics Dashboard
+                            </h1>
+                            <p className="text-gray-600 mt-1">
+                                Comprehensive insights into your Farmer Connect
+                                platform
+                            </p>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            <select
+                                value={timeRange}
+                                onChange={(e) => setTimeRange(e.target.value)}
+                                className="bg-white border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                <option value="7d">Last 7 days</option>
+                                <option value="30d">Last 30 days</option>
+                                <option value="90d">Last 90 days</option>
+                                <option value="1y">Last year</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Navigation */}
+                    <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+                        <button
+                            onClick={() => setActiveView('overview')}
+                            className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                                activeView === 'overview'
+                                    ? 'bg-white text-blue-600 shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
+                            }`}
+                        >
+                            Overview
+                        </button>
+                        {features.map((feature) => (
+                            <button
+                                key={feature.id}
+                                onClick={() => setActiveView(feature.id)}
+                                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                                    activeView === feature.id
+                                        ? 'bg-white text-blue-600 shadow-sm'
+                                        : 'text-gray-600 hover:text-gray-900'
+                                }`}
+                            >
+                                {feature.title}
+                            </button>
+                        ))}
                     </div>
                 </div>
+
+                {/* Content */}
+                {isLoading ? (
+                    <div className="flex items-center justify-center h-64">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    </div>
+                ) : activeView === 'overview' ? (
+                    renderOverview()
+                ) : (
+                    renderFeatureAnalytics()
+                )}
+
+                {/* Feature Grid for Overview */}
+                {activeView === 'overview' && !isLoading && (
+                    <div className="mt-8">
+                        <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                            Feature Analytics
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {features.map((feature) => (
+                                <FeatureCard
+                                    key={feature.id}
+                                    {...feature}
+                                    onClick={() => setActiveView(feature.id)}
+                                    isActive={activeView === feature.id}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
