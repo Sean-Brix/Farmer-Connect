@@ -3,17 +3,22 @@ import React, { useState, useEffect } from 'react';
 // ASSETS
 import default_image from '../../../Assets/eic_default.png';
 
+// TANSTACK QUERY HOOKS
+import {
+    useDistributionStacks,
+    useDistributionRequests,
+    useAllItems,
+    useAddDistributionItem,
+    useEditDistributionItem,
+    useUpdateRequestStatus,
+} from './hooks/useDistributionQueries';
+
 export default function Distribution() {
     const [activeSection, setActiveSection] = useState('items');
-    const [distributionStacks, setDistributionStacks] = useState([]);
-    const [requests, setRequests] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState('quantity');
     const [searchFilter, setSearchFilter] = useState('name');
     const [showAddModal, setShowAddModal] = useState(false);
-    const [allItems, setAllItems] = useState([]); // For existing items in the modal
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [selectedStack, setSelectedStack] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -43,97 +48,39 @@ export default function Distribution() {
         );
     };
 
-    // Fetch Distribution items when component mounts or section changes
-    useEffect(() => {
-        if (activeSection === 'items') {
-            fetchDistributionStacks();
-            fetchAllItems(); // Fetch all items for the dropdown
-        } else if (activeSection === 'requests') {
-            fetchRequests();
-        }
-    }, [activeSection]);
+    // TANSTACK QUERY HOOKS
+    const {
+        data: distributionStacks = [],
+        isLoading: isLoadingStacks,
+        error: stacksError,
+        refetch: refetchStacks,
+    } = useDistributionStacks();
 
-    const fetchRequests = async () => {
-        setIsLoading(true);
-        setError(null);
+    const {
+        data: requests = [],
+        isLoading: isLoadingRequests,
+        error: requestsError,
+        refetch: refetchRequests,
+    } = useDistributionRequests();
 
-        try {
-            const response = await fetch('/api/dist/request/all', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+    const {
+        data: allItems = [],
+        isLoading: isLoadingAllItems,
+        error: allItemsError,
+    } = useAllItems();
 
-            if (!response.ok) {
-                throw new Error(`Failed to fetch requests: ${response.status}`);
-            }
+    // MUTATIONS
+    const addDistributionItemMutation = useAddDistributionItem();
+    const editDistributionItemMutation = useEditDistributionItem();
+    const updateRequestStatusMutation = useUpdateRequestStatus();
 
-            const result = await response.json();
-            setRequests(result.requests || []);
-        } catch (err) {
-            console.error('Error fetching requests:', err);
-            setError(
-                'Unable to load request data. Please check your connection and try again.'
-            );
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const fetchAllItems = async () => {
-        try {
-            const response = await fetch('/api/inventory/all/items', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(
-                    `Failed to fetch all items: ${response.status}`
-                );
-            }
-
-            const result = await response.json();
-            setAllItems(result || []);
-        } catch (err) {
-            console.error('Error fetching all items:', err);
-        }
-    };
-
-    const fetchDistributionStacks = async () => {
-        setIsLoading(true);
-        setError(null);
-
-        try {
-            const response = await fetch('/api/dist/all', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(
-                    `Failed to fetch Distribution stacks: ${response.status}`
-                );
-            }
-
-            const result = await response.json();
-
-            // The API returns a direct array
-            setDistributionStacks(result || []);
-        } catch (err) {
-            console.error('Error fetching Distribution stacks:', err);
-            setError(
-                'Unable to load Distribution data. Please check your connection and try again.'
-            );
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    // Determine loading and error states
+    const isLoading =
+        activeSection === 'items' ? isLoadingStacks : isLoadingRequests;
+    const error =
+        activeSection === 'items'
+            ? stacksError?.message
+            : requestsError?.message;
 
     // Filter and sort stacks based on search and sort options
     const filteredStacks = distributionStacks
@@ -150,7 +97,6 @@ export default function Distribution() {
                     : stack.item?.description
                           ?.toLowerCase()
                           .includes(searchValue) || false;
-
             return matchesSearch;
         })
         .sort((a, b) => {
@@ -175,23 +121,16 @@ export default function Distribution() {
 
     const handleAddDistributionItem = async (formData) => {
         try {
-            const response = await fetch('/api/inventory/item/add', {
-                method: 'POST',
-                body: formData, // Send FormData directly for file upload
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
+            await addDistributionItemMutation.mutateAsync(formData);
             setShowAddModal(false);
             setImageUpdateTimestamp(Date.now()); // Force image refresh
-            await fetchDistributionStacks(); // Refresh Distribution items
-            await fetchAllItems(); // Refresh all items for dropdown
             showAlert('Distribution item added successfully', 'success');
         } catch (error) {
-            console.error('Failed to create Distribution item:', error);
-            showAlert('Failed to add Distribution item', 'error');
+            console.error('Failed to create distribution item:', error);
+            showAlert(
+                error.message || 'Failed to add distribution item',
+                'error'
+            );
         }
     };
 
@@ -232,40 +171,20 @@ export default function Distribution() {
         }
 
         try {
-            const response = await fetch(`/api/dist/item/${editingStack.id}`, {
-                method: 'PUT',
-                body: formData, // Send FormData directly for file upload
+            await editDistributionItemMutation.mutateAsync({
+                stackId: editingStack.id,
+                formData,
+                hasNameOrDescriptionChange,
             });
 
-            const responseData = await response.json();
-
-            if (!response.ok) {
-                throw new Error(
-                    responseData.error ||
-                        `HTTP error! status: ${response.status}`
-                );
-            }
-
-            // Check for success response
-            if (responseData.success) {
-                setShowEditModal(false);
-                setEditingStack(null);
-                setImageUpdateTimestamp(Date.now()); // Force image refresh
-                await fetchDistributionStacks(); // Refresh Distribution items
-                showAlert(
-                    responseData.message ||
-                        'Distribution item updated successfully',
-                    'success'
-                );
-            } else {
-                throw new Error(
-                    responseData.error || 'Failed to update Distribution item'
-                );
-            }
+            setShowEditModal(false);
+            setEditingStack(null);
+            setImageUpdateTimestamp(Date.now()); // Force image refresh
+            showAlert('Distribution item updated successfully', 'success');
         } catch (error) {
-            console.error('Failed to update Distribution item:', error);
+            console.error('Failed to update distribution item:', error);
             showAlert(
-                error.message || 'Failed to update Distribution item',
+                error.message || 'Failed to update distribution item',
                 'error'
             );
         }
@@ -275,10 +194,6 @@ export default function Distribution() {
     const handleViewRequests = (itemName) => {
         setActiveSection('requests');
         setRequestSearch(itemName);
-        // Ensure we fetch the latest requests data
-        setTimeout(() => {
-            fetchRequests();
-        }, 100);
     };
 
     // Handle requests button click - reset all filters and go to requests section
@@ -585,45 +500,21 @@ export default function Distribution() {
                 return; // User cancelled
             }
 
-            const response = await fetch('/api/dist/request/respond', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    transactionId: requestId,
-                    status: newStatus,
-                }),
+            await updateRequestStatusMutation.mutateAsync({
+                requestId,
+                status: newStatus,
+                itemName,
+                requestorName,
+                requestQuantity,
+                currentStock,
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(
-                    errorData.message ||
-                        `HTTP error! status: ${response.status}`
-                );
-            }
-
-            const responseData = await response.json();
-
-            // Update the requests list
-            setRequests((prevRequests) =>
-                prevRequests.map((request) =>
-                    request.id === requestId
-                        ? { ...request, status: newStatus }
-                        : request
-                )
-            );
-
             showAlert(
-                responseData.message || 'Request status updated successfully',
+                `Request status successfully changed to ${newStatus}`,
                 'success'
             );
-
-            // Refresh data
-            await fetchRequests();
         } catch (error) {
-            console.error('Failed to update request status:', error);
+            console.error('Error updating request status:', error);
             showAlert(
                 error.message || 'Failed to update request status',
                 'error'
@@ -740,7 +631,7 @@ export default function Distribution() {
                             </select>
 
                             <button
-                                onClick={fetchRequests}
+                                onClick={refetchRequests}
                                 className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
                             >
                                 <svg
@@ -849,7 +740,7 @@ export default function Distribution() {
                             </select>
 
                             <button
-                                onClick={fetchDistributionStacks}
+                                onClick={refetchStacks}
                                 className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
                             >
                                 <svg
@@ -1651,14 +1542,128 @@ function DistributionEditModal({
     onSubmit,
     imageUpdateTimestamp,
 }) {
-    // For now, let's use a simple placeholder modal
+    const [formData, setFormData] = useState({
+        name: stack.item?.name || '',
+        description: stack.item?.description || '',
+        category: stack.item?.category || 'Other',
+        quantity: stack.quantity || 1,
+    });
+
+    const [originalData] = useState({
+        name: stack.item?.name || '',
+        description: stack.item?.description || '',
+        category: stack.item?.category || 'Other',
+        quantity: stack.quantity || 1,
+    });
+
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [currentImageUrl, setCurrentImageUrl] = useState(null);
+
+    const categories = [
+        'Farming Equipment',
+        'Harvesting Tools',
+        'Irrigation Systems',
+        'Storage Equipment',
+        'Processing Equipment',
+        'Safety Gear',
+        'Pest Control',
+        'Livestock Equipment',
+        'Measuring Tools',
+        'Fisheries',
+        'Machinery',
+        'Other',
+    ];
+
+    // Load current image when modal opens
+    React.useEffect(() => {
+        if (stack?.item?.id) {
+            setCurrentImageUrl(
+                `/api/dist/photo/${stack.item.id}?t=${imageUpdateTimestamp}`
+            );
+        }
+    }, [stack?.item?.id, imageUpdateTimestamp]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: name === 'quantity' ? parseInt(value) || 0 : value,
+        }));
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type
+            const allowedTypes = [
+                'image/jpeg',
+                'image/jpg',
+                'image/png',
+                'image/gif',
+            ];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Please select a valid image file (JPEG, PNG, or GIF)');
+                return;
+            }
+
+            // Validate file size (5MB limit)
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) {
+                alert('File size must be less than 5MB');
+                return;
+            }
+
+            setSelectedImage(file);
+
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImagePreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const removeImage = () => {
+        setSelectedImage(null);
+        setImagePreview(null);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // Check if name or description changed
+        const hasNameOrDescriptionChange =
+            formData.name !== originalData.name ||
+            formData.description !== originalData.description ||
+            formData.category !== originalData.category;
+
+        // Create FormData for file upload
+        const submitData = new FormData();
+        submitData.append('name', formData.name);
+        submitData.append('description', formData.description);
+        submitData.append('category', formData.category);
+        submitData.append('quantity', formData.quantity);
+
+        // Add image if selected
+        if (selectedImage) {
+            submitData.append('image', selectedImage);
+        }
+
+        onSubmit(submitData, hasNameOrDescriptionChange);
+    };
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col mx-4">
-                <div className="flex items-center justify-between px-6 py-4 border-b">
-                    <h2 className="text-lg font-semibold">
-                        Edit Distribution Item
-                    </h2>
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col mx-4">
+                {/* HEADER */}
+                <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-green-50 to-green-100">
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-green-600 font-medium">
+                            Edit Distribution Item
+                        </span>
+                    </div>
                     <button
                         className="text-2xl text-gray-400 hover:text-gray-700 transition-colors"
                         onClick={onClose}
@@ -1667,17 +1672,208 @@ function DistributionEditModal({
                         &times;
                     </button>
                 </div>
-                <div className="p-6">
-                    <p className="text-gray-600 mb-4">
-                        Edit functionality will be implemented soon.
-                    </p>
-                    <button
-                        onClick={onClose}
-                        className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
-                    >
-                        Close
-                    </button>
-                </div>
+
+                {/* FORM */}
+                <form onSubmit={handleSubmit} className="px-6 py-6 space-y-4">
+                    {/* Item Name */}
+                    <div>
+                        <label
+                            htmlFor="name"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                        >
+                            Item Name
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            required
+                        />
+                        {formData.name !== originalData.name && (
+                            <p className="text-xs text-amber-600 mt-1">
+                                ⚠️ Changing the name will update the item in
+                                inventory
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Description */}
+                    <div>
+                        <label
+                            htmlFor="description"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                        >
+                            Description
+                        </label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            rows="3"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
+                        />
+                        {formData.description !== originalData.description && (
+                            <p className="text-xs text-amber-600 mt-1">
+                                ⚠️ Changing the description will update the item
+                                in inventory
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Category */}
+                    <div>
+                        <label
+                            htmlFor="category"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                        >
+                            Category
+                        </label>
+                        <select
+                            id="category"
+                            name="category"
+                            value={formData.category}
+                            onChange={handleChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        >
+                            {categories.map((cat) => (
+                                <option key={cat} value={cat}>
+                                    {cat}
+                                </option>
+                            ))}
+                        </select>
+                        {formData.category !== originalData.category && (
+                            <p className="text-xs text-amber-600 mt-1">
+                                ⚠️ Changing the category will update the item in
+                                inventory
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Quantity */}
+                    <div>
+                        <label
+                            htmlFor="quantity"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                        >
+                            Available Quantity
+                        </label>
+                        <input
+                            type="number"
+                            id="quantity"
+                            name="quantity"
+                            value={formData.quantity}
+                            onChange={handleChange}
+                            min="0"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            required
+                        />
+                    </div>
+
+                    {/* Image Upload */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Item Image
+                        </label>
+
+                        {/* Current Image Display */}
+                        {currentImageUrl && !imagePreview && (
+                            <div className="mb-3">
+                                <p className="text-xs text-gray-600 mb-2">
+                                    Current Image:
+                                </p>
+                                <img
+                                    src={currentImageUrl}
+                                    alt="Current item"
+                                    className="w-20 h-20 object-cover rounded border-2 border-gray-200"
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                    }}
+                                />
+                            </div>
+                        )}
+
+                        {/* Image Preview */}
+                        {imagePreview && (
+                            <div className="mb-3">
+                                <p className="text-xs text-gray-600 mb-2">
+                                    New Image Preview:
+                                </p>
+                                <img
+                                    src={imagePreview}
+                                    alt="Preview"
+                                    className="w-20 h-20 object-cover rounded border-2 border-green-200"
+                                />
+                            </div>
+                        )}
+
+                        {/* Upload Controls */}
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                className="hidden"
+                                id="edit-image-upload"
+                            />
+                            <label
+                                htmlFor="edit-image-upload"
+                                className="flex items-center px-3 py-2 bg-green-100 text-green-700 rounded cursor-pointer hover:bg-green-200 transition text-sm"
+                            >
+                                <svg
+                                    className="w-4 h-4 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                    />
+                                </svg>
+                                {currentImageUrl || imagePreview
+                                    ? 'Change Image'
+                                    : 'Add Image'}
+                            </label>
+                            {selectedImage && (
+                                <button
+                                    type="button"
+                                    onClick={removeImage}
+                                    className="px-2 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 transition"
+                                >
+                                    Remove
+                                </button>
+                            )}
+                        </div>
+
+                        <p className="text-xs text-gray-500 mt-1">
+                            Optional. Supported formats: JPEG, PNG, GIF. Max
+                            size: 5MB.
+                        </p>
+                    </div>
+
+                    {/* Buttons */}
+                    <div className="flex justify-end gap-3 pt-4">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-4 py-2 text-white bg-green-500 hover:bg-green-600 rounded-md transition-colors"
+                        >
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );
