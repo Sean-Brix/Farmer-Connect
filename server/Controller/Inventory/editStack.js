@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../prisma/generated/client.js';
+import auditLogger from '../../Services/auditLogger.js';
 const prisma = new PrismaClient();
 
 async function editStack(req, res) {
@@ -83,6 +84,26 @@ async function editStack(req, res) {
                     include: { item: true },
                 });
 
+                // Log the inventory status change action
+                await auditLogger.log(
+                    req.user?.id,
+                    'INVENTORY_STATUS_CHANGE',
+                    'InventoryItem',
+                    targetStack.item.id,
+                    targetStack.item.name,
+                    `Set quantity to 0 for ${targetStack.item.name} (${targetStack.status})`,
+                    {
+                        action: 'quantity_zeroed',
+                        itemName: targetStack.item.name,
+                        status: targetStack.status,
+                        previousQuantity: quantity,
+                        newQuantity: 0,
+                        dateLimit: targetStack.date_limit
+                    },
+                    req.ip,
+                    req.get('User-Agent')
+                );
+
                 return res.status(200).json({
                     message: 'Stack quantity set to 0 successfully',
                     stack: targetStack,
@@ -110,6 +131,25 @@ async function editStack(req, res) {
                     include: { item: true },
                 });
 
+                // Log the inventory creation action
+                await auditLogger.log(
+                    req.user?.id,
+                    'INVENTORY_CREATE',
+                    'InventoryItem',
+                    targetStack.item.id,
+                    targetStack.item.name,
+                    `Created new stack for ${targetStack.item.name} (${targetStack.status}) with 0 quantity`,
+                    {
+                        action: 'stack_created',
+                        itemName: targetStack.item.name,
+                        status: targetStack.status,
+                        quantity: 0,
+                        dateLimit: targetStack.date_limit
+                    },
+                    req.ip,
+                    req.get('User-Agent')
+                );
+
                 return res.status(200).json({
                     message: 'New stack created with 0 quantity',
                     stack: targetStack,
@@ -118,6 +158,10 @@ async function editStack(req, res) {
         } else {
             // If quantity > 0, update existing stack or create new one
             if (targetStack) {
+                // Store previous values for audit log
+                const previousQuantity = targetStack.quantity;
+                const previousDateLimit = targetStack.date_limit;
+                
                 // Update existing stack
                 targetStack = await prisma.itemStack.update({
                     where: { id: targetStack.id },
@@ -132,6 +176,27 @@ async function editStack(req, res) {
                     },
                     include: { item: true },
                 });
+
+                // Log the inventory update action
+                await auditLogger.log(
+                    req.user?.id,
+                    'INVENTORY_UPDATE',
+                    'InventoryItem',
+                    targetStack.item.id,
+                    targetStack.item.name,
+                    `Updated stack for ${targetStack.item.name} (${targetStack.status})`,
+                    {
+                        action: 'stack_updated',
+                        itemName: targetStack.item.name,
+                        status: targetStack.status,
+                        previousQuantity: previousQuantity,
+                        newQuantity: quantity,
+                        previousDateLimit: previousDateLimit,
+                        newDateLimit: targetStack.date_limit
+                    },
+                    req.ip,
+                    req.get('User-Agent')
+                );
             } else {
                 // Create new stack
                 if (!itemId || !status) {
@@ -154,6 +219,25 @@ async function editStack(req, res) {
                     },
                     include: { item: true },
                 });
+
+                // Log the inventory creation action
+                await auditLogger.log(
+                    req.user?.id,
+                    'INVENTORY_CREATE',
+                    'InventoryItem',
+                    targetStack.item.id,
+                    targetStack.item.name,
+                    `Created new stack for ${targetStack.item.name} (${targetStack.status}) with ${quantity} units`,
+                    {
+                        action: 'stack_created',
+                        itemName: targetStack.item.name,
+                        status: targetStack.status,
+                        quantity: quantity,
+                        dateLimit: targetStack.date_limit
+                    },
+                    req.ip,
+                    req.get('User-Agent')
+                );
             }
 
             return res.status(200).json({

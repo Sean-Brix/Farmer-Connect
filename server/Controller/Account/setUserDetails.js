@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../prisma/generated/client.js';
+import auditLogger from '../../Services/auditLogger.js';
 const prisma = new PrismaClient();
 
 async function setUserDetails(req, res) {
@@ -31,6 +32,15 @@ async function setUserDetails(req, res) {
         return res.status(400).json({ message: validationResult });
     }
 
+    // Get the current user details before updating for audit log
+    const currentUser = await prisma.account.findUnique({
+        where: { id: userId }
+    });
+
+    if (!currentUser) {
+        return res.status(404).json({ message: 'User not found.' });
+    }
+
     const updatedUser = await prisma.account.update({
         where: {
             id: userId,
@@ -57,6 +67,46 @@ async function setUserDetails(req, res) {
     updatedUser.password = undefined;
     updatedUser.picture = undefined;
     updatedUser.mimeType = undefined;
+
+    // Track what fields were updated for audit log
+    const updatedFields = [];
+    if (currentUser.username !== username) updatedFields.push('username');
+    if (currentUser.email !== email) updatedFields.push('email');
+    if (currentUser.firstName !== firstName) updatedFields.push('firstName');
+    if (currentUser.lastName !== lastName) updatedFields.push('lastName');
+    if (currentUser.middleName !== middleName) updatedFields.push('middleName');
+    if (currentUser.access !== access) updatedFields.push('access');
+    if (currentUser.gender !== gender) updatedFields.push('gender');
+    if (currentUser.client_profile !== client_profile) updatedFields.push('client_profile');
+    if (currentUser.cellphone_no !== cellphone_no) updatedFields.push('cellphone_no');
+    if (currentUser.telephone_no !== telephone_no) updatedFields.push('telephone_no');
+    if (currentUser.occupation !== occupation) updatedFields.push('occupation');
+    if (currentUser.position !== position) updatedFields.push('position');
+    if (currentUser.institution !== institution) updatedFields.push('institution');
+    if (currentUser.address !== address) updatedFields.push('address');
+
+    // Log the account update action
+    const auditAction = currentUser.access !== access ? 'ACCOUNT_ROLE_CHANGE' : 'ACCOUNT_UPDATE';
+    await auditLogger.log(
+        req.user?.id, // Admin ID from auth middleware
+        auditAction,
+        'Account',
+        updatedUser.id,
+        `${updatedUser.firstName} ${updatedUser.lastName}`,
+        auditAction === 'ACCOUNT_ROLE_CHANGE' 
+            ? `Changed role for ${updatedUser.firstName} ${updatedUser.lastName} from ${currentUser.access} to ${access}`
+            : `Updated account information for ${updatedUser.firstName} ${updatedUser.lastName}`,
+        {
+            action: auditAction === 'ACCOUNT_ROLE_CHANGE' ? 'role_changed' : 'account_updated',
+            targetUserId: updatedUser.id,
+            updatedFields: updatedFields,
+            previousRole: currentUser.access,
+            newRole: access,
+            isOwnProfile: req.user?.id === userId
+        },
+        req.ip,
+        req.get('User-Agent')
+    );
 
     if (!updatedUser) {
         return res.status(404).json({ message: 'User not found.' });
