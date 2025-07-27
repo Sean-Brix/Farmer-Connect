@@ -71,9 +71,9 @@ async function login(req, res) {
                     loginMethod: 'password',
                     rememberMe: rememberMe,
                     tokenExpiration: tokenExpiration,
-                    userRole: user.access
+                    userRole: user.access,
                 },
-                req: req
+                req: req,
             });
         }
 
