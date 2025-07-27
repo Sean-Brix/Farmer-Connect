@@ -68,14 +68,14 @@ async function addSeminar(req, res) {
         });
 
         // Log the seminar creation action
-        await auditLogger.log(
-            adminId,
-            'SEMINAR_CREATE',
-            'Seminar',
-            seminar.id,
-            seminar.title,
-            `Created new seminar: ${seminar.title}`,
-            {
+        await auditLogger.log({
+            adminId: adminId,
+            action: 'SEMINAR_CREATE',
+            targetType: 'Seminar',
+            targetId: seminar.id,
+            targetName: seminar.title,
+            details: `Created new seminar: ${seminar.title}`,
+            metadata: {
                 action: 'seminar_created',
                 title: seminar.title,
                 speaker: seminar.speaker,
@@ -83,11 +83,10 @@ async function addSeminar(req, res) {
                 capacity: seminar.capacity,
                 startDate: seminar.start_date,
                 endDate: seminar.end_date,
-                hasImage: !!picture
+                hasImage: !!picture,
             },
-            req.ip,
-            req.get('User-Agent')
-        );
+            req: req,
+        });
 
         return res.status(201).json({ payload: seminar });
     } catch (error) {
