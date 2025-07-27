@@ -21,4 +21,7 @@ router.use('/dist', distribution);
 import analytics from './Analytics/index.js';
 router.use('/analytics', analytics);
 
+import logs from './Logs/index.js';
+router.use('/logs', logs);
+
 export default router;

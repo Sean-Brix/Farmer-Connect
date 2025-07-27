@@ -87,16 +87,16 @@ async function setUserDetails(req, res) {
 
     // Log the account update action
     const auditAction = currentUser.access !== access ? 'ACCOUNT_ROLE_CHANGE' : 'ACCOUNT_UPDATE';
-    await auditLogger.log(
-        req.user?.id, // Admin ID from auth middleware
-        auditAction,
-        'Account',
-        updatedUser.id,
-        `${updatedUser.firstName} ${updatedUser.lastName}`,
-        auditAction === 'ACCOUNT_ROLE_CHANGE' 
+    await auditLogger.log({
+        adminId: req.user?.id, // Admin ID from auth middleware
+        action: auditAction,
+        targetType: 'Account',
+        targetId: updatedUser.id,
+        targetName: `${updatedUser.firstName} ${updatedUser.lastName}`,
+        details: auditAction === 'ACCOUNT_ROLE_CHANGE' 
             ? `Changed role for ${updatedUser.firstName} ${updatedUser.lastName} from ${currentUser.access} to ${access}`
             : `Updated account information for ${updatedUser.firstName} ${updatedUser.lastName}`,
-        {
+        metadata: {
             action: auditAction === 'ACCOUNT_ROLE_CHANGE' ? 'role_changed' : 'account_updated',
             targetUserId: updatedUser.id,
             updatedFields: updatedFields,
@@ -104,9 +104,8 @@ async function setUserDetails(req, res) {
             newRole: access,
             isOwnProfile: req.user?.id === userId
         },
-        req.ip,
-        req.get('User-Agent')
-    );
+        req: req
+    });
 
     if (!updatedUser) {
         return res.status(404).json({ message: 'User not found.' });

@@ -63,22 +63,18 @@ async function login(req, res) {
 
         // Log the login action only for admin/super admin users
         if (user.access === 'Admin' || user.access === 'Super_Admin') {
-            await auditLogger.log(
-                user.id,
-                'LOGIN',
-                null,
-                null,
-                null,
-                `Admin ${user.username} logged in successfully`,
-                {
+            await auditLogger.log({
+                adminId: user.id,
+                action: 'LOGIN',
+                details: `Admin ${user.username} logged in successfully`,
+                metadata: {
                     loginMethod: 'password',
                     rememberMe: rememberMe,
                     tokenExpiration: tokenExpiration,
                     userRole: user.access
                 },
-                req.ip,
-                req.get('User-Agent')
-            );
+                req: req
+            });
         }
 
         // Send response

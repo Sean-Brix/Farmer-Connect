@@ -160,6 +160,20 @@ exports.Prisma.AccountCommodityScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  action: 'action',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  targetName: 'targetName',
+  details: 'details',
+  metadata: 'metadata',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.InventoryItemScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -228,6 +242,11 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
@@ -261,6 +280,28 @@ exports.Prisma.AccountCommodityOrderByRelevanceFieldEnum = {
   id: 'id',
   account_id: 'account_id',
   commodity_id: 'commodity_id'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  targetName: 'targetName',
+  details: 'details',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent'
 };
 
 exports.Prisma.InventoryItemOrderByRelevanceFieldEnum = {
@@ -324,6 +365,44 @@ exports.client_profile = exports.$Enums.client_profile = {
   Other: 'Other'
 };
 
+exports.audit_action = exports.$Enums.audit_action = {
+  ACCOUNT_CREATE: 'ACCOUNT_CREATE',
+  ACCOUNT_UPDATE: 'ACCOUNT_UPDATE',
+  ACCOUNT_DELETE: 'ACCOUNT_DELETE',
+  ACCOUNT_ROLE_CHANGE: 'ACCOUNT_ROLE_CHANGE',
+  ACCOUNT_STATUS_CHANGE: 'ACCOUNT_STATUS_CHANGE',
+  LOGIN: 'LOGIN',
+  LOGOUT: 'LOGOUT',
+  LOGIN_FAILED: 'LOGIN_FAILED',
+  INVENTORY_CREATE: 'INVENTORY_CREATE',
+  INVENTORY_UPDATE: 'INVENTORY_UPDATE',
+  INVENTORY_DELETE: 'INVENTORY_DELETE',
+  INVENTORY_STATUS_CHANGE: 'INVENTORY_STATUS_CHANGE',
+  DISTRIBUTION_CREATE: 'DISTRIBUTION_CREATE',
+  DISTRIBUTION_UPDATE: 'DISTRIBUTION_UPDATE',
+  DISTRIBUTION_DELETE: 'DISTRIBUTION_DELETE',
+  DISTRIBUTION_REQUEST_APPROVE: 'DISTRIBUTION_REQUEST_APPROVE',
+  DISTRIBUTION_REQUEST_REJECT: 'DISTRIBUTION_REQUEST_REJECT',
+  DISTRIBUTION_REQUEST_NO_PICKUP: 'DISTRIBUTION_REQUEST_NO_PICKUP',
+  EIC_CREATE: 'EIC_CREATE',
+  EIC_UPDATE: 'EIC_UPDATE',
+  EIC_DELETE: 'EIC_DELETE',
+  EIC_STATUS_CHANGE: 'EIC_STATUS_CHANGE',
+  SEMINAR_CREATE: 'SEMINAR_CREATE',
+  SEMINAR_UPDATE: 'SEMINAR_UPDATE',
+  SEMINAR_DELETE: 'SEMINAR_DELETE',
+  SEMINAR_STATUS_CHANGE: 'SEMINAR_STATUS_CHANGE',
+  CONTENT_CREATE: 'CONTENT_CREATE',
+  CONTENT_UPDATE: 'CONTENT_UPDATE',
+  CONTENT_DELETE: 'CONTENT_DELETE',
+  SYSTEM_BACKUP: 'SYSTEM_BACKUP',
+  SYSTEM_RESTORE: 'SYSTEM_RESTORE',
+  SYSTEM_MAINTENANCE: 'SYSTEM_MAINTENANCE',
+  PROFILE_UPDATE: 'PROFILE_UPDATE',
+  PROFILE_PICTURE_UPDATE: 'PROFILE_PICTURE_UPDATE',
+  SETTINGS_UPDATE: 'SETTINGS_UPDATE'
+};
+
 exports.item_category = exports.$Enums.item_category = {
   Farming_Equipment: 'Farming_Equipment',
   Harvesting_Tools: 'Harvesting_Tools',
@@ -376,6 +455,7 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Commodity: 'Commodity',
   AccountCommodity: 'AccountCommodity',
+  AuditLog: 'AuditLog',
   InventoryItem: 'InventoryItem',
   ItemStack: 'ItemStack',
   ItemTransaction: 'ItemTransaction',
