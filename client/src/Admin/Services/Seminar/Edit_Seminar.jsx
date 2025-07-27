@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import default_picture from '../../../Assets/default_seminar_pic.jpg';
 
-export default function Edit_Seminar({
-    data,
-    toggleOff,
-    setProgramList,
-}) {
+export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
     // Render editing data
     const [newData, setNewData] = useState(data);
     const [image, setImage] = useState(data.photo);
@@ -17,12 +13,24 @@ export default function Edit_Seminar({
         e.preventDefault();
 
         try {
-            const response = await fetch('/api/seminars/updateSeminar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newData),
+            // Create FormData for file upload support
+            const formData = new FormData();
+
+            // Add all the form fields
+            Object.keys(newData).forEach((key) => {
+                if (newData[key] !== null && newData[key] !== undefined) {
+                    formData.append(key, newData[key]);
+                }
+            });
+
+            // Add the photo if it was changed
+            if (changedImage.current && newImage) {
+                formData.append('photo', newImage);
+            }
+
+            const response = await fetch(`/api/seminar/update/${newData.id}`, {
+                method: 'PUT',
+                body: formData, // Send as FormData, not JSON
             });
 
             if (!response.ok) {
@@ -32,46 +40,29 @@ export default function Edit_Seminar({
                     'Failed to update seminar:',
                     response.status,
                     response.statusText,
-                    data.payload.error
+                    data.error || data.payload?.error
                 );
 
                 alert('Failed to update seminar. Please try again.');
                 return;
             }
 
-            if (changedImage.current) {
-                // Create Body
-                const formData = new FormData();
-                formData.append('image', newImage);
-                formData.append('id', newData.id);
-
-                // Request Changes
-                const setImage = await fetch('/api/seminars/setPhoto', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                changedImage.current = false;
-
-                // If Fails
-                if (!setImage.ok) {
-                    const data = await response.json();
-                    console.log(data.payload.error);
-                    alert('Failed to upload image');
-                    return;
-                }
-            }
+            // Success - the photo was already handled in the main update request
+            const responseData = await response.json();
+            console.log('Seminar updated successfully:', responseData);
 
             setProgramList((prev) => {
-                const index = prev.findIndex(
-                    (item) => item.location === newData.location
-                );
+                const index = prev.findIndex((item) => item.id === newData.id);
                 if (index !== -1) {
                     const updatedList = [...prev];
-                    updatedList[index] = {...newData, photo: changedImage.current? URL.createObjectURL(newImage):image};
+                    updatedList[index] = {
+                        ...newData,
+                        photo: changedImage.current
+                            ? URL.createObjectURL(newImage)
+                            : image,
+                    };
                     return updatedList;
-                } 
-                else {
+                } else {
                     return [newData, ...prev];
                 }
             });
@@ -137,10 +128,12 @@ export default function Edit_Seminar({
                                 Status
                             </label>
                             <select
-                                onChange={(e) => setNewData({
-                                    ...newData,
-                                    status: e.target.value,
-                                })}
+                                onChange={(e) =>
+                                    setNewData({
+                                        ...newData,
+                                        status: e.target.value,
+                                    })
+                                }
                                 className="w-full border border-blue-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 shadow-sm"
                                 value={newData.status}
                             >
@@ -330,7 +323,8 @@ export default function Edit_Seminar({
                     {/* Right: Image Upload */}
                     <div className="flex flex-col items-center gap-4 w-full md:w-64">
                         <label className="block text-xs font-semibold text-blue-600 mb-1 self-start">
-                            Upload Image <span className="text-blue-300">(optional)</span>
+                            Upload Image{' '}
+                            <span className="text-blue-300">(optional)</span>
                         </label>
                         <input
                             type="file"

@@ -1,5 +1,10 @@
 import { useState } from 'react';
-import { useAuditLogs, useAuditLogStats, useAuditLogFilters, useRefreshAuditLogs } from './hooks/useAuditQueries.js';
+import {
+    useAuditLogs,
+    useAuditLogStats,
+    useAuditLogFilters,
+    useRefreshAuditLogs,
+} from './hooks/useAuditQueries.js';
 
 export default function Audit({ admin_navigate }) {
     const [activeView, setActiveView] = useState('logs');
@@ -56,10 +61,10 @@ export default function Audit({ admin_navigate }) {
                 {activeView === 'logs' ? (
                     <AuditLogsTable admin_navigate={admin_navigate} />
                 ) : (
-                    <AuditAnalytics 
+                    <AuditAnalytics
                         timeRange={timeRange}
                         setTimeRange={setTimeRange}
-                        admin_navigate={admin_navigate} 
+                        admin_navigate={admin_navigate}
                     />
                 )}
             </div>
@@ -77,7 +82,7 @@ function AuditLogsTable({ admin_navigate }) {
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState('createdAt');
     const [sortOrder, setSortOrder] = useState('desc');
-    
+
     // Advanced filter states
     const [adminId, setAdminId] = useState('');
     const [action, setAction] = useState('');
@@ -85,6 +90,20 @@ function AuditLogsTable({ admin_navigate }) {
     const [dateFrom, setDateFrom] = useState('');
     const [dateTo, setDateTo] = useState('');
     const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+
+    // State for expandable details
+    const [expandedDetails, setExpandedDetails] = useState(new Set());
+
+    // Toggle expanded details for a specific log
+    const toggleDetails = (logId) => {
+        const newExpanded = new Set(expandedDetails);
+        if (newExpanded.has(logId)) {
+            newExpanded.delete(logId);
+        } else {
+            newExpanded.add(logId);
+        }
+        setExpandedDetails(newExpanded);
+    };
 
     // Prepare filters object
     const filters = {
@@ -97,21 +116,19 @@ function AuditLogsTable({ admin_navigate }) {
         dateFrom,
         dateTo,
         sortBy,
-        sortOrder
+        sortOrder,
     };
 
     // Hooks
-    const { 
-        data: auditData, 
-        isLoading, 
-        error, 
-        isFetching 
+    const {
+        data: auditData,
+        isLoading,
+        error,
+        isFetching,
     } = useAuditLogs(filters);
 
-    const { 
-        data: filterData, 
-        isLoading: isLoadingFilters 
-    } = useAuditLogFilters();
+    const { data: filterData, isLoading: isLoadingFilters } =
+        useAuditLogFilters();
 
     const { refreshLogs } = useRefreshAuditLogs();
 
@@ -169,18 +186,27 @@ function AuditLogsTable({ admin_navigate }) {
     const getActionDisplayName = (actionCode) => {
         return actionCode
             .split('_')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .map(
+                (word) =>
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            )
             .join(' ');
     };
 
     // Get action badge color
     const getActionBadgeColor = (actionCode) => {
-        if (actionCode.includes('CREATE')) return 'bg-green-100 text-green-800 border-green-200';
-        if (actionCode.includes('UPDATE')) return 'bg-blue-100 text-blue-800 border-blue-200';
-        if (actionCode.includes('DELETE')) return 'bg-red-100 text-red-800 border-red-200';
-        if (actionCode.includes('LOGIN') || actionCode.includes('LOGOUT')) return 'bg-purple-100 text-purple-800 border-purple-200';
-        if (actionCode.includes('APPROVE')) return 'bg-emerald-100 text-emerald-800 border-emerald-200';
-        if (actionCode.includes('REJECT')) return 'bg-orange-100 text-orange-800 border-orange-200';
+        if (actionCode.includes('CREATE'))
+            return 'bg-green-100 text-green-800 border-green-200';
+        if (actionCode.includes('UPDATE'))
+            return 'bg-blue-100 text-blue-800 border-blue-200';
+        if (actionCode.includes('DELETE'))
+            return 'bg-red-100 text-red-800 border-red-200';
+        if (actionCode.includes('LOGIN') || actionCode.includes('LOGOUT'))
+            return 'bg-purple-100 text-purple-800 border-purple-200';
+        if (actionCode.includes('APPROVE'))
+            return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+        if (actionCode.includes('REJECT'))
+            return 'bg-orange-100 text-orange-800 border-orange-200';
         return 'bg-gray-100 text-gray-800 border-gray-200';
     };
 
@@ -189,18 +215,24 @@ function AuditLogsTable({ admin_navigate }) {
         const date = new Date(timestamp);
         const now = new Date();
         const diffInSeconds = Math.floor((now - date) / 1000);
-        
+
         if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
-        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-        if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-        
+        if (diffInSeconds < 3600)
+            return `${Math.floor(diffInSeconds / 60)}m ago`;
+        if (diffInSeconds < 86400)
+            return `${Math.floor(diffInSeconds / 3600)}h ago`;
+        if (diffInSeconds < 604800)
+            return `${Math.floor(diffInSeconds / 86400)}d ago`;
+
         return date.toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric',
-            year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined,
+            year:
+                date.getFullYear() !== now.getFullYear()
+                    ? 'numeric'
+                    : undefined,
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
         });
     };
 
@@ -210,7 +242,9 @@ function AuditLogsTable({ admin_navigate }) {
             <div className="flex justify-center items-center min-h-96">
                 <div className="flex flex-col items-center gap-4">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                    <div className="text-lg text-gray-600">Loading audit logs...</div>
+                    <div className="text-lg text-gray-600">
+                        Loading audit logs...
+                    </div>
                 </div>
             </div>
         );
@@ -221,7 +255,9 @@ function AuditLogsTable({ admin_navigate }) {
         return (
             <div className="flex justify-center items-center min-h-96">
                 <div className="text-center">
-                    <div className="text-lg text-red-600 mb-4">Error loading audit logs</div>
+                    <div className="text-lg text-red-600 mb-4">
+                        Error loading audit logs
+                    </div>
                     <div className="text-gray-600 mb-4">{error.message}</div>
                     <button
                         onClick={refreshLogs}
@@ -271,14 +307,27 @@ function AuditLogsTable({ admin_navigate }) {
                     {/* Control Buttons */}
                     <div className="flex gap-2">
                         <button
-                            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                            onClick={() =>
+                                setShowAdvancedFilters(!showAdvancedFilters)
+                            }
                             className={`flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-                                showAdvancedFilters || adminId || action || targetType || dateFrom || dateTo
+                                showAdvancedFilters ||
+                                adminId ||
+                                action ||
+                                targetType ||
+                                dateFrom ||
+                                dateTo
                                     ? 'bg-blue-100 text-blue-700 border border-blue-200'
                                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                             }`}
                         >
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <svg
+                                className="w-4 h-4 mr-2"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
                                 <path d="M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a2 2 0 0 1-.553 1.382l-5.894 6.183A2 2 0 0 0 14 15.118V19a1 1 0 0 1-1.447.894l-2-1A1 1 0 0 1 10 18v-2.882a2 2 0 0 0-.553-1.382L3.553 7.382A2 2 0 0 1 3 6V4Z" />
                             </svg>
                             Advanced Filters
@@ -288,8 +337,18 @@ function AuditLogsTable({ admin_navigate }) {
                             onClick={clearFilters}
                             className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all"
                         >
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg
+                                className="w-4 h-4 mr-2"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M6 18L18 6M6 6l12 12"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
                             </svg>
                             Clear
                         </button>
@@ -299,8 +358,20 @@ function AuditLogsTable({ admin_navigate }) {
                             disabled={isFetching}
                             className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-all"
                         >
-                            <svg className={`w-4 h-4 mr-2 ${isFetching ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg
+                                className={`w-4 h-4 mr-2 ${
+                                    isFetching ? 'animate-spin' : ''
+                                }`}
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
                             </svg>
                             Refresh
                         </button>
@@ -312,15 +383,22 @@ function AuditLogsTable({ admin_navigate }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 p-4 bg-white rounded-lg border border-gray-200">
                         {/* Admin Filter */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">Admin</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                                Admin
+                            </label>
                             <select
                                 value={adminId}
-                                onChange={(e) => handleFilterChange('adminId', e.target.value)}
+                                onChange={(e) =>
+                                    handleFilterChange(
+                                        'adminId',
+                                        e.target.value
+                                    )
+                                }
                                 className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                                 disabled={isLoadingFilters}
                             >
                                 <option value="">All Admins</option>
-                                {filterData?.admins?.map(admin => (
+                                {filterData?.admins?.map((admin) => (
                                     <option key={admin.id} value={admin.id}>
                                         {admin.fullName} (@{admin.username})
                                     </option>
@@ -330,16 +408,23 @@ function AuditLogsTable({ admin_navigate }) {
 
                         {/* Action Filter */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">Action</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                                Action
+                            </label>
                             <select
                                 value={action}
-                                onChange={(e) => handleFilterChange('action', e.target.value)}
+                                onChange={(e) =>
+                                    handleFilterChange('action', e.target.value)
+                                }
                                 className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                                 disabled={isLoadingFilters}
                             >
                                 <option value="">All Actions</option>
-                                {filterData?.actions?.map(actionOption => (
-                                    <option key={actionOption} value={actionOption}>
+                                {filterData?.actions?.map((actionOption) => (
+                                    <option
+                                        key={actionOption}
+                                        value={actionOption}
+                                    >
                                         {getActionDisplayName(actionOption)}
                                     </option>
                                 ))}
@@ -348,15 +433,22 @@ function AuditLogsTable({ admin_navigate }) {
 
                         {/* Target Type Filter */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">Target Type</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                                Target Type
+                            </label>
                             <select
                                 value={targetType}
-                                onChange={(e) => handleFilterChange('targetType', e.target.value)}
+                                onChange={(e) =>
+                                    handleFilterChange(
+                                        'targetType',
+                                        e.target.value
+                                    )
+                                }
                                 className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                                 disabled={isLoadingFilters}
                             >
                                 <option value="">All Types</option>
-                                {filterData?.targetTypes?.map(type => (
+                                {filterData?.targetTypes?.map((type) => (
                                     <option key={type} value={type}>
                                         {type}
                                     </option>
@@ -366,22 +458,33 @@ function AuditLogsTable({ admin_navigate }) {
 
                         {/* Date From */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">From Date</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                                From Date
+                            </label>
                             <input
                                 type="date"
                                 value={dateFrom}
-                                onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
+                                onChange={(e) =>
+                                    handleFilterChange(
+                                        'dateFrom',
+                                        e.target.value
+                                    )
+                                }
                                 className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
 
                         {/* Date To */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">To Date</label>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                                To Date
+                            </label>
                             <input
                                 type="date"
                                 value={dateTo}
-                                onChange={(e) => handleFilterChange('dateTo', e.target.value)}
+                                onChange={(e) =>
+                                    handleFilterChange('dateTo', e.target.value)
+                                }
                                 className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
@@ -391,9 +494,17 @@ function AuditLogsTable({ admin_navigate }) {
                 {/* Results Summary */}
                 <div className="flex items-center justify-between text-sm text-gray-600 mt-4">
                     <div>
-                        Showing {logs.length} of {pagination.totalCount || 0} entries
-                        {(search || adminId || action || targetType || dateFrom || dateTo) && (
-                            <span className="ml-2 text-blue-600">(filtered)</span>
+                        Showing {logs.length} of {pagination.totalCount || 0}{' '}
+                        entries
+                        {(search ||
+                            adminId ||
+                            action ||
+                            targetType ||
+                            dateFrom ||
+                            dateTo) && (
+                            <span className="ml-2 text-blue-600">
+                                (filtered)
+                            </span>
                         )}
                     </div>
                     {isFetching && (
@@ -410,7 +521,7 @@ function AuditLogsTable({ admin_navigate }) {
                 <table className="w-full">
                     <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                         <tr>
-                            <th 
+                            <th
                                 className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
                                 onClick={() => handleSort('createdAt')}
                             >
@@ -423,7 +534,7 @@ function AuditLogsTable({ admin_navigate }) {
                                     )}
                                 </div>
                             </th>
-                            <th 
+                            <th
                                 className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
                                 onClick={() => handleSort('admin')}
                             >
@@ -436,7 +547,7 @@ function AuditLogsTable({ admin_navigate }) {
                                     )}
                                 </div>
                             </th>
-                            <th 
+                            <th
                                 className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
                                 onClick={() => handleSort('action')}
                             >
@@ -449,7 +560,7 @@ function AuditLogsTable({ admin_navigate }) {
                                     )}
                                 </div>
                             </th>
-                            <th 
+                            <th
                                 className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
                                 onClick={() => handleSort('targetType')}
                             >
@@ -470,11 +581,18 @@ function AuditLogsTable({ admin_navigate }) {
                     <tbody className="divide-y divide-gray-100">
                         {logs.length === 0 ? (
                             <tr>
-                                <td colSpan={5} className="text-center py-16 text-gray-400 text-base font-medium">
-                                    {search || adminId || action || targetType || dateFrom || dateTo 
-                                        ? 'No logs found matching your filters.' 
-                                        : 'No audit logs available.'
-                                    }
+                                <td
+                                    colSpan={5}
+                                    className="text-center py-16 text-gray-400 text-base font-medium"
+                                >
+                                    {search ||
+                                    adminId ||
+                                    action ||
+                                    targetType ||
+                                    dateFrom ||
+                                    dateTo
+                                        ? 'No logs found matching your filters.'
+                                        : 'No audit logs available.'}
                                 </td>
                             </tr>
                         ) : (
@@ -482,7 +600,9 @@ function AuditLogsTable({ admin_navigate }) {
                                 <tr
                                     key={log.id}
                                     className={`${
-                                        index % 2 === 0 ? 'bg-white' : 'bg-gray-25'
+                                        index % 2 === 0
+                                            ? 'bg-white'
+                                            : 'bg-gray-25'
                                     } hover:bg-blue-50 transition-colors`}
                                 >
                                     {/* Timestamp */}
@@ -491,12 +611,14 @@ function AuditLogsTable({ admin_navigate }) {
                                             {formatTimestamp(log.createdAt)}
                                         </div>
                                         <div className="text-xs text-gray-500">
-                                            {new Date(log.createdAt).toLocaleDateString('en-US', {
+                                            {new Date(
+                                                log.createdAt
+                                            ).toLocaleDateString('en-US', {
                                                 year: 'numeric',
                                                 month: 'short',
                                                 day: 'numeric',
                                                 hour: '2-digit',
-                                                minute: '2-digit'
+                                                minute: '2-digit',
                                             })}
                                         </div>
                                     </td>
@@ -504,8 +626,35 @@ function AuditLogsTable({ admin_navigate }) {
                                     {/* Admin */}
                                     <td className="py-4 px-4">
                                         <div className="flex items-center">
-                                            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">
-                                                {log.admin.fullName.charAt(0).toUpperCase()}
+                                            {/* Show profile picture if available */}
+                                            {log.admin.hasPicture ? (
+                                                <img
+                                                    src={`/api/account/picture/${log.admin.id}`}
+                                                    alt={log.admin.fullName}
+                                                    className="w-8 h-8 rounded-full object-cover mr-3 border-2 border-blue-200"
+                                                    onError={(e) => {
+                                                        console.error(
+                                                            'Image failed to load:',
+                                                            `/api/account/picture/${log.admin.id}`
+                                                        );
+                                                        // Fallback to initials if image fails to load
+                                                        e.target.style.display =
+                                                            'none';
+                                                        e.target.nextSibling.style.display =
+                                                            'flex';
+                                                    }}
+                                                />
+                                            ) : null}
+                                            <div
+                                                className={`w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3 ${
+                                                    log.admin.hasPicture
+                                                        ? 'hidden'
+                                                        : ''
+                                                }`}
+                                            >
+                                                {log.admin.fullName
+                                                    .charAt(0)
+                                                    .toUpperCase()}
                                             </div>
                                             <div>
                                                 <div className="text-sm font-medium text-gray-900">
@@ -520,7 +669,11 @@ function AuditLogsTable({ admin_navigate }) {
 
                                     {/* Action */}
                                     <td className="py-4 px-4">
-                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getActionBadgeColor(log.action)}`}>
+                                        <span
+                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getActionBadgeColor(
+                                                log.action
+                                            )}`}
+                                        >
                                             {getActionDisplayName(log.action)}
                                         </span>
                                     </td>
@@ -539,11 +692,56 @@ function AuditLogsTable({ admin_navigate }) {
 
                                     {/* Details */}
                                     <td className="py-4 px-4">
-                                        <div className="text-sm text-gray-700 max-w-xs truncate">
-                                            {log.details || 'No additional details'}
+                                        <div className="text-sm text-gray-700">
+                                            {(() => {
+                                                const details =
+                                                    log.details ||
+                                                    'No additional details';
+                                                const isLong =
+                                                    details.length > 100;
+                                                const isExpanded =
+                                                    expandedDetails.has(log.id);
+
+                                                if (!isLong) {
+                                                    return (
+                                                        <span>{details}</span>
+                                                    );
+                                                }
+
+                                                return (
+                                                    <div className="max-w-xs">
+                                                        <div
+                                                            className={
+                                                                isExpanded
+                                                                    ? ''
+                                                                    : 'truncate'
+                                                            }
+                                                        >
+                                                            {isExpanded
+                                                                ? details
+                                                                : `${details.substring(
+                                                                      0,
+                                                                      100
+                                                                  )}...`}
+                                                        </div>
+                                                        <button
+                                                            onClick={() =>
+                                                                toggleDetails(
+                                                                    log.id
+                                                                )
+                                                            }
+                                                            className="text-blue-600 hover:text-blue-800 text-xs mt-1 font-medium focus:outline-none"
+                                                        >
+                                                            {isExpanded
+                                                                ? 'Show Less'
+                                                                : 'Show More'}
+                                                        </button>
+                                                    </div>
+                                                );
+                                            })()}
                                         </div>
                                         {log.ipAddress && (
-                                            <div className="text-xs text-gray-500">
+                                            <div className="text-xs text-gray-500 mt-1">
                                                 IP: {log.ipAddress}
                                             </div>
                                         )}
@@ -560,12 +758,13 @@ function AuditLogsTable({ admin_navigate }) {
                 <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                     <div className="flex items-center justify-between">
                         <div className="text-sm text-gray-700">
-                            Page {pagination.currentPage} of {pagination.totalPages}
+                            Page {pagination.currentPage} of{' '}
+                            {pagination.totalPages}
                             <span className="text-gray-500 ml-2">
                                 ({pagination.totalCount} total entries)
                             </span>
                         </div>
-                        
+
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => setPage(Math.max(1, page - 1))}
@@ -574,30 +773,46 @@ function AuditLogsTable({ admin_navigate }) {
                             >
                                 Previous
                             </button>
-                            
+
                             {/* Page Numbers */}
-                            {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                                const pageNum = Math.max(1, pagination.currentPage - 2) + i;
-                                if (pageNum > pagination.totalPages) return null;
-                                
-                                return (
-                                    <button
-                                        key={pageNum}
-                                        onClick={() => setPage(pageNum)}
-                                        disabled={isFetching}
-                                        className={`px-3 py-1 text-sm font-medium rounded-md disabled:cursor-not-allowed ${
-                                            pageNum === pagination.currentPage
-                                                ? 'bg-blue-600 text-white'
-                                                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                                        }`}
-                                    >
-                                        {pageNum}
-                                    </button>
-                                );
-                            })}
-                            
+                            {Array.from(
+                                { length: Math.min(5, pagination.totalPages) },
+                                (_, i) => {
+                                    const pageNum =
+                                        Math.max(
+                                            1,
+                                            pagination.currentPage - 2
+                                        ) + i;
+                                    if (pageNum > pagination.totalPages)
+                                        return null;
+
+                                    return (
+                                        <button
+                                            key={pageNum}
+                                            onClick={() => setPage(pageNum)}
+                                            disabled={isFetching}
+                                            className={`px-3 py-1 text-sm font-medium rounded-md disabled:cursor-not-allowed ${
+                                                pageNum ===
+                                                pagination.currentPage
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                            }`}
+                                        >
+                                            {pageNum}
+                                        </button>
+                                    );
+                                }
+                            )}
+
                             <button
-                                onClick={() => setPage(Math.min(pagination.totalPages, page + 1))}
+                                onClick={() =>
+                                    setPage(
+                                        Math.min(
+                                            pagination.totalPages,
+                                            page + 1
+                                        )
+                                    )
+                                }
                                 disabled={!pagination.hasNextPage || isFetching}
                                 className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
@@ -616,11 +831,7 @@ function AuditLogsTable({ admin_navigate }) {
 /* ================================================================================== */
 
 function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
-    const { 
-        data: statsData, 
-        isLoading, 
-        error 
-    } = useAuditLogStats(timeRange);
+    const { data: statsData, isLoading, error } = useAuditLogStats(timeRange);
 
     const { refreshStats } = useRefreshAuditLogs();
 
@@ -629,7 +840,9 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
             <div className="flex justify-center items-center min-h-96">
                 <div className="flex flex-col items-center gap-4">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                    <div className="text-lg text-gray-600">Loading analytics...</div>
+                    <div className="text-lg text-gray-600">
+                        Loading analytics...
+                    </div>
                 </div>
             </div>
         );
@@ -639,7 +852,9 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
         return (
             <div className="flex justify-center items-center min-h-96">
                 <div className="text-center">
-                    <div className="text-lg text-red-600 mb-4">Error loading analytics</div>
+                    <div className="text-lg text-red-600 mb-4">
+                        Error loading analytics
+                    </div>
                     <div className="text-gray-600 mb-4">{error.message}</div>
                     <button
                         onClick={refreshStats}
@@ -657,14 +872,16 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
         actionDistribution = [],
         adminActivity = [],
         targetTypeDistribution = [],
-        dailyActivity = []
+        dailyActivity = [],
     } = statsData || {};
 
     return (
         <div className="space-y-6">
             {/* Time Range Selector */}
             <div className="flex items-center justify-between bg-white rounded-lg p-4 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900">Audit Analytics</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                    Audit Analytics
+                </h3>
                 <select
                     value={timeRange}
                     onChange={(e) => setTimeRange(e.target.value)}
@@ -682,13 +899,27 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                     <div className="flex items-center">
                         <div className="p-3 rounded-lg bg-blue-100 mr-4">
-                            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg
+                                className="w-6 h-6 text-blue-600"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
                             </svg>
                         </div>
                         <div>
-                            <div className="text-2xl font-bold text-gray-900">{totalLogs.toLocaleString()}</div>
-                            <div className="text-sm text-gray-600">Total Activities</div>
+                            <div className="text-2xl font-bold text-gray-900">
+                                {totalLogs.toLocaleString()}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                                Total Activities
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -696,13 +927,27 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                     <div className="flex items-center">
                         <div className="p-3 rounded-lg bg-green-100 mr-4">
-                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg
+                                className="w-6 h-6 text-green-600"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
                             </svg>
                         </div>
                         <div>
-                            <div className="text-2xl font-bold text-gray-900">{adminActivity.length}</div>
-                            <div className="text-sm text-gray-600">Active Admins</div>
+                            <div className="text-2xl font-bold text-gray-900">
+                                {adminActivity.length}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                                Active Admins
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -710,13 +955,27 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                     <div className="flex items-center">
                         <div className="p-3 rounded-lg bg-purple-100 mr-4">
-                            <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg
+                                className="w-6 h-6 text-purple-600"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
                             </svg>
                         </div>
                         <div>
-                            <div className="text-2xl font-bold text-gray-900">{actionDistribution.length}</div>
-                            <div className="text-sm text-gray-600">Action Types</div>
+                            <div className="text-2xl font-bold text-gray-900">
+                                {actionDistribution.length}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                                Action Types
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -724,13 +983,27 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                     <div className="flex items-center">
                         <div className="p-3 rounded-lg bg-orange-100 mr-4">
-                            <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg
+                                className="w-6 h-6 text-orange-600"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
                             </svg>
                         </div>
                         <div>
-                            <div className="text-2xl font-bold text-gray-900">{targetTypeDistribution.length}</div>
-                            <div className="text-sm text-gray-600">Target Types</div>
+                            <div className="text-2xl font-bold text-gray-900">
+                                {targetTypeDistribution.length}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                                Target Types
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -740,21 +1013,37 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Top Actions */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Top Actions</h4>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                        Top Actions
+                    </h4>
                     <div className="space-y-3">
                         {actionDistribution.slice(0, 8).map((item, index) => (
-                            <div key={item.action} className="flex items-center justify-between">
+                            <div
+                                key={item.action}
+                                className="flex items-center justify-between"
+                            >
                                 <div className="flex items-center">
                                     <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                                        <span className="text-xs font-semibold text-blue-600">{index + 1}</span>
+                                        <span className="text-xs font-semibold text-blue-600">
+                                            {index + 1}
+                                        </span>
                                     </div>
                                     <span className="text-sm font-medium text-gray-900">
-                                        {item.action.split('_').map(word => 
-                                            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                                        ).join(' ')}
+                                        {item.action
+                                            .split('_')
+                                            .map(
+                                                (word) =>
+                                                    word
+                                                        .charAt(0)
+                                                        .toUpperCase() +
+                                                    word.slice(1).toLowerCase()
+                                            )
+                                            .join(' ')}
                                     </span>
                                 </div>
-                                <span className="text-sm text-gray-600">{item.count}</span>
+                                <span className="text-sm text-gray-600">
+                                    {item.count}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -762,14 +1051,21 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
 
                 {/* Most Active Admins */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Most Active Admins</h4>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                        Most Active Admins
+                    </h4>
                     <div className="space-y-3">
                         {adminActivity.slice(0, 8).map((item, index) => (
-                            <div key={item.admin.id} className="flex items-center justify-between">
+                            <div
+                                key={item.admin.id}
+                                className="flex items-center justify-between"
+                            >
                                 <div className="flex items-center">
                                     <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center mr-3">
                                         <span className="text-xs font-semibold text-white">
-                                            {item.admin.fullName.charAt(0).toUpperCase()}
+                                            {item.admin.fullName
+                                                .charAt(0)
+                                                .toUpperCase()}
                                         </span>
                                     </div>
                                     <div>
@@ -781,7 +1077,9 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
                                         </div>
                                     </div>
                                 </div>
-                                <span className="text-sm text-gray-600">{item.count}</span>
+                                <span className="text-sm text-gray-600">
+                                    {item.count}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -790,22 +1088,35 @@ function AuditAnalytics({ timeRange, setTimeRange, admin_navigate }) {
 
             {/* Daily Activity Chart */}
             <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">Daily Activity (Last 30 Days)</h4>
+                <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                    Daily Activity (Last 30 Days)
+                </h4>
                 <div className="h-64 flex items-end space-x-1">
                     {dailyActivity.map((day, index) => {
-                        const maxCount = Math.max(...dailyActivity.map(d => d.count));
-                        const height = maxCount > 0 ? (day.count / maxCount) * 100 : 0;
-                        
+                        const maxCount = Math.max(
+                            ...dailyActivity.map((d) => d.count)
+                        );
+                        const height =
+                            maxCount > 0 ? (day.count / maxCount) * 100 : 0;
+
                         return (
-                            <div key={day.date} className="flex-1 flex flex-col items-center">
-                                <div 
+                            <div
+                                key={day.date}
+                                className="flex-1 flex flex-col items-center"
+                            >
+                                <div
                                     className="w-full bg-blue-500 rounded-t min-h-[4px] transition-all hover:bg-blue-600"
-                                    style={{ height: `${Math.max(4, height)}%` }}
+                                    style={{
+                                        height: `${Math.max(4, height)}%`,
+                                    }}
                                     title={`${day.date}: ${day.count} activities`}
                                 ></div>
                                 {index % 5 === 0 && (
                                     <div className="text-xs text-gray-500 mt-1 transform -rotate-45 origin-top-left">
-                                        {new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                        {new Date(day.date).toLocaleDateString(
+                                            'en-US',
+                                            { month: 'short', day: 'numeric' }
+                                        )}
                                     </div>
                                 )}
                             </div>
