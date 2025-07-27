@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../prisma/generated/client.js';
+import auditLogger from '../../Services/auditLogger.js';
 const prisma = new PrismaClient();
 
 async function editItem(req, res) {
@@ -161,6 +162,27 @@ async function editItem(req, res) {
             });
 
             return updatedStack;
+        });
+
+        // Log the EIC item update
+        await auditLogger.log({
+            adminId: req.user?.id,
+            action: 'EIC_UPDATE',
+            targetType: 'EIC',
+            targetId: result.id,
+            targetName: result.item.name,
+            details: `Updated EIC item ${result.item.name} (Quantity: ${result.quantity})`,
+            metadata: {
+                action: 'eic_item_updated',
+                itemName: result.item.name,
+                quantity: result.quantity,
+                category: result.item.category,
+                stackId: result.id,
+                inventoryItemId: result.item.id,
+                hasImage: !!file,
+                dateLimit: result.date_limit,
+            },
+            req: req,
         });
 
         return res.status(200).json({

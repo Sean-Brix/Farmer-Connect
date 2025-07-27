@@ -85,24 +85,23 @@ async function editStack(req, res) {
                 });
 
                 // Log the inventory status change action
-                await auditLogger.log(
-                    req.user?.id,
-                    'INVENTORY_STATUS_CHANGE',
-                    'InventoryItem',
-                    targetStack.item.id,
-                    targetStack.item.name,
-                    `Set quantity to 0 for ${targetStack.item.name} (${targetStack.status})`,
-                    {
+                await auditLogger.log({
+                    adminId: req.user?.id,
+                    action: 'INVENTORY_STATUS_CHANGE',
+                    targetType: 'InventoryItem',
+                    targetId: targetStack.item.id,
+                    targetName: targetStack.item.name,
+                    details: `Set quantity to 0 for ${targetStack.item.name} (${targetStack.status})`,
+                    metadata: {
                         action: 'quantity_zeroed',
                         itemName: targetStack.item.name,
                         status: targetStack.status,
                         previousQuantity: quantity,
                         newQuantity: 0,
-                        dateLimit: targetStack.date_limit
+                        dateLimit: targetStack.date_limit,
                     },
-                    req.ip,
-                    req.get('User-Agent')
-                );
+                    req: req,
+                });
 
                 return res.status(200).json({
                     message: 'Stack quantity set to 0 successfully',
@@ -132,23 +131,22 @@ async function editStack(req, res) {
                 });
 
                 // Log the inventory creation action
-                await auditLogger.log(
-                    req.user?.id,
-                    'INVENTORY_CREATE',
-                    'InventoryItem',
-                    targetStack.item.id,
-                    targetStack.item.name,
-                    `Created new stack for ${targetStack.item.name} (${targetStack.status}) with 0 quantity`,
-                    {
+                await auditLogger.log({
+                    adminId: req.user?.id,
+                    action: 'INVENTORY_CREATE',
+                    targetType: 'InventoryItem',
+                    targetId: targetStack.item.id,
+                    targetName: targetStack.item.name,
+                    details: `Created new stack for ${targetStack.item.name} (${targetStack.status}) with 0 quantity`,
+                    metadata: {
                         action: 'stack_created',
                         itemName: targetStack.item.name,
                         status: targetStack.status,
                         quantity: 0,
-                        dateLimit: targetStack.date_limit
+                        dateLimit: targetStack.date_limit,
                     },
-                    req.ip,
-                    req.get('User-Agent')
-                );
+                    req: req,
+                });
 
                 return res.status(200).json({
                     message: 'New stack created with 0 quantity',
@@ -161,7 +159,7 @@ async function editStack(req, res) {
                 // Store previous values for audit log
                 const previousQuantity = targetStack.quantity;
                 const previousDateLimit = targetStack.date_limit;
-                
+
                 // Update existing stack
                 targetStack = await prisma.itemStack.update({
                     where: { id: targetStack.id },
@@ -178,25 +176,24 @@ async function editStack(req, res) {
                 });
 
                 // Log the inventory update action
-                await auditLogger.log(
-                    req.user?.id,
-                    'INVENTORY_UPDATE',
-                    'InventoryItem',
-                    targetStack.item.id,
-                    targetStack.item.name,
-                    `Updated stack for ${targetStack.item.name} (${targetStack.status})`,
-                    {
+                await auditLogger.log({
+                    adminId: req.user?.id,
+                    action: 'INVENTORY_UPDATE',
+                    targetType: 'InventoryItem',
+                    targetId: targetStack.item.id,
+                    targetName: targetStack.item.name,
+                    details: `Updated stack for ${targetStack.item.name} (${targetStack.status})`,
+                    metadata: {
                         action: 'stack_updated',
                         itemName: targetStack.item.name,
                         status: targetStack.status,
                         previousQuantity: previousQuantity,
                         newQuantity: quantity,
                         previousDateLimit: previousDateLimit,
-                        newDateLimit: targetStack.date_limit
+                        newDateLimit: targetStack.date_limit,
                     },
-                    req.ip,
-                    req.get('User-Agent')
-                );
+                    req: req,
+                });
             } else {
                 // Create new stack
                 if (!itemId || !status) {
@@ -221,23 +218,22 @@ async function editStack(req, res) {
                 });
 
                 // Log the inventory creation action
-                await auditLogger.log(
-                    req.user?.id,
-                    'INVENTORY_CREATE',
-                    'InventoryItem',
-                    targetStack.item.id,
-                    targetStack.item.name,
-                    `Created new stack for ${targetStack.item.name} (${targetStack.status}) with ${quantity} units`,
-                    {
+                await auditLogger.log({
+                    adminId: req.user?.id,
+                    action: 'INVENTORY_CREATE',
+                    targetType: 'InventoryItem',
+                    targetId: targetStack.item.id,
+                    targetName: targetStack.item.name,
+                    details: `Created new stack for ${targetStack.item.name} (${targetStack.status}) with ${quantity} units`,
+                    metadata: {
                         action: 'stack_created',
                         itemName: targetStack.item.name,
                         status: targetStack.status,
                         quantity: quantity,
-                        dateLimit: targetStack.date_limit
+                        dateLimit: targetStack.date_limit,
                     },
-                    req.ip,
-                    req.get('User-Agent')
-                );
+                    req: req,
+                });
             }
 
             return res.status(200).json({

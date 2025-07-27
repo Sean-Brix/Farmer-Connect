@@ -101,25 +101,25 @@ async function addItem(req, res) {
             });
 
             // Log the inventory update action
-            await auditLogger.log(
-                req.user?.id, // Admin ID from auth middleware
-                'INVENTORY_UPDATE',
-                'InventoryItem',
-                existingItem.id,
-                existingItem.name,
-                `Added ${parsedQuantity} units to existing inventory item: ${existingItem.name} (${targetStatus})`,
-                {
+            await auditLogger.log({
+                adminId: req.user?.id, // Admin ID from auth middleware
+                action: 'INVENTORY_UPDATE',
+                targetType: 'InventoryItem',
+                targetId: existingItem.id,
+                targetName: existingItem.name,
+                details: `Added ${parsedQuantity} units to existing inventory item: ${existingItem.name} (${targetStatus})`,
+                metadata: {
                     action: 'quantity_added',
                     itemName: existingItem.name,
                     quantityAdded: parsedQuantity,
                     status: targetStatus,
                     previousQuantity: existingStack?.quantity || 0,
-                    newQuantity: (existingStack?.quantity || 0) + parsedQuantity,
-                    imageUpdated: !!file
+                    newQuantity:
+                        (existingStack?.quantity || 0) + parsedQuantity,
+                    imageUpdated: !!file,
                 },
-                req.ip,
-                req.get('User-Agent')
-            );
+                req: req,
+            });
 
             return res.status(200).json({
                 message: 'Quantity added to existing item stack successfully',
@@ -157,26 +157,46 @@ async function addItem(req, res) {
                 },
             });
 
-            // Log the inventory creation action
-            await auditLogger.log(
-                req.user?.id, // Admin ID from auth middleware
-                'INVENTORY_CREATE',
-                'InventoryItem',
-                newItem.id,
-                newItem.name,
-                `Created new inventory item: ${newItem.name} with ${parsedQuantity} units (${targetStatus})`,
-                {
-                    action: 'item_created',
+            // Log the inventory creation action (context-aware based on target status)
+            const auditAction =
+                targetStatus === 'EIC'
+                    ? 'EIC_CREATE'
+                    : targetStatus === 'Distributed'
+                    ? 'DISTRIBUTION_CREATE'
+                    : 'INVENTORY_CREATE';
+
+            const auditTargetType =
+                targetStatus === 'EIC'
+                    ? 'EIC'
+                    : targetStatus === 'Distributed'
+                    ? 'Distribution'
+                    : 'InventoryItem';
+
+            await auditLogger.log({
+                adminId: req.user?.id, // Admin ID from auth middleware
+                action: auditAction,
+                targetType: auditTargetType,
+                targetId: newItem.id,
+                targetName: newItem.name,
+                details: `Created new ${targetStatus.toLowerCase()} item: ${
+                    newItem.name
+                } with ${parsedQuantity} units`,
+                metadata: {
+                    action:
+                        targetStatus === 'EIC'
+                            ? 'eic_item_created'
+                            : targetStatus === 'Distributed'
+                            ? 'distribution_item_created'
+                            : 'inventory_item_created',
                     itemName: newItem.name,
                     description: newItem.description,
                     category: newItem.category,
                     initialQuantity: parsedQuantity,
                     initialStatus: targetStatus,
-                    hasImage: !!file
+                    hasImage: !!file,
                 },
-                req.ip,
-                req.get('User-Agent')
-            );
+                req: req,
+            });
 
             return res.status(201).json({
                 message: 'Item created successfully with all status stacks',

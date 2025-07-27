@@ -91,35 +91,39 @@ async function editItem(req, res) {
         // Track what fields were updated for audit log
         const updatedFields = [];
         if (existingItem.name !== name.trim()) updatedFields.push('name');
-        if (existingItem.description !== (description ? description.trim() : null)) updatedFields.push('description');
-        if (existingItem.category !== categoryEnum) updatedFields.push('category');
+        if (
+            existingItem.description !==
+            (description ? description.trim() : null)
+        )
+            updatedFields.push('description');
+        if (existingItem.category !== categoryEnum)
+            updatedFields.push('category');
 
         // Log the inventory update action
-        await auditLogger.log(
-            req.user?.id, // Admin ID from auth middleware
-            'INVENTORY_UPDATE',
-            'InventoryItem',
-            updatedItem.id,
-            updatedItem.name,
-            `Updated inventory item: ${updatedItem.name}`,
-            {
+        await auditLogger.log({
+            adminId: req.user?.id, // Admin ID from auth middleware
+            action: 'INVENTORY_UPDATE',
+            targetType: 'InventoryItem',
+            targetId: updatedItem.id,
+            targetName: updatedItem.name,
+            details: `Updated inventory item: ${updatedItem.name}`,
+            metadata: {
                 action: 'item_edited',
                 itemName: updatedItem.name,
                 updatedFields: updatedFields,
                 previousValues: {
                     name: existingItem.name,
                     description: existingItem.description,
-                    category: existingItem.category
+                    category: existingItem.category,
                 },
                 newValues: {
                     name: updatedItem.name,
                     description: updatedItem.description,
-                    category: updatedItem.category
-                }
+                    category: updatedItem.category,
+                },
             },
-            req.ip,
-            req.get('User-Agent')
-        );
+            req: req,
+        });
 
         return res.status(200).json({
             success: true,

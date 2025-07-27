@@ -50,24 +50,26 @@ async function deleteItem(req, res) {
         });
 
         // Log the inventory deletion action
-        await auditLogger.log(
-            req.user?.id,
-            'INVENTORY_DELETE',
-            'InventoryItem',
-            item.id,
-            item.name,
-            `Deleted inventory item: ${item.name} and all associated stacks/transactions`,
-            {
+        await auditLogger.log({
+            adminId: req.user?.id,
+            action: 'INVENTORY_DELETE',
+            targetType: 'InventoryItem',
+            targetId: item.id,
+            targetName: item.name,
+            details: `Deleted inventory item: ${item.name} and all associated stacks/transactions`,
+            metadata: {
                 action: 'item_deleted',
                 itemName: item.name,
                 description: item.description,
                 category: item.category,
                 stacksDeleted: item.item_stacks.length,
-                transactionsDeleted: item.item_stacks.reduce((total, stack) => total + stack.itemTransactions.length, 0)
+                transactionsDeleted: item.item_stacks.reduce(
+                    (total, stack) => total + stack.itemTransactions.length,
+                    0
+                ),
             },
-            req.ip,
-            req.get('User-Agent')
-        );
+            req: req,
+        });
 
         res.status(200).json({
             message: 'Item and all associated stacks deleted successfully',
