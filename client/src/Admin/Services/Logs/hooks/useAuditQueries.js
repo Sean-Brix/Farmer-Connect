@@ -15,25 +15,28 @@ export const useAuditLogs = (filters = {}) => {
         dateFrom = '',
         dateTo = '',
         sortBy = 'createdAt',
-        sortOrder = 'desc'
+        sortOrder = 'desc',
     } = filters;
 
     return useQuery({
-        queryKey: ['auditLogs', { 
-            page, 
-            limit, 
-            search, 
-            adminId, 
-            action, 
-            targetType, 
-            dateFrom, 
-            dateTo, 
-            sortBy, 
-            sortOrder 
-        }],
+        queryKey: [
+            'auditLogs',
+            {
+                page,
+                limit,
+                search,
+                adminId,
+                action,
+                targetType,
+                dateFrom,
+                dateTo,
+                sortBy,
+                sortOrder,
+            },
+        ],
         queryFn: async () => {
             const params = new URLSearchParams();
-            
+
             if (page) params.append('page', page.toString());
             if (limit) params.append('limit', limit.toString());
             if (search) params.append('search', search);
@@ -59,7 +62,7 @@ export const useAuditLogs = (filters = {}) => {
             }
 
             const result = await response.json();
-            
+
             if (!result.success) {
                 throw new Error(result.message || 'Failed to fetch audit logs');
             }
@@ -83,12 +86,15 @@ export const useAuditLogStats = (timeRange = '30d') => {
             const params = new URLSearchParams();
             params.append('timeRange', timeRange);
 
-            const response = await fetch(`/api/logs/stats?${params.toString()}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            const response = await fetch(
+                `/api/logs/stats?${params.toString()}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
 
             if (!response.ok) {
                 throw new Error(
@@ -97,9 +103,11 @@ export const useAuditLogStats = (timeRange = '30d') => {
             }
 
             const result = await response.json();
-            
+
             if (!result.success) {
-                throw new Error(result.message || 'Failed to fetch audit log statistics');
+                throw new Error(
+                    result.message || 'Failed to fetch audit log statistics'
+                );
             }
 
             return result.data;
@@ -131,9 +139,11 @@ export const useAuditLogFilters = () => {
             }
 
             const result = await response.json();
-            
+
             if (!result.success) {
-                throw new Error(result.message || 'Failed to fetch audit log filters');
+                throw new Error(
+                    result.message || 'Failed to fetch audit log filters'
+                );
             }
 
             return result.data;
@@ -164,6 +174,6 @@ export const useRefreshAuditLogs = () => {
             queryClient.invalidateQueries(['auditLogs']);
             queryClient.invalidateQueries(['auditLogStats']);
             queryClient.invalidateQueries(['auditLogFilters']);
-        }
+        },
     };
 };

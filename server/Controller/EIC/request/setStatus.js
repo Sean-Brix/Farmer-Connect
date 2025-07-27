@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../../prisma/generated/client.js';
+import auditLogger from '../../../Services/auditLogger.js';
 const prisma = new PrismaClient();
 
 async function setStatus(req, res) {
@@ -111,13 +112,17 @@ async function setStatus(req, res) {
 
             // Prevent changing already completed transactions
             if (
-                ['Returned', 'No_Return', 'late_return', 'No_Pickup'].includes(
-                    transaction.status
-                )
+                [
+                    'Returned',
+                    'No_Return',
+                    'late_return',
+                    'No_Pickup',
+                    'Rejected',
+                ].includes(transaction.status)
             ) {
                 return res.status(400).json({
                     error: 'Invalid operation',
-                    message: 'Cannot modify completed transactions',
+                    message: 'Cannot modify completed or rejected transactions',
                 });
             }
 
@@ -235,10 +240,41 @@ async function setStatus(req, res) {
                         updatedAt: new Date(),
                     },
                 });
-
             }
 
             return updatedTransaction;
+        });
+
+        // Log the EIC request status change
+        const auditAction =
+            status === 'Approved'
+                ? 'EIC_REQUEST_APPROVE'
+                : status === 'Rejected'
+                ? 'EIC_REQUEST_REJECT'
+                : status === 'No_Pickup'
+                ? 'EIC_REQUEST_NO_PICKUP'
+                : 'EIC_STATUS_CHANGE';
+
+        await auditLogger.log({
+            adminId: req.user?.id,
+            action: auditAction,
+            targetType: 'EIC_Request',
+            targetId: result.id,
+            targetName: `${result.itemStack.item.name} (${result.account.firstName} ${result.account.lastName})`,
+            details: `Changed EIC request status to ${status} for ${result.itemStack.item.name} requested by ${result.account.firstName} ${result.account.lastName}`,
+            metadata: {
+                action: 'eic_request_status_changed',
+                requestId: result.id,
+                itemName: result.itemStack.item.name,
+                requestorName: `${result.account.firstName} ${result.account.lastName}`,
+                requestorId: result.account.id,
+                quantity: result.quantity,
+                previousStatus: transaction.status,
+                newStatus: status,
+                itemStackId: result.itemStackId,
+                inventoryItemId: result.itemStack.item.id,
+            },
+            req: req,
         });
 
         return res.status(200).json({

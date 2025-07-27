@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 /**
  * Get Audit Log Statistics
- * 
+ *
  * This controller provides statistical information about audit logs
  * including action counts, admin activity, and timeline data.
  * This is useful for analytics and dashboard summaries.
@@ -14,7 +14,7 @@ async function getLogStats(req, res) {
         const {
             dateFrom = '',
             dateTo = '',
-            timeRange = '30d' // 7d, 30d, 90d, 1y
+            timeRange = '30d', // 7d, 30d, 90d, 1y
         } = req.query;
 
         // Calculate date range
@@ -47,8 +47,8 @@ async function getLogStats(req, res) {
         const where = {
             createdAt: {
                 gte: startDate,
-                lte: endDate
-            }
+                lte: endDate,
+            },
         };
 
         // Get total log count
@@ -59,13 +59,13 @@ async function getLogStats(req, res) {
             by: ['action'],
             where,
             _count: {
-                action: true
+                action: true,
             },
             orderBy: {
                 _count: {
-                    action: 'desc'
-                }
-            }
+                    action: 'desc',
+                },
+            },
         });
 
         // Get most active admins
@@ -73,42 +73,42 @@ async function getLogStats(req, res) {
             by: ['adminId'],
             where,
             _count: {
-                adminId: true
+                adminId: true,
             },
             orderBy: {
                 _count: {
-                    adminId: 'desc'
-                }
+                    adminId: 'desc',
+                },
             },
-            take: 10
+            take: 10,
         });
 
         // Get admin details for the stats
-        const adminIds = adminStats.map(stat => stat.adminId);
+        const adminIds = adminStats.map((stat) => stat.adminId);
         const admins = await prisma.account.findMany({
             where: {
-                id: { in: adminIds }
+                id: { in: adminIds },
             },
             select: {
                 id: true,
                 username: true,
                 firstName: true,
                 lastName: true,
-                access: true
-            }
+                access: true,
+            },
         });
 
         // Combine admin stats with admin details
-        const adminActivity = adminStats.map(stat => {
-            const admin = admins.find(a => a.id === stat.adminId);
+        const adminActivity = adminStats.map((stat) => {
+            const admin = admins.find((a) => a.id === stat.adminId);
             return {
                 admin: {
                     id: admin.id,
                     username: admin.username,
                     fullName: `${admin.firstName} ${admin.lastName}`,
-                    access: admin.access
+                    access: admin.access,
                 },
-                count: stat._count.adminId
+                count: stat._count.adminId,
             };
         });
 
@@ -117,43 +117,43 @@ async function getLogStats(req, res) {
             by: ['targetType'],
             where: {
                 ...where,
-                targetType: { not: null }
+                targetType: { not: null },
             },
             _count: {
-                targetType: true
+                targetType: true,
             },
             orderBy: {
                 _count: {
-                    targetType: 'desc'
-                }
-            }
+                    targetType: 'desc',
+                },
+            },
         });
 
         // Get daily activity (last 30 days)
         const dailyActivity = [];
         const dailyStart = new Date();
         dailyStart.setDate(dailyStart.getDate() - 29);
-        
+
         for (let i = 0; i < 30; i++) {
             const dayStart = new Date(dailyStart);
             dayStart.setDate(dailyStart.getDate() + i);
             dayStart.setHours(0, 0, 0, 0);
-            
+
             const dayEnd = new Date(dayStart);
             dayEnd.setHours(23, 59, 59, 999);
-            
+
             const count = await prisma.auditLog.count({
                 where: {
                     createdAt: {
                         gte: dayStart,
-                        lte: dayEnd
-                    }
-                }
+                        lte: dayEnd,
+                    },
+                },
             });
-            
+
             dailyActivity.push({
                 date: dayStart.toISOString().split('T')[0],
-                count
+                count,
             });
         }
 
@@ -164,27 +164,27 @@ async function getLogStats(req, res) {
                 timeRange: {
                     from: startDate,
                     to: endDate,
-                    preset: timeRange
+                    preset: timeRange,
                 },
-                actionDistribution: actionStats.map(stat => ({
+                actionDistribution: actionStats.map((stat) => ({
                     action: stat.action,
-                    count: stat._count.action
+                    count: stat._count.action,
                 })),
                 adminActivity,
-                targetTypeDistribution: targetTypeStats.map(stat => ({
+                targetTypeDistribution: targetTypeStats.map((stat) => ({
                     targetType: stat.targetType,
-                    count: stat._count.targetType
+                    count: stat._count.targetType,
                 })),
-                dailyActivity
-            }
+                dailyActivity,
+            },
         });
-
     } catch (error) {
         console.error('Error fetching audit log statistics:', error);
         return res.status(500).json({
             success: false,
-            message: 'Internal server error while fetching audit log statistics',
-            error: error.message
+            message:
+                'Internal server error while fetching audit log statistics',
+            error: error.message,
         });
     }
 }

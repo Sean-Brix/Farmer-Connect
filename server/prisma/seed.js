@@ -584,12 +584,21 @@ async function createAuditLogs() {
     {
       action: 'INVENTORY_STATUS_CHANGE',
       targetType: 'InventoryItem',
-      getTarget: () => faker.helpers.arrayElement(itemStacks),
-      getDetails: (admin, target) => `Changed status of ${target.item.name} from Available to ${faker.helpers.arrayElement(['EIC', 'Distributed', 'Unavailable'])}`,
+      getTarget: () => {
+        const stack = faker.helpers.arrayElement(itemStacks);
+        return {
+          id: stack.item.id, // Use the actual inventory item ID
+          name: stack.item.name, // Use the actual inventory item name
+          quantity: stack.quantity,
+          stackId: stack.id
+        };
+      },
+      getDetails: (admin, target) => `Changed status of ${target.name} from Available to ${faker.helpers.arrayElement(['EIC', 'Distributed', 'Unavailable'])}`,
       getMetadata: (admin, target) => ({
         previousStatus: 'Available',
         newStatus: faker.helpers.arrayElement(['EIC', 'Distributed', 'Unavailable']),
-        quantity: target.quantity
+        quantity: target.quantity,
+        stackId: target.stackId
       })
     },
 
@@ -627,7 +636,17 @@ async function createAuditLogs() {
     {
       action: 'SEMINAR_CREATE',
       targetType: 'Seminar',
-      getTarget: () => faker.helpers.arrayElement(seminars),
+      getTarget: () => {
+        const seminar = faker.helpers.arrayElement(seminars);
+        return {
+          id: seminar.id,
+          title: seminar.title,
+          speaker: seminar.speaker,
+          location: seminar.location,
+          capacity: seminar.capacity,
+          start_date: seminar.start_date
+        };
+      },
       getDetails: (admin, target) => `Created new seminar: ${target.title}`,
       getMetadata: (admin, target) => ({
         speaker: target.speaker,
@@ -639,7 +658,15 @@ async function createAuditLogs() {
     {
       action: 'SEMINAR_UPDATE',
       targetType: 'Seminar',
-      getTarget: () => faker.helpers.arrayElement(seminars),
+      getTarget: () => {
+        const seminar = faker.helpers.arrayElement(seminars);
+        return {
+          id: seminar.id,
+          title: seminar.title,
+          speaker: seminar.speaker,
+          location: seminar.location
+        };
+      },
       getDetails: (admin, target) => `Updated seminar details: ${target.title}`,
       getMetadata: (admin, target) => ({
         updatedFields: faker.helpers.arrayElements(['description', 'location', 'capacity', 'speaker'], { min: 1, max: 3 }),
@@ -649,7 +676,14 @@ async function createAuditLogs() {
     {
       action: 'SEMINAR_STATUS_CHANGE',
       targetType: 'Seminar',
-      getTarget: () => faker.helpers.arrayElement(seminars),
+      getTarget: () => {
+        const seminar = faker.helpers.arrayElement(seminars);
+        return {
+          id: seminar.id,
+          title: seminar.title,
+          status: seminar.status
+        };
+      },
       getDetails: (admin, target) => `Changed seminar status: ${target.title} to ${faker.helpers.arrayElement(['Completed', 'Cancelled', 'Ongoing'])}`,
       getMetadata: (admin, target) => ({
         previousStatus: target.status,
@@ -703,7 +737,17 @@ async function createAuditLogs() {
     if (template.getTarget) {
       target = template.getTarget();
       targetId = target.id;
-      targetName = target.name || `${target.firstName} ${target.lastName}` || target.title;
+      
+      // Determine targetName based on target type and available properties
+      if (target.title) {
+        targetName = target.title; // For seminars
+      } else if (target.name) {
+        targetName = target.name; // For inventory items, distributions, etc.
+      } else if (target.firstName && target.lastName) {
+        targetName = `${target.firstName} ${target.lastName}`; // For accounts
+      } else {
+        targetName = target.id; // Fallback to ID if no other name is available
+      }
     }
 
     // Generate timestamp within the last 90 days
