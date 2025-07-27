@@ -52,6 +52,23 @@ CREATE TABLE `accounts_commodities` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `audit_logs` (
+    `id` VARCHAR(191) NOT NULL,
+    `adminId` VARCHAR(191) NOT NULL,
+    `action` ENUM('ACCOUNT_CREATE', 'ACCOUNT_UPDATE', 'ACCOUNT_DELETE', 'ACCOUNT_ROLE_CHANGE', 'ACCOUNT_STATUS_CHANGE', 'LOGIN', 'LOGOUT', 'LOGIN_FAILED', 'INVENTORY_CREATE', 'INVENTORY_UPDATE', 'INVENTORY_DELETE', 'INVENTORY_STATUS_CHANGE', 'DISTRIBUTION_CREATE', 'DISTRIBUTION_UPDATE', 'DISTRIBUTION_DELETE', 'DISTRIBUTION_REQUEST_APPROVE', 'DISTRIBUTION_REQUEST_REJECT', 'DISTRIBUTION_REQUEST_NO_PICKUP', 'EIC_CREATE', 'EIC_UPDATE', 'EIC_DELETE', 'EIC_STATUS_CHANGE', 'EIC_REQUEST_APPROVE', 'EIC_REQUEST_REJECT', 'EIC_REQUEST_NO_PICKUP', 'SEMINAR_CREATE', 'SEMINAR_UPDATE', 'SEMINAR_DELETE', 'SEMINAR_STATUS_CHANGE', 'SEMINAR_PARTICIPANT_UPDATE', 'CONTENT_CREATE', 'CONTENT_UPDATE', 'CONTENT_DELETE', 'SYSTEM_BACKUP', 'SYSTEM_RESTORE', 'SYSTEM_MAINTENANCE', 'PROFILE_UPDATE', 'PROFILE_PICTURE_UPDATE', 'SETTINGS_UPDATE') NOT NULL,
+    `targetType` VARCHAR(191) NULL,
+    `targetId` VARCHAR(191) NULL,
+    `targetName` VARCHAR(191) NULL,
+    `details` TEXT NULL,
+    `metadata` JSON NULL,
+    `ipAddress` VARCHAR(191) NULL,
+    `userAgent` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `inventory_items` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
@@ -71,6 +88,7 @@ CREATE TABLE `item_stacks` (
     `itemId` VARCHAR(191) NOT NULL,
     `quantity` INTEGER NOT NULL DEFAULT 1,
     `status` ENUM('Available', 'Unavailable', 'Damaged', 'EIC', 'Distributed') NOT NULL DEFAULT 'Available',
+    `date_limit` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -87,7 +105,7 @@ CREATE TABLE `item_transactions` (
     `status` ENUM('Pending', 'Approved', 'Rejected', 'Returned', 'No_Return', 'late_return', 'No_Pickup', 'Cancelled') NOT NULL DEFAULT 'Pending',
     `pickupDate` DATETIME(3) NOT NULL,
     `returnDate` DATETIME(3) NULL,
-    `dateLimit` INTEGER NULL,
+    `requestNote` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -135,6 +153,9 @@ ALTER TABLE `accounts_commodities` ADD CONSTRAINT `accounts_commodities_commodit
 
 -- AddForeignKey
 ALTER TABLE `accounts_commodities` ADD CONSTRAINT `accounts_commodities_account_id_fkey` FOREIGN KEY (`account_id`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `audit_logs` ADD CONSTRAINT `audit_logs_adminId_fkey` FOREIGN KEY (`adminId`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `item_stacks` ADD CONSTRAINT `item_stacks_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `inventory_items`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
