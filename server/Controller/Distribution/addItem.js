@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../prisma/generated/client.js';
+import auditLogger from '../../Services/auditLogger.js';
 
 const prisma = new PrismaClient();
 
@@ -87,6 +88,26 @@ const addDistributionItem = async (req, res) => {
                 },
             });
         }
+
+        // Log the distribution item creation
+        await auditLogger.log({
+            adminId: req.user?.id,
+            action: 'DISTRIBUTION_CREATE',
+            targetType: 'Distribution',
+            targetId: itemStack.id,
+            targetName: inventoryItem.name,
+            details: `Added ${parsedQuantity} units of ${inventoryItem.name} to distribution`,
+            metadata: {
+                action: 'distribution_item_added',
+                itemName: inventoryItem.name,
+                quantity: parsedQuantity,
+                category: inventoryItem.category,
+                isNewInventoryItem: !itemStack ? false : true,
+                stackId: itemStack.id,
+                inventoryItemId: inventoryItem.id,
+            },
+            req: req,
+        });
 
         res.status(201).json({
             success: true,

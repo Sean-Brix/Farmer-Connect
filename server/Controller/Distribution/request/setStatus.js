@@ -208,29 +208,39 @@ async function setStatus(req, res) {
 
             // Log the distribution request status change only for admin actions
             if (user.access === 'Admin' || user.access === 'Super_Admin') {
-                const auditAction = status === 'Approved' ? 'DISTRIBUTION_REQUEST_APPROVE' : 'DISTRIBUTION_REQUEST_REJECT';
+                const auditAction =
+                    status === 'Approved'
+                        ? 'DISTRIBUTION_REQUEST_APPROVE'
+                        : 'DISTRIBUTION_REQUEST_REJECT';
                 const isApproval = status === 'Approved';
-                
-                await auditLogger.log(
-                    userId,
-                    auditAction,
-                    'Distribution',
-                    updatedTransaction.id,
-                    updatedTransaction.itemStack.item.name,
-                    `${isApproval ? 'Approved' : 'Rejected'} distribution request for ${updatedTransaction.itemStack.item.name}`,
-                    {
-                        action: isApproval ? 'request_approved' : 'request_rejected',
+
+                await auditLogger.log({
+                    adminId: userId,
+                    action: auditAction,
+                    targetType: 'Distribution',
+                    targetId: updatedTransaction.id,
+                    targetName: updatedTransaction.itemStack.item.name,
+                    details: `${
+                        isApproval ? 'Approved' : 'Rejected'
+                    } distribution request for ${
+                        updatedTransaction.itemStack.item.name
+                    }`,
+                    metadata: {
+                        action: isApproval
+                            ? 'request_approved'
+                            : 'request_rejected',
                         itemName: updatedTransaction.itemStack.item.name,
                         requestedQuantity: updatedTransaction.quantity,
                         availableStock: transaction.itemStack.quantity,
                         requestorInfo: `${updatedTransaction.account.firstName} ${updatedTransaction.account.lastName}`,
                         previousStatus: currentStatus,
                         newStatus: newStatus,
-                        rejectionReason: !isApproval ? 'Admin rejection' : undefined
+                        rejectionReason: !isApproval
+                            ? 'Admin rejection'
+                            : undefined,
                     },
-                    req.ip,
-                    req.get('User-Agent')
-                );
+                    req: req,
+                });
             }
 
             // Update stack quantity if there's a change
