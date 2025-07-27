@@ -49,7 +49,6 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
 
             // Success - the photo was already handled in the main update request
             const responseData = await response.json();
-            console.log('Seminar updated successfully:', responseData);
 
             setProgramList((prev) => {
                 const index = prev.findIndex((item) => item.id === newData.id);

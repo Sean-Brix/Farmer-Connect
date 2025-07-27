@@ -121,7 +121,6 @@ export default function Distribution() {
 
     const handleAddDistributionItem = async (formData) => {
         try {
-            console.log('Submitting distribution item...');
             await addDistributionItemMutation.mutateAsync(formData);
             setShowAddModal(false);
             setImageUpdateTimestamp(Date.now()); // Force image refresh

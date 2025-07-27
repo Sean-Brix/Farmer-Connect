@@ -98,12 +98,6 @@ class AuditLogger {
                 },
             });
 
-            console.log(
-                `[AUDIT] ${action} by ${auditLog.admin.username}${
-                    targetName ? ` on ${targetName}` : ''
-                }`
-            );
-
             return auditLog;
         } catch (error) {
             // Log error but don't throw - audit logging should not break main functionality

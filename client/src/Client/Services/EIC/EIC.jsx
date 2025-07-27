@@ -183,7 +183,7 @@ export default function Eic() {
             setSelectedItem(item);
             setModalOpen(true);
         } catch (e) {
-            console.log('Request EIC Item:  ' + e);
+            console.error('Request EIC Item error:', e);
         }
     };
 

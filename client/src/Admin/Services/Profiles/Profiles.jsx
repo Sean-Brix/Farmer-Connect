@@ -25,14 +25,12 @@ export default function Profiles({ details }) {
             if (Object.values(filter).every((value) => value === 'none')) {
                 const response = await fetch('/api/account/all');
                 if (!response.ok) {
-                    console.log(await response.text());
                     throw new Error('Something went wrong');
                 }
                 return response.json();
             } else {
                 const response = await fetch(url);
                 if (!response.ok) {
-                    console.log(await response.text());
                     throw new Error('Something went wrong');
                 }
                 return response.json();

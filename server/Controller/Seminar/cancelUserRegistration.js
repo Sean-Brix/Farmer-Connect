@@ -17,7 +17,9 @@ async function cancelUserRegistration(req, res) {
         });
 
         if (!seminar || seminar.participants.length === 0) {
-            return res.status(404).json({ error: 'Seminar not found or user not registered' });
+            return res
+                .status(404)
+                .json({ error: 'Seminar not found or user not registered' });
         }
 
         // Set participant's registration status to 'cancelled'
@@ -30,11 +32,12 @@ async function cancelUserRegistration(req, res) {
                 status: 'Cancelled',
             },
         });
-        
-        return res.status(200).json({ message: 'Registration cancelled successfully' });
-    } 
-    catch (error) {
-        console.log(error)
+
+        return res
+            .status(200)
+            .json({ message: 'Registration cancelled successfully' });
+    } catch (error) {
+        console.error('Cancel user registration error:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 }

@@ -328,7 +328,6 @@ export default function Dashboard() {
 
                 if (response.ok) {
                     const result = await response.json();
-                    console.log(result.message); // "Logout successful"
 
                     // Clear any local storage or session storage if needed
                     localStorage.clear();

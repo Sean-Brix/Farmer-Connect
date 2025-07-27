@@ -179,7 +179,7 @@ export default function Distribution() {
             setSelectedItem(item);
             setModalOpen(true);
         } catch (e) {
-            console.log('Request Distribution Item:  ' + e);
+            console.error('Request Distribution Item error:', e);
         }
     };
 

@@ -10,7 +10,9 @@ import UserProfile_UpdateLoading from './Loading/User_Profile_Update';
 export default function Account() {
     const [refreshNav, setRefreshNav] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const [photo, setPhoto] = useState('/api/account/picture/me?refresh=' + new Date().getTime());
+    const [photo, setPhoto] = useState(
+        '/api/account/picture/me?refresh=' + new Date().getTime()
+    );
     const [imageFile, setImageFile] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -26,9 +28,9 @@ export default function Account() {
         queryFn: async () => {
             const response = await fetch(`/api/account/details/me`);
             if (!response.ok) {
-                const error = new Error("Fetch Error");
-                error.status = response.status
-                throw error
+                const error = new Error('Fetch Error');
+                error.status = response.status;
+                throw error;
             }
             return await response.json();
         },
@@ -106,19 +108,19 @@ export default function Account() {
                 setPhoto(URL.createObjectURL(imageFile));
             }
 
-            await profileMutation.mutateAsync({...profile, ...tempProfile});
-        } 
-        catch (error) {
-            console.log(error);
+            await profileMutation.mutateAsync({ ...profile, ...tempProfile });
+        } catch (error) {
+            console.error('Profile update error:', error);
         }
     };
 
     // Profile Details
-    if(isLoading) return <User_Profile_Loading/>;
-    if(isError) return <User_Profile_Error statusCode={error.status} />
+    if (isLoading) return <User_Profile_Loading />;
+    if (isError) return <User_Profile_Error statusCode={error.status} />;
 
     // Profile Updates
-    if(profileMutation.isPending || pictureMutation.isPending) return <UserProfile_UpdateLoading/>
+    if (profileMutation.isPending || pictureMutation.isPending)
+        return <UserProfile_UpdateLoading />;
 
     return (
         <>
@@ -315,9 +317,7 @@ export default function Account() {
                                     type="text"
                                     name="cellphone_no"
                                     className="block w-full border border-blue-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 text-blue-900 transition text-sm"
-                                    defaultValue={
-                                        profile.cellphone_no || ''
-                                    }
+                                    defaultValue={profile.cellphone_no || ''}
                                     onChange={handleChange}
                                     disabled={!editMode}
                                 />
@@ -330,9 +330,7 @@ export default function Account() {
                                     type="text"
                                     name="institution"
                                     className="block w-full border border-blue-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 text-blue-900 transition text-sm"
-                                    defaultValue={
-                                        profile.institution || ''
-                                    }
+                                    defaultValue={profile.institution || ''}
                                     onChange={handleChange}
                                     disabled={!editMode}
                                 />
@@ -357,9 +355,7 @@ export default function Account() {
                                             type="email"
                                             name="email"
                                             className="text-blue-900 break-all border border-blue-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50 transition text-sm"
-                                            defaultValue={
-                                                profile.email || ''
-                                            }
+                                            defaultValue={profile.email || ''}
                                             onChange={handleChange}
                                         />
                                     ) : (

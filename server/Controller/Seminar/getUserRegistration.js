@@ -8,29 +8,29 @@ async function getUserRegistration(req, res) {
         // Fetch all seminars where the user is a participant and status is not 'Cancelled'
         const userRegistrations = await prisma.seminarParticipant.findMany({
             where: {
-            account_id: userId,
-            status: {
-                not: 'Cancelled'
-            }
-            },
-            select: {
-            status: true,
-            seminar: {
-                select: {
-                id: true,
-                title: true,
-                description: true,
-                location: true,
-                speaker: true,
-                start_date: true,
-                end_date: true,
-                start_time: true,
-                end_time: true,
-                capacity: true,
-                registration_deadline: true,
-                status: true,
+                account_id: userId,
+                status: {
+                    not: 'Cancelled',
                 },
             },
+            select: {
+                status: true,
+                seminar: {
+                    select: {
+                        id: true,
+                        title: true,
+                        description: true,
+                        location: true,
+                        speaker: true,
+                        start_date: true,
+                        end_date: true,
+                        start_time: true,
+                        end_time: true,
+                        capacity: true,
+                        registration_deadline: true,
+                        status: true,
+                    },
+                },
             },
         });
 
@@ -43,9 +43,8 @@ async function getUserRegistration(req, res) {
         });
 
         return res.status(200).json(userRegistrations);
-    } 
-    catch (error) {
-        console.log(error);
+    } catch (error) {
+        console.error('Get user registration error:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 }

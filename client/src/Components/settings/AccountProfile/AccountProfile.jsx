@@ -1,54 +1,49 @@
-import { Link } from "react-router-dom";
-import default_picture from '../../../Assets/default_picture.png'
-import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
+import default_picture from '../../../Assets/default_picture.png';
+import { useEffect, useState } from 'react';
 
-import Info_Block from "./Info_Block";
+import Info_Block from './Info_Block';
 
-export default function AccountProfile({admin_navigate, details}){
-
+export default function AccountProfile({ admin_navigate, details }) {
     // Default Value
     const [user, setUser] = useState({
-        access: "Admin",
-        address: "Address",
-        cellphone_no: "00000000000",
-        client_profile: "Citizen",
-        created_at: "0000-00-00 00:00:00",
-        email_address: "userAccount@gmail.com",
-        firstname: "First Name",
-        lastname: "Last Name",
-        gender: "Gender",
-        id: "0",
-        institution: "User Institution",
-        occupation: "Occupation",
-        position: "Position",
-        telephone_no: "0000-0000",
-        username: "Account Username",
-        picture: details.picture
+        access: 'Admin',
+        address: 'Address',
+        cellphone_no: '00000000000',
+        client_profile: 'Citizen',
+        created_at: '0000-00-00 00:00:00',
+        email_address: 'userAccount@gmail.com',
+        firstname: 'First Name',
+        lastname: 'Last Name',
+        gender: 'Gender',
+        id: '0',
+        institution: 'User Institution',
+        occupation: 'Occupation',
+        position: 'Position',
+        telephone_no: '0000-0000',
+        username: 'Account Username',
+        picture: details.picture,
     });
 
-    useEffect(()=>{
-
-        (async()=>{
-
+    useEffect(() => {
+        (async () => {
             try {
-                const response = await fetch('/api/accounts/details', {method: 'GET'});
+                const response = await fetch('/api/accounts/details', {
+                    method: 'GET',
+                });
                 const data = await response.json();
 
                 if (!response.ok) {
-                    console.log(data.payload.error);
+                    console.error('Account profile error:', data.payload.error);
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                setUser({...data.payload, picture: details.picture});
-
-            } 
-            catch (error) {
+                setUser({ ...data.payload, picture: details.picture });
+            } catch (error) {
                 console.error('Error fetching user details:', error);
-                admin_navigate("analytics");
+                admin_navigate('analytics');
             }
-
-        })()
-
+        })();
     }, []);
 
     return (
@@ -60,7 +55,7 @@ export default function AccountProfile({admin_navigate, details}){
                 </span>
             </div>
 
-            <Info_Block user={user} admin_navigate={admin_navigate}/>
+            <Info_Block user={user} admin_navigate={admin_navigate} />
         </>
     );
 }
