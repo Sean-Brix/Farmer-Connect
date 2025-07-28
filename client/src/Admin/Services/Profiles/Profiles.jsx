@@ -45,149 +45,115 @@ export default function Profiles({ details }) {
     const userList = data?.list || [];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-3 px-1 sm:py-6 md:py-10 lg:py-14 xl:py-20 sm:mt-10 transition-all">
-            {/* HEADER */}
-            <div className="flex items-center justify-center md:justify-start max-w-4xl mx-auto mb-6">
-                <div className="flex items-center w-full">
-                    <hr className="flex-grow border-t border-gray-200" />
-                    <h1 className="mx-3 text-2xl sm:text-3xl font-bold text-gray-800 bg-white/80 px-6 py-1 rounded-full shadow whitespace-nowrap tracking-tight">
-                        Account Management
-                    </h1>
-                    <hr className="flex-grow border-t border-gray-200" />
-                </div>
-            </div>
-            <div className="max-w-4xl mx-auto bg-white/95 rounded-xl shadow-lg p-3 sm:p-6 border border-gray-100">
-                {/* FILTERS */}
-                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-6">
-                    <div className="flex flex-col gap-2 w-full md:w-auto md:flex-row md:items-center md:gap-4 flex-wrap">
-                        {/* Search Bar */}
-                        <input
-                            type="text"
-                            placeholder="Search profiles..."
-                            className="w-full md:w-64 px-3 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition bg-gray-50/60 placeholder:text-gray-400"
-                            onChange={(e) =>
-                                setFilter({ ...filter, search: e.target.value })
-                            }
-                        />
-                        {/* Filters */}
-                        <div className="flex flex-col gap-2 sm:flex-row sm:gap-3 w-full md:w-auto flex-wrap">
-                            {/* ACCESS FILTER */}
-                            <select
-                                className="w-full sm:w-36 px-2 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition bg-gray-50/60 text-gray-700"
-                                onChange={(e) =>
-                                    setFilter({
-                                        ...filter,
-                                        roles: e.target.value,
-                                    })
-                                }
-                            >
-                                <option value="none">All Roles</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Super Admin">Super Admin</option>
-                                <option value="User">User</option>
-                            </select>
-
-                            {/* CLIENT FILTER */}
-                            <select
-                                className="w-full sm:w-44 px-2 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition bg-gray-50/60 text-gray-700"
-                                onChange={(e) =>
-                                    setFilter({
-                                        ...filter,
-                                        client_profile: e.target.value,
-                                    })
-                                }
-                            >
-                                <option value="" disabled>
-                                    Client Profile
-                                </option>
-                                <option value="none">All Profile</option>
-                                <option value="Fishfolk">Fishfolk</option>
-                                <option value="Rural Based Org">
-                                    Rural Based Org
-                                </option>
-                                <option value="Student">Student</option>
-                                <option value="Agricultural/Fisheries Technician">
-                                    Agricultural/Fisheries Tech.
-                                </option>
-                                <option value="Youth">Youth</option>
-                                <option value="Women">Women</option>
-                                <option value="Gov't Employee">
-                                    Gov't Employee
-                                </option>
-                                <option value="PWD">PWD</option>
-                                <option value="Indigenous People">
-                                    Indigenous People
-                                </option>
-                            </select>
-
-                            {/* SORT BY FILTER */}
-                            <select
-                                className="w-full sm:w-36 px-2 py-2 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 transition bg-gray-50/60 text-gray-700"
-                                onChange={(e) =>
-                                    setFilter({
-                                        ...filter,
-                                        order: e.target.value,
-                                    })
-                                }
-                            >
-                                <option value="none">Sort by</option>
-                                <option value="username">Username</option>
-                                <option value="firstname">Firstname</option>
-                                <option value="lastname">Lastname</option>
-                                <option value="created_at">Date Created</option>
-                                <option value="updated_at">
-                                    Recently Updated
-                                </option>
-                            </select>
-                        </div>
+        <div className="min-h-screen bg-white pt-20 pb-8 px-2 sm:px-4 md:px-6 lg:px-0" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
+            <div className="w-full max-w-4xl mx-auto">
+                {/* HEADER - match Seminar style */}
+                <header className="flex flex-col gap-6 mb-8 w-full">
+                    <div className="flex items-center gap-3">
+                        <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif', fontWeight: 800 }}>
+                            <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" fill="none"/>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 20v-1a7 7 0 0 1 14 0v1" stroke="currentColor" strokeWidth="2" fill="none"/>
+                            </svg>
+                            Account Management
+                        </span>
                     </div>
-                </div>
+                    {/* FILTERS */}
+                    <div className="flex flex-col md:flex-row gap-2 md:gap-4 items-center w-full">
+                        <div className="relative w-full md:w-64 flex-shrink-0">
+                            <input
+                                type="text"
+                                placeholder="Search profiles..."
+                                className="block w-full p-2 pl-9 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition"
+                                onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+                            />
+                            <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
+                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
+                        </div>
+                        <select
+                            className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-200 focus:border-blue-400 p-2"
+                            onChange={(e) => setFilter({ ...filter, roles: e.target.value })}
+                        >
+                            <option value="none">All Roles</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Super Admin">Super Admin</option>
+                            <option value="User">User</option>
+                        </select>
+                        <select
+                            className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-200 focus:border-blue-400 p-2"
+                            onChange={(e) => setFilter({ ...filter, client_profile: e.target.value })}
+                        >
+                            <option value="" disabled>Client Profile</option>
+                            <option value="none">All Profile</option>
+                            <option value="Fishfolk">Fishfolk</option>
+                            <option value="Rural Based Org">Rural Based Org</option>
+                            <option value="Student">Student</option>
+                            <option value="Agricultural/Fisheries Technician">Agricultural/Fisheries Tech.</option>
+                            <option value="Youth">Youth</option>
+                            <option value="Women">Women</option>
+                            <option value="Gov't Employee">Gov't Employee</option>
+                            <option value="PWD">PWD</option>
+                            <option value="Indigenous People">Indigenous People</option>
+                        </select>
+                        <select
+                            className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-200 focus:border-blue-400 p-2"
+                            onChange={(e) => setFilter({ ...filter, order: e.target.value })}
+                        >
+                            <option value="none">Sort by</option>
+                            <option value="username">Username</option>
+                            <option value="firstname">Firstname</option>
+                            <option value="lastname">Lastname</option>
+                            <option value="created_at">Date Created</option>
+                            <option value="updated_at">Recently Updated</option>
+                        </select>
+                    </div>
+                </header>
 
-                <hr className="mb-5 border-gray-100" />
-
-                {/* LIST */}
-                <div className="flex flex-col gap-3">
+                {/* LIST - remove extra boxes, just list User items */}
+                <div className="flex flex-col gap-3" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
                     {isLoading ? (
-                        <div className="text-center text-gray-400 py-10 font-medium">
+                        <div className="text-center text-gray-400 py-8 font-medium text-base">
                             Loading profiles...
                         </div>
                     ) : error ? (
-                        <div className="text-center text-gray-400 py-10 font-medium">
+                        <div className="text-center text-red-400 py-8 font-medium text-base">
                             {error.message}
                         </div>
                     ) : !Array.isArray(userList) || userList.length === 0 ? (
-                        <div className="text-center text-gray-400 py-10 font-medium">
+                        <div className="text-center text-gray-400 py-8 font-medium text-base">
                             No profiles found.
                         </div>
                     ) : (
                         userList.map((user) => (
                             <div
                                 key={user.id}
-                                className="bg-gradient-to-r from-gray-50 via-white to-gray-100 rounded-lg shadow hover:shadow-md transition p-3 border border-gray-100"
+                                className="bg-white border border-blue-200 rounded-lg shadow-sm p-2 sm:p-3 md:p-4 transition"
+                                style={{ boxShadow: '0 0 0 2px #60a5fa33' }}
                             >
                                 <User
                                     user={user}
                                     details={details}
-                                    refetchRow={() =>
-                                        setRefreshToken(Date.now())
-                                    }
+                                    refetchRow={() => setRefreshToken(Date.now())}
                                 />
                             </div>
                         ))
                     )}
                 </div>
             </div>
-            {/* Responsive tweaks */}
-            <style>
-                {`
-                @media (max-width: 640px) {
-                    .filters-responsive {
-                        flex-direction: column !important;
-                        gap: 0.5rem !important;
+            <style>{`
+                @media (max-width: 1024px) {
+                    .max-w-4xl { max-width: 98vw !important; }
+                }
+                @media (max-width: 600px) {
+                    .max-w-4xl {
+                        padding-left: 0 !important;
+                        padding-right: 0 !important;
                     }
                 }
-                `}
-            </style>
+            `}</style>
         </div>
     );
 }
