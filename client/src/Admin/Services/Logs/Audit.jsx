@@ -10,13 +10,14 @@ export default function Audit({ admin_navigate }) {
     const [activeView, setActiveView] = useState('logs');
     const [timeRange, setTimeRange] = useState('30d');
 
+    // Modern soft neutral background
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-100 py-8 px-2 md:px-6">
+        <div className="min-h-screen bg-[#f5f6fa] py-10 px-2 md:px-6">
             {/* Header */}
-            <div className="relative mt-16 mb-8 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-4">
-                <span className="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
+            <div className="relative mt-10 mb-10 flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto gap-4">
+                <span className="text-3xl font-extrabold text-neutral-800 tracking-tight flex items-center gap-3">
                     <svg
-                        className="w-7 h-7 text-blue-600"
+                        className="w-8 h-8 text-blue-500 drop-shadow"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
@@ -28,27 +29,26 @@ export default function Audit({ admin_navigate }) {
                             strokeLinejoin="round"
                         />
                     </svg>
-                    Logs / Audit Trail
+                    Audit Trail
                 </span>
-
                 {/* View Toggle */}
-                <div className="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg">
+                <div className="flex items-center space-x-1 bg-white p-1 rounded-lg border border-neutral-200 shadow-sm">
                     <button
                         onClick={() => setActiveView('logs')}
-                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                        className={`px-5 py-2 rounded-md text-sm font-semibold transition-all ${
                             activeView === 'logs'
-                                ? 'bg-white text-blue-600 shadow-sm'
-                                : 'text-gray-600 hover:text-gray-900'
+                                ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow'
+                                : 'text-neutral-500 hover:text-blue-700 hover:bg-neutral-100'
                         }`}
                     >
                         Activity Logs
                     </button>
                     <button
                         onClick={() => setActiveView('analytics')}
-                        className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                        className={`px-5 py-2 rounded-md text-sm font-semibold transition-all ${
                             activeView === 'analytics'
-                                ? 'bg-white text-blue-600 shadow-sm'
-                                : 'text-gray-600 hover:text-gray-900'
+                                ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow'
+                                : 'text-neutral-500 hover:text-blue-700 hover:bg-neutral-100'
                         }`}
                     >
                         Analytics
@@ -273,11 +273,11 @@ function AuditLogsTable({ admin_navigate }) {
     const { logs = [], pagination = {} } = auditData || {};
 
     return (
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-xl border border-neutral-200 overflow-hidden max-w-6xl mx-auto">
             {/* Filters Section */}
-            <div className="p-6 border-b border-gray-200 bg-gray-50">
+            <div className="p-8 border-b border-neutral-100 bg-neutral-50">
                 {/* Search and Basic Controls */}
-                <div className="flex flex-col lg:flex-row gap-4 mb-4">
+                <div className="flex flex-col lg:flex-row gap-4 mb-6">
                     {/* Search Input */}
                     <div className="relative flex-1 max-w-md">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -298,7 +298,7 @@ function AuditLogsTable({ admin_navigate }) {
                         <input
                             type="search"
                             placeholder="Search admins, actions, targets, or details..."
-                            className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"
+                            className="block w-full p-3 pl-10 text-sm text-neutral-900 border border-neutral-200 rounded-lg bg-white focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
                             value={search}
                             onChange={(e) => handleSearchChange(e.target.value)}
                         />
@@ -307,18 +307,11 @@ function AuditLogsTable({ admin_navigate }) {
                     {/* Control Buttons */}
                     <div className="flex gap-2">
                         <button
-                            onClick={() =>
-                                setShowAdvancedFilters(!showAdvancedFilters)
-                            }
-                            className={`flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-                                showAdvancedFilters ||
-                                adminId ||
-                                action ||
-                                targetType ||
-                                dateFrom ||
-                                dateTo
-                                    ? 'bg-blue-100 text-blue-700 border border-blue-200'
-                                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                            className={`flex items-center justify-center px-4 py-3 rounded-lg text-sm font-semibold border transition-all ${
+                                showAdvancedFilters || adminId || action || targetType || dateFrom || dateTo
+                                    ? 'bg-blue-50 text-blue-700 border-blue-200 shadow'
+                                    : 'bg-white text-neutral-700 border-neutral-200 hover:bg-neutral-100'
                             }`}
                         >
                             <svg
@@ -335,7 +328,7 @@ function AuditLogsTable({ admin_navigate }) {
 
                         <button
                             onClick={clearFilters}
-                            className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all"
+                            className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-semibold bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border border-neutral-200 transition-all"
                         >
                             <svg
                                 className="w-4 h-4 mr-2"
@@ -356,7 +349,7 @@ function AuditLogsTable({ admin_navigate }) {
                         <button
                             onClick={refreshLogs}
                             disabled={isFetching}
-                            className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-all"
+                            className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-all shadow"
                         >
                             <svg
                                 className={`w-4 h-4 mr-2 ${
@@ -380,7 +373,7 @@ function AuditLogsTable({ admin_navigate }) {
 
                 {/* Advanced Filters */}
                 {showAdvancedFilters && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 p-4 bg-white rounded-lg border border-gray-200">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 p-6 bg-white rounded-lg border border-neutral-100 shadow-sm">
                         {/* Admin Filter */}
                         <div>
                             <label className="block text-xs font-medium text-gray-700 mb-1">
@@ -394,7 +387,7 @@ function AuditLogsTable({ admin_navigate }) {
                                         e.target.value
                                     )
                                 }
-                                className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full p-2 text-sm border border-neutral-200 rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
                                 disabled={isLoadingFilters}
                             >
                                 <option value="">All Admins</option>
@@ -416,7 +409,7 @@ function AuditLogsTable({ admin_navigate }) {
                                 onChange={(e) =>
                                     handleFilterChange('action', e.target.value)
                                 }
-                                className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full p-2 text-sm border border-neutral-200 rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
                                 disabled={isLoadingFilters}
                             >
                                 <option value="">All Actions</option>
@@ -444,7 +437,7 @@ function AuditLogsTable({ admin_navigate }) {
                                         e.target.value
                                     )
                                 }
-                                className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full p-2 text-sm border border-neutral-200 rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
                                 disabled={isLoadingFilters}
                             >
                                 <option value="">All Types</option>
@@ -470,7 +463,7 @@ function AuditLogsTable({ admin_navigate }) {
                                         e.target.value
                                     )
                                 }
-                                className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full p-2 text-sm border border-neutral-200 rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
                             />
                         </div>
 
@@ -485,14 +478,14 @@ function AuditLogsTable({ admin_navigate }) {
                                 onChange={(e) =>
                                     handleFilterChange('dateTo', e.target.value)
                                 }
-                                className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full p-2 text-sm border border-neutral-200 rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
                             />
                         </div>
                     </div>
                 )}
 
                 {/* Results Summary */}
-                <div className="flex items-center justify-between text-sm text-gray-600 mt-4">
+                <div className="flex items-center justify-between text-sm text-neutral-500 mt-6">
                     <div>
                         Showing {logs.length} of {pagination.totalCount || 0}{' '}
                         entries
@@ -517,9 +510,9 @@ function AuditLogsTable({ admin_navigate }) {
             </div>
 
             {/* Table */}
-            <div className="overflow-x-auto">
-                <table className="w-full">
-                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+        <div className="overflow-x-auto rounded-xl border border-neutral-100 shadow-sm mt-4">
+            <table className="w-full">
+                <thead className="bg-neutral-50 border-b border-neutral-100">
                         <tr>
                             <th
                                 className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
@@ -599,14 +592,14 @@ function AuditLogsTable({ admin_navigate }) {
                             logs.map((log, index) => (
                                 <tr
                                     key={log.id}
-                                    className={`${
+                                    className={`$${
                                         index % 2 === 0
                                             ? 'bg-white'
-                                            : 'bg-gray-25'
-                                    } hover:bg-blue-50 transition-colors`}
+                                            : 'bg-neutral-50'
+                                    } hover:bg-blue-50 transition-colors group`}
                                 >
                                     {/* Timestamp */}
-                                    <td className="py-4 px-4">
+                                    <td className="py-4 px-4 border-l-4 border-transparent group-hover:border-blue-200 transition-all">
                                         <div className="text-sm text-gray-900 font-medium">
                                             {formatTimestamp(log.createdAt)}
                                         </div>
@@ -625,42 +618,20 @@ function AuditLogsTable({ admin_navigate }) {
 
                                     {/* Admin */}
                                     <td className="py-4 px-4">
-                                        <div className="flex items-center">
-                                            {/* Show profile picture if available */}
-                                            {log.admin.hasPicture ? (
+                                        <div className="flex items-center gap-3">
+                                            {log.admin.hasPicture && (
                                                 <img
                                                     src={`/api/account/picture/${log.admin.id}`}
                                                     alt={log.admin.fullName}
-                                                    className="w-8 h-8 rounded-full object-cover mr-3 border-2 border-blue-200"
-                                                    onError={(e) => {
-                                                        console.error(
-                                                            'Image failed to load:',
-                                                            `/api/account/picture/${log.admin.id}`
-                                                        );
-                                                        // Fallback to initials if image fails to load
-                                                        e.target.style.display =
-                                                            'none';
-                                                        e.target.nextSibling.style.display =
-                                                            'flex';
-                                                    }}
+                                                    className="w-9 h-9 rounded-full object-cover border border-neutral-200 shadow-sm"
+                                                    style={{ minWidth: '2.25rem' }}
                                                 />
-                                            ) : null}
-                                            <div
-                                                className={`w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3 ${
-                                                    log.admin.hasPicture
-                                                        ? 'hidden'
-                                                        : ''
-                                                }`}
-                                            >
-                                                {log.admin.fullName
-                                                    .charAt(0)
-                                                    .toUpperCase()}
-                                            </div>
+                                            )}
                                             <div>
-                                                <div className="text-sm font-medium text-gray-900">
+                                                <div className="text-sm font-semibold text-neutral-900 tracking-tight leading-tight">
                                                     {log.admin.fullName}
                                                 </div>
-                                                <div className="text-xs text-gray-500">
+                                                <div className="text-xs text-neutral-500 mt-0.5">
                                                     @{log.admin.username}
                                                 </div>
                                             </div>
@@ -670,7 +641,7 @@ function AuditLogsTable({ admin_navigate }) {
                                     {/* Action */}
                                     <td className="py-4 px-4">
                                         <span
-                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getActionBadgeColor(
+                                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${getActionBadgeColor(
                                                 log.action
                                             )}`}
                                         >
@@ -692,7 +663,7 @@ function AuditLogsTable({ admin_navigate }) {
 
                                     {/* Details */}
                                     <td className="py-4 px-4">
-                                        <div className="text-sm text-gray-700">
+                                        <div className="text-sm text-neutral-700">
                                             {(() => {
                                                 const details =
                                                     log.details ||
@@ -730,7 +701,7 @@ function AuditLogsTable({ admin_navigate }) {
                                                                     log.id
                                                                 )
                                                             }
-                                                            className="text-blue-600 hover:text-blue-800 text-xs mt-1 font-medium focus:outline-none"
+                                                            className="text-blue-600 hover:text-blue-800 text-xs mt-1 font-medium focus:outline-none underline"
                                                         >
                                                             {isExpanded
                                                                 ? 'Show Less'
@@ -741,7 +712,7 @@ function AuditLogsTable({ admin_navigate }) {
                                             })()}
                                         </div>
                                         {log.ipAddress && (
-                                            <div className="text-xs text-gray-500 mt-1">
+                                            <div className="text-xs text-neutral-400 mt-1">
                                                 IP: {log.ipAddress}
                                             </div>
                                         )}
@@ -755,9 +726,9 @@ function AuditLogsTable({ admin_navigate }) {
 
             {/* Pagination */}
             {pagination.totalPages > 1 && (
-                <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                    <div className="flex items-center justify-between">
-                        <div className="text-sm text-gray-700">
+                <div className="px-4 py-4 border-t border-neutral-100 bg-neutral-50">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="text-sm text-neutral-600">
                             Page {pagination.currentPage} of{' '}
                             {pagination.totalPages}
                             <span className="text-gray-500 ml-2">
@@ -765,11 +736,11 @@ function AuditLogsTable({ admin_navigate }) {
                             </span>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-neutral-200 scrollbar-track-transparent pb-1">
                             <button
                                 onClick={() => setPage(Math.max(1, page - 1))}
                                 disabled={!pagination.hasPrevPage || isFetching}
-                                className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 py-1 text-sm font-medium text-neutral-700 bg-white border border-neutral-200 rounded-md hover:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed min-w-[70px]"
                             >
                                 Previous
                             </button>
@@ -791,11 +762,10 @@ function AuditLogsTable({ admin_navigate }) {
                                             key={pageNum}
                                             onClick={() => setPage(pageNum)}
                                             disabled={isFetching}
-                                            className={`px-3 py-1 text-sm font-medium rounded-md disabled:cursor-not-allowed ${
-                                                pageNum ===
-                                                pagination.currentPage
-                                                    ? 'bg-blue-600 text-white'
-                                                    : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                            className={`px-3 py-1 text-sm font-bold rounded-md disabled:cursor-not-allowed min-w-[40px] transition-all $${
+                                                pageNum === pagination.currentPage
+                                                    ? 'bg-blue-900 text-black border-2 border-blue-900 shadow-lg scale-105 z-10'
+                                                    : 'text-neutral-800 bg-white border border-neutral-200 hover:bg-blue-200 hover:text-blue-700'
                                             }`}
                                         >
                                             {pageNum}
@@ -814,7 +784,7 @@ function AuditLogsTable({ admin_navigate }) {
                                     )
                                 }
                                 disabled={!pagination.hasNextPage || isFetching}
-                                className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 py-1 text-sm font-medium text-neutral-700 bg-white border border-neutral-200 rounded-md hover:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed min-w-[70px]"
                             >
                                 Next
                             </button>
