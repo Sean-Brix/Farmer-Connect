@@ -108,102 +108,128 @@ export default function Seminar() {
     return (
         <div className="min-h-screen bg-white pt-30 pb-8 px-2 md:px-6">
             <div className="w-full max-w-5xl mx-auto">
-                {/* Header */}
-                <div className="relative mb-8 flex flex-col items-start justify-center max-w-5xl mx-auto gap-4">
-                    <span className="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight flex items-center gap-2 w-full ml-2 md:ml-6">
-                        <svg className="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M12 3L2 9l10 6 10-6-10-6zm0 13v5m-7-7v2a2 2 0 002 2h10a2 2 0 002-2v-2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                        Seminars & Programs
+                {/* Header - Centered and Professional */}
+                <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
+                  <span className="inline-flex items-center justify-center gap-3 w-full">
+                    <span className="rounded-full bg-blue-100 p-2">
+                      <svg className="w-9 h-9 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M12 3L2 9l10 6 10-6-10-6zm0 13v5m-7-7v2a2 2 0 002 2h10a2 2 0 002-2v-2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
                     </span>
+                    <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">Seminars & Programs</span>
+                  </span>
+                  <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">Empowering communities through knowledge and engagement</span>
                 </div>
 
                 {/* Divider between title and search/filters */}
                 <hr className="border-t border-gray-300 my-6 w-full max-w-5xl mx-auto" />
 
-                {/* Search and Filters - Distribution style */}
+                {/* Modern Search, Filters, and Actions - Responsive, no box */}
                 <div className="relative mt-0 mb-8 w-full max-w-5xl mx-auto px-2 md:px-6">
-                    <div className="flex flex-col gap-3 w-full">
-                        {/* Search bar */}
-                        <div className="relative w-full flex-grow min-w-0 md:max-w-md lg:max-w-lg mx-auto">
-                            <input
-                                type="search"
-                                placeholder="Search..."
-                                className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
-                            <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
-                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </div>
-                        </div>
-
-                        {/* Filters and buttons */}
-                        <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full justify-center mx-auto">
-                            <select
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 w-full sm:w-auto"
-                                value={searchFilter}
-                                onChange={(e) => setSearchFilter(e.target.value)}
-                            >
-                                <option value="title">Title</option>
-                                <option value="speaker">Speaker</option>
-                                <option value="location">Location</option>
-                            </select>
-                            <select
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 w-full sm:w-auto"
-                                value={statusFilter}
-                                onChange={(e) => setStatusFilter(e.target.value)}
-                            >
-                                <option value="all">All Statuses</option>
-                                <option value="Upcoming">Upcoming</option>
-                                <option value="Ongoing">Ongoing</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </select>
-                            <div className="flex gap-2 w-full sm:w-auto justify-end mt-2 sm:mt-0">
-                                {selectMode && (
-                                    <button
-                                        className="px-3 py-1 rounded-lg text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 transition"
-                                        onClick={() => {
-                                            if (selectedItems.length === programList.length) {
-                                                setSelectedItems([]);
-                                            } else {
-                                                setSelectedItems(programList.map((_, idx) => idx));
-                                            }
-                                        }}
-                                    >
-                                        {selectedItems.length === programList.length ? 'Unselect All' : 'Select All'}
-                                    </button>
-                                )}
-                                <button
-                                    className={`px-3 py-1 rounded-lg text-xs font-medium transition
-                                        ${selectMode ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'}
-                                        ${selectMode && selectedItems.length === 0 ? 'opacity-60 cursor-not-allowed' : ''}
-                                    `}
-                                    onClick={selectMode ? handleDeleteSelected : handleToggleSelectMode}
-                                    disabled={selectMode && selectedItems.length === 0}
-                                >
-                                    {selectMode ? (selectedItems.length > 0 ? `Delete (${selectedItems.length})` : 'Delete') : 'Delete'}
-                                </button>
-                                <button
-                                    className="px-3 py-1 rounded-lg text-xs font-medium bg-blue-500 hover:bg-blue-600 text-white transition"
-                                    onClick={() => setShowAdd(true)}
-                                >
-                                    <span className="mr-1 text-lg font-bold">+</span> Add
-                                </button>
-                                {selectMode && (
-                                    <button
-                                        className="px-3 py-1 rounded-lg text-xs font-medium bg-white hover:bg-gray-100 text-gray-700 border border-gray-200"
-                                        onClick={handleToggleSelectMode}
-                                    >
-                                        Cancel
-                                    </button>
-                                )}
-                            </div>
-                        </div>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 flex-wrap items-stretch w-full">
+                    {/* Search bar */}
+                    <div className="relative flex-1 min-w-0 w-full sm:w-auto">
+                      <input
+                        type="search"
+                        placeholder="Search seminars, speakers, locations..."
+                        className="block w-full py-3 pl-12 pr-4 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition placeholder-gray-400"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        aria-label="Search seminars"
+                      />
+                      <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                        <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
                     </div>
+                    {/* Filters */}
+                    <div className="flex flex-row gap-2 w-full sm:w-auto">
+                      <div className="relative w-full sm:w-auto">
+                        <select
+                          className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-base rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 block py-2 pl-4 pr-10 w-full sm:w-auto transition"
+                          value={searchFilter}
+                          onChange={(e) => setSearchFilter(e.target.value)}
+                          aria-label="Filter by"
+                        >
+                          <option value="title">Title</option>
+                          <option value="speaker">Speaker</option>
+                          <option value="location">Location</option>
+                        </select>
+                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="relative w-full sm:w-auto">
+                        <select
+                          className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-base rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 block py-2 pl-4 pr-10 w-full sm:w-auto transition"
+                          value={statusFilter}
+                          onChange={(e) => setStatusFilter(e.target.value)}
+                          aria-label="Status filter"
+                        >
+                          <option value="all">All Statuses</option>
+                          <option value="Upcoming">Upcoming</option>
+                          <option value="Ongoing">Ongoing</option>
+                          <option value="Completed">Completed</option>
+                          <option value="Cancelled">Cancelled</option>
+                        </select>
+                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Action buttons */}
+                    <div className="flex flex-row gap-2 w-full sm:w-auto items-center">
+                      {selectMode && (
+                        <button
+                          className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 transition shadow-sm w-full sm:w-auto"
+                          onClick={() => {
+                            if (selectedItems.length === programList.length) {
+                              setSelectedItems([]);
+                            } else {
+                              setSelectedItems(programList.map((_, idx) => idx));
+                            }
+                          }}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                          {selectedItems.length === programList.length ? 'Unselect All' : 'Select All'}
+                        </button>
+                      )}
+                      <button
+                        className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold transition shadow-sm w-full sm:w-auto
+                          ${selectMode ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'}
+                          ${selectMode && selectedItems.length === 0 ? 'opacity-60 cursor-not-allowed' : ''}
+                        `}
+                        onClick={selectMode ? handleDeleteSelected : handleToggleSelectMode}
+                        disabled={selectMode && selectedItems.length === 0}
+                        aria-label="Delete selected"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        {selectMode ? (selectedItems.length > 0 ? `Delete (${selectedItems.length})` : 'Delete') : 'Delete'}
+                      </button>
+                      <button
+                        className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold bg-blue-500 hover:bg-blue-600 text-white transition shadow-sm w-full sm:w-auto"
+                        onClick={() => setShowAdd(true)}
+                        aria-label="Add seminar"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        Add
+                      </button>
+                      {selectMode && (
+                        <button
+                          className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold bg-white hover:bg-gray-100 text-gray-700 border border-gray-200 transition shadow-sm w-full sm:w-auto"
+                          onClick={handleToggleSelectMode}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                          Cancel
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 {showAdd && (

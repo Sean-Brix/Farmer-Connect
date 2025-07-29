@@ -531,7 +531,7 @@ export default function EIC() {
         );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 py-8 px-2 md:px-6">
+        <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 py-8 sm:mt-20 px-2 md:px-6">
             {/* Alert Component */}
             {alert.show && (
                 <div
@@ -543,28 +543,27 @@ export default function EIC() {
                 </div>
             )}
 
-            {/* Header */}
-            <div className="relative mt-16 mb-8 flex flex-col items-start justify-center max-w-5xl mx-auto gap-4">
-                <span className="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight flex items-center gap-2 w-full ml-2 md:ml-6">
-                    <svg
-                        className="w-7 h-7 text-gray-500"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
-                    {activeSection === 'items'
-                        ? 'Equipment in Circulation'
-                        : 'EIC Requests Management'}
+            {/* Header - Centered and Professional (Seminar style) */}
+            <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
+              <span className="inline-flex items-center justify-center gap-3 w-full">
+                <span className="rounded-full bg-blue-100 p-2">
+                  <svg className="w-9 h-9 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </span>
+                <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
+                  {activeSection === 'items'
+                    ? 'Equipment in Circulation'
+                    : 'EIC Requests Management'}
+                </span>
+              </span>
+              <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
+                {activeSection === 'items'
+                  ? 'Manage and monitor all equipment in circulation.'
+                  : 'Oversee and process all EIC requests efficiently.'}
+              </span>
             </div>
-
+          
             {/* Divider between title and search/filters */}
             {activeSection !== 'requests' && (
                 <hr className="border-t border-gray-300 my-6 w-full max-w-5xl mx-auto" />
@@ -686,39 +685,42 @@ export default function EIC() {
                 </div>
             ) : (
                 <>
-                    {/* Search and Filters - Distribution style */}
-                    <div className="relative mt-0 mb-8 w-full max-w-5xl mx-auto px-2 md:px-6">
-                        <div className="flex flex-col gap-3 w-full">
-                            {/* Search bar */}
-                            <div className="relative w-full flex-grow min-w-0 md:max-w-md lg:max-w-lg mx-auto">
-                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg
-                                        className="w-5 h-5 text-gray-500"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
+                    {/* Minimal, Responsive Search/Filters/Buttons Bar */}
+                    <div className="w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
+                    <div className="w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4 w-full">
+                            {/* Search Bar */}
+                            <div className="w-full sm:flex-1 flex items-center">
+                                <div className="relative w-full">
+                                    <input
+                                        type="search"
+                                        placeholder="Search items..."
+                                        className="block w-full pl-11 pr-4 py-2.5 text-base text-gray-900 border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all placeholder-gray-400"
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                    />
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg
+                                            className="w-5 h-5 text-gray-400"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
+                                    </div>
                                 </div>
-                                <input
-                                    type="search"
-                                    placeholder="Search..."
-                                    className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                />
                             </div>
 
-                            {/* Filters and buttons */}
-                            <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full justify-center mx-auto">
+                            {/* Filters */}
+                            <div className="w-full sm:w-auto flex flex-row gap-2">
                                 <select
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 w-full sm:w-auto"
+                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-500 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
                                     value={searchFilter}
                                     onChange={(e) => setSearchFilter(e.target.value)}
                                 >
@@ -726,9 +728,8 @@ export default function EIC() {
                                     <option value="category">Category</option>
                                     <option value="description">Description</option>
                                 </select>
-
                                 <select
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 w-full sm:w-auto"
+                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-500 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
                                 >
@@ -738,10 +739,13 @@ export default function EIC() {
                                     <option value="quantity">Sort by Quantity</option>
                                     <option value="date">Sort by Date</option>
                                 </select>
+                            </div>
 
+                            {/* Action Buttons */}
+                            <div className="w-full sm:w-auto flex flex-row gap-2 justify-end">
                                 <button
                                     onClick={refetchStacks}
-                                    className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all w-full sm:w-auto"
+                                    className="flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
                                 >
                                     <svg
                                         className="w-4 h-4 mr-2"
@@ -758,10 +762,9 @@ export default function EIC() {
                                     </svg>
                                     Refresh
                                 </button>
-
                                 <button
                                     onClick={handleRequestsButtonClick}
-                                    className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-all w-full sm:w-auto"
+                                    className="flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-lg text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
                                 >
                                     <svg
                                         className="w-4 h-4 mr-2"
@@ -778,10 +781,9 @@ export default function EIC() {
                                     </svg>
                                     Requests
                                 </button>
-
                                 <button
                                     onClick={() => setShowAddModal(true)}
-                                    className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white transition-all w-full sm:w-auto"
+                                    className="flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-teal-300 shadow-sm"
                                 >
                                     <svg
                                         className="w-4 h-4 mr-2"
@@ -800,6 +802,7 @@ export default function EIC() {
                                 </button>
                             </div>
                         </div>
+                    </div>
                     </div>
 
                     {/* Items Grid */}
@@ -982,30 +985,30 @@ function RequestsTable({
     }
 
     return (
-        <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+        <div className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100">
             <div className="overflow-x-auto">
-                <table className="w-full">
-                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                <table className="w-full text-sm md:text-base font-inter">
+                    <thead className="bg-gradient-to-r from-blue-50 to-gray-50 border-b border-gray-200">
                         <tr>
-                            <th className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider w-1/4">
+                            <th className="py-5 px-5 text-left text-xs font-bold text-gray-700 uppercase tracking-widest w-1/4 whitespace-nowrap">
                                 Item Details
                             </th>
-                            <th className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="py-5 px-5 text-left text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
                                 Requestor
                             </th>
-                            <th className="py-4 px-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="py-5 px-5 text-center text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
                                 Quantity
                             </th>
-                            <th className="py-4 px-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="py-5 px-5 text-center text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
                                 Stock
                             </th>
-                            <th className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="py-5 px-5 text-left text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
                                 Dates
                             </th>
-                            <th className="py-4 px-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="py-5 px-5 text-center text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
                                 Status
                             </th>
-                            <th className="py-4 px-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="py-5 px-5 text-center text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
                                 Actions
                             </th>
                         </tr>
@@ -1014,11 +1017,9 @@ function RequestsTable({
                         {filteredRequests.map((request, index) => (
                             <tr
                                 key={request.id}
-                                className={`${
-                                    index % 2 === 0 ? 'bg-white' : 'bg-gray-25'
-                                } hover:bg-blue-50 transition-colors`}
+                                className={`group transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-100/40`}
                             >
-                                <td className="py-5 px-4">
+                                <td className="py-6 px-5 align-top">
                                     <div className="space-y-2">
                                         <div className="font-semibold text-gray-900 text-base truncate">
                                             {request.itemName}
@@ -1081,7 +1082,7 @@ function RequestsTable({
                                         )}
                                     </div>
                                 </td>
-                                <td className="py-5 px-4">
+                                <td className="py-6 px-5 align-top">
                                     <div className="space-y-1">
                                         <div className="font-medium text-gray-900">
                                             {request.requestorName}
@@ -1107,12 +1108,12 @@ function RequestsTable({
                                         </div>
                                     </div>
                                 </td>
-                                <td className="py-5 px-4 text-center">
+                                <td className="py-6 px-5 text-center align-top">
                                     <span className="bg-blue-100 text-blue-800 px-3 py-2 rounded-full text-sm font-bold">
                                         {request.quantity}
                                     </span>
                                 </td>
-                                <td className="py-5 px-4 text-center">
+                                <td className="py-6 px-5 text-center align-top">
                                     <div className="space-y-1">
                                         <div
                                             className={`px-3 py-2 rounded-full text-sm font-bold ${
@@ -1136,7 +1137,7 @@ function RequestsTable({
                                         )}
                                     </div>
                                 </td>
-                                <td className="py-5 px-4">
+                                <td className="py-6 px-5 align-top">
                                     <div className="space-y-2">
                                         <div className="text-sm">
                                             <div className="flex items-center text-green-600">
@@ -1203,7 +1204,7 @@ function RequestsTable({
                                         </div>
                                     </div>
                                 </td>
-                                <td className="py-5 px-4 text-center">
+                                <td className="py-6 px-5 text-center align-top">
                                     <div className="space-y-2">
                                         <div className="relative inline-block group">
                                             {getStatusBadge(request.status)}
@@ -1314,11 +1315,11 @@ function RequestsTable({
                                         </div>
                                     </div>
                                 </td>
-                                <td className="py-5 px-4 text-center">
+                                <td className="py-6 px-5 text-center align-top">
                                     {getStatusOptions(request.status).length >
                                     0 ? (
                                         <select
-                                            className="bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 font-medium cursor-pointer"
+                                            className="bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-400 px-4 py-2 font-semibold cursor-pointer shadow-sm transition-all"
                                             value=""
                                             onChange={(e) => {
                                                 if (e.target.value) {
@@ -1357,10 +1358,9 @@ function RequestsTable({
                     </tbody>
                 </table>
             </div>
-            <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
-                <div className="text-sm text-gray-600">
-                    Showing {filteredRequests.length} of {requests.length} total
-                    requests
+            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                <div className="text-sm text-gray-600 font-medium text-right">
+                    Showing <span className="font-bold text-blue-700">{filteredRequests.length}</span> of <span className="font-bold text-blue-700">{requests.length}</span> total requests
                 </div>
             </div>
         </div>
