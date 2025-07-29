@@ -449,7 +449,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Sean Brix\\OneDrive\\Desktop\\Code\\Capstone\\Farmer-Connect\\server\\prisma\\generated",
+      "value": "C:\\Users\\Sonny Galamay\\Desktop\\Farmer-Connect\\server\\prisma\\generated",
       "fromEnvVar": null
     },
     "config": {
@@ -463,7 +463,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Sean Brix\\OneDrive\\Desktop\\Code\\Capstone\\Farmer-Connect\\server\\prisma\\schema\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Sonny Galamay\\Desktop\\Farmer-Connect\\server\\prisma\\schema\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -477,6 +477,7 @@ const config = {
     "db"
   ],
   "activeProvider": "mysql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

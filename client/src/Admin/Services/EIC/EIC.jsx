@@ -544,8 +544,8 @@ export default function EIC() {
             )}
 
             {/* Header */}
-            <div className="relative mt-16 mb-8 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-4">
-                <span className="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
+            <div className="relative mt-16 mb-8 flex flex-col items-start justify-center max-w-5xl mx-auto gap-4">
+                <span className="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight flex items-center gap-2 w-full ml-2 md:ml-6">
                     <svg
                         className="w-7 h-7 text-gray-500"
                         fill="none"
@@ -565,8 +565,13 @@ export default function EIC() {
                 </span>
             </div>
 
+            {/* Divider between title and search/filters */}
+            {activeSection !== 'requests' && (
+                <hr className="border-t border-gray-300 my-6 w-full max-w-5xl mx-auto" />
+            )}
+
             {activeSection === 'requests' ? (
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-5xl mx-auto">
                     {/* Request Search and Filters */}
                     <div className="flex flex-col lg:flex-row items-center gap-4 w-full mb-6">
                         <div className="relative flex-1 max-w-md">
@@ -681,126 +686,124 @@ export default function EIC() {
                 </div>
             ) : (
                 <>
-                    {/* Search and Filters */}
-                    <div className="flex flex-col lg:flex-row items-center gap-4 w-full max-w-7xl mx-auto mb-6">
-                        <div className="relative flex-1 max-w-md">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg
-                                    className="w-5 h-5 text-gray-500"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
+                    {/* Search and Filters - Distribution style */}
+                    <div className="relative mt-0 mb-8 w-full max-w-5xl mx-auto px-2 md:px-6">
+                        <div className="flex flex-col gap-3 w-full">
+                            {/* Search bar */}
+                            <div className="relative w-full flex-grow min-w-0 md:max-w-md lg:max-w-lg mx-auto">
+                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg
+                                        className="w-5 h-5 text-gray-500"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="search"
+                                    placeholder="Search..."
+                                    className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
                             </div>
-                            <input
-                                type="search"
-                                placeholder="Search..."
-                                className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
-                        </div>
 
-                        <div className="flex flex-wrap gap-2">
-                            <select
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3"
-                                value={searchFilter}
-                                onChange={(e) =>
-                                    setSearchFilter(e.target.value)
-                                }
-                            >
-                                <option value="name">Item Name</option>
-                                <option value="category">Category</option>
-                                <option value="description">Description</option>
-                            </select>
-
-                            <select
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3"
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                            >
-                                <option value="default">Default Order</option>
-                                <option value="name">Sort by Name</option>
-                                <option value="category">
-                                    Sort by Category
-                                </option>
-                                <option value="quantity">
-                                    Sort by Quantity
-                                </option>
-                                <option value="date">Sort by Date</option>
-                            </select>
-
-                            <button
-                                onClick={refetchStacks}
-                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
-                            >
-                                <svg
-                                    className="w-4 h-4 mr-2"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
+                            {/* Filters and buttons */}
+                            <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full justify-center mx-auto">
+                                <select
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 w-full sm:w-auto"
+                                    value={searchFilter}
+                                    onChange={(e) => setSearchFilter(e.target.value)}
                                 >
-                                    <path
-                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                                Refresh
-                            </button>
+                                    <option value="name">Item Name</option>
+                                    <option value="category">Category</option>
+                                    <option value="description">Description</option>
+                                </select>
 
-                            <button
-                                onClick={handleRequestsButtonClick}
-                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-all"
-                            >
-                                <svg
-                                    className="w-4 h-4 mr-2"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
+                                <select
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 w-full sm:w-auto"
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value)}
                                 >
-                                    <path
-                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                                Requests
-                            </button>
+                                    <option value="default">Default Order</option>
+                                    <option value="name">Sort by Name</option>
+                                    <option value="category">Sort by Category</option>
+                                    <option value="quantity">Sort by Quantity</option>
+                                    <option value="date">Sort by Date</option>
+                                </select>
 
-                            <button
-                                onClick={() => setShowAddModal(true)}
-                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white transition-all"
-                            >
-                                <svg
-                                    className="w-4 h-4 mr-2"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
+                                <button
+                                    onClick={refetchStacks}
+                                    className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all w-full sm:w-auto"
                                 >
-                                    <path
-                                        d="M12 4v16m8-8H4"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                                Add EIC Item
-                            </button>
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    Refresh
+                                </button>
+
+                                <button
+                                    onClick={handleRequestsButtonClick}
+                                    className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-all w-full sm:w-auto"
+                                >
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    Requests
+                                </button>
+
+                                <button
+                                    onClick={() => setShowAddModal(true)}
+                                    className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white transition-all w-full sm:w-auto"
+                                >
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M12 4v16m8-8H4"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    Add EIC Item
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     {/* Items Grid */}
-                    <div className="w-full max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    <div className="w-full max-w-5xl mx-auto px-2 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                         {filteredStacks.map((stack) => (
                             <EICItemCard
                                 key={stack.id}

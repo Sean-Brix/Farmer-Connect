@@ -1,3 +1,4 @@
+
 import User from './User/User.jsx';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -42,10 +43,21 @@ export default function Profiles({ details }) {
         refetch();
     }, [filter, refetch]);
 
+
+    // Pagination state
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 10;
     const userList = data?.list || [];
+    const totalPages = Math.ceil(userList.length / itemsPerPage);
+    const paginatedList = userList.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+    // Reset to first page if filter changes or userList changes
+    useEffect(() => {
+        setPage(1);
+    }, [filter, userList.length]);
 
     return (
-        <div className="min-h-screen bg-white pt-20 pb-8 px-2 sm:px-4 md:px-6 lg:px-0" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
+        <div className="min-h-screen bg-white pt-30 pb-8 px-2 sm:px-4 md:px-6 lg:px-0" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
             <div className="w-full max-w-4xl mx-auto">
                 {/* HEADER - match Seminar style */}
                 <header className="flex flex-col gap-6 mb-8 w-full">
@@ -112,8 +124,8 @@ export default function Profiles({ details }) {
                     </div>
                 </header>
 
-                {/* LIST - remove extra boxes, just list User items */}
-                <div className="flex flex-col gap-3" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
+                {/* LIST - tabular layout */}
+                <div className="overflow-x-auto" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
                     {isLoading ? (
                         <div className="text-center text-gray-400 py-8 font-medium text-base">
                             Loading profiles...
@@ -127,19 +139,55 @@ export default function Profiles({ details }) {
                             No profiles found.
                         </div>
                     ) : (
-                        userList.map((user) => (
-                            <div
-                                key={user.id}
-                                className="bg-white border border-blue-200 rounded-lg shadow-sm p-2 sm:p-3 md:p-4 transition"
-                                style={{ boxShadow: '0 0 0 2px #60a5fa33' }}
-                            >
-                                <User
-                                    user={user}
-                                    details={details}
-                                    refetchRow={() => setRefreshToken(Date.now())}
-                                />
+                        <>
+                            <table className="min-w-full bg-white rounded-2xl shadow-xl border border-blue-200 overflow-hidden text-sm">
+                                <thead className="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200">
+                                    <tr>
+                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Username</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Name</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Role</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Client Profile</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {paginatedList.map((user, idx) => (
+                                        <tr
+                                            key={user.id}
+                                            className={`transition ${(idx % 2 === 0 ? 'bg-white' : 'bg-blue-50')} hover:bg-blue-100`} 
+                                            style={{ lineHeight: '1.25' }}
+                                        >
+                                            <User
+                                                user={user}
+                                                details={details}
+                                                refetchRow={() => setRefreshToken(Date.now())}
+                                                tabular={true}
+                                            />
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            {/* Pagination Controls */}
+                            <div className="flex justify-center items-center gap-2 mt-6">
+                                <button
+                                    className="px-3 py-1 rounded-lg border border-blue-200 bg-white text-blue-700 font-semibold shadow-sm hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                                    disabled={page === 1}
+                                >
+                                    Previous
+                                </button>
+                                <span className="text-blue-800 font-semibold text-base mx-2">
+                                    Page {page} of {totalPages}
+                                </span>
+                                <button
+                                    className="px-3 py-1 rounded-lg border border-blue-200 bg-white text-blue-700 font-semibold shadow-sm hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                                    disabled={page === totalPages || totalPages === 0}
+                                >
+                                    Next
+                                </button>
                             </div>
-                        ))
+                        </>
                     )}
                 </div>
             </div>

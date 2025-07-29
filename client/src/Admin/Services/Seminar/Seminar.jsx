@@ -106,23 +106,30 @@ export default function Seminar() {
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="min-h-screen bg-white pt-20 pb-8 px-2 sm:px-4 md:px-6 lg:px-0">
-            <div className="w-full max-w-4xl mx-auto">
-                <header className="flex flex-col gap-6 mb-8 w-full">
-                    <div className="flex items-center gap-3">
-                        <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2">
-                            <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d="M12 3L2 9l10 6 10-6-10-6zm0 13v5m-7-7v2a2 2 0 002 2h10a2 2 0 002-2v-2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            Seminars & Programs
-                        </span>
-                    </div>
-                    <div className="flex flex-col md:flex-row gap-2 md:gap-4 items-center w-full">
-                        <div className="relative w-full md:w-64 flex-shrink-0">
+        <div className="min-h-screen bg-white pt-30 pb-8 px-2 md:px-6">
+            <div className="w-full max-w-5xl mx-auto">
+                {/* Header */}
+                <div className="relative mb-8 flex flex-col items-start justify-center max-w-5xl mx-auto gap-4">
+                    <span className="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight flex items-center gap-2 w-full ml-2 md:ml-6">
+                        <svg className="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M12 3L2 9l10 6 10-6-10-6zm0 13v5m-7-7v2a2 2 0 002 2h10a2 2 0 002-2v-2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        Seminars & Programs
+                    </span>
+                </div>
+
+                {/* Divider between title and search/filters */}
+                <hr className="border-t border-gray-300 my-6 w-full max-w-5xl mx-auto" />
+
+                {/* Search and Filters - Distribution style */}
+                <div className="relative mt-0 mb-8 w-full max-w-5xl mx-auto px-2 md:px-6">
+                    <div className="flex flex-col gap-3 w-full">
+                        {/* Search bar */}
+                        <div className="relative w-full flex-grow min-w-0 md:max-w-md lg:max-w-lg mx-auto">
                             <input
                                 type="search"
                                 placeholder="Search..."
-                                className="block w-full p-2 pl-9 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition"
+                                className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
@@ -132,68 +139,72 @@ export default function Seminar() {
                                 </svg>
                             </div>
                         </div>
-                        <select
-                            className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-200 focus:border-blue-400 p-2"
-                            value={searchFilter}
-                            onChange={(e) => setSearchFilter(e.target.value)}
-                        >
-                            <option value="title">Title</option>
-                            <option value="speaker">Speaker</option>
-                            <option value="location">Location</option>
-                        </select>
-                        <select
-                            className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-200 focus:border-blue-400 p-2"
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                        >
-                            <option value="all">All Statuses</option>
-                            <option value="Upcoming">Upcoming</option>
-                            <option value="Ongoing">Ongoing</option>
-                            <option value="Completed">Completed</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
-                        <div className="flex gap-2 w-full md:w-auto justify-end mt-2 md:mt-0">
-                            {selectMode && (
-                                <button
-                                    className="px-3 py-1 rounded-lg text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 transition"
-                                    onClick={() => {
-                                        if (selectedItems.length === programList.length) {
-                                            setSelectedItems([]);
-                                        } else {
-                                            setSelectedItems(programList.map((_, idx) => idx));
-                                        }
-                                    }}
-                                >
-                                    {selectedItems.length === programList.length ? 'Unselect All' : 'Select All'}
-                                </button>
-                            )}
-                            <button
-                                className={`px-3 py-1 rounded-lg text-xs font-medium transition
-                                    ${selectMode ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'}
-                                    ${selectMode && selectedItems.length === 0 ? 'opacity-60 cursor-not-allowed' : ''}
-                                `}
-                                onClick={selectMode ? handleDeleteSelected : handleToggleSelectMode}
-                                disabled={selectMode && selectedItems.length === 0}
+
+                        {/* Filters and buttons */}
+                        <div className="flex flex-col sm:flex-row flex-wrap gap-2 w-full justify-center mx-auto">
+                            <select
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 w-full sm:w-auto"
+                                value={searchFilter}
+                                onChange={(e) => setSearchFilter(e.target.value)}
                             >
-                                {selectMode ? (selectedItems.length > 0 ? `Delete (${selectedItems.length})` : 'Delete') : 'Delete'}
-                            </button>
-                            <button
-                                className="px-3 py-1 rounded-lg text-xs font-medium bg-blue-500 hover:bg-blue-600 text-white transition"
-                                onClick={() => setShowAdd(true)}
+                                <option value="title">Title</option>
+                                <option value="speaker">Speaker</option>
+                                <option value="location">Location</option>
+                            </select>
+                            <select
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 w-full sm:w-auto"
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
                             >
-                                <span className="mr-1 text-lg font-bold">+</span> Add
-                            </button>
-                            {selectMode && (
+                                <option value="all">All Statuses</option>
+                                <option value="Upcoming">Upcoming</option>
+                                <option value="Ongoing">Ongoing</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            <div className="flex gap-2 w-full sm:w-auto justify-end mt-2 sm:mt-0">
+                                {selectMode && (
+                                    <button
+                                        className="px-3 py-1 rounded-lg text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 transition"
+                                        onClick={() => {
+                                            if (selectedItems.length === programList.length) {
+                                                setSelectedItems([]);
+                                            } else {
+                                                setSelectedItems(programList.map((_, idx) => idx));
+                                            }
+                                        }}
+                                    >
+                                        {selectedItems.length === programList.length ? 'Unselect All' : 'Select All'}
+                                    </button>
+                                )}
                                 <button
-                                    className="px-3 py-1 rounded-lg text-xs font-medium bg-white hover:bg-gray-100 text-gray-700 border border-gray-200"
-                                    onClick={handleToggleSelectMode}
+                                    className={`px-3 py-1 rounded-lg text-xs font-medium transition
+                                        ${selectMode ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'}
+                                        ${selectMode && selectedItems.length === 0 ? 'opacity-60 cursor-not-allowed' : ''}
+                                    `}
+                                    onClick={selectMode ? handleDeleteSelected : handleToggleSelectMode}
+                                    disabled={selectMode && selectedItems.length === 0}
                                 >
-                                    Cancel
+                                    {selectMode ? (selectedItems.length > 0 ? `Delete (${selectedItems.length})` : 'Delete') : 'Delete'}
                                 </button>
-                            )}
+                                <button
+                                    className="px-3 py-1 rounded-lg text-xs font-medium bg-blue-500 hover:bg-blue-600 text-white transition"
+                                    onClick={() => setShowAdd(true)}
+                                >
+                                    <span className="mr-1 text-lg font-bold">+</span> Add
+                                </button>
+                                {selectMode && (
+                                    <button
+                                        className="px-3 py-1 rounded-lg text-xs font-medium bg-white hover:bg-gray-100 text-gray-700 border border-gray-200"
+                                        onClick={handleToggleSelectMode}
+                                    >
+                                        Cancel
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </header>
+                </div>
 
                 {showAdd && (
                     <Add_Program
@@ -226,7 +237,7 @@ export default function Seminar() {
                     />
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
+                <div className="w-full max-w-5xl mx-auto px-2 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     {paginatedPrograms && paginatedPrograms.map((item, idx) => {
                         const globalIdx = (currentPage - 1) * itemsPerPage + idx;
                         const isSelected = selectedItems.includes(globalIdx);

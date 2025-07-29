@@ -60,78 +60,63 @@ export default function User({ user, details, refetchRow }) {
         );
     };
 
+    // Tabular cell layout for table (render only <td> elements, larger and more professional)
     return (
-        <div className="flex flex-col items-center w-full px-2">
-            <div
-                className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full max-w-4xl bg-white rounded-xl shadow p-3 sm:p-6 gap-4 transition-all duration-200"
-                style={{ minWidth: 0 }}
-            >
-                <div className="flex flex-col sm:flex-row items-center gap-4 flex-1 min-w-0 w-full">
+        <>
+            <td className="px-4 py-3 whitespace-nowrap align-middle bg-white border-b border-blue-100">
+                <div className="flex items-center gap-3 min-w-0">
                     <img
                         src={account?.picture}
                         alt={`${account?.username}'s profile`}
-                        className="w-16 h-16 rounded-full object-cover border-2 border-blue-400 flex-shrink-0"
+                        className="w-12 h-12 rounded-full object-cover border-2 border-blue-400 shadow-sm align-middle"
+                        style={{ boxShadow: '0 2px 8px 0 #60a5fa22' }}
                     />
-
-                    <div className="flex flex-col min-w-0 w-full">
-                        {/* FULLNAME */}
-                        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">
-                            {account?.firstName} {account?.lastName}
-                        </h3>
-
-                        {/* EMAIL */}
-                        <p className="truncate text-sm sm:text-base">
-                            Email: {account?.email}
-                        </p>
-
-                        {/* USERNAME */}
-                        <p className="text-gray-500 truncate text-sm sm:text-base">
-                            Username: {account?.username}
-                        </p>
-
-                        <p
-                            className={`font-semibold text-center py-1 px-2 rounded-full text-xs sm:text-sm w-fit ${
-                                account?.access === 'Super Admin'
-                                    ? 'bg-red-500 text-white'
-                                    : account?.access === 'Admin'
-                                    ? 'bg-green-500 text-white'
-                                    : 'bg-blue-400 text-white'
-                            }`}
-                        >
-                            {account?.access}
-                        </p>
-                    </div>
+                    <span className="font-semibold text-gray-900 truncate max-w-[140px] align-middle text-base" style={{letterSpacing: '0.01em'}}>{account?.username}</span>
                 </div>
-                {/* Button container for responsiveness */}
-                <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 justify-center sm:justify-end w-full sm:w-auto">
+            </td>
+            <td className="px-4 py-3 whitespace-nowrap align-middle bg-white border-b border-blue-100">
+                <span className="truncate max-w-[180px] block align-middle text-base text-gray-800 font-medium">{account?.firstName} {account?.lastName}</span>
+            </td>
+            <td className="px-4 py-3 whitespace-nowrap align-middle text-center bg-white border-b border-blue-100">
+                <span className={`font-bold px-3 py-1 rounded-full text-sm align-middle shadow-sm ${
+                    account?.access === 'Super Admin'
+                        ? 'bg-red-500 text-white border border-red-400'
+                        : account?.access === 'Admin'
+                        ? 'bg-green-500 text-white border border-green-400'
+                        : 'bg-blue-500 text-white border border-blue-400'
+                }`} style={{letterSpacing: '0.03em'}}>
+                    {account?.access}
+                </span>
+            </td>
+            <td className="px-4 py-3 whitespace-nowrap align-middle bg-white border-b border-blue-100">
+                <span className="truncate max-w-[180px] block align-middle text-base text-gray-700">{account?.client_profile || '-'}</span>
+            </td>
+            <td className="px-4 py-3 whitespace-nowrap align-middle text-center bg-white border-b border-blue-100">
+                <div className="flex gap-2 justify-center items-center">
                     {details.access === 'Super_Admin' && (
-                        <div className="w-full sm:w-auto">
-                            <button
-                                onClick={() => {
-                                    setEditBtn(true);
-                                    setIsExpanded(true);
-                                }}
-                                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg shadow transition w-full sm:w-auto"
-                            >
-                                Edit
-                            </button>
-                        </div>
-                    )}
-
-                    <div className="w-full sm:w-auto">
                         <button
                             onClick={() => {
+                                setEditBtn(true);
                                 setIsExpanded(true);
-                                setEditBtn(false);
                             }}
-                            className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-5 rounded-lg shadow transition w-full sm:w-auto"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition text-sm align-middle border border-blue-500"
+                            style={{letterSpacing: '0.01em'}}
                         >
-                            Details
+                            Edit
                         </button>
-                    </div>
+                    )}
+                    <button
+                        onClick={() => {
+                            setIsExpanded(true);
+                            setEditBtn(false);
+                        }}
+                        className="bg-gray-100 hover:bg-blue-100 text-blue-700 font-semibold py-2 px-4 rounded-lg shadow transition text-sm align-middle border border-blue-200"
+                        style={{letterSpacing: '0.01em'}}
+                    >
+                        Details
+                    </button>
                 </div>
-            </div>
-
+            </td>
             {/* Modal for Details */}
             <Modal open={isExpanded} onClose={() => setIsExpanded(false)}>
                 <h2 className="text-2xl font-bold mb-6 text-blue-700 flex items-center gap-2">
@@ -150,7 +135,6 @@ export default function User({ user, details, refetchRow }) {
                     </svg>
                     User Details
                 </h2>
-
                 <div className="mb-4">
                     <User_Details
                         user={account}
@@ -159,6 +143,6 @@ export default function User({ user, details, refetchRow }) {
                     />
                 </div>
             </Modal>
-        </div>
+        </>
     );
 }

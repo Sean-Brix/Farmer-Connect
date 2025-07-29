@@ -439,14 +439,14 @@ export default function Dashboard() {
             )}
             {/* Mobile sidebar */}
             <aside
-                className={`fixed inset-y-0 left-0 bg-gradient-to-b from-blue-50 via-white to-blue-100/80 backdrop-blur-xl border-r border-blue-200 w-64 z-50 transform transition-transform duration-300 ${
+                className={`fixed inset-y-0 left-0 bg-white backdrop-blur-xl border-r border-blue-200 w-64 z-50 transform transition-transform duration-300 ${
                     mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
                 } md:hidden flex flex-col h-screen max-h-screen shadow-2xl`}
                 id="mobile-menu"
                 style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22' }}
             >
                 <div className="flex flex-col h-full max-h-screen">
-                    <div className="p-6 border-b border-blue-200 bg-gradient-to-r from-blue-100/80 to-white/80 flex items-center justify-between shadow-sm">
+                    <div className="p-6 border-b border-blue-200 bg-white flex items-center justify-between shadow-sm">
                         <div className="flex items-center gap-3">
                             <div className="rounded-full bg-blue-200/60 p-2 shadow-md">
                                 <i className="fas fa-seedling text-blue-700 text-2xl"></i>
@@ -642,31 +642,28 @@ export default function Dashboard() {
                             </ul>
                         </nav>
                         {/* Profile and Logout at the bottom, styled like desktop */}
-                        <div className="p-6 border-t border-blue-200 flex flex-col items-center mt-auto bg-gradient-to-r from-white/90 to-blue-100/60 shadow-inner">
-                            <div
-                                className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-blue-100/60 rounded-xl p-3 transition shadow-sm"
-                                onClick={() => {
-                                    setPage(elements.current['account']);
-                                }}
-                                style={{ minHeight: '4.2rem' }}
-                            >
-                                <div className="relative rounded-full border-2 border-blue-300 shadow-md sidebar-profile-picture">
-                                    <img
-                                        src={details.picture}
-                                        alt="Profile"
-                                        className="h-12 w-12 rounded-full object-cover border-2 border-white shadow"
-                                        style={{ background: '#e0e7ef' }}
-                                    />
-                                </div>
-                                <div className="flex flex-col sidebar-profile-info">
-                                    <span className="font-bold text-blue-900 sidebar-username text-base tracking-tight drop-shadow-sm">
-                                        {details.username}
-                                    </span>
-                                    <span className="text-sm text-blue-500 sidebar-position font-medium">
-                                        {details.position}
-                                    </span>
-                                </div>
+                        <div className="p-6 border-t border-blue-200 flex flex-col items-center mt-auto bg-white shadow-inner">
+                        <div className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-blue-100/60 rounded-xl p-3 transition shadow-sm"
+                            onClick={() => {
+                                setPage(elements.current['account']);
+                            }}
+                            style={{ minHeight: '4.2rem' }}
+                        >
+                            <img
+                                src={details.picture}
+                                alt="Profile"
+                                className="h-12 w-12 rounded-full object-cover border-2 border-blue-300 shadow"
+                                style={{ background: '#e0e7ef' }}
+                            />
+                            <div className="flex flex-col sidebar-profile-info">
+                                <span className="font-bold text-blue-900 sidebar-username text-base tracking-tight drop-shadow-sm">
+                                    {details.username}
+                                </span>
+                                <span className="text-sm text-blue-500 sidebar-position font-medium">
+                                    {details.position}
+                                </span>
                             </div>
+                        </div>
                             {/* Logout button (mobile sidebar, bottom) */}
                             <button
                                 className="flex items-center justify-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-100/80 to-blue-200/80 hover:from-blue-200 hover:to-blue-300 rounded-xl transition text-blue-800 w-full border border-blue-200 font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn"
@@ -679,7 +676,7 @@ export default function Dashboard() {
                                 <span className="sidebar-logout-text">Logout</span>
                             </button>
                         </div>
-                    </div>
+                        </div>
                 </div>
             </aside>
 

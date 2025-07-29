@@ -86,11 +86,11 @@ export default function Sidebar({
 
     return (
         <aside
-            className={`sidebar transition-all duration-300 w-64 bg-gradient-to-b from-blue-50 via-white to-blue-100/80 backdrop-blur-xl border-r border-blue-200 shadow-2xl hidden md:flex flex-col fixed left-0 top-0 z-30 h-screen max-h-screen ${iconOnlyClass}`}
+            className={`sidebar transition-all duration-300 w-64 bg-white backdrop-blur-xl border-r border-blue-200 shadow-2xl hidden md:flex flex-col fixed left-0 top-0 z-30 h-screen max-h-screen ${iconOnlyClass}`}
             style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22' }}
         >
             <div className="flex flex-col h-full max-h-screen">
-                <div className="p-6 border-b border-blue-200 bg-gradient-to-r from-blue-100/80 to-white/80 flex items-center gap-3 shadow-sm">
+                <div className="p-6 border-b border-blue-200 bg-white flex items-center gap-3 shadow-sm">
                     <div className="rounded-full bg-blue-200/60 p-2 shadow-md">
                         <i className="fas fa-seedling text-blue-700 text-2xl"></i>
                     </div>
@@ -117,27 +117,29 @@ export default function Sidebar({
                         ))}
                     </ul>
                 </nav>
-                <div className="p-6 border-t border-blue-200 flex flex-col items-center mt-auto bg-gradient-to-r from-white/90 to-blue-100/60 shadow-inner">
+                <div className="p-6 border-t border-blue-200 flex flex-col items-center mt-auto bg-white shadow-inner">
                     <div
                         className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-blue-100/60 rounded-xl p-3 transition shadow-sm"
                         onClick={() => setPage(elements.current['account'])}
                         style={{ minHeight: '4.2rem' }}
                     >
-                        <div className="relative rounded-full border-2 border-blue-300 shadow-md">
-                            <img
-                                src={details.picture}
-                                alt="Profile"
-                                className="h-14 w-14 rounded-full object-cover border-2 border-white shadow"
-                                style={{ background: '#e0e7ef' }}
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="font-bold text-blue-900 sidebar-username text-lg tracking-tight drop-shadow-sm">{details.username}</span>
-                            <span className="text-sm text-blue-500 sidebar-position font-medium">{details.position}</span>
+                        <img
+                            src={details.picture}
+                            alt="Profile"
+                            className="h-12 w-12 rounded-full object-cover border-2 border-blue-300 shadow"
+                            style={{ background: '#e0e7ef' }}
+                        />
+                        <div className="flex flex-col sidebar-profile-info">
+                            <span className="font-bold text-blue-900 sidebar-username text-base tracking-tight drop-shadow-sm">
+                                {details.username}
+                            </span>
+                            <span className="text-sm text-blue-500 sidebar-position font-medium">
+                                {details.position}
+                            </span>
                         </div>
                     </div>
                     <button
-                        className="flex items-center justify-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-100/80 to-blue-200/80 hover:from-blue-200 hover:to-blue-300 rounded-xl transition text-blue-800 w-full border border-blue-200 font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn"
+                        className="flex items-center justify-center gap-3 px-6 py-3 bg-blue-100/80 hover:bg-blue-200 rounded-xl transition text-blue-800 w-full border border-blue-200 font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn"
                         onClick={logging}
                         style={{ letterSpacing: '0.01em' }}
                     >
