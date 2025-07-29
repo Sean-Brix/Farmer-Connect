@@ -712,36 +712,42 @@ function Analytics() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6 mt-30 rounded-xl">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen  sm:mt-10 bg-gradient-to-br from-gray-50 via-white to-gray-100 flex justify-center items-start py-12 px-4 sm:px-8 md:px-12 lg:px-16">
+            <div className="w-full max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto bg-white/80 rounded-2xl shadow-xl p-8 md:p-12 lg:p-14 border border-gray-200">
                 {/* Header */}
-                <div className="mb-8">
-                    <div className="flex items-center justify-between mb-6">
+                <div className="mb-10">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">
+                            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-1">
                                 Analytics Dashboard
                             </h1>
-                            <p className="text-gray-600 mt-1">
-                                Comprehensive insights into your Farmer Connect
-                                platform
+                            <p className="text-gray-600 text-base md:text-lg">
+                                Comprehensive insights into your Farmer Connect platform
                             </p>
                         </div>
-                        <div className="flex items-center space-x-4">
-                            <select
-                                value={timeRange}
-                                onChange={(e) => setTimeRange(e.target.value)}
-                                className="bg-white border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                                <option value="7d">Last 7 days</option>
-                                <option value="30d">Last 30 days</option>
-                                <option value="90d">Last 90 days</option>
-                                <option value="1y">Last year</option>
-                            </select>
+                        <div className="flex items-center space-x-2 md:space-x-4">
+                            <div className="relative">
+                                <select
+                                    value={timeRange}
+                                    onChange={(e) => setTimeRange(e.target.value)}
+                                    className="appearance-none bg-white border border-gray-300 rounded-lg pl-4 pr-10 py-2 shadow-md text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-400 transition-all duration-200 hover:border-blue-400 outline-none cursor-pointer text-base font-medium"
+                                >
+                                    <option value="7d">Last 7 days</option>
+                                    <option value="30d">Last 30 days</option>
+                                    <option value="90d">Last 90 days</option>
+                                    <option value="1y">Last year</option>
+                                </select>
+                                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </span>
+                            </div>
                         </div>
                     </div>
 
                     {/* Navigation */}
-                    <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+                    <div className="flex flex-wrap gap-1 bg-gray-100 p-2 rounded-lg shadow-sm">
                         <button
                             onClick={() => setActiveView('overview')}
                             className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
@@ -781,11 +787,11 @@ function Analytics() {
 
                 {/* Feature Grid for Overview */}
                 {activeView === 'overview' && !isLoading && (
-                    <div className="mt-8">
-                        <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                    <div className="mt-12">
+                        <h2 className="text-xl font-semibold text-gray-900 mb-6 pl-1">
                             Feature Analytics
                         </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {features.map((feature) => (
                                 <FeatureCard
                                     key={feature.id}

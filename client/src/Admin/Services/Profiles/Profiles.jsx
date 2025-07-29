@@ -85,7 +85,7 @@ export default function Profiles({ details }) {
                             fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif',
                             fontWeight: 800,
                             letterSpacing: '0.04em',
-                            color: '#1e293b',
+                            color: '#000',
                         }}>
                             Account Management
                         </span>
