@@ -57,38 +57,23 @@ export default function Profiles({ details }) {
     }, [filter, userList.length]);
 
     return (
-        <div className="min-h-screen bg-white pt-10 sm:pt-20 px-2 sm:px-4 md:px-6 lg:px-0" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
+        <div className="min-h-screen bg-white pt-6 px-2 sm:px-4 md:px-6 lg:px-0" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
             <div className="w-full max-w-4xl mx-auto">
-                {/* HEADER - EIC style */}
-                <div className="relative pb-0 md:mt-6 mb-2 md:mb-6 flex flex-col items-center justify-center max-w-4xl mx-auto gap-1 md:gap-4">
-                    <span
-                        className="text-3xl md:text-4xl font-extrabold text-blue-900 tracking-wide flex items-center gap-3 w-full justify-center text-center drop-shadow-sm"
-                        style={{
-                            fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif',
-                            letterSpacing: '0.04em',
-                            textShadow: '0 2px 8px rgba(30,64,175,0.08)',
-                        }}
-                    >
-                        <span className="inline-flex items-center justify-center rounded-full bg-blue-100 p-2 shadow-sm border border-blue-200">
-                            <svg
-                                className="w-8 h-8 text-blue-600"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.2"
-                                viewBox="0 0 24 24"
-                            >
-                                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2.2" fill="#fff"/>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 20v-1a7 7 0 0 1 14 0v1" stroke="currentColor" strokeWidth="2.2" fill="none"/>
+                {/* HEADER - Inventory/EIC style */}
+                <div className="relative mb-6 sm:mt-20 mt-5 p-5 flex flex-col items-center justify-center max-w-4xl mx-auto gap-2 text-center">
+                    <span className="inline-flex items-center justify-center gap-3 w-full">
+                        <span className="rounded-full bg-blue-100 p-2">
+                            <svg className="w-9 h-9 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" fill="#fff"/>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 20v-1a7 7 0 0 1 14 0v1" stroke="currentColor" strokeWidth="2" fill="none"/>
                             </svg>
                         </span>
-                        <span className="ml-1" style={{
-                            fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif',
-                            fontWeight: 800,
-                            letterSpacing: '0.04em',
-                            color: '#000',
-                        }}>
+                        <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
                             Account Management
                         </span>
+                    </span>
+                    <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
+                        Manage and oversee all user accounts and profiles.
                     </span>
                 </div>
                 <hr className="border-t border-gray-300 mb-4 md:mb-8 mt-0.5 md:mt-2 w-full max-w-4xl mx-auto" />

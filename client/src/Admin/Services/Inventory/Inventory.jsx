@@ -62,9 +62,8 @@ function Content() {
     // Selected item stacks for expanded view
     const [selectedItemStacks, setSelectedItemStacks] = useState(null);
 
-    // Drag and drop states
-    const [draggedItem, setDraggedItem] = useState(null);
-    const [dragOverIndex, setDragOverIndex] = useState(null);
+    // Sorting state
+    const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
 
     // Helper to show alert
     const showAlert = (message, type = 'success') => {
@@ -193,22 +192,31 @@ function Content() {
         setEditForm({});
     };
 
-    const filteredItems = items.filter((item) => {
-        const matchesSearch =
-            (item.name || '')
-                .toLowerCase()
-                .includes((search || '').toLowerCase()) ||
-            (item.description || '')
-                .toLowerCase()
-                .includes((search || '').toLowerCase());
-        const matchesCategoryFilter =
-            categoryFilter === 'All' || item.category === categoryFilter;
-        const matchesStatusFilter =
-            statusFilter === 'All' ||
-            (item.stacks &&
-                item.stacks.some((stack) => stack.status === statusFilter));
-        return matchesSearch && matchesCategoryFilter && matchesStatusFilter;
-    });
+    const filteredItems = items
+        .filter((item) => {
+            const matchesSearch =
+                (item.name || '')
+                    .toLowerCase()
+                    .includes((search || '').toLowerCase()) ||
+                (item.description || '')
+                    .toLowerCase()
+                    .includes((search || '').toLowerCase());
+            const matchesCategoryFilter =
+                categoryFilter === 'All' || item.category === categoryFilter;
+            const matchesStatusFilter =
+                statusFilter === 'All' ||
+                (item.stacks &&
+                    item.stacks.some((stack) => stack.status === statusFilter));
+            return matchesSearch && matchesCategoryFilter && matchesStatusFilter;
+        })
+        .sort((a, b) => {
+            // Sort by name (case-insensitive)
+            if (sortOrder === 'asc') {
+                return (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' });
+            } else {
+                return (b.name || '').localeCompare(a.name || '', undefined, { sensitivity: 'base' });
+            }
+        });
 
     const truncate = (str, n = 24) =>
         str && str.length > n ? str.slice(0, n) + '...' : str;
@@ -740,25 +748,11 @@ function Content() {
         }
     };
 
-    // Drag and drop handlers
-    const handleDragStart = (e, item, index) => {
-        setDraggedItem({ item, index });
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/html', e.target.outerHTML);
-        e.target.style.opacity = '0.5';
+    // Sorting handler
+    const handleSortToggle = () => {
+        setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     };
 
-    const handleDragEnd = (e) => {
-        e.target.style.opacity = '';
-        setDraggedItem(null);
-        setDragOverIndex(null);
-    };
-
-    const handleDragOver = (e, index) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        setDragOverIndex(index);
-    };
 
     const handleDragLeave = (e) => {
         // Only clear dragOverIndex if we're leaving the entire row
@@ -847,8 +841,25 @@ function Content() {
                 </div>
             )}
 
+            {/* EIC-style Title Section with reduced top margin */}
+            <div className="relative mb-6 mt-5 sm:mt-20 p-6 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
+                <span className="inline-flex items-center justify-center gap-3 w-full">
+                    <span className="rounded-full bg-blue-100 p-2">
+                        <svg className="w-9 h-9 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </span>
+                    <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
+                        Inventory Management
+                    </span>
+                </span>
+                <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
+                    Manage and monitor all inventory items and their stacks.
+                </span>
+            </div>
+
             <div
-                className={`flex flex-col items-center justify-center min-h-[91vh] w-full bg-white rounded-xl shadow mt-15 transition-all
+                className={`flex flex-col items-center justify-center min-h-[91vh] w-full bg-white rounded-xl shadow mt-2 transition-all
                     ${sizeClasses[uiSize]}
                 `}
                 style={{
@@ -865,21 +876,13 @@ function Content() {
                             : 'p-2'
                     }`}
                 >
-                    <h1 className="text-lg sm:text-xl font-bold text-blue-800 mb-4 text-center tracking-tight">
-                        Inventory Management
-                    </h1>
+                    {/* Sorting Button above the table */}
+                    {/* Sorting Button above the table, not in the search/filter controls */}
+
                     {!showDelete && (
                         <div className="text-center mb-3">
                             <p className="text-sm text-blue-600 font-medium flex items-center justify-center gap-2">
-                                <svg
-                                    className="w-4 h-4"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path d="M7 2a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 14a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 2a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 14a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
-                                </svg>
-                                Drag items to reorder • Click arrows to view
-                                stacks
+                                Click arrows to view stacks
                             </p>
                         </div>
                     )}
@@ -1329,6 +1332,15 @@ function Content() {
                     )} */}
 
                 <div className="w-full mt-2">
+                    {/* Sorting Button above the table */}
+                    <div className="flex justify-end mb-2">
+                        <button
+                            onClick={handleSortToggle}
+                            className="px-3 py-1 rounded bg-blue-100 text-blue-700 font-semibold text-xs border border-blue-200 hover:bg-blue-200 transition"
+                        >
+                            Sort: {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}
+                        </button>
+                    </div>
                     <div className="overflow-x-auto rounded-xl shadow bg-white border border-blue-50 p-2 sm:p-4 w-full">
                         <table className="min-w-full bg-transparent rounded-xl">
                             <thead>
@@ -1382,39 +1394,7 @@ function Content() {
                                 ) : (
                                     filteredItems.map((item, index) => (
                                         <React.Fragment key={item.id + index}>
-                                            <tr
-                                                className={`hover:bg-blue-50 transition cursor-move ${
-                                                    dragOverIndex === index
-                                                        ? 'border-t-4 border-blue-500 bg-blue-100'
-                                                        : ''
-                                                }`}
-                                                draggable={
-                                                    !showDelete &&
-                                                    editItemId !== item.id
-                                                }
-                                                onDragStart={(e) =>
-                                                    handleDragStart(
-                                                        e,
-                                                        item,
-                                                        index
-                                                    )
-                                                }
-                                                onDragEnd={handleDragEnd}
-                                                onDragOver={(e) =>
-                                                    handleDragOver(e, index)
-                                                }
-                                                onDragLeave={handleDragLeave}
-                                                onDrop={(e) =>
-                                                    handleDrop(e, index)
-                                                }
-                                                style={{
-                                                    opacity:
-                                                        draggedItem?.index ===
-                                                        index
-                                                            ? 0.5
-                                                            : 1,
-                                                }}
-                                            >
+                                            <tr className="hover:bg-blue-50 transition">
                                                 <td className="py-2 px-2 border-b w-[60px]">
                                                     {/* Show checkbox if delete mode, else expand button */}
                                                     {showDelete ? (
@@ -1431,83 +1411,62 @@ function Content() {
                                                             aria-label={`Select ${item.name}`}
                                                         />
                                                     ) : (
-                                                        <div className="flex items-center gap-1">
-                                                            {/* Drag handle */}
-                                                            <div
-                                                                className="drag-handle text-gray-400 hover:text-gray-600 cursor-move p-1"
-                                                                title="Drag to reorder"
-                                                            >
-                                                                <svg
-                                                                    width="12"
-                                                                    height="12"
-                                                                    viewBox="0 0 20 20"
-                                                                    fill="currentColor"
-                                                                >
-                                                                    <path d="M7 2a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 14a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 2a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM17 14a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
-                                                                </svg>
-                                                            </div>
-                                                            {/* Expand/Collapse button */}
-                                                            <button
-                                                                onClick={() =>
-                                                                    handleViewStacks(
-                                                                        item
-                                                                    )
-                                                                }
-                                                                className="p-1 rounded transition hover:bg-blue-100 focus:outline-none"
-                                                                aria-label={
-                                                                    expandedStacks.has(
-                                                                        item.id
-                                                                    )
-                                                                        ? 'Collapse Stacks'
-                                                                        : 'Expand Stacks'
-                                                                }
-                                                                style={{
-                                                                    display:
-                                                                        'flex',
-                                                                    alignItems:
-                                                                        'center',
-                                                                    justifyContent:
-                                                                        'center',
-                                                                    background:
-                                                                        'none',
-                                                                    border: 'none',
-                                                                }}
-                                                            >
-                                                                {expandedStacks.has(
+                                                        <button
+                                                            onClick={() =>
+                                                                handleViewStacks(
+                                                                    item
+                                                                )
+                                                            }
+                                                            className="p-1 rounded transition hover:bg-blue-100 focus:outline-none"
+                                                            aria-label={
+                                                                expandedStacks.has(
                                                                     item.id
-                                                                ) ? (
-                                                                    <svg
-                                                                        width="18"
-                                                                        height="18"
-                                                                        viewBox="0 0 20 20"
-                                                                        fill="none"
-                                                                    >
-                                                                        <path
-                                                                            d="M6 8l4 4 4-4"
-                                                                            stroke="#2563eb"
-                                                                            strokeWidth="2"
-                                                                            strokeLinecap="round"
-                                                                            strokeLinejoin="round"
-                                                                        />
-                                                                    </svg>
-                                                                ) : (
-                                                                    <svg
-                                                                        width="18"
-                                                                        height="18"
-                                                                        viewBox="0 0 20 20"
-                                                                        fill="none"
-                                                                    >
-                                                                        <path
-                                                                            d="M6 12l4-4 4 4"
-                                                                            stroke="#2563eb"
-                                                                            strokeWidth="2"
-                                                                            strokeLinecap="round"
-                                                                            strokeLinejoin="round"
-                                                                        />
-                                                                    </svg>
-                                                                )}
-                                                            </button>
-                                                        </div>
+                                                                )
+                                                                    ? 'Collapse Stacks'
+                                                                    : 'Expand Stacks'
+                                                            }
+                                                            style={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                background: 'none',
+                                                                border: 'none',
+                                                            }}
+                                                        >
+                                                            {expandedStacks.has(
+                                                                item.id
+                                                            ) ? (
+                                                                <svg
+                                                                    width="18"
+                                                                    height="18"
+                                                                    viewBox="0 0 20 20"
+                                                                    fill="none"
+                                                                >
+                                                                    <path
+                                                                        d="M6 8l4 4 4-4"
+                                                                        stroke="#2563eb"
+                                                                        strokeWidth="2"
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                    />
+                                                                </svg>
+                                                            ) : (
+                                                                <svg
+                                                                    width="18"
+                                                                    height="18"
+                                                                    viewBox="0 0 20 20"
+                                                                    fill="none"
+                                                                >
+                                                                    <path
+                                                                        d="M6 12l4-4 4 4"
+                                                                        stroke="#2563eb"
+                                                                        strokeWidth="2"
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                    />
+                                                                </svg>
+                                                            )}
+                                                        </button>
                                                     )}
                                                 </td>
                                                 <td className="py-2 px-2 border-b font-semibold text-blue-900 max-w-[120px]">
@@ -2032,8 +1991,8 @@ function Content() {
                     </select>
                 </div>
             </div>
+
         </>
     );
 }
-
 export default Content;

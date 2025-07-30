@@ -12,26 +12,26 @@ export default function Audit({ admin_navigate }) {
 
     // Modern soft neutral background
     return (
-        <div className="min-h-screen bg-[#f5f6fa] py-10 px-2 md:px-6">
-            {/* Header */}
-            <div className="relative mt-10 mb-10 flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto gap-4">
-                <span className="text-3xl font-extrabold text-neutral-800 tracking-tight flex items-center gap-3">
-                    <svg
-                        className="w-8 h-8 text-blue-500 drop-shadow"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
-                    Audit Trail
+        <div className="min-h-screen bg-[#f5f6fa] py-6 px-2 md:px-6">
+            {/* EIC-style Title Section */}
+            <div className="relative mt-5 sm:mb-6 sm:mt-20 p-5 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
+                <span className="inline-flex items-center justify-center gap-3 w-full">
+                    <span className="rounded-full bg-blue-100 p-2">
+                        <svg className="w-9 h-9 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </span>
+                    <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
+                        Audit Trail
+                    </span>
                 </span>
-                {/* View Toggle */}
+                <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
+                    View and analyze all admin activities and system changes.
+                </span>
+            </div>
+
+            {/* View Toggle */}
+            <div className="flex items-center justify-center mb-8">
                 <div className="flex items-center space-x-1 bg-white p-1 rounded-lg border border-neutral-200 shadow-sm">
                     <button
                         onClick={() => setActiveView('logs')}
