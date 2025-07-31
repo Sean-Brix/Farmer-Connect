@@ -1,5 +1,5 @@
 // UTILS
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
 // NAVBAR
 import Navbar from '../../Components/Navbar'
@@ -14,8 +14,21 @@ import img5 from './Assets/rabies.jpg'
 import img6 from './Assets/bg.jpg'
 import video from './Assets/rice.mp4'
 import logo from './Assets/Logo.png'
+import s2 from './Assets/s2.jpg'
 
 export default function Landing() {
+    // Responsive card count state
+    const [cardsToShow, setCardsToShow] = useState(window.innerWidth < 640 ? 1 : 4);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setCardsToShow(window.innerWidth < 640 ? 1 : 4);
+        };
+        window.addEventListener('resize', handleResize);
+        // Initial set
+        handleResize();
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
     // Slider state
     const programs = [
         {
@@ -50,15 +63,36 @@ export default function Landing() {
         },
     ];
 
+
     const [current, setCurrent] = useState(0);
+    const [direction, setDirection] = useState(0); // -1 for left, 1 for right
+    const [isAnimating, setIsAnimating] = useState(false);
+    const timeoutRef = useRef();
 
     const prevSlide = () => {
-        setCurrent((prev) => (prev === 0 ? programs.length - 1 : prev - 1));
+        if (isAnimating) return;
+        setDirection(-1);
+        setIsAnimating(true);
+        timeoutRef.current = setTimeout(() => {
+            setCurrent((prev) => (prev === 0 ? programs.length - 1 : prev - 1));
+            setIsAnimating(false);
+        }, 350);
     };
 
     const nextSlide = () => {
-        setCurrent((prev) => (prev === programs.length - 1 ? 0 : prev + 1));
+        if (isAnimating) return;
+        setDirection(1);
+        setIsAnimating(true);
+        timeoutRef.current = setTimeout(() => {
+            setCurrent((prev) => (prev === programs.length - 1 ? 0 : prev + 1));
+            setIsAnimating(false);
+        }, 350);
     };
+
+    // Clean up timeout on unmount
+    useEffect(() => {
+        return () => clearTimeout(timeoutRef.current);
+    }, []);
 
     // Animation on scroll
     useEffect(() => {
@@ -85,25 +119,15 @@ export default function Landing() {
                 {/* HERO SECTION */}
             <section className="mb-0">
                 <div
-                    className="
-                        w-screen relative left-1/2 right-1/2  -ml-[50vw] -mr-[50vw]
-                        flex flex-col items-center justify-center gap-6
-                        bg-black/80 backdrop-blur shadow-2xl p-35 sm:p-55 mb-20 border border-blue-900
-                        overflow-hidden
-                        reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700
-                    "
+                    className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex flex-col items-center justify-center gap-6 shadow-2xl p-35 sm:p-55 mb-20 border border-blue-900 overflow-hidden reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700"
+                    style={{
+                        backgroundImage: `linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url(${s2})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        minHeight: '520px',
+                    }}
                 >
-                    <video
-                        src={video}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover z-0 opacity-60"
-                        style={{
-                            animation: 'none',
-                            transition: 'none',
-                        }}></video>
                     <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center">
                         <h1
                             className="text-5xl font-extrabold mb-6 text-white leading-tight tracking-tight drop-shadow-2xl"
@@ -152,15 +176,13 @@ export default function Landing() {
                 <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row gap-10 relative z-10">
                     {/* Mission */}
                     <div className="flex-1 flex flex-col items-center justify-center relative group">
-                        {/* Unique shape background */}
-                        <svg className="absolute -top-6 left-1/2 -translate-x-1/2 w-64 h-64 opacity-30 blur-2xl z-0" viewBox="0 0 300 300" fill="none">
-                            <ellipse cx="150" cy="150" rx="120" ry="80" fill="#3b82f6" />
-                        </svg>
+                        {/* Removed decorative blur background */}
                         <div className="relative z-10 flex flex-col items-center">
                             <span className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 via-blue-200 to-blue-400 text-blue-800 shadow-lg mb-6 group-hover:scale-110 transition">
-                                {/* Mission Icon */}
+                                {/* Mission Icon - Agriculture: Plant sprout */}
                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 10c-4.418 0-8-3.582-8-8 0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.418-3.582 8-8 8z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21c-4.418 0-8-3.582-8-8V5a1 1 0 011-1h2a1 1 0 011 1v8a4 4 0 004 4 4 4 0 004-4V5a1 1 0 011-1h2a1 1 0 011 1v8c0 4.418-3.582 8-8 8z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 13V3m0 0c1.5 2 4 2 4 2m-4-2c-1.5 2-4 2-4 2" />
                                 </svg>
                             </span>
                             <h2 className="text-3xl font-extrabold text-blue-900 tracking-tight letter-spacing-wide mb-4">Mission</h2>
@@ -170,9 +192,7 @@ export default function Landing() {
                         </div>
                         {/* Decorative dots */}
                         <div className="mt-8 flex items-center gap-2 z-10">
-                            <span className="w-3 h-3 rounded-full bg-blue-700"></span>
-                            <span className="w-3 h-3 rounded-full bg-blue-400"></span>
-                            <span className="w-3 h-3 rounded-full bg-blue-200"></span>
+                            {/* Removed decorative dots */}
                         </div>
                     </div>
                     {/* Divider for desktop */}
@@ -183,15 +203,14 @@ export default function Landing() {
                     </div>
                     {/* Vision */}
                     <div className="flex-1 flex flex-col items-center justify-center relative group">
-                        {/* Unique shape background */}
-                        <svg className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-64 h-64 opacity-30 blur-2xl z-0" viewBox="0 0 300 300" fill="none">
-                            <ellipse cx="150" cy="150" rx="120" ry="80" fill="#2563eb" />
-                        </svg>
+                        {/* Removed decorative blur background */}
                         <div className="relative z-10 flex flex-col items-center">
                             <span className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-200 via-blue-100 to-blue-400 text-blue-800 shadow-lg mb-6 group-hover:scale-110 transition">
-                                {/* Vision Icon */}
+                                {/* Vision Icon - Agriculture: Sun and field */}
                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0c0 5-4.03 9-9 9s-9-4-9-9 4.03-9 9-9 9 4 9 9z" />
+                                    <circle cx="12" cy="12" r="4" stroke="#2563eb" strokeWidth="2" fill="#fff" />
+                                    <path stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M2 20c2-4 6-6 10-6s8 2 10 6" />
+                                    <path stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 2v2m6.364 1.636l-1.414 1.414M22 12h-2M17.364 17.364l-1.414-1.414M12 22v-2M6.636 17.364l1.414-1.414M2 12h2M6.636 6.636l1.414 1.414" />
                                 </svg>
                             </span>
                             <h2 className="text-3xl font-extrabold text-blue-900 tracking-tight letter-spacing-wide mb-4">Vision</h2>
@@ -201,9 +220,7 @@ export default function Landing() {
                         </div>
                         {/* Decorative dots */}
                         <div className="mt-8 flex items-center gap-2 z-10">
-                            <span className="w-3 h-3 rounded-full bg-blue-500"></span>
-                            <span className="w-3 h-3 rounded-full bg-blue-300"></span>
-                            <span className="w-3 h-3 rounded-full bg-blue-100"></span>
+                            {/* Removed decorative dots */}
                         </div>
                     </div>
                 </div>
@@ -214,420 +231,200 @@ export default function Landing() {
             </section>
 
             {/* PROGRAMS */}
-            <section id="programs" className="mb-20 mt-20 py-14 bg-blue-300">
-                <h2 className="text-3xl font-extrabold text-blue-900 mb-12 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
+            <section id="programs" className="mb-20 mt-20 py-14 bg-blue-50">
+                <h2 className="text-3xl font-extrabold text-blue-900 mb-20 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
                     Our Programs
                 </h2>
-                <div className="relative max-w-6xl mx-auto">
-                    <div className="flex items-center justify-between gap-0 overflow-x-auto scrollbar-modern py-10 px-2 md:px-8">
-                        {/* Timeline line */}
-                        <div className="absolute left-0 right-0 top-1/2 h-1 bg-blue-200 z-0" style={{ transform: 'translateY(-50%)' }}></div>
-                        {programs.map((program, idx) => (
+                <div className="max-w-6xl mx-auto px-4">
+                    <div className="flex items-center justify-center gap-6">
+                        <button
+                            aria-label="Previous"
+                            onClick={prevSlide}
+                            className="bg-blue-200 hover:bg-blue-400 text-blue-900 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition disabled:opacity-40 disabled:cursor-not-allowed"
+                            disabled={programs.length <= 4}
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+                        </button>
+                        <div className="w-full flex justify-center gap-6 overflow-hidden mx-4 md:mx-10 lg:mx-16">
                             <div
-                                key={idx}
-                                className="relative z-10 flex flex-col items-center flex-1 min-w-[180px] max-w-[220px] mx-2 group"
+                                className={`flex gap-4 py-5 w-full transition-transform duration-300 ease-in-out ${isAnimating ? (direction === 1 ? 'slider-next' : 'slider-prev') : ''}`}
+                                style={{
+                                    transform: isAnimating
+                                        ? `translateX(${direction === 1 ? (window.innerWidth < 640 ? '-100%' : '-25%') : (window.innerWidth < 640 ? '100%' : '25%')})`
+                                        : 'translateX(0)',
+                                }}
                             >
-                                {/* Timeline dot */}
-                                <div className="w-8 h-8 rounded-full bg-blue-700 border-4 border-blue-200 flex items-center justify-center mb-4 shadow-lg group-hover:bg-blue-800 transition">
-                                    <img
-                                        src={program.img}
-                                        alt={program.title}
-                                        className="w-6 h-6 object-cover rounded-full"
-                                    />
-                                </div>
-                                <div className="bg-white/90 border border-blue-100 rounded-xl shadow-md px-5 py-4 text-center mb-2 group-hover:shadow-xl transition">
-                                    <h3 className="text-lg font-bold text-blue-900 mb-1">{program.title}</h3>
-                                    <p className="text-gray-700 text-sm font-medium">{program.desc}</p>
-                                </div>
+                                {/* Responsive: 1 item on small screens, 4 on md+ */}
+                                {Array.from({ length: cardsToShow }).map((_, i) => {
+                                    const idx = (current + i) % programs.length;
+                                    const program = programs[idx];
+                                    let cardOpacity = 'opacity-100 scale-100';
+                                    if ((cardsToShow > 1) && (i === 0 || i === cardsToShow - 1)) cardOpacity = 'opacity-60 scale-90';
+                                    return (
+                                        <div
+                                            key={idx}
+                                            className={`bg-white rounded-3xl shadow-xl flex flex-col items-center p-3 xs:p-4 sm:p-5 md:p-6 lg:p-8 hover:shadow-2xl transition group border-t-8 border-blue-600 relative mx-auto ${cardOpacity}`}
+                                            style={{
+                                                width: '90vw',
+                                                maxWidth: '260px',
+                                                minWidth: '140px',
+                                                height: '100%',
+                                                minHeight: '240px',
+                                                maxHeight: '360px',
+                                                transition: 'all 0.3s',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                            }}
+                                        >
+                                            <div className="w-14 h-14 xs:w-16 xs:h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-full bg-blue-100 flex items-center justify-center mb-3 sm:mb-4 shadow group-hover:bg-blue-200 transition">
+                                                <img
+                                                    src={program.img}
+                                                    alt={program.title}
+                                                    className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-cover rounded-full border-4 border-blue-200 shadow"
+                                                />
+                                            </div>
+                                            <h3 className="text-sm xs:text-base sm:text-lg md:text-xl font-bold text-blue-900 mb-1 sm:mb-2 text-center group-hover:text-blue-700 transition truncate w-full" title={program.title}>{program.title}</h3>
+                                            <p className="text-gray-700 text-xs xs:text-sm sm:text-base font-medium text-center mb-2 sm:mb-3 line-clamp-3 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', maxHeight: '4.5em' }} title={program.desc}>{program.desc}</p>
+                                            <a
+                                                href="/seminar"
+                                                className="mt-auto inline-block bg-gradient-to-r from-blue-600 to-blue-800 text-white px-2 py-1.5 xs:px-3 xs:py-2 sm:px-4 sm:py-2 rounded-xl font-semibold shadow hover:scale-105 transition-transform text-xs xs:text-sm md:text-base"
+                                                onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
+                                            >
+                                                Learn More
+                                            </a>
+                                        </div>
+                                    );
+                                })}
                             </div>
+                        </div>
+                        <button
+                            aria-label="Next"
+                            onClick={nextSlide}
+                            className="bg-blue-200 hover:bg-blue-400 text-blue-900 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition disabled:opacity-40 disabled:cursor-not-allowed"
+                            disabled={programs.length <= 4}
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                    </div>
+                    {/* Dots navigation */}
+                    <div className="flex justify-center gap-2 mt-8">
+                        {programs.slice(0, programs.length).map((_, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => setCurrent(idx)}
+                                className={`w-3 h-3 rounded-full transition border-2 ${current === idx ? 'bg-blue-700 border-blue-700' : 'bg-blue-200 border-blue-200 hover:bg-blue-400'}`}
+                                aria-label={`Go to program ${idx + 1}`}
+                            />
                         ))}
                     </div>
-                    {/* Custom dark blue modern scrollbar style */}
-                    <style>{`
-                        .scrollbar-modern {
-                            scrollbar-width: thin;
-                            scrollbar-color: #1e3a8a #dbeafe;
-                        }
-                        .scrollbar-modern::-webkit-scrollbar {
-                            height: 12px;
-                            background: #dbeafe;
-                            border-radius: 8px;
-                        }
-                        .scrollbar-modern::-webkit-scrollbar-thumb {
-                            background: linear-gradient(135deg, #1e3a8a 60%, #1e40af 100%);
-                            border-radius: 8px;
-                            border: 2px solid #dbeafe;
-                        }
-                        .scrollbar-modern::-webkit-scrollbar-track {
-                            background: #dbeafe;
-                            border-radius: 8px;
-                        }
-                    `}</style>
                 </div>
             </section>
 
+
             {/* LATEST NEWS & UPDATES */}
-            <section className="relative max-w-3xl mx-auto px-2 py-15 mb-20">
+            <section className="relative max-w-6xl mx-auto px-4 py-16 mb-20">
                 {/* Decorative background shapes */}
                 <div className="absolute -top-8 -left-8 w-28 h-28 bg-blue-100 rounded-full opacity-30 blur-2xl z-0"></div>
                 <div className="absolute -bottom-8 -right-8 w-36 h-36 bg-blue-300 rounded-full opacity-20 blur-2xl z-0"></div>
-                <div className="absolute top-1/2 left-0 w-10 h-10 bg-blue-200 rounded-full opacity-20 blur-xl z-0"></div>
-                <div className="absolute bottom-1/3 right-0 w-8 h-8 bg-blue-400 rounded-full opacity-10 blur-xl z-0"></div>
-                <h2 className="text-xl md:text-2xl font-extrabold text-blue-900 mb-4 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-10 transition-all duration-700 delay-100 relative z-10">
+                <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-10 transition-all duration-700 delay-100 relative z-10">
                     Latest News & Updates
                 </h2>
-                <div className="relative flex flex-col items-center">
-                    {/* Vertical timeline line */}
-                    <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b mt-4 from-blue-200 via-blue-100 to-blue-50 z-0"></div>
-                    {/* Timeline Items */}
-                    <div className="space-y-6 w-full z-10">
-                        {/* News Card 1 */}
-                        <div className="flex md:flex-row flex-col items-center md:items-start w-full group relative">
-                            <div className="md:w-1/2 w-full md:pr-4 flex justify-end md:justify-end">
-                                <div className="relative bg-white/90 rounded-xl shadow-lg border border-blue-100 p-3 w-full max-w-xs hover:shadow-2xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-100">
-                                    <div className="absolute -left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-blue-700 border-2 border-blue-100 rounded-full flex items-center justify-center shadow-lg z-10">
-                                        <span className="text-white font-bold text-xs">1</span>
-                                    </div>
-                                    <div className="relative mb-1">
-                                        <img src={fits} alt="FITS Center" className="w-full h-16 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300 shadow-md" />
-                                        <span className="absolute top-1 right-1 bg-blue-700 text-blue-50 text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow">New</span>
-                                    </div>
-                                    <h3 className="font-bold text-sm text-blue-900 mb-1">FITS Center Launches New Farmer Training</h3>
-                                    <p className="text-gray-800 text-xs mb-1 font-semibold">
-                                        The FITS Center recently conducted a hands-on training session for local farmers, focusing on sustainable crop management and modern agricultural techniques.
-                                    </p>
-                                    <div className="flex items-center justify-between mt-auto">
-                                        <span className="text-blue-700 text-[10px] font-semibold">June 2024</span>
-                                        <a
-                                            href="https://ati.da.gov.ph/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition text-xs"
-                                        >
-                                            Read More
-                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
+                <div className="relative z-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+                    {/* News Card 1 */}
+                    <div className="bg-white/95 rounded-2xl shadow-lg border border-blue-100 p-5 flex flex-col hover:shadow-2xl transition-all duration-300 group max-w-xs w-full">
+                            <div className="relative mb-3">
+                                <img src={fits} alt="FITS Center" className="w-full h-40 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300 shadow-md" />
+                                <span className="absolute top-2 right-2 bg-blue-700 text-blue-50 text-xs px-2 py-0.5 rounded-full font-bold shadow">New</span>
                             </div>
-                            <div className="hidden md:block md:w-1/2"></div>
-                        </div>
-                        {/* Decorative connector */}
-                        <div className="flex justify-center items-center">
-                            <div className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center shadow-md">
-                                <svg className="w-3 h-3 text-blue-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="10" />
-                                </svg>
+                            <h3 className="font-bold text-lg text-blue-900 mb-2">FITS Center Launches New Farmer Training</h3>
+                            <p className="text-gray-800 text-sm mb-3 font-semibold line-clamp-3 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', maxHeight: '4.5em' }}>
+                                The FITS Center recently conducted a hands-on training session for local farmers, focusing on sustainable crop management and modern agricultural techniques.
+                            </p>
+                            <div className="flex items-center justify-between mt-auto">
+                                <span className="text-blue-700 text-xs font-semibold">June 2024</span>
+                                <a
+                                    href="https://ati.da.gov.ph/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition text-sm"
+                                >
+                                    Read More
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                </a>
                             </div>
                         </div>
                         {/* News Card 2 */}
-                        <div className="flex md:flex-row flex-col-reverse items-center md:items-start w-full group relative">
-                            <div className="hidden md:block md:w-1/2"></div>
-                            <div className="md:w-1/2 w-full md:pl-4 flex justify-start md:justify-start">
-                                <div className="relative bg-white/90 rounded-xl shadow-lg border border-blue-100 p-3 w-full max-w-xs hover:shadow-2xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-200">
-                                    <div className="absolute -right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-blue-600 border-2 border-blue-100 rounded-full flex items-center justify-center shadow-lg z-10">
-                                        <span className="text-white font-bold text-xs">2</span>
-                                    </div>
-                                    <div className="relative mb-1">
-                                        <img src={img4} alt="Organic Farming" className="w-full h-16 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300 shadow-md" />
-                                        <span className="absolute top-1 right-1 bg-blue-600 text-blue-50 text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow">Update</span>
-                                    </div>
-                                    <h3 className="font-bold text-sm text-blue-900 mb-1">Organic Farming Initiative Expands</h3>
-                                    <p className="text-gray-800 text-xs mb-1 font-semibold">
-                                        Our organic farming program has expanded to include more barangays, promoting healthier produce and eco-friendly practices across the region.
-                                    </p>
-                                    <div className="flex items-center justify-between mt-auto">
-                                        <span className="text-blue-700 text-[10px] font-semibold">May 2024</span>
-                                        <a
-                                            href="https://ati.da.gov.ph/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition text-xs"
-                                        >
-                                            Read More
-                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
+                    <div className="bg-white/95 rounded-2xl shadow-lg border border-blue-100 p-5 flex flex-col hover:shadow-2xl transition-all duration-300 group max-w-xs w-full">
+                            <div className="relative mb-3">
+                                <img src={img4} alt="Organic Farming" className="w-full h-40 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300 shadow-md" />
+                                <span className="absolute top-2 right-2 bg-blue-600 text-blue-50 text-xs px-2 py-0.5 rounded-full font-bold shadow">Update</span>
                             </div>
-                        </div>
-                        {/* Decorative connector */}
-                        <div className="flex justify-center items-center">
-                            <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center shadow-md">
-                                <svg className="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="10" />
-                                </svg>
+                            <h3 className="font-bold text-lg text-blue-900 mb-2">Organic Farming Initiative Expands</h3>
+                            <p className="text-gray-800 text-sm mb-3 font-semibold line-clamp-3 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', maxHeight: '4.5em' }}>
+                                Our organic farming program has expanded to include more barangays, promoting healthier produce and eco-friendly practices across the region.
+                            </p>
+                            <div className="flex items-center justify-between mt-auto">
+                                <span className="text-blue-700 text-xs font-semibold">May 2024</span>
+                                <a
+                                    href="https://ati.da.gov.ph/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition text-sm"
+                                >
+                                    Read More
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                </a>
                             </div>
                         </div>
                         {/* News Card 3 */}
-                        <div className="flex md:flex-row flex-col items-center md:items-start w-full group relative">
-                            <div className="md:w-1/2 w-full md:pr-4 flex justify-end md:justify-end">
-                                <div className="relative bg-white/90 rounded-xl shadow-lg border border-blue-100 p-3 w-full max-w-xs hover:shadow-2xl transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-300">
-                                    <div className="absolute -left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 bg-blue-500 border-2 border-blue-100 rounded-full flex items-center justify-center shadow-lg z-10">
-                                        <span className="text-white font-bold text-xs">3</span>
-                                    </div>
-                                    <div className="relative mb-1">
-                                        <img src={img5} alt="Rabies Control" className="w-full h-16 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300 shadow-md" />
-                                        <span className="absolute top-1 right-1 bg-blue-500 text-blue-50 text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow">Event</span>
-                                    </div>
-                                    <h3 className="font-bold text-sm text-blue-900 mb-1">Rabies Awareness Campaign</h3>
-                                    <p className="text-gray-800 text-xs mb-1 font-semibold">
-                                        The Rabies Control team held a successful awareness drive, educating pet owners and distributing free vaccines to ensure community safety.
-                                    </p>
-                                    <div className="flex items-center justify-between mt-auto">
-                                        <span className="text-blue-700 text-[10px] font-semibold">April 2024</span>
-                                        <a
-                                            href="https://ati.da.gov.ph/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition text-xs"
-                                        >
-                                            Read More
-                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
+                    <div className="bg-white/95 rounded-2xl shadow-lg border border-blue-100 p-5 flex flex-col hover:shadow-2xl transition-all duration-300 group max-w-xs w-full">
+                            <div className="relative mb-3">
+                                <img src={img5} alt="Rabies Control" className="w-full h-40 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300 shadow-md" />
+                                <span className="absolute top-2 right-2 bg-blue-500 text-blue-50 text-xs px-2 py-0.5 rounded-full font-bold shadow">Event</span>
                             </div>
-                            <div className="hidden md:block md:w-1/2"></div>
+                            <h3 className="font-bold text-lg text-blue-900 mb-2">Rabies Awareness Campaign</h3>
+                            <p className="text-gray-800 text-sm mb-3 font-semibold line-clamp-3 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', maxHeight: '4.5em' }}>
+                                The Rabies Control team held a successful awareness drive, educating pet owners and distributing free vaccines to ensure community safety.
+                            </p>
+                            <div className="flex items-center justify-between mt-auto">
+                                <span className="text-blue-700 text-xs font-semibold">April 2024</span>
+                                <a
+                                    href="https://ati.da.gov.ph/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-700 font-bold hover:underline flex items-center gap-1 transition text-sm"
+                                >
+                                    Read More
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                {/* Decorative bottom wave */}
-                    <svg className="absolute left-0 right-0 bottom-0 w-full h-16 pointer-events-none" viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill="#2563eb" fillOpacity="0.06" d="M0,40 C480,0 960,80 1440,40 L1440,80 L0,80 Z"></path>
-                    </svg>
+                
             </section>
             
-            {/* Why Choose Us Section */}
-            <section className="bg-blue-200 py-30 mb-20">
-                <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900 mb-20 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-20 transition-all duration-700 delay-100">
-                    Why Choose Us?
-                </h2>
-                <div className="relative max-w-5xl mx-auto flex flex-col items-center">
-                    {/* Decorative SVG curve */}
-                    <svg className="absolute left-0 right-0 top-0 w-full h-32 pointer-events-none" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill="#2563eb" fillOpacity="0.08" d="M0,80 C480,160 960,0 1440,80 L1440,120 L0,120 Z"></path>
-                    </svg>
-                    {/* Timeline style cards */}
-                    <div className="flex flex-col md:flex-row items-center justify-between w-full z-10">
-                        {/* Line */}
-                        <div className="hidden md:block absolute left-1/2 top-24 bottom-0 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200" style={{height: '220px', transform: 'translateX(-50%)'}}></div>
-                        {/* Card 1 */}
-                        <div className="flex flex-col items-center md:w-1/3 mb-12 md:mb-0 relative z-10">
-                            <div className="bg-blue-800 rounded-full p-5 shadow-lg mb-4 border-4 border-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3s3-1.343 3-3c0-1.657-1.343-3-3-3zm0 10c-4.418 0-8-3.582-8-8 0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.418-3.582 8-8 8z" />
-                                </svg>
-                            </div>
-                            <div className="bg-white/90 rounded-xl shadow-md px-7 py-6 text-center border-t-4 border-blue-700 reveal-on-scroll opacity-0 translate-y-10 delay-100">
-                                <h3 className="font-bold text-lg text-blue-900 mb-2">Expert Support</h3>
-                                <p className="text-blue-700 text-base font-semibold">
-                                    Our team provides expert guidance and support to help you succeed in agriculture.
-                                </p>
-                            </div>
-                        </div>
-                        {/* Connector for desktop */}
-                        <div className="hidden md:flex flex-col items-center w-1/6">
-                            <div className="w-3 h-3 bg-blue-700 rounded-full mb-2"></div>
-                            <div className="flex-1 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200"></div>
-                            <div className="w-3 h-3 bg-blue-700 rounded-full mt-2"></div>
-                        </div>
-                        {/* Card 2 */}
-                        <div className="flex flex-col items-center md:w-1/3 mb-12 md:mb-0 relative z-10">
-                            <div className="bg-blue-800 rounded-full p-5 shadow-lg mb-4 border-4 border-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a4 4 0 018 0v2m-4-6a4 4 0 100-8 4 4 0 000 8z" />
-                                </svg>
-                            </div>
-                            <div className="bg-white/90 rounded-xl shadow-md px-7 py-6 text-center border-t-4 border-blue-700 reveal-on-scroll opacity-0 translate-y-10 delay-200">
-                                <h3 className="font-bold text-lg text-blue-900 mb-2">Community Focus</h3>
-                                <p className="text-blue-700 text-base font-semibold">
-                                    We are dedicated to uplifting communities and fostering sustainable growth.
-                                </p>
-                            </div>
-                        </div>
-                        {/* Connector for desktop */}
-                        <div className="hidden md:flex flex-col items-center w-1/6">
-                            <div className="w-3 h-3 bg-blue-700 rounded-full mb-2"></div>
-                            <div className="flex-1 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200"></div>
-                            <div className="w-3 h-3 bg-blue-700 rounded-full mt-2"></div>
-                        </div>
-                        {/* Card 3 */}
-                        <div className="flex flex-col items-center md:w-1/3 relative z-10">
-                            <div className="bg-blue-800 rounded-full p-5 shadow-lg mb-4 border-4 border-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-blue-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2z" />
-                                </svg>
-                            </div>
-                            <div className="bg-white/90 rounded-xl shadow-md px-7 py-6 text-center border-t-4 border-blue-700 reveal-on-scroll opacity-0 translate-y-10 delay-300">
-                                <h3 className="font-bold text-lg text-blue-900 mb-2">Trusted & Secure</h3>
-                                <p className="text-blue-700 text-base font-semibold">
-                                    We ensure your data and interactions are safe and handled with integrity.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    {/* Decorative SVG curve bottom */}
-                    <svg className="absolute left-0 right-0 bottom-0 w-full h-32 pointer-events-none" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill="#2563eb" fillOpacity="0.08" d="M0,40 C480,0 960,160 1440,40 L1440,120 L0,120 Z"></path>
-                    </svg>
-                    </div>
-            </section>
-
-            {/* --- TESTIMONIALS --- */}
-            <section className="max-w-6xl mx-auto px-4 py-14 mb-20">
-                <h2 className="text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-10 transition-all duration-700 delay-100">
-                    Testimonials
-                </h2>
-                <div className="relative flex flex-col md:flex-row items-stretch gap-8">
-                    {/* Decorative background gradient line */}
-                    <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200 rounded-full opacity-40" style={{transform: 'translateX(-50%)'}}></div>
-                    {/* Testimonial 1 */}
-                    <div className="relative flex-1 flex flex-col items-center text-center group">
-                        <div className="relative mb-6">
-                            <img
-                                src="https://randomuser.me/api/portraits/men/32.jpg"
-                                alt="Testimonial 1"
-                                className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg object-cover z-10"
-                            />
-                            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-700 text-white px-3 py-1 rounded-full text-xs font-bold shadow group-hover:bg-blue-800 transition">Farmer</span>
-                        </div>
-                        <div className="relative bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-700/80 rounded-3xl shadow-xl border border-blue-800 px-8 py-7 flex flex-col items-center group-hover:scale-105 transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-100">
-                            <svg className="w-8 h-8 text-blue-400 mb-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                <path d="M9 17c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5h-1zm-6 0c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5H3z" />
-                            </svg>
-                            <p className="text-blue-100 text-base mb-4 font-semibold">
-                                "Thanks to Agri-Connect, I learned new farming techniques that doubled my harvest. The support team is always ready to help!"
-                            </p>
-                            <span className="text-blue-300 font-bold">Juan Dela Cruz</span>
-                            <span className="text-blue-400 text-xs">Tanza</span>
-                        </div>
-                    </div>
-                    {/* Testimonial 2 */}
-                    <div className="relative flex-1 flex flex-col items-center text-center group">
-                        <div className="relative mb-6">
-                            <img
-                                src="https://randomuser.me/api/portraits/women/44.jpg"
-                                alt="Testimonial 2"
-                                className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg object-cover z-10"
-                            />
-                            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow group-hover:bg-blue-700 transition">Barangay Leader</span>
-                        </div>
-                        <div className="relative bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-700/80 rounded-3xl shadow-xl border border-blue-800 px-8 py-7 flex flex-col items-center group-hover:scale-105 transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-200">
-                            <svg className="w-8 h-8 text-blue-400 mb-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                <path d="M9 17c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5h-1zm-6 0c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5H3z" />
-                            </svg>
-                            <p className="text-blue-100 text-base mb-4 font-semibold">
-                                "The FITS Center's organic farming program helped our community grow healthier food and protect our environment."
-                            </p>
-                            <span className="text-blue-300 font-bold">Maria Santos</span>
-                            <span className="text-blue-400 text-xs">Tanza</span>
-                        </div>
-                    </div>
-                    {/* Testimonial 3 */}
-                    <div className="relative flex-1 flex flex-col items-center text-center group">
-                        <div className="relative mb-6">
-                            <img
-                                src="https://randomuser.me/api/portraits/men/65.jpg"
-                                alt="Testimonial 3"
-                                className="w-24 h-24 rounded-full border-4 border-blue-700 shadow-lg object-cover z-10"
-                            />
-                            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow group-hover:bg-blue-600 transition">Student</span>
-                        </div>
-                        <div className="relative bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-700/80 rounded-3xl shadow-xl border border-blue-800 px-8 py-7 flex flex-col items-center group-hover:scale-105 transition-all duration-300 reveal-on-scroll opacity-0 translate-y-10 delay-300">
-                            <svg className="w-8 h-8 text-blue-400 mb-2" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                <path d="M9 17c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5h-1zm-6 0c0-4.418 3.582-8 8-8V5a7 7 0 00-7 7v5H3z" />
-                            </svg>
-                            <p className="text-blue-100 text-base mb-4 font-semibold">
-                                "I attended the Agri Bootcamp and learned so much about sustainable agriculture. Highly recommended for the youth!"
-                            </p>
-                            <span className="text-blue-300 font-bold">Mark Reyes</span>
-                            <span className="text-blue-400 text-xs">Tanza</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Frequently Asked Questions */}
-            <section className="max-w-6xl mx-auto px-4 py-14 mb-20">
-                <h2 className="text-3xl font-extrabold text-blue-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
-                    Frequently Asked Questions
-                </h2>
-                <div className="space-y-6">
-                    <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
-                        <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
-                            What is the FITS Program?
-                            <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
-                        </summary>
-                        <p className="mt-3 text-blue-100 font-semibold">
-                            The Farmers' Information and Technology Services (FITS) Program provides agricultural information, training, and technology support to farmers and stakeholders.
-                        </p>
-                    </details>
-                    <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-200">
-                        <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
-                            How can I join your programs?
-                            <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
-                        </summary>
-                        <p className="mt-3 text-blue-100 font-semibold">
-                            You can join by contacting us through our website, visiting the FITS Center, or following our social media for announcements and registration details.
-                        </p>
-                    </details>
-                    <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-300">
-                        <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
-                            Are your services free?
-                            <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
-                        </summary>
-                        <p className="mt-3 text-blue-100 font-semibold">
-                            Most of our services, trainings, and consultations are free for local farmers and community members, thanks to government and partner support.
-                        </p>
-                    </details>
-                    <details className="bg-gray-900/80 backdrop-blur-md rounded-2xl shadow border border-blue-900 p-6 group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-400">
-                        <summary className="font-bold text-blue-200 cursor-pointer flex items-center justify-between">
-                            How do I get updates on events?
-                            <span className="ml-2 text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
-                        </summary>
-                        <p className="mt-3 text-blue-100 font-semibold">
-                            Subscribe to our newsletter, follow us on social media, or regularly check our website for the latest news and event schedules.
-                        </p>
-                    </details>
-                </div>
-            </section>
 
             {/* USEFUL EXTERNAL RESOURCES */}
-            <section className="max-w-5xl mx-auto px-6 py-16 mb-20">
-                <h2 className="text-3xl font-extrabold text-blue-900 mb-12 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-1/  transition-all duration-700 delay-100">
+            <section className="  py-40 = bg-blue-50">
+                <h2 className="text-3xl font-extrabold text-blue-900 mb-20 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-2  transition-all duration-700 delay-100">
                     Useful External Resources
                 </h2>
-                {/* Unique layout: circular/arc arrangement with connecting lines */}
-                <div className="relative flex items-center justify-center min-h-[380px]">
-                    {/* SVG arc connector */}
-                    <svg
-                        className="absolute left-0 translate-y-1/2 right-0 mx-auto top-8 w-[90%] h-[260px] pointer-events-none"
-                        viewBox="0 0 600 260"
-                        fill="none"
-                        style={{ zIndex: 0 }}
-                    >
-                        <path
-                            d="M60 220 Q300 20 540 220"
-                            stroke="#2563eb"
-                            strokeWidth="3"
-                            strokeDasharray="8 8"
-                            fill="none"
-                        />
-                    </svg>
-                    {/* Resource 1 - left */}
+                {/* Resource cards in a responsive flex layout */}
+                <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-5 md:gap-12 px-4">
+                    {/* Resource 1 */}
                     <a
                         href="https://www.da.gov.ph/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="absolute left-0 translate-y-1/2 top-32 group flex flex-col items-center"
-                        style={{ width: 220 }}
+                        className="flex flex-col items-center w-full max-w-xs group"
                     >
                         <span className="bg-white shadow-lg border-4 border-blue-700 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-blue-700 group-hover:text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-700 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -639,13 +436,12 @@ export default function Landing() {
                             <p className="text-blue-700 text-sm font-semibold">Official government portal for Philippine agriculture programs, news, and resources.</p>
                         </div>
                     </a>
-                    {/* Resource 2 - top center */}
+                    {/* Resource 2 */}
                     <a
                         href="https://ati.da.gov.ph/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="absolute left-1/2 -translate-x-1/2 translate-y-1/8 top-0 group flex flex-col items-center"
-                        style={{ width: 220 }}
+                        className="flex flex-col items-center w-full max-w-xs group"
                     >
                         <span className="bg-white shadow-lg border-4 border-blue-800 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-blue-800 group-hover:text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-800 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -657,13 +453,12 @@ export default function Landing() {
                             <p className="text-blue-700 text-sm font-semibold">Training, extension, and e-learning for farmers and agri-entrepreneurs.</p>
                         </div>
                     </a>
-                    {/* Resource 3 - right */}
+                    {/* Resource 3 */}
                     <a
                         href="https://www.philrice.gov.ph/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="absolute right-0 top-32 translate-y-1/2 group flex flex-col items-center"
-                        style={{ width: 220 }}
+                        className="flex flex-col items-center w-full max-w-xs group"
                     >
                         <span className="bg-white shadow-lg border-4 border-blue-900 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-blue-900 group-hover:text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-900 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -871,6 +666,21 @@ export default function Landing() {
                 }
                 .reveal-on-scroll.translate-y-0 {
                     transform: translateY(0) !important;
+                }
+                /* Slider animation */
+                .slider-next {
+                    animation: slideNext 0.35s cubic-bezier(0.4,0,0.2,1);
+                }
+                .slider-prev {
+                    animation: slidePrev 0.35s cubic-bezier(0.4,0,0.2,1);
+                }
+                @keyframes slideNext {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-25%); }
+                }
+                @keyframes slidePrev {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(25%); }
                 }
             `}</style>
         </>
