@@ -4,7 +4,14 @@ import logo from '../../Assets/Logo.png';
 import Chat from '../../Components/Chats/Chat';
 
 export default function Navbar({refresh}) {
-
+    // Inject Google Fonts Poppins if not already present
+    if (typeof document !== 'undefined' && !document.getElementById('poppins-font')) {
+        const link = document.createElement('link');
+        link.id = 'poppins-font';
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap';
+        document.head.appendChild(link);
+    }
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [servicesOpen, setServicesOpen] = useState(false);
@@ -200,8 +207,8 @@ export default function Navbar({refresh}) {
                     </div>
                 </div>
             )}
-            <nav className="bg-white shadow-lg fixed w-full rounded-b-4xl z-30 top-0 left-0">
-                <div className="max-w-7xl mx-auto flex items-center justify-between px-2 md:px-8 py-6">
+            <nav className="bg-white shadow-lg fixed w-full rounded-xl z-30 top-0 left-0" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <div className="max-w-7xl mx-auto flex items-center justify-between px-2 md:px-8 py-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
                     <img
                         src={logo}
                         alt="FITS -Tanza Logo"
@@ -214,7 +221,7 @@ export default function Navbar({refresh}) {
                         FITS -Tanza
                     </Link>
                     <div className="flex-1 flex justify-center">
-                        <ul className="hidden md:flex items-center gap-2 lg:gap-6">
+                        <ul className="hidden md:flex items-center gap-2 lg:gap-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
                             <li>
                                 <Link
                                     to="/"
@@ -530,7 +537,7 @@ export default function Navbar({refresh}) {
                             </li>
                         </ul>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
                         <div className="relative hidden md:block">
                             <button
                                 onClick={() => setOpen((open) => !open)}
@@ -664,6 +671,7 @@ export default function Navbar({refresh}) {
                         open ? 'translate-x-0' : '-translate-x-full'
                     } md:hidden`}
                     style={{
+                        fontFamily: 'Poppins, sans-serif',
                         overflowY: 'auto',
                         overflowX: 'hidden',
                         scrollbarWidth: 'none',

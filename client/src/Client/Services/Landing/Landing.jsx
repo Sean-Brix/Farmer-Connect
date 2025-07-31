@@ -1,6 +1,7 @@
 // UTILS
 
-// Google Fonts import for Montserrat
+ 
+            <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
 // eslint-disable-next-line
 import React, { useEffect, useState, useRef } from 'react'
 
@@ -21,6 +22,14 @@ import s2 from './Assets/s2.jpg'
 import mainbg from './Assets/mainbg.jpg'
 
 export default function Landing() {
+    // Inject Google Fonts Poppins if not already present
+    if (typeof document !== 'undefined' && !document.getElementById('poppins-font')) {
+        const link = document.createElement('link');
+        link.id = 'poppins-font';
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap';
+        document.head.appendChild(link);
+    }
     // Responsive card count state
     const [cardsToShow, setCardsToShow] = useState(window.innerWidth < 640 ? 1 : 4);
 
@@ -118,14 +127,13 @@ export default function Landing() {
     // Replace all green color classes with blue equivalents
     return (
         <>
-            {/* Google Fonts Montserrat import */}
-            <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
+          
             <Navbar />
-        <main className="min-h-screen">
+        <main className="min-h-screen" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {/* HERO SECTION */}
-            <section className="mb-0">
+            <section className="mb-0 mt-0" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 <div
-                    className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex flex-col items-center justify-center gap-6 shadow-2xl p-35 sm:p-55 mb-20 border border-blue-900 overflow-hidden reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700"
+                    className="w-screen relative top-1 left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex flex-col items-center justify-center gap-6 shadow-2xl p-40 sm:p-50 mb-20 border border-blue-900 overflow-hidden reveal-on-scroll opacity-0  transition-all duration-700"
                     style={{
                         backgroundImage: `linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url(${mainbg})`,
                         backgroundSize: 'cover',
@@ -145,7 +153,7 @@ export default function Landing() {
                                     '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
                             }}
                         >
-                            Empowering <span style={{color:'#4b6043'}}>Agriculture</span>,<br />Enriching Lives
+                            Empowering <span style={{color:'#5D8736'}}>Agriculture</span>,<br />Enriching Lives
                         </h1>
                         <p
                             className="text-xl md:text-lg text-white mb-8 drop-shadow-2xl font-medium tracking-wider"
@@ -162,7 +170,7 @@ export default function Landing() {
                         <div className="flex gap-4 flex-wrap mb-8 justify-center">
                             <a
                                 href="/seminar"
-                                className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-8 py-3 rounded-2xl font-semibold shadow hover:scale-105 transition-transform"
+                                className="bg-blue-100 text-blue-900 font-bold px-8 py-3 rounded-2xl  shadow hover:scale-105 hover:bg-blue-400 hover:text-white transition-transform"
                                 onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
                             >
                                 Our Programs
@@ -180,7 +188,7 @@ export default function Landing() {
             </section>
 
             {/* MISSION & VISION */}
-            <section className="py-20 mt-0  relative overflow-hidden ">
+            <section className="py-20 mt-0  relative overflow-hidden " style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {/* Decorative SVG background */}
                 <svg className="absolute top-0 left-0 w-full h-40 opacity-20 pointer-events-none" viewBox="0 0 1440 320" fill="none">
                     <path fill="#2563eb" fillOpacity="0.08" d="M0,160L60,170.7C120,181,240,203,360,197.3C480,192,600,160,720,154.7C840,149,960,171,1080,181.3C1200,192,1320,192,1380,192L1440,192L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
@@ -242,7 +250,7 @@ export default function Landing() {
             </section>
 
             {/* PROGRAMS */}
-            <section id="programs" className="mb-20 mt-20 py-14 bg-blue-50">
+            <section id="programs" className="mb-20 mt-20 py-14 bg-blue-50" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 <h2 className="text-3xl font-extrabold text-blue-900 mb-20 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
                     Our Programs
                 </h2>
@@ -333,7 +341,7 @@ export default function Landing() {
 
 
             {/* LATEST NEWS & UPDATES */}
-            <section className="relative max-w-6xl mx-auto px-4 py-16 mb-20">
+            <section className="relative max-w-6xl mx-auto px-4 py-16 mb-20" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {/* Decorative background shapes */}
                 <div className="absolute -top-8 -left-8 w-28 h-28 bg-blue-100 rounded-full opacity-30 blur-2xl z-0"></div>
                 <div className="absolute -bottom-8 -right-8 w-36 h-36 bg-blue-300 rounded-full opacity-20 blur-2xl z-0"></div>
@@ -424,7 +432,7 @@ export default function Landing() {
             
 
             {/* USEFUL EXTERNAL RESOURCES */}
-            <section className="  py-40 = bg-blue-50">
+            <section className="  py-40 = bg-blue-50" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 <h2 className="text-3xl font-extrabold text-blue-900 mb-20 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-2  transition-all duration-700 delay-100">
                     Useful External Resources
                 </h2>
@@ -486,7 +494,7 @@ export default function Landing() {
 
             {/* Move footer outside of main for valid structure */}
         </main>
-           <footer className="bg-blue-900 py-16 px-6">
+           <footer className="bg-blue-900 py-16 px-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-14">
                     {/* Logo & About */}
                     <div className="flex-1 mb-10 md:mb-0">
