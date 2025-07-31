@@ -144,7 +144,7 @@ export default function Landing() {
                 >
                     <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center">
                         <h1
-                            className="text-4xl md:text-6xl font-extrabold mb-6 text-white leading-tight tracking-tight drop-shadow-2xl"
+                            className="text-4xl md:text-6xl font-extrabold mb-6 pt-5 text-white leading-tight tracking-tight drop-shadow-2xl"
                             style={{
                                 fontFamily: 'Montserrat, Arial, sans-serif',
                                 fontWeight: 800,

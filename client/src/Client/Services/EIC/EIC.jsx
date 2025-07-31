@@ -1135,7 +1135,7 @@ export default function Eic() {
                                 </div>
                                 <div className="relative flex justify-center w-full sm:w-auto">
                                     <button
-                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold border border-blue-200 shadow transition focus:outline-none"
+                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-blue-100 text-blue-700 font-semibold border border-blue-200 shadow transition focus:outline-none"
                                         onClick={() => setShowFilter((f) => !f)}
                                         type="button"
                                         aria-label="Show filter options"

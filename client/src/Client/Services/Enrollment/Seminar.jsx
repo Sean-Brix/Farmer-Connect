@@ -260,11 +260,11 @@ export default function Seminar() {
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative"
+                className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100   relative"
                 style={{ overflow: 'hidden' }}
             >
-                <main className="flex-1 w-full relative z-10 mt-30">
-                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20">
+                <main className="flex-1 w-full relative z-10 mt-30 ">
+                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20 ">
                         {/* Header */}
                         <header className="flex flex-col items-center mb-12 w-full">
                             <span className="uppercase tracking-widest text-blue-400 text-xs font-semibold mb-1 letter-spacing-wide">
@@ -309,7 +309,7 @@ export default function Seminar() {
                                 {/* Filter Dropdown */}
                                 <div className="relative flex justify-center w-full sm:w-auto">
                                     <button
-                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold border border-blue-200 shadow transition focus:outline-none"
+                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-blue-100 text-blue-700 font-semibold border border-blue-200 shadow transition focus:outline-none"
                                         onClick={() => setShowFilter((f) => !f)}
                                         type="button"
                                         aria-label="Show filter options"
@@ -638,6 +638,14 @@ export default function Seminar() {
                         padding-right: 0 !important;
                     }
                 }
+                  html, body, #root {
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                }
+                html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar {
+                    display: none;
+                }
+              
                 `}
             </style>
         </>
@@ -662,7 +670,7 @@ function SeminarDetails({ seminar, onClose }) {
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md ">
             <div className="relative bg-gradient-to-br from-white via-blue-50 to-blue-100 rounded-3xl shadow-2xl max-w-2xl w-full flex flex-col overflow-hidden animate-fade-in max-h-[90vh] border-2 border-blue-200">
                 {/* Seminar Image on Top, Large and Responsive */}
                 <div className="w-full flex-shrink-0 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
