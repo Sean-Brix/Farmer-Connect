@@ -1,4 +1,7 @@
 // UTILS
+
+// Google Fonts import for Montserrat
+// eslint-disable-next-line
 import React, { useEffect, useState, useRef } from 'react'
 
 // NAVBAR
@@ -15,6 +18,7 @@ import img6 from './Assets/bg.jpg'
 import video from './Assets/rice.mp4'
 import logo from './Assets/Logo.png'
 import s2 from './Assets/s2.jpg'
+import mainbg from './Assets/mainbg.jpg'
 
 export default function Landing() {
     // Responsive card count state
@@ -114,6 +118,8 @@ export default function Landing() {
     // Replace all green color classes with blue equivalents
     return (
         <>
+            {/* Google Fonts Montserrat import */}
+            <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
             <Navbar />
         <main className="min-h-screen">
                 {/* HERO SECTION */}
@@ -121,7 +127,7 @@ export default function Landing() {
                 <div
                     className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex flex-col items-center justify-center gap-6 shadow-2xl p-35 sm:p-55 mb-20 border border-blue-900 overflow-hidden reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700"
                     style={{
-                        backgroundImage: `linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url(${s2})`,
+                        backgroundImage: `linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url(${mainbg})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
@@ -130,17 +136,23 @@ export default function Landing() {
                 >
                     <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center">
                         <h1
-                            className="text-5xl font-extrabold mb-6 text-white leading-tight tracking-tight drop-shadow-2xl"
+                            className="text-4xl md:text-6xl font-extrabold mb-6 text-white leading-tight tracking-tight drop-shadow-2xl"
                             style={{
+                                fontFamily: 'Montserrat, Arial, sans-serif',
+                                fontWeight: 800,
+                                letterSpacing: '0.01em',
                                 textShadow:
                                     '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
                             }}
                         >
-                            Empowering Agriculture,<br />Enriching Lives
+                            Empowering <span style={{color:'#4b6043'}}>Agriculture</span>,<br />Enriching Lives
                         </h1>
                         <p
-                            className="text-xl text-white mb-8 drop-shadow-2xl font-semibold"
+                            className="text-xl md:text-lg text-white mb-8 drop-shadow-2xl font-medium tracking-wider"
                             style={{
+                                fontFamily: 'Montserrat, Arial, sans-serif',
+                                fontWeight: 400,
+                                letterSpacing: '0.18em',
                                 textShadow:
                                     '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
                             }}
@@ -179,10 +191,10 @@ export default function Landing() {
                         {/* Removed decorative blur background */}
                         <div className="relative z-10 flex flex-col items-center">
                             <span className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 via-blue-200 to-blue-400 text-blue-800 shadow-lg mb-6 group-hover:scale-110 transition">
-                                {/* Mission Icon - Agriculture: Plant sprout */}
+                                {/* Mission Icon - Flag */}
                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21c-4.418 0-8-3.582-8-8V5a1 1 0 011-1h2a1 1 0 011 1v8a4 4 0 004 4 4 4 0 004-4V5a1 1 0 011-1h2a1 1 0 011 1v8c0 4.418-3.582 8-8 8z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 13V3m0 0c1.5 2 4 2 4 2m-4-2c-1.5 2-4 2-4 2" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 21V5a1 1 0 011-1h10a1 1 0 011 1v7a1 1 0 01-1 1H6a1 1 0 00-1 1v7" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5h12" />
                                 </svg>
                             </span>
                             <h2 className="text-3xl font-extrabold text-blue-900 tracking-tight letter-spacing-wide mb-4">Mission</h2>
@@ -206,11 +218,10 @@ export default function Landing() {
                         {/* Removed decorative blur background */}
                         <div className="relative z-10 flex flex-col items-center">
                             <span className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-200 via-blue-100 to-blue-400 text-blue-800 shadow-lg mb-6 group-hover:scale-110 transition">
-                                {/* Vision Icon - Agriculture: Sun and field */}
+                                {/* Vision Icon - Eye */}
                                 <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <circle cx="12" cy="12" r="4" stroke="#2563eb" strokeWidth="2" fill="#fff" />
-                                    <path stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M2 20c2-4 6-6 10-6s8 2 10 6" />
-                                    <path stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M12 2v2m6.364 1.636l-1.414 1.414M22 12h-2M17.364 17.364l-1.414-1.414M12 22v-2M6.636 17.364l1.414-1.414M2 12h2M6.636 6.636l1.414 1.414" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+                                    <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth={2} />
                                 </svg>
                             </span>
                             <h2 className="text-3xl font-extrabold text-blue-900 tracking-tight letter-spacing-wide mb-4">Vision</h2>
