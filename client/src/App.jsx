@@ -17,7 +17,7 @@ import Details_php from './TEST/details_php.jsx';
 //CLIENT 
 import Eic from './Client/Services/EIC/EIC.jsx';
 import User from './Client/Services/Profile/User_Profile.jsx';
-import Account from './Client/Services/Profile/Account_Profile.jsx';
+
 import Seminar from './Client/Services/Enrollment/Seminar.jsx';
 import Contact from './Client/Services/Info/contact.jsx';
 import About from './Client/Services/Info/About.jsx';
@@ -39,7 +39,7 @@ function App() {
                 <Route path="/seminar" element={<Seminar />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/settings/profile" element={<User />} />
-                <Route path="/settings/account" element={<Account />} />
+                 
                 <Route path="/about" element={<About />} />
                 <Route path="/distribution" element={<Distribution />} />
                 <Route path="/survey" element={<Survey />} />

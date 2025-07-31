@@ -134,13 +134,13 @@ export default function Landing() {
             <section className="mb-0 mt-0" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 <div
                     className="w-screen relative top-1 left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex flex-col items-center justify-center gap-6 shadow-2xl p-40 sm:p-50 mb-20 border border-blue-900 overflow-hidden reveal-on-scroll opacity-0  transition-all duration-700"
-                    style={{
-                        backgroundImage: `linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url(${mainbg})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                        minHeight: '520px',
-                    }}
+              style={{
+                    backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${mainbg})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    minHeight: '520px',
+                }}
                 >
                     <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center">
                         <h1
