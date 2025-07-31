@@ -485,36 +485,7 @@ export default function Navbar({refresh}) {
                                             {'Distribution'}
                                         </Link>
                                     </li>
-                                    <li>
-                                        <Link
-                                            to="/survey"
-                                            className="flex items-center gap-3 px-6 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
-                                        >
-                                            <svg
-                                                className="w-5 h-5 text-blue-500"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <rect
-                                                    x="3"
-                                                    y="4"
-                                                    width="18"
-                                                    height="16"
-                                                    rx="2"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                />
-                                                <path
-                                                    d="M8 10h8M8 14h6"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                            {'Survey'}
-                                        </Link>
-                                    </li>
+                            {/* Survey link removed */}
                                 </ul>
                             </li>
                             <li>
@@ -1026,36 +997,7 @@ export default function Navbar({refresh}) {
                                                 Distribution
                                             </Link>
                                         </li>
-                                        <li>
-                                            <Link
-                                                to="/survey"
-                                                className="flex items-center gap-3 px-8 py-4 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
-                                            >
-                                                <svg
-                                                    className="w-5 h-5 text-blue-500"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <rect
-                                                        x="3"
-                                                        y="4"
-                                                        width="18"
-                                                        height="16"
-                                                        rx="2"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                    />
-                                                    <path
-                                                        d="M8 10h8M8 14h6"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                                Survey
-                                            </Link>
-                                        </li>
+                                        {/* Survey link removed */}
                                     </ul>
                                 </details>
                             </li>

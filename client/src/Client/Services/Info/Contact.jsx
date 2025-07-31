@@ -120,14 +120,7 @@ export default function contact() {
                   <div className="text-blue-500 text-xs">{'maphil.alquizola@FITS-Tanza.com'}</div>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <img src="https://ui-avatars.com/api/?name=Rhodmar+Valenzuela&background=1d4ed8&color=fff" alt="Rhodmar Valenzuela" className="w-12 h-12 rounded-full shadow" />
-                <div>
-                  <span className="font-semibold text-lg text-blue-900">Rhodmar Valenzuela</span>
-                  <div className="text-blue-700 text-sm font-medium">QA Tester</div>
-                  <div className="text-blue-500 text-xs">{'rhodmar.valenzuela@FITS-Tanza.com'}</div>
-                </div>
-              </div>
+              
               <div className="flex items-center gap-4 mt-2">
                 <span className="material-icons text-blue-500">support_agent</span>
                 <div>

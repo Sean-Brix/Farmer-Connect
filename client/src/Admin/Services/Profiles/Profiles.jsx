@@ -56,45 +56,45 @@ export default function Profiles({ details }) {
         setPage(1);
     }, [filter, userList.length]);
 
-return (
-        <div className="min-h-screen bg-white pt-20 px-8 sm:px-16 md:px-32 lg:px-0" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif', fontWeight: 400, fontSize: '1.5rem' }}>
-            <div className="w-full max-w-7xl mx-auto">
+    return (
+        <div className="min-h-screen bg-white pt-6 px-2 sm:px-4 md:px-6 lg:px-0" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
+            <div className="w-full max-w-4xl mx-auto">
                 {/* HEADER - Inventory/EIC style */}
-                <div className="relative mb-16 sm:mt-40 mt-16 p-14 flex flex-col items-center justify-center max-w-7xl mx-auto gap-8 text-center">
-                    <span className="inline-flex items-center justify-center gap-6 w-full">
-                        <span className="rounded-full bg-blue-100 p-8">
-                            <svg className="w-24 h-24 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <div className="relative mb-6 sm:mt-20 mt-5 p-5 flex flex-col items-center justify-center max-w-4xl mx-auto gap-2 text-center">
+                    <span className="inline-flex items-center justify-center gap-3 w-full">
+                        <span className="rounded-full bg-blue-100 p-2">
+                            <svg className="w-9 h-9 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" fill="#fff"/>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 20v-1a7 7 0 0 1 14 0v1" stroke="currentColor" strokeWidth="2" fill="none"/>
                             </svg>
                         </span>
-                        <span className="text-7xl md:text-8xl font-extrabold text-gray-900 tracking-tight drop-shadow-2xl">
+                        <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
                             Account Management
                         </span>
                     </span>
-                    <span className="block text-3xl md:text-4xl text-gray-500 font-bold mt-4">
+                    <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
                         Manage and oversee all user accounts and profiles.
                     </span>
                 </div>
-                <hr className="border-t-4 border-gray-300 mb-14 md:mb-20 mt-2 md:mt-8 w-full max-w-7xl mx-auto" />
+                <hr className="border-t border-gray-300 mb-4 md:mb-8 mt-0.5 md:mt-2 w-full max-w-4xl mx-auto" />
                 {/* FILTERS - professional search bar and filters */}
-                <div className="flex flex-wrap gap-8 sm:gap-12 md:gap-20 items-center w-full mb-16 md:mb-24 px-4 sm:px-8">
+                <div className="flex flex-wrap gap-2 sm:gap-4 md:gap-6 items-center w-full mb-6 md:mb-8 px-1 sm:px-2">
                     {/* Responsive: stack filters vertically on xs, wrap on small, horizontal on md+ */}
-                    <div className="relative flex-grow min-w-[320px] sm:min-w-[400px] md:w-[600px] flex-shrink-0">
+                    <div className="relative flex-grow min-w-[180px] sm:min-w-[200px] md:w-80 flex-shrink-0">
                         <input
                             type="text"
                             placeholder="Search profiles..."
-                            className="block w-full p-8 pl-28 text-2xl border-4 border-blue-400 rounded-3xl bg-gray-50 focus:ring-8 focus:ring-blue-200 focus:border-blue-600 outline-none transition shadow-2xl"
+                            className="block w-full p-3 pl-12 text-base border border-blue-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 outline-none transition shadow-sm"
                             onChange={(e) => setFilter({ ...filter, search: e.target.value })}
                         />
-                        <div className="absolute inset-y-0 left-10 flex items-center pointer-events-none">
-                            <svg className="w-12 h-12 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                            <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </div>
                     </div>
                     <select
-                        className="bg-white border-4 border-blue-400 text-gray-700 text-2xl rounded-3xl focus:ring-8 focus:ring-blue-200 focus:border-blue-600 p-6 shadow-2xl min-w-[220px] sm:min-w-[260px] flex-1"
+                        className="bg-white border border-blue-200 text-gray-700 text-base rounded-xl focus:ring-blue-200 focus:border-blue-400 p-3 shadow-sm min-w-[120px] sm:min-w-[150px] flex-1"
                         onChange={(e) => setFilter({ ...filter, roles: e.target.value })}
                     >
                         <option value="none">All Roles</option>
@@ -103,7 +103,7 @@ return (
                         <option value="User">User</option>
                     </select>
                     <select
-                        className="bg-white border-4 border-blue-400 text-gray-700 text-2xl rounded-3xl focus:ring-8 focus:ring-blue-200 focus:border-blue-600 p-6 shadow-2xl min-w-[300px] sm:min-w-[340px] flex-1"
+                        className="bg-white border border-blue-200 text-gray-700 text-base rounded-xl focus:ring-blue-200 focus:border-blue-400 p-3 shadow-sm min-w-[150px] sm:min-w-[180px] flex-1"
                         onChange={(e) => setFilter({ ...filter, client_profile: e.target.value })}
                     >
                         <option value="" disabled>Client Profile</option>
@@ -119,7 +119,7 @@ return (
                         <option value="Indigenous People">Indigenous People</option>
                     </select>
                     <select
-                        className="bg-white border-4 border-blue-400 text-gray-700 text-2xl rounded-3xl focus:ring-8 focus:ring-blue-200 focus:border-blue-600 p-6 shadow-2xl min-w-[220px] sm:min-w-[260px] flex-1"
+                        className="bg-white border border-blue-200 text-gray-700 text-base rounded-xl focus:ring-blue-200 focus:border-blue-400 p-3 shadow-sm min-w-[120px] sm:min-w-[150px] flex-1"
                         onChange={(e) => setFilter({ ...filter, order: e.target.value })}
                     >
                         <option value="none">Sort by</option>
@@ -132,7 +132,7 @@ return (
                 </div>
 
                 {/* LIST - tabular layout */}
-                <div className="overflow-x-auto" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif', fontSize: '2rem' }}>
+                <div className="overflow-x-auto" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
                     {isLoading ? (
                         <div className="text-center text-gray-400 py-8 font-medium text-base">
                             Loading profiles...
@@ -147,14 +147,14 @@ return (
                         </div>
                     ) : (
                         <>
-                            <table className="min-w-full bg-white rounded-4xl shadow-2xl border-4 border-blue-400 overflow-hidden text-3xl">
-                                <thead className="bg-gradient-to-r from-blue-200 to-blue-300 border-b-4 border-blue-400">
+                            <table className="min-w-full bg-white rounded-2xl shadow-xl border border-blue-200 overflow-hidden text-sm">
+                                <thead className="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200">
                                     <tr>
-                                        <th className="px-16 py-10 text-left font-extrabold text-blue-900 uppercase tracking-wider whitespace-nowrap text-4xl">Username</th>
-                                        <th className="px-16 py-10 text-left font-extrabold text-blue-900 uppercase tracking-wider whitespace-nowrap text-4xl">Name</th>
-                                        <th className="px-16 py-10 text-left font-extrabold text-blue-900 uppercase tracking-wider whitespace-nowrap text-4xl">Role</th>
-                                        <th className="px-16 py-10 text-left font-extrabold text-blue-900 uppercase tracking-wider whitespace-nowrap text-4xl">Client Profile</th>
-                                        <th className="px-16 py-10 text-left font-extrabold text-blue-900 uppercase tracking-wider whitespace-nowrap text-4xl">Actions</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Username</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Name</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Role</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Client Profile</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -162,7 +162,7 @@ return (
                                         <tr
                                             key={user.id}
                                             className={`transition ${(idx % 2 === 0 ? 'bg-white' : 'bg-blue-50')} hover:bg-blue-100`} 
-                                            style={{ lineHeight: '2', fontSize: '2.2em', height: '7rem' }}
+                                            style={{ lineHeight: '1.25' }}
                                         >
                                             <User
                                                 user={user}
@@ -175,19 +175,19 @@ return (
                                 </tbody>
                             </table>
                             {/* Pagination Controls */}
-                            <div className="flex justify-center items-center gap-16 mt-16">
+                            <div className="flex justify-center items-center gap-2 mt-6">
                                 <button
-                                    className="px-16 py-6 rounded-3xl border-4 border-blue-400 bg-white text-blue-800 font-extrabold shadow-2xl hover:bg-blue-100 text-3xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150"
+                                    className="px-3 py-1 rounded-lg border border-blue-200 bg-white text-blue-700 font-semibold shadow-sm hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                                     disabled={page === 1}
                                 >
                                     Previous
                                 </button>
-                                <span className="text-blue-900 font-extrabold text-4xl mx-10">
+                                <span className="text-blue-800 font-semibold text-base mx-2">
                                     Page {page} of {totalPages}
                                 </span>
                                 <button
-                                    className="px-16 py-6 rounded-3xl border-4 border-blue-400 bg-white text-blue-800 font-extrabold shadow-2xl hover:bg-blue-100 text-3xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150"
+                                    className="px-3 py-1 rounded-lg border border-blue-200 bg-white text-blue-700 font-semibold shadow-sm hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                                     disabled={page === totalPages || totalPages === 0}
                                 >
@@ -199,17 +199,11 @@ return (
                 </div>
             </div>
             <style>{`
-                @media (max-width: 1920px) {
-                    .max-w-7xl { max-width: 99vw !important; }
-                }
-                @media (max-width: 1440px) {
-                    .max-w-7xl { max-width: 100vw !important; }
-                }
                 @media (max-width: 1024px) {
-                    .max-w-7xl { max-width: 100vw !important; }
+                    .max-w-4xl { max-width: 98vw !important; }
                 }
                 @media (max-width: 600px) {
-                    .max-w-7xl {
+                    .max-w-4xl {
                         padding-left: 0 !important;
                         padding-right: 0 !important;
                     }

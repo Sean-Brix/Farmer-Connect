@@ -102,71 +102,76 @@ export default function User_Details({ user, isEdit, refetchRow}) {
     };
 
     const renderDisplayMode = () => (
-        <div className="bg-white rounded-xl shadow-lg p-8 border border-blue-300 relative">
-            <div className="flex items-center mb-8">
+        <div className="bg-white rounded-xl shadow p-4 border border-blue-300 relative">
+            <div className="flex items-center mb-4">
                 <div className="flex-1 border-t-2 border-blue-500"></div>
-                <span className="px-4 text-xl font-bold text-blue-700 bg-white z-10">
+                <span className="px-2 text-lg font-bold text-blue-700 bg-white z-10">
                     User Details
                 </span>
                 <div className="flex-1 border-t-2 border-blue-500"></div>
             </div>
-            <div className="bg-gradient-to-tr from-blue-50 via-white to-blue-100 rounded-lg border border-blue-200 p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gradient-to-tr from-blue-50 via-white to-blue-100 rounded-lg border border-blue-200 p-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">
-                            ID
-                        </label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-0.5">ID</label>
                         <input
                             type="text"
                             value={userDetail?.id || ''}
                             readOnly
-                            className="w-full bg-white border border-blue-300 text-blue-900 font-bold py-1 px-2 mb-2 focus:outline-none rounded-lg"
+                            className="w-full bg-white border border-blue-300 text-blue-900 font-bold py-1 px-2 mb-1 focus:outline-none rounded-lg"
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">
-                            Username
-                        </label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-0.5">Username</label>
                         <input
                             type="text"
                             value={userDetail?.username || ''}
                             readOnly
-                            className="w-full bg-white border border-blue-300 text-blue-900 font-bold py-1 px-2 mb-2 focus:outline-none rounded-lg"
+                            className="w-full bg-white border border-blue-300 text-blue-900 font-bold py-1 px-2 mb-1 focus:outline-none rounded-lg"
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">
-                            Access
-                        </label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-0.5">Access</label>
                         <input
                             type="text"
                             value={userDetail?.access || ''}
                             readOnly
-                            className="w-full bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-2 focus:outline-none rounded-lg"
+                            className="w-full bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-1 focus:outline-none rounded-lg"
                         />
                     </div>
-                    <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">
-                            Full Name
-                        </label>
-                        <input
-                            type="text"
-                            value={`${userDetail?.firstName || ''}${
-                                userDetail?.initial || ''
-                            } ${userDetail?.lastName || ''}`}
-                            readOnly
-                            className="w-full bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-2 focus:outline-none rounded-lg"
-                        />
+                    <div className="col-span-1 md:col-span-2">
+                        <label className="block text-xs text-blue-700 font-semibold mb-0.5">Full Name</label>
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                value={userDetail?.firstName || ''}
+                                readOnly
+                                placeholder="First Name"
+                                className="w-32 bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-1 focus:outline-none rounded-lg"
+                            />
+                            <input
+                                type="text"
+                                value={userDetail?.middleName || ''}
+                                readOnly
+                                placeholder="Middle Name"
+                                className="w-24 bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-1 focus:outline-none rounded-lg"
+                            />
+                            <input
+                                type="text"
+                                value={userDetail?.lastName || ''}
+                                readOnly
+                                placeholder="Last Name"
+                                className="w-32 bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-1 focus:outline-none rounded-lg"
+                            />
+                        </div>
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">
-                            Gender
-                        </label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">Gender</label>
                         <input
                             type="text"
                             value={userDetail?.gender || ''}
                             readOnly
-                            className="w-full bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-2 focus:outline-none rounded-lg"
+                            className="w-24 bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-2 focus:outline-none rounded-lg"
                         />
                     </div>
                     <div>
@@ -225,14 +230,12 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">
-                            Position
-                        </label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-1">Position</label>
                         <input
                             type="text"
                             value={userDetail?.position || ''}
                             readOnly
-                            className="w-full bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-2 focus:outline-none rounded-lg"
+                            className="w-32 bg-white border border-blue-300 text-blue-900 py-1 px-2 mb-2 focus:outline-none rounded-lg"
                         />
                     </div>
                     <div>
@@ -305,95 +308,71 @@ export default function User_Details({ user, isEdit, refetchRow}) {
     );
 
     const renderEditMode = () => (
-        <div className="bg-white rounded-xl shadow-lg p-8 border border-blue-300 relative">
-            <div className="flex items-center mb-8">
+        <div className="bg-white rounded-xl shadow p-4 border border-blue-300 relative">
+            <div className="flex items-center mb-4">
                 <div className="flex-1 border-t-2 border-blue-500"></div>
-                <span className="px-4 text-xl font-bold text-blue-700 bg-white z-10">
+                <span className="px-2 text-lg font-bold text-blue-700 bg-white z-10">
                     Edit User Details
                 </span>
                 <div className="flex-1 border-t-2 border-blue-500"></div>
             </div>
-            <div className="bg-gradient-to-tr from-blue-50 via-white to-blue-100 rounded-lg border border-blue-200 p-6">
+            <div className="bg-gradient-to-tr from-blue-50 via-white to-blue-100 rounded-lg border border-blue-200 p-3">
                 <div>
-                    <label className="block text-xs text-blue-700 font-semibold mb-1">
-                        Account ID
-                    </label>
+                    <label className="block text-xs text-blue-700 font-semibold mb-0.5">Account ID</label>
                     <input
                         type="text"
                         value={(userDetail?.id || '').toUpperCase()}
                         readOnly
-                        className="w-full bg-white border border-blue-300 text-blue-900 font-bold py-1 px-2 mb-5 focus:outline-none focus:border-blue-600 rounded-lg"
+                        className="w-full bg-white border border-blue-300 text-blue-900 font-bold py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
                     />
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">
-                            Username
-                        </label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-0.5">Username</label>
                         <input
                             type="text"
                             value={userDetail?.username || ''}
-                            onChange={(e) =>
-                                handleChange('username', e.target.value)
-                            }
-                            className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
+                            onChange={(e) => handleChange('username', e.target.value)}
+                            className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-1 focus:outline-none focus:border-blue-600 rounded-lg"
                         />
                     </div>
                     <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">
-                            Access
-                        </label>
+                        <label className="block text-xs text-blue-700 font-semibold mb-0.5">Access</label>
                         <select
                             value={userDetail?.access || ''}
-                            onChange={(e) =>
-                                handleChange('access', e.target.value)
-                            }
-                            className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
+                            onChange={(e) => handleChange('access', e.target.value)}
+                            className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-1 focus:outline-none focus:border-blue-600 rounded-lg"
                         >
                             <option value="User">User</option>
                             <option value="Admin">Admin</option>
                             <option value="Super Admin">Super Admin</option>
                         </select>
                     </div>
-                    <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">
-                            First Name
-                        </label>
-                        <input
-                            type="text"
-                            value={userDetail?.firstName || ''}
-                            onChange={(e) =>
-                                handleChange('firstName', e.target.value)
-                            }
-                            className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">
-                            Middle Name
-                        </label>
-                        <input
-                            type="text"
-                            value={userDetail?.middleName || ''}
-                            onChange={(e) =>
-                                handleChange('middleName', e.target.value)
-                            }
-                            className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-xs text-blue-700 font-semibold mb-1">
-                            Last Name
-                        </label>
-                        <input
-                            type="text"
-                            value={userDetail?.lastName || ''}
-                            onChange={(e) =>
-                                handleChange('lastName', e.target.value)
-                            }
-                            className="w-full bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-2 focus:outline-none focus:border-blue-600 rounded-lg"
-                        />
+                    <div className="col-span-1 md:col-span-2">
+                        <label className="block text-xs text-blue-700 font-semibold mb-0.5">Full Name</label>
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                value={userDetail?.firstName || ''}
+                                onChange={(e) => handleChange('firstName', e.target.value)}
+                                placeholder="First Name"
+                                className="w-32 bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-1 focus:outline-none focus:border-blue-600 rounded-lg"
+                            />
+                            <input
+                                type="text"
+                                value={userDetail?.middleName || ''}
+                                onChange={(e) => handleChange('middleName', e.target.value)}
+                                placeholder="Middle Name"
+                                className="w-24 bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-1 focus:outline-none focus:border-blue-600 rounded-lg"
+                            />
+                            <input
+                                type="text"
+                                value={userDetail?.lastName || ''}
+                                onChange={(e) => handleChange('lastName', e.target.value)}
+                                placeholder="Last Name"
+                                className="w-32 bg-white border-2 border-blue-400 text-blue-900 py-1 px-2 mb-1 focus:outline-none focus:border-blue-600 rounded-lg"
+                            />
+                        </div>
                     </div>
                     <div>
                         <label className="block text-xs text-blue-700 font-semibold mb-1">
@@ -577,7 +556,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         />
                     </div>
                 </div>
-                <div className="flex justify-end gap-2 mt-8">
+                <div className="flex justify-end gap-2 mt-4">
                     <button
                         onClick={handleSave}
                         className="bg-green-500 text-white px-5 py-2 rounded-lg font-semibold shadow hover:bg-green-600 transition"

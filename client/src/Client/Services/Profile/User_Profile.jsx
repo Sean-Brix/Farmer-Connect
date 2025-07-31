@@ -126,23 +126,23 @@ export default function Account() {
         <>
             <Navbar refresh={refreshNav} />
 
-            <div className="w-full flex flex-col items-center mt-10 py-10 px-2 sm:px-0 pt-32 bg-white min-h-screen">
-                <h1 className="text-2xl font-bold text-blue-800 mb-6 flex items-center gap-2">
+            <div className="w-full flex flex-col items-center mt-6 py-8 px-2 sm:px-0 pt-24 bg-white min-h-screen">
+                <h1 className="text-2xl font-bold text-blue-800 mb-6 flex items-center gap-2 drop-shadow">
                     <svg className="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                     </svg>
                     Account Profile
                 </h1>
-                <div className="w-full max-w-3xl mx-auto rounded-xl border border-blue-100 bg-white flex flex-col md:flex-row">
-                    <div className="flex flex-col items-center justify-center p-8 md:w-1/3 gap-4 border-b md:border-b-0 md:border-r border-blue-100">
-                        <div className="relative rounded-full border-2 border-blue-400 p-1 mb-2 bg-white">
+                <div className="w-full max-w-2xl mx-auto rounded-xl border border-blue-100 bg-white flex flex-col md:flex-row shadow-lg">
+                    <div className="flex flex-col items-center justify-center p-6 md:w-1/3 gap-3 border-b md:border-b-0 md:border-r border-blue-100 bg-gradient-to-b from-blue-50 to-white">
+                        <div className="relative rounded-full border-2 border-blue-400 p-1 mb-2 bg-white shadow">
                             <img
                                 src={photo}
                                 alt="Profile"
-                                className="w-24 h-24 object-cover rounded-full border-2 border-blue-300"
+                                className="w-24 h-24 object-cover rounded-full border-2 border-blue-300 shadow"
                             />
                             {editMode && (
-                                <label className="absolute bottom-2 right-2 bg-blue-600 text-white rounded-full p-1 cursor-pointer hover:bg-blue-700 transition">
+                                <label className="absolute bottom-2 right-2 bg-blue-600 text-white rounded-full p-2 cursor-pointer hover:bg-blue-700 transition shadow text-base">
                                     <i className="fa-solid fa-camera"></i>
                                     <input
                                         type="file"
@@ -229,7 +229,7 @@ export default function Account() {
                             </button>
                         )}
                     </div>
-                    <form className="flex-1 p-8" onSubmit={handleSubmit}>
+                    <form className="flex-1 p-6" onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block mb-2 text-blue-900 text-base font-bold tracking-wide">Occupation</label>
