@@ -149,7 +149,7 @@ export default function Landing() {
     const [heroIndex, setHeroIndex] = useState(0);
     const [nextHeroIndex, setNextHeroIndex] = useState(null); // null if not transitioning
     const [isTransitioning, setIsTransitioning] = useState(false);
-    // Remove slideDirection for fade effect
+    const [slideDirection, setSlideDirection] = useState(0); // -1 for left, 1 for right
     const heroTimeout = useRef();
     const heroAnimTimeout = useRef();
 
@@ -158,7 +158,7 @@ export default function Landing() {
         heroTimeout.current && clearTimeout(heroTimeout.current);
         if (!isTransitioning) {
             heroTimeout.current = setTimeout(() => {
-                startHeroTransition((heroIndex + 1) % heroSlides.length);
+                handleHeroNav(1);
             }, 4000);
         }
         return () => {
@@ -166,10 +166,11 @@ export default function Landing() {
         };
     }, [heroIndex, isTransitioning]);
 
-    // Manual prev/next
-    // Start transition to a specific slide (fade)
+    // Start transition to a specific slide (slide effect)
     const startHeroTransition = (targetIdx) => {
         if (isTransitioning || targetIdx === heroIndex) return;
+        const dir = targetIdx > heroIndex || (targetIdx === 0 && heroIndex === heroSlides.length - 1) ? 1 : -1;
+        setSlideDirection(dir);
         setNextHeroIndex(targetIdx);
         setIsTransitioning(true);
         heroAnimTimeout.current && clearTimeout(heroAnimTimeout.current);
@@ -177,13 +178,22 @@ export default function Landing() {
             setHeroIndex(targetIdx);
             setNextHeroIndex(null);
             setIsTransitioning(false);
-        }, 600); // match CSS fade duration
+        }, 600); // match CSS slide duration
     };
 
     // Manual prev/next
     const handleHeroNav = (dir) => {
+        if (isTransitioning) return;
         let targetIdx = (heroIndex + dir + heroSlides.length) % heroSlides.length;
-        startHeroTransition(targetIdx);
+        setSlideDirection(dir);
+        setNextHeroIndex(targetIdx);
+        setIsTransitioning(true);
+        heroAnimTimeout.current && clearTimeout(heroAnimTimeout.current);
+        heroAnimTimeout.current = setTimeout(() => {
+            setHeroIndex(targetIdx);
+            setNextHeroIndex(null);
+            setIsTransitioning(false);
+        }, 600);
     };
 
     // Replace all green color classes with blue equivalents
@@ -205,48 +215,23 @@ export default function Landing() {
                             backgroundColor: '#0a2540', // dark blue fallback background
                         }}
                     >
-                        {/* Slide animation wrapper */}
+                        {/* Slide animation wrapper - carousel sliding */}
                         <div style={{position:'absolute', inset:0, width:'100%', height:'100%', overflow:'hidden'}}>
-                            {/* Fade transition: outgoing slide fades out, incoming fades in */}
-                            {isTransitioning && nextHeroIndex !== null ? (
-                                <>
-                                    <div
-                                        className={`hero-slide-img hero-slide-fade-out`}
-                                        style={{
-                                            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${heroSlides[heroIndex].img})`,
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
-                                            backgroundRepeat: 'no-repeat',
-                                            width: '100%',
-                                            height: '100%',
-                                            position: 'absolute',
-                                            top: 0,
-                                            left: 0,
-                                            pointerEvents: 'none',
-                                            zIndex: 2,
-                                        }}
-                                    />
-                                    <div
-                                        className={`hero-slide-img hero-slide-fade-in`}
-                                        style={{
-                                            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${heroSlides[nextHeroIndex].img})`,
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
-                                            backgroundRepeat: 'no-repeat',
-                                            width: '100%',
-                                            height: '100%',
-                                            position: 'absolute',
-                                            top: 0,
-                                            left: 0,
-                                            pointerEvents: 'none',
-                                            zIndex: 1,
-                                            opacity: 0,
-                                        }}
-                                    />
-                                </>
-                            ) : (
+                            <div
+                                className={`hero-carousel-track${isTransitioning ? ' transitioning' : ''}`}
+                                style={{
+                                    display: 'flex',
+                                    width: '200%',
+                                    height: '100%',
+                                    transform: isTransitioning && nextHeroIndex !== null
+                                        ? `translateX(${slideDirection === 1 ? '-50%' : '0%'})`
+                                        : 'translateX(0%)',
+                                    transition: isTransitioning ? 'transform 0.6s cubic-bezier(0.77,0,0.175,1)' : 'none',
+                                }}
+                            >
+                                {/* Current slide */}
                                 <div
-                                    className="hero-slide-img hero-slide-fade-in"
+                                    className="hero-slide-img"
                                     style={{
                                         backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${heroSlides[heroIndex].img})`,
                                         backgroundSize: 'cover',
@@ -254,13 +239,27 @@ export default function Landing() {
                                         backgroundRepeat: 'no-repeat',
                                         width: '100%',
                                         height: '100%',
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        pointerEvents: 'none',
+                                        minWidth: '100%',
+                                        position: 'relative',
                                     }}
                                 />
-                            )}
+                                {/* Next slide (for transition) */}
+                                {isTransitioning && nextHeroIndex !== null && (
+                                    <div
+                                        className="hero-slide-img"
+                                        style={{
+                                            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${heroSlides[nextHeroIndex].img})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            backgroundRepeat: 'no-repeat',
+                                            width: '100%',
+                                            height: '100%',
+                                            minWidth: '100%',
+                                            position: 'relative',
+                                        }}
+                                    />
+                                )}
+                            </div>
                         </div>
                         {/* Slide content */}
                         <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center px-4" style={{width:'100%', maxWidth:'100vw'}}>
@@ -827,17 +826,17 @@ export default function Landing() {
 
             <style>{`
                 .hero-slide-img {
-                    transition: opacity 0.6s cubic-bezier(0.77,0,0.175,1);
-                    will-change: opacity;
+                    transition: none;
+                    will-change: transform;
                     z-index: 1;
                 }
-                .hero-slide-fade-in {
-                    opacity: 1 !important;
-                    z-index: 2;
+                .hero-carousel-track {
+                    display: flex;
+                    width: 200%;
+                    height: 100%;
                 }
-                .hero-slide-fade-out {
-                    opacity: 0 !important;
-                    z-index: 1;
+                .hero-carousel-track.transitioning {
+                    transition: transform 0.6s cubic-bezier(0.77,0,0.175,1);
                 }
                 html, body, #root {
                     overflow-x: hidden !important;

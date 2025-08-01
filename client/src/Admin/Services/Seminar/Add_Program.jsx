@@ -90,12 +90,15 @@ export default function Add_Program({
     };
 
     return (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-            <form
-                className="bg-white rounded-3xl shadow-2xl p-0 w-full max-w-2xl max-h-[95vh] relative border border-blue-200 flex flex-col"
-                onSubmit={handleAddProgram}
-                style={{ minWidth: 320 }}
-            >
+        <>
+            {/* Remove browser autofill background for inputs */}
+            <style>{`input:-webkit-autofill,input:-webkit-autofill:focus,input:-webkit-autofill:hover,input:-webkit-autofill:active{-webkit-box-shadow:0 0 0 1000px #fff inset!important;box-shadow:0 0 0 1000px #fff inset!important;-webkit-text-fill-color:#222!important;}`}</style>
+            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                <form
+                    className="bg-white rounded-3xl shadow-2xl p-0 w-full max-w-2xl max-h-[95vh] relative border border-blue-200 flex flex-col"
+                    onSubmit={handleAddProgram}
+                    style={{ minWidth: 320 }}
+                >
                 <div className="flex justify-between items-center border-b border-blue-100 px-8 py-5 bg-gradient-to-r from-blue-500/10 to-blue-100 rounded-t-3xl">
                     <h2 className="text-xl font-bold text-blue-700 tracking-tight">
                         Add Program
@@ -117,7 +120,7 @@ export default function Add_Program({
                             </label>
                             <input
                                 type="text"
-                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
+                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-white focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
                                 value={newProgram.title}
                                 onChange={(e) =>
                                     setNewProgram({
@@ -135,7 +138,7 @@ export default function Add_Program({
                             </label>
                             <input
                                 type="text"
-                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
+                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-white focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
                                 value={newProgram.location}
                                 onChange={(e) =>
                                     setNewProgram({
@@ -153,7 +156,7 @@ export default function Add_Program({
                                 </label>
                                 <input
                                     type="date"
-                                    className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
+                                    className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-white focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
                                     value={newProgram.startDate}
                                     onChange={(e) =>
                                         setNewProgram({
@@ -170,7 +173,7 @@ export default function Add_Program({
                                 </label>
                                 <input
                                     type="date"
-                                    className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
+                                    className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-white focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
                                     value={newProgram.endDate}
                                     onChange={(e) =>
                                         setNewProgram({
@@ -189,7 +192,7 @@ export default function Add_Program({
                                 </label>
                                 <input
                                     type="time"
-                                    className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
+                                    className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-white focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
                                     value={newProgram.openTime}
                                     onChange={(e) =>
                                         setNewProgram({
@@ -206,7 +209,7 @@ export default function Add_Program({
                                 </label>
                                 <input
                                     type="time"
-                                    className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
+                                    className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-white focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
                                     value={newProgram.closeTime}
                                     onChange={(e) =>
                                         setNewProgram({
@@ -225,7 +228,7 @@ export default function Add_Program({
                             <input
                                 type="number"
                                 min="1"
-                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
+                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-white focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
                                 value={newProgram.capacity}
                                 onChange={(e) =>
                                     setNewProgram({
@@ -242,7 +245,7 @@ export default function Add_Program({
                             </label>
                             <input
                                 type="text"
-                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
+                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-white focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
                                 value={newProgram.speaker}
                                 onChange={(e) =>
                                     setNewProgram({
@@ -260,7 +263,7 @@ export default function Add_Program({
                             </label>
                             <input
                                 type="date"
-                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
+                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-white focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
                                 value={newProgram.registrationDeadline}
                                 onChange={(e) =>
                                     setNewProgram({
@@ -276,7 +279,7 @@ export default function Add_Program({
                                 Description
                             </label>
                             <textarea
-                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition resize-none"
+                                className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-white focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition resize-none"
                                 value={newProgram.description}
                                 onChange={(e) =>
                                     setNewProgram({
@@ -297,7 +300,7 @@ export default function Add_Program({
                         <input
                             type="file"
                             accept="image/*"
-                            className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
+                            className="w-full border border-blue-100 rounded-xl px-3 py-2 bg-white focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
                             onChange={changeImage}
                         />
                         <div className="w-full flex justify-center">
@@ -322,7 +325,8 @@ export default function Add_Program({
                         {mutation.isPending ? 'Saving...' : 'Save'}
                     </button>
                 </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        </>
     );
 }

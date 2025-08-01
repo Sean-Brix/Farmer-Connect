@@ -57,7 +57,7 @@ export default function Profiles({ details }) {
     }, [filter, userList.length]);
 
     return (
-        <div className="min-h-screen bg-white pt-6 px-2 sm:px-4 md:px-6 lg:px-0" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
+        <div className="min-h-screen bg-white pt-6 px-2 sm:px-4 md:px-6 lg:px-0" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
             <div className="w-full max-w-4xl mx-auto">
                 {/* HEADER - Inventory/EIC style */}
                 <div className="relative mb-6 sm:mt-20 mt-5 p-5 flex flex-col items-center justify-center max-w-4xl mx-auto gap-2 text-center">
@@ -78,57 +78,62 @@ export default function Profiles({ details }) {
                 </div>
                 <hr className="border-t border-gray-300 mb-4 md:mb-8 mt-0.5 md:mt-2 w-full max-w-4xl mx-auto" />
                 {/* FILTERS - professional search bar and filters */}
-                <div className="flex flex-wrap gap-2 sm:gap-4 md:gap-6 items-center w-full mb-6 md:mb-8 px-1 sm:px-2">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 md:gap-6 items-stretch w-full mb-6 md:mb-8 px-1 sm:px-2">
                     {/* Responsive: stack filters vertically on xs, wrap on small, horizontal on md+ */}
-                    <div className="relative flex-grow min-w-[180px] sm:min-w-[200px] md:w-80 flex-shrink-0">
-                        <input
-                            type="text"
-                            placeholder="Search profiles..."
-                            className="modern-search-input"
-                            onChange={(e) => setFilter({ ...filter, search: e.target.value })}
-                        />
-                        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                            <svg className="w-5 h-5 text-blue-500 opacity-80 -translate-y-1" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </div>
+                    <div className="flex flex-col xs:flex-row sm:flex-row flex-1 gap-2 sm:gap-3 md:gap-3 items-stretch w-full sm:w-auto">
+                <div className="relative flex-grow min-w-[100px] sm:min-w-[120px] md:w-54 flex-shrink-0 w-full sm:w-auto">
+                    <input
+                        type="text"
+                        placeholder="Search profiles..."
+                        className="modern-search-input"
+                        style={{ maxWidth: '260px' }}
+                        onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+                    />
+                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                        <svg className="w-4 h-4 text-blue-500 opacity-80 -translate-y-0.5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
                     </div>
-                    <select
-                        className="custom-select"
-                        onChange={(e) => setFilter({ ...filter, roles: e.target.value })}
-                    >
-                        <option value="none">All Roles</option>
-                        <option value="Admin">Admin</option>
-                        <option value="Super Admin">Super Admin</option>
-                        <option value="User">User</option>
-                    </select>
-                    <select
-                        className="custom-select"
-                        onChange={(e) => setFilter({ ...filter, client_profile: e.target.value })}
-                    >
-                        <option value="" disabled>Client Profile</option>
-                        <option value="none">All Profile</option>
-                        <option value="Fishfolk">Fishfolk</option>
-                        <option value="Rural Based Org">Rural Based Org</option>
-                        <option value="Student">Student</option>
-                        <option value="Agricultural/Fisheries Technician">Agricultural/Fisheries Tech.</option>
-                        <option value="Youth">Youth</option>
-                        <option value="Women">Women</option>
-                        <option value="Gov't Employee">Gov't Employee</option>
-                        <option value="PWD">PWD</option>
-                        <option value="Indigenous People">Indigenous People</option>
-                    </select>
-                    <select
-                        className="sortby-select"
-                        onChange={(e) => setFilter({ ...filter, order: e.target.value })}
-                    >
-                        <option value="none">Sort by</option>
-                        <option value="username">Username</option>
-                        <option value="firstname">Firstname</option>
-                        <option value="lastname">Lastname</option>
-                        <option value="created_at">Date Created</option>
-                        <option value="updated_at">Recently Updated</option>
-                    </select>
+                </div>
+                        <select
+                            className="custom-select w-full sm:w-auto"
+                            onChange={(e) => setFilter({ ...filter, roles: e.target.value })}
+                        >
+                            <option value="none">All Roles</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Super Admin">Super Admin</option>
+                            <option value="User">User</option>
+                        </select>
+                        <select
+                            className="custom-select w-full sm:w-auto"
+                            onChange={(e) => setFilter({ ...filter, client_profile: e.target.value })}
+                        >
+                            <option value="" disabled>Client Profile</option>
+                            <option value="none">All Profile</option>
+                            <option value="Fishfolk">Fishfolk</option>
+                            <option value="Rural Based Org">Rural Based Org</option>
+                            <option value="Student">Student</option>
+                            <option value="Agricultural/Fisheries Technician">Agricultural/Fisheries Tech.</option>
+                            <option value="Youth">Youth</option>
+                            <option value="Women">Women</option>
+                            <option value="Gov't Employee">Gov't Employee</option>
+                            <option value="PWD">PWD</option>
+                            <option value="Indigenous People">Indigenous People</option>
+                        </select>
+                    </div>
+                    <div className="flex-none ml-auto min-w-[110px] w-full sm:w-auto mt-2 sm:mt-0">
+                        <select
+                            className="sortby-select w-full sm:w-auto"
+                            onChange={(e) => setFilter({ ...filter, order: e.target.value })}
+                        >
+                            <option value="none" >Sort by</option>
+                            <option value="username">Username</option>
+                            <option value="firstname">Firstname</option>
+                            <option value="lastname">Lastname</option>
+                            <option value="created_at">Date Created</option>
+                            <option value="updated_at">Recently Updated</option>
+                        </select>
+                    </div>
                 </div>
 
                 {/* LIST - tabular layout */}
@@ -198,7 +203,26 @@ export default function Profiles({ details }) {
                     )}
                 </div>
             </div>
+            {/* Import Poppins font from Google Fonts */}
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
             <style>{`
+                html, body, .min-h-screen {
+                    font-family: 'Poppins', Inter, Segoe UI, Arial, sans-serif !important;
+                }
+                @media (max-width: 640px) {
+                    .flex-col, .flex-col > * {
+                        width: 100% !important;
+                        min-width: 0 !important;
+                    }
+                    .custom-select, .sortby-select, .modern-search-input {
+                        width: 100% !important;
+                        min-width: 0 !important;
+                        margin-bottom: 0.4rem;
+                    }
+                    .ml-auto {
+                        margin-left: 0 !important;
+                    }
+                }
                 @media (max-width: 1024px) {
                     .max-w-4xl { max-width: 98vw !important; }
                 }
@@ -207,34 +231,46 @@ export default function Profiles({ details }) {
                         padding-left: 0 !important;
                         padding-right: 0 !important;
                     }
+                    .flex-col, .flex-col > * {
+                        width: 100% !important;
+                        min-width: 0 !important;
+                    }
+                    .custom-select, .sortby-select, .modern-search-input {
+                        width: 100% !important;
+                        min-width: 0 !important;
+                        margin-bottom: 0.4rem;
+                    }
+                    .ml-auto {
+                        margin-left: 0 !important;
+                    }
                 }
                 .modern-search-input {
                     background: rgba(255, 255, 255, 0.55);
                     border: 1.5px solid #e0e7ef;
                     color: #0f172a;
-                    font-size: 1.05rem;
-                    border-radius: 1.25rem;
-                    padding: 0.8rem 1.2rem 0.8rem 2.7rem;
+                    font-size: 0.93rem;
+                    border-radius: 0.85rem;
+                    padding: 0.55rem 0.9rem 0.55rem 2.1rem;
                     width: 100%;
-                    box-shadow: 0 4px 24px 0 rgba(30,41,59,0.10), 0 1.5px 8px 0 rgba(59,130,246,0.07);
+                    box-shadow: 0 2px 12px 0 rgba(30,41,59,0.08), 0 1px 4px 0 rgba(59,130,246,0.05);
                     outline: none;
                     transition: border 0.18s, box-shadow 0.18s, transform 0.13s;
                     appearance: none;
-                    margin-bottom: 0.7rem;
+                    margin-bottom: 0.5rem;
                     box-sizing: border-box;
-                    backdrop-filter: blur(8px) saturate(1.2);
-                    -webkit-backdrop-filter: blur(8px) saturate(1.2);
+                    backdrop-filter: blur(7px) saturate(1.1);
+                    -webkit-backdrop-filter: blur(7px) saturate(1.1);
                 }
                 .modern-search-input:focus {
                     border-color: #3b82f6;
-                    box-shadow: 0 0 0 3px #bae6fd;
-                    transform: scale(1.03);
+                    box-shadow: 0 0 0 2px #bae6fd;
+                    transform: scale(1.025);
                 }
                 .modern-search-input:hover {
                     border-color: #2563eb;
                     background: rgba(255,255,255,0.75);
-                    box-shadow: 0 6px 28px 0 rgba(59,130,246,0.13);
-                    transform: scale(1.02);
+                    box-shadow: 0 4px 16px 0 rgba(59,130,246,0.10);
+                    transform: scale(1.015);
                 }
                 .modern-search-input::placeholder {
                     color: #64748b;
@@ -245,32 +281,32 @@ export default function Profiles({ details }) {
                     background: #fff;
                     border: 1px solid #e0e7ef;
                     color: #0369a1;
-                    font-size: 0.98rem;
-                    border-radius: 12px;
-                    padding: 0.7rem 2.7rem 0.7rem 1.1rem;
-                    min-width: 140px;
-                    box-shadow: 0 4px 24px 0 rgba(30,41,59,0.10), 0 1.5px 8px 0 rgba(59,130,246,0.07);
+                    font-size: 0.91rem;
+                    border-radius: .38rem;
+                    padding: 0.48rem 2.1rem 0.48rem 0.8rem;
+                    min-width: 100px;
+                    box-shadow: 0 2px 12px 0 rgba(30,41,59,0.08), 0 1px 4px 0 rgba(59,130,246,0.05);
                     outline: none;
                     transition: border 0.18s, box-shadow 0.18s, transform 0.13s;
                     appearance: none;
                     background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%230369a1" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>');
                     background-repeat: no-repeat;
-                    background-position: right 1.1rem center;
-                    background-size: 1.3em;
+                    background-position: right 0.7rem center;
+                    background-size: 1.1em;
                     margin-right: 0;
-                    margin-bottom: 0.7rem;
+                    margin-bottom: 0.5rem;
                     box-sizing: border-box;
                 }
                 .sortby-select:focus {
                     border-color: #0ea5e9;
-                    box-shadow: 0 0 0 2.5px #bae6fd;
-                    transform: scale(1.03);
+                    box-shadow: 0 0 0 1.5px #bae6fd;
+                    transform: scale(1.015);
                 }
                 .sortby-select:hover {
                     border-color: #0369a1;
                     background: #fff;
-                    box-shadow: 0 8px 32px 0 rgba(56,189,248,0.22), 0 2px 12px 0 rgba(59,130,246,0.13);
-                    transform: scale(1.02);
+                    box-shadow: 0 4px 16px 0 rgba(56,189,248,0.13), 0 1px 6px 0 rgba(59,130,246,0.08);
+                    transform: scale(1.01);
                 }
                 .sortby-select option {
                     background: #fff;
@@ -284,34 +320,34 @@ export default function Profiles({ details }) {
                     background: rgba(255, 255, 255, 0.55);
                     border: 1.5px solid #e0e7ef;
                     color: #0f172a;
-                    font-size: 1.05rem;
-                    border-radius: 1.25rem;
-                    padding: 0.8rem 3.2rem 0.8rem 1.2rem;
-                    min-width: 180px;
-                    box-shadow: 0 4px 24px 0 rgba(30,41,59,0.10), 0 1.5px 8px 0 rgba(59,130,246,0.07);
+                    font-size: 0.93rem;
+                    border-radius: 0.85rem;
+                    padding: 0.55rem 2.1rem 0.55rem 0.9rem;
+                    min-width: 120px;
+                    box-shadow: 0 2px 12px 0 rgba(30,41,59,0.08), 0 1px 4px 0 rgba(59,130,246,0.05);
                     outline: none;
                     transition: border 0.18s, box-shadow 0.18s, transform 0.13s;
                     appearance: none;
-                    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%233b82f6" stroke-width="3.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>');
+                    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%233b82f6" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>');
                     background-repeat: no-repeat;
-                    background-position: right 1.3rem center;
-                    background-size: 2em;
+                    background-position: right 0.9rem center;
+                    background-size: 1.2em;
                     margin-right: 0;
-                    margin-bottom: 0.7rem;
+                    margin-bottom: 0.5rem;
                     box-sizing: border-box;
-                    backdrop-filter: blur(8px) saturate(1.2);
-                    -webkit-backdrop-filter: blur(8px) saturate(1.2);
+                    backdrop-filter: blur(7px) saturate(1.1);
+                    -webkit-backdrop-filter: blur(7px) saturate(1.1);
                 }
                 .custom-select:focus {
                     border-color: #3b82f6;
-                    box-shadow: 0 0 0 3px #bae6fd;
-                    transform: scale(1.03);
+                    box-shadow: 0 0 0 2px #bae6fd;
+                    transform: scale(1.025);
                 }
                 .custom-select:hover {
                     border-color: #2563eb;
                     background: rgba(255,255,255,0.75);
-                    box-shadow: 0 6px 28px 0 rgba(59,130,246,0.13);
-                    transform: scale(1.02);
+                    box-shadow: 0 4px 16px 0 rgba(59,130,246,0.10);
+                    transform: scale(1.015);
                 }
                 .custom-select option {
                     background: #fff;
@@ -322,11 +358,11 @@ export default function Profiles({ details }) {
                 }
                 @media (max-width: 600px) {
                     .custom-select {
-                        min-width: 110px;
-                        font-size: 0.97rem;
-                        padding: 0.6rem 2.2rem 0.6rem 0.9rem;
-                        background-position: right 0.7rem center;
-                        background-size: 1.3em;
+                        min-width: 80px;
+                        font-size: 0.89rem;
+                        padding: 0.4rem 1.2rem 0.4rem 0.7rem;
+                        background-position: right 0.5rem center;
+                        background-size: 1em;
                     }
                 }
             `}</style>

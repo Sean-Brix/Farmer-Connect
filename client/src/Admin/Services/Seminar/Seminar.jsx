@@ -128,11 +128,11 @@ export default function Seminar() {
                 <div className="relative mt-0 mb-8 w-full max-w-5xl mx-auto px-2 md:px-6">
                   <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 flex-wrap items-stretch w-full">
                     {/* Search bar */}
-                    <div className="relative flex-1 min-w-0 w-full sm:w-auto">
+                    <div className="relative flex-1 min-w-0 w-full sm:w-1/2">
                       <input
                         type="search"
                         placeholder="Search seminars, speakers, locations..."
-                        className="block w-full py-3 pl-12 pr-4 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition placeholder-gray-400"
+                        className="block w-full py-2.5 pl-10 pr-3 text-sm text-gray-900 border border-gray-300 rounded-xl bg-white focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition placeholder-gray-400"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         aria-label="Search seminars"
@@ -144,10 +144,10 @@ export default function Seminar() {
                       </div>
                     </div>
                     {/* Filters */}
-                    <div className="flex flex-row gap-2 w-full sm:w-auto">
-                      <div className="relative w-full sm:w-auto">
+                    <div className="flex flex-row gap-2 w-full sm:w-1/2">
+                      <div className="relative flex-1 min-w-0">
                         <select
-                          className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-base rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 block py-2 pl-4 pr-10 w-full sm:w-auto transition"
+                          className="appearance-none bg-white border border-gray-300 text-gray-700 text-base rounded-xl focus:ring-1 focus:ring-blue-400 focus:border-blue-400 block py-2 pl-4 pr-10 w-full transition"
                           value={searchFilter}
                           onChange={(e) => setSearchFilter(e.target.value)}
                           aria-label="Filter by"
@@ -162,9 +162,9 @@ export default function Seminar() {
                           </svg>
                         </div>
                       </div>
-                      <div className="relative w-full sm:w-auto">
+                      <div className="relative flex-1 min-w-0">
                         <select
-                          className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-base rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 block py-2 pl-4 pr-10 w-full sm:w-auto transition"
+                          className="appearance-none bg-white border border-gray-300 text-gray-700 text-base rounded-xl focus:ring-1 focus:ring-blue-400 focus:border-blue-400 block py-2 pl-4 pr-10 w-full transition"
                           value={statusFilter}
                           onChange={(e) => setStatusFilter(e.target.value)}
                           aria-label="Status filter"
@@ -182,35 +182,8 @@ export default function Seminar() {
                         </div>
                       </div>
                     </div>
-                    {/* Action buttons */}
+                    {/* Action buttons: Only Add remains */}
                     <div className="flex flex-row gap-2 w-full sm:w-auto items-center">
-                      {selectMode && (
-                        <button
-                          className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 transition shadow-sm w-full sm:w-auto"
-                          onClick={() => {
-                            if (selectedItems.length === programList.length) {
-                              setSelectedItems([]);
-                            } else {
-                              setSelectedItems(programList.map((_, idx) => idx));
-                            }
-                          }}
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                          {selectedItems.length === programList.length ? 'Unselect All' : 'Select All'}
-                        </button>
-                      )}
-                      <button
-                        className={`flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold transition shadow-sm w-full sm:w-auto
-                          ${selectMode ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'}
-                          ${selectMode && selectedItems.length === 0 ? 'opacity-60 cursor-not-allowed' : ''}
-                        `}
-                        onClick={selectMode ? handleDeleteSelected : handleToggleSelectMode}
-                        disabled={selectMode && selectedItems.length === 0}
-                        aria-label="Delete selected"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                        {selectMode ? (selectedItems.length > 0 ? `Delete (${selectedItems.length})` : 'Delete') : 'Delete'}
-                      </button>
                       <button
                         className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold bg-blue-500 hover:bg-blue-600 text-white transition shadow-sm w-full sm:w-auto"
                         onClick={() => setShowAdd(true)}
@@ -219,15 +192,6 @@ export default function Seminar() {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" strokeLinecap="round" strokeLinejoin="round" /></svg>
                         Add
                       </button>
-                      {selectMode && (
-                        <button
-                          className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold bg-white hover:bg-gray-100 text-gray-700 border border-gray-200 transition shadow-sm w-full sm:w-auto"
-                          onClick={handleToggleSelectMode}
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                          Cancel
-                        </button>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -266,25 +230,12 @@ export default function Seminar() {
                 <div className="w-full max-w-5xl mx-auto px-2 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     {paginatedPrograms && paginatedPrograms.map((item, idx) => {
                         const globalIdx = (currentPage - 1) * itemsPerPage + idx;
-                        const isSelected = selectedItems.includes(globalIdx);
                         const truncatedDescription = item.description && item.description.length > 100 ? item.description.slice(0, 100) + '...' : item.description;
                         return (
                             <div
                                 key={globalIdx}
-                                className={`relative flex flex-col bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition overflow-hidden group ${selectMode ? 'cursor-pointer' : ''} ${selectMode && isSelected ? 'ring-2 ring-red-300' : ''}`}
-                                onClick={selectMode ? () => handleSelectItem(globalIdx) : undefined}
+                                className="relative flex flex-col bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition overflow-hidden group"
                             >
-                                {selectMode && (
-                                    <div className="absolute top-3 left-3 z-10">
-                                        <input
-                                            type="checkbox"
-                                            checked={isSelected}
-                                            onChange={() => handleSelectItem(globalIdx)}
-                                            onClick={(e) => e.stopPropagation()}
-                                            className="w-4 h-4 accent-red-400"
-                                        />
-                                    </div>
-                                )}
                                 <div className="relative">
                                     <img
                                         src={item.photo}
@@ -306,22 +257,45 @@ export default function Seminar() {
                                     </span>
                                 </div>
                                 <div className="flex-1 flex flex-col p-4">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-1 truncate">{item.title}</h3>
-                                    <p className="text-gray-500 text-xs mb-2 flex-1 cursor-default line-clamp-3">{truncatedDescription}</p>
-                                    <div className="flex flex-wrap gap-x-2 gap-y-1 text-xs text-gray-400 mb-2">
-                                        <span><span className="font-medium text-gray-700">Speaker:</span> {item.speaker}</span>
-                                        <span><span className="font-medium text-gray-700">Location:</span> {item.location}</span>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-1 truncate w-full" title={item.title}>{item.title}</h3>
+                                    <p className="text-gray-500 text-xs mb-2 flex-1 cursor-default line-clamp-3 w-full truncate" title={item.description}>{truncatedDescription}</p>
+                                    <div className="flex flex-col gap-1 text-xs text-gray-400 mb-2 w-full">
+                                        <div className="flex flex-row items-center w-full">
+                                            <span className="font-medium text-gray-700 mr-1 shrink-0">Speaker:</span>
+                                            <span className="truncate text-gray-500" style={{ maxWidth: 'calc(100% - 60px)' }} title={item.speaker}>{item.speaker}</span>
+                                        </div>
+                                        <div className="flex flex-row items-center w-full">
+                                            <span className="font-medium text-gray-700 mr-1 shrink-0">Location:</span>
+                                            <span className="truncate text-gray-500" style={{ maxWidth: 'calc(100% - 70px)' }} title={item.location}>{item.location}</span>
+                                        </div>
                                     </div>
-                                    <div className="flex flex-col gap-2 mt-auto md:flex-row">
+                                    <div className="flex flex-wrap gap-2 mt-auto w-full">
                                         <button
                                             onClick={(e) => { edit_seminar(e, item); }}
-                                            className="w-full md:w-auto bg-gray-900 hover:bg-gray-700 text-white cursor-pointer px-5 py-2 mt-2 rounded-lg text-base font-semibold transition shadow-sm"
+                                            className="flex-1 min-w-[120px] bg-gray-900 hover:bg-gray-700 text-white cursor-pointer px-5 py-2 rounded-lg text-base font-semibold transition shadow-sm"
+                                            style={{ marginTop: '0.5rem' }}
                                         >
                                             Edit
                                         </button>
                                         <button
+                                            onClick={() => {
+                                                if (window.confirm('Are you sure you want to delete this seminar?')) {
+                                                    mutation.mutate(item.id);
+                                                }
+                                            }}
+                                            className="flex-1 min-w-[120px] bg-red-500 hover:bg-red-600 text-white cursor-pointer px-4 py-2 rounded-lg text-base font-semibold transition shadow-sm flex items-center justify-center"
+                                            aria-label="Delete seminar"
+                                            title="Delete seminar"
+                                            style={{ marginTop: '0.5rem' }}
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                <path d="M3 6h18M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2m2 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </button>
+                                        <button
                                             onClick={(e) => { edit_participants(e, item); }}
-                                            className="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white cursor-pointer px-5 py-2 mt-2 rounded-lg text-base font-semibold transition shadow-sm"
+                                            className="flex-1 min-w-[120px] bg-blue-500 hover:bg-blue-600 text-white cursor-pointer px-5 py-2 rounded-lg text-base font-semibold transition shadow-sm flex items-center justify-center"
+                                            style={{ marginTop: '0.5rem' }}
                                         >
                                             Participants
                                         </button>

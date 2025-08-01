@@ -367,9 +367,12 @@ export default function Dashboard() {
         window.scrollTo(0, 0);
     }, [pathname]);
 
+
     return (
         <>
-            <div className="flex min-h-screen h-screen bg-gray-50">
+            {/* Import Poppins font from Google Fonts */}
+            <style>{`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');`}</style>
+            <div className="flex min-h-screen h-screen bg-gray-50" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
                 {/* DESKTOP SIDEBAR */}
                 <Sidebar
                     logging={logging}
@@ -378,46 +381,66 @@ export default function Dashboard() {
                     elements={elements}
                     currentPageKey={currentPageKey}
                     handleSetPage={handleSetPage}
+                    logo={logo}
                 />
 
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col min-h-screen h-screen ml-0 transition-all dashboard-main-content">
-                    <header className="bg-white/90 backdrop-blur-md shadow-lg px-8 py-3 flex justify-between md:justify-center items-center w-full fixed top-0 left-0 z-20 dashboard-header h-20 border-b border-blue-100 professional-navbar">
-                        <div className="flex items-center gap-5">
-                            <img
-                                src={logo}
-                                alt="Logo"
-                                className="h-12 w-12 rounded-full shadow-md border-2 border-blue-100"
-                                style={{ background: '#e0e7ef' }}
-                            />
-                            <h1
-                                className="text-lg md:text-2xl font-bold text-blue-900 tracking-tight cursor-pointer professional-navbar-title"
-                                onClick={() => navigate('/')}
-                                style={{ userSelect: 'none', letterSpacing: '-0.5px' }}
-                            >
-                                FITS Tanza <span className="text-blue-400 font-semibold">|</span> <span className="font-medium text-gray-700">Municipal Agriculture Office</span>
-                            </h1>
-                        </div>
+                    <header className="bg-white/90 backdrop-blur-md shadow-lg px-8 py-3 flex items-center w-full fixed top-0 left-0 z-20 dashboard-header h-20 border-b border-blue-100 professional-navbar" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
+                        {/* Home button (left) */}
                         <button
-                            className="md:hidden text-blue-600 hover:text-blue-800 transition ml-2"
-                            onClick={() => setMobileMenuOpen(true)}
-                            aria-label="Open menu"
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-100 hover:bg-blue-200 rounded-lg text-blue-700 font-bold shadow transition mr-4"
+                            onClick={() => navigate('/')}
+                            aria-label="Go to Landing Page"
+                            style={{ letterSpacing: '0.01em' }}
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-8 w-8"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M4 6h16M4 12h16m-7 6h7"
-                                />
-                            </svg>
+                            <i className="fas fa-home text-xl"></i>
+                            <span className="hidden sm:inline">Home</span>
                         </button>
+                        {/* Centered dashboard title */}
+                        <div className="flex-1 flex items-center justify-center">
+                            <div className="flex items-center gap-2">
+                                
+                                     {/* Logo on mobile sidebar */}
+                            <img src={logo} alt="Logo" className="h-10 w-10 object-contain mr-2" />
+                                <h1
+                                    className="text-lg md:text-2xl font-bold text-blue-900 tracking-tight professional-navbar-title"
+                                    style={{ userSelect: 'none', letterSpacing: '-0.5px', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
+                                >
+                                   DASHBOARD  
+                                </h1>
+                            </div>
+                        </div>
+                        {/* Settings icon (right) and mobile menu */}
+                        <div className="flex items-center gap-2 ml-4">
+                            <button
+                                className="flex items-center justify-center p-3 bg-blue-100 hover:bg-blue-200 rounded-full text-blue-700 shadow transition"
+                                onClick={() => handleSetPage('settings')}
+                                aria-label="Settings"
+                            >
+                                <i className="fas fa-cog text-xl"></i>
+                            </button>
+                            <button
+                                className="md:hidden text-blue-600 hover:text-blue-800 transition ml-2"
+                                onClick={() => setMobileMenuOpen(true)}
+                                aria-label="Open menu"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-8 w-8"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M4 6h16M4 12h16m-7 6h7"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
                     </header>
                     {/* Render children below the header */}
                     <main className="flex-1 p-2 sm:p-6 overflow-auto pt-20 h-0 min-h-0 minimalist-scrollbar bg-white/70">
@@ -448,10 +471,8 @@ export default function Dashboard() {
                 <div className="flex flex-col h-full max-h-screen">
                     <div className="p-6 border-b border-blue-200 bg-white flex items-center justify-between shadow-sm">
                         <div className="flex items-center gap-3">
-                            <div className="rounded-full bg-blue-200/60 p-2 shadow-md">
-                                <i className="fas fa-seedling text-blue-700 text-2xl"></i>
-                            </div>
-                            <h1 className="text-2xl font-extrabold text-blue-800 tracking-tight drop-shadow-sm">Dashboard</h1>
+                       
+                            <h1 className="text-2xl font-extrabold text-blue-800 tracking-tight drop-shadow-sm">FITS - TANZA</h1>
                         </div>
                         <button
                             className="text-blue-500 hover:text-blue-700 transition"
@@ -488,12 +509,12 @@ export default function Dashboard() {
                                         handleSetPage('analytics');
                                         setMobileMenuOpen(false);
                                     }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em' }}
+                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-chart-line h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight">Analytics</span>
+                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Analytics</span>
                                 </li>
                                 {/* User Profiles */}
                                 <li
@@ -506,12 +527,12 @@ export default function Dashboard() {
                                         handleSetPage('profiles');
                                         setMobileMenuOpen(false);
                                     }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em' }}
+                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-user-circle h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight">User Profiles</span>
+                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>User Profiles</span>
                                 </li>
                                 {/* Seminar Programs */}
                                 <li
@@ -524,12 +545,12 @@ export default function Dashboard() {
                                         handleSetPage('enrollment');
                                         setMobileMenuOpen(false);
                                     }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em' }}
+                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-user-plus h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight">Seminars </span>
+                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Seminars </span>
                                 </li>
                                 {/* EIC */}
                                 <li
@@ -542,12 +563,12 @@ export default function Dashboard() {
                                         handleSetPage('eic');
                                         setMobileMenuOpen(false);
                                     }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em' }}
+                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-id-card h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight">EIC - Item Panel</span>
+                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>EIC - Item Panel</span>
                                 </li>
                                 {/* Distribution */}
                                 <li
@@ -560,12 +581,12 @@ export default function Dashboard() {
                                         handleSetPage('distribution');
                                         setMobileMenuOpen(false);
                                     }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em' }}
+                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-box-open h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight">Distributions</span>
+                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Distributions</span>
                                 </li>
                                 {/* Content Management */}
                                 <li
@@ -578,12 +599,12 @@ export default function Dashboard() {
                                         handleSetPage('content');
                                         setMobileMenuOpen(false);
                                     }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em' }}
+                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-archive h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight">Inventory</span>
+                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Inventory</span>
                                 </li>
                                 {/* Audit */}
                                 <li
@@ -596,12 +617,12 @@ export default function Dashboard() {
                                         handleSetPage('audit');
                                         setMobileMenuOpen(false);
                                     }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em' }}
+                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-clipboard-list h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight">Logs / Audit Trail</span>
+                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Logs / Audit Trail</span>
                                 </li>
                                 {/* Survey */}
                                 <li
@@ -614,12 +635,12 @@ export default function Dashboard() {
                                         handleSetPage('survey');
                                         setMobileMenuOpen(false);
                                     }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em' }}
+                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-poll h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight">Survey Forms</span>
+                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Survey Forms</span>
                                 </li>
                                 {/* Settings */}
                                 <li
@@ -632,12 +653,12 @@ export default function Dashboard() {
                                         handleSetPage('settings');
                                         setMobileMenuOpen(false);
                                     }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em' }}
+                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-cog h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight">Settings</span>
+                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Settings</span>
                                 </li>
                             </ul>
                         </nav>
@@ -666,7 +687,7 @@ export default function Dashboard() {
                         </div>
                             {/* Logout button (mobile sidebar, bottom) */}
                             <button
-                                className="flex items-center justify-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-100/80 to-blue-200/80 hover:from-blue-200 hover:to-blue-300 rounded-xl transition text-blue-800 w-full border border-blue-200 font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn"
+                                className="flex items-center justify-center gap-3 px-6 py-3 bg-white hover:bg-blue-100  rounded-xl transition text-blue-800 w-full border border-blue-200 font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn"
                                 onClick={logging}
                                 style={{ letterSpacing: '0.01em' }}
                             >
@@ -682,6 +703,10 @@ export default function Dashboard() {
 
             {/* Minimalist scrollbar utility and sidebar icon-only mode */}
             <style>{`
+      /* Use Poppins font for headings and navbar */
+      .professional-navbar, .professional-navbar-title, h1, h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
+      }
       /* Fix: Only nav in mobile sidebar scrolls, no double scrollbar */
       @media (max-width: 751px) {
         aside#mobile-menu {

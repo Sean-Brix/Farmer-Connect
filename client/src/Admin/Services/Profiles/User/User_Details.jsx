@@ -112,7 +112,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
         <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg border border-blue-200 p-8 relative animate-fade-in">
             <div className="flex flex-col items-center justify-center mb-4">
                 <h2 className="text-xl sm:text-2xl font-extrabold text-blue-800 tracking-tight mb-2 text-center uppercase">View User Details</h2>
-                <span className="text-xs text-blue-400 font-semibold bg-blue-50 px-3 py-1 rounded-full border border-blue-200">ID: {userDetail?.id || ''}</span>
+                <span className="text-xs text-blue-400 font-semibold bg-blue-50 px-3 py-1 mb-4 rounded-full border border-blue-200">ID: {userDetail?.id || ''}</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-4">
@@ -193,7 +193,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
         <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg border border-blue-200 p-4 sm:p-6 md:p-8 relative animate-fade-in">
             <div className="flex flex-col items-center justify-center mb-4">
                 <h2 className="text-xl sm:text-2xl font-extrabold text-blue-800 tracking-tight mb-2 text-center uppercase">Edit User Details</h2>
-                <span className="text-xs text-blue-400 font-semibold bg-blue-50 px-3 py-1 rounded-full border border-blue-200">ID: {(userDetail?.id || '').toUpperCase()}</span>
+                <span className="text-xs text-blue-400 font-semibold bg-blue-50 px-3 py-1 rounded-full border mb-4 border-blue-200">ID: {(userDetail?.id || '').toUpperCase()}</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                 <div className="space-y-4">

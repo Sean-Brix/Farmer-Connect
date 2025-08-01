@@ -713,7 +713,7 @@ function Analytics() {
 
     return (
         <div className="min-h-screen  sm:mt-10 bg-gradient-to-br from-gray-50 via-white to-gray-100 flex justify-center items-start py-12 px-4 sm:px-8 md:px-12 lg:px-16">
-            <div className="w-full max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto bg-white/80 rounded-2xl shadow-xl p-8 md:p-12 lg:p-14 border border-gray-200">
+            <div className="w-full max-w-4xl xl:max-w-6xl 2xl:max-w-6xl mx-auto bg-white/80 rounded-2xl shadow-xl p-8 md:p-12 lg:p-14 border border-gray-200">
                 {/* Header */}
                 <div className="mb-10">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
