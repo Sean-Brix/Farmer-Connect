@@ -20,8 +20,23 @@ import video from './Assets/rice.mp4'
 import logo from './Assets/Logo.png'
 import s2 from './Assets/s2.jpg'
 import mainbg from './Assets/mainbg.jpg'
+import i1 from './Assets/i1.jpg'
+import i2 from './Assets/i2.jpg'
+import i3 from './Assets/i3.jpg'
+import i4 from './Assets/i4.jpg'
 
 export default function Landing() {
+    // Preload hero images to prevent white flash on transition
+    useEffect(() => {
+        const images = [
+            // If heroSlides is not yet defined, use the same image variables as in heroSlides
+            i1, i3, i2, i4
+        ];
+        images.forEach(src => {
+            const img = new window.Image();
+            img.src = src;
+        });
+    }, []);
     // Inject Google Fonts Poppins if not already present
     if (typeof document !== 'undefined' && !document.getElementById('poppins-font')) {
         const link = document.createElement('link');
@@ -52,7 +67,7 @@ export default function Landing() {
         {
             img: img2,
             title: "Crop Production",
-            desc: "Supporting sustainable crop production through modern techniques, research, and farmer education for increased yield and food security.",
+            desc: "Enhancing crop production through innovative techniques, research, and farmer education for sustainable agriculture.",
         },
         {
             img: img5,
@@ -124,68 +139,210 @@ export default function Landing() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Hero slideshow state
+    const heroSlides = [
+        { img: i1, desc: 'Advancing sustainable agriculture and community well-being through innovation and dedicated support.' },
+        { img: i3, desc: 'Supporting sustainable crop production through modern techniques, research, and farmer education.' },
+        { img: i2, desc: 'Promoting eco-friendly practices and healthier produce for the community.' },
+        { img: i4, desc: 'Sustainability begins not with the tools we use, but with the values we sow.' },
+    ];
+    const [heroIndex, setHeroIndex] = useState(0);
+    const [nextHeroIndex, setNextHeroIndex] = useState(null); // null if not transitioning
+    const [isTransitioning, setIsTransitioning] = useState(false);
+    // Remove slideDirection for fade effect
+    const heroTimeout = useRef();
+    const heroAnimTimeout = useRef();
+
+    // Automatic slide
+    useEffect(() => {
+        heroTimeout.current && clearTimeout(heroTimeout.current);
+        if (!isTransitioning) {
+            heroTimeout.current = setTimeout(() => {
+                startHeroTransition((heroIndex + 1) % heroSlides.length);
+            }, 4000);
+        }
+        return () => {
+            heroTimeout.current && clearTimeout(heroTimeout.current);
+        };
+    }, [heroIndex, isTransitioning]);
+
+    // Manual prev/next
+    // Start transition to a specific slide (fade)
+    const startHeroTransition = (targetIdx) => {
+        if (isTransitioning || targetIdx === heroIndex) return;
+        setNextHeroIndex(targetIdx);
+        setIsTransitioning(true);
+        heroAnimTimeout.current && clearTimeout(heroAnimTimeout.current);
+        heroAnimTimeout.current = setTimeout(() => {
+            setHeroIndex(targetIdx);
+            setNextHeroIndex(null);
+            setIsTransitioning(false);
+        }, 600); // match CSS fade duration
+    };
+
+    // Manual prev/next
+    const handleHeroNav = (dir) => {
+        let targetIdx = (heroIndex + dir + heroSlides.length) % heroSlides.length;
+        startHeroTransition(targetIdx);
+    };
+
     // Replace all green color classes with blue equivalents
     return (
         <>
-          
             <Navbar />
-        <main className="min-h-screen" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                {/* HERO SECTION */}
-            <section className="mb-0 mt-0" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                <div
-                    className="w-screen relative top-1 left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex flex-col items-center justify-center gap-6 shadow-2xl p-40 sm:p-50 mb-20 border border-blue-900 overflow-hidden reveal-on-scroll opacity-0  transition-all duration-700"
-              style={{
-                    backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${mainbg})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    minHeight: '520px',
-                }}
-                >
-                    <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center">
-                        <h1
-                            className="text-4xl md:text-6xl font-extrabold mb-6 pt-5 text-white leading-tight tracking-tight drop-shadow-2xl"
-                            style={{
-                                fontFamily: 'Montserrat, Arial, sans-serif',
-                                fontWeight: 800,
-                                letterSpacing: '0.01em',
-                                textShadow:
-                                    '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
-                            }}
-                        >
-                            Empowering <span style={{color:'#5D8736'}}>Agriculture</span>,<br />Enriching Lives
-                        </h1>
-                        <p
-                            className="text-xl md:text-lg text-white mb-8 drop-shadow-2xl font-medium tracking-wider"
-                            style={{
-                                fontFamily: 'Montserrat, Arial, sans-serif',
-                                fontWeight: 400,
-                                letterSpacing: '0.18em',
-                                textShadow:
-                                    '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
-                            }}
-                        >
-                            Advancing sustainable agriculture and community well-being through innovation and dedicated support.
-                        </p>
-                        <div className="flex gap-4 flex-wrap mb-8 justify-center">
-                            <a
-                                href="/seminar"
-                                className="bg-blue-100 text-blue-900 font-bold px-8 py-3 rounded-2xl  shadow hover:scale-105 hover:bg-blue-400 hover:text-white transition-transform"
-                                onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
-                            >
-                                Our Programs
-                            </a>
-                            <a
-                                href="/about"
-                                className="border-2 border-blue-100 text-blue-50 px-8 py-3 rounded-2xl font-semibold hover:bg-blue-900/30 transition"
-                                onClick={e => { e.preventDefault(); window.location = '/about'; }}
-                            >
-                                Learn More
-                            </a>
+            <main className="min-h-screen" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                {/* HERO SECTION - SLIDESHOW */}
+                <section className="mb-0 mt-0" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    <div
+                        className="w-screen relative top-1 left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex flex-col items-center justify-center gap-6 shadow-2xl mb-20 border border-blue-900 overflow-hidden reveal-on-scroll opacity-0 transition-all duration-700"
+                        style={{
+                            minHeight: '800px',
+                            maxHeight: '800px',
+                            height: '800px',
+                            width: '100vw',
+                            padding: '0',
+                            position: 'relative',
+                            backgroundColor: '#0a2540', // dark blue fallback background
+                        }}
+                    >
+                        {/* Slide animation wrapper */}
+                        <div style={{position:'absolute', inset:0, width:'100%', height:'100%', overflow:'hidden'}}>
+                            {/* Fade transition: outgoing slide fades out, incoming fades in */}
+                            {isTransitioning && nextHeroIndex !== null ? (
+                                <>
+                                    <div
+                                        className={`hero-slide-img hero-slide-fade-out`}
+                                        style={{
+                                            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${heroSlides[heroIndex].img})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            backgroundRepeat: 'no-repeat',
+                                            width: '100%',
+                                            height: '100%',
+                                            position: 'absolute',
+                                            top: 0,
+                                            left: 0,
+                                            pointerEvents: 'none',
+                                            zIndex: 2,
+                                        }}
+                                    />
+                                    <div
+                                        className={`hero-slide-img hero-slide-fade-in`}
+                                        style={{
+                                            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${heroSlides[nextHeroIndex].img})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            backgroundRepeat: 'no-repeat',
+                                            width: '100%',
+                                            height: '100%',
+                                            position: 'absolute',
+                                            top: 0,
+                                            left: 0,
+                                            pointerEvents: 'none',
+                                            zIndex: 1,
+                                            opacity: 0,
+                                        }}
+                                    />
+                                </>
+                            ) : (
+                                <div
+                                    className="hero-slide-img hero-slide-fade-in"
+                                    style={{
+                                        backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${heroSlides[heroIndex].img})`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                        backgroundRepeat: 'no-repeat',
+                                        width: '100%',
+                                        height: '100%',
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        pointerEvents: 'none',
+                                    }}
+                                />
+                            )}
                         </div>
+                        {/* Slide content */}
+                        <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center px-4" style={{width:'100%', maxWidth:'100vw'}}>
+                            <h1
+                                className="text-4xl md:text-6xl font-extrabold mb-6 pt-5 text-white leading-tight tracking-tight drop-shadow-2xl"
+                                style={{
+                                    fontFamily: 'Montserrat, Arial, sans-serif',
+                                    fontWeight: 800,
+                                    letterSpacing: '0.01em',
+                                    textShadow: '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
+                                }}
+                            >
+                                Empowering <span style={{color:'#5D8736'}}>Agriculture</span>,<br />Enriching Lives
+                            </h1>
+                            <p
+                                className="text-xl md:text-lg text-white mb-8 drop-shadow-2xl font-medium tracking-wider"
+                                style={{
+                                    fontFamily: 'Montserrat, Arial, sans-serif',
+                                    fontWeight: 400,
+                                    letterSpacing: '0.18em',
+                                    textShadow: '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
+                                }}
+                            >
+                                {heroSlides[heroIndex].desc}
+                            </p>
+                            <div className="flex gap-4 flex-wrap mb-8 justify-center">
+                                <a
+                                    href="/seminar"
+                                    className="bg-blue-100 text-blue-900 font-bold px-8 py-3 rounded-2xl shadow hover:scale-105 hover:bg-blue-400 hover:text-white transition-transform"
+                                    onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
+                                >
+                                    Our Programs
+                                </a>
+                                <a
+                                    href="/about"
+                                    className="border-2 border-blue-100 text-blue-50 px-8 py-3 rounded-2xl font-semibold hover:bg-blue-900/30 transition"
+                                    onClick={e => { e.preventDefault(); window.location = '/about'; }}
+                                >
+                                    Learn More
+                                </a>
+                            </div>
+                            {/* Slide navigation dots */}
+                            <div className="flex gap-2 justify-center mt-2">
+                                {heroSlides.map((_, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => startHeroTransition(idx)}
+                                        className={`w-3 h-3 rounded-full border-2 ${heroIndex === idx ? 'bg-blue-700 border-blue-700' : 'bg-blue-200 border-blue-200 hover:bg-blue-400'}`}
+                                        aria-label={`Go to slide ${idx + 1}`}
+                                        style={{transition:'all 0.2s'}}
+                                        disabled={isTransitioning}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        {/* Manual prev/next controls */}
+                        <button
+                            aria-label="Previous slide"
+                            onClick={() => handleHeroNav(-1)}
+                            className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/60 hover:bg-blue-600 text-blue-900 hover:text-white rounded-full w-14 h-14 flex items-center justify-center shadow-xl border-2 border-blue-200/60 hover:border-blue-700 transition-all duration-200 group"
+                            style={{zIndex:20, boxShadow:'0 4px 24px rgba(0,0,0,0.12)'}}
+                            disabled={isTransitioning}
+                        >
+                            <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="11" stroke="currentColor" strokeWidth="2" fill="none" className="group-hover:stroke-white group-hover:fill-blue-600 transition" />
+                                <path d="M14.5 8l-4 4 4 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                            </svg>
+                        </button>
+                        <button
+                            aria-label="Next slide"
+                            onClick={() => handleHeroNav(1)}
+                            className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/60 hover:bg-blue-600 text-blue-900 hover:text-white rounded-full w-14 h-14 flex items-center justify-center shadow-xl border-2 border-blue-200/60 hover:border-blue-700 transition-all duration-200 group"
+                            style={{zIndex:20, boxShadow:'0 4px 24px rgba(0,0,0,0.12)'}}
+                            disabled={isTransitioning}
+                        >
+                            <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="11" stroke="currentColor" strokeWidth="2" fill="none" className="group-hover:stroke-white group-hover:fill-blue-600 transition" />
+                                <path d="M9.5 8l4 4-4 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                            </svg>
+                        </button>
                     </div>
-                </div>
-            </section>
+                </section>
 
             {/* MISSION & VISION */}
             <section className="py-20 mt-0  relative overflow-hidden " style={{ fontFamily: 'Poppins, sans-serif' }}>
@@ -669,6 +826,19 @@ export default function Landing() {
             </footer>
 
             <style>{`
+                .hero-slide-img {
+                    transition: opacity 0.6s cubic-bezier(0.77,0,0.175,1);
+                    will-change: opacity;
+                    z-index: 1;
+                }
+                .hero-slide-fade-in {
+                    opacity: 1 !important;
+                    z-index: 2;
+                }
+                .hero-slide-fade-out {
+                    opacity: 0 !important;
+                    z-index: 1;
+                }
                 html, body, #root {
                     overflow-x: hidden !important;
                     width: 100vw;
@@ -685,21 +855,6 @@ export default function Landing() {
                 }
                 .reveal-on-scroll.translate-y-0 {
                     transform: translateY(0) !important;
-                }
-                /* Slider animation */
-                .slider-next {
-                    animation: slideNext 0.35s cubic-bezier(0.4,0,0.2,1);
-                }
-                .slider-prev {
-                    animation: slidePrev 0.35s cubic-bezier(0.4,0,0.2,1);
-                }
-                @keyframes slideNext {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(-25%); }
-                }
-                @keyframes slidePrev {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(25%); }
                 }
             `}</style>
         </>
