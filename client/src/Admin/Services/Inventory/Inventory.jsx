@@ -892,12 +892,12 @@ function Content() {
                             placeholder="Search..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="flex-1 min-w-[120px] border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 text-blue-900 placeholder:text-blue-400 w-full sm:w-auto"
+                            className="flex-1 min-w-[120px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-white text-blue-900 placeholder:text-blue-400 w-full sm:w-auto"
                         />
                         <select
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
-                            className="min-w-[100px] border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 text-blue-900 w-full sm:w-auto"
+                            className="min-w-[100px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none ocus:ring-1 focus:ring-blue-300 bg-white text-blue-900 placeholder:text-blue-400 w-full sm:w-auto"
                         >
                             <option key="All">All</option>
                             {categories.map((cat) => (
@@ -909,7 +909,7 @@ function Content() {
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="min-w-[100px] border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 text-blue-900 w-full sm:w-auto"
+                            className="min-w-[100px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-1  focus:ring-blue-300 bg-white text-blue-900 placeholder:text-blue-400 w-full sm:w-auto"
                         >
                             <option key="All">All</option>
                             {statuses.map((status) => (
@@ -948,7 +948,7 @@ function Content() {
                                     disabled={selectedItems.length === 0}
                                     className={`px-4 py-2 rounded font-semibold bg-red-500 text-white hover:bg-red-600 disabled:bg-red-200 disabled:cursor-not-allowed w-full sm:w-auto`}
                                 >
-                                    Remove Selected
+                                    Delete
                                 </button>
                                 <button
                                     onClick={() => {
