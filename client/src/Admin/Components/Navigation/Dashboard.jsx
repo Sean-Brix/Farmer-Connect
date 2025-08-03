@@ -389,7 +389,7 @@ export default function Dashboard() {
                     <header className="bg-white/90 backdrop-blur-md shadow-lg px-8 py-3 flex items-center w-full fixed top-0 left-0 z-20 dashboard-header h-20 border-b border-blue-100 professional-navbar" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
                         {/* Home button (left) */}
                         <button
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-100 hover:bg-blue-200 rounded-lg text-blue-700 font-bold shadow transition mr-4"
+                            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 hover:bg-blue-200 rounded-lg text-blue-700 font-bold shadow transition mr-4"
                             onClick={() => navigate('/')}
                             aria-label="Go to Landing Page"
                             style={{ letterSpacing: '0.01em' }}
@@ -414,7 +414,7 @@ export default function Dashboard() {
                         {/* Settings icon (right) and mobile menu */}
                         <div className="flex items-center gap-2 ml-4">
                             <button
-                                className="flex items-center justify-center p-3 bg-blue-100 hover:bg-blue-200 rounded-full text-blue-700 shadow transition"
+                                className="flex items-center justify-center p-3 bg-white border border-gray-300 hover:bg-blue-200 rounded-full text-blue-700 shadow transition"
                                 onClick={() => handleSetPage('settings')}
                                 aria-label="Settings"
                             >

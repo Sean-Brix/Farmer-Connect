@@ -26,6 +26,7 @@ import i2 from './Assets/i2.jpg'
 import i3 from './Assets/i3.jpg'
 import i4 from './Assets/i4.jpg'
 import soil from './Assets/soil.jpg'
+import farm from './Assets/farm.jpg'
 
 export default function Landing() {
     // Preload hero images to prevent white flash on transition
@@ -149,53 +150,22 @@ export default function Landing() {
         { img: i4, desc: 'Sustainability begins not with the tools we use, but with the values we sow.' },
     ];
     const [heroIndex, setHeroIndex] = useState(0);
-    const [nextHeroIndex, setNextHeroIndex] = useState(null); // null if not transitioning
-    const [isTransitioning, setIsTransitioning] = useState(false);
-    const [slideDirection, setSlideDirection] = useState(0); // -1 for left, 1 for right
     const heroTimeout = useRef();
-    const heroAnimTimeout = useRef();
 
     // Automatic slide
     useEffect(() => {
         heroTimeout.current && clearTimeout(heroTimeout.current);
-        if (!isTransitioning) {
-            heroTimeout.current = setTimeout(() => {
-                handleHeroNav(1);
-            }, 4000);
-        }
-        return () => {
-            heroTimeout.current && clearTimeout(heroTimeout.current);
-        };
-    }, [heroIndex, isTransitioning]);
+        heroTimeout.current = setTimeout(() => {
+            setHeroIndex((prev) => (prev + 1) % heroSlides.length);
+        }, 4000);
+        return () => heroTimeout.current && clearTimeout(heroTimeout.current);
+    }, [heroIndex]);
 
-    // Start transition to a specific slide (slide effect)
-    const startHeroTransition = (targetIdx) => {
-        if (isTransitioning || targetIdx === heroIndex) return;
-        const dir = targetIdx > heroIndex || (targetIdx === 0 && heroIndex === heroSlides.length - 1) ? 1 : -1;
-        setSlideDirection(dir);
-        setNextHeroIndex(targetIdx);
-        setIsTransitioning(true);
-        heroAnimTimeout.current && clearTimeout(heroAnimTimeout.current);
-        heroAnimTimeout.current = setTimeout(() => {
-            setHeroIndex(targetIdx);
-            setNextHeroIndex(null);
-            setIsTransitioning(false);
-        }, 600); // match CSS slide duration
+    const handlePrevHero = () => {
+        setHeroIndex((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
     };
-
-    // Manual prev/next
-    const handleHeroNav = (dir) => {
-        if (isTransitioning) return;
-        let targetIdx = (heroIndex + dir + heroSlides.length) % heroSlides.length;
-        setSlideDirection(dir);
-        setNextHeroIndex(targetIdx);
-        setIsTransitioning(true);
-        heroAnimTimeout.current && clearTimeout(heroAnimTimeout.current);
-        heroAnimTimeout.current = setTimeout(() => {
-            setHeroIndex(targetIdx);
-            setNextHeroIndex(null);
-            setIsTransitioning(false);
-        }, 600);
+    const handleNextHero = () => {
+        setHeroIndex((prev) => (prev + 1) % heroSlides.length);
     };
 
     // Replace all green color classes with blue equivalents
@@ -209,9 +179,9 @@ export default function Landing() {
                 <div className="absolute top-0 left-0 w-full h-4 bg-blue-600 z-20"></div>
                 {/* Overlay image */}
                 <img
-                    src={soil1}
+                    src={fits}
                     alt="Soil texture overlay"
-                    className="absolute left-0 bottom-0 w-full h-[500px] object-cover opacity-30 pointer-events-none z-10"
+                    className="absolute left-0 bottom-0 w-full h-[700px] object-cover opacity-20 pointer-events-none z-10"
                     style={{mixBlendMode: 'multiply'}}
                 />
                 {/* Responsive flex: column on small screens, row on md+ */}
@@ -240,15 +210,51 @@ export default function Landing() {
                         </div>
                     </div>
                     {/* Right: Video - below on small screens, right on md+ */}
-                    <div className="flex-1 flex justify-center items-center min-w-[320px] w-full md:w-auto mt-10 md:mt-0">
-                        <video
-                            src={video}
-                            autoPlay
-                            loop
-                            muted
-                            className="w-full h-[260px] md:h-[600px] max-w-[700px] rounded-b-none rounded-bl-[60px] object-cover shadow-lg bg-[#e3f0ff] block -mt-4 md:-mt-16"
-                            style={{ boxShadow: '0 32px 20px 6px rgba(0,0,0,0.12)' }}
-                        />
+                    <div className="flex-1 flex items-center min-w-[320px] w-full md:w-auto mt-10 md:mt-0 justify-end">
+                        <div className="relative w-full h-[260px] md:h-[600px] max-w-[720px] bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 border border-blue-200 rounded-2xl md:rounded-bl-[60px] shadow-2xl overflow-hidden flex items-center justify-center -mt-4 md:-mt-16">
+                            {/* Slideshow image */}
+                            <img
+                                src={heroSlides[heroIndex].img}
+                                alt={heroSlides[heroIndex].desc}
+                                className="w-full h-full object-cover rounded-2xl md:rounded-bl-[60px] transition-all duration-700 ease-in-out z-10"
+                                style={{
+                                    boxShadow: '0 16px 40px 0 rgba(36,99,235,0.18), 0 2px 8px 0 rgba(0,0,0,0.10), 0 0px 0px 2px rgba(36,99,235,0.08)'
+                                }}
+                            />
+                            {/* Overlay for polish */}
+                            <div className="absolute inset-0 pointer-events-none z-20" style={{background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(36,99,235,0.04) 100%)'}}></div>
+                            {/* Caption */}
+                            <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-900/70 via-blue-900/30 to-transparent px-6 py-10 text-white font-semibold text-lg md:text-2xl z-30 flex items-center justify-between">
+                                <button
+                                    className="bg-blue-700/70 hover:bg-blue-800/80 rounded-full p-2 mr-2 transition shadow-lg"
+                                    onClick={handlePrevHero}
+                                    aria-label="Previous Slide"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+                                </button>
+                                <span className="flex-1 text-center font-poppins font-semibold text-base md:text-xl px-2">
+                                    {heroSlides[heroIndex].desc}
+                                </span>
+                                <button
+                                    className="bg-blue-700/70 hover:bg-blue-800/80 rounded-full p-2 ml-2 transition shadow-lg"
+                                    onClick={handleNextHero}
+                                    aria-label="Next Slide"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                                </button>
+                            </div>
+                            {/* Dots navigation */}
+                            <div className="absolute bottom-3 left-0 w-full flex justify-center gap-2 z-40">
+                                {heroSlides.map((_, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setHeroIndex(idx)}
+                                        className={`w-3 h-3 rounded-full border-2 transition ${heroIndex === idx ? 'bg-blue-700 border-blue-700' : 'bg-blue-200 border-blue-200 hover:bg-blue-400'}`}
+                                        aria-label={`Go to slide ${idx + 1}`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 </section>
