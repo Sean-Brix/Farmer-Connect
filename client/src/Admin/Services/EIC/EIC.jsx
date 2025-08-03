@@ -1846,7 +1846,7 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col mx-4">
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full mt-30 max-w-2xl  overflow-hidden flex flex-col mx-2 md:mx-8 lg:mx-16">
                 {/* HEADER */}
                 <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-blue-100">
                     <div className="flex items-center gap-2">
@@ -1864,7 +1864,7 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                 </div>
 
                 {/* FORM */}
-                <form onSubmit={handleSubmit} className="px-6 py-6 space-y-4">
+                <form onSubmit={handleSubmit} className="px-4 md:px-8 py-6 space-y-4">
                     {/* Item Name */}
                     <div>
                         <label
@@ -2048,7 +2048,7 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                     </div>
 
                     {/* Buttons */}
-                    <div className="flex justify-end gap-3 pt-4">
+                    <div className="flex flex-col md:flex-row justify-end gap-3 pt-4">
                         <button
                             type="button"
                             onClick={onClose}

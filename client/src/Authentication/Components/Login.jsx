@@ -303,7 +303,7 @@ export default function Login() {
                             </label>
 
                             <Link
-                                to="/"
+                                to="/forgot-password"
                                 className="text-sm text-blue-600 hover:underline"
                             >
                                 Forgot password?

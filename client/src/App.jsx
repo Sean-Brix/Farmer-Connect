@@ -23,6 +23,8 @@ import Contact from './Client/Services/Info/contact.jsx';
 import About from './Client/Services/Info/About.jsx';
 import Distribution from './Client/Services/Distributions/Distribution.jsx';
 import Survey from './Components/Survey/Survey.jsx';
+import My_Profile from './Admin/Components/Profile/My_Profile.jsx';
+import ForgotPassword from './Authentication/Components/ForgotPassword';
 
 function App() {
     return (
@@ -31,6 +33,7 @@ function App() {
                 {/* AUTHENTICATION */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
 
                 {/* CLIENT ROUTES */}
                 <Route path="/" element={<Landing />} />
@@ -48,6 +51,7 @@ function App() {
 
                 {/* ADMIN ROUTES */}
                 <Route path="/admin" element={<Dashboard />} />
+                <Route path="/admin/profile" element={<My_Profile />} />
 
                 {/* SERVER TESTING */}
                 <Route path="/testing/request" element={<API_Request />} />

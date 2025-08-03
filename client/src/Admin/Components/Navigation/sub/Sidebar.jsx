@@ -104,7 +104,7 @@ export default function Sidebar({
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer sidebar-item shadow-sm
                                         ${
                                             currentPageKey === item.key
-                                                ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                                ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
                                                 : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                         }
                                     `}
@@ -120,7 +120,7 @@ export default function Sidebar({
                     <div className="p-6 border-t border-blue-200 flex flex-col items-center mt-auto bg-white shadow-inner">
                         <div
                             className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-blue-100/60 rounded-xl p-3 transition shadow-sm"
-                            onClick={() => setPage(elements.current['account'])}
+                            onClick={() => navigate('/admin/profile')}
                             style={{ minHeight: '4.2rem' }}
                         >
                             <img
