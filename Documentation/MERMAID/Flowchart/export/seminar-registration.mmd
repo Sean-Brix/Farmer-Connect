@@ -1,3 +1,18 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
 flowchart TD
     A[User Views Seminars] --> B[Browse Available Seminars]
     B --> C[Select Seminar of Interest]
@@ -18,16 +33,8 @@ flowchart TD
     L --> M[Confirm Registration]
     M --> N[Status: Registered]
     
-    N --> O[Seminar Date Arrives]
-    O --> P[Admin Marks Attendance]
-    P --> Q{User Attended?}
+    I --> O{Want to Cancel?}
+    O -->|Yes| P[Cancel Registration]
+    O -->|No| Q[Keep Registration]
     
-    Q -->|Yes| R[Status: Attended]
-    Q -->|No| S[Status: Not Attended]
-    
-    I --> T{Want to Cancel?}
-    T -->|Yes| U[Cancel Registration]
-    T -->|No| V[Keep Registration]
-    
-    U --> W[Status: Cancelled]
-    V --> O
+    P --> R[Status: Cancelled]

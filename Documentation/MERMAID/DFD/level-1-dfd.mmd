@@ -1,31 +1,49 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
 flowchart TB
 
+    subgraph "Farmer-Connect System"
 
-    A[User Login Request] --> B[Validate Credentials]
-    B --> C{Valid?}
-    C -->|Yes| D[Generate JWT Token]
-    C -->|No| E[Return Error]
-    D --> F[Set Session Cookie]
-    F --> G[Return Success Response]
+        subgraph "--"
+        A[User Login Request] --> B[Validate Credentials]
+        B --> C{Valid?}
+        C -->|Yes| D[Generate JWT Token]
+        C -->|No| E[Return Error]
+        D --> F[Set Session Cookie]
+        F --> G[Return Success Response]
 
-    H[Browse Seminars] --> I[Select Seminar]
-    I --> J{User Authenticated?}
-    J -->|No| K[Redirect to Authentication]
-    J -->|Yes| L[Check Availability]
-    L --> M{Slots Available?}
-    M -->|Yes| N[Register User]
-    M -->|No| O[Show Full Message]
-    N --> P[Update Seminar Capacity]
-    P --> Q[Send Confirmation]
+        H[Browse Seminars] --> I[Select Seminar]
+        I --> J{User Authenticated?}
+        J -->|No| K[Redirect to Authentication]
+        J -->|Yes| L[Check Availability]
+        L --> M{Slots Available?}
+        M -->|Yes| N[Register User]
+        M -->|No| O[Show Full Message]
+        N --> P[Update Seminar Capacity]
+        P --> Q[Send Confirmation]
 
-    R[User Item Request] --> S[Check Item Availability]
-    S --> T{Available?}
-    T -->|Yes| U[Create Transaction]
-    T -->|No| V[Notify Unavailable]
-    U --> W[Admin Review Queue]
-    W --> X{Admin Decision}
-    X -->|Approve| Y[Update Item Status]
-    X -->|Reject| Z[Notify Rejection]
-    Y --> AA[Schedule Pickup]
+        R[User Item Request] --> S[Check Item Availability]
+        S --> T{Available?}
+        T -->|Yes| U[Create Transaction]
+        T -->|No| V[Notify Unavailable]
+        U --> W[Admin Review Queue]
+        W --> X{Admin Decision}
+        X -->|Approve| Y[Update Item Status]
+        X -->|Reject| Z[Notify Rejection]
+        Y --> AA[Schedule Pickup]
 
-
+        end
+    end

@@ -1,0 +1,45 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+flowchart TB
+    %% --- Login Flow ---
+    A[Admin Login] --> B{Valid Admin Credentials?}
+    B -->|No| C[Access Denied]
+    B -->|Yes| D[Admin Dashboard]
+
+    %% --- Dashboard & Module Selection ---
+    D --> E[Choose Content Module]
+    E --> F[Seminar Management]
+    E --> G[Inventory Management]
+
+    %% --- Seminar Management Module ---
+    F --> H[Create Seminar]
+    H --> I[Upload Seminar Image]
+    I --> J[Set Capacity & Deadline]
+    J --> K[Publish Seminar]
+
+    F --> L[Manage Participants]
+    F --> M[Update Seminar Status]
+    L --> N[Mark Attendance]
+
+    %% --- Inventory Management Module ---
+    G --> O[Add Inventory Items]
+    O --> P[Upload Item Image]
+    P --> Q[Set Item Category]
+    Q --> R[Create Item Stacks]
+
+    G --> S[Manage Item Stacks]
+    G --> T[Process Requests]
+    T --> U[Approve/Reject Requests]

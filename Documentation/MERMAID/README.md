@@ -13,9 +13,17 @@ MERMAID/
 │   └── audit-module.mmd
 ├── Flowchart/              # System Process Flowcharts
 │   ├── authentication-flow.mmd
-│   ├── admin-workflow.mmd
+│   ├── admin-system-management.mmd
+│   ├── admin-content-management.mmd
 │   ├── item-request-flow.mmd
-│   └── seminar-enrollment.mmd
+│   ├── seminar-registration.mmd
+│   ├── seminar-attendance.mmd
+│   ├── profile-personal-info.mmd
+│   ├── profile-security-settings.mmd
+│   ├── profile-media-contacts.mmd
+│   ├── landing-navigation-hero.mmd
+│   ├── landing-content-sections.mmd
+│   └── landing-footer-navigation.mmd
 ├── DFD/                    # Data Flow Diagrams
 │   ├── context-level-dfd.mmd
 │   ├── level-1-dfd.mmd
@@ -50,9 +58,17 @@ Modular database design documentation showing:
 ### Flowcharts
 User journey and process documentation including:
 - **Authentication Flow**: Login, registration, and session management
-- **Admin Workflow**: Administrative tasks and system management
+- **Admin System Management**: Administrative analytics, user management, and system oversight
+- **Admin Content Management**: Content creation for seminars and inventory management
 - **Item Request Flow**: Equipment lending and distribution processes
-- **Seminar Enrollment**: Educational event participation
+- **Seminar Registration**: Seminar discovery and registration process
+- **Seminar Attendance**: Event attendance tracking and post-event processing
+- **Profile Personal Info**: User personal information management and validation
+- **Profile Security Settings**: Account security, passwords, 2FA, and privacy controls
+- **Profile Media & Contacts**: Profile pictures, contact info, and user preferences
+- **Landing Navigation & Hero**: Main page navigation and hero section functionality
+- **Landing Content Sections**: Programs, about, and news content display
+- **Landing Footer Navigation**: Footer links, contact info, and social media integration
 
 ### Data Flow Diagrams (DFD)
 System architecture and data movement documentation:

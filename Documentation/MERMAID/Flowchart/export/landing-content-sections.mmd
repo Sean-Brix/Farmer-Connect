@@ -1,0 +1,47 @@
+
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+flowchart TD
+    A[Load Content Sections] --> B[Programs Section]
+    A --> C[About Section]
+    A --> D[News Section]
+    
+    B --> E[Display Program Cards]
+    E --> F[Program Carousel Controls]
+    F --> G[Previous/Next Navigation]
+    F --> H[Pagination Dots]
+    
+    G --> I[Link to Seminar Pages]
+    H --> I
+    
+    C --> J[Mission & Vision Display]
+    J --> K[Organization Values]
+    K --> L[What We Offer]
+    L --> M[Service Descriptions]
+    
+    D --> N[Latest News Cards]
+    N --> O[News Content Display]
+    O --> P[External Resource Links]
+    P --> Q[Government Portal Links]
+    
+    I --> R[Navigate to Detailed Programs]
+    M --> S[Navigate to Service Pages]
+    Q --> T[External Government Sites]
+    
+    R --> U[Load Target Content]
+    S --> U
+    T --> V[Open External Links]
+```

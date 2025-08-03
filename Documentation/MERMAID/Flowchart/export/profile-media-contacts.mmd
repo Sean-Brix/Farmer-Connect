@@ -1,0 +1,60 @@
+
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+flowchart TD
+    A[Access Profile Media & Contacts] --> B[Display Media Options]
+    
+    B --> C[Profile Picture Management]
+    B --> D[Contact Information]
+    B --> E[Preferences Settings]
+    
+    C --> C1[Upload New Photo]
+    C --> C2[Crop/Resize Image]
+    C --> C3[Set Default Picture]
+    
+    C1 --> F[Process Image Upload]
+    C2 --> F
+    C3 --> F
+    
+    F --> G{Image Processing OK?}
+    G -->|No| H[Show Upload Error]
+    G -->|Yes| I[Save Image to Server]
+    
+    D --> D1[Update Phone Numbers]
+    D --> D2[Edit Social Media Links]
+    D --> D3[Institution Information]
+    
+    D1 --> J[Validate Contact Data]
+    D2 --> J
+    D3 --> J
+    
+    E --> E1[Notification Settings]
+    E --> E2[Language Preferences]
+    
+    E1 --> K[Configure Notifications]
+    E2 --> L[Set Language Option]
+    
+    H --> B
+    I --> M[Log Media Changes]
+    J --> N[Save Contact Changes]
+    K --> O[Save Notification Prefs]
+    L --> O
+    
+    M --> P[Update Session Data]
+    N --> P
+    O --> P
+    P --> Q[Show Success Message]
+```

@@ -1,0 +1,47 @@
+
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+flowchart TD
+    A[User Visits Landing Page] --> B[Load Page Components]
+    B --> C[Initialize Navigation]
+    C --> D[Display Header/Navbar]
+    
+    D --> E{User Authentication Status}
+    E -->|Logged In| F[Show Authenticated Menu]
+    E -->|Guest| G[Show Guest Menu]
+    
+    F --> H[Profile Access Available]
+    F --> I[User Services Menu]
+    
+    G --> J[Login/Register Options]
+    G --> K[Guest Information Access]
+    
+    H --> L[Load Hero Section]
+    I --> L
+    J --> L
+    K --> L
+    
+    L --> M[Display Hero Slideshow]
+    M --> N[Auto-rotate Hero Images]
+    M --> O[Manual Navigation Controls]
+    
+    N --> P[Show Call-to-Action Buttons]
+    O --> P
+    
+    P --> Q[Navigate to Programs]
+    P --> R[Navigate to About]
+    P --> S[Access User Services]
+```

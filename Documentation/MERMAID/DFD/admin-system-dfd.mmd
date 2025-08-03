@@ -1,3 +1,18 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
 flowchart TB
     subgraph "Admin Management System"
         A[Admin Dashboard Access] --> B[Load Analytics Data]
@@ -31,13 +46,11 @@ flowchart TB
         I --> Z
         R --> AA
 
-        
-    end
-    
-    subgraph "Data Storage"
         W[(User Database)]
         X[(Inventory Database)]
         Y[(Seminar Database)]
         Z[(Audit Logs)]
         AA[(File Storage)]
     end
+
+
