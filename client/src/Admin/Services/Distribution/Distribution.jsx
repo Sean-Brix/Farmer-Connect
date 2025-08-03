@@ -550,7 +550,7 @@ export default function Distribution() {
         );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 py-8 sm:mt-20 px-2 md:px-6">
+        <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 py-8 sm:mt-20 px-2 md:px-6 relative">
             {/* Alert Component */}
             {alert.show && (
                 <div
@@ -699,125 +699,130 @@ export default function Distribution() {
                 <>
                     {/* Divider between title and search/filters */}
                     <hr className="border-t border-gray-300 my-6 w-full max-w-5xl mx-auto" />
-                    {/* Modern Search, Filters, and Actions - Responsive, Professional */}
-                    <div className="relative mt-0 mb-8 w-full max-w-5xl mx-auto px-2 md:px-6">
-                      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4 w-full">
-                        {/* Search Bar */}
-                        <div className="w-full sm:flex-1 flex items-center">
-                          <div className="relative w-full">
-                            <input
-                              type="search"
-                              placeholder="Search items, categories, descriptions..."
-                              className="block w-full pl-11 pr-4 py-2.5 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all placeholder-gray-400"
-                              value={search}
-                              onChange={(e) => setSearch(e.target.value)}
-                              aria-label="Search distribution items"
-                            />
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                              <svg
-                                className="w-5 h-5 text-blue-400"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
+                    {/* Search Bar and Refresh Button - Same Row */}
+                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-4">
+                        <div className="flex flex-col sm:flex-row items-stretch w-full gap-2 sm:gap-4">
+                            <div className="relative w-full sm:flex-1">
+                                <input
+                                    type="search"
+                                    placeholder="Search items, categories, descriptions..."
+                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all placeholder-gray-400"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    aria-label="Search distribution items"
                                 />
-                              </svg>
+                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg
+                                        className="w-5 h-5 text-blue-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </div>
                             </div>
-                          </div>
+                            <div className="flex-shrink-0 flex justify-end items-center w-full sm:w-auto">
+                                <button
+                                    onClick={refetchStacks}
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
+                                    style={{ minWidth: '120px' }}
+                                >
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    Refresh
+                                </button>
+                            </div>
                         </div>
-
-                        {/* Filters */}
-                        <div className="w-full sm:w-auto flex flex-row gap-2">
-                          <select
-                            className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
-                            value={searchFilter}
-                            onChange={(e) => setSearchFilter(e.target.value)}
-                            aria-label="Filter by"
-                          >
-                            <option value="name">Item Name</option>
-                            <option value="category">Category</option>
-                            <option value="description">Description</option>
-                          </select>
-                          <select
-                            className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            aria-label="Sort by"
-                          >
-                            <option value="default">Default Order</option>
-                            <option value="name">Sort by Name</option>
-                            <option value="category">Sort by Category</option>
-                            <option value="quantity">Sort by Quantity</option>
-                            <option value="date">Sort by Date</option>
-                          </select>
+                    </div>
+                    {/* Search Bar - Separate Row */}
+                    {/* ...existing code... */}
+                    {/* Filters and Action Buttons - Separate Row */}
+                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full">
+                            {/* Filters */}
+                            <div className="flex flex-row gap-2 flex-1">
+                                <select
+                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    value={searchFilter}
+                                    onChange={(e) => setSearchFilter(e.target.value)}
+                                    aria-label="Filter by"
+                                >
+                                    <option value="name">Item Name</option>
+                                    <option value="category">Category</option>
+                                    <option value="description">Description</option>
+                                </select>
+                                <select
+                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value)}
+                                    aria-label="Sort by"
+                                >
+                                    <option value="default">Default Order</option>
+                                    <option value="name">Sort by Name</option>
+                                    <option value="category">Sort by Category</option>
+                                    <option value="quantity">Sort by Quantity</option>
+                                    <option value="date">Sort by Date</option>
+                                </select>
+                            </div>
+                            {/* Action Buttons */}
+                            <div className="flex flex-col sm:flex-row flex-wrap gap-2 justify-end flex-shrink-0 w-full sm:w-auto">
+                                <button
+                                    onClick={handleRequestsButtonClick}
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
+                                >
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    Requests
+                                </button>
+                                <button
+                                    onClick={() => setShowAddModal(true)}
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-blue-700 hover:bg-blue-600 text-white transition-all focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-sm"
+                                >
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M12 4v16m8-8H4"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    Add Item
+                                </button>
+                            </div>
                         </div>
-
-                        {/* Action Buttons */}
-                        <div className="w-full sm:w-auto flex flex-row gap-2 justify-end">
-                          <button
-                            onClick={refetchStacks}
-                            className="flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
-                          >
-                            <svg
-                              className="w-4 h-4 mr-2"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                            Refresh
-                          </button>
-                          <button
-                            onClick={handleRequestsButtonClick}
-                            className="flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
-                          >
-                            <svg
-                              className="w-4 h-4 mr-2"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                            Requests
-                          </button>
-                          <button
-                            onClick={() => setShowAddModal(true)}
-                            className="flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-xl text-sm font-semibold bg-blue-700 hover:bg-blue-600 text-white transition-all focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-sm"
-                          >
-                            <svg
-                              className="w-4 h-4 mr-2"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                d="M12 4v16m8-8H4"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
-                            Add Distribution Item
-                          </button>
-                        </div>
-                      </div>
                     </div>
 
                     {/* Items Grid */}

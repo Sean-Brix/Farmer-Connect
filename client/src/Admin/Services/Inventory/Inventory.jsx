@@ -867,15 +867,7 @@ function Content() {
                     width: '100%',
                 }}
             >
-                <div
-                    className={`w-full sticky top-[-5px] bg-white rounded-xl shadow border-b border-blue-100 mb-4 ${
-                        uiSize === 'lg'
-                            ? 'p-6'
-                            : uiSize === 'md'
-                            ? 'p-4'
-                            : 'p-2'
-                    }`}
-                >
+            <div className="w-full mb-4">
                     {/* Sorting Button above the table */}
                     {/* Sorting Button above the table, not in the search/filter controls */}
 
@@ -886,7 +878,7 @@ function Content() {
                             </p>
                         </div>
                     )}
-                    <div className="flex flex-wrap gap-2 w-full mx-auto justify-center mb-2">
+                <div className="flex flex-wrap gap-2 w-full mx-auto justify-center mb-2 px-0 py-0">
                         <input
                             type="text"
                             placeholder="Search..."
@@ -941,27 +933,25 @@ function Content() {
                         )}
                     </div>
                     {showDelete && (
-                        <div className="flex flex-col items-end mt-2 gap-2 w-full">
-                            <div className="flex gap-2 flex-wrap w-full">
-                                <button
-                                    onClick={handleRemoveSelected}
-                                    disabled={selectedItems.length === 0}
-                                    className={`px-4 py-2 rounded font-semibold bg-red-500 text-white hover:bg-red-600 disabled:bg-red-200 disabled:cursor-not-allowed w-full sm:w-auto`}
-                                >
-                                    Delete
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setSelectAll(true);
-                                        setSelectedItems(
-                                            filteredItems.map((item) => item.id)
-                                        );
-                                    }}
-                                    className="px-4 py-2 rounded font-semibold bg-blue-500 text-white hover:bg-blue-600 w-full sm:w-auto"
-                                >
-                                    Select All
-                                </button>
-                            </div>
+                        <div className="flex gap-2 flex-wrap w-full justify-end mt-2">
+                            <button
+                                onClick={handleRemoveSelected}
+                                disabled={selectedItems.length === 0}
+                                className={`px-4 py-2 rounded font-semibold bg-red-500 text-white hover:bg-red-600 disabled:bg-red-200 disabled:cursor-not-allowed w-full sm:w-auto`}
+                            >
+                                Delete
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setSelectAll(true);
+                                    setSelectedItems(
+                                        filteredItems.map((item) => item.id)
+                                    );
+                                }}
+                                className="px-4 py-2 rounded font-semibold bg-blue-500 text-white hover:bg-blue-600 w-full sm:w-auto"
+                            >
+                                Select All
+                            </button>
                         </div>
                     )}
                 </div>

@@ -531,6 +531,7 @@ export default function EIC() {
         );
 
     return (
+
         <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 py-8 sm:mt-20 px-2 md:px-6">
             {/* Alert Component */}
             {alert.show && (
@@ -570,182 +571,41 @@ export default function EIC() {
             )}
 
             {activeSection === 'requests' ? (
+
                 <div className="max-w-5xl mx-auto">
-                    {/* Request Search and Filters */}
-                    <div className="flex flex-col lg:flex-row items-center gap-4 w-full mb-6">
-                        <div className="relative flex-1 max-w-md">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg
-                                    className="w-5 h-5 text-gray-500"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                            </div>
-                            <input
-                                type="search"
-                                placeholder="Search by item name, requestor, or note..."
-                                className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                                value={requestSearch}
-                                onChange={(e) =>
-                                    setRequestSearch(e.target.value)
-                                }
-                            />
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                            <select
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3"
-                                value={requestStatusFilter}
-                                onChange={(e) =>
-                                    setRequestStatusFilter(e.target.value)
-                                }
-                            >
-                                <option value="all">All Statuses</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Approved">Approved</option>
-                                <option value="Rejected">Rejected</option>
-                                <option value="Returned">Returned</option>
-                                <option value="No_Return">No Return</option>
-                                <option value="late_return">Late Return</option>
-                                <option value="No_Pickup">No Pickup</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </select>
-
-                            <select
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3"
-                                value={requestSortBy}
-                                onChange={(e) =>
-                                    setRequestSortBy(e.target.value)
-                                }
-                            >
-                                <option value="status">Sort by Status</option>
-                                <option value="date">Sort by Date</option>
-                                <option value="item">Sort by Item</option>
-                                <option value="client">Sort by Client</option>
-                            </select>
-
-                            <button
-                                onClick={refetchRequests}
-                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
-                            >
-                                <svg
-                                    className="w-4 h-4 mr-2"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                                Refresh
-                            </button>
-
-                            <button
-                                onClick={() => setActiveSection('items')}
-                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-gray-500 hover:bg-gray-600 text-white transition-all"
-                            >
-                                <svg
-                                    className="w-4 h-4 mr-2"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                                Back to Items
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Requests Table */}
-                    <RequestsTable
-                        requests={requests}
-                        search={requestSearch}
-                        statusFilter={requestStatusFilter}
-                        sortBy={requestSortBy}
-                        onStatusChange={handleStatusChange}
-                    />
-                </div>
-            ) : (
-                <>
-                    {/* Minimal, Responsive Search/Filters/Buttons Bar */}
-                    <div className="w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
-                    <div className="w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
-                        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4 w-full">
-                            {/* Search Bar */}
-                            <div className="w-full sm:flex-1 flex items-center">
-                                <div className="relative w-full">
-                                    <input
-                                        type="search"
-                                        placeholder="Search items..."
-                                        className="block w-full pl-11 pr-4 py-2.5 text-base text-gray-900 border border-gray-200 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all placeholder-gray-400"
-                                        value={search}
-                                        onChange={(e) => setSearch(e.target.value)}
-                                    />
-                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <svg
-                                            className="w-5 h-5 text-gray-400"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                    </div>
+                    {/* Distribution-style Search/Filters/Buttons Layout for Requests */}
+                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-4">
+                        <div className="flex flex-col sm:flex-row items-stretch w-full gap-2 sm:gap-4">
+                            <div className="relative w-full sm:flex-1">
+                                <input
+                                    type="search"
+                                    placeholder="Search by item name, requestor, or note..."
+                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all placeholder-gray-400"
+                                    value={requestSearch}
+                                    onChange={(e) => setRequestSearch(e.target.value)}
+                                    aria-label="Search requests"
+                                />
+                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg
+                                        className="w-5 h-5 text-blue-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
                                 </div>
                             </div>
-
-                            {/* Filters */}
-                            <div className="w-full sm:w-auto flex flex-row gap-2">
-                                <select
-                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-500 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
-                                    value={searchFilter}
-                                    onChange={(e) => setSearchFilter(e.target.value)}
-                                >
-                                    <option value="name">Item Name</option>
-                                    <option value="category">Category</option>
-                                    <option value="description">Description</option>
-                                </select>
-                                <select
-                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-400 focus:border-blue-500 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value)}
-                                >
-                                    <option value="default">Default Order</option>
-                                    <option value="name">Sort by Name</option>
-                                    <option value="category">Sort by Category</option>
-                                    <option value="quantity">Sort by Quantity</option>
-                                    <option value="date">Sort by Date</option>
-                                </select>
-                            </div>
-
-                            {/* Action Buttons */}
-                            <div className="w-full sm:w-auto flex flex-row gap-2 justify-end">
+                            <div className="flex-shrink-0 flex justify-end items-center w-full sm:w-auto">
                                 <button
-                                    onClick={refetchStacks}
-                                    className="flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
+                                    onClick={refetchRequests}
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
+                                    style={{ minWidth: '120px' }}
                                 >
                                     <svg
                                         className="w-4 h-4 mr-2"
@@ -762,9 +622,156 @@ export default function EIC() {
                                     </svg>
                                     Refresh
                                 </button>
+                                <span className="hidden sm:inline-block w-2"></span>
+                                <button
+                                    onClick={() => setActiveSection('items')}
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-gray-500 hover:bg-gray-600 text-white transition-all focus:outline-none focus:ring-2 focus:ring-gray-400 shadow-sm"
+                                >
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    Back to Items
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
+                        <div className="flex flex-row gap-2 flex-1">
+                            <select
+                                className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                value={requestStatusFilter}
+                                onChange={(e) => setRequestStatusFilter(e.target.value)}
+                                aria-label="Filter by status"
+                            >
+                                <option value="all">All Statuses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Returned">Returned</option>
+                                <option value="No_Return">No Return</option>
+                                <option value="late_return">Late Return</option>
+                                <option value="No_Pickup">No Pickup</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            <select
+                                className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                value={requestSortBy}
+                                onChange={(e) => setRequestSortBy(e.target.value)}
+                                aria-label="Sort by"
+                            >
+                                <option value="status">Sort by Status</option>
+                                <option value="date">Sort by Date</option>
+                                <option value="item">Sort by Item</option>
+                                <option value="client">Sort by Client</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Requests Table */}
+                    <RequestsTable
+                        requests={requests}
+                        search={requestSearch}
+                        statusFilter={requestStatusFilter}
+                        sortBy={requestSortBy}
+                        onStatusChange={handleStatusChange}
+                    />
+                </div>
+            ) : (
+                <>
+                    {/* Distribution-style Search/Filters/Buttons Layout */}
+                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-4">
+                        <div className="flex flex-col sm:flex-row items-stretch w-full gap-2 sm:gap-4">
+                            <div className="relative w-full sm:flex-1">
+                                <input
+                                    type="search"
+                                    placeholder="Search items, categories, descriptions..."
+                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all placeholder-gray-400"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    aria-label="Search EIC items"
+                                />
+                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg
+                                        className="w-5 h-5 text-blue-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div className="flex-shrink-0 flex justify-end items-center w-full sm:w-auto">
+                                <button
+                                    onClick={refetchStacks}
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
+                                    style={{ minWidth: '120px' }}
+                                >
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full">
+                            <div className="flex flex-row gap-2 flex-1">
+                                <select
+                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    value={searchFilter}
+                                    onChange={(e) => setSearchFilter(e.target.value)}
+                                    aria-label="Filter by"
+                                >
+                                    <option value="name">Item Name</option>
+                                    <option value="category">Category</option>
+                                    <option value="description">Description</option>
+                                </select>
+                                <select
+                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value)}
+                                    aria-label="Sort by"
+                                >
+                                    <option value="default">Default Order</option>
+                                    <option value="name">Sort by Name</option>
+                                    <option value="category">Sort by Category</option>
+                                    <option value="quantity">Sort by Quantity</option>
+                                    <option value="date">Sort by Date</option>
+                                </select>
+                            </div>
+                            <div className="flex flex-col sm:flex-row flex-wrap gap-2 justify-end flex-shrink-0 w-full sm:w-auto">
                                 <button
                                     onClick={handleRequestsButtonClick}
-                                    className="flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-lg text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-slate-700 hover:bg-slate-800 text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 shadow-sm"
                                 >
                                     <svg
                                         className="w-4 h-4 mr-2"
@@ -783,7 +790,7 @@ export default function EIC() {
                                 </button>
                                 <button
                                     onClick={() => setShowAddModal(true)}
-                                    className="flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-teal-300 shadow-sm"
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-sm"
                                 >
                                     <svg
                                         className="w-4 h-4 mr-2"
@@ -798,11 +805,10 @@ export default function EIC() {
                                             strokeLinejoin="round"
                                         />
                                     </svg>
-                                    Add EIC Item
+                                    Add Item
                                 </button>
                             </div>
                         </div>
-                    </div>
                     </div>
 
                     {/* Items Grid */}

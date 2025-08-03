@@ -12,7 +12,7 @@ export default function Audit({ admin_navigate }) {
 
     // Modern soft neutral background
     return (
-        <div className="min-h-screen bg-[#f5f6fa] py-6 px-2 md:px-6">
+        <div className="min-h-screen bg-white py-6 px-2 md:px-6">
             {/* EIC-style Title Section */}
             <div className="relative mt-5 sm:mb-6 sm:mt-20 p-5 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
                 <span className="inline-flex items-center justify-center gap-3 w-full">
@@ -273,9 +273,9 @@ function AuditLogsTable({ admin_navigate }) {
     const { logs = [], pagination = {} } = auditData || {};
 
     return (
-        <div className="bg-white rounded-2xl shadow-xl border border-neutral-200 overflow-hidden max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto">
             {/* Filters Section */}
-            <div className="p-8 border-b border-neutral-100 bg-neutral-50">
+            <div className="pt-8 pb-4">
                 {/* Search and Basic Controls */}
                 <div className="flex flex-col lg:flex-row gap-4 mb-6">
                     {/* Search Input */}
@@ -373,7 +373,7 @@ function AuditLogsTable({ admin_navigate }) {
 
                 {/* Advanced Filters */}
                 {showAdvancedFilters && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 p-6 bg-white rounded-lg border border-neutral-100 shadow-sm">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 p-6 bg-white rounded-lg border border-neutral-100 shadow-sm mt-2">
                         {/* Admin Filter */}
                         <div>
                             <label className="block text-xs font-medium text-gray-700 mb-1">
@@ -485,10 +485,15 @@ function AuditLogsTable({ admin_navigate }) {
                 )}
 
                 {/* Results Summary */}
-                <div className="flex items-center justify-between text-sm text-neutral-500 mt-6">
+                <div className="flex items-center justify-end text-sm text-neutral-500 mt-4">
+                    {isFetching && (
+                        <div className="text-blue-600 flex items-center mr-4">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                            Updating...
+                        </div>
+                    )}
                     <div>
-                        Showing {logs.length} of {pagination.totalCount || 0}{' '}
-                        entries
+                        Showing {logs.length} of {pagination.totalCount || 0} entries
                         {(search ||
                             adminId ||
                             action ||
@@ -500,12 +505,6 @@ function AuditLogsTable({ admin_navigate }) {
                             </span>
                         )}
                     </div>
-                    {isFetching && (
-                        <div className="text-blue-600 flex items-center">
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                            Updating...
-                        </div>
-                    )}
                 </div>
             </div>
 

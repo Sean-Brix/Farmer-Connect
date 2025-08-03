@@ -201,145 +201,43 @@ export default function Landing() {
         <>
             <Navbar />
             <main className="min-h-screen" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                {/* HERO SECTION - SLIDESHOW */}
-                <section className="mb-0 mt-0" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                    <div
-                        className="w-screen relative top-1 left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex flex-col items-center justify-center gap-6 shadow-2xl mb-20 border border-blue-900 overflow-hidden reveal-on-scroll opacity-0 transition-all duration-700"
-                        style={{
-                            minHeight: '800px',
-                            maxHeight: '800px',
-                            height: '800px',
-                            width: '100vw',
-                            padding: '0',
-                            position: 'relative',
-                            backgroundColor: '#0a2540', // dark blue fallback background
-                        }}
-                    >
-                        {/* Slide animation wrapper - carousel sliding */}
-                        <div style={{position:'absolute', inset:0, width:'100%', height:'100%', overflow:'hidden'}}>
-                            <div
-                                className={`hero-carousel-track${isTransitioning ? ' transitioning' : ''}`}
-                                style={{
-                                    display: 'flex',
-                                    width: '200%',
-                                    height: '100%',
-                                    transform: isTransitioning && nextHeroIndex !== null
-                                        ? `translateX(${slideDirection === 1 ? '-50%' : '0%'})`
-                                        : 'translateX(0%)',
-                                    transition: isTransitioning ? 'transform 0.6s cubic-bezier(0.77,0,0.175,1)' : 'none',
-                                }}
+                {/* HERO SECTION - FLEX WITH VIDEO */}
+                <section className="relative mb-0 mt-0 p-10 pt-16 min-h-[800px] flex items-center justify-center px-[8vw] bg-[#e3f0ff] font-poppins">
+                    {/* Top accent bar */}
+                    <div className="absolute top-0 left-0 w-full h-4 bg-blue-600 z-20"></div>
+                    {/* Left: Headline and Description */}
+                    <div className="flex-1 pr-[2vw] min-w-[320px] relative z-30">
+                        <h1 className="font-montserrat font-extrabold text-[3.5rem] text-[#0a2540] m-0 leading-tight tracking-[0.01em]">
+                            Empowering <span className="text-blue-600">Agriculture</span>,<br />Enriching Lives
+                        </h1>
+                        <p className="font-poppins text-[1.25rem] text-[#0a2540] mt-8 max-w-xl font-medium">
+                            Get updates on new features, farmer stories, and the future of AI for agriculture—delivered monthly to your inbox.
+                        </p>
+                        <div className="flex gap-4 mt-10 flex-wrap">
+                            <button
+                                className="bg-gradient-to-r from-blue-600 to-[#0a2540] text-white border-none rounded-xl px-8 py-3 font-bold text-base cursor-pointer font-poppins shadow transition-colors duration-200 hover:from-blue-700 hover:to-[#0a2540]"
+                                onClick={() => window.location = '/seminar'}
                             >
-                                {/* Current slide */}
-                                <div
-                                    className="hero-slide-img"
-                                    style={{
-                                        backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${heroSlides[heroIndex].img})`,
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
-                                        backgroundRepeat: 'no-repeat',
-                                        width: '100%',
-                                        height: '100%',
-                                        minWidth: '100%',
-                                        position: 'relative',
-                                    }}
-                                />
-                                {/* Next slide (for transition) */}
-                                {isTransitioning && nextHeroIndex !== null && (
-                                    <div
-                                        className="hero-slide-img"
-                                        style={{
-                                            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${heroSlides[nextHeroIndex].img})`,
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
-                                            backgroundRepeat: 'no-repeat',
-                                            width: '100%',
-                                            height: '100%',
-                                            minWidth: '100%',
-                                            position: 'relative',
-                                        }}
-                                    />
-                                )}
-                            </div>
+                                Our Programs
+                            </button>
+                            <button
+                                className="bg-white text-blue-600 border-2 border-blue-600 rounded-xl px-8 py-3 font-semibold text-base cursor-pointer font-poppins shadow transition-colors duration-200 hover:bg-blue-600 hover:text-white"
+                                onClick={() => window.location = '/about'}
+                            >
+                                Learn More
+                            </button>
                         </div>
-                        {/* Slide content */}
-                        <div className="flex-1 flex flex-col items-center justify-center relative z-10 text-center px-4" style={{width:'100%', maxWidth:'100vw'}}>
-                            <h1
-                                className="text-4xl md:text-6xl font-extrabold mb-6 pt-5 text-white leading-tight tracking-tight drop-shadow-2xl"
-                                style={{
-                                    fontFamily: 'Montserrat, Arial, sans-serif',
-                                    fontWeight: 800,
-                                    letterSpacing: '0.01em',
-                                    textShadow: '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
-                                }}
-                            >
-                                Empowering <span style={{color:'#5D8736'}}>Agriculture</span>,<br />Enriching Lives
-                            </h1>
-                            <p
-                                className="text-xl md:text-lg text-white mb-8 drop-shadow-2xl font-medium tracking-wider"
-                                style={{
-                                    fontFamily: 'Montserrat, Arial, sans-serif',
-                                    fontWeight: 400,
-                                    letterSpacing: '0.18em',
-                                    textShadow: '0 4px 24px rgba(0,0,0,0.95), 0 1px 0 #fff',
-                                }}
-                            >
-                                {heroSlides[heroIndex].desc}
-                            </p>
-                            <div className="flex gap-4 flex-wrap mb-8 justify-center">
-                                <a
-                                    href="/seminar"
-                                    className="bg-blue-100 text-blue-900 font-bold px-8 py-3 rounded-2xl shadow hover:scale-105 hover:bg-blue-400 hover:text-white transition-transform"
-                                    onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
-                                >
-                                    Our Programs
-                                </a>
-                                <a
-                                    href="/about"
-                                    className="border-2 border-blue-100 text-blue-50 px-8 py-3 rounded-2xl font-semibold hover:bg-blue-900/30 transition"
-                                    onClick={e => { e.preventDefault(); window.location = '/about'; }}
-                                >
-                                    Learn More
-                                </a>
-                            </div>
-                            {/* Slide navigation dots */}
-                            <div className="flex gap-2 justify-center mt-2">
-                                {heroSlides.map((_, idx) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => startHeroTransition(idx)}
-                                        className={`w-3 h-3 rounded-full border-2 ${heroIndex === idx ? 'bg-blue-700 border-blue-700' : 'bg-blue-200 border-blue-200 hover:bg-blue-400'}`}
-                                        aria-label={`Go to slide ${idx + 1}`}
-                                        style={{transition:'all 0.2s'}}
-                                        disabled={isTransitioning}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                        {/* Manual prev/next controls */}
-                        <button
-                            aria-label="Previous slide"
-                            onClick={() => handleHeroNav(-1)}
-                            className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/60 hover:bg-blue-600 text-blue-900 hover:text-white rounded-full w-14 h-14 flex items-center justify-center shadow-xl border-2 border-blue-200/60 hover:border-blue-700 transition-all duration-200 group"
-                            style={{zIndex:20, boxShadow:'0 4px 24px rgba(0,0,0,0.12)'}}
-                            disabled={isTransitioning}
-                        >
-                            <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="11" stroke="currentColor" strokeWidth="2" fill="none" className="group-hover:stroke-white group-hover:fill-blue-600 transition" />
-                                <path d="M14.5 8l-4 4 4 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                            </svg>
-                        </button>
-                        <button
-                            aria-label="Next slide"
-                            onClick={() => handleHeroNav(1)}
-                            className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/60 hover:bg-blue-600 text-blue-900 hover:text-white rounded-full w-14 h-14 flex items-center justify-center shadow-xl border-2 border-blue-200/60 hover:border-blue-700 transition-all duration-200 group"
-                            style={{zIndex:20, boxShadow:'0 4px 24px rgba(0,0,0,0.12)'}}
-                            disabled={isTransitioning}
-                        >
-                            <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="11" stroke="currentColor" strokeWidth="2" fill="none" className="group-hover:stroke-white group-hover:fill-blue-600 transition" />
-                                <path d="M9.5 8l4 4-4 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                            </svg>
-                        </button>
+                    </div>
+                    {/* Right: Video */}
+                    <div className="flex-1 flex justify-center items-center min-w-[320px]">
+                        <video
+                            src={video}
+                            autoPlay
+                            loop
+                            muted
+                            className="w-full h-[600px] max-w-[700px] rounded-b-none rounded-bl-[60px] object-cover shadow-lg bg-[#e3f0ff] block -mt-16"
+                            style={{ boxShadow: '0 32px 20px 6px rgba(0,0,0,0.12)' }}
+                        />
                     </div>
                 </section>
 
