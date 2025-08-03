@@ -884,7 +884,7 @@ function Content() {
                             placeholder="Search..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="flex-1 min-w-[120px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-white text-blue-900 placeholder:text-blue-400 w-full sm:w-auto"
+                            className="flex-1 min-w-[120px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-white text-gray-900 placeholder:text-gray-400 w-full sm:w-auto"
                         />
                         <select
                             value={categoryFilter}

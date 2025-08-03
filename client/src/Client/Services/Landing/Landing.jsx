@@ -10,6 +10,7 @@ import Navbar from '../../Components/Navbar'
 
 // IMAGES
 import fits from './Assets/fits.jpg'
+import soil1 from './Assets/soil1.jpg'
 import img1 from './Assets/1.jpg'
 import img2 from './Assets/2.jpg'
 import img3 from './Assets/3.jpg'
@@ -24,6 +25,7 @@ import i1 from './Assets/i1.jpg'
 import i2 from './Assets/i2.jpg'
 import i3 from './Assets/i3.jpg'
 import i4 from './Assets/i4.jpg'
+import soil from './Assets/soil.jpg'
 
 export default function Landing() {
     // Preload hero images to prevent white flash on transition
@@ -199,46 +201,56 @@ export default function Landing() {
     // Replace all green color classes with blue equivalents
     return (
         <>
-            <Navbar />
+            <div className="relative z-[100]"><Navbar /></div>
             <main className="min-h-screen" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {/* HERO SECTION - FLEX WITH VIDEO */}
                 <section className="relative mb-0 mt-0 p-10 pt-16 min-h-[800px] flex items-center justify-center px-[8vw] bg-[#e3f0ff] font-poppins">
-                    {/* Top accent bar */}
-                    <div className="absolute top-0 left-0 w-full h-4 bg-blue-600 z-20"></div>
+                {/* Top accent bar */}
+                <div className="absolute top-0 left-0 w-full h-4 bg-blue-600 z-20"></div>
+                {/* Overlay image */}
+                <img
+                    src={soil1}
+                    alt="Soil texture overlay"
+                    className="absolute left-0 bottom-0 w-full h-[500px] object-cover opacity-30 pointer-events-none z-10"
+                    style={{mixBlendMode: 'multiply'}}
+                />
+                {/* Responsive flex: column on small screens, row on md+ */}
+                <div className="flex flex-col md:flex-row w-full items-center justify-center">
                     {/* Left: Headline and Description */}
-                    <div className="flex-1 pr-[2vw] min-w-[320px] relative z-30">
-                        <h1 className="font-montserrat font-extrabold text-[3.5rem] text-[#0a2540] m-0 leading-tight tracking-[0.01em]">
+                    <div className="flex-1 pr-[2vw] min-w-[320px] relative z-30 w-full md:w-auto">
+                        <h1 className="font-montserrat font-extrabold text-[2.2rem] md:text-[3.5rem] text-[#0a2540] m-0 leading-tight tracking-[0.01em]">
                             Empowering <span className="text-blue-600">Agriculture</span>,<br />Enriching Lives
                         </h1>
-                        <p className="font-poppins text-[1.25rem] text-[#0a2540] mt-8 max-w-xl font-medium">
+                        <p className="font-poppins text-base md:text-[1.25rem] text-[#0a2540] mt-8 max-w-xl font-medium">
                             Get updates on new features, farmer stories, and the future of AI for agriculture—delivered monthly to your inbox.
                         </p>
                         <div className="flex gap-4 mt-10 flex-wrap">
                             <button
-                                className="bg-gradient-to-r from-blue-600 to-[#0a2540] text-white border-none rounded-xl px-8 py-3 font-bold text-base cursor-pointer font-poppins shadow transition-colors duration-200 hover:from-blue-700 hover:to-[#0a2540]"
+                                className="bg-blue-600  text-white border-none rounded-xl px-8 py-3 font-bold text-base cursor-pointer font-poppins shadow transition-colors duration-200  hover:bg-[#0a2540]"
                                 onClick={() => window.location = '/seminar'}
                             >
                                 Our Programs
                             </button>
                             <button
-                                className="bg-white text-blue-600 border-2 border-blue-600 rounded-xl px-8 py-3 font-semibold text-base cursor-pointer font-poppins shadow transition-colors duration-200 hover:bg-blue-600 hover:text-white"
+                                className="bg-white text-blue-600 border-2 border-blue-600 rounded-xl px-8 py-3 font-semibold text-base cursor-pointer font-poppins shadow transition-colors duration-200 hover:bg-[#0a2540] hover:text-white"
                                 onClick={() => window.location = '/about'}
                             >
                                 Learn More
                             </button>
                         </div>
                     </div>
-                    {/* Right: Video */}
-                    <div className="flex-1 flex justify-center items-center min-w-[320px]">
+                    {/* Right: Video - below on small screens, right on md+ */}
+                    <div className="flex-1 flex justify-center items-center min-w-[320px] w-full md:w-auto mt-10 md:mt-0">
                         <video
                             src={video}
                             autoPlay
                             loop
                             muted
-                            className="w-full h-[600px] max-w-[700px] rounded-b-none rounded-bl-[60px] object-cover shadow-lg bg-[#e3f0ff] block -mt-16"
+                            className="w-full h-[260px] md:h-[600px] max-w-[700px] rounded-b-none rounded-bl-[60px] object-cover shadow-lg bg-[#e3f0ff] block -mt-4 md:-mt-16"
                             style={{ boxShadow: '0 32px 20px 6px rgba(0,0,0,0.12)' }}
                         />
                     </div>
+                </div>
                 </section>
 
             {/* MISSION & VISION */}

@@ -511,7 +511,7 @@ function AuditLogsTable({ admin_navigate }) {
             {/* Table */}
         <div className="overflow-x-auto rounded-xl border border-neutral-100 shadow-sm mt-4">
             <table className="w-full">
-                <thead className="bg-neutral-50 border-b border-neutral-100">
+                <thead className="bg-blue-100 border-b border-neutral-100">
                         <tr>
                             <th
                                 className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
