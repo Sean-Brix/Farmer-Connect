@@ -1,0 +1,48 @@
+erDiagram
+    Account {
+        string id PK
+        string access
+        string username UK
+        string email UK
+        string firstName
+        string lastName
+        string middleName
+        string gender
+        string client_profile
+        string cellphone_no
+        string telephone_no
+        string occupation
+        string position
+        string institution
+        string address
+        bytes picture
+        string mimeType
+        string password
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Commodity {
+        string id PK
+        string name UK
+        string icon
+        string description
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    AccountCommodity {
+        string id PK
+        string account_id FK
+        string commodity_id FK
+        datetime createdAt
+        datetime updatedAt
+    }
+
+
+    AccountCommodity ||--o{ Account : "has"
+    AccountCommodity ||--o{ Commodity : "belongs_to"
+    SeminarParticipant ||--o{ Account : "participates"
+    ItemTransaction ||--o{ Account : "admin_handles"
+    Account ||--o{ Seminar : "creates"
+    Account ||--o{ AuditLog : "admin_logs"

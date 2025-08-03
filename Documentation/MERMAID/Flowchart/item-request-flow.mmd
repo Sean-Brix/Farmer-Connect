@@ -1,0 +1,37 @@
+flowchart TD
+    A[User Requests Item] --> B[Select Request Type]
+    B --> C[EIC - Equipment in Circulation]
+    B --> D[Distribution - Permanent]
+    
+    C --> E[Choose Equipment]
+    E --> F[Specify Quantity]
+    F --> G[Set Return Date]
+    G --> H[Submit EIC Request]
+    
+    D --> I[Choose Distribution Item]
+    I --> J[Specify Quantity]
+    J --> K[Add Request Note]
+    K --> L[Submit Distribution Request]
+    
+    H --> M[Admin Reviews EIC Request]
+    L --> N[Admin Reviews Distribution Request]
+    
+    M --> O{EIC Request Decision}
+    N --> P{Distribution Decision}
+    
+    O -->|Approve| Q[Schedule Pickup]
+    O -->|Reject| R[Notify User - Rejection]
+    
+    P -->|Approve| S[Schedule Pickup]
+    P -->|Reject| T[Notify User - Rejection]
+    
+    Q --> U[User Picks Up Item]
+    S --> V[User Picks Up Item]
+    
+    U --> W[Item Status: EIC]
+    V --> X[Item Status: Distributed]
+    
+    W --> Y[Monitor Return Date]
+    Y --> Z{Returned On Time?}
+    Z -->|Yes| AA[Item Status: Available]
+    Z -->|No| BB[Item Status: Late Return]

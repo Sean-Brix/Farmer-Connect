@@ -1,0 +1,43 @@
+flowchart TB
+    subgraph "Admin Management System"
+        A[Admin Dashboard Access] --> B[Load Analytics Data]
+        B --> C[Display System Metrics]
+        
+        D[User Profile Management] --> E[Fetch User Data]
+        E --> F[Display User List]
+        F --> G[Edit User Details]
+        G --> H[Update Database]
+        H --> I[Log Admin Action]
+        
+        J[Inventory Control] --> K[Load Item Catalog]
+        K --> L[Manage Item Stacks]
+        L --> M[Process Requests]
+        M --> N[Update Item Status]
+        N --> O[Generate Notifications]
+        
+        P[Seminar Administration] --> Q[Create/Edit Seminars]
+        Q --> R[Upload Media Files]
+        R --> S[Set Capacity Limits]
+        S --> T[Publish Seminar]
+        T --> U[Manage Participants]
+        U --> V[Track Attendance]
+
+        E --> W
+        H --> W
+        K --> X
+        N --> X
+        Q --> Y
+        T --> Y
+        I --> Z
+        R --> AA
+
+        
+    end
+    
+    subgraph "Data Storage"
+        W[(User Database)]
+        X[(Inventory Database)]
+        Y[(Seminar Database)]
+        Z[(Audit Logs)]
+        AA[(File Storage)]
+    end

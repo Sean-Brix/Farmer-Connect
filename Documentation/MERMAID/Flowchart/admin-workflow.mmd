@@ -1,0 +1,33 @@
+flowchart TD
+    A[Admin Login] --> B{Valid Admin Credentials?}
+    B -->|No| C[Access Denied]
+    B -->|Yes| D[Admin Dashboard]
+    
+    D --> E[Choose Module]
+    E --> F[Analytics]
+    E --> G[User Profiles]
+    E --> H[Seminar Management]
+    E --> I[Inventory Management]
+    
+    F --> J[View System Statistics]
+    J --> K[Generate Reports]
+    
+    G --> L[View All Users]
+    L --> M[Edit User Details]
+    L --> N[Manage User Roles]
+    
+    H --> O[Create Seminar]
+    H --> P[Manage Participants]
+    H --> Q[Update Seminar Status]
+    
+    I --> R[Add Inventory Items]
+    I --> S[Manage Item Stacks]
+    I --> T[Process Requests]
+    
+    O --> U[Upload Seminar Image]
+    U --> V[Set Capacity & Deadline]
+    V --> W[Publish Seminar]
+    
+    R --> X[Upload Item Image]
+    X --> Y[Set Item Category]
+    Y --> Z[Create Item Stacks]

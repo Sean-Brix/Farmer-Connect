@@ -1,0 +1,31 @@
+erDiagram
+    Seminar {
+        string id PK
+        string title
+        text description
+        string location
+        string speaker
+        date start_date
+        date end_date
+        string start_time
+        string end_time
+        int capacity
+        date registration_deadline
+        string status
+        bytes picture
+        string mimeType
+        string createdById FK
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    SeminarParticipant {
+        string id PK
+        string seminar_id FK
+        string account_id FK
+        string status
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    SeminarParticipant ||--o{Seminar  : "has_participants"

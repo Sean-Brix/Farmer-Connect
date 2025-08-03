@@ -1,0 +1,42 @@
+flowchart TB
+
+    subgraph "Farmer-Connect System"
+        A[Farmers/Users]
+        B[Administrators]
+        C[System Admin]
+
+        D[Authentication Service]
+        E[User Management]
+        F[Seminar Management]
+        G[Inventory Management]
+        H[Analytics Service]
+        I[Audit Service]
+
+        J[(User Database)]
+        K[(Seminar Database)]
+        L[(Inventory Database)]
+        M[(Audit Logs)]
+        N[(System Analytics)]
+        
+    end
+
+    D -->|User Validation| J
+    E -->|User Data| J
+    F -->|Seminar Data| K
+    G -->|Inventory Data| L
+    H -->|Analytics Data| N
+    I -->|Audit Data| M
+
+    C -->|System Monitoring| I
+    C -->|Admin Management| E
+    
+    A -->|Login Request| D
+    A -->|Registration Data| E
+    A -->|Seminar Enrollment| F
+    A -->|Item Requests| G
+
+    B -->|Admin Access| D
+    B -->|User Management| E
+    B -->|Seminar Creation| F
+    B -->|Inventory Control| G
+    B -->|View Analytics| H

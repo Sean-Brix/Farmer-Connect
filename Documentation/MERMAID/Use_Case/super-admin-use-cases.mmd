@@ -1,0 +1,55 @@
+flowchart TB
+
+   subgraph "--"
+        subgraph "SUPER ADMIN"
+            UC1[View Audit Logs]
+            UC2[Filter Audit Data]
+            UC3[Export Audit Reports]
+            UC4[Monitor Admin Actions]
+            UC5[Track System Changes]
+            UC6[Manage Super Admins]
+            UC7[System Maintenance]
+            UC8[Database Backup]
+        end
+        
+        A1[Super Administrator]
+
+        subgraph "SUPER ADMIN"
+            UC9[System Configuration]
+            UC10[Security Settings]
+            UC11[Deep System Analysis]
+            UC12[Performance Monitoring]
+            UC13[Usage Statistics]
+            UC14[Trend Analysis]
+            UC15[Custom Reporting]  
+        end
+
+    end
+
+    A1 --- UC9
+    A1 --- UC10
+    A1 --- UC11
+    A1 --- UC12
+    A1 --- UC13
+    A1 --- UC14
+    A1 --- UC15
+
+    UC1 <--- A1
+    UC2 <--- A1
+    UC3 <--- A1
+    UC4 <--- A1
+    UC5 <--- A1
+    UC6 <--- A1
+    UC7 <--- A1
+    UC8 <--- A1
+
+
+  
+    
+    
+    
+
+   
+
+    
+    

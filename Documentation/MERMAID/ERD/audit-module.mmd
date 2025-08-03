@@ -1,0 +1,22 @@
+erDiagram
+    AuditLog {
+        string id PK
+        string adminId FK
+        string action
+        string targetType
+        string targetId
+        string targetName
+        text details
+        json metadata
+        string ipAddress
+        string userAgent
+        datetime createdAt
+    }
+
+    Account {
+        string id PK
+        string username
+        string access
+    }
+
+    Account ||--o{ AuditLog : "creates_logs"

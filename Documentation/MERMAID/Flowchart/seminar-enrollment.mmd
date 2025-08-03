@@ -1,0 +1,33 @@
+flowchart TD
+    A[User Views Seminars] --> B[Browse Available Seminars]
+    B --> C[Select Seminar of Interest]
+    C --> D{Registration Open?}
+    
+    D -->|No| E[Show Registration Closed]
+    D -->|Yes| F{User Logged In?}
+    
+    F -->|No| G[Redirect to Login]
+    F -->|Yes| H{Already Registered?}
+    
+    H -->|Yes| I[Show Registration Status]
+    H -->|No| J{Capacity Available?}
+    
+    J -->|No| K[Show Seminar Full]
+    J -->|Yes| L[Register for Seminar]
+    
+    L --> M[Confirm Registration]
+    M --> N[Status: Registered]
+    
+    N --> O[Seminar Date Arrives]
+    O --> P[Admin Marks Attendance]
+    P --> Q{User Attended?}
+    
+    Q -->|Yes| R[Status: Attended]
+    Q -->|No| S[Status: Not Attended]
+    
+    I --> T{Want to Cancel?}
+    T -->|Yes| U[Cancel Registration]
+    T -->|No| V[Keep Registration]
+    
+    U --> W[Status: Cancelled]
+    V --> O
