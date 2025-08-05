@@ -500,9 +500,9 @@ export default function Dashboard() {
                             <ul className="space-y-2 px-3 max-h-[70vh]">
                                 {/* Analytics */}
                                 <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
+                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer  h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'analytics'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -514,13 +514,13 @@ export default function Dashboard() {
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-chart-line h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Analytics</span>
+                                    <span className={`font-medium tracking-tight ${currentPageKey === 'analytics' ? 'font-bold' : 'font-normal'}`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Analytics</span>
                                 </li>
                                 {/* User Profiles */}
                                 <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
+                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'profiles'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -532,13 +532,13 @@ export default function Dashboard() {
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-user-circle h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>User Profiles</span>
+                                    <span className={`font-medium tracking-tight ${currentPageKey === 'profiles' ? 'font-bold' : 'font-normal'}`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>User Profiles</span>
                                 </li>
                                 {/* Seminar Programs */}
                                 <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
+                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'enrollment'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -550,13 +550,13 @@ export default function Dashboard() {
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-user-plus h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Seminars </span>
+                                    <span className={`font-medium tracking-tight ${currentPageKey === 'enrollment' ? 'font-bold' : 'font-normal'}`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Seminars </span>
                                 </li>
                                 {/* EIC */}
                                 <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
+                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'eic'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -568,13 +568,13 @@ export default function Dashboard() {
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-id-card h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>EIC - Item Panel</span>
+                                    <span className={`font-medium tracking-tight ${currentPageKey === 'eic' ? 'font-bold' : 'font-normal'}`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>EIC - Item Panel</span>
                                 </li>
                                 {/* Distribution */}
                                 <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
+                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'distribution'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -586,13 +586,13 @@ export default function Dashboard() {
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-box-open h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Distributions</span>
+                                    <span className={`font-medium tracking-tight ${currentPageKey === 'distribution' ? 'font-bold' : 'font-normal'}`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Distributions</span>
                                 </li>
                                 {/* Content Management */}
                                 <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
+                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'content'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -604,13 +604,13 @@ export default function Dashboard() {
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-archive h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Inventory</span>
+                                    <span className={`font-medium tracking-tight ${currentPageKey === 'content' ? 'font-bold' : 'font-normal'}`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Inventory</span>
                                 </li>
                                 {/* Audit */}
                                 <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
+                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'audit'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -622,13 +622,13 @@ export default function Dashboard() {
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-clipboard-list h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Logs / Audit Trail</span>
+                                    <span className={`font-medium tracking-tight ${currentPageKey === 'audit' ? 'font-bold' : 'font-normal'}`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Logs / Audit Trail</span>
                                 </li>
                                 {/* Survey */}
                                 <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
+                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'survey'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -640,13 +640,13 @@ export default function Dashboard() {
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-poll h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Survey Forms</span>
+                                    <span className={`font-medium tracking-tight ${currentPageKey === 'survey' ? 'font-bold' : 'font-normal'}`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Survey Forms</span>
                                 </li>
                                 {/* Settings */}
                                 <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
+                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'settings'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -658,17 +658,19 @@ export default function Dashboard() {
                                     <span className="text-blue-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-cog h-6 w-6"></i>
                                     </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Settings</span>
+                                    <span className={`font-medium tracking-tight ${currentPageKey === 'settings' ? 'font-bold' : 'font-normal'}`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Settings</span>
                                 </li>
                             </ul>
                         </nav>
                         {/* Profile and Logout at the bottom, styled like desktop */}
                         <div className="p-6 border-t border-blue-200 flex flex-col items-center mt-auto bg-white shadow-inner">
-                        <div className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-blue-100/60 rounded-xl p-3 transition shadow-sm"
+                        <div
+                            className="flex items-center gap-4 px-5 py-3 w-full cursor-pointer hover:bg-blue-100/60 rounded-xl transition shadow-sm"
                             onClick={() => {
                                 setPage(elements.current['account']);
+                                setMobileMenuOpen(false);
                             }}
-                            style={{ minHeight: '4.2rem' }}
+                            style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                         >
                             <img
                                 src={details.picture}
@@ -804,14 +806,11 @@ export default function Dashboard() {
       }
       /* Responsive sidebar/mobile nav link sizing */
       #mobile-menu li {
-        min-height: 4rem !important;
-        height: 4rem !important;
-        width: 100% !important;
+        /* min-height: 4rem !important; */ /* Commenting out to prevent full width */
         box-sizing: border-box;
       }
       #mobile-menu li > .flex {
         min-height: 4rem !important;
-        height: 4rem !important;
         align-items: center !important;
       }
     `}</style>

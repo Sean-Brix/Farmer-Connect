@@ -112,16 +112,31 @@ export default function Sidebar({
                                     onClick={() => handleClick(item)}
                                 >
                                     <span className="sidebar-icon text-blue-700/90 text-xl drop-shadow-sm">{item.icon}</span>
-                                    <span className="sidebar-label font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>{item.label}</span>
+                                    <span
+                                        className={`sidebar-label font-medium tracking-tight ${currentPageKey === item.key ? 'font-normal' : 'font-normal'}`}
+                                        style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
+                                    >
+                                        {item.label}
+                                    </span>
                                 </li>
                             ))}
                         </ul>
                     </nav>
                     <div className="p-6 border-t border-blue-200 flex flex-col items-center mt-auto bg-white shadow-inner">
-                        <div
-                            className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-blue-100/60 rounded-xl p-3 transition shadow-sm"
-                            onClick={() => navigate('/admin/profile')}
-                            style={{ minHeight: '4.2rem' }}
+                        {/* Profile link for mobile sidebar: match Dashboard.jsx structure */}
+                        <li
+                            className="flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full min-h-[4rem] shadow-sm hover:bg-blue-100/60"
+                            onClick={() => {
+                                navigate('/admin/profile');
+                                if (typeof window !== 'undefined') {
+                                    const mobileMenu = document.getElementById('mobile-menu');
+                                    if (mobileMenu && mobileMenu.classList.contains('translate-x-0')) {
+                                        mobileMenu.classList.remove('translate-x-0');
+                                        mobileMenu.classList.add('-translate-x-full');
+                                    }
+                                }
+                            }}
+                            style={{ minHeight: '4rem', maxWidth: '100%', width: '100%', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                         >
                             <img
                                 src={details.picture}
@@ -137,7 +152,7 @@ export default function Sidebar({
                                     {details.position}
                                 </span>
                             </div>
-                        </div>
+                        </li>
                         <button
                             className="flex items-center justify-center gap-3 px-6 py-3 bg-white hover:bg-blue-200 rounded-xl transition text-blue-800 w-full border border-blue-200 font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn"
                             onClick={logging}
@@ -156,10 +171,6 @@ export default function Sidebar({
                     .sidebar, .sidebar-label, .sidebar-username, .sidebar-position, .sidebar-logout-text {
                         font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
                     }
-            /* Use Poppins font for sidebar */
-            .sidebar, .sidebar-label, .sidebar-username, .sidebar-position, .sidebar-logout-text {
-                font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
-            }
                 .minimalist-scrollbar::-webkit-scrollbar {
                     width: 8px;
                     background: transparent;

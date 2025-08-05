@@ -181,7 +181,7 @@ export default function Landing() {
                 <img
                     src={fits}
                     alt="Soil texture overlay"
-                    className="absolute left-0 bottom-0 w-full h-[700px] object-cover opacity-20 pointer-events-none z-10"
+                    className="absolute left-0 bottom-0 w-full h-[700px] object-cover opacity-20 pointer-events-none z-10 "
                     style={{mixBlendMode: 'multiply'}}
                 />
                 {/* Responsive flex: column on small screens, row on md+ */}
