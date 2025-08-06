@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import i1 from '../Assets/i3.jpg';
+import i1 from '../Assets/people.jpg';
+import ebg from '../Assets/elementbg.jpg';
 import logo from '../../Assets/Logo.png';
 
 export default function ForgotPassword() {
@@ -15,12 +16,19 @@ export default function ForgotPassword() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-blue-100 px-2 py-6 sm:py-10">
+        <div className="min-h-screen flex items-center justify-center px-2 py-6 sm:py-10" style={{
+            backgroundImage: `url(${ebg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+        }}>
             <div className="relative flex flex-col md:flex-row w-full max-w-5xl md:h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200">
                 {/* Left: Form Section */}
                 <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 md:py-10 z-10 max-h-[90vh] md:max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-transparent">
                     <div className="flex flex-col items-center mb-8 ">
-                        <h1 className="font-extrabold text-3xl md:text-4xl text-blue-700 tracking-tight mb-6 mt-20 text-center drop-shadow">Forgot Password</h1>
+                        <img src={logo} alt="FITS Tanza Logo" className="h-12 w-12 rounded-full mb-3 shadow-xl  z-30 relative mt-5" />
+                        <h1 className="font-extrabold text-3xl md:text-4xl text-blue-700 tracking-tight mb-1 text-center drop-shadow font-sans uppercase" style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
+                        <span className="text-sm md:text-sm font-semibold text-blue-600 tracking-wide mb-2 text-center" style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
                         <span className="text-gray-500 text-base md:text-lg text-center">Enter your registered email address below and we'll send you a link to reset your password.</span>
                     </div>
                     <form
@@ -79,25 +87,11 @@ export default function ForgotPassword() {
                                 src={i1}
                                 alt="side"
                                 className="w-full h-full object-cover object-center  rounded-tl-[120px] rounded-br-[120px] rounded-tr-none rounded-bl-none shadow-2xl absolute top-0 left-0"
-                                style={{position:'absolute'}} 
+                                style={{position:'absolute', objectPosition: 'center top'}} 
                             />
                             {/* Overlay for darkening and soft edge */}
                             <div className="absolute inset-0 rounded-tl-[120px] rounded-br-[120px] rounded-tr-none rounded-bl-none bg-gradient-to-br from-black/40 via-black/20 to-black/40 pointer-events-none" style={{zIndex:20}}></div>
-                            {/* Centered FITS Tanza branding, moved a little bit on top */}
-                            <div className="absolute inset-0 flex flex-col items-center justify-center text-center drop-shadow-2xl z-30" style={{ justifyContent: 'flex-start', top: '20%' }}>
-                                <img src={logo} alt="FITS Tanza Logo" className="h-20 w-20 rounded-full mb-3 shadow-xl border-4 border-blue-400 z-30 relative" />
-                                <span className="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight mb-1 font-sans uppercase z-30 relative"
-                                    style={{
-                                        letterSpacing: '0.04em',
-                                        textShadow: '0 3px 12px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.7)',
-                                    }}
-                                >FITS Tanza</span>
-                                <span className="text-lg md:text-xl font-semibold text-white tracking-wide mb-1 z-30 relative"
-                                    style={{
-                                        textShadow: '0 2px 8px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.7)',
-                                    }}
-                                >Municipal Agriculture Office</span>
-                            </div>
+                            {/* Branding removed from right image section, now in left form section */}
                         </div>
                     </div>
                 </div>

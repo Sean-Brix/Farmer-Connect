@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import i1 from '../Assets/i3.jpg';
+import i1 from '../Assets/people.jpg';
 import logo from '../../Assets/Logo.png';
+import ebg from '../Assets/elementbg.jpg';
 
 // Wrapper for passing in Navigate Hooks
 function register_wrapper() {
@@ -166,17 +167,24 @@ class Register extends Component {
         if (register === 'second') stepIndex = 1;
         if (register === 'third') stepIndex = 2;
         return (
-            <div className="min-h-screen flex items-center justify-center bg-blue-100 px-2 py-6 sm:py-10">
+            <div className="min-h-screen flex items-center justify-center px-2 py-6 sm:py-10" style={{
+                backgroundImage: `url(${ebg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+            }}>
                 <div className="relative flex flex-col md:flex-row w-full max-w-5xl md:h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200">
                     {/* Left: Form Section, scrollable if needed */}
                     <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 md:py-10 z-10 max-h-[90vh] md:max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-transparent">
-                        {/* Title for Stepper */}
-                        <div className="flex flex-col items-center mb-8 ">
-                            <h1 className="font-extrabold text-3xl md:text-4xl text-blue-700 tracking-tight mb-6 mt-20 text-center drop-shadow">Farmer Connect</h1>
+                        {/* FITS Tanza Branding at the top, matching Login */}
+                        <div className="flex flex-col items-center mb-8 mt-15 ">
+                            <img src={logo} alt="FITS Tanza Logo" className="h-12 w-12 rounded-full mb-3 shadow-xl  z-30 relative mt-5" />
+                            <h1 className="font-extrabold text-3xl md:text-4xl text-blue-700 tracking-tight mb-1 text-center drop-shadow font-sans uppercase" style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
+                            <span className="text-sm md:text-sm font-semibold text-blue-600 tracking-wide mb-2 text-center" style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
                             <span className="text-gray-500 text-base md:text-lg text-center">Create your account</span>
                         </div>
                         {/* Stepper with modern progress line */}
-                        <div className="relative flex items-center mb-10 w-full max-w-md mx-auto">
+                        <div className="relative flex items-center mb-5 w-full max-w-md mx-auto">
                             {/* Modern Progress Bar */}
                             <div className="absolute top-1/2 left-0 right-0 h-2 bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 rounded-full shadow-inner z-0" style={{ transform: 'translateY(-50%)' }} />
                             <div className="absolute top-1/2 left-0 h-2 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full shadow-lg z-10 transition-all duration-500" style={{ width: `${(stepIndex) / (this.steps.length - 1) * 100}%`, transform: 'translateY(-50%)' }} />
@@ -204,26 +212,12 @@ class Register extends Component {
                                 <img
                                     src={i1}
                                     alt="side"
-                                    className="w-full h-full object-cover object-center   rounded-tl-[120px] rounded-br-[120px] rounded-tr-none rounded-bl-none shadow-2xl absolute top-0 left-0"
-                                    style={{position:'absolute'}} 
+                                    className="w-full h-full object-cover rounded-tl-[120px] rounded-br-[120px] rounded-tr-none rounded-bl-none shadow-2xl absolute top-0 left-0"
+                                    style={{position:'absolute', objectPosition: 'center top'}} 
                                 />
                                 {/* Overlay for darkening and soft edge */}
                                 <div className="absolute inset-0 rounded-tl-[120px] rounded-br-[120px] rounded-tr-none rounded-bl-none bg-gradient-to-br from-black/40 via-black/20 to-black/40 pointer-events-none" style={{zIndex:20}}></div>
-                                {/* Centered FITS Tanza branding, moved a little bit on top */}
-                                <div className="absolute inset-0 flex flex-col items-center justify-center text-center drop-shadow-2xl z-30" style={{ justifyContent: 'flex-start', top: '20%' }}>
-                                    <img src={logo} alt="FITS Tanza Logo" className="h-20 w-20 rounded-full mb-3 shadow-xl border-4 border-blue-400 z-30 relative" />
-                                    <span className="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight mb-1 font-sans uppercase z-30 relative"
-                                        style={{
-                                            letterSpacing: '0.04em',
-                                            textShadow: '0 3px 12px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.7)',
-                                        }}
-                                    >FITS Tanza</span>
-                                    <span className="text-lg md:text-xl font-semibold text-white tracking-wide mb-1 z-30 relative"
-                                        style={{
-                                            textShadow: '0 2px 8px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.7)',
-                                        }}
-                                    >Municipal Agriculture Office</span>
-                                </div>
+                                {/* Branding removed from right image section, now in left form section */}
                             </div>
                         </div>
                     </div>
@@ -234,7 +228,7 @@ class Register extends Component {
 
     render_first() {
         return (
-            <form className="space-y-6" onSubmit={(e) => this.onNext(e, 'second')}>
+            <form className="space-y-5" onSubmit={(e) => this.onNext(e, 'second')}>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Create new account<span className="text-blue-600">.</span></h2>
                 <p className="text-gray-400 text-sm mb-4">Already A Member? <Link to="/login" className="text-blue-600 hover:underline">Log In</Link></p>
                 <div className="flex space-x-3">
@@ -264,7 +258,7 @@ class Register extends Component {
                         </label>
                     </div>
                 </div>
-                <button type="submit" className="w-full py-3 mt-4 mb-6 text-white bg-blue-600 rounded-lg font-semibold shadow hover:bg-blue-700 transition">Next</button>
+                <button type="submit" className="w-full py-3 mt-4  text-white bg-blue-600 rounded-lg font-semibold shadow hover:bg-blue-700 transition">Next</button>
             </form>
         );
     }
@@ -329,7 +323,7 @@ class Register extends Component {
                         <input type="text" id="institution" name="institution" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
                     </div>
                 </div>
-                <button type="submit" className="w-full py-3 mt-4 mb-6 text-white bg-blue-600 rounded-lg font-semibold shadow hover:bg-blue-700 transition">Next</button>
+                <button type="submit" className="w-full py-3 mt-4 text-white bg-blue-600 rounded-lg font-semibold shadow hover:bg-blue-700 transition">Next</button>
             </form>
         );
     }

@@ -5,7 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 // COMPONENTS
 import cover from '../Assets/Cover.jpg';
 import logo from '../../Assets/Logo.png';
-import bg from '../Assets/bg.jpg';
+import ebg from '../Assets/elementbg.jpg';
+import pipol from '../Assets/people.jpg'; 
 import i1 from '../Assets/i1.jpg';
 import i2 from '../Assets/i2.jpg';
 import i3 from '../Assets/i3.jpg';
@@ -58,12 +59,19 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-2 py-6 sm:py-10 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300">
+        <div className="min-h-screen flex items-center justify-center px-2 py-6 sm:py-10" style={{
+            backgroundImage: `url(${ebg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+        }}>
             <div className="relative flex flex-col md:flex-row w-full max-w-5xl md:h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200">
                 {/* Left: Form Section */}
                 <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 md:py-10 z-10 max-h-[90vh] md:max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
                     <div className="flex flex-col items-center mb-8 ">
-                        <h1 className="font-extrabold text-3xl md:text-4xl text-blue-700 tracking-tight mb-2 mt-3 text-center drop-shadow">Farmer Connect</h1>
+                        <img src={logo} alt="FITS Tanza Logo" className="h-12 w-12 rounded-full mb-3 shadow-xl  z-30 relative mt-5" />
+                        <h1 className="font-extrabold text-3xl md:text-4xl text-blue-700 tracking-tight mb-1 text-center drop-shadow font-sans uppercase" style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
+                        <span className="text-sm md:text-sm font-semibold text-blue-600 tracking-wide mb-2 text-center" style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
                         <span className="text-gray-500 text-base md:text-lg text-center">Sign in to your account</span>
                     </div>
                     <form
@@ -138,7 +146,7 @@ export default function Login() {
                                 required
                                 ref={username}
                                 autoComplete="username"
-                                className="w-full px-4 py-2 mt-1 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-gray-300"
+                                className="w-full px-4 py-2 mt-1 border rounded-md  = border-gray-300 bg-white"
                             />
                         </div>
                         <div>
@@ -149,7 +157,7 @@ export default function Login() {
                                 name="password"
                                 required
                                 ref={password}
-                                className="w-full px-4 py-2 mt-1 border rounded-md focus:ring-blue-500 focus:border-blue-500 border-gray-300"
+                                className="w-full px-4 py-2 mt-1 border rounded-md  border-gray-300 bg-white"
                             />
                         </div>
                         <div className="flex items-center justify-between">
@@ -174,7 +182,7 @@ export default function Login() {
                             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5 mr-2" />
                             Google
                         </button> */}
-                        <p className="mt-6 text-center text-sm text-gray-700">Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Sign up</Link></p>
+                        <p className=" text-center text-sm text-gray-700">Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Sign up</Link></p>
                         <div className="mt-2 text-center text-xs text-gray-400">
                             <Link to="/terms" className="hover:underline">Terms & Conditions</Link>
                         </div>
@@ -185,29 +193,15 @@ export default function Login() {
                     <div className="flex items-center justify-center w-full h-full">
                         <div className="relative w-[95%] h-[95%] flex items-center justify-center">
                             <img
-                                src={i3}
+                                src={pipol}
                                 alt="side"
-                                className="w-full h-full object-cover object-center rounded-tl-[120px] rounded-br-[120px] rounded-tr-none rounded-bl-none shadow-2xl absolute top-0 left-0"
-                                style={{position:'absolute'}} 
+                                className="w-full h-full object-cover rounded-tl-[120px] rounded-br-[120px] rounded-tr-none rounded-bl-none shadow-2xl absolute top-0 left-0"
+                                style={{position:'absolute', objectPosition: 'center top'}} 
                             />
                             {/* Overlay for darkening and soft edge */}
                             <div className="absolute inset-0 rounded-tl-[120px] rounded-br-[120px] rounded-tr-none rounded-bl-none bg-gradient-to-br from-black/40 via-black/20 to-black/40 pointer-events-none" style={{zIndex:20}}></div>
-                            {/* Centered FITS Tanza branding, moved a little bit on top */}
-                            <div className="absolute inset-0 flex flex-col items-center justify-center text-center drop-shadow-2xl z-30" style={{ justifyContent: 'flex-start', top: '20%' }}>
-                                <img src={logo} alt="FITS Tanza Logo" className="h-20 w-20 rounded-full mb-3 shadow-xl border-4 border-blue-400 z-30 relative" />
-                                <span className="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight mb-1 font-sans uppercase z-30 relative"
-                                    style={{
-                                        letterSpacing: '0.04em',
-                                        textShadow: '0 3px 12px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.7)',
-                                    }}
-                                >FITS Tanza</span>
-                                <span className="text-lg md:text-xl font-semibold text-white tracking-wide mb-1 z-30 relative"
-                                    style={{
-                                        textShadow: '0 2px 8px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.7)',
-                                    }}
-                                >Municipal Agriculture Office</span>
-                            </div>
-                            {/* Slide indicators removed since only one image is used */}
+                            {/* Branding removed from right image section, now in left form section */}
+                            
                         </div>
                     </div>
                 </div>
