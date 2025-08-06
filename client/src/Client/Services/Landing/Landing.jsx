@@ -212,15 +212,22 @@ export default function Landing() {
                     {/* Right: Video - below on small screens, right on md+ */}
                     <div className="flex-1 flex items-center min-w-[320px] w-full md:w-auto mt-10 md:mt-0 justify-end">
                         <div className="relative w-full h-[260px] md:h-[600px] max-w-[720px] bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 border border-blue-200 rounded-2xl md:rounded-bl-[60px] shadow-2xl overflow-hidden flex items-center justify-center -mt-4 md:-mt-16">
-                            {/* Slideshow image */}
-                            <img
-                                src={heroSlides[heroIndex].img}
-                                alt={heroSlides[heroIndex].desc}
-                                className="w-full h-full object-cover rounded-2xl md:rounded-bl-[60px] transition-all duration-700 ease-in-out z-10"
-                                style={{
-                                    boxShadow: '0 16px 40px 0 rgba(36,99,235,0.18), 0 2px 8px 0 rgba(0,0,0,0.10), 0 0px 0px 2px rgba(36,99,235,0.08)'
-                                }}
-                            />
+                            {/* Slideshow images with fade transition */}
+                            {heroSlides.map((slide, idx) => (
+                                <img
+                                    key={idx}
+                                    src={slide.img}
+                                    alt={slide.desc}
+                                    className={`w-full h-full object-cover rounded-2xl md:rounded-bl-[60px] hero-fade-img ${heroIndex === idx ? 'opacity-100 z-20' : 'opacity-0 z-10'} ${heroIndex === idx ? 'fade-in' : 'fade-out'}`}
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        transition: 'opacity 1.6s cubic-bezier(0.86,0,0.07,1)',
+                                        boxShadow: '0 16px 40px 0 rgba(36,99,235,0.18), 0 2px 8px 0 rgba(0,0,0,0.10), 0 0px 0px 2px rgba(36,99,235,0.08)'
+                                    }}
+                                />
+                            ))}
                             {/* Overlay for polish */}
                             <div className="absolute inset-0 pointer-events-none z-20" style={{background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(36,99,235,0.04) 100%)'}}></div>
                             {/* Caption */}
@@ -741,18 +748,20 @@ export default function Landing() {
             </footer>
 
             <style>{`
-                .hero-slide-img {
-                    transition: none;
-                    will-change: transform;
-                    z-index: 1;
-                }
-                .hero-carousel-track {
-                    display: flex;
-                    width: 200%;
+                .hero-fade-img {
+                    opacity: 0;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
                     height: 100%;
+                    transition: opacity 1.6s cubic-bezier(0.86,0,0.07,1);
                 }
-                .hero-carousel-track.transitioning {
-                    transition: transform 0.6s cubic-bezier(0.77,0,0.175,1);
+                .hero-fade-img.opacity-100 {
+                    opacity: 1 !important;
+                }
+                .hero-fade-img.opacity-0 {
+                    opacity: 0 !important;
                 }
                 html, body, #root {
                     overflow-x: hidden !important;

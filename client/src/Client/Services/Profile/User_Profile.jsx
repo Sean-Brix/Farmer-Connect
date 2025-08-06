@@ -125,216 +125,134 @@ export default function Account() {
     return (
         <>
             <Navbar refresh={refreshNav} />
-
-            <div className="w-full flex flex-col items-center mt-15 py-8 px-2 sm:px-0 pt-24 bg-white min-h-screen">
-                <h1 className="text-2xl font-bold text-blue-800 mb-6 flex items-center gap-2 drop-shadow">
-                    <svg className="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                    </svg>
-                    Account Profile
-                </h1>
-                <div className="w-full max-w-2xl mx-auto rounded-xl border border-blue-100 bg-white flex flex-col md:flex-row shadow-lg">
-                    <div className="flex flex-col items-center justify-center p-6 md:w-1/3 gap-3 border-b md:border-b-0 md:border-r border-blue-100 bg-gradient-to-b from-blue-50 to-white">
-                        <div className="relative rounded-full border-2 border-blue-400 p-1 mb-2 bg-white shadow">
-                            <img
-                                src={photo}
-                                alt="Profile"
-                                className="w-24 h-24 object-cover rounded-full border-2 border-blue-300 shadow"
-                            />
-                            {editMode && (
-                                <label className="absolute bottom-2 right-2 bg-blue-600 text-white rounded-full p-2 cursor-pointer hover:bg-blue-700 transition shadow text-base">
-                                    <i className="fa-solid fa-camera"></i>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handlePhotoChange}
-                                        className="hidden"
-                                    />
-                                </label>
-                            )}
-                        </div>
-                        {editMode ? (
-                            <div className="flex flex-col gap-1 w-full items-center">
-                                <input
-                                    type="text"
-                                    name="firstName"
-                                    defaultValue={profile.firstName}
-                                    onChange={handleChange}
-                                    placeholder="First Name"
-                                    className="bg-white border border-blue-200 rounded px-2 py-1 text-blue-900 font-semibold text-center text-sm w-full max-w-[140px]"
-                                />
-                                <input
-                                    type="text"
-                                    name="lastName"
-                                    defaultValue={profile.lastName}
-                                    onChange={handleChange}
-                                    placeholder="Last Name"
-                                    className="bg-white border border-blue-200 rounded px-2 py-1 text-blue-900 font-semibold text-center text-sm w-full max-w-[140px]"
-                                />
+            <div className="relative min-h-screen bg-gray-50 mt-20">
+                {/* Blue background banner */}
+                <div className="w-full h-56 bg-gradient-to-t from-blue-200 to-blue-100"></div>
+                {/* Floating profile card */}
+                <div className="w-full flex justify-center">
+                    <div className="-mt-24 w-full max-w-2xl">
+                        <div className="bg-white rounded-2xl shadow-xl px-8 pt-8 pb-10 flex flex-col items-center border border-gray-200">
+                            <div className="relative -mt-20 mb-2">
+                                <div className="w-32 h-32 rounded-xl bg-gray-200 border-4 border-white shadow-lg overflow-hidden flex items-center justify-center">
+                                    <img src={photo} alt="Profile" className="w-full h-full object-cover" />
+                                </div>
+                                {editMode && (
+                                    <label className="absolute bottom-2 right-2 bg-blue-600 text-white rounded-full p-2 cursor-pointer hover:bg-blue-800 transition shadow text-lg border-2 border-white">
+                                        <i className="fa-solid fa-camera"></i>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handlePhotoChange}
+                                            className="hidden"
+                                        />
+                                    </label>
+                                )}
                             </div>
-                        ) : (
-                            <span className="text-blue-900 font-bold text-lg text-center">
-                                {profile.firstName} {profile.lastName}
-                            </span>
-                        )}
-                        {editMode ? (
-                            <select
-                                name="gender"
-                                defaultValue={profile.gender || 'Male'}
-                                onChange={handleChange}
-                                className="text-blue-900 font-semibold rounded px-2 py-1 bg-white border border-blue-200 text-sm"
-                            >
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        ) : (
-                            <span className="text-blue-500 text-xs flex items-center gap-1">
-                                <i className="fa-solid fa-mars"></i> {profile.gender || 'Male'}
-                            </span>
-                        )}
-                        {editMode ? (
-                            <input
-                                type="text"
-                                name="position"
-                                defaultValue={profile.position || ''}
-                                onChange={handleChange}
-                                className="text-blue-900 font-semibold rounded px-2 py-1 bg-white border border-blue-200 text-center text-sm"
-                            />
-                        ) : (
-                            <span className="text-blue-500 text-xs flex items-center gap-1">
-                                <i className="fa-solid fa-user-tie"></i> {profile.position || 'Field Supervisor'}
-                            </span>
-                        )}
-                        {!editMode ? (
-                            <button
-                                onClick={() => {
-                                    setTempProfile(profile.user);
-                                    setEditMode(true);
-                                }}
-                                className="mt-2 px-4 py-1 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition text-xs"
-                            >
-                                <i className="fa-solid fa-pen-to-square"></i> Edit
-                            </button>
-                        ) : (
-                            <button
-                                onClick={() => {
-                                    setPhoto('/api/account/picture/me');
-                                    setEditMode(false);
-                                    setImageFile(null);
-                                }}
-                                className="mt-2 px-4 py-1 bg-gray-200 text-blue-700 font-semibold rounded hover:bg-gray-300 transition text-xs"
-                            >
-                                <i className="fa-solid fa-xmark"></i> Cancel
-                            </button>
-                        )}
-                    </div>
-                    <form className="flex-1 p-6" onSubmit={handleSubmit}>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block mb-2 text-blue-900 text-base font-bold tracking-wide">Occupation</label>
-                                <input
-                                    type="text"
-                                    name="occupation"
-                                    className="block w-full border-2 border-blue-400 rounded-lg px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-700 text-blue-900 text-base font-semibold transition placeholder:text-blue-300"
-                                    defaultValue={profile.occupation || ''}
-                                    onChange={handleChange}
-                                    disabled={!editMode}
-                                />
+                            <div className="flex flex-col items-center mb-4">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="inline-block bg-blue-50 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full border border-blue-100">🇵🇭 Philippines</span>
+                                </div>
+                                <div className="font-extrabold text-2xl text-gray-900">{profile.firstName} {profile.lastName}</div>
+                                <div className="text-gray-500 text-sm font-medium">{profile.position || 'Software Engineering'} <span className="mx-1">|</span> {profile.email}</div>
                             </div>
-                            <div>
-                                <label className="block mb-2 text-blue-900 text-base font-bold tracking-wide">Address</label>
-                                <input
-                                    type="text"
-                                    name="address"
-                                    className="block w-full border-2 border-blue-400 rounded-lg px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-700 text-blue-900 text-base font-semibold transition placeholder:text-blue-300"
-                                    defaultValue={profile.address || ''}
-                                    onChange={handleChange}
-                                    disabled={!editMode}
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-2 text-blue-900 text-base font-bold tracking-wide">Cellphone</label>
-                                <input
-                                    type="text"
-                                    name="cellphone_no"
-                                    className="block w-full border-2 border-blue-400 rounded-lg px-3 py-2 bg-blue-50 focus:bg-white focus:border-blue-700 text-blue-900 text-base font-semibold transition placeholder:text-blue-300"
-                                    defaultValue={profile.cellphone_no || ''}
-                                    onChange={handleChange}
-                                    disabled={!editMode}
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-1 text-blue-700 text-xs font-medium">Institution</label>
-                                <input
-                                    type="text"
-                                    name="institution"
-                                    className="block w-full border border-blue-100 rounded px-2 py-1 bg-white text-blue-900 text-sm"
-                                    defaultValue={profile.institution || ''}
-                                    onChange={handleChange}
-                                    disabled={!editMode}
-                                />
-                            </div>
-                        </div>
-                        <div className="mt-6">
-                            <div className="mb-2 text-blue-700 text-xs font-medium">Contact Information</div>
-                            <div className="flex flex-col gap-3">
-                                <div className="flex flex-col md:flex-row justify-between items-center gap-2">
-                                    <span className="text-blue-700 text-xs font-medium">Email</span>
-                                    {editMode ? (
+                            <form className="w-full mt-2" onSubmit={handleSubmit}>
+                                <div className="font-bold text-lg text-gray-900 mb-4">Contact information</div>
+                                <div className="grid grid-cols-1 gap-4">
+                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
+                                        <label className="w-32 text-gray-500 font-medium mb-1 md:mb-0">Name</label>
+                                        <span className="font-semibold text-gray-900">{profile.firstName} {profile.lastName}</span>
+                                    </div>
+                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
+                                        <label className="w-32 text-gray-500 font-medium mb-1 md:mb-0">Your email</label>
                                         <input
                                             type="email"
                                             name="email"
-                                            className="text-blue-900 border border-blue-100 rounded px-2 py-1 bg-white text-sm"
                                             defaultValue={profile.email || ''}
                                             onChange={handleChange}
+                                            disabled={!editMode}
+                                            className="flex-1 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none text-base font-semibold"
                                         />
-                                    ) : (
-                                        <span className="text-blue-900 text-sm">{profile.email}</span>
-                                    )}
-                                </div>
-                                <div className="flex flex-col md:flex-row justify-between items-center gap-2">
-                                    <span className="text-blue-700 text-xs font-medium">Alternate Phone</span>
-                                    {editMode ? (
+                                    </div>
+                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
+                                        <label className="w-32 text-gray-500 font-medium mb-1 md:mb-0">Phone number</label>
                                         <input
                                             type="text"
-                                            name="telephone_no"
-                                            className="text-blue-900 border border-blue-100 rounded px-2 py-1 bg-white text-sm"
-                                            defaultValue={profile.telephone_no || ''}
+                                            name="cellphone_no"
+                                            defaultValue={profile.cellphone_no || ''}
                                             onChange={handleChange}
+                                            disabled={!editMode}
+                                            className="flex-1 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none text-base font-semibold"
+                                            placeholder="Enter number"
                                         />
+                                    </div>
+                                    {/* Removed 'Your website' input field */}
+                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
+                                        <label className="w-32 text-gray-500 font-medium mb-1 md:mb-0">Your address</label>
+                                        <input
+                                            type="text"
+                                            name="address"
+                                            defaultValue={profile.address || ''}
+                                            onChange={handleChange}
+                                            disabled={!editMode}
+                                            className="flex-1 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none text-base font-semibold"
+                                            placeholder="City, Country"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
+                                        <label className="w-32 text-gray-500 font-medium mb-1 md:mb-0">Gender</label>
+                                        <select
+                                            name="gender"
+                                            defaultValue={profile.gender || 'Male'}
+                                            onChange={handleChange}
+                                            disabled={!editMode}
+                                            className="flex-1 border border-gray-200 rounded-lg px-4 py-2 text-gray-900 bg-gray-50 focus:bg-white focus:border-blue-500 focus:outline-none text-base font-semibold"
+                                        >
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="flex justify-end mt-8">
+                                    {editMode ? (
+                                        <button
+                                            type="submit"
+                                            className="px-8 py-3 bg-purple-600 hover:bg-purple-700 transition text-white rounded-lg font-bold text-base shadow focus:outline-none focus:ring-2 focus:ring-purple-400"
+                                        >
+                                            Save Profile
+                                        </button>
                                     ) : (
-                                        <span className="text-blue-900 text-sm">{profile.telephone_no}</span>
+                                        <button
+                                            type="button"
+                                            className="px-8 py-3 bg-blue-700 hover:bg-blue-800 transition text-white rounded-lg font-bold text-base shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                            onClick={() => {
+                                                setTempProfile(profile.user);
+                                                setEditMode(true);
+                                            }}
+                                        >
+                                            Edit Profile
+                                        </button>
                                     )}
                                 </div>
-                            </div>
+                            </form>
                         </div>
-                        {editMode && (
-                            <div className="flex justify-end pt-6">
-                                <button
-                                    type="submit"
-                                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 transition text-white rounded font-semibold text-sm"
-                                >
-                                    Save Changes
-                                </button>
-                            </div>
-                        )}
-                    </form>
+                    </div>
                 </div>
+                {/* Delete Modal */}
                 {showDeleteModal && (
-                    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-xl p-6 max-w-xs w-full border border-blue-100">
-                            <div className="font-bold text-lg mb-3 text-red-600">Delete Account</div>
-                            <div className="mb-5 text-blue-900 text-sm">Are you sure you want to delete your account? This action cannot be undone.</div>
-                            <div className="flex gap-2">
+                    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-3xl p-10 max-w-md w-full border border-blue-200 shadow-2xl">
+                            <div className="font-extrabold text-2xl mb-4 text-red-600 flex items-center gap-2"><i className="fa-solid fa-triangle-exclamation"></i> Delete Account</div>
+                            <div className="mb-8 text-blue-900 text-lg">Are you sure you want to delete your account? This action cannot be undone.</div>
+                            <div className="flex gap-4">
                                 <button
-                                    className="flex-1 px-3 py-2 rounded bg-gray-100 hover:bg-gray-200 text-blue-700 text-sm"
+                                    className="flex-1 px-5 py-3 rounded-2xl bg-gray-100 hover:bg-gray-200 text-blue-700 text-lg font-bold shadow"
                                     onClick={() => setShowDeleteModal(false)}
                                 >
                                     Cancel
                                 </button>
                                 <button
-                                    className="flex-1 px-3 py-2 rounded bg-red-500 hover:bg-red-600 text-white text-sm"
+                                    className="flex-1 px-5 py-3 rounded-2xl bg-red-500 hover:bg-red-600 text-white text-lg font-bold shadow"
                                     onClick={handleDelete}
                                 >
                                     Delete
@@ -346,7 +264,7 @@ export default function Account() {
             </div>
             <style>{`
                 html, body, #root {
-                    background: #fff;
+                    background: #f8fafc;
                 }
                 html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar {
                     display: none;
