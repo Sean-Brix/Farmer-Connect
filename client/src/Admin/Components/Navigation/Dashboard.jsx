@@ -20,6 +20,7 @@ import Audit from '../../Services/Logs/Audit.jsx';
 
 export default function Dashboard() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [showAccountPanel, setShowAccountPanel] = useState(false);
     const navigate = useNavigate();
 
     // User Account Details
@@ -444,10 +445,13 @@ export default function Dashboard() {
                     </header>
                     {/* Render children below the header */}
                     <main className="flex-1 p-2 sm:p-6 overflow-auto pt-20 h-0 min-h-0 minimalist-scrollbar bg-white/70">
-                        <Page
-                            admin_navigate={admin_navigate}
-                            details={details}
-                        />
+                        {currentPageKey === 'account' ? (
+                            <div className="max-w-[22rem] w-full mx-auto">
+                                <Page admin_navigate={admin_navigate} details={details} />
+                            </div>
+                        ) : (
+                            <Page admin_navigate={admin_navigate} details={details} />
+                        )}
                     </main>
                 </div>
             </div>
@@ -461,48 +465,48 @@ export default function Dashboard() {
                 />
             )}
             {/* Mobile sidebar */}
-            <aside
-                className={`fixed inset-y-0 left-0 bg-white backdrop-blur-xl border-r border-blue-200 w-64 z-50 transform transition-transform duration-300 ${
-                    mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-                } md:hidden flex flex-col h-screen max-h-screen shadow-2xl`}
-                id="mobile-menu"
-                style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22' }}
-            >
-                <div className="flex flex-col h-full max-h-screen">
-                    <div className="p-6 border-b border-blue-200 bg-white flex items-center justify-between shadow-sm">
-                        <div className="flex items-center gap-3">
-                       
-                            <h1 className="text-2xl font-extrabold text-blue-800 tracking-tight drop-shadow-sm">FITS - TANZA</h1>
-                        </div>
-                        <button
-                            className="text-blue-500 hover:text-blue-700 transition"
-                            onClick={() => setMobileMenuOpen(false)}
-                            aria-label="Close menu"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-7 w-7"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+            {!showAccountPanel && (
+                <aside
+                    className={`fixed inset-y-0 left-0 bg-white backdrop-blur-xl border-r border-blue-200 w-full max-w-xs z-50 transform transition-transform duration-300 ${
+                        mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+                    } md:hidden flex flex-col h-screen max-h-screen shadow-2xl`}
+                    id="mobile-menu"
+                    style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22' }}
+                >
+                    <div className="flex flex-col h-full max-h-screen">
+                        <div className="p-6 border-b border-blue-200 bg-white flex items-center justify-between shadow-sm">
+                            <div className="flex items-center gap-3">
+                                <h1 className="text-2xl font-extrabold text-blue-800 tracking-tight drop-shadow-sm">FITS - TANZA</h1>
+                            </div>
+                            <button
+                                className="text-blue-500 hover:text-blue-700 transition"
+                                onClick={() => setMobileMenuOpen(false)}
+                                aria-label="Close menu"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </button>
-                    </div>
-                    <div className="flex-1 min-h-0 flex flex-col">
-                        <nav className="mt-3 flex-1 overflow-y-auto minimalist-scrollbar">
-                            <ul className="space-y-2 px-3 max-h-[70vh]">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-7 w-7"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="flex-1 min-h-0 flex flex-col">
+                            <nav className="mt-3 flex-1 overflow-y-auto minimalist-scrollbar">
+                                <ul className="space-y-2 px-3 max-h-[70vh]">
                                 {/* Analytics */}
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'analytics'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -520,7 +524,7 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'profiles'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -538,7 +542,7 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'enrollment'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -556,7 +560,7 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'eic'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -574,7 +578,7 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'distribution'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -592,7 +596,7 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'content'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -610,7 +614,7 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'audit'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -628,7 +632,7 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'survey'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -646,7 +650,7 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'settings'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800 ring-2 ring-blue-400/30 shadow-lg'
+                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
                                             : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
@@ -666,10 +670,51 @@ export default function Dashboard() {
                         <div className="p-6 border-t border-blue-200 flex flex-col items-center mt-auto bg-white shadow-inner">
                         <div className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-blue-100/60 rounded-xl p-3 transition shadow-sm"
                             onClick={() => {
-                                setPage(elements.current['account']);
+                                if (window.innerWidth <= 751) {
+                                    setMobileMenuOpen(false);
+                                    setTimeout(() => setShowAccountPanel(true), 300);
+                                } else {
+                                    setPage(elements.current['account']);
+                                }
                             }}
                             style={{ minHeight: '4.2rem' }}
                         >
+            {/* Account management overlay panel for mobile */}
+            {showAccountPanel && (
+                <div
+                    className="fixed inset-y-0 left-0 bg-white backdrop-blur-xl border-r border-blue-200 w-full max-w-xs z-[60] flex flex-col h-screen max-h-screen shadow-2xl transition-all duration-300"
+                    style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22' }}
+                >
+                    <div className="p-6 border-b border-blue-200 bg-white flex items-center justify-between shadow-sm">
+                        <div className="flex items-center gap-3">
+                            <h1 className="text-2xl font-extrabold text-blue-800 tracking-tight drop-shadow-sm">Account</h1>
+                        </div>
+                        <button
+                            className="text-blue-500 hover:text-blue-700 transition"
+                            onClick={() => setShowAccountPanel(false)}
+                            aria-label="Close account panel"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-7 w-7"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="flex-1 min-h-0 flex flex-col overflow-y-auto p-4">
+                        <AccountProfile details={details} />
+                    </div>
+                </div>
+            )}
                             <img
                                 src={details.picture}
                                 alt="Profile"
@@ -698,8 +743,11 @@ export default function Dashboard() {
                             </button>
                         </div>
                         </div>
+
+
                 </div>
             </aside>
+        )}
 
             {/* Minimalist scrollbar utility and sidebar icon-only mode */}
             <style>{`
