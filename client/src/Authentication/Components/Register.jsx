@@ -175,7 +175,34 @@ class Register extends Component {
             }}>
                 <div className="relative flex flex-col md:flex-row w-full max-w-5xl md:h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200">
                     {/* Left: Form Section, scrollable if needed */}
-                    <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 md:py-10 z-10 max-h-[90vh] md:max-h-[600px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-transparent">
+                    <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 md:py-10 z-10 max-h-[90vh] md:max-h-[600px] overflow-y-auto custom-scrollbar">
+                    {/* Custom Scrollbar Styles */}
+                    <style>{`
+                        .custom-scrollbar::-webkit-scrollbar {
+                            width: 9px;
+                            background: transparent;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-thumb {
+                            background: linear-gradient(120deg, #2563eb 60%, #1e40af 100%);
+                            border-radius: 16px;
+                            border: 2px solid #e0e7ef;
+                            box-shadow: 0 2px 8px 0 rgba(30,64,175,0.10);
+                            min-height: 36px;
+                            transition: background 0.25s, border 0.25s;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                            background: linear-gradient(120deg, #1e40af 60%, #2563eb 100%);
+                            border: 2px solid #2563eb;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-track {
+                            background: #f6f8fc;
+                            border-radius: 16px;
+                        }
+                        .custom-scrollbar {
+                            scrollbar-width: thin;
+                            scrollbar-color: #2563eb #f6f8fc;
+                        }
+                    `}</style>
                         {/* FITS Tanza Branding at the top, matching Login */}
                         <div className="flex flex-col items-center mb-8 mt-15 ">
                             <img src={logo} alt="FITS Tanza Logo" className="h-12 w-12 rounded-full mb-3 shadow-xl  z-30 relative mt-5" />
