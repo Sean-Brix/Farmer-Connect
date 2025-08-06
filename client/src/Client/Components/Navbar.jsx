@@ -251,13 +251,20 @@ export default function Navbar({refresh}) {
                                     {!isMidScreen && 'Home'}
                                 </NavLink>
                             </li>
-                            <li className="relative group">
+                            <li 
+                                className="relative group"
+                                onMouseEnter={() => {
+                                    if (window.infoMenuTimeout) clearTimeout(window.infoMenuTimeout);
+                                    setInfoOpen(true);
+                                }}
+                                onMouseLeave={() => {
+                                    window.infoMenuTimeout = setTimeout(() => setInfoOpen(false), 180);
+                                }}
+                            >
                                 <button
                                     type="button"
-                                    onClick={() => setInfoOpen(!infoOpen)}
-                                    onBlur={() =>
-                                        setTimeout(() => setInfoOpen(false), 150)
-                                    }
+                                    // onClick removed for hover UX
+                                    tabIndex={0}
                                     className={`flex items-center gap-2 text-blue-700 hover:bg-blue-50 px-4 py-3 rounded-lg font-semibold transition focus:outline-none${infoActive ? ' bg-blue-100 text-blue-900' : ''}`}
                                 >
                                     <svg
@@ -366,16 +373,20 @@ export default function Navbar({refresh}) {
                                     </li>
                                 </ul>
                             </li>
-                            <li className="relative group">
+                            <li 
+                                className="relative group"
+                                onMouseEnter={() => {
+                                    if (window.servicesMenuTimeout) clearTimeout(window.servicesMenuTimeout);
+                                    setServicesOpen(true);
+                                }}
+                                onMouseLeave={() => {
+                                    window.servicesMenuTimeout = setTimeout(() => setServicesOpen(false), 180);
+                                }}
+                            >
                                 <button
                                     type="button"
-                                    onClick={() => setServicesOpen(!servicesOpen)}
-                                    onBlur={() =>
-                                        setTimeout(
-                                            () => setServicesOpen(false),
-                                            150
-                                        )
-                                    }
+                                    // onClick removed for hover UX
+                                    tabIndex={0}
                                     className={`flex items-center gap-2 text-blue-700 hover:bg-blue-50 px-4 py-3 rounded-lg font-semibold transition focus:outline-none${servicesActive ? ' bg-blue-100 text-blue-900' : ''}`}
                                 >
                                     <svg

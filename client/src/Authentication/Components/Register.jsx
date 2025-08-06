@@ -323,7 +323,7 @@ class Register extends Component {
                         <input type="text" id="institution" name="institution" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
                     </div>
                 </div>
-                <button type="submit" className="w-full py-3 mt-4 text-white bg-blue-600 rounded-lg font-semibold shadow hover:bg-blue-700 transition">Next</button>
+                <button type="submit" className="w-full py-3 mt-4 mb-6 text-white bg-blue-600 rounded-lg font-semibold shadow hover:bg-blue-700 transition">Next</button>
             </form>
         );
     }
