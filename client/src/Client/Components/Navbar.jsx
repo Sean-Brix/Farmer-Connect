@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import logo from '../../Assets/Logo.png';
 import Chat from '../../Components/Chats/Chat';
 
 export default function Navbar({refresh}) {
+    const location = useLocation();
     // Inject Google Fonts Poppins if not already present
     if (typeof document !== 'undefined' && !document.getElementById('poppins-font')) {
         const link = document.createElement('link');
@@ -155,6 +156,11 @@ export default function Navbar({refresh}) {
     }, []);
     
 
+    // Helper: is any of the Info links active?
+    const infoActive = ['/about', '/contact'].some((path) => location.pathname.startsWith(path));
+    // Helper: is any of the Services links active?
+    const servicesActive = ['/seminar', '/eic', '/distribution'].some((path) => location.pathname.startsWith(path));
+
     return (
         <>
             <Chat />
@@ -223,9 +229,11 @@ export default function Navbar({refresh}) {
                     <div className="flex-1 flex justify-center">
                         <ul className="hidden md:flex items-center gap-2 lg:gap-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
                             <li>
-                                <Link
+                                <NavLink
                                     to="/"
-                                    className="flex items-center gap-2 text-blue-700 hover:bg-blue-50 px-4 py-3 rounded-lg font-semibold transition"
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-2 text-blue-700 hover:bg-blue-50 px-4 py-3 rounded-lg font-semibold transition${isActive ? ' bg-blue-100 text-blue-900' : ''}`
+                                    }
                                 >
                                     <svg
                                         className="w-5 h-5 text-blue-500"
@@ -241,7 +249,7 @@ export default function Navbar({refresh}) {
                                         />
                                     </svg>
                                     {!isMidScreen && 'Home'}
-                                </Link>
+                                </NavLink>
                             </li>
                             <li className="relative group">
                                 <button
@@ -250,7 +258,7 @@ export default function Navbar({refresh}) {
                                     onBlur={() =>
                                         setTimeout(() => setInfoOpen(false), 150)
                                     }
-                                    className="flex items-center gap-2 text-blue-700 hover:bg-blue-50 px-4 py-3 rounded-lg font-semibold transition focus:outline-none"
+                                    className={`flex items-center gap-2 text-blue-700 hover:bg-blue-50 px-4 py-3 rounded-lg font-semibold transition focus:outline-none${infoActive ? ' bg-blue-100 text-blue-900' : ''}`}
                                 >
                                     <svg
                                         className="w-5 h-5 text-blue-500"
@@ -299,9 +307,11 @@ export default function Navbar({refresh}) {
                                     }`}
                                 >
                                     <li>
-                                        <Link
+                                        <NavLink
                                             to="/about"
-                                            className="flex items-center gap-2 px-6 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-2 px-6 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium${isActive ? ' bg-blue-100 text-blue-900' : ''}`
+                                    }
                                         >
                                             <svg
                                                 className="w-5 h-5 text-blue-500"
@@ -324,12 +334,14 @@ export default function Navbar({refresh}) {
                                                 />
                                             </svg>
                                             {'About'}
-                                        </Link>
+                                        </NavLink>
                                     </li>
                                     <li>
-                                        <Link
+                                        <NavLink
                                             to="/contact"
-                                            className="flex items-center gap-2 px-6 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-2 px-6 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium${isActive ? ' bg-blue-100 text-blue-900' : ''}`
+                                    }
                                         >
                                             <svg
                                                 className="w-5 h-5 text-blue-500"
@@ -350,7 +362,7 @@ export default function Navbar({refresh}) {
                                                 />
                                             </svg>
                                             {'Contact'}
-                                        </Link>
+                                        </NavLink>
                                     </li>
                                 </ul>
                             </li>
@@ -364,7 +376,7 @@ export default function Navbar({refresh}) {
                                             150
                                         )
                                     }
-                                    className="flex items-center gap-2 text-blue-700 hover:bg-blue-50 px-4 py-3 rounded-lg font-semibold transition focus:outline-none"
+                                    className={`flex items-center gap-2 text-blue-700 hover:bg-blue-50 px-4 py-3 rounded-lg font-semibold transition focus:outline-none${servicesActive ? ' bg-blue-100 text-blue-900' : ''}`}
                                 >
                                     <svg
                                         className="w-5 h-5 text-blue-500"
@@ -404,9 +416,11 @@ export default function Navbar({refresh}) {
                                     }`}
                                 >
                                     <li>
-                                        <Link
+                                        <NavLink
                                             to="/seminar"
-                                            className="flex items-center gap-3 px-6 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-3 px-6 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium${isActive ? ' bg-blue-100 text-blue-900' : ''}`
+                                    }
                                         >
                                             <svg
                                                 className="w-5 h-5 text-blue-500"
@@ -427,12 +441,14 @@ export default function Navbar({refresh}) {
                                                 />
                                             </svg>
                                             {'Seminar Programs'}
-                                        </Link>
+                                        </NavLink>
                                     </li>
                                     <li>
-                                        <Link
+                                        <NavLink
                                             to="/eic"
-                                            className="flex items-center gap-3 px-6 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-3 px-6 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium${isActive ? ' bg-blue-100 text-blue-900' : ''}`
+                                    }
                                         >
                                             <svg
                                                 className="w-5 h-5 text-blue-500"
@@ -457,12 +473,14 @@ export default function Navbar({refresh}) {
                                                 />
                                             </svg>
                                             {'EIC'}
-                                        </Link>
+                                        </NavLink>
                                     </li>
                                     <li>
-                                        <Link
+                                        <NavLink
                                             to="/distribution"
-                                            className="flex items-center gap-3 px-6 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-3 px-6 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium${isActive ? ' bg-blue-100 text-blue-900' : ''}`
+                                    }
                                         >
                                             <svg
                                                 className="w-5 h-5 text-blue-500"
@@ -483,15 +501,17 @@ export default function Navbar({refresh}) {
                                                 />
                                             </svg>
                                             {'Distribution'}
-                                        </Link>
+                                        </NavLink>
                                     </li>
                             {/* Survey link removed */}
                                 </ul>
                             </li>
                             <li>
-                                <Link
+                                <NavLink
                                     to="/settings/profile"
-                                    className="flex items-center gap-2 text-blue-700 hover:bg-blue-50 px-4 py-3 rounded-lg font-semibold transition"
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-2 text-blue-700 hover:bg-blue-50 px-4 py-3 rounded-lg font-semibold transition${isActive ? ' bg-blue-100 text-blue-900' : ''}`
+                                    }
                                 >
                                     <svg
                                         className="w-5 h-5 text-blue-500"
@@ -504,7 +524,7 @@ export default function Navbar({refresh}) {
                                         <path d="M5.5 21a8.38 8.38 0 0113 0" />
                                     </svg>
                                     {!isMidScreen && 'Profile Settings'}
-                                </Link>
+                                </NavLink>
                             </li>
                         </ul>
                     </div>
@@ -670,12 +690,14 @@ export default function Navbar({refresh}) {
                                 alt="FITS -Tanza Logo"
                                 className="w-10 h-10 object-contain "
                             />
-                            <Link
-                                to="/"
-                                className="flex items-center font-extrabold text-2xl px-2 mr-10  text-blue-700 md:text-2xl"
-                            >
+                                <NavLink
+                                    to="/"
+                                    className={({ isActive }) =>
+                                        `flex items-center font-extrabold text-2xl px-2 mr-10  text-blue-700 md:text-2xl${isActive ? ' underline decoration-2 decoration-blue-700 underline-offset-4' : ''}`
+                                    }
+                                >
                                 FITS -Tanza
-                            </Link>
+                            </NavLink>
                             <button
                                 onClick={() => setOpen(false)}
                                 className="text-blue-700 focus:outline-none"
@@ -741,9 +763,11 @@ export default function Navbar({refresh}) {
                                     </button>
                                 </>
                             ) : (
-                                <Link
+                                <NavLink
                                     to="/login"
-                                    className="flex items-center gap-2 px-8 py-3 bg-blue-700 text-white hover:bg-blue-800 font-bold rounded-full shadow-lg transition"
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-2 px-8 py-3 bg-blue-700 text-white hover:bg-blue-800 font-bold rounded-full shadow-lg transition${isActive ? ' underline decoration-2 decoration-white underline-offset-4' : ''}`
+                                    }
                                     onClick={() => setOpen(false)}
                                 >
                                     <svg
@@ -760,14 +784,16 @@ export default function Navbar({refresh}) {
                                         />
                                     </svg>
                                     Login
-                                </Link>
+                                </NavLink>
                             )}
                         </div>
                         <ul className="flex flex-col gap-2 px-8 py-8">
                             <li>
-                                <Link
+                                <NavLink
                                     to="/"
-                                    className="flex items-center gap-2 px-6 py-6 text-blue-700 hover:bg-blue-50 font-semibold rounded-lg transition"
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-2 px-6 py-6 text-blue-700 hover:bg-blue-50 font-semibold rounded-lg transition${isActive ? ' underline decoration-2 decoration-blue-700 underline-offset-4' : ''}`
+                                    }
                                 >
                                     <svg
                                         className="w-5 h-5 text-blue-500"
@@ -783,11 +809,11 @@ export default function Navbar({refresh}) {
                                         />
                                     </svg>
                                     Home
-                                </Link>
+                                </NavLink>
                             </li>
                             <li>
                                 <details className="group">
-                                    <summary className="flex items-center gap-2 px-6 py-6 text-blue-700 hover:bg-blue-50 font-semibold rounded-lg cursor-pointer transition focus:outline-none">
+                                    <summary className={`flex items-center gap-2 px-6 py-6 text-blue-700 hover:bg-blue-50 font-semibold rounded-lg cursor-pointer transition focus:outline-none${infoActive ? ' underline decoration-2 decoration-blue-700 underline-offset-4' : ''}`}> 
                                         <svg
                                             className="w-5 h-5 text-blue-500"
                                             fill="none"
@@ -827,9 +853,11 @@ export default function Navbar({refresh}) {
                                     </summary>
                                     <ul className="bg-white rounded-xl shadow-lg py-2 mt-2 border border-blue-100">
                                         <li>
-                                            <Link
+                                            <NavLink
                                                 to="/about"
-                                                className="flex items-center gap-2 px-8 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
+                                                className={({ isActive }) =>
+                                                    `flex items-center gap-2 px-8 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium${isActive ? ' underline decoration-2 decoration-blue-700 underline-offset-4' : ''}`
+                                                }
                                             >
                                                 <svg
                                                     className="w-5 h-5 text-blue-500"
@@ -852,12 +880,14 @@ export default function Navbar({refresh}) {
                                                     />
                                                 </svg>
                                                 About
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li>
-                                            <Link
+                                            <NavLink
                                                 to="/contact"
-                                                className="flex items-center gap-2 px-8 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
+                                                className={({ isActive }) =>
+                                                    `flex items-center gap-2 px-8 py-3 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium${isActive ? ' underline decoration-2 decoration-blue-700 underline-offset-4' : ''}`
+                                                }
                                             >
                                                 <svg
                                                     className="w-5 h-5 text-blue-500"
@@ -878,14 +908,14 @@ export default function Navbar({refresh}) {
                                                     />
                                                 </svg>
                                                 Contact
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                     </ul>
                                 </details>
                             </li>
                             <li>
                                 <details className="group">
-                                    <summary className="flex items-center gap-2 px-6 py-6 text-blue-700 hover:bg-blue-50 font-semibold rounded-lg cursor-pointer transition focus:outline-none">
+                                    <summary className={`flex items-center gap-2 px-6 py-6 text-blue-700 hover:bg-blue-50 font-semibold rounded-lg cursor-pointer transition focus:outline-none${servicesActive ? ' underline decoration-2 decoration-blue-700 underline-offset-4' : ''}`}> 
                                         <svg
                                             className="w-5 h-5 text-blue-500"
                                             fill="none"
@@ -916,9 +946,11 @@ export default function Navbar({refresh}) {
                                     </summary>
                                     <ul className="bg-white rounded-xl shadow-lg py-4 mt-2 border border-blue-100">
                                         <li>
-                                            <Link
+                                            <NavLink
                                                 to="/seminar"
-                                                className="flex items-center gap-3 px-8 py-4 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
+                                                className={({ isActive }) =>
+                                                    `flex items-center gap-3 px-8 py-4 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium${isActive ? ' underline decoration-2 decoration-blue-700 underline-offset-4' : ''}`
+                                                }
                                             >
                                                 <svg
                                                     className="w-5 h-5 text-blue-500"
@@ -939,12 +971,14 @@ export default function Navbar({refresh}) {
                                                     />
                                                 </svg>
                                                 Seminar Programs
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li>
-                                            <Link
+                                            <NavLink
                                                 to="/eic"
-                                                className="flex items-center gap-3 px-8 py-4 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
+                                                className={({ isActive }) =>
+                                                    `flex items-center gap-3 px-8 py-4 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium${isActive ? ' underline decoration-2 decoration-blue-700 underline-offset-4' : ''}`
+                                                }
                                             >
                                                 <svg
                                                     className="w-5 h-5 text-blue-500"
@@ -969,12 +1003,14 @@ export default function Navbar({refresh}) {
                                                     />
                                                 </svg>
                                                 EIC
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         <li>
-                                            <Link
+                                            <NavLink
                                                 to="/distribution"
-                                                className="flex items-center gap-3 px-8 py-4 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium"
+                                                className={({ isActive }) =>
+                                                    `flex items-center gap-3 px-8 py-4 text-blue-700 hover:bg-blue-50 rounded-lg transition font-medium${isActive ? ' underline decoration-2 decoration-blue-700 underline-offset-4' : ''}`
+                                                }
                                             >
                                                 <svg
                                                     className="w-5 h-5 text-blue-500"
@@ -995,16 +1031,18 @@ export default function Navbar({refresh}) {
                                                     />
                                                 </svg>
                                                 Distribution
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                         {/* Survey link removed */}
                                     </ul>
                                 </details>
                             </li>
                             <li>
-                                <Link
+                                <NavLink
                                     to="/settings/profile"
-                                    className="flex items-center gap-2 px-6 py-6 text-blue-700 hover:bg-blue-50 font-semibold rounded-lg transition"
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-2 px-6 py-6 text-blue-700 hover:bg-blue-50 font-semibold rounded-lg transition${isActive ? ' underline decoration-2 decoration-blue-700 underline-offset-4' : ''}`
+                                    }
                                 >
                                     <svg
                                         className="w-5 h-5 text-blue-500"
@@ -1017,7 +1055,7 @@ export default function Navbar({refresh}) {
                                         <path d="M5.5 21a8.38 8.38 0 0113 0" />
                                     </svg>
                                     Profile Settings
-                                </Link>
+                                </NavLink>
                             </li>
                         </ul>
                     </div>

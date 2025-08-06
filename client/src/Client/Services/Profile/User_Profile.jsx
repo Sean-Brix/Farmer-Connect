@@ -126,7 +126,7 @@ export default function Account() {
         <>
             <Navbar refresh={refreshNav} />
 
-            <div className="w-full flex flex-col items-center mt-6 py-8 px-2 sm:px-0 pt-24 bg-white min-h-screen">
+            <div className="w-full flex flex-col items-center mt-15 py-8 px-2 sm:px-0 pt-24 bg-white min-h-screen">
                 <h1 className="text-2xl font-bold text-blue-800 mb-6 flex items-center gap-2 drop-shadow">
                     <svg className="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
