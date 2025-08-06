@@ -1,0 +1,168 @@
+erDiagram
+    %% ========================================
+    %% ACCOUNT MANAGEMENT ENTITIES
+    %% ========================================
+    
+    Account {
+        string id PK "Primary Key (cuid)"
+        access access "User access level"
+        string username UK "Unique username"
+        string email UK "Unique email"
+        string firstName "First name"
+        string lastName "Last name"
+        string middleName "Middle name (optional)"
+        gender gender "User gender"
+        client_profile client_profile "Client profile type"
+        string cellphone_no "Cellphone number (optional)"
+        string telephone_no "Telephone number (optional)"
+        string occupation "Occupation (optional)"
+        string position "Position (optional)"
+        string institution "Institution (optional)"
+        string address "Address (optional)"
+        bytes picture "Profile picture (optional)"
+        string mimeType "Picture MIME type (optional)"
+        string password "Encrypted password"
+        datetime createdAt "Creation timestamp"
+        datetime updatedAt "Last update timestamp"
+    }
+
+    Commodity {
+        string id PK "Primary Key (cuid)"
+        string name UK "Unique commodity name"
+        string icon "Icon representation (optional)"
+        string description "Commodity description (optional)"
+        datetime createdAt "Creation timestamp"
+        datetime updatedAt "Last update timestamp"
+    }
+
+    AccountCommodity {
+        string id PK "Primary Key (cuid)"
+        string account_id FK "Foreign Key to Account"
+        string commodity_id FK "Foreign Key to Commodity"
+        datetime createdAt "Creation timestamp"
+        datetime updatedAt "Last update timestamp"
+    }
+
+    %% ========================================
+    %% INVENTORY MANAGEMENT ENTITIES
+    %% ========================================
+
+    InventoryItem {
+        string id PK "Primary Key (cuid)"
+        string name UK "Unique item name"
+        string description "Item description (optional)"
+        bytes picture "Item picture (optional)"
+        item_category category "Item category"
+        datetime createdAt "Creation timestamp"
+        datetime updatedAt "Last update timestamp"
+    }
+
+    ItemStack {
+        string id PK "Primary Key (cuid)"
+        string itemId FK "Foreign Key to InventoryItem"
+        int quantity "Available quantity"
+        item_status status "Stack status"
+        int date_limit "Days limit for borrowing (optional)"
+        datetime createdAt "Creation timestamp"
+        datetime updatedAt "Last update timestamp"
+    }
+
+    ItemTransaction {
+        string id PK "Primary Key (cuid)"
+        string itemStackId FK "Foreign Key to ItemStack"
+        string accountId FK "Foreign Key to Account (requester)"
+        string adminId FK "Foreign Key to Account (admin, optional)"
+        int quantity "Requested quantity"
+        transaction_status status "Transaction status"
+        datetime pickupDate "Scheduled pickup date"
+        datetime returnDate "Scheduled return date (optional)"
+        string requestNote "Request note (optional)"
+        datetime createdAt "Creation timestamp"
+        datetime updatedAt "Last update timestamp"
+    }
+
+    %% ========================================
+    %% SEMINAR MANAGEMENT ENTITIES
+    %% ========================================
+
+    Seminar {
+        string id PK "Primary Key (cuid)"
+        string title "Seminar title"
+        text description "Seminar description"
+        string location "Seminar location"
+        string speaker "Speaker name"
+        date start_date "Start date"
+        date end_date "End date"
+        string start_time "Start time"
+        string end_time "End time"
+        int capacity "Maximum participants"
+        date registration_deadline "Registration deadline"
+        seminar_status status "Seminar status"
+        bytes picture "Seminar picture (optional)"
+        string mimeType "Picture MIME type (optional)"
+        string createdById FK "Foreign Key to Account (creator)"
+        datetime createdAt "Creation timestamp"
+        datetime updatedAt "Last update timestamp"
+    }
+
+    SeminarParticipant {
+        string id PK "Primary Key (cuid)"
+        string seminar_id FK "Foreign Key to Seminar"
+        string account_id FK "Foreign Key to Account"
+        participant_status status "Participation status"
+        datetime createdAt "Creation timestamp"
+        datetime updatedAt "Last update timestamp"
+    }
+
+    %% ========================================
+    %% AUDIT LOG ENTITY
+    %% ========================================
+
+    AuditLog {
+        string id PK "Primary Key (cuid)"
+        string adminId FK "Foreign Key to Account (admin)"
+        audit_action action "Action performed"
+        string targetType "Target entity type (optional)"
+        string targetId "Target entity ID (optional)"
+        string targetName "Target entity name (optional)"
+        text details "Action details (optional)"
+        json metadata "Structured metadata (optional)"
+        string ipAddress "IP address (optional)"
+        string userAgent "User agent (optional)"
+        datetime createdAt "Creation timestamp"
+    }
+
+    %% ========================================
+    %% RELATIONSHIPS
+    %% ========================================
+
+    %% Account-Commodity Many-to-Many Relationship
+    Account ||--o{ AccountCommodity : "has"
+    Commodity ||--o{ AccountCommodity : "belongs to"
+
+    %% Inventory Relationships
+    InventoryItem ||--o{ ItemStack : "has stacks"
+    ItemStack ||--o{ ItemTransaction : "has transactions"
+    Account ||--o{ ItemTransaction : "requests items"
+    Account ||--o{ ItemTransaction : "admin approves"
+
+    %% Seminar Relationships
+    Account ||--o{ Seminar : "creates"
+    Seminar ||--o{ SeminarParticipant : "has participants"
+    Account ||--o{ SeminarParticipant : "participates in"
+
+    %% Audit Log Relationships
+    Account ||--o{ AuditLog : "performs actions"
+
+    %% ========================================
+    %% ENUMS DOCUMENTATION
+    %% ========================================
+    %% access: Admin, User, Super_Admin
+    %% gender: Male, Female, Other
+    %% client_profile: Fishfolk, Rural_Based_Org, Student, Agricultural_Fisheries_Technician, Youth, Women, Govt_Employee, PWD, Indigenous_People, Other
+    %% item_category: Farming_Equipment, Harvesting_Tools, Irrigation_Systems, Storage_Equipment, Processing_Equipment, Safety_Gear, Pest_Control, Livestock_Equipment, Measuring_Tools, Fisheries, Machinery, Other
+    %% item_status: Available, Unavailable, Damaged, EIC, Distributed
+    %% transaction_status: Pending, Approved, Rejected, Returned, No_Return, late_return, No_Pickup, Cancelled
+    %% seminar_status: Upcoming, Ongoing, Completed, Cancelled
+    %% participant_status: Attended, Not_Attended, Registered, Cancelled
+    %% audit_action: ACCOUNT_CREATE, ACCOUNT_UPDATE, ACCOUNT_DELETE, ACCOUNT_ROLE_CHANGE, ACCOUNT_STATUS_CHANGE, LOGIN, LOGOUT, LOGIN_FAILED, INVENTORY_CREATE, INVENTORY_UPDATE, INVENTORY_DELETE, INVENTORY_STATUS_CHANGE, DISTRIBUTION_CREATE, DISTRIBUTION_UPDATE, DISTRIBUTION_DELETE, DISTRIBUTION_REQUEST_APPROVE, DISTRIBUTION_REQUEST_REJECT, DISTRIBUTION_REQUEST_NO_PICKUP, EIC_CREATE, EIC_UPDATE, EIC_DELETE, EIC_STATUS_CHANGE, EIC_REQUEST_APPROVE, EIC_REQUEST_REJECT, EIC_REQUEST_NO_PICKUP, SEMINAR_CREATE, SEMINAR_UPDATE, SEMINAR_DELETE, SEMINAR_STATUS_CHANGE, SEMINAR_PARTICIPANT_UPDATE, CONTENT_CREATE, CONTENT_UPDATE, CONTENT_DELETE, SYSTEM_BACKUP, SYSTEM_RESTORE, SYSTEM_MAINTENANCE, PROFILE_UPDATE, PROFILE_PICTURE_UPDATE, SETTINGS_UPDATE

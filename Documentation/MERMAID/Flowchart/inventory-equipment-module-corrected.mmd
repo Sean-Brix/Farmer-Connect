@@ -1,0 +1,86 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% User Equipment Request Flow
+    A([Start: User Equipment Request]) --> B[/Display Equipment Categories/]
+    B --> C[Load Available Equipment]
+    C --> DB1[(Inventory Database)]
+    C --> D[/Display Equipment List/]
+    D --> E[/User Select Equipment/]
+    E --> F{Equipment Type?}
+    
+    F -->|EIC Borrowing| G[/Display Equipment Details/]
+    F -->|Distribution Permanent| H[/Display Equipment Details/]
+    
+    G --> I[/Input Request Details/]
+    I --> J[Submit EIC Request]
+    J --> DB2[(Request Database)]
+    J --> K[/Display Request Submitted/]
+    
+    H --> L[/Input Distribution Request/]
+    L --> M[Submit Distribution Request]
+    M --> DB3[(Request Database)]
+    M --> N[/Display Request Submitted/]
+    
+    %% Admin Request Processing
+    K --> O{{Admin Review Process}}
+    N --> O
+    O --> P[Load Pending Requests]
+    P --> DB4[(Request Database)]
+    P --> Q[/Display Request List/]
+    Q --> R[/Admin Select Request/]
+    R --> S{Approve Request?}
+    
+    S -->|Yes| T[Approve Request]
+    S -->|No| U[Reject Request]
+    T --> DB5[(Request Database)]
+    T --> V[/Send Approval Notification/]
+    U --> DB6[(Request Database)]
+    U --> W[/Send Rejection Notification/]
+    
+    %% Equipment Pickup/Return
+    V --> X{{Equipment Pickup}}
+    X --> Y[Process Equipment Pickup]
+    Y --> DB7[(Transaction Database)]
+    Y --> Z[/Display Pickup Complete/]
+    
+    Z --> AA{EIC Equipment?}
+    AA -->|Yes| BB{{Equipment Return}}
+    AA -->|No| CC([End: Distribution Complete])
+    
+    BB --> DD[Process Equipment Return]
+    DD --> DB8[(Transaction Database)]
+    DD --> EE[/Display Return Complete/]
+    
+    %% End Points
+    W --> FF([End: Request Rejected])
+    EE --> GG([End: EIC Return Complete])
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef inputOutput fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    classDef connector fill:#f0f4c3,stroke:#827717,stroke-width:2px,color:#000
+    
+    class A,CC,FF,GG startEnd
+    class C,J,M,P,T,U,Y,DD process
+    class F,S,AA decision
+    class DB1,DB2,DB3,DB4,DB5,DB6,DB7,DB8 database
+    class B,D,E,G,H,I,K,L,N,Q,R,V,W,Z,EE inputOutput
+    class O,X,BB connector

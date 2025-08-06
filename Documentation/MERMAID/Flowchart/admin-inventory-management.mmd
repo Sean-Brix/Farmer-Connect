@@ -1,0 +1,73 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% Inventory Management Flow
+    A([Start: Inventory Management]) --> B[Load Inventory Items]
+    B --> DB1[(Inventory Database)]
+    B --> C[/Display Equipment Catalog/]
+    C --> D{Action Choice?}
+    
+    D -->|Add Item| E[/Input New Equipment Details/]
+    D -->|Edit Item| F[/Select Equipment to Edit/]
+    D -->|Manage Stock| G[/Select Item for Stock Update/]
+    D -->|Process Requests| H[Load User Requests]
+    
+    E --> I[Create Equipment Record]
+    I --> DB2[(Inventory Database)]
+    I --> J[/Display Item Added/]
+    
+    F --> K[/Input Updated Details/]
+    K --> L[Update Equipment Record]
+    L --> DB3[(Inventory Database)]
+    L --> M[/Display Item Updated/]
+    
+    G --> N[/Input New Stock Quantity/]
+    N --> O[Update Stock Levels]
+    O --> DB4[(Inventory Database)]
+    O --> P[/Display Stock Updated/]
+    
+    H --> DB5[(Request Database)]
+    H --> Q[/Display Pending Requests/]
+    Q --> R[/Admin Select Request/]
+    R --> S{Approve Request?}
+    
+    S -->|Yes| T[Approve Request]
+    S -->|No| U[Reject Request]
+    T --> DB6[(Request Database)]
+    T --> V[/Display Request Approved/]
+    U --> DB7[(Request Database)]
+    U --> W[/Display Request Rejected/]
+    
+    %% End Points
+    J --> X([End: Item Added])
+    M --> Y([End: Item Updated])
+    P --> Z([End: Stock Updated])
+    V --> AA([End: Request Approved])
+    W --> BB([End: Request Rejected])
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef inputOutput fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    
+    class A,X,Y,Z,AA,BB startEnd
+    class B,H,I,L,O,T,U process
+    class D,S decision
+    class DB1,DB2,DB3,DB4,DB5,DB6,DB7 database
+    class C,E,F,G,J,K,M,N,P,Q,R,V,W inputOutput

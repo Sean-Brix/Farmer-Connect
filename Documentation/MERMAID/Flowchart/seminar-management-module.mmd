@@ -1,0 +1,58 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% User Seminar Registration Flow
+    A([Start: User Access Seminars]) --> B{User Authenticated?}
+    B -->|No| C[/Redirect to Login/]
+    B -->|Yes| D[/Display Available Seminars/]
+    
+    %% Seminar Discovery
+    D --> E[(Load Seminars Database)]
+    E --> F[Filter Seminars]
+    F --> G[/Display Filtered Results/]
+    
+    %% Seminar Selection
+    G --> H[/User Select Seminar/]
+    H --> I[/Display Seminar Details/]
+    I --> J{Registration Available?}
+    
+    %% Registration Process
+    J -->|No| K[/Show Registration Closed/]
+    J -->|Yes| L{Already Registered?}
+    L -->|Yes| M[/Show Already Registered/]
+    L -->|No| N[/Registration Form/]
+    N --> O[(Create Participant Record)]
+    O --> P[/Registration Successful/]
+    
+    %% End Process
+    P --> Q([End: Registration Complete])
+    K --> R([End: Registration Failed])
+    M --> S([End: Already Registered])
+    C --> T([End: Login Required])
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef inputOutput fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    
+    class A,Q,R,S,T startEnd
+    class F process
+    class B,J,L decision
+    class E,O database
+    class C,D,G,H,I,K,M,N,P inputOutput

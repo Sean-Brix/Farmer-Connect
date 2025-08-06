@@ -1,0 +1,122 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% User Entry Point
+    A[("🚀 User Access Equipment")] --> B{"🔐 User Authenticated?"}
+    B -->|No| C[("🚪 Redirect to Login")]
+    B -->|Yes| D[("📋 Display Equipment Categories")]
+    
+    %% Equipment Selection
+    D --> E{"⚙️ Choose Equipment Type"}
+    E --> F[("🔄 EIC - Equipment in Circulation")]
+    E --> G[("📦 Distribution - Permanent Items")]
+    
+    %% EIC Flow (Borrowing)
+    F --> H[("🔍 Browse Available EIC Items")]
+    H --> I[("📊 Database: Load EIC Items (Status=EIC)")]
+    I --> J[("📝 Select Equipment & Quantity")]
+    J --> K[("📅 Set Pickup & Return Dates")]
+    K --> L[("💬 Add Request Note (Optional)")]
+    L --> M[("📋 Submit EIC Request")]
+    
+    %% Distribution Flow (Permanent)
+    G --> N[("🔍 Browse Available Distribution Items")]
+    N --> O[("📊 Database: Load Distribution Items (Status=Distributed)")]
+    O --> P[("📝 Select Equipment & Quantity")]
+    P --> Q[("📅 Set Pickup Date")]
+    Q --> R[("💬 Add Request Note (Optional)")]
+    R --> S[("📋 Submit Distribution Request")]
+    
+    %% Request Validation
+    M --> T[("🔍 Process: Validate EIC Request")]
+    S --> U[("🔍 Process: Validate Distribution Request")]
+    
+    T --> V{"✅ EIC Request Valid?"}
+    U --> W{"✅ Distribution Request Valid?"}
+    
+    %% Validation Results
+    V -->|No| X[("❌ Show Validation Errors")]
+    V -->|Yes| Y[("💾 Database: Create EIC Transaction")]
+    W -->|No| Z[("❌ Show Validation Errors")]
+    W -->|Yes| AA[("💾 Database: Create Distribution Transaction")]
+    
+    %% Admin Review Process
+    Y --> BB[("📨 Send to Admin Queue")]
+    AA --> BB
+    BB --> CC[("👨‍💼 Admin: Review Request")]
+    CC --> DD{"🎯 Admin Decision"}
+    
+    %% Admin Decision Outcomes
+    DD -->|Approve| EE[("✅ Process: Approve Request")]
+    DD -->|Reject| FF[("❌ Process: Reject Request")]
+    
+    %% Approval Process
+    EE --> GG[("📊 Database: Update Status to 'Approved'")]
+    GG --> HH[("📉 Database: Reduce Stock Quantity")]
+    HH --> II[("📧 Process: Notify User (Approval)")]
+    
+    %% Rejection Process
+    FF --> JJ[("📊 Database: Update Status to 'Rejected'")]
+    JJ --> KK[("📧 Process: Notify User (Rejection)")]
+    
+    %% User Pickup Flow
+    II --> LL[("📦 User: Pickup Equipment")]
+    LL --> MM{"📋 Pickup Confirmed?"}
+    MM -->|No| NN[("⏰ Process: Mark 'No Pickup'")]
+    MM -->|Yes| OO[("✅ Process: Mark 'Picked Up'")]
+    
+    %% EIC Return Flow (Only for EIC items)
+    OO --> PP{"🔄 Is EIC Item?"}
+    PP -->|No| QQ[("✅ End: Item Distributed Permanently")]
+    PP -->|Yes| RR[("⏰ Process: Monitor Return Date")]
+    
+    RR --> SS{"📅 Returned On Time?"}
+    SS -->|Yes| TT[("✅ Process: Mark 'Returned'")]
+    SS -->|No| UU[("⚠️ Process: Mark 'Late Return'")]
+    
+    %% Return Processing
+    TT --> VV[("📈 Database: Restore Stock Quantity")]
+    UU --> VV
+    VV --> WW[("📊 Database: Update Item Status to 'Available'")]
+    
+    %% Error Flows
+    X --> J
+    Z --> P
+    NN --> XX[("📊 Database: Restore Stock Quantity")]
+    XX --> WW
+    
+    %% User Self-Service
+    D --> YY[("👤 My Requests")]
+    YY --> ZZ[("📋 View Request Status")]
+    ZZ --> AAA{"❌ Cancel Request?"}
+    AAA -->|Yes| BBB[("📊 Database: Update Status to 'Cancelled'")]
+    AAA -->|No| ZZ
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef admin fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    classDef error fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000
+    
+    class A,QQ startEnd
+    class H,J,K,L,N,P,Q,R,LL,OO,RR,TT,UU,ZZ process
+    class B,E,V,W,DD,MM,PP,SS,AAA decision
+    class I,O,Y,AA,GG,HH,JJ,VV,WW,XX,BBB database
+    class CC,EE,FF admin
+    class X,Z,NN error

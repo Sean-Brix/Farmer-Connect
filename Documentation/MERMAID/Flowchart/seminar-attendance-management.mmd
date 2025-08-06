@@ -1,0 +1,49 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% Seminar Attendance Management Flow
+    A([Start: Seminar Event Day]) --> B[(Load Participant List)]
+    B --> C[/Display Registered Participants/]
+    C --> D[/Admin Select Participant/]
+    D --> E{Mark Attendance?}
+    
+    E -->|Yes| F[(Update Status: Attended)]
+    E -->|No| G[(Update Status: Not Attended)]
+    
+    F --> H[/Display Attendance Marked/]
+    G --> I[/Display Absence Marked/]
+    
+    H --> J{More Participants?}
+    I --> J
+    
+    J -->|Yes| D
+    J -->|No| K[Generate Attendance Report]
+    K --> L[/Display Final Report/]
+    L --> M([End: Attendance Complete])
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef inputOutput fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    
+    class A,M startEnd
+    class K process
+    class E,J decision
+    class B,F,G database
+    class C,D,H,I,L inputOutput

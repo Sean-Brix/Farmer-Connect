@@ -1,0 +1,46 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% Simple Seminar Registration
+    A([Start: Seminar Registration]) --> B[/Display Seminars/]
+    B --> C[Load Seminars]
+    C --> DB1[(Seminar Database)]
+    C --> D[/User Select Seminar/]
+    D --> E{Can Register?}
+    
+    E -->|Yes| F[/Input Registration Form/]
+    E -->|No| G[/Show Cannot Register/]
+    
+    F --> H[Submit Registration]
+    H --> DB2[(Participant Database)]
+    H --> I[/Show Success Message/]
+    
+    I --> J([End: Registration Complete])
+    G --> K([End: Registration Failed])
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef inputOutput fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    
+    class A,J,K startEnd
+    class C,H process
+    class E decision
+    class DB1,DB2 database
+    class B,D,F,G,I inputOutput

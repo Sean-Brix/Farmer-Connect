@@ -1,0 +1,41 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% Admin Seminar Creation Flow
+    A([Start: Admin Create Seminar]) --> B[/Input Seminar Title/]
+    B --> C[/Input Description/]
+    C --> D[/Input Speaker Name/]
+    D --> E[/Input Date & Time/]
+    E --> F[/Input Location/]
+    F --> G[/Input Capacity/]
+    G --> H[/Input Registration Deadline/]
+    H --> I[/Upload Seminar Image/]
+    I --> J[(Create Seminar Record)]
+    J --> K[Publish Seminar]
+    K --> L[/Display Success Message/]
+    L --> M([End: Seminar Created])
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef inputOutput fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    
+    class A,M startEnd
+    class K process
+    class J database
+    class B,C,D,E,F,G,H,I,L inputOutput

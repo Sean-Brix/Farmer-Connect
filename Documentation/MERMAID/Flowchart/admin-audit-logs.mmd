@@ -1,0 +1,57 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% Audit Logs Flow
+    A([Start: Audit Logs]) --> B[Load Audit Trail]
+    B --> DB1[(Audit Database)]
+    B --> C[/Display Admin Activity Logs/]
+    C --> D[/Input Filter Criteria/]
+    D --> E{Apply Filter?}
+    
+    E -->|Yes| F[Filter Logs]
+    E -->|No| G[/Display All Logs/]
+    
+    F --> DB2[(Audit Database)]
+    F --> H[/Display Filtered Results/]
+    
+    G --> I[/Select Log Entry/]
+    H --> I
+    I --> J[/Display Log Details/]
+    J --> K{Export Logs?}
+    
+    K -->|Yes| L[Generate Log Export]
+    K -->|No| M[/Continue Monitoring/]
+    
+    L --> N[/Download Log File/]
+    M --> O[/Return to Log List/]
+    
+    %% End Points
+    N --> P([End: Logs Exported])
+    O --> Q([End: Monitoring Complete])
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef inputOutput fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    
+    class A,P,Q startEnd
+    class B,F,L process
+    class E,K decision
+    class DB1,DB2 database
+    class C,D,G,H,I,J,M,N,O inputOutput

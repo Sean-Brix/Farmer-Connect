@@ -1,0 +1,51 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% Analytics Dashboard Flow
+    A([Start: Analytics Dashboard]) --> B[Load System Statistics]
+    B --> DB1[(Analytics Database)]
+    B --> C[/Display: User Activity, Equipment Usage, Seminar Participation, System Performance/]
+    C --> D{Generate Report?}
+    C --> D{Generate Report?}
+    
+    D -->|Yes| E[/Select Report Type/]
+    D -->|No| F[/Continue Monitoring/]
+    
+    E --> G[Generate Report]
+    G --> DB2[(Analytics Database)]
+    G --> H[/Display Generated Report, Download Option/]
+    
+    F --> I[Refresh Dashboard]
+    I --> DB3[(Analytics Database)]
+    I --> J[/Display Updated Metrics/]
+    
+    %% End Points
+    H --> K([End: Report Generated])
+    J --> L([End: Dashboard Refreshed])
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef inputOutput fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    
+    class A,K,L startEnd
+    class B,G,I process
+    class D decision
+    class DB1,DB2,DB3 database
+    class C,E,F,H,J inputOutput

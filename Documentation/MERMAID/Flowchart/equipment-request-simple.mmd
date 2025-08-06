@@ -1,0 +1,53 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% Simple Equipment Request
+    A([Start: Equipment Request]) --> B[/Display Equipment/]
+    B --> C[Load Equipment]
+    C --> DB1[(Inventory Database)]
+    C --> D[/User Select Equipment/]
+    D --> E[/Input Request Details/]
+    E --> F[Submit Request]
+    F --> DB2[(Request Database)]
+    F --> G[/Show Request Submitted/]
+    
+    %% Admin Processing
+    G --> H{{Admin Reviews}}
+    H --> I[Process Request]
+    I --> DB3[(Request Database)]
+    I --> J{Approve?}
+    
+    J -->|Yes| K[/Send Approval/]
+    J -->|No| L[/Send Rejection/]
+    
+    K --> M([End: Request Approved])
+    L --> N([End: Request Rejected])
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef inputOutput fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    classDef connector fill:#f0f4c3,stroke:#827717,stroke-width:2px,color:#000
+    
+    class A,M,N startEnd
+    class C,F,I process
+    class J decision
+    class DB1,DB2,DB3 database
+    class B,D,E,G,K,L inputOutput
+    class H connector

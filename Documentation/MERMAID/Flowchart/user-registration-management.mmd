@@ -1,0 +1,48 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% User Registration Management Flow
+    A([Start: My Seminars]) --> B[(Load User Registrations)]
+    B --> C[/Display My Registered Seminars/]
+    C --> D[/User Select Seminar/]
+    D --> E{Action Choice?}
+    
+    E -->|View Details| F[/Display Seminar Details/]
+    E -->|Cancel Registration| G{Confirm Cancellation?}
+    
+    G -->|Yes| H[(Update Status: Cancelled)]
+    G -->|No| I[/Return to List/]
+    
+    H --> J[/Display Cancellation Success/]
+    F --> K[/Return to List/]
+    J --> L[/Updated Seminar List/]
+    
+    I --> C
+    K --> C
+    L --> M([End: Management Complete])
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef inputOutput fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    
+    class A,M startEnd
+    class E,G decision
+    class B,H database
+    class C,D,F,I,J,K,L inputOutput

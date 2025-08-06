@@ -1,0 +1,37 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+flowchart TD
+    %% Simple User Management
+    A([Start: User Management]) --> B[Load Users]
+    B --> DB1[(User Database)]
+    B --> C[/Display Users, Select User/]
+    C --> D[/Select: Edit, Delete, Reset Password/]
+    D --> E[Process Action]
+    E --> DB2[(User Database)]
+    E --> F[/Show Action Complete/]
+    F --> G([End: User Management])
+    
+    %% Style Definitions
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef inputOutput fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    
+    class A,G startEnd
+    class B,E process
+    class DB1,DB2 database
+    class C,D,F inputOutput
