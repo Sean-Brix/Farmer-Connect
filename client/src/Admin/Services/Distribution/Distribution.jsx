@@ -565,8 +565,8 @@ export default function Distribution() {
             {/* Header - Centered and Professional (EIC style) */}
             <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
               <span className="inline-flex items-center justify-center gap-3 w-full">
-                <span className="rounded-full bg-blue-100 p-2">
-                  <svg className="w-9 h-9 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <span className="rounded-full bg-green-100 p-2">
+                  <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>
@@ -607,7 +607,7 @@ export default function Distribution() {
                             <input
                                 type="search"
                                 placeholder="Search by item name, requestor, or note..."
-                                className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                                className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500"
                                 value={requestSearch}
                                 onChange={(e) =>
                                     setRequestSearch(e.target.value)
@@ -617,7 +617,7 @@ export default function Distribution() {
 
                         <div className="flex flex-wrap gap-2">
                             <select
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3"
                                 value={requestStatusFilter}
                                 onChange={(e) =>
                                     setRequestStatusFilter(e.target.value)
@@ -632,7 +632,7 @@ export default function Distribution() {
                             </select>
 
                             <select
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3"
                                 value={requestSortBy}
                                 onChange={(e) =>
                                     setRequestSortBy(e.target.value)
@@ -646,7 +646,7 @@ export default function Distribution() {
 
                             <button
                                 onClick={refetchRequests}
-                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
+                                className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-all"
                             >
                                 <svg
                                     className="w-4 h-4 mr-2"
@@ -706,14 +706,14 @@ export default function Distribution() {
                                 <input
                                     type="search"
                                     placeholder="Search items, categories, descriptions..."
-                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all placeholder-gray-400"
+                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     aria-label="Search distribution items"
                                 />
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <svg
-                                        className="w-5 h-5 text-blue-400"
+                                        className="w-5 h-5 text-green-400"
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
@@ -730,7 +730,7 @@ export default function Distribution() {
                             <div className="flex-shrink-0 flex justify-end items-center w-full sm:w-auto">
                                 <button
                                     onClick={refetchStacks}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm"
                                     style={{ minWidth: '120px' }}
                                 >
                                     <svg
@@ -759,7 +759,7 @@ export default function Distribution() {
                             {/* Filters */}
                             <div className="flex flex-row gap-2 flex-1">
                                 <select
-                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
                                     value={searchFilter}
                                     onChange={(e) => setSearchFilter(e.target.value)}
                                     aria-label="Filter by"
@@ -769,7 +769,7 @@ export default function Distribution() {
                                     <option value="description">Description</option>
                                 </select>
                                 <select
-                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
                                     aria-label="Sort by"
@@ -804,7 +804,7 @@ export default function Distribution() {
                                 </button>
                                 <button
                                     onClick={() => setShowAddModal(true)}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-blue-700 hover:bg-blue-600 text-white transition-all focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-sm"
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-700 hover:bg-green-600 text-white transition-all focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-sm"
                                 >
                                     <svg
                                         className="w-4 h-4 mr-2"
@@ -853,6 +853,14 @@ export default function Distribution() {
                 onSubmit={handleAddDistributionItem}
                 existingItems={allItems}
                 distributionItems={distributionStacks}
+                maxWidth="1200px"
+                modalStyle={{
+                    maxWidth: '99vw',
+                    width: '1200px',
+                    minWidth: '320px',
+                    borderRadius: '1.2rem',
+                    padding: '2rem 1.5rem',
+                }}
             />
 
             {/* Detail Modal */}
@@ -862,6 +870,14 @@ export default function Distribution() {
                     onClose={handleCloseDetailModal}
                     imageUpdateTimestamp={imageUpdateTimestamp}
                     onViewRequests={handleViewRequests}
+                    maxWidth="1200px"
+                    modalStyle={{
+                        maxWidth: '99vw',
+                        width: '1200px',
+                        minWidth: '320px',
+                        borderRadius: '1.2rem',
+                        padding: '2rem 1.5rem',
+                    }}
                 />
             )}
 
@@ -872,6 +888,15 @@ export default function Distribution() {
                     onClose={handleCloseEditModal}
                     onSubmit={handleEditSubmit}
                     imageUpdateTimestamp={imageUpdateTimestamp}
+                    maxWidth="1600px"
+                    modalStyle={{
+                        maxWidth: '99vw',
+                        width: '1600px',
+                        minWidth: '320px',
+                        borderRadius: '1.2rem',
+                        padding: '2rem 1.5rem',
+                        marginTop: '3.5rem',
+                    }}
                 />
             )}
         </div>
@@ -1033,7 +1058,7 @@ function RequestsTable({
                                 key={request.id}
                                 className={`${
                                     index % 2 === 0 ? 'bg-white' : 'bg-gray-25'
-                                } hover:bg-blue-50 transition-colors`}
+                                } hover:bg-green-50 transition-colors`}
                             >
                                 <td className="py-5 px-4">
                                     <div className="space-y-2">
@@ -1057,7 +1082,7 @@ function RequestsTable({
                                             {request.itemCategory}
                                         </div>
                                         {request.requestNote && (
-                                            <div className="text-xs text-gray-600 mt-2 p-2 bg-gray-50 rounded-lg border-l-2 border-blue-300">
+                                            <div className="text-xs text-gray-600 mt-2 p-2 bg-gray-50 rounded-lg border-l-2 border-green-300">
                                                 <svg
                                                     className="w-3 h-3 inline mr-1"
                                                     fill="none"
@@ -1093,7 +1118,7 @@ function RequestsTable({
                                     </div>
                                 </td>
                                 <td className="py-5 px-4 text-center">
-                                    <span className="bg-blue-100 text-blue-800 px-3 py-2 rounded-full text-sm font-bold">
+                                    <span className="bg-green-100 text-green-800 px-3 py-2 rounded-full text-sm font-bold">
                                         {request.quantity}
                                     </span>
                                 </td>
@@ -1250,7 +1275,7 @@ function DistributionItemCard({
                         e.target.src = default_image;
                     }}
                 />
-                <span className="absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm bg-blue-50 text-blue-700 border border-blue-100">
+                <span className="absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm bg-green-50 text-green-700 border border-green-100">
                     Distribution
                 </span>
             </div>
@@ -1290,7 +1315,7 @@ function DistributionItemCard({
                     </button>
                     <button
                         onClick={() => onEdit(stack)}
-                        className="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
+                        className="w-full md:w-auto bg-green-500 hover:bg-green-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
                     >
                         Edit
                     </button>
@@ -1329,9 +1354,9 @@ function DistributionDetailModal({
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
             <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col mx-4">
                 {/* HEADER */}
-                <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-blue-100">
+                <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-green-50 to-green-100">
                     <div className="flex items-center gap-2">
-                        <span className="text-xs text-blue-600 font-medium">
+                        <span className="text-xs text-green-600 font-medium">
                             Distribution Item Details
                         </span>
                     </div>
@@ -1407,7 +1432,7 @@ function DistributionDetailModal({
                             className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default
                                 ${
                                     stack.item?.category === 'Farming_Equipment'
-                                        ? 'bg-blue-100 text-blue-800'
+                                        ? 'bg-green-100 text-green-800'
                                         : stack.item?.category ===
                                           'Harvesting_Tools'
                                         ? 'bg-pink-100 text-pink-800'
@@ -1459,7 +1484,7 @@ function DistributionDetailModal({
 
                         {/* QUANTITY */}
                         <span
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold cursor-default"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-green-100 text-green-800 text-xs font-semibold cursor-default"
                             title="Available Quantity"
                         >
                             <svg
@@ -1513,7 +1538,7 @@ function DistributionDetailModal({
                     <div className="mt-4">
                         <button
                             onClick={handleViewRequests}
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-colors"
                         >
                             <svg
                                 className="w-4 h-4"
@@ -1680,7 +1705,7 @@ function DistributionEditModal({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col mx-4">
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full mt-30 max-w-2xl overflow-hidden flex flex-col mx-2 md:mx-8 lg:mx-16">
                 {/* HEADER */}
                 <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-green-50 to-green-100">
                     <div className="flex items-center gap-2">
@@ -1698,7 +1723,7 @@ function DistributionEditModal({
                 </div>
 
                 {/* FORM */}
-                <form onSubmit={handleSubmit} className="px-6 py-6 space-y-4">
+                <form onSubmit={handleSubmit} className="px-4 md:px-8 py-6 space-y-4">
                     {/* Item Name */}
                     <div>
                         <label
@@ -1882,7 +1907,7 @@ function DistributionEditModal({
                     </div>
 
                     {/* Buttons */}
-                    <div className="flex justify-end gap-3 pt-4">
+                    <div className="flex flex-col md:flex-row justify-end gap-3 pt-4">
                         <button
                             type="button"
                             onClick={onClose}
@@ -2136,15 +2161,15 @@ function AddDistributionItemModal({
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow p-6 w-full max-w-md relative border border-blue-100 mx-2">
+            <div className="bg-white rounded-xl shadow p-6 w-full max-w-md relative border border-green-100 mx-2">
                 <button
-                    className="absolute top-2 right-2 text-blue-400 hover:text-blue-700 text-xl transition"
+                    className="absolute top-2 right-2 text-green-400 hover:text-green-700 text-xl transition"
                     onClick={handleClose}
                     aria-label="Close"
                 >
                     ×
                 </button>
-                <h2 className="text-base font-bold mb-4 text-blue-800 text-center">
+                <h2 className="text-base font-bold mb-4 text-green-800 text-center">
                     Add Distribution Item
                 </h2>
                 <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
@@ -2159,15 +2184,15 @@ function AddDistributionItemModal({
                                 setTimeout(() => setShowDropdown(false), 150)
                             }
                             placeholder="Item Name"
-                            className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
+                            className="border border-green-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-300 bg-green-50 w-full"
                             required
                         />
                         {showDropdown && filteredItems.length > 0 && (
-                            <div className="absolute top-full left-0 right-0 bg-white border border-blue-200 rounded-b-md max-h-40 overflow-y-auto z-10 shadow-lg">
+                            <div className="absolute top-full left-0 right-0 bg-white border border-green-200 rounded-b-md max-h-40 overflow-y-auto z-10 shadow-lg">
                                 {filteredItems.map((item, index) => (
                                     <div
                                         key={item.id || index}
-                                        className="px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm"
+                                        className="px-3 py-2 hover:bg-green-50 cursor-pointer text-sm"
                                         onClick={() =>
                                             handleNameSelect(item.name)
                                         }
@@ -2191,7 +2216,7 @@ function AddDistributionItemModal({
                         value={form.quantity}
                         onChange={handleChange}
                         placeholder="Quantity"
-                        className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
+                        className="border border-green-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-300 bg-green-50 w-full"
                         min="1"
                         required
                     />
@@ -2206,7 +2231,7 @@ function AddDistributionItemModal({
                                 value={form.description}
                                 onChange={handleChange}
                                 placeholder="Description"
-                                className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
+                                className="border border-green-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-300 bg-green-50 w-full"
                             />
 
                             {/* Category Dropdown */}
@@ -2214,7 +2239,7 @@ function AddDistributionItemModal({
                                 name="category"
                                 value={form.category}
                                 onChange={handleChange}
-                                className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
+                                className="border border-green-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-300 bg-green-50 w-full"
                             >
                                 {categories.map((cat) => (
                                     <option key={cat} value={cat}>
@@ -2238,7 +2263,7 @@ function AddDistributionItemModal({
                                     />
                                     <label
                                         htmlFor="image-upload"
-                                        className="flex items-center px-3 py-2 bg-blue-100 text-blue-700 rounded cursor-pointer hover:bg-blue-200 transition text-sm"
+                                        className="flex items-center px-3 py-2 bg-green-100 text-green-700 rounded cursor-pointer hover:bg-green-200 transition text-sm"
                                     >
                                         <svg
                                             className="w-4 h-4 mr-2"
@@ -2270,7 +2295,7 @@ function AddDistributionItemModal({
                                         <img
                                             src={imagePreview}
                                             alt="Preview"
-                                            className="w-20 h-20 object-cover rounded border-2 border-blue-200"
+                                            className="w-20 h-20 object-cover rounded border-2 border-green-200"
                                         />
                                     </div>
                                 )}
@@ -2280,7 +2305,7 @@ function AddDistributionItemModal({
 
                     <button
                         type="submit"
-                        className="bg-blue-500 text-white font-bold py-2 rounded hover:bg-blue-600 transition mt-2 w-full"
+                        className="bg-green-500 text-white font-bold py-2 rounded hover:bg-green-600 transition mt-2 w-full"
                     >
                         Add Distribution Item
                     </button>

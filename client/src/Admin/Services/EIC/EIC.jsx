@@ -547,8 +547,8 @@ export default function EIC() {
             {/* Header - Centered and Professional (Seminar style) */}
             <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
               <span className="inline-flex items-center justify-center gap-3 w-full">
-                <span className="rounded-full bg-blue-100 p-2">
-                  <svg className="w-9 h-9 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <span className="rounded-full bg-green-100 p-2">
+                  <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>
@@ -580,14 +580,14 @@ export default function EIC() {
                                 <input
                                     type="search"
                                     placeholder="Search by item name, requestor, or note..."
-                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all placeholder-gray-400"
+                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400"
                                     value={requestSearch}
                                     onChange={(e) => setRequestSearch(e.target.value)}
                                     aria-label="Search requests"
                                 />
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <svg
-                                        className="w-5 h-5 text-blue-400"
+                                        className="w-5 h-5 text-green-400"
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
@@ -604,7 +604,7 @@ export default function EIC() {
                             <div className="flex-shrink-0 flex justify-end items-center w-full sm:w-auto">
                                 <button
                                     onClick={refetchRequests}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm"
                                     style={{ minWidth: '120px' }}
                                 >
                                     <svg
@@ -649,7 +649,7 @@ export default function EIC() {
                     <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
                         <div className="flex flex-row gap-2 flex-1">
                             <select
-                                className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
                                 value={requestStatusFilter}
                                 onChange={(e) => setRequestStatusFilter(e.target.value)}
                                 aria-label="Filter by status"
@@ -665,7 +665,7 @@ export default function EIC() {
                                 <option value="Cancelled">Cancelled</option>
                             </select>
                             <select
-                                className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
                                 value={requestSortBy}
                                 onChange={(e) => setRequestSortBy(e.target.value)}
                                 aria-label="Sort by"
@@ -696,14 +696,14 @@ export default function EIC() {
                                 <input
                                     type="search"
                                     placeholder="Search items, categories, descriptions..."
-                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all placeholder-gray-400"
+                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     aria-label="Search EIC items"
                                 />
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <svg
-                                        className="w-5 h-5 text-blue-400"
+                                        className="w-5 h-5 text-green-400"
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
@@ -720,7 +720,7 @@ export default function EIC() {
                             <div className="flex-shrink-0 flex justify-end items-center w-full sm:w-auto">
                                 <button
                                     onClick={refetchStacks}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm"
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm"
                                     style={{ minWidth: '120px' }}
                                 >
                                     <svg
@@ -746,7 +746,7 @@ export default function EIC() {
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full">
                             <div className="flex flex-row gap-2 flex-1">
                                 <select
-                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
                                     value={searchFilter}
                                     onChange={(e) => setSearchFilter(e.target.value)}
                                     aria-label="Filter by"
@@ -756,7 +756,7 @@ export default function EIC() {
                                     <option value="description">Description</option>
                                 </select>
                                 <select
-                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-blue-400 focus:border-blue-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
                                     aria-label="Sort by"
@@ -790,7 +790,7 @@ export default function EIC() {
                                 </button>
                                 <button
                                     onClick={() => setShowAddModal(true)}
-                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-sm"
+                                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-orange-300 shadow-sm"
                                 >
                                     <svg
                                         className="w-4 h-4 mr-2"
@@ -994,7 +994,7 @@ function RequestsTable({
         <div className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100">
             <div className="overflow-x-auto">
                 <table className="w-full text-sm md:text-base font-inter">
-                    <thead className="bg-gradient-to-r from-blue-50 to-gray-50 border-b border-gray-200">
+                    <thead className="bg-gradient-to-r from-green-50 to-gray-50 border-b border-gray-200">
                         <tr>
                             <th className="py-5 px-5 text-left text-xs font-bold text-gray-700 uppercase tracking-widest w-1/4 whitespace-nowrap">
                                 Item Details
@@ -1023,7 +1023,7 @@ function RequestsTable({
                         {filteredRequests.map((request, index) => (
                             <tr
                                 key={request.id}
-                                className={`group transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-100/40`}
+                                className={`group transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-green-100/40`}
                             >
                                 <td className="py-6 px-5 align-top">
                                     <div className="space-y-2">
@@ -1047,7 +1047,7 @@ function RequestsTable({
                                             {request.itemCategory}
                                         </div>
                                         {request.itemDateLimit && (
-                                            <div className="text-xs text-blue-600 bg-blue-50 inline-block px-2 py-1 rounded-full">
+                                            <div className="text-xs text-green-600 bg-green-50 inline-block px-2 py-1 rounded-full">
                                                 <svg
                                                     className="w-3 h-3 inline mr-1"
                                                     fill="none"
@@ -1066,7 +1066,7 @@ function RequestsTable({
                                             </div>
                                         )}
                                         {request.requestNote && (
-                                            <div className="text-xs text-gray-600 mt-2 p-2 bg-gray-50 rounded-lg border-l-2 border-blue-300">
+                                            <div className="text-xs text-gray-600 mt-2 p-2 bg-gray-50 rounded-lg border-l-2 border-green-300">
                                                 <svg
                                                     className="w-3 h-3 inline mr-1"
                                                     fill="none"
@@ -1103,7 +1103,7 @@ function RequestsTable({
                                             className={`text-xs px-2 py-1 rounded-full inline-block ${
                                                 request.requestorAccess ===
                                                 'User'
-                                                    ? 'bg-blue-100 text-blue-800'
+                                                    ? 'bg-green-100 text-green-800'
                                                     : request.requestorAccess ===
                                                       'Admin'
                                                     ? 'bg-purple-100 text-purple-800'
@@ -1115,7 +1115,7 @@ function RequestsTable({
                                     </div>
                                 </td>
                                 <td className="py-6 px-5 text-center align-top">
-                                    <span className="bg-blue-100 text-blue-800 px-3 py-2 rounded-full text-sm font-bold">
+                                    <span className="bg-green-100 text-green-800 px-3 py-2 rounded-full text-sm font-bold">
                                         {request.quantity}
                                     </span>
                                 </td>
@@ -1219,7 +1219,7 @@ function RequestsTable({
                                                     'Pending' && (
                                                     <>
                                                         {/* Hover indicator */}
-                                                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center opacity-75 group-hover:opacity-100 transition-opacity">
+                                                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full flex items-center justify-center opacity-75 group-hover:opacity-100 transition-opacity">
                                                             <svg
                                                                 className="w-2 h-2 text-white"
                                                                 fill="none"
@@ -1266,7 +1266,7 @@ function RequestsTable({
                                                                 {/* Content */}
                                                                 <div className="space-y-2">
                                                                     <div className="flex items-center gap-2 pb-2 border-b border-gray-700">
-                                                                        <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                                                                        <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                                                                             <svg
                                                                                 className="w-3 h-3 text-white"
                                                                                 fill="none"
@@ -1325,7 +1325,7 @@ function RequestsTable({
                                     {getStatusOptions(request.status).length >
                                     0 ? (
                                         <select
-                                            className="bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-400 px-4 py-2 font-semibold cursor-pointer shadow-sm transition-all"
+                                            className="bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg focus:ring-2 focus:ring-green-300 focus:border-green-400 px-4 py-2 font-semibold cursor-pointer shadow-sm transition-all"
                                             value=""
                                             onChange={(e) => {
                                                 if (e.target.value) {
@@ -1366,7 +1366,7 @@ function RequestsTable({
             </div>
             <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
                 <div className="text-sm text-gray-600 font-medium text-right">
-                    Showing <span className="font-bold text-blue-700">{filteredRequests.length}</span> of <span className="font-bold text-blue-700">{requests.length}</span> total requests
+                    Showing <span className="font-bold text-green-700">{filteredRequests.length}</span> of <span className="font-bold text-green-700">{requests.length}</span> total requests
                 </div>
             </div>
         </div>
@@ -1446,7 +1446,7 @@ function EICItemCard({ stack, onViewDetails, onEdit, imageUpdateTimestamp }) {
                     </button>
                     <button
                         onClick={() => onEdit(stack)}
-                        className="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
+                        className="w-full md:w-auto bg-green-500 hover:bg-green-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
                     >
                         Edit
                     </button>
@@ -1573,7 +1573,7 @@ function EICDetailModal({
                             className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default
                                 ${
                                     stack.item?.category === 'Farming Equipment'
-                                        ? 'bg-blue-100 text-blue-800'
+                                        ? 'bg-green-100 text-green-800'
                                         : stack.item?.category ===
                                           'Harvesting Tools'
                                         ? 'bg-pink-100 text-pink-800'
@@ -1679,7 +1679,7 @@ function EICDetailModal({
                     <div className="mt-4">
                         <button
                             onClick={handleViewRequests}
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-colors"
                         >
                             <svg
                                 className="w-4 h-4"
@@ -1848,9 +1848,9 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
             <div className="relative bg-white rounded-2xl shadow-2xl w-full mt-30 max-w-2xl  overflow-hidden flex flex-col mx-2 md:mx-8 lg:mx-16">
                 {/* HEADER */}
-                <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-blue-100">
+                <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-green-50 to-green-100">
                     <div className="flex items-center gap-2">
-                        <span className="text-sm text-blue-600 font-medium">
+                        <span className="text-sm text-green-600 font-medium">
                             Edit EIC Item
                         </span>
                     </div>
@@ -1879,7 +1879,7 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             required
                         />
                         {formData.name !== originalData.name && (
@@ -1904,7 +1904,7 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                             value={formData.description}
                             onChange={handleChange}
                             rows="3"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
                         />
                         {formData.description !== originalData.description && (
                             <p className="text-xs text-amber-600 mt-1">
@@ -1927,7 +1927,7 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         >
                             {categories.map((cat) => (
                                 <option key={cat} value={cat}>
@@ -1958,7 +1958,7 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                             value={formData.quantity}
                             onChange={handleChange}
                             min="0"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                             required
                         />
                     </div>
@@ -1995,7 +1995,7 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                                 <img
                                     src={imagePreview}
                                     alt="Preview"
-                                    className="w-20 h-20 object-cover rounded border-2 border-blue-200"
+                                    className="w-20 h-20 object-cover rounded border-2 border-green-200"
                                 />
                             </div>
                         )}
@@ -2011,7 +2011,7 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                             />
                             <label
                                 htmlFor="edit-image-upload"
-                                className="flex items-center px-3 py-2 bg-blue-100 text-blue-700 rounded cursor-pointer hover:bg-blue-200 transition text-sm"
+                                className="flex items-center px-3 py-2 bg-green-100 text-green-700 rounded cursor-pointer hover:bg-green-200 transition text-sm"
                             >
                                 <svg
                                     className="w-4 h-4 mr-2"
@@ -2058,7 +2058,7 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-md transition-colors"
+                            className="px-4 py-2 text-white bg-green-500 hover:bg-green-600 rounded-md transition-colors"
                         >
                             Save Changes
                         </button>

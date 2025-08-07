@@ -387,10 +387,10 @@ export default function Dashboard() {
 
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col min-h-screen h-screen ml-0 transition-all dashboard-main-content">
-                    <header className="bg-white/90 backdrop-blur-md shadow-lg px-8 py-3 flex items-center w-full fixed top-0 left-0 z-20 dashboard-header h-20 border-b border-blue-100 professional-navbar" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
+                    <header className="bg-white/90 backdrop-blur-md shadow-lg px-8 py-3 flex items-center w-full fixed top-0 left-0 z-20 dashboard-header h-20 border-b border-green-100 professional-navbar" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
                         {/* Home button (left) */}
                         <button
-                            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 hover:bg-blue-200 rounded-lg text-blue-700 font-bold shadow transition mr-4"
+                            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 hover:bg-green-200 rounded-lg text-green-700 font-bold shadow transition mr-4"
                             onClick={() => navigate('/')}
                             aria-label="Go to Landing Page"
                             style={{ letterSpacing: '0.01em' }}
@@ -405,7 +405,7 @@ export default function Dashboard() {
                                      {/* Logo on mobile sidebar */}
                             <img src={logo} alt="Logo" className="h-10 w-10 object-contain mr-2" />
                                 <h1
-                                    className="text-lg md:text-2xl font-bold text-blue-900 tracking-tight professional-navbar-title"
+                                    className="text-lg md:text-2xl font-bold text-green-900 tracking-tight professional-navbar-title"
                                     style={{ userSelect: 'none', letterSpacing: '-0.5px', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
                                    DASHBOARD  
@@ -415,14 +415,14 @@ export default function Dashboard() {
                         {/* Settings icon (right) and mobile menu */}
                         <div className="flex items-center gap-2 ml-4">
                             <button
-                                className="flex items-center justify-center p-3 bg-white border border-gray-300 hover:bg-blue-200 rounded-full text-blue-700 shadow transition"
+                                className="flex items-center justify-center p-3 bg-white border border-gray-300 hover:bg-green-200 rounded-full text-green-700 shadow transition"
                                 onClick={() => handleSetPage('settings')}
                                 aria-label="Settings"
                             >
                                 <i className="fas fa-cog text-xl"></i>
                             </button>
                             <button
-                                className="md:hidden text-blue-600 hover:text-blue-800 transition ml-2"
+                                className="md:hidden text-green-600 hover:text-green-800 transition ml-2"
                                 onClick={() => setMobileMenuOpen(true)}
                                 aria-label="Open menu"
                             >
@@ -467,19 +467,19 @@ export default function Dashboard() {
             {/* Mobile sidebar */}
             {!showAccountPanel && (
                 <aside
-                    className={`fixed inset-y-0 left-0 bg-white backdrop-blur-xl border-r border-blue-200 w-full max-w-xs z-50 transform transition-transform duration-300 ${
+                    className={`fixed inset-y-0 left-0 bg-white backdrop-blur-xl border-r border-green-200 w-full max-w-xs z-50 transform transition-transform duration-300 ${
                         mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
                     } md:hidden flex flex-col h-screen max-h-screen shadow-2xl`}
                     id="mobile-menu"
                     style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22' }}
                 >
                     <div className="flex flex-col h-full max-h-screen">
-                        <div className="p-6 border-b border-blue-200 bg-white flex items-center justify-between shadow-sm">
+                        <div className="p-6 border-b border-green-200 bg-white flex items-center justify-between shadow-sm">
                             <div className="flex items-center gap-3">
-                                <h1 className="text-2xl font-extrabold text-blue-800 tracking-tight drop-shadow-sm">FITS - TANZA</h1>
+                                <h1 className="text-2xl font-extrabold text-green-800 tracking-tight drop-shadow-sm">FITS - TANZA</h1>
                             </div>
                             <button
-                                className="text-blue-500 hover:text-blue-700 transition"
+                                className="text-green-500 hover:text-green-700 transition"
                                 onClick={() => setMobileMenuOpen(false)}
                                 aria-label="Close menu"
                             >
@@ -506,8 +506,8 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'analytics'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
-                                            : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
+                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
+                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
                                         handleSetPage('analytics');
@@ -515,7 +515,7 @@ export default function Dashboard() {
                                     }}
                                     style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
-                                    <span className="text-blue-700/90 text-xl drop-shadow-sm">
+                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-chart-line h-6 w-6"></i>
                                     </span>
                                     <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Analytics</span>
@@ -524,8 +524,8 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'profiles'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
-                                            : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
+                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
+                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
                                         handleSetPage('profiles');
@@ -533,7 +533,7 @@ export default function Dashboard() {
                                     }}
                                     style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
-                                    <span className="text-blue-700/90 text-xl drop-shadow-sm">
+                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-user-circle h-6 w-6"></i>
                                     </span>
                                     <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>User Profiles</span>
@@ -542,8 +542,8 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'enrollment'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
-                                            : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
+                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
+                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
                                         handleSetPage('enrollment');
@@ -551,7 +551,7 @@ export default function Dashboard() {
                                     }}
                                     style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
-                                    <span className="text-blue-700/90 text-xl drop-shadow-sm">
+                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-user-plus h-6 w-6"></i>
                                     </span>
                                     <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Seminars </span>
@@ -560,8 +560,8 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'eic'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
-                                            : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
+                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
+                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
                                         handleSetPage('eic');
@@ -569,7 +569,7 @@ export default function Dashboard() {
                                     }}
                                     style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
-                                    <span className="text-blue-700/90 text-xl drop-shadow-sm">
+                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-id-card h-6 w-6"></i>
                                     </span>
                                     <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>EIC - Item Panel</span>
@@ -578,8 +578,8 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'distribution'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
-                                            : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
+                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
+                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
                                         handleSetPage('distribution');
@@ -587,7 +587,7 @@ export default function Dashboard() {
                                     }}
                                     style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
-                                    <span className="text-blue-700/90 text-xl drop-shadow-sm">
+                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-box-open h-6 w-6"></i>
                                     </span>
                                     <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Distributions</span>
@@ -596,8 +596,8 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'content'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
-                                            : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
+                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
+                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
                                         handleSetPage('content');
@@ -605,7 +605,7 @@ export default function Dashboard() {
                                     }}
                                     style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
-                                    <span className="text-blue-700/90 text-xl drop-shadow-sm">
+                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-archive h-6 w-6"></i>
                                     </span>
                                     <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Inventory</span>
@@ -614,8 +614,8 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'audit'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
-                                            : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
+                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
+                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
                                         handleSetPage('audit');
@@ -623,7 +623,7 @@ export default function Dashboard() {
                                     }}
                                     style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
-                                    <span className="text-blue-700/90 text-xl drop-shadow-sm">
+                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-clipboard-list h-6 w-6"></i>
                                     </span>
                                     <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Logs / Audit Trail</span>
@@ -632,8 +632,8 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'survey'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
-                                            : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
+                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
+                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
                                         handleSetPage('survey');
@@ -641,7 +641,7 @@ export default function Dashboard() {
                                     }}
                                     style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
-                                    <span className="text-blue-700/90 text-xl drop-shadow-sm">
+                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-poll h-6 w-6"></i>
                                     </span>
                                     <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Survey Forms</span>
@@ -650,8 +650,8 @@ export default function Dashboard() {
                                 <li
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
                                         currentPageKey === 'settings'
-                                            ? 'bg-gradient-to-r from-blue-200/80 to-blue-100/80 font-bold text-blue-800'
-                                            : 'text-gray-700 hover:bg-blue-100/70 hover:shadow-md'
+                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
+                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
                                     }`}
                                     onClick={() => {
                                         handleSetPage('settings');
@@ -659,7 +659,7 @@ export default function Dashboard() {
                                     }}
                                     style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
-                                    <span className="text-blue-700/90 text-xl drop-shadow-sm">
+                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
                                         <i className="fas fa-cog h-6 w-6"></i>
                                     </span>
                                     <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Settings</span>
@@ -667,8 +667,8 @@ export default function Dashboard() {
                             </ul>
                         </nav>
                         {/* Profile and Logout at the bottom, styled like desktop */}
-                        <div className="p-6 border-t border-blue-200 flex flex-col items-center mt-auto bg-white shadow-inner">
-                        <div className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-blue-100/60 rounded-xl p-3 transition shadow-sm"
+                        <div className="p-6 border-t border-green-200 flex flex-col items-center mt-auto bg-white shadow-inner">
+                        <div className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-green-100/60 rounded-xl p-3 transition shadow-sm"
                             onClick={() => {
                                 if (window.innerWidth <= 751) {
                                     setMobileMenuOpen(false);
@@ -682,15 +682,15 @@ export default function Dashboard() {
             {/* Account management overlay panel for mobile */}
             {showAccountPanel && (
                 <div
-                    className="fixed inset-y-0 left-0 bg-white backdrop-blur-xl border-r border-blue-200 w-full max-w-xs z-[60] flex flex-col h-screen max-h-screen shadow-2xl transition-all duration-300"
+                    className="fixed inset-y-0 left-0 bg-white backdrop-blur-xl border-r border-green-200 w-full max-w-xs z-[60] flex flex-col h-screen max-h-screen shadow-2xl transition-all duration-300"
                     style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22' }}
                 >
-                    <div className="p-6 border-b border-blue-200 bg-white flex items-center justify-between shadow-sm">
+                    <div className="p-6 border-b border-green-200 bg-white flex items-center justify-between shadow-sm">
                         <div className="flex items-center gap-3">
-                            <h1 className="text-2xl font-extrabold text-blue-800 tracking-tight drop-shadow-sm">Account</h1>
+                            <h1 className="text-2xl font-extrabold text-green-800 tracking-tight drop-shadow-sm">Account</h1>
                         </div>
                         <button
-                            className="text-blue-500 hover:text-blue-700 transition"
+                            className="text-green-500 hover:text-green-700 transition"
                             onClick={() => setShowAccountPanel(false)}
                             aria-label="Close account panel"
                         >
@@ -718,21 +718,21 @@ export default function Dashboard() {
                             <img
                                 src={details.picture}
                                 alt="Profile"
-                                className="h-12 w-12 rounded-full object-cover border-2 border-blue-300 shadow"
+                                className="h-12 w-12 rounded-full object-cover border-2 border-green-300 shadow"
                                 style={{ background: '#e0e7ef' }}
                             />
                             <div className="flex flex-col sidebar-profile-info">
-                                <span className="font-bold text-blue-900 sidebar-username text-base tracking-tight drop-shadow-sm">
+                                <span className="font-bold text-green-900 sidebar-username text-base tracking-tight drop-shadow-sm">
                                     {details.username}
                                 </span>
-                                <span className="text-sm text-blue-500 sidebar-position font-medium">
+                                <span className="text-sm text-green-500 sidebar-position font-medium">
                                     {details.position}
                                 </span>
                             </div>
                         </div>
                             {/* Logout button (mobile sidebar, bottom) */}
                             <button
-                                className="flex items-center justify-center gap-3 px-6 py-3 bg-white hover:bg-blue-100  rounded-xl transition text-blue-800 w-full border border-blue-200 font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn"
+                                className="flex items-center justify-center gap-3 px-6 py-3 bg-white hover:bg-green-100  rounded-xl transition text-green-800 w-full border border-green-200 font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn"
                                 onClick={logging}
                                 style={{ letterSpacing: '0.01em' }}
                             >

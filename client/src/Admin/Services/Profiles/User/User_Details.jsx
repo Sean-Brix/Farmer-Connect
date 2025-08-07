@@ -109,78 +109,78 @@ export default function User_Details({ user, isEdit, refetchRow}) {
     };
 
     const renderDisplayMode = () => (
-        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg border border-blue-200 p-8 relative animate-fade-in">
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg border border-green-200 p-8 relative animate-fade-in">
             <div className="flex flex-col items-center justify-center mb-4">
-                <h2 className="text-xl sm:text-2xl font-extrabold text-blue-800 tracking-tight mb-2 text-center uppercase">View User Details</h2>
-                <span className="text-xs text-blue-400 font-semibold bg-blue-50 px-3 py-1 mb-4 rounded-full border border-blue-200">ID: {userDetail?.id || ''}</span>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-green-800 tracking-tight mb-2 text-center uppercase">View User Details</h2>
+                <span className="text-xs text-green-400 font-semibold bg-green-50 px-3 py-1 mb-4 rounded-full border border-green-200">ID: {userDetail?.id || ''}</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Username</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900 font-medium">{userDetail?.username || ''}</div>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Username</label>
+                        <div className="w-full bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900 font-medium">{userDetail?.username || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Access</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.access || ''}</div>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Access</label>
+                        <div className="w-full bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900">{userDetail?.access || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Gender</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.gender || ''}</div>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Gender</label>
+                        <div className="w-full bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900">{userDetail?.gender || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Client Profile</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.client_profile || ''}</div>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Client Profile</label>
+                        <div className="w-full bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900">{userDetail?.client_profile || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Occupation</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.occupation || ''}</div>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Occupation</label>
+                        <div className="w-full bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900">{userDetail?.occupation || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Position</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.position || ''}</div>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Position</label>
+                        <div className="w-full bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900">{userDetail?.position || ''}</div>
                     </div>
                 </div>
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Full Name</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Full Name</label>
                         <div className="flex gap-2">
-                            <div className="flex-1 bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900" title="First Name">{userDetail?.firstName || ''}</div>
-                            <div className="flex-1 bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900" title="Middle Name">{userDetail?.middleName || ''}</div>
-                            <div className="flex-1 bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900" title="Last Name">{userDetail?.lastName || ''}</div>
+                            <div className="flex-1 bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900" title="First Name">{userDetail?.firstName || ''}</div>
+                            <div className="flex-1 bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900" title="Middle Name">{userDetail?.middleName || ''}</div>
+                            <div className="flex-1 bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900" title="Last Name">{userDetail?.lastName || ''}</div>
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Address</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.address || ''}</div>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Address</label>
+                        <div className="w-full bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900">{userDetail?.address || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Telephone No</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.telephone_no || ''}</div>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Telephone No</label>
+                        <div className="w-full bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900">{userDetail?.telephone_no || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Cellphone No</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.cellphone_no || ''}</div>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Cellphone No</label>
+                        <div className="w-full bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900">{userDetail?.cellphone_no || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Institution</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.institution || ''}</div>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Institution</label>
+                        <div className="w-full bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900">{userDetail?.institution || ''}</div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Email Address</label>
-                        <div className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900">{userDetail?.email || ''}</div>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Email Address</label>
+                        <div className="w-full bg-white border border-green-200 rounded-lg px-3 py-2 text-green-900">{userDetail?.email || ''}</div>
                     </div>
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                 <div>
-                    <label className="block text-xs text-blue-700 font-semibold mb-1">Created At</label>
+                    <label className="block text-xs text-green-700 font-semibold mb-1">Created At</label>
                     <div className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-gray-700">
                         {userDetail?.createdAt ? new Date(userDetail?.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}
                     </div>
                 </div>
                 <div>
-                    <label className="block text-xs text-blue-700 font-semibold mb-1">Updated At</label>
+                    <label className="block text-xs text-green-700 font-semibold mb-1">Updated At</label>
                     <div className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-gray-700">
                         {userDetail?.updatedAt ? new Date(userDetail?.updatedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}
                     </div>
@@ -190,29 +190,29 @@ export default function User_Details({ user, isEdit, refetchRow}) {
     );
 
     const renderEditMode = () => (
-        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg border border-blue-200 p-4 sm:p-6 md:p-8 relative animate-fade-in">
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg border border-green-200 p-4 sm:p-6 md:p-8 relative animate-fade-in">
             <div className="flex flex-col items-center justify-center mb-4">
-                <h2 className="text-xl sm:text-2xl font-extrabold text-blue-800 tracking-tight mb-2 text-center uppercase">Edit User Details</h2>
-                <span className="text-xs text-blue-400 font-semibold bg-blue-50 px-3 py-1 rounded-full border mb-4 border-blue-200">ID: {(userDetail?.id || '').toUpperCase()}</span>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-green-800 tracking-tight mb-2 text-center uppercase">Edit User Details</h2>
+                <span className="text-xs text-green-400 font-semibold bg-green-50 px-3 py-1 rounded-full border mb-4 border-green-200">ID: {(userDetail?.id || '').toUpperCase()}</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Username</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Username</label>
                         <input
                             type="text"
                             value={userDetail?.username || ''}
                             onChange={(e) => handleChange('username', e.target.value)}
-                            className="w-full bg-white border border-blue-300 text-blue-900 font-medium px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full bg-white border border-green-300 text-green-900 font-medium px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                             autoComplete="off"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Access</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Access</label>
                         <select
                             value={userDetail?.access || ''}
                             onChange={(e) => handleChange('access', e.target.value)}
-                            className="w-full bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                             autoComplete="off"
                         >
                             <option value="User">User</option>
@@ -221,11 +221,11 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         </select>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Gender</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Gender</label>
                         <select
                             value={userDetail?.gender || ''}
                             onChange={(e) => handleChange('gender', e.target.value)}
-                            className="w-full bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                             autoComplete="off"
                         >
                             <option value="">Select</option>
@@ -235,11 +235,11 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         </select>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Client Profile</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Client Profile</label>
                         <select
                             value={userDetail?.client_profile || ''}
                             onChange={(e) => handleChange('client_profile', e.target.value)}
-                            className="w-full bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                             autoComplete="off"
                         >
                             <option value="">Select</option>
@@ -255,36 +255,36 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         </select>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Occupation</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Occupation</label>
                         <input
                             type="text"
                             value={userDetail?.occupation || ''}
                             onChange={(e) => handleChange('occupation', e.target.value)}
-                            className="w-full bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                             autoComplete="off"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Position</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Position</label>
                         <input
                             type="text"
                             value={userDetail?.position || ''}
                             onChange={(e) => handleChange('position', e.target.value)}
-                            className="w-full bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                             autoComplete="off"
                         />
                     </div>
                 </div>
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Full Name</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Full Name</label>
                         <div className="flex flex-col sm:flex-row gap-2">
                             <input
                                 type="text"
                                 value={userDetail?.firstName || ''}
                                 onChange={(e) => handleChange('firstName', e.target.value)}
                                 placeholder="First Name"
-                                className="flex-1 bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition min-w-0"
+                                className="flex-1 bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition min-w-0"
                                 autoComplete="off"
                             />
                             <input
@@ -292,7 +292,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                 value={userDetail?.middleName || ''}
                                 onChange={(e) => handleChange('middleName', e.target.value)}
                                 placeholder="Middle Name"
-                                className="flex-1 bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition min-w-0"
+                                className="flex-1 bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition min-w-0"
                                 autoComplete="off"
                             />
                             <input
@@ -300,58 +300,58 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                 value={userDetail?.lastName || ''}
                                 onChange={(e) => handleChange('lastName', e.target.value)}
                                 placeholder="Last Name"
-                                className="flex-1 bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition min-w-0"
+                                className="flex-1 bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition min-w-0"
                                 autoComplete="off"
                             />
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Address</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Address</label>
                         <input
                             type="text"
                             value={userDetail?.address || ''}
                             onChange={(e) => handleChange('address', e.target.value)}
-                            className="w-full bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                             autoComplete="off"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Telephone No</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Telephone No</label>
                         <input
                             type="text"
                             value={userDetail?.telephone_no || ''}
                             onChange={(e) => handleChange('telephone_no', e.target.value)}
-                            className="w-full bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                             autoComplete="off"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Cellphone No</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Cellphone No</label>
                         <input
                             type="text"
                             value={userDetail?.cellphone_no || ''}
                             onChange={(e) => handleChange('cellphone_no', e.target.value)}
-                            className="w-full bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                             autoComplete="off"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Institution</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Institution</label>
                         <input
                             type="text"
                             value={userDetail?.institution || ''}
                             onChange={(e) => handleChange('institution', e.target.value)}
-                            className="w-full bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                             autoComplete="off"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm text-blue-700 font-semibold mb-1">Email Address</label>
+                        <label className="block text-sm text-green-700 font-semibold mb-1">Email Address</label>
                         <input
                             type="text"
                             value={userDetail?.email || ''}
                             onChange={(e) => handleChange('email', e.target.value)}
-                            className="w-full bg-white border border-blue-300 text-blue-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            className="w-full bg-white border border-green-300 text-green-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
                             autoComplete="off"
                         />
                     </div>
@@ -359,7 +359,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-8">
                 <div>
-                    <label className="block text-xs text-blue-700 font-semibold mb-1">Created At</label>
+                    <label className="block text-xs text-green-700 font-semibold mb-1">Created At</label>
                     <input
                         type="text"
                         value={userDetail?.createdAt ? new Date(userDetail?.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}
@@ -369,7 +369,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     />
                 </div>
                 <div>
-                    <label className="block text-xs text-blue-700 font-semibold mb-1">Updated At</label>
+                    <label className="block text-xs text-green-700 font-semibold mb-1">Updated At</label>
                     <input
                         type="text"
                         value={userDetail?.updatedAt ? new Date(userDetail?.updatedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : ''}
@@ -412,7 +412,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         <p className="text-gray-600 mb-4">{errorModal.message}</p>
                         <button
                             onClick={() => setErrorModal({ open: false, message: '' })}
-                            className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-6 py-2 rounded-lg font-semibold shadow hover:from-blue-500 hover:to-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            className="bg-gradient-to-r from-green-400 to-green-600 text-white px-6 py-2 rounded-lg font-semibold shadow hover:from-green-500 hover:to-green-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-300"
                         >
                             Close
                         </button>
@@ -422,7 +422,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             {confirmModal.open && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 ">
                     <div className="bg-white rounded-xl shadow-xl p-8 max-w-sm w-full text-center animate-fade-in">
-                        <div className="text-blue-600 text-2xl mb-2">
+                        <div className="text-green-600 text-2xl mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 mx-auto">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 6h.01M6.938 20h10.124c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 17c-.77 1.333.192 3 1.732 3z" />
                             </svg>

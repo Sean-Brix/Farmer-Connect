@@ -844,8 +844,8 @@ function Content() {
             {/* EIC-style Title Section with reduced top margin */}
             <div className="relative mb-6 mt-5 sm:mt-20 p-6 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
                 <span className="inline-flex items-center justify-center gap-3 w-full">
-                    <span className="rounded-full bg-blue-100 p-2">
-                        <svg className="w-9 h-9 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <span className="rounded-full bg-green-100 p-2">
+                        <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </span>
@@ -873,7 +873,7 @@ function Content() {
 
                     {!showDelete && (
                         <div className="text-center mb-3">
-                            <p className="text-sm text-blue-600 font-medium flex items-center justify-center gap-2">
+                            <p className="text-sm text-green-600 font-medium flex items-center justify-center gap-2">
                                 Click arrows to view stacks
                             </p>
                         </div>
@@ -884,12 +884,12 @@ function Content() {
                             placeholder="Search..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="flex-1 min-w-[120px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-white text-gray-900 placeholder:text-gray-400 w-full sm:w-auto"
+                            className="flex-1 min-w-[120px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-300 bg-white text-gray-900 placeholder:text-gray-400 w-full sm:w-auto"
                         />
                         <select
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
-                            className="min-w-[100px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none ocus:ring-1 focus:ring-blue-300 bg-white text-blue-900 placeholder:text-blue-400 w-full sm:w-auto"
+                            className="min-w-[100px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none ocus:ring-1 focus:ring-green-300 bg-white text-green-900 placeholder:text-green-400 w-full sm:w-auto"
                         >
                             <option key="All">All</option>
                             {categories.map((cat) => (
@@ -901,7 +901,7 @@ function Content() {
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="min-w-[100px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-1  focus:ring-blue-300 bg-white text-blue-900 placeholder:text-blue-400 w-full sm:w-auto"
+                            className="min-w-[100px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-1  focus:ring-green-300 bg-white text-green-900 placeholder:text-green-400 w-full sm:w-auto"
                         >
                             <option key="All">All</option>
                             {statuses.map((status) => (
@@ -912,7 +912,7 @@ function Content() {
                         </select>
                         <button
                             onClick={() => setShowModal(true)}
-                            className="bg-blue-500 text-white font-bold px-4 py-2 rounded hover:bg-blue-600 transition w-full sm:w-auto"
+                            className="bg-green-500 text-white font-bold px-4 py-2 rounded hover:bg-green-600 transition w-full sm:w-auto"
                         >
                             + Add
                         </button>
@@ -926,7 +926,7 @@ function Content() {
                         ) : (
                             <button
                                 onClick={() => setShowDelete(false)}
-                                className="bg-gray-300 text-blue-900 font-bold px-4 py-2 rounded hover:bg-gray-400 transition w-full sm:w-auto"
+                                className="bg-gray-300 text-green-900 font-bold px-4 py-2 rounded hover:bg-gray-400 transition w-full sm:w-auto"
                             >
                                 Cancel
                             </button>
@@ -948,7 +948,7 @@ function Content() {
                                         filteredItems.map((item) => item.id)
                                     );
                                 }}
-                                className="px-4 py-2 rounded font-semibold bg-blue-500 text-white hover:bg-blue-600 w-full sm:w-auto"
+                                className="px-4 py-2 rounded font-semibold bg-green-500 text-white hover:bg-green-600 w-full sm:w-auto"
                             >
                                 Select All
                             </button>
@@ -1073,9 +1073,9 @@ function Content() {
                     selectedItemStacks &&
                     selectedItemStacks.currentStacks && (
                         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                            <div className="bg-white rounded-xl shadow p-6 w-full max-w-lg relative border border-blue-100 mx-2">
+                            <div className="bg-white rounded-xl shadow p-6 w-full max-w-lg relative border border-green-100 mx-2">
                                 <button
-                                    className="absolute top-2 right-2 text-blue-400 hover:text-blue-700 text-xl transition"
+                                    className="absolute top-2 right-2 text-green-400 hover:text-green-700 text-xl transition"
                                     onClick={() => {
                                         setShowStacksModal(false);
                                     }}
@@ -1084,7 +1084,7 @@ function Content() {
                                     ×
                                 </button>
                                 <div className="mb-4">
-                                    <h2 className="text-base font-bold text-blue-800 text-center">
+                                    <h2 className="text-base font-bold text-green-800 text-center">
                                         {selectedItemStacks.name} -{' '}
                                         {selectedItemStacks.currentStatus}{' '}
                                         Stacks
@@ -1099,14 +1099,14 @@ function Content() {
                                             >
                                                 <div className="flex justify-between items-center text-xs">
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-blue-900 font-medium">
+                                                        <span className="text-green-900 font-medium">
                                                             Stack #{index + 1}
                                                         </span>
                                                         {editingStacks.has(
                                                             stack.id
                                                         ) ? (
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-blue-700">
+                                                                <span className="text-green-700">
                                                                     Qty:
                                                                 </span>
                                                                 <div className="flex items-center gap-1">
@@ -1152,7 +1152,7 @@ function Content() {
                                                                                     .value
                                                                             )
                                                                         }
-                                                                        className="w-16 px-1 py-0.5 border border-blue-200 rounded text-center text-xs"
+                                                                        className="w-16 px-1 py-0.5 border border-green-200 rounded text-center text-xs"
                                                                         min="1"
                                                                     />
                                                                     <button
@@ -1174,7 +1174,7 @@ function Content() {
                                                                 </div>
                                                             </div>
                                                         ) : (
-                                                            <span className="text-blue-700">
+                                                            <span className="text-green-700">
                                                                 Qty:{' '}
                                                                 {stack.quantity}
                                                             </span>
@@ -1241,7 +1241,7 @@ function Content() {
                                                                         stack.quantity
                                                                     )
                                                                 }
-                                                                className="p-1 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded transition-colors"
+                                                                className="p-1 text-green-500 hover:text-green-700 hover:bg-green-50 rounded transition-colors"
                                                                 title="Edit Stack"
                                                                 aria-label={`Edit Stack #${
                                                                     index + 1
@@ -1298,7 +1298,7 @@ function Content() {
                                                 {!editingStacks.has(
                                                     stack.id
                                                 ) && (
-                                                    <div className="mt-1 text-xs text-blue-600 flex gap-2 flex-wrap">
+                                                    <div className="mt-1 text-xs text-green-600 flex gap-2 flex-wrap">
                                                         <span>
                                                             Created:{' '}
                                                             {new Date(
@@ -1326,16 +1326,16 @@ function Content() {
                     <div className="flex justify-end mb-2">
                         <button
                             onClick={handleSortToggle}
-                            className="px-3 py-1 rounded bg-blue-100 text-blue-700 font-semibold text-xs border border-blue-200 hover:bg-blue-200 transition"
+                            className="px-3 py-1 rounded bg-green-100 text-green-700 font-semibold text-xs border border-green-200 hover:bg-green-200 transition"
                         >
                             Sort: {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}
                         </button>
                     </div>
-                    <div className="overflow-x-auto rounded-xl shadow bg-white border border-blue-50 p-2 sm:p-4 w-full">
+                    <div className="overflow-x-auto rounded-xl shadow bg-white border border-green-50 p-2 sm:p-4 w-full">
                         <table className="min-w-full bg-transparent rounded-xl">
                             <thead>
                                 <tr>
-                                    <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold w-[60px]">
+                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold w-[60px]">
                                         {/* Show select all checkbox only if delete mode is active, else empty for expand icon */}
                                         {showDelete ? (
                                             <input
@@ -1348,24 +1348,24 @@ function Content() {
                                                 aria-label="Select all"
                                             />
                                         ) : (
-                                            <span className="text-xs text-blue-500 font-medium">
+                                            <span className="text-xs text-green-500 font-medium">
                                                 Actions
                                             </span>
                                         )}
                                     </th>
-                                    <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold">
+                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold">
                                         Name
                                     </th>
-                                    <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold">
+                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold">
                                         Quantity
                                     </th>
-                                    <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold">
+                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold">
                                         Description
                                     </th>
-                                    <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold">
+                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold">
                                         Category
                                     </th>
-                                    <th className="py-2 px-2 border-b text-left text-blue-700 font-semibold">
+                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold">
                                         Actions
                                     </th>
                                 </tr>
@@ -1375,7 +1375,7 @@ function Content() {
                                     <tr>
                                         <td
                                             colSpan={7}
-                                            className="py-6 text-center text-blue-400 font-semibold"
+                                            className="py-6 text-center text-green-400 font-semibold"
                                             key="no-items"
                                         >
                                             No items found.
@@ -1384,7 +1384,7 @@ function Content() {
                                 ) : (
                                     filteredItems.map((item, index) => (
                                         <React.Fragment key={item.id + index}>
-                                            <tr className="hover:bg-blue-50 transition">
+                                            <tr className="hover:bg-green-50 transition">
                                                 <td className="py-2 px-2 border-b w-[60px]">
                                                     {/* Show checkbox if delete mode, else expand button */}
                                                     {showDelete ? (
@@ -1407,7 +1407,7 @@ function Content() {
                                                                     item
                                                                 )
                                                             }
-                                                            className="p-1 rounded transition hover:bg-blue-100 focus:outline-none"
+                                                            className="p-1 rounded transition hover:bg-green-100 focus:outline-none"
                                                             aria-label={
                                                                 expandedStacks.has(
                                                                     item.id
@@ -1459,7 +1459,7 @@ function Content() {
                                                         </button>
                                                     )}
                                                 </td>
-                                                <td className="py-2 px-2 border-b font-semibold text-blue-900 max-w-[120px]">
+                                                <td className="py-2 px-2 border-b font-semibold text-green-900 max-w-[120px]">
                                                     {editItemId === item.id ? (
                                                         <input
                                                             type="text"
@@ -1474,7 +1474,7 @@ function Content() {
                                                             onKeyDown={
                                                                 handleKeyPress
                                                             }
-                                                            className="w-full border border-blue-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400 bg-white text-sm"
+                                                            className="w-full border border-green-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white text-sm"
                                                             required
                                                             autoFocus
                                                         />
@@ -1484,12 +1484,12 @@ function Content() {
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="py-2 px-2 border-b text-blue-700">
+                                                <td className="py-2 px-2 border-b text-green-700">
                                                     <span>
                                                         {item.totalQuantity}
                                                     </span>
                                                 </td>
-                                                <td className="py-2 px-2 border-b text-blue-700 max-w-[120px]">
+                                                <td className="py-2 px-2 border-b text-green-700 max-w-[120px]">
                                                     {editItemId === item.id ? (
                                                         <input
                                                             type="text"
@@ -1504,7 +1504,7 @@ function Content() {
                                                             onKeyDown={
                                                                 handleKeyPress
                                                             }
-                                                            className="w-full border border-blue-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400 bg-white text-sm"
+                                                            className="w-full border border-green-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white text-sm"
                                                             placeholder="Description"
                                                         />
                                                     ) : (
@@ -1521,7 +1521,7 @@ function Content() {
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="py-2 px-2 border-b text-blue-700 max-w-[120px]">
+                                                <td className="py-2 px-2 border-b text-green-700 max-w-[120px]">
                                                     {editItemId === item.id ? (
                                                         <select
                                                             name="category"
@@ -1535,7 +1535,7 @@ function Content() {
                                                             onKeyDown={
                                                                 handleKeyPress
                                                             }
-                                                            className="w-full border border-blue-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400 bg-white text-sm"
+                                                            className="w-full border border-green-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white text-sm"
                                                         >
                                                             {categories.map(
                                                                 (cat) => (
@@ -1558,7 +1558,7 @@ function Content() {
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="py-2 px-2 border-b text-blue-700">
+                                                <td className="py-2 px-2 border-b text-green-700">
                                                     {editItemId === item.id ? (
                                                         <div className="flex gap-1">
                                                             <button
@@ -1599,13 +1599,13 @@ function Content() {
                                                     <tr>
                                                         <td
                                                             colSpan={6}
-                                                            className="p-0 bg-gradient-to-r from-blue-50 to-indigo-50"
+                                                            className="p-0 bg-gradient-to-r from-green-50 to-indigo-50"
                                                         >
                                                             <div className="p-4">
                                                                 <div className="mb-3">
                                                                     <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
                                                                         <svg
-                                                                            className="w-4 h-4 text-blue-500"
+                                                                            className="w-4 h-4 text-green-500"
                                                                             fill="none"
                                                                             stroke="currentColor"
                                                                             strokeWidth="2"
@@ -1713,10 +1713,10 @@ function Content() {
                                                                                                 };
                                                                                             case 'Distributed':
                                                                                                 return {
-                                                                                                    bg: 'bg-gradient-to-br from-blue-50 to-cyan-100',
-                                                                                                    border: 'border-blue-200',
-                                                                                                    badge: 'bg-blue-500 text-white',
-                                                                                                    icon: 'text-blue-600',
+                                                                                                    bg: 'bg-gradient-to-br from-green-50 to-cyan-100',
+                                                                                                    border: 'border-green-200',
+                                                                                                    badge: 'bg-green-500 text-white',
+                                                                                                    icon: 'text-green-600',
                                                                                                 };
                                                                                             default:
                                                                                                 return {
@@ -1857,7 +1857,7 @@ function Content() {
                                                                                                                         .value
                                                                                                                 )
                                                                                                             }
-                                                                                                            className="w-full px-2 py-1 border border-gray-200 rounded text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                                                                                            className="w-full px-2 py-1 border border-gray-200 rounded text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-green-300"
                                                                                                             min="0"
                                                                                                             placeholder="Enter quantity"
                                                                                                         />
@@ -1967,13 +1967,13 @@ function Content() {
                 </div>
                 {/* UI Size Control */}
                 <div className="w-full flex flex-col sm:flex-row justify-end items-center mt-8 mr-8 mb-2 gap-2">
-                    <label className="font-semibold text-blue-700">
+                    <label className="font-semibold text-green-700">
                         UI Size:
                     </label>
                     <select
                         value={uiSize}
                         onChange={(e) => setUiSize(e.target.value)}
-                        className="border border-blue-200 rounded px-3 py-2 bg-blue-50 text-blue-900 w-full sm:w-auto"
+                        className="border border-green-200 rounded px-3 py-2 bg-green-50 text-green-900 w-full sm:w-auto"
                     >
                         <option value="sm">Small</option>
                         <option value="md">Medium</option>

@@ -127,7 +127,7 @@ export default function Account() {
             <Navbar refresh={refreshNav} />
             <div className="relative min-h-screen bg-gray-50 mt-20">
                 {/* Blue background banner */}
-                <div className="w-full h-56 bg-gradient-to-t from-blue-200 to-blue-100"></div>
+                <div className="w-full h-56 bg-gradient-to-t from-green-200 to-green-100"></div>
                 {/* Floating profile card */}
                 <div className="w-full flex justify-center">
                     <div className="-mt-24 w-full max-w-2xl">
@@ -137,7 +137,7 @@ export default function Account() {
                                     <img src={photo} alt="Profile" className="w-full h-full object-cover" />
                                 </div>
                                 {editMode && (
-                                    <label className="absolute bottom-2 right-2 bg-blue-600 text-white rounded-full p-2 cursor-pointer hover:bg-blue-800 transition shadow text-lg border-2 border-white">
+                                    <label className="absolute bottom-2 right-2 bg-green-600 text-white rounded-full p-2 cursor-pointer hover:bg-green-800 transition shadow text-lg border-2 border-white">
                                         <i className="fa-solid fa-camera"></i>
                                         <input
                                             type="file"
@@ -150,7 +150,7 @@ export default function Account() {
                             </div>
                             <div className="flex flex-col items-center mb-4">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <span className="inline-block bg-blue-50 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full border border-blue-100">🇵🇭 Philippines</span>
+                                    <span className="inline-block bg-green-50 text-green-700 text-xs font-semibold px-2 py-1 rounded-full border border-green-100">🇵🇭 Philippines</span>
                                 </div>
                                 <div className="font-extrabold text-2xl text-gray-900">{profile.firstName} {profile.lastName}</div>
                                 <div className="text-gray-500 text-sm font-medium">{profile.position || 'Software Engineering'} <span className="mx-1">|</span> {profile.email}</div>
@@ -224,7 +224,7 @@ export default function Account() {
                                     ) : (
                                         <button
                                             type="button"
-                                            className="px-8 py-3 bg-blue-700 hover:bg-blue-800 transition text-white rounded-lg font-bold text-base shadow focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                            className="px-8 py-3 bg-green-700 hover:bg-green-800 transition text-white rounded-lg font-bold text-base shadow focus:outline-none focus:ring-2 focus:ring-green-400"
                                             onClick={() => {
                                                 setTempProfile(profile.user);
                                                 setEditMode(true);

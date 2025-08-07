@@ -62,8 +62,8 @@ export default function Profiles({ details }) {
                 {/* HEADER - Inventory/EIC style */}
                 <div className="relative mb-6 sm:mt-20 mt-5 p-5 flex flex-col items-center justify-center max-w-4xl mx-auto gap-2 text-center">
                     <span className="inline-flex items-center justify-center gap-3 w-full">
-                        <span className="rounded-full bg-blue-100 p-2">
-                            <svg className="w-9 h-9 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <span className="rounded-full bg-green-100 p-2">
+                            <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" fill="#fff"/>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 20v-1a7 7 0 0 1 14 0v1" stroke="currentColor" strokeWidth="2" fill="none"/>
                             </svg>
@@ -90,7 +90,7 @@ export default function Profiles({ details }) {
                         onChange={(e) => setFilter({ ...filter, search: e.target.value })}
                     />
                     <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                        <svg className="w-4 h-4 text-blue-500 opacity-80 -translate-y-0.5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-green-500 opacity-80 -translate-y-0.5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
                             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </div>
@@ -152,21 +152,21 @@ export default function Profiles({ details }) {
                         </div>
                     ) : (
                         <>
-                            <table className="min-w-full bg-white rounded-2xl shadow-xl border border-blue-200 overflow-hidden text-sm">
-                                <thead className="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-blue-200">
+                            <table className="min-w-full bg-white rounded-2xl shadow-xl border border-green-200 overflow-hidden text-sm">
+                                <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200">
                                     <tr>
-                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Username</th>
-                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Name</th>
-                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Role</th>
-                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Client Profile</th>
-                                        <th className="px-4 py-3 text-left font-extrabold text-blue-800 uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-green-800 uppercase tracking-wider whitespace-nowrap">Username</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-green-800 uppercase tracking-wider whitespace-nowrap">Name</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-green-800 uppercase tracking-wider whitespace-nowrap">Role</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-green-800 uppercase tracking-wider whitespace-nowrap">Client Profile</th>
+                                        <th className="px-4 py-3 text-left font-extrabold text-green-800 uppercase tracking-wider whitespace-nowrap">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {paginatedList.map((user, idx) => (
                                         <tr
                                             key={user.id}
-                                            className={`transition ${(idx % 2 === 0 ? 'bg-white' : 'bg-blue-50')} hover:bg-blue-100`} 
+                                            className={`transition ${(idx % 2 === 0 ? 'bg-white' : 'bg-green-50')} hover:bg-green-100`} 
                                             style={{ lineHeight: '1.25' }}
                                         >
                                             <User
@@ -182,17 +182,17 @@ export default function Profiles({ details }) {
                             {/* Pagination Controls */}
                             <div className="flex justify-center items-center gap-2 mt-6">
                                 <button
-                                    className="px-3 py-1 rounded-lg border border-blue-200 bg-white text-blue-700 font-semibold shadow-sm hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="px-3 py-1 rounded-lg border border-green-200 bg-white text-green-700 font-semibold shadow-sm hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                                     disabled={page === 1}
                                 >
                                     Previous
                                 </button>
-                                <span className="text-blue-800 font-semibold text-base mx-2">
+                                <span className="text-green-800 font-semibold text-base mx-2">
                                     Page {page} of {totalPages}
                                 </span>
                                 <button
-                                    className="px-3 py-1 rounded-lg border border-blue-200 bg-white text-blue-700 font-semibold shadow-sm hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="px-3 py-1 rounded-lg border border-green-200 bg-white text-green-700 font-semibold shadow-sm hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                                     disabled={page === totalPages || totalPages === 0}
                                 >
@@ -247,7 +247,7 @@ export default function Profiles({ details }) {
                 .modern-search-input {
                     background: rgba(255, 255, 255, 0.55);
                     border: 1.5px solid #e0e7ef;
-                    color: #0f172a;
+                    color: green;
                     font-size: 0.93rem;
                     border-radius: 0.85rem;
                     padding: 0.55rem 0.9rem 0.55rem 2.1rem;
@@ -262,25 +262,25 @@ export default function Profiles({ details }) {
                     -webkit-backdrop-filter: blur(7px) saturate(1.1);
                 }
                 .modern-search-input:focus {
-                    border-color: #3b82f6;
-                    box-shadow: 0 0 0 2px #bae6fd;
+                    border-color: green;
+                    box-shadow: 0 0 0 2px green;
                     transform: scale(1.025);
                 }
                 .modern-search-input:hover {
-                    border-color: #2563eb;
+                    border-color: green;
                     background: rgba(255,255,255,0.75);
                     box-shadow: 0 4px 16px 0 rgba(59,130,246,0.10);
                     transform: scale(1.015);
                 }
                 .modern-search-input::placeholder {
-                    color: #64748b;
+                    color: green;
                     opacity: 0.85;
                 }
 
                 .sortby-select {
                     background: #fff;
                     border: 1px solid #e0e7ef;
-                    color: #0369a1;
+                    color: green;
                     font-size: 0.91rem;
                     border-radius: .38rem;
                     padding: 0.48rem 2.1rem 0.48rem 0.8rem;
@@ -289,7 +289,8 @@ export default function Profiles({ details }) {
                     outline: none;
                     transition: border 0.18s, box-shadow 0.18s, transform 0.13s;
                     appearance: none;
-                    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%230369a1" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>');
+                    /* Green arrow */
+                    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%2300a651" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>');
                     background-repeat: no-repeat;
                     background-position: right 0.7rem center;
                     background-size: 1.1em;
@@ -298,19 +299,19 @@ export default function Profiles({ details }) {
                     box-sizing: border-box;
                 }
                 .sortby-select:focus {
-                    border-color: #0ea5e9;
-                    box-shadow: 0 0 0 1.5px #bae6fd;
+                    border-color: green;
+                    box-shadow: 0 0 0 1.5px green;
                     transform: scale(1.015);
                 }
                 .sortby-select:hover {
-                    border-color: #0369a1;
+                    border-color: green;
                     background: #fff;
                     box-shadow: 0 4px 16px 0 rgba(56,189,248,0.13), 0 1px 6px 0 rgba(59,130,246,0.08);
                     transform: scale(1.01);
                 }
                 .sortby-select option {
                     background: #fff;
-                    color: #0369a1;
+                    color: green;
                 }
                 .sortby-select::-ms-expand {
                     display: none;
@@ -318,8 +319,8 @@ export default function Profiles({ details }) {
 
                 .custom-select {
                     background: rgba(255, 255, 255, 0.55);
-                    border: 1.5px solid #e0e7ef;
-                    color: #0f172a;
+                    border: 1.5px solid green;
+                    color: green;
                     font-size: 0.93rem;
                     border-radius: 0.85rem;
                     padding: 0.55rem 2.1rem 0.55rem 0.9rem;
@@ -328,7 +329,8 @@ export default function Profiles({ details }) {
                     outline: none;
                     transition: border 0.18s, box-shadow 0.18s, transform 0.13s;
                     appearance: none;
-                    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%233b82f6" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>');
+                    /* Green arrow */
+                    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%2300a651" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>');
                     background-repeat: no-repeat;
                     background-position: right 0.9rem center;
                     background-size: 1.2em;
@@ -339,19 +341,19 @@ export default function Profiles({ details }) {
                     -webkit-backdrop-filter: blur(7px) saturate(1.1);
                 }
                 .custom-select:focus {
-                    border-color: #3b82f6;
-                    box-shadow: 0 0 0 2px #bae6fd;
+                    border-color: green;
+                    box-shadow: 0 0 0 2px green;
                     transform: scale(1.025);
                 }
                 .custom-select:hover {
-                    border-color: #2563eb;
+                    border-color: green;
                     background: rgba(255,255,255,0.75);
                     box-shadow: 0 4px 16px 0 rgba(59,130,246,0.10);
                     transform: scale(1.015);
                 }
                 .custom-select option {
                     background: #fff;
-                    color: #0f172a;
+                    color: green;
                 }
                 .custom-select::-ms-expand {
                     display: none;

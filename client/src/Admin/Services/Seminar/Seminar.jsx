@@ -111,8 +111,8 @@ export default function Seminar() {
                 {/* Header - Centered and Professional */}
                 <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
                   <span className="inline-flex items-center justify-center gap-3 w-full">
-                    <span className="rounded-full bg-blue-100 p-2">
-                      <svg className="w-9 h-9 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <span className="rounded-full bg-green-100 p-2">
+                      <svg className="w-9 h-9" style={{ color: '#059669' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path d="M12 3L2 9l10 6 10-6-10-6zm0 13v5m-7-7v2a2 2 0 002 2h10a2 2 0 002-2v-2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </span>
@@ -132,13 +132,13 @@ export default function Seminar() {
                       <input
                         type="search"
                         placeholder="Search seminars, speakers, locations..."
-                        className="block w-full py-2.5 pl-10 pr-3 text-sm text-gray-900 border border-gray-300 rounded-xl bg-white focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition placeholder-gray-400"
+                        className="block w-full py-2.5 pl-10 pr-3 text-sm text-gray-900 border border-gray-300 rounded-xl bg-white focus:ring-1 focus:ring-green-400 focus:border-green-400 transition placeholder-gray-400"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         aria-label="Search seminars"
                       />
                       <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                        <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5" style={{ color: '#059669' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </div>
@@ -147,7 +147,7 @@ export default function Seminar() {
                     <div className="flex flex-row gap-2 w-full sm:w-1/2">
                       <div className="relative flex-1 min-w-0">
                         <select
-                          className="appearance-none bg-white border border-gray-300 text-gray-700 text-base rounded-xl focus:ring-1 focus:ring-blue-400 focus:border-blue-400 block py-2 pl-4 pr-10 w-full transition"
+                          className="appearance-none bg-white border border-gray-300 text-gray-700 text-base rounded-xl focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-4 pr-10 w-full transition"
                           value={searchFilter}
                           onChange={(e) => setSearchFilter(e.target.value)}
                           aria-label="Filter by"
@@ -156,7 +156,7 @@ export default function Seminar() {
                           <option value="speaker">Speaker</option>
                           <option value="location">Location</option>
                         </select>
-                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
@@ -164,7 +164,7 @@ export default function Seminar() {
                       </div>
                       <div className="relative flex-1 min-w-0">
                         <select
-                          className="appearance-none bg-white border border-gray-300 text-gray-700 text-base rounded-xl focus:ring-1 focus:ring-blue-400 focus:border-blue-400 block py-2 pl-4 pr-10 w-full transition"
+                          className="appearance-none bg-white border border-gray-300 text-gray-700 text-base rounded-xl focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-4 pr-10 w-full transition"
                           value={statusFilter}
                           onChange={(e) => setStatusFilter(e.target.value)}
                           aria-label="Status filter"
@@ -175,7 +175,7 @@ export default function Seminar() {
                           <option value="Completed">Completed</option>
                           <option value="Cancelled">Cancelled</option>
                         </select>
-                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
@@ -185,7 +185,7 @@ export default function Seminar() {
                     {/* Action buttons: Only Add remains */}
                     <div className="flex flex-row gap-2 w-full sm:w-auto items-center">
                       <button
-                        className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold bg-blue-500 hover:bg-blue-600 text-white transition shadow-sm w-full sm:w-auto"
+                        className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold bg-green-500 hover:bg-green-600 text-white transition shadow-sm w-full sm:w-auto"
                         onClick={() => setShowAdd(true)}
                         aria-label="Add seminar"
                       >
@@ -294,7 +294,7 @@ export default function Seminar() {
                                         </button>
                                         <button
                                             onClick={(e) => { edit_participants(e, item); }}
-                                            className="flex-1 min-w-[120px] bg-blue-500 hover:bg-blue-600 text-white cursor-pointer px-5 py-2 rounded-lg text-base font-semibold transition shadow-sm flex items-center justify-center"
+                        className="flex-1 min-w-[120px] bg-green-600 hover:bg-green-700 text-white cursor-pointer px-5 py-2 rounded-lg text-base font-semibold transition shadow-sm flex items-center justify-center"
                                             style={{ marginTop: '0.5rem' }}
                                         >
                                             Participants
@@ -328,7 +328,7 @@ export default function Seminar() {
                                 <>
                                     <button
                                         onClick={() => setCurrentPage(1)}
-                                        className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === 1 ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                        className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === 1 ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
                                     >1</button>
                                     {currentPage > 3 && <span className="px-1 text-gray-300">...</span>}
                                     {Array.from({ length: 3 }, (_, i) => {
@@ -338,14 +338,14 @@ export default function Seminar() {
                                             <button
                                                 key={page}
                                                 onClick={() => setCurrentPage(page)}
-                                                className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === page ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                                className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === page ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
                                             >{page}</button>
                                         );
                                     })}
                                     {currentPage < totalPages - 2 && <span className="px-1 text-gray-300">...</span>}
                                     <button
                                         onClick={() => setCurrentPage(totalPages)}
-                                        className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === totalPages ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                        className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === totalPages ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
                                     >{totalPages}</button>
                                 </>
                             ) : (
@@ -353,7 +353,7 @@ export default function Seminar() {
                                     <button
                                         key={i + 1}
                                         onClick={() => setCurrentPage(i + 1)}
-                                        className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === i + 1 ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === i + 1 ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
                                     >{i + 1}</button>
                                 ))
                             )}

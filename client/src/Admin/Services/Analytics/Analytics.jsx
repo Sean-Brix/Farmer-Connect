@@ -48,7 +48,7 @@ const OverviewCard = ({
 }) => (
     <div
         className={`bg-white rounded-xl shadow-md p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
-            isActive ? 'ring-2 ring-blue-500 bg-blue-50' : ''
+            isActive ? 'ring-2 ring-green-500 bg-green-50' : ''
         }`}
         onClick={onClick}
     >
@@ -85,7 +85,7 @@ const FeatureCard = ({
 }) => (
     <div
         className={`bg-white rounded-xl shadow-md p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
-            isActive ? 'ring-2 ring-blue-500 bg-blue-50' : ''
+            isActive ? 'ring-2 ring-green-500 bg-green-50' : ''
         }`}
         onClick={onClick}
     >
@@ -146,7 +146,7 @@ function Analytics() {
                     <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                 </svg>
             ),
-            color: 'from-blue-500 to-blue-600',
+            color: 'from-green-500 to-green-600',
             stats: [
                 { value: '1,234', label: 'Total Users' },
                 { value: '89', label: 'Active Today' },
@@ -331,7 +331,7 @@ function Analytics() {
                             <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                         </svg>
                     }
-                    color="from-blue-500 to-blue-600"
+                    color="from-green-500 to-green-600"
                 />
                 <OverviewCard
                     title="Total Seminars"
@@ -730,7 +730,7 @@ function Analytics() {
                                 <select
                                     value={timeRange}
                                     onChange={(e) => setTimeRange(e.target.value)}
-                                    className="appearance-none bg-white border border-gray-300 rounded-lg pl-4 pr-10 py-2 shadow-md text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-400 transition-all duration-200 hover:border-blue-400 outline-none cursor-pointer text-base font-medium"
+                                    className="appearance-none bg-white border border-gray-300 rounded-lg pl-4 pr-10 py-2 shadow-md text-gray-700 focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium"
                                 >
                                     <option value="7d">Last 7 days</option>
                                     <option value="30d">Last 30 days</option>
@@ -752,7 +752,7 @@ function Analytics() {
                             onClick={() => setActiveView('overview')}
                             className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                                 activeView === 'overview'
-                                    ? 'bg-white text-blue-600 shadow-sm'
+                                    ? 'bg-white text-green-600 shadow-sm'
                                     : 'text-gray-600 hover:text-gray-900'
                             }`}
                         >
@@ -764,7 +764,7 @@ function Analytics() {
                                 onClick={() => setActiveView(feature.id)}
                                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                                     activeView === feature.id
-                                        ? 'bg-white text-blue-600 shadow-sm'
+                                        ? 'bg-white text-green-600 shadow-sm'
                                         : 'text-gray-600 hover:text-gray-900'
                                 }`}
                             >
@@ -777,7 +777,7 @@ function Analytics() {
                 {/* Content */}
                 {isLoading ? (
                     <div className="flex items-center justify-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
                     </div>
                 ) : activeView === 'overview' ? (
                     renderOverview()

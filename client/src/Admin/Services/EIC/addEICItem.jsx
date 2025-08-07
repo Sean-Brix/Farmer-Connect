@@ -207,15 +207,15 @@ const AddEICItemModal = ({
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-2">
-            <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-lg relative border border-blue-100 transition-all">
+            <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-lg relative border border-green-100 transition-all">
                 <button
-                    className="absolute top-3 right-3 text-blue-400 hover:text-blue-700 text-2xl font-bold transition focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    className="absolute top-3 right-3 text-green-400 hover:text-green-700 text-2xl font-bold transition focus:outline-none focus:ring-2 focus:ring-green-200"
                     onClick={handleClose}
                     aria-label="Close"
                 >
                     ×
                 </button>
-                <h2 className="text-xl font-bold mb-6 text-blue-800 text-center tracking-tight">
+                <h2 className="text-xl font-bold mb-6 text-green-800 text-center tracking-tight">
                     Add EIC Item
                 </h2>
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -228,15 +228,15 @@ const AddEICItemModal = ({
                             onFocus={() => setShowDropdown(true)}
                             onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
                             placeholder="Item Name"
-                            className="border border-blue-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-blue-50 w-full text-base transition placeholder-gray-400"
+                            className="border border-green-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-300 bg-green-50 w-full text-base transition placeholder-gray-400"
                             required
                         />
                         {showDropdown && filteredItems.length > 0 && (
-                            <div className="absolute top-full left-0 right-0 bg-white border border-blue-200 rounded-b-lg max-h-44 overflow-y-auto z-20 shadow-xl">
+                            <div className="absolute top-full left-0 right-0 bg-white border border-green-200 rounded-b-lg max-h-44 overflow-y-auto z-20 shadow-xl">
                                 {filteredItems.map((item, index) => (
                                     <div
                                         key={item.id || index}
-                                        className="px-4 py-2 hover:bg-blue-50 cursor-pointer text-sm transition"
+                                        className="px-4 py-2 hover:bg-green-50 cursor-pointer text-sm transition"
                                         onClick={() => handleNameSelect(item.name)}
                                     >
                                         {item.name}
@@ -259,7 +259,7 @@ const AddEICItemModal = ({
                         value={form.quantity}
                         onChange={handleChange}
                         placeholder="Quantity"
-                        className="border border-blue-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-blue-50 w-full text-base transition placeholder-gray-400"
+                        className="border border-green-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-300 bg-green-50 w-full text-base transition placeholder-gray-400"
                         min="1"
                         required
                     />
@@ -274,7 +274,7 @@ const AddEICItemModal = ({
                                 value={form.description}
                                 onChange={handleChange}
                                 placeholder="Description"
-                                className="border border-blue-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-blue-50 w-full text-base transition placeholder-gray-400"
+                                className="border border-green-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-300 bg-green-50 w-full text-base transition placeholder-gray-400"
                             />
 
                             {/* Category Dropdown */}
@@ -282,7 +282,7 @@ const AddEICItemModal = ({
                                 name="category"
                                 value={form.category}
                                 onChange={handleChange}
-                                className="border border-blue-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-blue-50 w-full text-base transition"
+                                className="border border-green-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-300 bg-green-50 w-full text-base transition"
                             >
                                 {categories.map((cat) => (
                                     <option key={cat} value={cat}>
@@ -306,7 +306,7 @@ const AddEICItemModal = ({
                                     />
                                     <label
                                         htmlFor="image-upload"
-                                        className="flex items-center px-3 py-2 bg-blue-100 text-blue-700 rounded-lg cursor-pointer hover:bg-blue-200 transition text-sm font-medium"
+                                        className="flex items-center px-3 py-2 bg-green-100 text-green-700 rounded-lg cursor-pointer hover:bg-green-200 transition text-sm font-medium"
                                     >
                                         <svg
                                             className="w-4 h-4 mr-2"
@@ -338,7 +338,7 @@ const AddEICItemModal = ({
                                         <img
                                             src={imagePreview}
                                             alt="Preview"
-                                            className="w-20 h-20 object-cover rounded-lg border-2 border-blue-200"
+                                            className="w-20 h-20 object-cover rounded-lg border-2 border-green-200"
                                         />
                                     </div>
                                 )}
@@ -348,7 +348,7 @@ const AddEICItemModal = ({
 
                     <button
                         type="submit"
-                        className="bg-blue-600 text-white font-bold py-2.5 rounded-lg hover:bg-blue-700 transition mt-2 w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 text-base"
+                        className="bg-green-600 text-white font-bold py-2.5 rounded-lg hover:bg-green-700 transition mt-2 w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-green-300 text-base"
                     >
                         Add EIC Item
                     </button>

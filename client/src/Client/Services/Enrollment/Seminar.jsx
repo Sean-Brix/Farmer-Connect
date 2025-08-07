@@ -260,29 +260,29 @@ export default function Seminar() {
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100   relative"
+                className="flex min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100   relative"
                 style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30 ">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20 ">
                         {/* Header */}
                         <header className="flex flex-col items-center mb-12 w-full">
-                            <span className="uppercase tracking-widest text-blue-400 text-xs font-semibold mb-1 letter-spacing-wide">
+                            <span className="uppercase tracking-widest text-green-400 text-xs font-semibold mb-1 letter-spacing-wide">
                                 Welcome to
                             </span>
                             <h1
-                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title"
-                                style={{ color: '#1e3a8a' }}
+                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title text-green-800"
+                                
                             >
                                 Seminar Enrollment
                             </h1>
-                            <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200 opacity-90 shadow-lg"></div>
+                            <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-green-400 via-green-300 to-green-200 opacity-90 shadow-lg"></div>
                         </header>
                         {/* Modernized: My Registered Seminars Button & Search/Filter Bar */}
                         <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
                             <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
                                 <button
-                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-700 hover:bg-green-800 text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400"
                                     onClick={() => setShowUserSeminarsModal(true)}
                                 >
                                     <i className="fa-solid fa-list-check text-lg"></i>
@@ -294,7 +294,7 @@ export default function Seminar() {
                                 <div className="relative w-full sm:w-auto flex justify-center">
                                     <input
                                         type="text"
-                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-blue-900 bg-white shadow transition placeholder:text-blue-400 font-medium"
+                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border border-green-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 text-green-900 bg-white shadow transition placeholder:text-green-400 font-medium"
                                         placeholder={`Search by ${filterBy.toLowerCase()}...`}
                                         value={search}
                                         onChange={(e) => {
@@ -302,14 +302,14 @@ export default function Seminar() {
                                             setCurrentPage(1);
                                         }}
                                     />
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 pointer-events-none">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
                                         <i className="fa-solid fa-magnifying-glass"></i>
                                     </span>
                                 </div>
                                 {/* Filter Dropdown */}
                                 <div className="relative flex justify-center w-full sm:w-auto">
                                     <button
-                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-blue-100 text-blue-700 font-semibold border border-blue-200 shadow transition focus:outline-none"
+                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-green-100 text-green-700 font-semibold border border-green-200 shadow transition focus:outline-none"
                                         onClick={() => setShowFilter((f) => !f)}
                                         type="button"
                                         aria-label="Show filter options"
@@ -325,8 +325,8 @@ export default function Seminar() {
                                                     key={opt.value}
                                                     className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
                                                         filterBy === opt.value
-                                                            ? 'bg-blue-600 text-white shadow'
-                                                            : 'text-blue-900 hover:bg-blue-50'
+                                                            ? 'bg-green-600 text-white shadow'
+                                                            : 'text-green-900 hover:bg-green-50'
                                                     }`}
                                                     onClick={() => {
                                                         setFilterBy(opt.value);
@@ -346,11 +346,11 @@ export default function Seminar() {
                         {/* Seminar Cards */}
                         <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
                             {isLoading ? (
-                                <div className="col-span-full text-center text-blue-300 py-16 text-lg font-semibold tracking-wide">
+                                <div className="col-span-full text-center text-green-300 py-16 text-lg font-semibold tracking-wide">
                                     Loading...
                                 </div>
                             ) : paginatedPrograms.length === 0 ? (
-                                <div className="col-span-full text-center text-blue-300 py-16 text-lg font-semibold tracking-wide">
+                                <div className="col-span-full text-center text-green-300 py-16 text-lg font-semibold tracking-wide">
                                     No programs found.
                                 </div>
                             ) : (
@@ -438,7 +438,7 @@ export default function Seminar() {
                                                                     program.id
                                                                 )
                                                             }
-                                                            className="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
+                                                            className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
                                                             disabled={
                                                                 applyMutation.isLoading
                                                             }
@@ -546,7 +546,7 @@ export default function Seminar() {
                                                 onClick={() => setCurrentPage(totalPages)}
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === totalPages
-                                                        ? 'bg-blue-500 text-white'
+                                                        ? 'bg-green-500 text-white'
                                                         : 'text-gray-700 hover:bg-gray-200'
                                                 }`}
                                             >
@@ -560,7 +560,7 @@ export default function Seminar() {
                                                 onClick={() => setCurrentPage(i + 1)}
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === i + 1
-                                                        ? 'bg-blue-500 text-white'
+                                                        ? 'bg-green-500 text-white'
                                                         : 'text-gray-700 hover:bg-gray-200'
                                                 }`}
                                             >
@@ -660,7 +660,7 @@ function SeminarDetails({ seminar, onClose }) {
                     <p className="text-blue-700 font-semibold">Loading...</p>
                     <button
                         onClick={onClose}
-                        className="mt-4 px-6 py-2 bg-blue-100 text-blue-800 rounded-xl font-bold shadow hover:bg-blue-200 transition"
+                        className="mt-4 px-6 py-2 bg-blue-100 text-green-800 rounded-xl font-bold shadow hover:bg-green-200 transition"
                     >
                         Close
                     </button>
@@ -688,24 +688,24 @@ function SeminarDetails({ seminar, onClose }) {
                 >
                     <button
                         onClick={onClose}
-                        className="absolute top-4 right-4 text-blue-400 hover:text-blue-700 text-2xl focus:outline-none"
+                        className="absolute top-4 right-4 text-green-400 hover:text-green-700 text-2xl focus:outline-none"
                         aria-label="Close"
                     >
                         <i className="fa-solid fa-xmark"></i>
                     </button>
-                    <h2 className="text-3xl font-extrabold text-blue-900 mb-3 mt-2 tracking-tight">
+                    <h2 className="text-3xl font-extrabold text-green-900 mb-3 mt-2 tracking-tight">
                         {seminar.title}
                     </h2>
                     <div className="flex flex-wrap gap-3 mb-6">
-                        <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
+                        <span className="inline-flex items-center gap-1 text-xs text-green-900 bg-green-100 px-3 py-1 rounded-lg font-semibold border border-green-200 shadow-sm">
                             <i className="fa-solid fa-user"></i>
                             {seminar.speaker}
                         </span>
-                        <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
+                        <span className="inline-flex items-center gap-1 text-xs text-green-900 bg-green-100 px-3 py-1 rounded-lg font-semibold border border-green-200 shadow-sm">
                             <i className="fa-solid fa-location-dot"></i>
                             {seminar.location}
                         </span>
-                        <span className="inline-flex items-center gap-1 text-xs text-blue-900 bg-blue-100 px-3 py-1 rounded-lg font-semibold border border-blue-200 shadow-sm">
+                        <span className="inline-flex items-center gap-1 text-xs text-green-900 bg-green-100 px-3 py-1 rounded-lg font-semibold border border-green-200 shadow-sm">
                             <i className="fa-solid fa-layer-group"></i>
                             {seminar.category}
                         </span>
@@ -752,13 +752,13 @@ function SeminarDetails({ seminar, onClose }) {
                             {seminar.status}
                         </span>
                     </div>
-                    <div className="text-blue-800 text-base mb-8 whitespace-pre-line leading-relaxed font-medium">
+                    <div className="text-green-800 text-base mb-8 whitespace-pre-line leading-relaxed font-medium">
                         {seminar.description}
                     </div>
                     <div className="flex justify-end mt-auto">
                         <button
                             onClick={onClose}
-                            className="px-8 py-2 rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 text-white font-bold shadow hover:from-blue-800 hover:to-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="px-8 py-2 rounded-xl bg-gradient-to-r from-green-700 to-green-500 text-white font-bold shadow hover:from-green-800 hover:to-green-700 transition focus:outline-none focus:ring-2 focus:ring-green-400"
                         >
                             Close
                         </button>
@@ -786,8 +786,8 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                            <i className="fa-solid fa-calendar-check text-blue-600"></i>
+                        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                            <i className="fa-solid fa-calendar-check text-green-600"></i>
                         </div>
                         <div>
                             <h2 className="text-xl font-bold text-gray-900">My Registered Seminars</h2>
@@ -809,7 +809,7 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                 <div className="flex-1 overflow-y-auto p-6">
                     {isLoading ? (
                         <div className="flex flex-col items-center justify-center py-12">
-                            <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+                            <div className="w-12 h-12 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mb-4"></div>
                             <p className="text-gray-600 font-medium">Loading your seminars...</p>
                         </div>
                     ) : seminars.length === 0 ? (
@@ -965,7 +965,7 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                                                 onClick={() => setCurrentModalPage(i + 1)}
                                                 className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                                                     currentModalPage === i + 1
-                                                        ? 'bg-blue-600 text-white'
+                                                        ? 'bg-green-600 text-white'
                                                         : 'text-gray-700 hover:bg-gray-100'
                                                 }`}
                                             >
@@ -986,7 +986,7 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
 
                             <button
                                 onClick={onClose}
-                                className="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                className="px-6 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                             >
                                 Close
                             </button>
