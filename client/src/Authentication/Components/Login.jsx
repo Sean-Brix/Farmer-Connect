@@ -75,30 +75,30 @@ export default function Login() {
                     background: transparent;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: linear-gradient(120deg, #2563eb 60%, #1e40af 100%);
+                    background: linear-gradient(120deg, #22c55e 60%, #16a34a 100%);
                     border-radius: 16px;
-                    border: 2px solid #e0e7ef;
-                    box-shadow: 0 2px 8px 0 rgba(30,64,175,0.10);
+                    border: 2px solid #bbf7d0;
+                    box-shadow: 0 2px 8px 0 rgba(34,197,94,0.10);
                     min-height: 36px;
                     transition: background 0.25s, border 0.25s;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: linear-gradient(120deg, #1e40af 60%, #2563eb 100%);
-                    border: 2px solid #2563eb;
+                    background: linear-gradient(120deg, #16a34a 60%, #22c55e 100%);
+                    border: 2px solid #22c55e;
                 }
                 .custom-scrollbar::-webkit-scrollbar-track {
-                    background: #f6f8fc;
+                    background: #bbf7d0;
                     border-radius: 16px;
                 }
                 .custom-scrollbar {
                     scrollbar-width: thin;
-                    scrollbar-color: #2563eb #f6f8fc;
+                    scrollbar-color: #22c55e #bbf7d0;
                 }
             `}</style>
                     <div className="flex flex-col items-center mb-8 ">
                         <img src={logo} alt="FITS Tanza Logo" className="h-12 w-12 rounded-full mb-3 shadow-xl  z-30 relative mt-5" />
-                        <h1 className="font-extrabold text-3xl md:text-4xl text-blue-700 tracking-tight mb-1 text-center drop-shadow font-sans uppercase" style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
-                        <span className="text-sm md:text-sm font-semibold text-blue-600 tracking-wide mb-2 text-center" style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
+                        <h1 className="font-extrabold text-3xl md:text-4xl text-green-700 tracking-tight mb-1 text-center drop-shadow font-sans uppercase" style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
+                        <span className="text-sm md:text-sm font-semibold text-green-600 tracking-wide mb-2 text-center" style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
                         <span className="text-gray-500 text-base md:text-lg text-center">Sign in to your account</span>
                     </div>
                     <form
@@ -193,13 +193,13 @@ export default function Login() {
                                     type="checkbox"
                                     checked={rememberMe}
                                     onChange={(e) => handleRememberMeChange(e.target.checked)}
-                                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                                 />
                                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
                             </label>
-                            <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline">Forgot password?</Link>
+                            <Link to="/forgot-password" className="text-sm text-green-600 hover:underline">Forgot password?</Link>
                         </div>
-                        <button type="submit" className="w-full py-3 mt-4 mb-6 text-white bg-blue-600 rounded-lg font-semibold shadow hover:bg-blue-700 transition">Sign In</button>
+                        <button type="submit" className="w-full py-3 mt-4 mb-6 text-white bg-green-600 rounded-lg font-semibold shadow hover:bg-green-700 transition">Sign In</button>
                         {/* <div className="flex items-center gap-2  w-full">
                             <span className="flex-grow border-t border-gray-300"></span>
                             <span className="mx-2 text-gray-500 text-sm">or</span>
@@ -209,7 +209,7 @@ export default function Login() {
                             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5 mr-2" />
                             Google
                         </button> */}
-                        <p className=" text-center text-sm text-gray-700">Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Sign up</Link></p>
+                        <p className=" text-center text-sm text-gray-700">Don't have an account? <Link to="/register" className="text-green-600 hover:underline">Sign up</Link></p>
                         <div className="mt-2 text-center text-xs text-gray-400">
                             <Link to="/terms" className="hover:underline">Terms & Conditions</Link>
                         </div>

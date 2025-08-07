@@ -124,19 +124,19 @@ export default function Distribution() {
 
     const typeIcon = (type) => {
         if (type === 'Seeds')
-            return <i className="fa-solid fa-seedling text-blue-500"></i>;
+            return <i className="fa-solid fa-seedling text-green-500"></i>;
         if (type === 'Fertilizers')
-            return <i className="fa-solid fa-flask text-blue-500"></i>;
+            return <i className="fa-solid fa-flask text-green-500"></i>;
         if (type === 'Livestock')
             return <i className="fa-solid fa-horse text-yellow-500"></i>;
         if (type === 'Fish Fingerlings')
-            return <i className="fa-solid fa-fish text-blue-500"></i>;
+            return <i className="fa-solid fa-fish text-green-500"></i>;
         if (type === 'Organic Inputs')
-            return <i className="fa-solid fa-leaf text-blue-700"></i>;
+            return <i className="fa-solid fa-leaf text-green-700"></i>;
         if (type === 'Tools')
             return <i className="fa-solid fa-toolbox text-gray-500"></i>;
         if (type === 'Plants')
-            return <i className="fa-solid fa-tree text-blue-900"></i>;
+            return <i className="fa-solid fa-tree text-green-900"></i>;
         if (type === 'Compost')
             return <i className="fa-solid fa-recycle text-orange-500"></i>;
         return <i className="fa-solid fa-question text-gray-500"></i>;
@@ -1119,28 +1119,28 @@ export default function Distribution() {
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative"
+                className="flex min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 relative"
                 style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20">
                         <header className="flex flex-col items-center mb-12 w-full">
-                            <span className="uppercase tracking-widest text-blue-400 text-xs font-semibold mb-1 letter-spacing-wide">
+                            <span className="uppercase tracking-widest text-green-400 text-xs font-semibold mb-1 letter-spacing-wide">
                                 Welcome to
                             </span>
                             <h1
-                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center dist-title"
-                                style={{ color: '#1e3a8a' }}
+                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center text-green-800 "
+                                
                             >
                                 Distribution Center
                             </h1>
-                            <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200 opacity-90 shadow-lg"></div>
+                            <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-green-400 via-green-300 to-green-200 opacity-90 shadow-lg"></div>
                         </header>
 
                         <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
                             <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
                                 <button
-                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-700 hover:bg-green-800 text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400"
                                     onClick={handleMyRequestsClick}
                                 >
                                     <i className="fa-solid fa-list-check text-lg"></i>
@@ -1151,21 +1151,21 @@ export default function Distribution() {
                                 <div className="relative w-full sm:w-auto flex justify-center">
                                     <input
                                         type="text"
-                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 text-blue-900 bg-white shadow transition placeholder:text-blue-400 font-medium"
+                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border border-green-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 text-green-900 bg-white shadow transition placeholder:text-green-400 font-medium"
                                         placeholder="Search by name, category, description..."
                                         value={search}
                                         onChange={(e) =>
                                             setSearch(e.target.value)
                                         }
                                     />
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 pointer-events-none">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
                                         <i className="fa-solid fa-magnifying-glass"></i>
                                     </span>
                                 </div>
                                 <div className="relative flex justify-center w-full sm:w-auto">
                                     <button
                                         id="modernFilterButton"
-                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-blue-100 text-blue-700 font-semibold border border-blue-200 shadow transition focus:outline-none"
+                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-green-100 text-green-700 font-semibold border border-green-200 shadow transition focus:outline-none"
                                         onClick={() => setShowFilter((f) => !f)}
                                         type="button"
                                         aria-label="Show filter options"
@@ -1181,15 +1181,15 @@ export default function Distribution() {
                                     {showFilter && (
                                         <div
                                             id="modernFilterDropdown"
-                                            className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-blue-100 z-20 animate-fade-in py-2"
+                                            className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-green-100 z-20 animate-fade-in py-2"
                                         >
                                             {filterOptions.map((opt) => (
                                                 <button
                                                     key={opt.value}
                                                     className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
                                                         filter === opt.value
-                                                            ? 'bg-blue-600 text-white shadow'
-                                                            : 'text-blue-900 hover:bg-blue-50'
+                                                            ? 'bg-green-600 text-white shadow'
+                                                            : 'text-green-900 hover:bg-green-50'
                                                     }`}
                                                     onClick={() => {
                                                         setFilter(opt.value);
@@ -1207,7 +1207,7 @@ export default function Distribution() {
                         </div>
                         <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
                             {filteredItems.length === 0 ? (
-                                <div className="col-span-full text-center text-blue-300 py-16 text-lg font-semibold tracking-wide">
+                                <div className="col-span-full text-center text-green-300 py-16 text-lg font-semibold tracking-wide">
                                     No distribution items found.
                                 </div>
                             ) : (
@@ -1215,7 +1215,7 @@ export default function Distribution() {
                                     return (
                                         <div
                                             key={item.id}
-                                            className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-xl border border-blue-100 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]"
+                                            className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-xl border border-green-100 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]"
                                         >
                                             <div className="relative">
                                                 <img
@@ -1238,22 +1238,22 @@ export default function Distribution() {
                                                             ? 'bg-green-500'
                                                             : item.category ===
                                                               'Fertilizers'
-                                                            ? 'bg-blue-500'
+                                                            ? 'bg-green-500'
                                                             : item.category ===
                                                               'Livestock'
                                                             ? 'bg-yellow-500'
                                                             : item.category ===
                                                               'Fish Fingerlings'
-                                                            ? 'bg-blue-500'
+                                                            ? 'bg-green-500'
                                                             : item.category ===
                                                               'Organic Inputs'
-                                                            ? 'bg-blue-700'
+                                                            ? 'bg-green-700'
                                                             : item.category ===
                                                               'Tools'
                                                             ? 'bg-gray-500'
                                                             : item.category ===
                                                               'Plants'
-                                                            ? 'bg-blue-900'
+                                                            ? 'bg-green-900'
                                                             : item.category ===
                                                               'Compost'
                                                             ? 'bg-orange-500'
@@ -1264,7 +1264,7 @@ export default function Distribution() {
                                                 </span>
                                             </div>
                                             <div className="p-5 flex flex-col flex-1">
-                                                <h3 className="text-xl font-bold mb-2 text-blue-900 line-clamp-1 min-h-[28px]">
+                                                <h3 className="text-xl font-bold mb-2 text-green-900 line-clamp-1 min-h-[28px]">
                                                     {item.Name}
                                                 </h3>
                                                 <p
@@ -1274,7 +1274,7 @@ export default function Distribution() {
                                                     {item.description}
                                                 </p>
                                                 <div className="flex items-center justify-between mb-4">
-                                                    <span className="text-sm text-blue-700 font-semibold">
+                                                    <span className="text-sm text-green-700 font-semibold">
                                                         Qty: {item.quantity}
                                                     </span>
                                                     <div className="flex items-center gap-1">
@@ -1284,7 +1284,7 @@ export default function Distribution() {
                                                     </div>
                                                 </div>
                                                 <button
-                                                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 mt-auto"
+                                                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 mt-auto"
                                                     onClick={() =>
                                                         handleRequestClick(item)
                                                     }
@@ -1340,7 +1340,7 @@ export default function Distribution() {
                                                 }
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === 1
-                                                        ? 'bg-blue-500 text-white'
+                                                        ? 'bg-green-500 text-white'
                                                         : 'text-gray-700 hover:bg-gray-200'
                                                 }`}
                                             >
@@ -1372,7 +1372,7 @@ export default function Distribution() {
                                                             className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                                 currentPage ===
                                                                 page
-                                                                    ? 'bg-blue-500 text-white'
+                                                                    ? 'bg-green-500 text-white'
                                                                     : 'text-gray-700 hover:bg-gray-200'
                                                             }`}
                                                         >
@@ -1392,7 +1392,7 @@ export default function Distribution() {
                                                 }
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === totalPages
-                                                        ? 'bg-blue-500 text-white'
+                                                        ? 'bg-green-500 text-white'
                                                         : 'text-gray-700 hover:bg-gray-200'
                                                 }`}
                                             >
@@ -1410,7 +1410,7 @@ export default function Distribution() {
                                                     }
                                                     className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                         currentPage === i + 1
-                                                            ? 'bg-blue-500 text-white'
+                                                            ? 'bg-green-500 text-white'
                                                             : 'text-gray-700 hover:bg-gray-200'
                                                     }`}
                                                 >
@@ -1457,13 +1457,13 @@ export default function Distribution() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
                     <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in">
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-700 to-blue-600">
+                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-green-700 to-green-600">
                             <h2 className="text-xl font-bold text-white">
                                 <i className="fa-solid fa-paper-plane mr-2"></i>
                                 Request Distribution Item
                             </h2>
                             <button
-                                className="text-white text-2xl hover:text-blue-200 transition"
+                                className="text-white text-2xl hover:text-green-200 transition"
                                 onClick={handleCloseModal}
                                 aria-label="Close"
                             >
@@ -1482,10 +1482,10 @@ export default function Distribution() {
                                     onError={(e) => {
                                         e.target.src = default_image;
                                     }}
-                                    className="w-16 h-16 rounded-xl object-cover border-2 border-blue-700 shadow"
+                                    className="w-16 h-16 rounded-xl object-cover border-2 border-green-700 shadow"
                                 />
                                 <div className="flex-1">
-                                    <div className="text-lg font-semibold text-blue-900 truncate">
+                                    <div className="text-lg font-semibold text-green-900 truncate">
                                         {selectedItem?.Name}
                                     </div>
                                     <div className="text-xs text-gray-500">
@@ -1498,8 +1498,8 @@ export default function Distribution() {
                                 </div>
                             </div>
 
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                                <p className="text-sm text-blue-800">
+                            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                                <p className="text-sm text-green-800">
                                     <i className="fa-solid fa-info-circle mr-2"></i>
                                     <span className="text-red-500">*</span>{' '}
                                     indicates required fields
@@ -1520,7 +1520,7 @@ export default function Distribution() {
                                         name="pickupDate"
                                         value={requestData.pickupDate}
                                         onChange={handleInputChange}
-                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition ${
+                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none transition ${
                                             formErrors.pickupDate
                                                 ? 'border-red-300 bg-red-50'
                                                 : 'border-gray-200'
@@ -1552,7 +1552,7 @@ export default function Distribution() {
                                         name="quantity"
                                         value={requestData.quantity}
                                         onChange={handleInputChange}
-                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition ${
+                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none transition ${
                                             formErrors.quantity
                                                 ? 'border-red-300 bg-red-50'
                                                 : 'border-gray-200'
@@ -1594,7 +1594,7 @@ export default function Distribution() {
                                     value={requestData.request_note}
                                     onChange={handleInputChange}
                                     rows="3"
-                                    className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-blue-600 focus:outline-none transition resize-none"
+                                    className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none transition resize-none"
                                     placeholder="Describe the purpose for this distribution item and any special requirements..."
                                 ></textarea>
                             </div>
@@ -1626,7 +1626,7 @@ export default function Distribution() {
                                                 {requestData.quantity} unit(s)
                                             </span>
                                         </div>
-                                        <div className="text-xs text-blue-600 mt-2 p-2 bg-blue-50 rounded border">
+                                        <div className="text-xs text-green-600 mt-2 p-2 bg-green-50 rounded border">
                                             <i className="fa-solid fa-info-circle mr-1"></i>
                                             Distribution items do not require
                                             return
@@ -1652,7 +1652,7 @@ export default function Distribution() {
                                         !requestData.pickupDate ||
                                         !requestData.quantity
                                             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'bg-blue-700 hover:bg-blue-800 text-white'
+                                            : 'bg-green-700 hover:bg-green-800 text-white'
                                     }`}
                                 >
                                     <i className="fa-solid fa-paper-plane mr-2"></i>
@@ -1667,13 +1667,13 @@ export default function Distribution() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
                     <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-4 relative overflow-hidden animate-fade-in max-h-[90vh] flex flex-col">
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-700 to-blue-600 flex-shrink-0">
+                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-green-700 to-green-600 flex-shrink-0">
                             <h2 className="text-xl font-bold text-white">
                                 <i className="fa-solid fa-list mr-2"></i>
                                 My Distribution Requests
                             </h2>
                             <button
-                                className="text-white text-2xl hover:text-blue-200 transition"
+                                className="text-white text-2xl hover:text-green-200 transition"
                                 onClick={handleCloseMyRequestsModal}
                                 aria-label="Close"
                             >
@@ -1684,8 +1684,8 @@ export default function Distribution() {
                         <div className="px-8 py-6 space-y-5 overflow-y-auto flex-1">
                             {myRequests.length > 0 ? (
                                 <div>
-                                    <div className="mb-6 text-sm text-gray-600 bg-blue-50 p-4 rounded-xl border border-blue-100">
-                                        <i className="fa-solid fa-info-circle mr-2 text-blue-600"></i>
+                                    <div className="mb-6 text-sm text-gray-600 bg-green-50 p-4 rounded-xl border border-green-100">
+                                        <i className="fa-solid fa-info-circle mr-2 text-green-600"></i>
                                         <span className="font-medium">
                                             Found {myRequests.length} request
                                             {myRequests.length !== 1 ? 's' : ''}
@@ -1756,7 +1756,7 @@ export default function Distribution() {
                                                                 </div>
                                                             </td>
                                                             <td className="py-5 px-4 text-center">
-                                                                <span className="bg-blue-100 text-blue-800 px-3 py-2 rounded-full text-sm font-bold min-w-[50px] inline-block">
+                                                                <span className="bg-green-100 text-green-800 px-3 py-2 rounded-full text-sm font-bold min-w-[50px] inline-block">
                                                                     {
                                                                         request.quantity
                                                                     }
@@ -1795,7 +1795,7 @@ export default function Distribution() {
                                                                             : request.status ===
                                                                               'Cancelled'
                                                                             ? 'bg-gray-100 text-gray-800 border border-gray-200'
-                                                                            : 'bg-blue-100 text-blue-800 border border-blue-200'
+                                                                            : 'bg-green-100 text-green-800 border border-green-200'
                                                                     }`}
                                                                 >
                                                                     {request.status ===
@@ -1876,9 +1876,7 @@ export default function Distribution() {
                 .letter-spacing-wide {
                     letter-spacing: 0.15em;
                 }
-                .dist-title {
-                    color: #1e3a8a !important;
-                }
+               
                 .line-clamp-1 {
                     overflow: hidden;
                     display: -webkit-box;

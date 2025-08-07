@@ -178,48 +178,48 @@ class Register extends Component {
                     <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 md:py-10 z-10 max-h-[90vh] md:max-h-[600px] overflow-y-auto custom-scrollbar">
                     {/* Custom Scrollbar Styles */}
                     <style>{`
-                        .custom-scrollbar::-webkit-scrollbar {
-                            width: 9px;
-                            background: transparent;
-                        }
-                        .custom-scrollbar::-webkit-scrollbar-thumb {
-                            background: linear-gradient(120deg, #2563eb 60%, #1e40af 100%);
-                            border-radius: 16px;
-                            border: 2px solid #e0e7ef;
-                            box-shadow: 0 2px 8px 0 rgba(30,64,175,0.10);
-                            min-height: 36px;
-                            transition: background 0.25s, border 0.25s;
-                        }
-                        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                            background: linear-gradient(120deg, #1e40af 60%, #2563eb 100%);
-                            border: 2px solid #2563eb;
-                        }
-                        .custom-scrollbar::-webkit-scrollbar-track {
-                            background: #f6f8fc;
-                            border-radius: 16px;
-                        }
-                        .custom-scrollbar {
-                            scrollbar-width: thin;
-                            scrollbar-color: #2563eb #f6f8fc;
-                        }
+                       .custom-scrollbar::-webkit-scrollbar {
+                    width: 9px;
+                    background: transparent;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: linear-gradient(120deg, #22c55e 60%, #16a34a 100%);
+                    border-radius: 16px;
+                    border: 2px solid #bbf7d0;
+                    box-shadow: 0 2px 8px 0 rgba(34,197,94,0.10);
+                    min-height: 36px;
+                    transition: background 0.25s, border 0.25s;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: linear-gradient(120deg, #16a34a 60%, #22c55e 100%);
+                    border: 2px solid #22c55e;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: #bbf7d0;
+                    border-radius: 16px;
+                }
+                .custom-scrollbar {
+                    scrollbar-width: thin;
+                    scrollbar-color: #22c55e #bbf7d0;
+                }
                     `}</style>
                         {/* FITS Tanza Branding at the top, matching Login */}
                         <div className="flex flex-col items-center mb-8 mt-15 ">
                             <img src={logo} alt="FITS Tanza Logo" className="h-12 w-12 rounded-full mb-3 shadow-xl  z-30 relative mt-5" />
-                            <h1 className="font-extrabold text-3xl md:text-4xl text-blue-700 tracking-tight mb-1 text-center drop-shadow font-sans uppercase" style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
-                            <span className="text-sm md:text-sm font-semibold text-blue-600 tracking-wide mb-2 text-center" style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
+                            <h1 className="font-extrabold text-3xl md:text-4xl text-green-700 tracking-tight mb-1 text-center drop-shadow font-sans uppercase" style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
+                            <span className="text-sm md:text-sm font-semibold text-green-600 tracking-wide mb-2 text-center" style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
                             <span className="text-gray-500 text-base md:text-lg text-center">Create your account</span>
                         </div>
                         {/* Stepper with modern progress line */}
                         <div className="relative flex items-center mb-5 w-full max-w-md mx-auto">
                             {/* Modern Progress Bar */}
-                            <div className="absolute top-1/2 left-0 right-0 h-2 bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100 rounded-full shadow-inner z-0" style={{ transform: 'translateY(-50%)' }} />
-                            <div className="absolute top-1/2 left-0 h-2 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full shadow-lg z-10 transition-all duration-500" style={{ width: `${(stepIndex) / (this.steps.length - 1) * 100}%`, transform: 'translateY(-50%)' }} />
+                            <div className="absolute top-1/2 left-0 right-0 h-2 bg-gradient-to-r from-green-100 via-green-200 to-green-100 rounded-full shadow-inner z-0" style={{ transform: 'translateY(-50%)' }} />
+                            <div className="absolute top-1/2 left-0 h-2 bg-gradient-to-r from-green-400 to-green-600 rounded-full shadow-lg z-10 transition-all duration-500" style={{ width: `${(stepIndex) / (this.steps.length - 1) * 100}%`, transform: 'translateY(-50%)' }} />
                             {/* Step Circles */}
                             {this.steps.map((step, idx) => (
                                 <div key={step.label} className="relative flex-1 flex flex-col items-center z-20">
-                                    <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 transition-all duration-300 shadow-md ${idx < stepIndex ? 'border-blue-600 bg-blue-600 text-white' : idx === stepIndex ? 'border-blue-600 bg-white text-blue-700 font-bold' : 'border-gray-300 bg-white text-gray-400'}`}>{idx + 1}</div>
-                                    <span className={`mt-2 text-xs md:text-sm text-center ${idx < stepIndex ? 'text-blue-600' : idx === stepIndex ? 'text-blue-700 font-semibold' : 'text-gray-400'}`}>{step.label}</span>
+                                    <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 transition-all duration-300 shadow-md ${idx < stepIndex ? 'border-green-600 bg-green-600 text-white' : idx === stepIndex ? 'border-green-600 bg-white text-green-700 font-bold' : 'border-gray-300 bg-white text-gray-400'}`}>{idx + 1}</div>
+                                    <span className={`mt-2 text-xs md:text-sm text-center ${idx < stepIndex ? 'text-green-600' : idx === stepIndex ? 'text-green-700 font-semibold' : 'text-gray-400'}`}>{step.label}</span>
                                 </div>
                             ))}
                         </div>
@@ -256,36 +256,36 @@ class Register extends Component {
     render_first() {
         return (
             <form className="space-y-5" onSubmit={(e) => this.onNext(e, 'second')}>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Create new account<span className="text-blue-600">.</span></h2>
-                <p className="text-gray-400 text-sm mb-4">Already A Member? <Link to="/login" className="text-blue-600 hover:underline">Log In</Link></p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Create new account<span className="text-green-600">.</span></h2>
+                <p className="text-gray-400 text-sm mb-4">Already A Member? <Link to="/login" className="text-green-600 hover:underline">Log In</Link></p>
                 <div className="flex space-x-3">
                     <div className="flex-1">
                         <label htmlFor="fname" className="block text-xs font-semibold text-gray-500 mb-1">First name</label>
-                        <input type="text" id="fname" name="firstName" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                        <input type="text" id="fname" name="firstName" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                     </div>
                     <div className="flex-1">
                         <label htmlFor="lname" className="block text-xs font-semibold text-gray-500 mb-1">Last name</label>
-                        <input type="text" id="lname" name="lastName" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                        <input type="text" id="lname" name="lastName" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                     </div>
                 </div>
                 <div>
                     <label className="block text-xs font-semibold text-gray-500 mb-1">Gender</label>
                     <div className="flex space-x-6 mt-1">
                         <label className="flex items-center cursor-pointer">
-                            <input type="radio" name="gender" value="Male" onChange={this.onChange_input} required className="accent-blue-600" />
+                            <input type="radio" name="gender" value="Male" onChange={this.onChange_input} required className="accent-green-600" />
                             <span className="ml-2 text-gray-700">Male</span>
                         </label>
                         <label className="flex items-center cursor-pointer">
-                            <input type="radio" name="gender" value="Female" onChange={this.onChange_input} required className="accent-blue-600" />
+                            <input type="radio" name="gender" value="Female" onChange={this.onChange_input} required className="accent-green-600" />
                             <span className="ml-2 text-gray-700">Female</span>
                         </label>
                         <label className="flex items-center cursor-pointer">
-                            <input type="radio" name="gender" value="Other" onChange={this.onChange_input} required className="accent-blue-600" />
+                            <input type="radio" name="gender" value="Other" onChange={this.onChange_input} required className="accent-green-600" />
                             <span className="ml-2 text-gray-700">Other</span>
                         </label>
                     </div>
                 </div>
-                <button type="submit" className="w-full py-3 mt-4  text-white bg-blue-600 rounded-lg font-semibold shadow hover:bg-blue-700 transition">Next</button>
+                <button type="submit" className="w-full py-3 mt-4  text-white bg-green-600 rounded-lg font-semibold shadow hover:bg-green-700 transition">Next</button>
             </form>
         );
     }
@@ -295,7 +295,7 @@ class Register extends Component {
             <form className="space-y-6" onSubmit={(e) => this.onNext(e, 'third')}>
                 <div>
                     <label htmlFor="clientProfile" className="block text-xs font-semibold text-gray-500 mb-1">Client Profile</label>
-                    <select id="clientProfile" name="clientProfile" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50">
+                    <select id="clientProfile" name="clientProfile" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50">
                         <option value="">Select profile</option>
                         <option value="Fishfolk">Fishfolk</option>
                         <option value="Rural_Based_Org">Rural Based Org</option>
@@ -312,7 +312,7 @@ class Register extends Component {
                 <div className="flex space-x-3">
                     <div className="flex-1">
                         <label htmlFor="email" className="block text-xs font-semibold text-gray-500 mb-1">Email</label>
-                        <input type="email" id="email" name="email" onChange={(e) => { this.onChange_input(e); clearTimeout(this.emailCheckTimeout); this.emailCheckTimeout = setTimeout(() => { this.check_email(e); }, 500); }} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                        <input type="email" id="email" name="email" onChange={(e) => { this.onChange_input(e); clearTimeout(this.emailCheckTimeout); this.emailCheckTimeout = setTimeout(() => { this.check_email(e); }, 500); }} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                         {this.state.email_prompt && (
                             <p className={`mt-1 text-xs ${this.state.checkEmail ? 'text-green-500' : 'text-red-500'}`}>{this.state.email_prompt}</p>
                         )}
@@ -321,36 +321,36 @@ class Register extends Component {
                 <div className="flex space-x-3">
                     <div className="flex-1">
                         <label htmlFor="address" className="block text-xs font-semibold text-gray-500 mb-1">Address</label>
-                        <input type="text" id="address" name="address" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                        <input type="text" id="address" name="address" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                     </div>
                 </div>
                 <div className="flex space-x-3">
                     <div className="flex-1">
                         <label htmlFor="telephone" className="block text-xs font-semibold text-gray-500 mb-1">Telephone No</label>
-                        <input type="tel" id="telephone" name="telephoneNumber" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                        <input type="tel" id="telephone" name="telephoneNumber" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                     </div>
                     <div className="flex-1">
                         <label htmlFor="cellphone" className="block text-xs font-semibold text-gray-500 mb-1">Cellphone No</label>
-                        <input type="tel" id="cellphone" name="cellphoneNumber" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                        <input type="tel" id="cellphone" name="cellphoneNumber" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                     </div>
                 </div>
                 <div className="flex space-x-3">
                     <div className="flex-1">
                         <label htmlFor="occupation" className="block text-xs font-semibold text-gray-500 mb-1">Occupation</label>
-                        <input type="text" id="occupation" name="occupation" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                        <input type="text" id="occupation" name="occupation" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                     </div>
                     <div className="flex-1">
                         <label htmlFor="position" className="block text-xs font-semibold text-gray-500 mb-1">Position</label>
-                        <input type="text" id="position" name="position" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                        <input type="text" id="position" name="position" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                     </div>
                 </div>
                 <div className="flex space-x-3">
                     <div className="flex-1">
                         <label htmlFor="institution" className="block text-xs font-semibold text-gray-500 mb-1">Institution</label>
-                        <input type="text" id="institution" name="institution" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                        <input type="text" id="institution" name="institution" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                     </div>
                 </div>
-                <button type="submit" className="w-full py-3 mt-4 mb-6 text-white bg-blue-600 rounded-lg font-semibold shadow hover:bg-blue-700 transition">Next</button>
+                <button type="submit" className="w-full py-3 mt-4 mb-6 text-white bg-green-600 rounded-lg font-semibold shadow hover:bg-green-700 transition">Next</button>
             </form>
         );
     }
@@ -360,17 +360,17 @@ class Register extends Component {
             <form className="space-y-6" onSubmit={this.post_account}>
                 <div>
                     <label htmlFor="username" className="block text-xs font-semibold text-gray-500 mb-1">Username</label>
-                    <input type="text" id="username" name="username" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                    <input type="text" id="username" name="username" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                 </div>
                 <div>
                     <label htmlFor="password" className="block text-xs font-semibold text-gray-500 mb-1">Password</label>
-                    <input type="password" id="password" name="password" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                    <input type="password" id="password" name="password" onChange={this.onChange_input} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                 </div>
                 <div>
                     <label htmlFor="confirmPass" className="block text-xs font-semibold text-gray-500 mb-1">Confirm Password</label>
-                    <input type="password" id="confirmPass" name="confirmPass" value={this.state.confirm_value} onChange={(e) => { this.inputs.confirmPass = e.target.value; this.setState({ ...this.state, confirm_value: e.target.value }); }} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50" />
+                    <input type="password" id="confirmPass" name="confirmPass" value={this.state.confirm_value} onChange={(e) => { this.inputs.confirmPass = e.target.value; this.setState({ ...this.state, confirm_value: e.target.value }); }} required className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50" />
                 </div>
-                <button type="submit" className="w-full py-3 mt-4 text-white bg-blue-600 rounded-lg font-semibold shadow hover:bg-blue-700 transition">Create account</button>
+                <button type="submit" className="w-full py-3 mt-4 text-white bg-green-600 rounded-lg font-semibold shadow hover:bg-green-700 transition">Create account</button>
             </form>
         );
     }

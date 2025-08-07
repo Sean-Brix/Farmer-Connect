@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import logo from '../../Assets/Logo.png';
 import Chat from '../../Components/Chats/Chat';
@@ -160,6 +160,8 @@ export default function Navbar({refresh}) {
     const infoActive = ['/about', '/contact'].some((path) => location.pathname.startsWith(path));
     // Helper: is any of the Services links active?
     const servicesActive = ['/seminar', '/eic', '/distribution'].some((path) => location.pathname.startsWith(path));
+
+    const closeProfileTimeout = useRef();
 
     return (
         <>
@@ -540,12 +542,21 @@ export default function Navbar({refresh}) {
                         </ul>
                     </div>
                     <div className="flex items-center gap-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                        <div className="relative hidden md:block">
+                        <div
+                            className="relative hidden md:block"
+                            onMouseEnter={() => {
+                                if (closeProfileTimeout.current) clearTimeout(closeProfileTimeout.current);
+                                setOpen(true);
+                            }}
+                            onMouseLeave={() => {
+                                closeProfileTimeout.current = setTimeout(() => setOpen(false), 250); // 250ms delay
+                            }}
+                        >
                             <button
-                                onClick={() => setOpen((open) => !open)}
                                 className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-green-700 to-green-400 hover:from-green-800 hover:to-green-500 transition-all duration-200 focus:outline-none shadow-lg border border-green-100"
                                 aria-haspopup="true"
                                 aria-expanded={open}
+                                tabIndex={0}
                             >
                                 <img
                                     src={user.avatar}
@@ -553,12 +564,10 @@ export default function Navbar({refresh}) {
                                     className="w-8 h-8 rounded-full object-cover"
                                 />
                                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
-                                
                             </button>
                             {open && (
                                 <ul
-                                    className="absolute right-0 mt-3 w-44 bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl py-2 z-50 border border-green-100 animate-fade-in"
-                                    onMouseLeave={() => setOpen(false)}
+                                    className="absolute right-0 mt-3 w-44 bg-white rounded-2xl shadow-2xl py-2 z-[9999] border border-green-100 animate-fade-in"
                                 >
                                     {loggedIn ? (
                                         <>
@@ -703,9 +712,7 @@ export default function Navbar({refresh}) {
                             />
                                 <NavLink
                                     to="/"
-                                className={({ isActive }) =>
-                                    `flex items-center font-extrabold text-2xl px-2 mr-10  text-green-700 md:text-2xl${isActive ? ' underline decoration-2 decoration-green-700 underline-offset-4' : ''}`
-                                    }
+                                className="flex items-center font-extrabold text-2xl px-2 mr-10  text-green-700 md:text-2xl"
                                 >
                                 FITS -Tanza
                             </NavLink>
@@ -803,7 +810,7 @@ export default function Navbar({refresh}) {
                                 <NavLink
                                     to="/"
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 px-6 py-6 text-green-700 hover:bg-green-50 font-semibold rounded-lg transition${isActive ? ' underline decoration-2 decoration-green-700 underline-offset-4' : ''}`
+                                        `flex items-center gap-2 px-6 py-6 font-semibold rounded-lg transition ${isActive ? 'bg-green-100 text-green-900' : 'text-green-700 hover:bg-green-50'}`
                                     }
                                 >
                                     <svg
@@ -824,7 +831,7 @@ export default function Navbar({refresh}) {
                             </li>
                             <li>
                                 <details className="group">
-                                    <summary className={`flex items-center gap-2 px-6 py-6 text-green-700 hover:bg-green-50 font-semibold rounded-lg cursor-pointer transition focus:outline-none${infoActive ? ' underline decoration-2 decoration-green-700 underline-offset-4' : ''}`}> 
+                                    <summary className={`flex items-center gap-2 px-6 py-6 font-semibold rounded-lg cursor-pointer transition focus:outline-none ${infoActive ? 'bg-green-100 text-green-900' : 'text-green-700 hover:bg-green-50'}`}> 
                                         <svg
                                             className="w-5 h-5 text-green-500"
                                             fill="none"
@@ -866,9 +873,9 @@ export default function Navbar({refresh}) {
                                         <li>
                                             <NavLink
                                                 to="/about"
-                                                className={({ isActive }) =>
-                                                    `flex items-center gap-2 px-8 py-3 text-green-700 hover:bg-green-50 rounded-lg transition font-medium${isActive ? ' underline decoration-2 decoration-green-700 underline-offset-4' : ''}`
-                                                }
+                                            className={({ isActive }) =>
+                                                `flex items-center gap-2 px-8 py-3 rounded-lg transition font-medium ${isActive ? 'bg-green-100 text-green-900' : 'text-green-700 hover:bg-green-50'}`
+                                            }
                                             >
                                                 <svg
                                                     className="w-5 h-5 text-green-500"
@@ -896,9 +903,9 @@ export default function Navbar({refresh}) {
                                         <li>
                                             <NavLink
                                                 to="/contact"
-                                                className={({ isActive }) =>
-                                                    `flex items-center gap-2 px-8 py-3 text-green-700 hover:bg-green-50 rounded-lg transition font-medium${isActive ? ' underline decoration-2 decoration-green-700 underline-offset-4' : ''}`
-                                                }
+                                            className={({ isActive }) =>
+                                                `flex items-center gap-2 px-8 py-3 rounded-lg transition font-medium ${isActive ? 'bg-green-100 text-green-900' : 'text-green-700 hover:bg-green-50'}`
+                                            }
                                             >
                                                 <svg
                                                     className="w-5 h-5 text-green-500"
@@ -926,7 +933,7 @@ export default function Navbar({refresh}) {
                             </li>
                             <li>
                                 <details className="group">
-                                    <summary className={`flex items-center gap-2 px-6 py-6 text-green-700 hover:bg-green-50 font-semibold rounded-lg cursor-pointer transition focus:outline-none${servicesActive ? ' underline decoration-2 decoration-green-700 underline-offset-4' : ''}`}> 
+                                    <summary className={`flex items-center gap-2 px-6 py-6 font-semibold rounded-lg cursor-pointer transition focus:outline-none ${servicesActive ? 'bg-green-100 text-green-900' : 'text-green-700 hover:bg-green-50'}`}> 
                                         <svg
                                                         className="w-5 h-5 text-green-500"
                                             fill="none"
@@ -960,7 +967,7 @@ export default function Navbar({refresh}) {
                                             <NavLink
                                                 to="/seminar"
                                                 className={({ isActive }) =>
-                                                    `flex items-center gap-3 px-8 py-4 text-green-700 hover:bg-green-50 rounded-lg transition font-medium${isActive ? ' underline decoration-2 decoration-green-700 underline-offset-4' : ''}`
+                                                    `flex items-center gap-3 px-8 py-4 rounded-lg transition font-medium ${isActive ? 'bg-green-100 text-green-900' : 'text-green-700 hover:bg-green-50'}`
                                                 }
                                             >
                                                 <svg
@@ -988,7 +995,7 @@ export default function Navbar({refresh}) {
                                             <NavLink
                                                 to="/eic"
                                                 className={({ isActive }) =>
-                                                    `flex items-center gap-3 px-8 py-4 text-green-700 hover:bg-green-50 rounded-lg transition font-medium${isActive ? ' underline decoration-2 decoration-green-700 underline-offset-4' : ''}`
+                                                    `flex items-center gap-3 px-8 py-4 rounded-lg transition font-medium ${isActive ? 'bg-green-100 text-green-900' : 'text-green-700 hover:bg-green-50'}`
                                                 }
                                             >
                                                 <svg
@@ -1020,7 +1027,7 @@ export default function Navbar({refresh}) {
                                             <NavLink
                                                 to="/distribution"
                                                 className={({ isActive }) =>
-                                                    `flex items-center gap-3 px-8 py-4 text-green-700 hover:bg-green-50 rounded-lg transition font-medium${isActive ? ' underline decoration-2 decoration-green-700 underline-offset-4' : ''}`
+                                                    `flex items-center gap-3 px-8 py-4 rounded-lg transition font-medium ${isActive ? 'bg-green-100 text-green-900' : 'text-green-700 hover:bg-green-50'}`
                                                 }
                                             >
                                                 <svg
@@ -1052,7 +1059,7 @@ export default function Navbar({refresh}) {
                                 <NavLink
                                     to="/settings/profile"
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 px-6 py-6 text-green-700 hover:bg-green-50 font-semibold rounded-lg transition${isActive ? ' underline decoration-2 decoration-green-700 underline-offset-4' : ''}`
+                                        `flex items-center gap-2 px-6 py-6 font-semibold rounded-lg transition ${isActive ? 'bg-green-100 text-green-900' : 'text-green-700 hover:bg-green-50'}`
                                     }
                                 >
                                     <svg
