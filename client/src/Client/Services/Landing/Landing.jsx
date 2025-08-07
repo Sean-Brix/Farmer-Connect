@@ -333,89 +333,59 @@ export default function Landing() {
                 <h2 className="text-3xl font-extrabold text-green-900 mb-20 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
                     Our Programs
                 </h2>
-                <div className="max-w-6xl mx-auto px-4">
-                    <div className="flex items-center justify-center gap-6">
-                        <button
-                            aria-label="Previous"
-                            onClick={prevSlide}
-                            className="bg-green-900/30 hover:bg-green-900/60 text-green-900 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition disabled:opacity-40 disabled:cursor-not-allowed"
-                            disabled={programs.length <= 4}
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-                        </button>
-                        <div className="w-full flex justify-center gap-6 overflow-hidden mx-4 md:mx-10 lg:mx-16">
-                            <div
-                                className={`flex gap-4 py-5 w-full transition-transform duration-300 ease-in-out ${isAnimating ? (direction === 1 ? 'slider-next' : 'slider-prev') : ''}`}
-                                style={{
-                                    transform: isAnimating
-                                        ? `translateX(${direction === 1 ? (window.innerWidth < 640 ? '-100%' : '-25%') : (window.innerWidth < 640 ? '100%' : '25%')})`
-                                        : 'translateX(0)',
-                                }}
-                            >
-                                {/* Responsive: 1 item on small screens, 4 on md+ */}
-                                {Array.from({ length: cardsToShow }).map((_, i) => {
-                                    const idx = (current + i) % programs.length;
-                                    const program = programs[idx];
-                                    let cardOpacity = 'opacity-100 scale-100';
-                                    if ((cardsToShow > 1) && (i === 0 || i === cardsToShow - 1)) cardOpacity = 'opacity-60 scale-90';
-                                    return (
-                                        <div
-                                            key={idx}
-                                className={`bg-white rounded-3xl shadow-xl flex flex-col items-center p-3 xs:p-4 sm:p-5 md:p-6 lg:p-8 hover:shadow-2xl transition group border-t-8 border-green-900 relative mx-auto ${cardOpacity}`}
-                                            style={{
-                                                width: '90vw',
-                                                maxWidth: '260px',
-                                                minWidth: '140px',
-                                                height: '100%',
-                                                minHeight: '240px',
-                                                maxHeight: '360px',
-                                                transition: 'all 0.3s',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                            }}
+                <div className="max-w-7xl mx-auto px-4">
+                    <div className="flex flex-row gap-8 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-green-700 scrollbar-track-green-100" style={{scrollbarColor:'#22c55e #bbf7d0'}}>
+                        {programs.map((program, idx) => (
+                            <div key={idx} className="min-w-[350px] max-w-[400px] w-full bg-white rounded-2xl shadow-lg border border-green-900/30 p-5 flex flex-col hover:shadow-2xl transition-all duration-300 group">
+                                <div className="relative mb-3">
+                                    <img src={program.img} alt={program.title} className="w-full h-48 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300 shadow-md" />
+                                    <span className="absolute top-2 right-2 bg-green-900 text-green-100 text-xs px-2 py-0.5 rounded-full font-bold shadow">{program.tag || 'Program'}</span>
+                                </div>
+                                <h3 className="font-bold text-lg text-green-900 mb-2">{program.title}</h3>
+                                <p className="text-gray-800 text-sm mb-3 font-semibold line-clamp-3 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', maxHeight: '4.5em' }}>
+                                    {program.desc}
+                                </p>
+                                <div className="flex items-center justify-between mt-auto">
+                                    <span className="text-green-900 text-xs font-semibold">{program.date}</span>
+                                    {program.link && (
+                                        <a
+                                            href={program.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-green-900 font-bold hover:underline flex items-center gap-1 transition text-sm"
                                         >
-                                            <div className="w-14 h-14 xs:w-16 xs:h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-full bg-green-900/20 flex items-center justify-center mb-3 sm:mb-4 shadow group-hover:bg-green-900/40 transition">
-                                                <img
-                                                    src={program.img}
-                                                    alt={program.title}
-                                                    className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-cover rounded-full border-4 border-green-900/30 shadow"
-                                                />
-                                            </div>
-                                            <h3 className="text-sm xs:text-base sm:text-lg md:text-xl font-bold text-green-900 mb-1 sm:mb-2 text-center group-hover:text-green-800 transition truncate w-full" title={program.title}>{program.title}</h3>
-                                            <p className="text-gray-700 text-xs xs:text-sm sm:text-base font-medium text-center mb-2 sm:mb-3 line-clamp-3 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', maxHeight: '4.5em' }} title={program.desc}>{program.desc}</p>
-                                            <a
-                                                href="/seminar"
-                                                className="mt-auto inline-block bg-gradient-to-r from-green-900 to-green-800 text-white px-2 py-1.5 xs:px-3 xs:py-2 sm:px-4 sm:py-2 rounded-xl font-semibold shadow hover:scale-105 transition-transform text-xs xs:text-sm md:text-base"
-                                                onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
-                                            >
-                                                Learn More
-                                            </a>
-                                        </div>
-                                    );
-                                })}
+                                            Read More
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                            </svg>
+                                        </a>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                        <button
-                            aria-label="Next"
-                            onClick={nextSlide}
-                            className="bg-green-900/30 hover:bg-green-900/60 text-green-900 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition disabled:opacity-40 disabled:cursor-not-allowed"
-                            disabled={programs.length <= 4}
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-                        </button>
-                    </div>
-                    {/* Dots navigation */}
-                    <div className="flex justify-center gap-2 mt-8">
-                        {programs.slice(0, programs.length).map((_, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => setCurrent(idx)}
-                                className={`w-3 h-3 rounded-full transition border-2 ${current === idx ? 'bg-green-900 border-green-900' : 'bg-green-700 border-green-700 hover:bg-green-800'}`}
-                                aria-label={`Go to program ${idx + 1}`}
-                            />
                         ))}
                     </div>
                 </div>
+                <style>{`
+                    .scrollbar-thin::-webkit-scrollbar {
+                        height: 10px;
+                        background: #bbf7d0;
+                    }
+                    .scrollbar-thin::-webkit-scrollbar-thumb {
+                        background: linear-gradient(120deg, #22c55e 60%, #16a34a 100%);
+                        border-radius: 16px;
+                        border: 2px solid #bbf7d0;
+                        min-height: 36px;
+                        transition: background 0.25s, border 0.25s;
+                    }
+                    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+                        background: linear-gradient(120deg, #16a34a 60%, #22c55e 100%);
+                        border: 2px solid #22c55e;
+                    }
+                    .scrollbar-thin::-webkit-scrollbar-track {
+                        background: #bbf7d0;
+                        border-radius: 16px;
+                    }
+                `}</style>
             </section>
 
 
