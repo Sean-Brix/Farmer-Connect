@@ -165,12 +165,15 @@ export default function Sidebar({
                     background: transparent;
                 }
                 .minimalist-scrollbar::-webkit-scrollbar-thumb {
-                    background: #c7d2fe;
-                    border-radius: 4px;
+                    background: #22c55e !important; /* green-500 */
+                    border-radius: 4px !important;
+                }
+                .minimalist-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: #16a34a !important; /* green-600 */
                 }
                 .minimalist-scrollbar {
-                    scrollbar-width: thin;
-                    scrollbar-color: #c7d2fe transparent;
+                    scrollbar-width: thin !important;
+                    scrollbar-color: #22c55e transparent !important; /* green-500 */
                 }
                 @media (max-width: 1300px) and (min-width: 1000px) {
                     .sidebar-icon-only {
@@ -210,6 +213,7 @@ export default function Sidebar({
                 .sidebar-logout-btn:active {
                     transform: scale(0.97);
                 }
+                    
             `}</style>
             </aside>
         </>

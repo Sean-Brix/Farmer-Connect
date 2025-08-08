@@ -66,31 +66,37 @@ export default function Landing() {
             img: img1,
             title: "FITS Program",
             desc: "The Farmers' Information and Technology Services (FITS) Program delivers timely agricultural information and technology to empower farmers and stakeholders.",
+            status: "Ongoing"
         },
         {
             img: img2,
             title: "Crop Production",
             desc: "Enhancing crop production through innovative techniques, research, and farmer education for sustainable agriculture.",
+            status: "Available"
         },
         {
             img: img5,
             title: "Rabies Control",
             desc: "Implementing comprehensive rabies prevention and control initiatives to safeguard public health and animal welfare.",
+            status: "Upcoming"
         },
         {
             img: img3,
             title: "Fisheries Program",
             desc: "Promoting responsible fisheries management and aquaculture to ensure sustainable livelihoods and healthy aquatic ecosystems.",
+            status: "Ongoing"
         },
         {
             img: img4,
             title: "Organic Farming",
             desc: "Advancing organic farming practices for healthier produce, environmental stewardship, and improved farmer well-being.",
+            status: "Available"
         },
         {
             img: img5,
             title: "Rabies Control",
             desc: "Implementing comprehensive rabies prevention and control initiatives to safeguard public health and animal welfare.",
+            status: "Completed"
         },
     ];
 
@@ -184,314 +190,639 @@ export default function Landing() {
                 />
                 {/* Responsive flex: column on small screens, row on md+ */}
                 <div className="flex flex-col md:flex-row w-full items-center justify-center">
-                    {/* Left: Headline and Description */}
+                    {/* Left: Professional Headline and Description */}
                     <div className="flex-1 pr-[2vw] min-w-[320px] relative z-30 w-full md:w-auto">
-                        <h1 className="font-montserrat font-extrabold text-[2.2rem] md:text-[3.5rem] text-[#0a2540] m-0 leading-tight tracking-[0.01em]">
-                            Empowering <span className="text-green-700">Agriculture</span>,<br />Enriching Lives
+                        {/* Premium badge */}
+                        <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 rounded-full px-4 py-2 mb-6">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span className="text-green-700 font-semibold text-sm uppercase tracking-wide">
+                                Transforming Agriculture
+                            </span>
+                        </div>
+                        
+                        {/* Enhanced title with modern typography */}
+                        <h1 className="font-montserrat font-black text-[2.5rem] md:text-[4rem] lg:text-[4.5rem] text-gray-900 m-0 leading-[0.9] tracking-tight mb-6">
+                            Empowering{' '}
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-700 to-green-800 animate-gradient-x">
+                                Agriculture
+                            </span>
+                            <br />
+                            <span className="text-gray-700 text-[2rem] md:text-[3rem] lg:text-[3.5rem] font-bold">
+                                Enriching Lives
+                            </span>
                         </h1>
-                        <p className="font-poppins text-base md:text-[1.25rem] text-[#0a2540] mt-8 max-w-xl font-medium">
-                            Get updates on new features, farmer stories, and the future of AI for agriculture—delivered monthly to your inbox.
+                        
+                        {/* Professional description */}
+                        <p className="font-poppins text-lg md:text-xl text-gray-600 mt-6 max-w-2xl font-medium leading-relaxed">
+                            Discover innovative agricultural solutions, connect with expert farmers, and access cutting-edge technology to{' '}
+                            <span className="text-green-700 font-semibold">transform your farming journey</span> today.
                         </p>
-                        <div className="flex gap-4 mt-10 flex-wrap">
+                        
+                        {/* Professional CTA buttons */}
+                        <div className="flex flex-col sm:flex-row gap-4 mt-10">
                             <button
-                                className="bg-green-700 text-white border-none rounded-xl px-8 py-3 font-bold text-base cursor-pointer font-poppins shadow transition-colors duration-200 hover:bg-green-800"
+                                className="group relative overflow-hidden bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border-none rounded-2xl px-8 py-4 font-bold text-lg cursor-pointer font-poppins shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 transform"
                                 onClick={() => window.location = '/seminar'}
                             >
-                                Our Programs
+                                <span className="relative z-10 flex items-center justify-center gap-3">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                    Explore Programs
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             </button>
+                            
                             <button
-                                className="bg-white text-green-700 border-2 border-green-700 rounded-xl px-8 py-3 font-semibold text-base cursor-pointer font-poppins shadow transition-colors duration-200 hover:bg-green-700 hover:text-white"
+                                className="group relative bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-300 hover:border-green-500 rounded-2xl px-8 py-4 font-semibold text-lg cursor-pointer font-poppins shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 transform"
                                 onClick={() => window.location = '/about'}
                             >
-                                Learn More
+                                <span className="flex items-center justify-center gap-3 group-hover:text-green-700 transition-colors duration-300">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Learn More
+                                </span>
                             </button>
                         </div>
+                        
+                        {/* Trust indicators */}
+                    
                     </div>
-                    {/* Right: Video - below on small screens, right on md+ */}
+                    {/* Right: Enhanced Professional Slideshow */}
                     <div className="flex-1 flex items-center min-w-[320px] w-full md:w-auto mt-10 md:mt-0 justify-end">
-                        <div className="relative w-full h-[260px] md:h-[650px] max-w-[720px] bg-gradient-to-br from-green-200 via-green-100 to-green-300 border border-green-200 rounded-2xl md:rounded-bl-[60px] shadow-2xl overflow-hidden flex items-center justify-center -mt-4 md:-mt-16">
-                            {/* Slideshow images with fade transition */}
-                            {heroSlides.map((slide, idx) => (
-                                <img
-                                    key={idx}
-                                    src={slide.img}
-                                    alt={slide.desc}
-                                    className={`w-full h-full object-cover rounded-2xl md:rounded-bl-[60px] hero-fade-img ${heroIndex === idx ? 'opacity-100 z-20' : 'opacity-0 z-10'} ${heroIndex === idx ? 'fade-in' : 'fade-out'}`}
-                                    style={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        transition: 'opacity 1.6s cubic-bezier(0.86,0,0.07,1)',
-                                        boxShadow: '0 16px 40px 0 rgba(36,99,235,0.18), 0 2px 8px 0 rgba(0,0,0,0.10), 0 0px 0px 2px rgba(36,99,235,0.08)'
-                                    }}
-                                />
-                            ))}
-                            {/* Overlay for polish */}
-                            <div className="absolute inset-0 pointer-events-none z-20" style={{background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(34,197,94,0.08) 100%)'}}></div>
-                            {/* Caption */}
-                            <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-green-700/80 via-green-700/40 to-transparent px-6 py-10 text-white font-semibold text-lg md:text-2xl z-30 flex items-center justify-between">
+                        <div className="relative w-full h-[260px] md:h-[650px] max-w-[720px] bg-gradient-to-br from-gray-100 via-white to-gray-200 border border-gray-200 rounded-3xl shadow-2xl overflow-hidden flex items-center justify-center -mt-4 md:-mt-16 group">
+                            
+                            {/* Professional slideshow with enhanced transitions */}
+                            <div className="relative w-full h-full overflow-hidden rounded-3xl">
+                                {heroSlides.map((slide, idx) => (
+                                    <div
+                                        key={idx}
+                                        className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+                                            heroIndex === idx 
+                                                ? 'opacity-100 scale-100 z-20' 
+                                                : 'opacity-0 scale-105 z-10'
+                                        }`}
+                                        style={{
+                                            transform: heroIndex === idx ? 'scale(1)' : 'scale(1.05)',
+                                            filter: heroIndex === idx ? 'brightness(1) contrast(1.05)' : 'brightness(0.8)'
+                                        }}
+                                    >
+                                        <img
+                                            src={slide.img}
+                                            alt={slide.desc}
+                                            className="w-full h-full object-cover"
+                                            style={{
+                                                filter: 'contrast(1.1) saturate(1.1) brightness(0.95)'
+                                            }}
+                                        />
+                                        {/* Professional gradient overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-green-900/10 via-transparent to-green-900/10"></div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Professional navigation controls */}
+                            <div className="absolute top-6 right-6 z-30 flex gap-3 translate-y-5">
                                 <button
-                                    className="bg-green-700/80 hover:bg-green-800/90 rounded-full p-2 mr-2 transition shadow-lg"
+                                    className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl p-3 transition-all duration-300 hover:scale-110 shadow-lg border border-white/20"
                                     onClick={handlePrevHero}
                                     aria-label="Previous Slide"
                                 >
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                    </svg>
                                 </button>
-                                <span className="flex-1 text-center font-poppins font-semibold text-base md:text-xl px-2">
-                                    {heroSlides[heroIndex].desc}
-                                </span>
                                 <button
-                                    className="bg-green-700/80 hover:bg-green-800/90 rounded-full p-2 ml-2 transition shadow-lg"
+                                    className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl p-3 transition-all duration-300 hover:scale-110 shadow-lg border border-white/20"
                                     onClick={handleNextHero}
                                     aria-label="Next Slide"
                                 >
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                    </svg>
                                 </button>
                             </div>
-                            {/* Dots navigation */}
-                            <div className="absolute bottom-3 left-0 w-full flex justify-center gap-2 z-40">
+
+                            {/* Professional caption with modern typography */}
+                            <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent px-8 py-8 text-white z-30">
+                                <div className="max-w-lg">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+                                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            </svg>
+                                        </div>
+                                        <span className="text-green-400 font-semibold text-sm uppercase tracking-wide">
+                                            Feature Highlight
+                                        </span>
+                                    </div>
+                                    <p className="font-poppins font-medium text-lg md:text-xl leading-relaxed text-white/95">
+                                        {heroSlides[heroIndex].desc}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Modern progress indicators */}
+                            <div className="absolute bottom-6 right-6 z-30 flex gap-2 ">
                                 {heroSlides.map((_, idx) => (
                                     <button
                                         key={idx}
                                         onClick={() => setHeroIndex(idx)}
-                                        className={`w-3 h-3 rounded-full border-2 transition ${heroIndex === idx ? 'bg-green-700 border-green-700' : 'bg-green-200 border-green-200 hover:bg-green-400'}`}
+                                        className={`transition-all duration-300 rounded-full ${
+                                            heroIndex === idx 
+                                                ? 'w-8 h-2 bg-white shadow-lg' 
+                                                : 'w-2 h-2 bg-white/50 hover:bg-white/70'
+                                        }`}
                                         aria-label={`Go to slide ${idx + 1}`}
                                     />
                                 ))}
                             </div>
+
+                            {/* Slide counter */}
+                            <div className="absolute top-6 left-6 z-30 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-2 text-white translate-y-5 text-sm font-medium">
+                                <span className="text-green-400">{heroIndex + 1}</span>
+                                <span className="text-white/70 mx-1">/</span>
+                                <span className="text-white/70">{heroSlides.length}</span>
+                            </div>
+
+                            
+
+                            {/* Professional border glow effect */}
+                            <div className="absolute inset-0 rounded-3xl ring-1 ring-white/20 ring-inset pointer-events-none"></div>
                         </div>
                     </div>
                 </div>
                 </section>
 
-            {/* MISSION & VISION */}
-            <section className="py-20 mt-0  relative overflow-hidden " style={{ fontFamily: 'Poppins, sans-serif' }}>
-                {/* Decorative SVG background */}
-               
-                <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row gap-10 relative z-10">
-                    {/* Mission */}
-                    <div className="flex-1 flex flex-col items-center justify-center relative group">
-                        {/* Removed decorative blur background */}
-                        <div className="relative z-10 flex flex-col items-center">
-                            <span className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-green-100 shadow-lg mb-6 group-hover:scale-110 transition">
-                                {/* Mission Icon - Flag */}
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 21V5a1 1 0 011-1h10a1 1 0 011 1v7a1 1 0 01-1 1H6a1 1 0 00-1 1v7" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5h12" />
-                                </svg>
-                            </span>
-                            <h2 className="text-3xl font-extrabold text-green-900 tracking-tight letter-spacing-wide mb-4">Mission</h2>
-                            <p className="text-gray-700 text-lg leading-relaxed font-semibold text-center max-w-md">
-                                To drive sustainable agricultural growth and elevate community livelihoods through innovative solutions, transformative education, and collaborative partnerships.
-                            </p>
-                        </div>
-                        {/* Decorative dots */}
-                        <div className="mt-8 flex items-center  gap-2 z-10">
-                            
-                        </div>
-                    </div>
-                    {/* Divider for desktop */}
-                    <div className="hidden md:flex flex-col justify-center">
-                        <svg className="w-2 h-40" viewBox="0 0 8 160" fill="none">
-                            <path d="M4 0C4 0 4 80 4 160" stroke="green" strokeWidth="4" strokeDasharray="8 8" />
-                        </svg>
-                    </div>
-                    {/* Vision */}
-                    <div className="flex-1 flex flex-col items-center justify-center relative group">
-                        {/* Removed decorative blur background */}
-                        <div className="relative z-10 flex flex-col items-center">
-                            <span className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-green-100 shadow-lg mb-6 group-hover:scale-110 transition">
-                                {/* Vision Icon - Eye */}
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
-                                    <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth={2} />
-                                </svg>
-                            </span>
-                            <h2 className="text-3xl font-extrabold text-green-900 tracking-tight letter-spacing-wide mb-4">Vision</h2>
-                            <p className="text-gray-700 text-lg leading-relaxed font-semibold text-center max-w-md">
-                                To be a catalyst for agricultural transformation, fostering innovation and building resilient, thriving communities for generations to come.
-                            </p>
-                        </div>
-                        {/* Decorative dots */}
-                        <div className="mt-8 flex items-center gap-2 z-10">
-                            {/* Removed decorative dots */}
-                        </div>
-                    </div>
+            {/* MISSION & VISION - Professional Redesign */}
+            <section className="py-12 mt-0 relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-green-50/30" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                {/* Premium background elements */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute top-10 left-10 w-48 h-48 bg-green-100/40 rounded-full blur-3xl"></div>
+                    <div className="absolute bottom-10 right-10 w-64 h-64 bg-emerald-100/30 rounded-full blur-3xl"></div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-green-50/20 to-emerald-50/20 rounded-full blur-3xl"></div>
                 </div>
-                
-            </section>
 
-            {/* PROGRAMS */}
-            <section id="programs" className="mb-20 mt-20 py-14 bg-green-900/10" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                <h2 className="text-3xl font-extrabold text-green-900 mb-20 text-center tracking-tight reveal-on-scroll opacity-0 translate-y-10 transition-all duration-700 delay-100">
-                    Our Programs
-                </h2>
-                <div className="max-w-6xl mx-auto px-4">
-                    <div className="flex items-center justify-center gap-6">
-                        <button
-                            aria-label="Previous"
-                            onClick={prevSlide}
-                            className="bg-green-900/30 hover:bg-green-900/60 text-green-900 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition disabled:opacity-40 disabled:cursor-not-allowed"
-                            disabled={programs.length <= 4}
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-                        </button>
-                        <div className="w-full flex justify-center gap-6 overflow-hidden mx-4 md:mx-10 lg:mx-16">
-                            <div
-                                className={`flex gap-4 py-5 w-full transition-transform duration-300 ease-in-out ${isAnimating ? (direction === 1 ? 'slider-next' : 'slider-prev') : ''}`}
-                                style={{
-                                    transform: isAnimating
-                                        ? `translateX(${direction === 1 ? (window.innerWidth < 640 ? '-100%' : '-25%') : (window.innerWidth < 640 ? '100%' : '25%')})`
-                                        : 'translateX(0)',
-                                }}
-                            >
-                                {/* Responsive: 1 item on small screens, 4 on md+ */}
-                                {Array.from({ length: cardsToShow }).map((_, i) => {
-                                    const idx = (current + i) % programs.length;
-                                    const program = programs[idx];
-                                    let cardOpacity = 'opacity-100 scale-100';
-                                    if ((cardsToShow > 1) && (i === 0 || i === cardsToShow - 1)) cardOpacity = 'opacity-60 scale-90';
-                                    return (
-                                        <div
-                                            key={idx}
-                                className={`bg-white rounded-3xl shadow-xl flex flex-col items-center p-3 xs:p-4 sm:p-5 md:p-6 lg:p-8 hover:shadow-2xl transition group border-t-8 border-green-900 relative mx-auto ${cardOpacity}`}
-                                            style={{
-                                                width: '90vw',
-                                                maxWidth: '260px',
-                                                minWidth: '140px',
-                                                height: '100%',
-                                                minHeight: '240px',
-                                                maxHeight: '360px',
-                                                transition: 'all 0.3s',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                            }}
-                                        >
-                                            <div className="w-14 h-14 xs:w-16 xs:h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-full bg-green-900/20 flex items-center justify-center mb-3 sm:mb-4 shadow group-hover:bg-green-900/40 transition">
-                                                <img
-                                                    src={program.img}
-                                                    alt={program.title}
-                                                    className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-cover rounded-full border-4 border-green-900/30 shadow"
-                                                />
+                {/* Section header */}
+                <div className="text-center mb-12 relative z-10">
+                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 rounded-full px-4 py-2 mb-6 shadow-sm">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-green-700 font-bold text-xs uppercase tracking-wider">Our Foundation</span>
+                    </div>
+                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 mb-4 tracking-tight">
+                        Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Purpose</span> & Vision
+                    </h2>
+                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed">
+                        Driving agricultural innovation and community empowerment through sustainable solutions.
+                    </p>
+                </div>
+               
+                <div className="max-w-6xl mx-auto px-4 relative z-10">
+                    <div className="grid md:grid-cols-2 gap-8 lg:gap-10 items-stretch">
+                        
+                        {/* Mission Card - Enhanced */}
+                        <div className="group relative h-full">
+                            {/* Premium card container */}
+                            <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-200/50 hover:shadow-2xl transition-all duration-500 hover:scale-105 transform h-full flex flex-col">
+                                
+                                {/* Premium icon container */}
+                                <div className="relative mb-6">
+                                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 rounded-xl shadow-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                        </svg>
+                                    </div>
+                                    {/* Floating accent */}
+                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full opacity-80 group-hover:scale-125 transition-transform duration-300"></div>
+                                </div>
+                                
+                                {/* Content */}
+                                <div className="space-y-4 flex-grow">
+                                    <div>
+                                        <h3 className="text-xl lg:text-2xl font-black text-gray-900 mb-2 tracking-tight">Mission</h3>
+                                        <div className="w-12 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                                    </div>
+                                    
+                                    <p className="text-sm lg:text-base text-gray-700 leading-relaxed font-medium min-h-[4rem]">
+                                        To drive <span className="text-green-700 font-bold">sustainable agricultural growth</span> and elevate community livelihoods through innovative solutions, transformative education, and <span className="text-emerald-700 font-bold">collaborative partnerships</span>.
+                                    </p>
+                                    
+                                    {/* Key points */}
+                                    <div className="space-y-2 pt-2">
+                                        {[
+                                            'Sustainable Growth',
+                                            'Community Empowerment', 
+                                            'Innovation Excellence'
+                                        ].map((point, idx) => (
+                                            <div key={idx} className="flex items-center gap-2">
+                                                <div className="w-1.5 h-1.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                                                <span className="text-gray-600 font-semibold text-sm">{point}</span>
                                             </div>
-                                            <h3 className="text-sm xs:text-base sm:text-lg md:text-xl font-bold text-green-900 mb-1 sm:mb-2 text-center group-hover:text-green-800 transition truncate w-full" title={program.title}>{program.title}</h3>
-                                            <p className="text-gray-700 text-xs xs:text-sm sm:text-base font-medium text-center mb-2 sm:mb-3 line-clamp-3 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', maxHeight: '4.5em' }} title={program.desc}>{program.desc}</p>
-                                            <a
-                                                href="/seminar"
-                                                className="mt-auto inline-block bg-gradient-to-r from-green-900 to-green-800 text-white px-2 py-1.5 xs:px-3 xs:py-2 sm:px-4 sm:py-2 rounded-xl font-semibold shadow hover:scale-105 transition-transform text-xs xs:text-sm md:text-base"
-                                                onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
-                                            >
-                                                Learn More
-                                            </a>
-                                        </div>
-                                    );
-                                })}
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                                {/* Hover overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-emerald-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                             </div>
                         </div>
-                        <button
-                            aria-label="Next"
-                            onClick={nextSlide}
-                            className="bg-green-900/30 hover:bg-green-900/60 text-green-900 rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition disabled:opacity-40 disabled:cursor-not-allowed"
-                            disabled={programs.length <= 4}
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-                        </button>
+
+                        {/* Vision Card - Enhanced */}
+                        <div className="group relative h-full">
+                            {/* Premium card container */}
+                            <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-200/50 hover:shadow-2xl transition-all duration-500 hover:scale-105 transform h-full flex flex-col">
+                                
+                                {/* Premium icon container */}
+                                <div className="relative mb-6">
+                                    <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 via-emerald-600 to-green-600 rounded-xl shadow-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </div>
+                                    {/* Floating accent */}
+                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full opacity-80 group-hover:scale-125 transition-transform duration-300"></div>
+                                </div>
+                                
+                                {/* Content */}
+                                <div className="space-y-4 flex-grow">
+                                    <div>
+                                        <h3 className="text-xl lg:text-2xl font-black text-gray-900 mb-2 tracking-tight">Vision</h3>
+                                        <div className="w-12 h-1 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full"></div>
+                                    </div>
+                                    
+                                    <p className="text-sm lg:text-base text-gray-700 leading-relaxed font-medium min-h-[4rem]">
+                                        To be a <span className="text-emerald-700 font-bold">catalyst for agricultural transformation</span>, fostering innovation and building resilient, <span className="text-green-700 font-bold">thriving communities</span> for generations to come.
+                                    </p>
+                                    
+                                    {/* Key points */}
+                                    <div className="space-y-2 pt-2">
+                                        {[
+                                            'Agricultural Leadership',
+                                            'Innovation Catalyst',
+                                            'Community Resilience'
+                                        ].map((point, idx) => (
+                                            <div key={idx} className="flex items-center gap-2">
+                                                <div className="w-1.5 h-1.5 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full"></div>
+                                                <span className="text-gray-600 font-semibold text-sm">{point}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                                {/* Hover overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-green-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                            </div>
+                        </div>
                     </div>
-                    {/* Dots navigation */}
-                    <div className="flex justify-center gap-2 mt-8">
-                        {programs.slice(0, programs.length).map((_, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => setCurrent(idx)}
-                                className={`w-3 h-3 rounded-full transition border-2 ${current === idx ? 'bg-green-900 border-green-900' : 'bg-green-700 border-green-700 hover:bg-green-800'}`}
-                                aria-label={`Go to program ${idx + 1}`}
-                            />
+                    
+                    {/* Bottom stats/achievements */}
+                    <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                        {[
+                            { number: '5+', label: 'Years of Excellence', icon: '🏆' },
+                            { number: '1,200+', label: 'Farmers Supported', icon: '👥' },
+                            { number: '50+', label: 'Communities Served', icon: '🌍' },
+                            { number: '98%', label: 'Success Rate', icon: '📈' }
+                        ].map((stat, idx) => (
+                            <div key={idx} className="group">
+                                <div className="text-2xl mb-2">{stat.icon}</div>
+                                <div className="text-xl lg:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600 mb-1">
+                                    {stat.number}
+                                </div>
+                                <div className="text-gray-600 font-semibold text-sm">{stat.label}</div>
+                            </div>
                         ))}
                     </div>
                 </div>
             </section>
 
+            {/* PROGRAMS - Professional Design */}
+            <section id="programs" className="py-12 bg-gradient-to-br from-green-100/90 via-emerald-100/80 to-green-200/60 relative overflow-hidden" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                {/* Premium background elements */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute top-10 left-10 w-48 h-48 bg-green-200/30 rounded-full blur-3xl"></div>
+                    <div className="absolute bottom-10 right-10 w-60 h-60 bg-emerald-200/25 rounded-full blur-3xl"></div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px] bg-gradient-to-r from-green-100/30 to-emerald-100/25 rounded-full blur-3xl"></div>
+                </div>
 
-            {/* LATEST NEWS & UPDATES */}
-            <section className="relative max-w-6xl mx-auto px-4 py-16 mb-20" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                {/* Decorative background shapes */}
-                <div className="absolute -top-8 -left-8 w-28 h-28 bg-green-900/20 rounded-full opacity-30 blur-2xl z-0"></div>
-                <div className="absolute -bottom-8 -right-8 w-36 h-36 bg-green-900/30 rounded-full opacity-20 blur-2xl z-0"></div>
-                <h2 className="text-2xl md:text-3xl font-extrabold text-green-900 mb-10 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-10 transition-all duration-700 delay-100 relative z-10">
-                    Latest News & Updates
-                </h2>
-                <div className="relative z-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-                    {/* News Card 1 */}
-                    <div className="bg-white/95 rounded-2xl shadow-lg border border-green-900/30 p-5 flex flex-col hover:shadow-2xl transition-all duration-300 group max-w-xs w-full">
-                            <div className="relative mb-3">
-                                <img src={fits} alt="FITS Center" className="w-full h-40 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300 shadow-md" />
-                                <span className="absolute top-2 right-2 bg-green-900 text-green-100 text-xs px-2 py-0.5 rounded-full font-bold shadow">New</span>
+                {/* Section header */}
+                <div className="text-center mb-10 relative z-10">
+                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100/80 to-emerald-100/80 border border-green-300/50 rounded-full px-4 py-2 mb-6 shadow-sm">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-green-700 font-bold text-xs uppercase tracking-wider">Our Expertise</span>
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 tracking-tight">
+                        Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Programs</span>
+                    </h2>
+                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed">
+                        Comprehensive training and development programs designed to elevate agricultural excellence.
+                    </p>
+                </div>
+
+                <div className="max-w-6xl mx-auto px-4 relative z-10">
+                    {/* Professional Horizontal Scroller */}
+                    <div className="relative">
+                        {/* Enhanced Left scroll button */}
+                        <button
+                            onClick={() => {
+                                const container = document.getElementById('programs-scroller');
+                                container.scrollBy({ left: -300, behavior: 'smooth' });
+                            }}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/95 hover:bg-white text-green-600 hover:text-green-700 rounded-full w-12 h-12 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 border border-green-100"
+                            aria-label="Scroll left"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+
+                        {/* Enhanced Right scroll button */}
+                        <button
+                            onClick={() => {
+                                const container = document.getElementById('programs-scroller');
+                                container.scrollBy({ left: 300, behavior: 'smooth' });
+                            }}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/95 hover:bg-white text-green-600 hover:text-green-700 rounded-full w-12 h-12 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 border border-green-100"
+                            aria-label="Scroll right"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+
+                        {/* Premium Scrollable container */}
+                        <div 
+                            id="programs-scroller"
+                            className="flex gap-6 overflow-x-auto px-14 py-6 cursor-grab active:cursor-grabbing select-none"
+                            style={{
+                                scrollbarWidth: 'none', /* Firefox */
+                                msOverflowStyle: 'none', /* IE and Edge */
+                                scrollBehavior: 'smooth'
+                            }}
+                            onScroll={(e) => {
+                                // Hide scrollbar for webkit browsers
+                                e.target.style.webkitScrollbar = 'none';
+                            }}
+                            onWheel={(e) => {
+                                // Prevent default vertical scrolling
+                                e.preventDefault();
+                                // Scroll horizontally instead
+                                const container = e.currentTarget;
+                                container.scrollBy({
+                                    left: e.deltaY * 2, // Multiply by 2 for faster scrolling
+                                    behavior: 'smooth'
+                                });
+                            }}
+                            onMouseDown={(e) => {
+                                const container = e.currentTarget;
+                                let isDown = true;
+                                let startX = e.pageX - container.offsetLeft;
+                                let scrollLeft = container.scrollLeft;
+                                
+                                const handleMouseMove = (e) => {
+                                    if (!isDown) return;
+                                    e.preventDefault();
+                                    const x = e.pageX - container.offsetLeft;
+                                    const walk = (x - startX) * 2; // Multiply by 2 for faster scrolling
+                                    container.scrollLeft = scrollLeft - walk;
+                                };
+                                
+                                const handleMouseUp = () => {
+                                    isDown = false;
+                                    document.removeEventListener('mousemove', handleMouseMove);
+                                    document.removeEventListener('mouseup', handleMouseUp);
+                                    container.style.cursor = 'grab';
+                                };
+                                
+                                container.style.cursor = 'grabbing';
+                                document.addEventListener('mousemove', handleMouseMove);
+                                document.addEventListener('mouseup', handleMouseUp);
+                            }}
+                            onDragStart={(e) => e.preventDefault()} // Prevent text/image dragging
+                        >
+                            {programs.map((program, index) => (
+                                <div
+                                    key={index}
+                                    className="group flex-shrink-0 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 w-80 hover:-translate-y-2"
+                                >
+                                    {/* Enhanced Image */}
+                                    <div className="relative h-44 overflow-hidden">
+                                        <img 
+                                            src={program.img} 
+                                            alt={program.title}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                                        
+                                        {/* Status overlay badge */}
+                                        <div className={`absolute top-3 left-3 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg ${
+                                            program.status === 'Ongoing' ? 'bg-blue-100/95 text-blue-700' :
+                                            program.status === 'Available' ? 'bg-green-100/95 text-green-700' :
+                                            program.status === 'Upcoming' ? 'bg-yellow-100/95 text-yellow-700' :
+                                            program.status === 'Completed' ? 'bg-gray-100/95 text-gray-700' :
+                                            'bg-white/95 text-green-600'
+                                        }`}>
+                                            <span className="font-bold text-xs">{program.status || 'Available'}</span>
+                                        </div>
+                                        
+                                        {/* Category tag */}
+                                        <div className="absolute bottom-3 left-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg">
+                                            Training Program
+                                        </div>
+                                    </div>
+
+                                    {/* Enhanced Content */}
+                                    <div className="p-6">
+                                        <div className="mb-4">
+                                            <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors duration-300 leading-tight">
+                                                {program.title}
+                                            </h3>
+                                            <div className="w-10 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mb-3"></div>
+                                            <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+                                                {program.desc}
+                                            </p>
+                                        </div>
+                                        
+                                        {/* Enhanced CTA Button */}
+                                        <a
+                                            href="/seminar"
+                                            className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-300 hover:shadow-xl hover:scale-105 group/btn"
+                                            onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
+                                        >
+                                            Learn More
+                                            <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Professional Scroll indicator */}
+                        <div className="flex justify-center mt-6">
+                            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg border border-green-100">
+                                <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+                                </svg>
+                                <span className="text-gray-700 font-semibold text-sm">Scroll to explore programs</span>
+                                <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
                             </div>
-                            <h3 className="font-bold text-lg text-green-900 mb-2">FITS Center Launches New Farmer Training</h3>
-                            <p className="text-gray-800 text-sm mb-3 font-semibold line-clamp-3 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', maxHeight: '4.5em' }}>
-                                The FITS Center recently conducted a hands-on training session for local farmers, focusing on sustainable crop management and modern agricultural techniques.
-                            </p>
-                            <div className="flex items-center justify-between mt-auto">
-                                <span className="text-green-900 text-xs font-semibold">June 2024</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            {/* LATEST NEWS & UPDATES - Professional Design */}
+            <section className="py-16 bg-gradient-to-br from-green-50 via-white to-emerald-50/30 relative overflow-hidden" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                {/* Premium background elements */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute top-20 left-10 w-64 h-64 bg-green-100/40 rounded-full blur-3xl"></div>
+                    <div className="absolute bottom-20 right-10 w-80 h-80 bg-emerald-100/30 rounded-full blur-3xl"></div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-green-50/20 to-emerald-50/20 rounded-full blur-3xl"></div>
+                </div>
+
+                {/* Section header */}
+                <div className="text-center mb-12 relative z-10">
+                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100/80 to-emerald-100/80 border border-green-300/50 rounded-full px-4 py-2 mb-6 shadow-sm">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-green-700 font-bold text-xs uppercase tracking-wider">Latest Updates</span>
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4 tracking-tight">
+                        News & <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Updates</span>
+                    </h2>
+                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed">
+                        Stay informed with the latest developments, achievements, and upcoming initiatives in agricultural innovation.
+                    </p>
+                </div>
+
+                <div className="max-w-6xl mx-auto px-4 relative z-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {/* Enhanced News Card 1 */}
+                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2">
+                            <div className="relative overflow-hidden">
+                                <img src={fits} alt="FITS Center" className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                                
+                                {/* Status badge */}
+                                <div className="absolute top-4 left-4 bg-green-100/95 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg">
+                                    <span className="text-green-700 font-bold text-xs">New</span>
+                                </div>
+                                
+                                {/* Date badge */}
+                                <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
+                                    <span className="text-gray-700 font-semibold text-xs">June 2025</span>
+                                </div>
+                            </div>
+                            
+                            <div className="p-6">
+                                <div className="mb-4">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-300 leading-tight">
+                                        FITS Center Launches New Farmer Training
+                                    </h3>
+                                    <div className="w-12 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mb-4"></div>
+                                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                                        The FITS Center recently conducted a hands-on training session for local farmers, focusing on sustainable crop management and modern agricultural techniques.
+                                    </p>
+                                </div>
+                                
                                 <a
                                     href="https://ati.da.gov.ph/"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-green-900 font-bold hover:underline flex items-center gap-1 transition text-sm"
+                                    className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-sm transition-all duration-300 group/link"
                                 >
                                     Read More
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                     </svg>
                                 </a>
                             </div>
                         </div>
-                        {/* News Card 2 */}
-                    <div className="bg-white/95 rounded-2xl shadow-lg border border-green-900/30 p-5 flex flex-col hover:shadow-2xl transition-all duration-300 group max-w-xs w-full">
-                            <div className="relative mb-3">
-                                <img src={img4} alt="Organic Farming" className="w-full h-40 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300 shadow-md" />
-                                <span className="absolute top-2 right-2 bg-green-900 text-green-100 text-xs px-2 py-0.5 rounded-full font-bold shadow">Update</span>
+
+                        {/* Enhanced News Card 2 */}
+                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2">
+                            <div className="relative overflow-hidden">
+                                <img src={img4} alt="Organic Farming" className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                                
+                                {/* Status badge */}
+                                <div className="absolute top-4 left-4 bg-emerald-100/95 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg">
+                                    <span className="text-emerald-700 font-bold text-xs">Update</span>
+                                </div>
+                                
+                                {/* Date badge */}
+                                <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
+                                    <span className="text-gray-700 font-semibold text-xs">May 2025</span>
+                                </div>
                             </div>
-                            <h3 className="font-bold text-lg text-green-900 mb-2">Organic Farming Initiative Expands</h3>
-                            <p className="text-gray-800 text-sm mb-3 font-semibold line-clamp-3 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', maxHeight: '4.5em' }}>
-                                Our organic farming program has expanded to include more barangays, promoting healthier produce and eco-friendly practices across the region.
-                            </p>
-                            <div className="flex items-center justify-between mt-auto">
-                                <span className="text-green-900 text-xs font-semibold">May 2024</span>
+                            
+                            <div className="p-6">
+                                <div className="mb-4">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-300 leading-tight">
+                                        Organic Farming Initiative Expands
+                                    </h3>
+                                    <div className="w-12 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mb-4"></div>
+                                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                                        Our organic farming program has expanded to include more barangays, promoting healthier produce and eco-friendly practices across the region.
+                                    </p>
+                                </div>
+                                
                                 <a
                                     href="https://ati.da.gov.ph/"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-green-900 font-bold hover:underline flex items-center gap-1 transition text-sm"
+                                    className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-sm transition-all duration-300 group/link"
                                 >
                                     Read More
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                     </svg>
                                 </a>
                             </div>
                         </div>
-                        {/* News Card 3 */}
-                    <div className="bg-white/95 rounded-2xl shadow-lg border border-green-900/30 p-5 flex flex-col hover:shadow-2xl transition-all duration-300 group max-w-xs w-full">
-                            <div className="relative mb-3">
-                                <img src={img5} alt="Rabies Control" className="w-full h-40 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300 shadow-md" />
-                                <span className="absolute top-2 right-2 bg-green-900 text-green-100 text-xs px-2 py-0.5 rounded-full font-bold shadow">Event</span>
+
+                        {/* Enhanced News Card 3 */}
+                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2">
+                            <div className="relative overflow-hidden">
+                                <img src={img5} alt="Rabies Control" className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                                
+                                {/* Status badge */}
+                                <div className="absolute top-4 left-4 bg-green-200/95 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg">
+                                    <span className="text-green-800 font-bold text-xs">Event</span>
+                                </div>
+                                
+                                {/* Date badge */}
+                                <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
+                                    <span className="text-gray-700 font-semibold text-xs">April 2025</span>
+                                </div>
                             </div>
-                            <h3 className="font-bold text-lg text-green-900 mb-2">Rabies Awareness Campaign</h3>
-                            <p className="text-gray-800 text-sm mb-3 font-semibold line-clamp-3 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', maxHeight: '4.5em' }}>
-                                The Rabies Control team held a successful awareness drive, educating pet owners and distributing free vaccines to ensure community safety.
-                            </p>
-                            <div className="flex items-center justify-between mt-auto">
-                                <span className="text-green-900 text-xs font-semibold">April 2024</span>
+                            
+                            <div className="p-6">
+                                <div className="mb-4">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-300 leading-tight">
+                                        Rabies Awareness Campaign
+                                    </h3>
+                                    <div className="w-12 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mb-4"></div>
+                                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                                        The Rabies Control team held a successful awareness drive, educating pet owners and distributing free vaccines to ensure community safety.
+                                    </p>
+                                </div>
+                                
                                 <a
                                     href="https://ati.da.gov.ph/"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-green-900 font-bold hover:underline flex items-center gap-1 transition text-sm"
+                                    className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-sm transition-all duration-300 group/link"
                                 >
                                     Read More
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                     </svg>
                                 </a>
@@ -499,229 +830,369 @@ export default function Landing() {
                         </div>
                     </div>
                 </div>
-                
             </section>
             
 
-            {/* USEFUL EXTERNAL RESOURCES */}
-            <section className="  py-40 = bg-green-900/10" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                <h2 className="text-3xl font-extrabold text-green-900 mb-20 text-center tracking-tight reveal-on-scroll opacity-0 -translate-y-2  transition-all duration-700 delay-100">
-                    Useful External Resources
-                </h2>
-                {/* Resource cards in a responsive flex layout */}
-                <div className="flex flex-col md:flex-row items-center justify-center gap-8 mt-5 md:gap-12 px-4">
-                    {/* Resource 1 */}
-                    <a
-                        href="https://www.da.gov.ph/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex flex-col items-center w-full max-w-xs group"
-                    >
-                        <span className="bg-white shadow-lg border-4 border-green-900 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-green-900 group-hover:text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-green-900 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <circle cx="12" cy="12" r="10" strokeWidth={2} />
-                            </svg>
-                        </span>
-                        <div className="text-center">
-                            <h3 className="font-bold text-lg text-green-900 mb-1">Department of Agriculture</h3>
-                            <p className="text-green-900 text-sm font-semibold">Official government portal for Philippine agriculture programs, news, and resources.</p>
-                        </div>
-                    </a>
-                    {/* Resource 2 */}
-                    <a
-                        href="https://ati.da.gov.ph/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex flex-col items-center w-full max-w-xs group"
-                    >
-                        <span className="bg-white shadow-lg border-4 border-green-900 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-green-900 group-hover:text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-green-900 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a4 4 0 018 0v2m-4-6a4 4 0 100-8 4 4 0 000 8z" />
-                            </svg>
-                        </span>
-                        <div className="text-center">
-                            <h3 className="font-bold text-lg text-green-900 mb-1">Agricultural Training Institute</h3>
-                            <p className="text-green-900 text-sm font-semibold">Training, extension, and e-learning for farmers and agri-entrepreneurs.</p>
-                        </div>
-                    </a>
-                    {/* Resource 3 */}
-                    <a
-                        href="https://www.philrice.gov.ph/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex flex-col items-center w-full max-w-xs group"
-                    >
-                        <span className="bg-white shadow-lg border-4 border-green-900 rounded-full p-4 flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-green-900 group-hover:text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-green-900 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a5 5 0 00-10 0v2a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2z" />
-                            </svg>
-                        </span>
-                        <div className="text-center">
-                            <h3 className="font-bold text-lg text-green-900 mb-1">PhilRice</h3>
-                            <p className="text-green-900 text-sm font-semibold">Research and innovations for rice farmers and the rice industry.</p>
-                        </div>
-                    </a>
+            {/* USEFUL EXTERNAL RESOURCES - Compact Design */}
+            <section className="py-12 bg-gradient-to-br from-green-900/20 via-emerald-50/60 to-green-900/25" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <div className="max-w-6xl mx-auto px-6">
+                    {/* Compact Header */}
+                    <div className="text-center mb-10 reveal-on-scroll opacity-0 -translate-y-2 transition-all duration-700 delay-100">
+                        <h2 className="text-3xl font-extrabold text-green-900 tracking-tight mb-2">
+                            External Resources
+                        </h2>
+                        <div className="w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto"></div>
+                    </div>
+
+                    {/* Compact Resource Cards Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-on-scroll opacity-0 translate-y-4 transition-all duration-700 delay-300">
+                        {/* Compact Resource 1 - Department of Agriculture */}
+                        <a
+                            href="https://www.da.gov.ph/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group"
+                        >
+                            <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/50 hover:border-green-200 hover:-translate-y-1">
+                                {/* Compact Icon */}
+                                <div className="flex justify-center mb-4">
+                                    <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                
+                                {/* Compact Content */}
+                                <div className="text-center">
+                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-green-600 transition-colors duration-300 mb-2">
+                                        Department of Agriculture
+                                    </h3>
+                                    <p className="text-gray-600 text-sm mb-3">
+                                        Government portal for agriculture programs and resources.
+                                    </p>
+                                    <span className="inline-flex items-center gap-1 text-green-600 font-semibold text-sm">
+                                        Visit
+                                        <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+
+                        {/* Compact Resource 2 - Agricultural Training Institute */}
+                        <a
+                            href="https://ati.da.gov.ph/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group"
+                        >
+                            <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/50 hover:border-green-200 hover:-translate-y-1">
+                                {/* Compact Icon */}
+                                <div className="flex justify-center mb-4">
+                                    <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                
+                                {/* Compact Content */}
+                                <div className="text-center">
+                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-green-600 transition-colors duration-300 mb-2">
+                                        Agricultural Training Institute
+                                    </h3>
+                                    <p className="text-gray-600 text-sm mb-3">
+                                        Training and e-learning for farmers and agri-entrepreneurs.
+                                    </p>
+                                    <span className="inline-flex items-center gap-1 text-green-600 font-semibold text-sm">
+                                        Visit
+                                        <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+
+                        {/* Compact Resource 3 - PhilRice */}
+                        <a
+                            href="https://www.philrice.gov.ph/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group"
+                        >
+                            <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/50 hover:border-green-200 hover:-translate-y-1">
+                                {/* Compact Icon */}
+                                <div className="flex justify-center mb-4">
+                                    <div className="w-14 h-14 bg-gradient-to-br from-green-600 to-emerald-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                
+                                {/* Compact Content */}
+                                <div className="text-center">
+                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-green-600 transition-colors duration-300 mb-2">
+                                        PhilRice
+                                    </h3>
+                                    <p className="text-gray-600 text-sm mb-3">
+                                        Research and innovations for rice farmers and industry.
+                                    </p>
+                                    <span className="inline-flex items-center gap-1 text-green-600 font-semibold text-sm">
+                                        Visit
+                                        <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </section>
 
             {/* Move footer outside of main for valid structure */}
         </main>
-           <footer className="bg-green-900 py-16 px-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-14">
-                    {/* Logo & About */}
-                    <div className="flex-1 mb-10 md:mb-0">
-                        <div className="flex items-center gap-3 mb-4">
-                            <img src={logo} alt="FITS Logo" className="w-12 h-12 rounded-full border-2 border-green-900 shadow" />
-                            <span className="text-2xl font-extrabold text-green-100 tracking-wide">FITS-Tanza</span>
+        
+        {/* Professional Footer */}
+        <footer className="relative bg-gradient-to-br from-green-900 via-green-800 to-green-900 overflow-hidden" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,_theme(colors.emerald.400)_1px,_transparent_0)] bg-[30px_30px]"></div>
+            </div>
+            
+            {/* Top decorative bar */}
+            <div className="h-1 bg-gradient-to-r from-emerald-400 via-green-400 to-emerald-500"></div>
+            
+            <div className="relative py-20 px-6">
+                <div className="max-w-7xl mx-auto">
+                    {/* Main Footer Content */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                        
+                        {/* Enhanced Logo & About Section */}
+                        <div className="lg:col-span-2">
+                            <div className="mb-8">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="relative">
+                                        <img src={logo} alt="FITS Logo" className="w-16 h-16 rounded-2xl border-3 border-emerald-400 shadow-xl" />
+                                        <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-green-400 rounded-2xl blur opacity-25"></div>
+                                    </div>
+                                    <div>
+                                        <span className="text-3xl font-extrabold text-white tracking-wide">FITS-Tanza</span>
+                                        <p className="text-emerald-300 text-sm font-medium">Farmers' Information & Technology Services</p>
+                                    </div>
+                                </div>
+                                
+                                <p className="text-green-100 text-base leading-relaxed mb-8 max-w-2xl">
+                                    Empowering local farmers and communities through innovative agricultural programs, advanced training, 
+                                    and comprehensive support services for sustainable farming practices.
+                                </p>
+                            </div>
+                            
+                            {/* Enhanced Contact Information */}
+                            <div className="space-y-4">
+                                <div className="flex items-start gap-3 group">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 12.414a2 2 0 10-2.828 2.828l4.243 4.243a8 8 0 111.414-1.414z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p className="text-white font-semibold text-sm">Address</p>
+                                        <p className="text-green-200 text-sm">Poblacion, Tanza, Cavite, Philippines</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-start gap-3 group">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p className="text-white font-semibold text-sm">Email</p>
+                                        <a href="mailto:fitstanza@gmail.com" className="text-emerald-300 hover:text-emerald-200 text-sm transition-colors duration-300 underline">
+                                            fitstanza@gmail.com
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-start gap-3 group">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3l2 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p className="text-white font-semibold text-sm">Phone</p>
+                                        <a href="tel:+63464123456" className="text-emerald-300 hover:text-emerald-200 text-sm transition-colors duration-300 underline">
+                                            (+63) 46 412 3456
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p className="text-green-100 text-sm mb-4 font-semibold">
-                            The Farmers' Information and Technology Services (FITS) Center of Tanza is dedicated to empowering local farmers and communities through innovative agricultural programs, training, and support.
-                        </p>
-                        <div className="flex items-center gap-2 text-green-100 text-xs">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 12.414a2 2 0 10-2.828 2.828l4.243 4.243a8 8 0 111.414-1.414z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span>Poblacion, Tanza, Cavite, Philippines</span>
+                        
+                        {/* Enhanced Quick Links */}
+                        <div>
+                            <div className="mb-6">
+                                <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                    <div className="w-1 h-6 bg-gradient-to-b from-emerald-400 to-green-400 rounded-full"></div>
+                                    Quick Links
+                                </h4>
+                                <div className="w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full"></div>
+                            </div>
+                            
+                            <nav className="space-y-3">
+                                {[
+                                    { href: '/about', label: 'About Us' },
+                                    { href: '/seminar', label: 'Programs' },
+                                    { href: '/contact', label: 'Contact' },
+                                    { href: '/faq', label: 'FAQ' },
+                                    { href: '/resources', label: 'Resources' }
+                                ].map((link, index) => (
+                                    <a
+                                        key={index}
+                                        href={link.href}
+                                        className="group flex items-center gap-3 text-green-200 hover:text-emerald-300 transition-all duration-300"
+                                        onClick={e => { e.preventDefault(); window.location = link.href; }}
+                                    >
+                                        <div className="w-2 h-2 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                        <span className="font-medium">{link.label}</span>
+                                        <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                        </svg>
+                                    </a>
+                                ))}
+                            </nav>
                         </div>
-                        <div className="flex items-center gap-2 text-green-100 text-xs mt-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 12v1a4 4 0 01-8 0v-1m8 0a4 4 0 00-8 0m8 0V8a4 4 0 00-8 0v4" />
-                            </svg>
-                            <span>Email: <a href="mailto:fitstanza@gmail.com" className="underline hover:text-blue-400">fitstanza@gmail.com</a></span>
-                        </div>
-                        <div className="flex items-center gap-2 text-green-100 text-xs mt-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm14 0a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2V5z" />
-                            </svg>
-                            <span>Tel: <a href="tel:+63464123456" className="underline hover:text-blue-400">(+63) 46 412 3456</a></span>
+                        
+                        {/* Enhanced Office Hours & Services */}
+                        <div>
+                            <div className="mb-6">
+                                <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                    <div className="w-1 h-6 bg-gradient-to-b from-emerald-400 to-green-400 rounded-full"></div>
+                                    Office Hours
+                                </h4>
+                                <div className="w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full"></div>
+                            </div>
+                            
+                            <div className="space-y-4 mb-8">
+                                <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <polyline points="12,6 12,12 16,14"/>
+                                        </svg>
+                                        <span className="text-white font-semibold text-sm">Working Days</span>
+                                    </div>
+                                    <p className="text-green-200 text-sm">Monday - Friday</p>
+                                    <p className="text-emerald-300 font-semibold text-sm">8:00 AM - 5:00 PM</p>
+                                </div>
+                                
+                                <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                        </svg>
+                                        <span className="text-white font-semibold text-sm">Message Us</span>
+                                    </div>
+                                    <a href="https://m.me/fitstanza" target="_blank" rel="noopener noreferrer" className="text-emerald-300 hover:text-emerald-200 text-sm transition-colors duration-300 underline">
+                                        Facebook Messenger
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <p className="text-green-200 text-sm">
+                                For urgent concerns, please call or visit our office during working hours.
+                            </p>
                         </div>
                     </div>
-                    {/* Quick Links */}
-                    <div className="flex-1 mb-10 md:mb-0">
-                        <h4 className="font-semibold text-green-100 mb-4 text-lg">Quick Links</h4>
-                        <ul className="space-y-2 text-green-100 text-base font-semibold">
-                            <li>
-                                <a
-                                    href="/about"
-                                    className="hover:text-blue-600 transition"
-                                    onClick={e => { e.preventDefault(); window.location = '/about'; }}
-                                >
-                                    About Us
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="/seminar"
-                                    className="hover:text-blue-600 transition"
-                                    onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
-                                >
-                                    Programs
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="/contact"
-                                    className="hover:text-blue-600 transition"
-                                    onClick={e => { e.preventDefault(); window.location = '/contact'; }}
-                                >
-                                    Contact
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="/faq"
-                                    className="hover:text-blue-600 transition"
-                                    onClick={e => { e.preventDefault(); window.location = '/faq'; }}
-                                >
-                                    FAQ
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="/resources"
-                                    className="hover:text-blue-600 transition"
-                                    onClick={e => { e.preventDefault(); window.location = '/resources'; }}
-                                >
-                                    Resources
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    {/* Contact & Hours */}
-                    <div className="flex-1 mb-10 md:mb-0">
-                        <h4 className="font-semibold text-green-100 mb-4 text-lg">Contact & Hours</h4>
-                        <div className="text-green-100 text-sm font-semibold mb-2">
-                            <span className="block">Office Hours:</span>
-                            <span className="block">Mon - Fri: 8:00 AM - 5:00 PM</span>
-                            <span className="block">Sat - Sun: Closed</span>
+                    
+                    {/* Enhanced Social Media & Connect Section */}
+                    <div className="border-t border-white/10 pt-12 mb-12">
+                        <div className="text-center mb-8">
+                            <h4 className="text-2xl font-bold text-white mb-4">Stay Connected</h4>
+                            <p className="text-green-200 text-base max-w-2xl mx-auto">
+                                Follow us on social media for the latest updates on agricultural programs, events, and farming innovations.
+                            </p>
                         </div>
-                        <div className="text-green-100 text-sm font-semibold mb-2">
-                            <span className="block">Facebook Messenger: <a href="https://m.me/fitstanza" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-400">Message Us</a></span>
-                        </div>
-                        <div className="text-green-100 text-sm font-semibold">
-                            <span className="block">For urgent concerns, please call or visit our office during working hours.</span>
+                        
+                        <div className="flex justify-center gap-6">
+                            {[
+                                { 
+                                    href: 'https://facebook.com/fitstanza', 
+                                    label: 'Facebook',
+                                    icon: "M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.408 24 22.674V1.326C24 .592 23.406 0 22.675 0" 
+                                },
+                                { 
+                                    href: 'https://twitter.com/fitstanza', 
+                                    label: 'Twitter',
+                                    icon: "M24 4.557a9.83 9.83 0 01-2.828.775 4.932 4.932 0 002.165-2.724c-.951.564-2.005.974-3.127 1.195a4.916 4.916 0 00-8.38 4.482C7.691 8.095 4.066 6.13 1.64 3.161c-.542.929-.856 2.01-.857 3.17 0 2.188 1.115 4.117 2.823 5.254a4.904 4.904 0 01-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.936 4.936 0 01-2.224.084c.627 1.956 2.444 3.377 4.6 3.417A9.867 9.867 0 010 21.543a13.94 13.94 0 007.548 2.209c9.058 0 14.009-7.496 14.009-13.986 0-.21-.005-.423-.015-.634A9.936 9.936 0 0024 4.557z" 
+                                },
+                                { 
+                                    href: 'https://instagram.com/fitstanzacavite', 
+                                    label: 'Instagram',
+                                    icon: "M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.974.975 1.244 2.242 1.306 3.608.058 1.266.069 1.646.069 4.85s-.012 3.584-.07 4.85c-.062 1.366-.332 2.633-1.306 3.608-.975.974-2.242 1.244-3.608 1.306-1.266.058-1.646.069-4.85.069s-3.584-.012-4.85-.07c-1.366-.062-2.633-.332-3.608-1.306-.974-.975-1.244-2.242-1.306-3.608C2.175 15.647 2.163 15.267 2.163 12s.012-3.584.07-4.85c.062-1.366.332-2.633 1.306-3.608C4.513 2.565 5.78 2.295 7.146 2.233 8.412 2.17 8.792 2.163 12 2.163zm0-2.163C8.741 0 8.332.012 7.052.07 5.771.127 4.659.392 3.678 1.373c-.98.98-1.245 2.092-1.302 3.373C2.012 5.668 2 6.077 2 12c0 5.923.012 6.332.07 7.613.057 1.281.322 2.393 1.302 3.373.98.98 2.092 1.245 3.373 1.302C8.332 23.988 8.741 24 12 24s3.668-.012 4.948-.07c1.281-.057 2.393-.322 3.373-1.302.98-.98 1.245-2.092 1.302-3.373.058-1.281.07-1.69.07-7.613 0-5.923-.012-6.332-.07-7.613-.057-1.281-.322-2.393-1.302-3.373-.98-.98-2.092-1.245-3.373-1.302C15.668.012 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a3.999 3.999 0 110-7.998 3.999 3.999 0 010 7.998zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z" 
+                                }
+                            ].map((social, index) => (
+                                <a
+                                    key={index}
+                                    href={social.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={social.label}
+                                    className="group relative"
+                                >
+                                    <div className="w-14 h-14 bg-gradient-to-br from-emerald-500/20 to-green-500/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-emerald-400/50 transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-emerald-500/25">
+                                        <svg fill="currentColor" viewBox="0 0 24 24" className="w-7 h-7 text-emerald-300 group-hover:text-white transition-colors duration-300">
+                                            <path d={social.icon} />
+                                        </svg>
+                                    </div>
+                                    <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-green-400 rounded-2xl blur opacity-0 group-hover:opacity-25 transition-opacity duration-300"></div>
+                                </a>
+                            ))}
                         </div>
                     </div>
-                    {/* Social Media & Newsletter */}
-                    <div className="flex-1">
-                        <h4 className="font-semibold text-green-100 mb-4 text-lg">Connect with us</h4>
-                        <div className="flex gap-5 mb-6">
-                            <a
-                                href="https://facebook.com/fitstanza"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="Facebook"
-                                className="bg-green-900 hover:bg-green-800 rounded-full p-2 transition"
-                            >
-                                <svg fill="currentColor" viewBox="0 0 24 24" className="w-6 h-6 text-green-100">
-                                    <path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.408 24 22.674V1.326C24 .592 23.406 0 22.675 0"/>
-                                </svg>
-                            </a>
-                            <a
-                                href="https://twitter.com/fitstanza"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="Twitter"
-                                className="bg-green-900 hover:bg-green-800 rounded-full p-2 transition"
-                            >
-                                <svg fill="currentColor" viewBox="0 0 24 24" className="w-6 h-6 text-green-100">
-                                    <path d="M24 4.557a9.83 9.83 0 01-2.828.775 4.932 4.932 0 002.165-2.724c-.951.564-2.005.974-3.127 1.195a4.916 4.916 0 00-8.38 4.482C7.691 8.095 4.066 6.13 1.64 3.161c-.542.929-.856 2.01-.857 3.17 0 2.188 1.115 4.117 2.823 5.254a4.904 4.904 0 01-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.936 4.936 0 01-2.224.084c.627 1.956 2.444 3.377 4.6 3.417A9.867 9.867 0 010 21.543a13.94 13.94 0 007.548 2.209c9.058 0 14.009-7.496 14.009-13.986 0-.21-.005-.423-.015-.634A9.936 9.936 0 0024 4.557z"/>
-                                </svg>
-                            </a>
-                            <a
-                                href="https://instagram.com/fitstanzacavite"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="Instagram"
-                                className="bg-green-900 hover:bg-green-800 rounded-full p-2 transition"
-                            >
-                                <svg fill="currentColor" viewBox="0 0 24 24" className="w-6 h-6 text-green-100">
-                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.974.975 1.244 2.242 1.306 3.608.058 1.266.069 1.646.069 4.85s-.012 3.584-.07 4.85c-.062 1.366-.332 2.633-1.306 3.608-.975.974-2.242 1.244-3.608 1.306-1.266.058-1.646.069-4.85.069s-3.584-.012-4.85-.07c-1.366-.062-2.633-.332-3.608-1.306-.974-.975-1.244-2.242-1.306-3.608C2.175 15.647 2.163 15.267 2.163 12s.012-3.584.07-4.85c.062-1.366.332-2.633 1.306-3.608C4.513 2.565 5.78 2.295 7.146 2.233 8.412 2.17 8.792 2.163 12 2.163zm0-2.163C8.741 0 8.332.012 7.052.07 5.771.127 4.659.392 3.678 1.373c-.98.98-1.245 2.092-1.302 3.373C2.012 5.668 2 6.077 2 12c0 5.923.012 6.332.07 7.613.057 1.281.322 2.393 1.302 3.373.98.98 2.092 1.245 3.373 1.302C8.332 23.988 8.741 24 12 24s3.668-.012 4.948-.07c1.281-.057 2.393-.322 3.373-1.302.98-.98 1.245-2.092 1.302-3.373.058-1.281.07-1.69.07-7.613 0-5.923-.012-6.332-.07-7.613-.057-1.281-.322-2.393-1.302-3.373-.98-.98-2.092-1.245-3.373-1.302C15.668.012 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a3.999 3.999 0 110-7.998 3.999 3.999 0 010 7.998zm6.406-11.845a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/>
-                                </svg>
-                            </a>
+                    
+                    {/* Enhanced Bottom Section */}
+                    <div className="border-t border-white/10 pt-8">
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div className="text-center md:text-left">
+                                <p className="text-green-200 text-sm mb-1">
+                                    &copy; {new Date().getFullYear()} FITS-Tanza. All rights reserved.
+                                </p>
+                                <p className="text-green-300 text-sm">
+                                    Developed by the FITS-Tanza IT Team. 
+                                    <a href="mailto:fitstanza@gmail.com" className="text-emerald-300 hover:text-emerald-200 underline ml-1 transition-colors duration-300">
+                                        Contact Webmaster
+                                    </a>
+                                </p>
+                            </div>
+                            
+                            <div className="flex flex-wrap justify-center gap-6 text-sm">
+                                {[
+                                    { href: '/privacy', label: 'Privacy Policy' },
+                                    { href: '/terms', label: 'Terms of Service' },
+                                    { href: '/accessibility', label: 'Accessibility' }
+                                ].map((link, index) => (
+                                    <a
+                                        key={index}
+                                        href={link.href}
+                                        className="text-green-200 hover:text-emerald-300 transition-colors duration-300 underline"
+                                    >
+                                        {link.label}
+                                    </a>
+                                ))}
+                            </div>
                         </div>
-                        <form
-                            className="mb-4"
-                            onSubmit={e => {
-                                e.preventDefault();
-                                alert('Thank you for subscribing!');
-                            }}
-                        >
-                          
-                        </form>
-                        <p className="text-green-100 text-xs">&copy; {new Date().getFullYear()} FITS-Tanza. All rights reserved.</p>
-                        <p className="text-green-100 text-xs mt-1">Developed by the FITS-Tanza IT Team. <a href="mailto:fitstanza@gmail.com" className="underline hover:text-blue-600">Contact Webmaster</a></p>
                     </div>
                 </div>
-                <div className="mt-10 border-t border-green-900 pt-6 text-center text-green-100 text-xs">
-                    <span>
-                        <a href="/privacy" className="underline hover:text-blue-600">Privacy Policy</a> &nbsp;|&nbsp;
-                        <a href="/terms" className="underline hover:text-blue-600">Terms of Service</a> &nbsp;|&nbsp;
-                        <a href="/accessibility" className="underline hover:text-blue-600">Accessibility</a>
-                    </span>
-                </div>
-            </footer>
+            </div>
+        </footer>
 
             <style>{`
                 .hero-fade-img {

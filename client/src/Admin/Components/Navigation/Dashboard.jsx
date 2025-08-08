@@ -862,6 +862,7 @@ export default function Dashboard() {
         height: 4rem !important;
         align-items: center !important;
       }
+        
     `}</style>
         </>
     );
