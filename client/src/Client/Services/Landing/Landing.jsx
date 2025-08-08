@@ -104,6 +104,7 @@ export default function Landing() {
     const [current, setCurrent] = useState(0);
     const [direction, setDirection] = useState(0); // -1 for left, 1 for right
     const [isAnimating, setIsAnimating] = useState(false);
+    const [showBackToTop, setShowBackToTop] = useState(false);
     const timeoutRef = useRef();
 
     const prevSlide = () => {
@@ -131,22 +132,163 @@ export default function Landing() {
         return () => clearTimeout(timeoutRef.current);
     }, []);
 
-    // Animation on scroll
+    // Enhanced Animation on scroll with multiple animation types
     useEffect(() => {
-        const revealElements = document.querySelectorAll('.reveal-on-scroll');
+        const animatedElements = document.querySelectorAll('[data-aos]');
+        
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const animateElement = (element, animationType) => {
+            element.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            
+            switch (animationType) {
+                case 'fade-up':
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0px)';
+                    break;
+                case 'fade-down':
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0px)';
+                    break;
+                case 'fade-left':
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateX(0px)';
+                    break;
+                case 'fade-right':
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateX(0px)';
+                    break;
+                case 'zoom-in':
+                    element.style.opacity = '1';
+                    element.style.transform = 'scale(1)';
+                    break;
+                case 'zoom-out':
+                    element.style.opacity = '1';
+                    element.style.transform = 'scale(1)';
+                    break;
+                case 'flip-up':
+                    element.style.opacity = '1';
+                    element.style.transform = 'rotateX(0deg)';
+                    break;
+                case 'slide-up':
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0px)';
+                    break;
+                default:
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0px)';
+            }
+        };
+
+        const initializeElement = (element, animationType) => {
+            element.style.opacity = '0';
+            
+            switch (animationType) {
+                case 'fade-up':
+                    element.style.transform = 'translateY(30px)';
+                    break;
+                case 'fade-down':
+                    element.style.transform = 'translateY(-30px)';
+                    break;
+                case 'fade-left':
+                    element.style.transform = 'translateX(-30px)';
+                    break;
+                case 'fade-right':
+                    element.style.transform = 'translateX(30px)';
+                    break;
+                case 'zoom-in':
+                    element.style.transform = 'scale(0.8)';
+                    break;
+                case 'zoom-out':
+                    element.style.transform = 'scale(1.2)';
+                    break;
+                case 'flip-up':
+                    element.style.transform = 'rotateX(-90deg)';
+                    element.style.transformOrigin = 'bottom';
+                    break;
+                case 'slide-up':
+                    element.style.transform = 'translateY(50px)';
+                    break;
+                default:
+                    element.style.transform = 'translateY(30px)';
+            }
+        };
+
+        // Initialize all elements
+        animatedElements.forEach(element => {
+            const animationType = element.getAttribute('data-aos');
+            initializeElement(element, animationType);
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const element = entry.target;
+                    const animationType = element.getAttribute('data-aos');
+                    const delay = element.getAttribute('data-aos-delay') || 0;
+                    
+                    setTimeout(() => {
+                        animateElement(element, animationType);
+                    }, parseInt(delay));
+                    
+                    observer.unobserve(element);
+                }
+            });
+        }, observerOptions);
+
+        animatedElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // Fallback for legacy reveal-on-scroll elements
+        const legacyElements = document.querySelectorAll('.reveal-on-scroll');
         const handleScroll = () => {
-            revealElements.forEach((el) => {
+            legacyElements.forEach((el) => {
                 const rect = el.getBoundingClientRect();
                 if (rect.top < window.innerHeight - 80) {
                     el.classList.add('opacity-100', 'translate-y-0');
                 }
             });
         };
-        // Initial check
+        
         handleScroll();
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
+
+    // Back to top button visibility detection
+    useEffect(() => {
+        const handleBackToTopScroll = () => {
+            const footer = document.querySelector('footer');
+            if (footer) {
+                const footerRect = footer.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                // Show button when footer is visible (top of footer is within viewport)
+                setShowBackToTop(footerRect.top <= windowHeight);
+            }
+        };
+
+        window.addEventListener('scroll', handleBackToTopScroll);
+        // Initial check
+        handleBackToTopScroll();
+
+        return () => window.removeEventListener('scroll', handleBackToTopScroll);
+    }, []);
+
+    // Scroll to top function
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
 
     // Hero slideshow state
     const heroSlides = [
@@ -177,7 +319,7 @@ export default function Landing() {
     // Replace all green color classes with blue equivalents
     return (
         <>
-            <div className="relative z-[100] m-0 p-0"><Navbar /></div>
+            <Navbar />
             <main className="min-h-screen" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {/* HERO SECTION - FLEX WITH VIDEO */}
                 <section className="relative mb-0 mt-0  min-h-[800px] flex items-center justify-center px-[8vw] bg-green-50 font-poppins">
@@ -193,7 +335,7 @@ export default function Landing() {
                     {/* Left: Professional Headline and Description */}
                     <div className="flex-1 pr-[2vw] min-w-[320px] relative z-30 w-full md:w-auto">
                         {/* Premium badge */}
-                        <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 rounded-full px-4 py-2 mb-6">
+                        <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 rounded-full px-4 py-2 mb-6" data-aos="fade-right" data-aos-delay="100">
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                             <span className="text-green-700 font-semibold text-sm uppercase tracking-wide">
                                 Transforming Agriculture
@@ -201,7 +343,7 @@ export default function Landing() {
                         </div>
                         
                         {/* Enhanced title with modern typography */}
-                        <h1 className="font-montserrat font-black text-[2.5rem] md:text-[4rem] lg:text-[4.5rem] text-gray-900 m-0 leading-[0.9] tracking-tight mb-6">
+                        <h1 className="font-montserrat font-black text-[2.5rem] md:text-[4rem] lg:text-[4.5rem] text-gray-900 m-0 leading-[0.9] tracking-tight mb-6" data-aos="fade-up" data-aos-delay="200">
                             Empowering{' '}
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-700 to-green-800 animate-gradient-x">
                                 Agriculture
@@ -213,13 +355,13 @@ export default function Landing() {
                         </h1>
                         
                         {/* Professional description */}
-                        <p className="font-poppins text-lg md:text-xl text-gray-600 mt-6 max-w-2xl font-medium leading-relaxed">
+                        <p className="font-poppins text-lg md:text-xl text-gray-600 mt-6 max-w-2xl font-medium leading-relaxed" data-aos="fade-up" data-aos-delay="300">
                             Discover innovative agricultural solutions, connect with expert farmers, and access cutting-edge technology to{' '}
                             <span className="text-green-700 font-semibold">transform your farming journey</span> today.
                         </p>
                         
                         {/* Professional CTA buttons */}
-                        <div className="flex flex-col sm:flex-row gap-4 mt-10">
+                        <div className="flex flex-col sm:flex-row gap-4 mt-10" data-aos="fade-up" data-aos-delay="400">
                             <button
                                 className="group relative overflow-hidden bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border-none rounded-2xl px-8 py-4 font-bold text-lg cursor-pointer font-poppins shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 transform"
                                 onClick={() => window.location = '/seminar'}
@@ -250,30 +392,33 @@ export default function Landing() {
                     
                     </div>
                     {/* Right: Enhanced Professional Slideshow */}
-                    <div className="flex-1 flex items-center min-w-[320px] w-full md:w-auto mt-10 md:mt-0 justify-end">
-                        <div className="relative w-full h-[260px] md:h-[650px] max-w-[720px] bg-gradient-to-br from-gray-100 via-white to-gray-200 border border-gray-200 rounded-3xl shadow-2xl overflow-hidden flex items-center justify-center -mt-4 md:-mt-16 group">
+                    <div className="flex-1 flex items-center min-w-[320px] w-full md:w-auto mt-10 md:mt-0 justify-end relative z-40" data-aos="fade-left" data-aos-delay="500">
+                        <div className="relative w-full h-[260px] md:h-[650px] max-w-[720px] bg-white border border-gray-200 rounded-3xl shadow-2xl overflow-hidden flex items-center justify-center -mt-4 md:-mt-16 group z-50">
                             
                             {/* Professional slideshow with enhanced transitions */}
-                            <div className="relative w-full h-full overflow-hidden rounded-3xl">
+                            <div className="relative w-full h-full overflow-hidden rounded-3xl bg-white z-50">
                                 {heroSlides.map((slide, idx) => (
                                     <div
                                         key={idx}
-                                        className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+                                        className={`absolute inset-0 transition-all duration-1000 ease-in-out z-50 ${
                                             heroIndex === idx 
-                                                ? 'opacity-100 scale-100 z-20' 
-                                                : 'opacity-0 scale-105 z-10'
+                                                ? 'opacity-100 scale-100' 
+                                                : 'opacity-0 scale-105'
                                         }`}
                                         style={{
                                             transform: heroIndex === idx ? 'scale(1)' : 'scale(1.05)',
-                                            filter: heroIndex === idx ? 'brightness(1) contrast(1.05)' : 'brightness(0.8)'
+                                            filter: heroIndex === idx ? 'brightness(1) contrast(1.05)' : 'brightness(0.8)',
+                                            backgroundColor: '#ffffff',
+                                            zIndex: heroIndex === idx ? 60 : 55
                                         }}
                                     >
                                         <img
                                             src={slide.img}
                                             alt={slide.desc}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover bg-white relative z-60"
                                             style={{
-                                                filter: 'contrast(1.1) saturate(1.1) brightness(0.95)'
+                                                filter: 'contrast(1.1) saturate(1.1) brightness(0.95)',
+                                                backgroundColor: '#ffffff'
                                             }}
                                         />
                                         {/* Professional gradient overlay */}
@@ -284,7 +429,7 @@ export default function Landing() {
                             </div>
 
                             {/* Professional navigation controls */}
-                            <div className="absolute top-6 right-6 z-30 flex gap-3 translate-y-5">
+                            <div className="absolute top-6 right-6 z-70 flex gap-3 translate-y-5">
                                 <button
                                     className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl p-3 transition-all duration-300 hover:scale-110 shadow-lg border border-white/20"
                                     onClick={handlePrevHero}
@@ -306,7 +451,7 @@ export default function Landing() {
                             </div>
 
                             {/* Professional caption with modern typography */}
-                            <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent px-8 py-8 text-white z-30">
+                            <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent px-8 py-8 text-white z-70">
                                 <div className="max-w-lg">
                                     <div className="flex items-center gap-2 mb-3">
                                         <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
@@ -325,7 +470,7 @@ export default function Landing() {
                             </div>
 
                             {/* Modern progress indicators */}
-                            <div className="absolute bottom-6 right-6 z-30 flex gap-2 ">
+                            <div className="absolute bottom-6 right-6 z-70 flex gap-2 ">
                                 {heroSlides.map((_, idx) => (
                                     <button
                                         key={idx}
@@ -341,7 +486,7 @@ export default function Landing() {
                             </div>
 
                             {/* Slide counter */}
-                            <div className="absolute top-6 left-6 z-30 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-2 text-white translate-y-5 text-sm font-medium">
+                            <div className="absolute top-6 left-6 z-70 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-2 text-white translate-y-5 text-sm font-medium">
                                 <span className="text-green-400">{heroIndex + 1}</span>
                                 <span className="text-white/70 mx-1">/</span>
                                 <span className="text-white/70">{heroSlides.length}</span>
@@ -367,14 +512,14 @@ export default function Landing() {
 
                 {/* Section header */}
                 <div className="text-center mb-12 relative z-10">
-                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 rounded-full px-4 py-2 mb-6 shadow-sm">
+                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 rounded-full px-4 py-2 mb-6 shadow-sm" data-aos="fade-down" data-aos-delay="100">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                         <span className="text-green-700 font-bold text-xs uppercase tracking-wider">Our Foundation</span>
                     </div>
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 mb-4 tracking-tight">
+                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 mb-4 tracking-tight" data-aos="fade-up" data-aos-delay="200">
                         Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Purpose</span> & Vision
                     </h2>
-                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed">
+                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed" data-aos="fade-up" data-aos-delay="300">
                         Driving agricultural innovation and community empowerment through sustainable solutions.
                     </p>
                 </div>
@@ -383,7 +528,7 @@ export default function Landing() {
                     <div className="grid md:grid-cols-2 gap-8 lg:gap-10 items-stretch">
                         
                         {/* Mission Card - Enhanced */}
-                        <div className="group relative h-full">
+                        <div className="group relative h-full" data-aos="fade-right" data-aos-delay="400">
                             {/* Premium card container */}
                             <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-200/50 hover:shadow-2xl transition-all duration-500 hover:scale-105 transform h-full flex flex-col">
                                 
@@ -430,7 +575,7 @@ export default function Landing() {
                         </div>
 
                         {/* Vision Card - Enhanced */}
-                        <div className="group relative h-full">
+                        <div className="group relative h-full" data-aos="fade-left" data-aos-delay="500">
                             {/* Premium card container */}
                             <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-200/50 hover:shadow-2xl transition-all duration-500 hover:scale-105 transform h-full flex flex-col">
                                 
@@ -509,14 +654,14 @@ export default function Landing() {
 
                 {/* Section header */}
                 <div className="text-center mb-10 relative z-10">
-                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100/80 to-emerald-100/80 border border-green-300/50 rounded-full px-4 py-2 mb-6 shadow-sm">
+                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100/80 to-emerald-100/80 border border-green-300/50 rounded-full px-4 py-2 mb-6 shadow-sm" data-aos="fade-down" data-aos-delay="100">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                         <span className="text-green-700 font-bold text-xs uppercase tracking-wider">Our Expertise</span>
                     </div>
-                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 tracking-tight">
+                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 tracking-tight" data-aos="fade-up" data-aos-delay="200">
                         Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Programs</span>
                     </h2>
-                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed">
+                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed" data-aos="fade-up" data-aos-delay="300">
                         Comprehensive training and development programs designed to elevate agricultural excellence.
                     </p>
                 </div>
@@ -556,6 +701,8 @@ export default function Landing() {
                         <div 
                             id="programs-scroller"
                             className="flex gap-6 overflow-x-auto px-14 py-6 cursor-grab active:cursor-grabbing select-none"
+                            data-aos="zoom-in" 
+                            data-aos-delay="400"
                             style={{
                                 scrollbarWidth: 'none', /* Firefox */
                                 msOverflowStyle: 'none', /* IE and Edge */
@@ -689,14 +836,14 @@ export default function Landing() {
 
                 {/* Section header */}
                 <div className="text-center mb-12 relative z-10">
-                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100/80 to-emerald-100/80 border border-green-300/50 rounded-full px-4 py-2 mb-6 shadow-sm">
+                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100/80 to-emerald-100/80 border border-green-300/50 rounded-full px-4 py-2 mb-6 shadow-sm" data-aos="fade-down" data-aos-delay="100">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                         <span className="text-green-700 font-bold text-xs uppercase tracking-wider">Latest Updates</span>
                     </div>
-                    <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4 tracking-tight">
+                    <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4 tracking-tight" data-aos="fade-up" data-aos-delay="200">
                         News & <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Updates</span>
                     </h2>
-                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed">
+                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed" data-aos="fade-up" data-aos-delay="300">
                         Stay informed with the latest developments, achievements, and upcoming initiatives in agricultural innovation.
                     </p>
                 </div>
@@ -704,7 +851,7 @@ export default function Landing() {
                 <div className="max-w-6xl mx-auto px-4 relative z-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {/* Enhanced News Card 1 */}
-                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2">
+                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="400">
                             <div className="relative overflow-hidden">
                                 <img src={fits} alt="FITS Center" className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
@@ -746,7 +893,7 @@ export default function Landing() {
                         </div>
 
                         {/* Enhanced News Card 2 */}
-                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2">
+                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="500">
                             <div className="relative overflow-hidden">
                                 <img src={img4} alt="Organic Farming" className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
@@ -788,7 +935,7 @@ export default function Landing() {
                         </div>
 
                         {/* Enhanced News Card 3 */}
-                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2">
+                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="600">
                             <div className="relative overflow-hidden">
                                 <img src={img5} alt="Rabies Control" className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
@@ -837,21 +984,23 @@ export default function Landing() {
             <section className="py-12 bg-gradient-to-br from-green-900/20 via-emerald-50/60 to-green-900/25" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 <div className="max-w-6xl mx-auto px-6">
                     {/* Compact Header */}
-                    <div className="text-center mb-10 reveal-on-scroll opacity-0 -translate-y-2 transition-all duration-700 delay-100">
-                        <h2 className="text-3xl font-extrabold text-green-900 tracking-tight mb-2">
+                    <div className="text-center mb-10">
+                        <h2 className="text-3xl font-extrabold text-green-900 tracking-tight mb-2" data-aos="fade-up" data-aos-delay="100">
                             External Resources
                         </h2>
-                        <div className="w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto"></div>
+                        <div className="w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto" data-aos="fade-up" data-aos-delay="200"></div>
                     </div>
 
                     {/* Compact Resource Cards Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-on-scroll opacity-0 translate-y-4 transition-all duration-700 delay-300">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Compact Resource 1 - Department of Agriculture */}
                         <a
                             href="https://www.da.gov.ph/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group"
+                            data-aos="fade-up" 
+                            data-aos-delay="300"
                         >
                             <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/50 hover:border-green-200 hover:-translate-y-1">
                                 {/* Compact Icon */}
@@ -887,6 +1036,8 @@ export default function Landing() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group"
+                            data-aos="fade-up" 
+                            data-aos-delay="400"
                         >
                             <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/50 hover:border-green-200 hover:-translate-y-1">
                                 {/* Compact Icon */}
@@ -922,6 +1073,8 @@ export default function Landing() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group"
+                            data-aos="fade-up" 
+                            data-aos-delay="500"
                         >
                             <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/50 hover:border-green-200 hover:-translate-y-1">
                                 {/* Compact Icon */}
@@ -967,48 +1120,48 @@ export default function Landing() {
             {/* Top decorative bar */}
             <div className="h-1 bg-gradient-to-r from-emerald-400 via-green-400 to-emerald-500"></div>
             
-            <div className="relative py-20 px-6">
+            <div className="relative py-12 px-6">
                 <div className="max-w-7xl mx-auto">
                     {/* Main Footer Content */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                         
                         {/* Enhanced Logo & About Section */}
                         <div className="lg:col-span-2">
-                            <div className="mb-8">
-                                <div className="flex items-center gap-4 mb-6">
+                            <div className="mb-6">
+                                <div className="flex items-center gap-4 mb-4">
                                     <div className="relative">
-                                        <img src={logo} alt="FITS Logo" className="w-16 h-16 rounded-2xl border-3 border-emerald-400 shadow-xl" />
+                                        <img src={logo} alt="FITS Logo" className="w-12 h-12 rounded-2xl border-3 border-emerald-400 shadow-xl" />
                                         <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-green-400 rounded-2xl blur opacity-25"></div>
                                     </div>
                                     <div>
-                                        <span className="text-3xl font-extrabold text-white tracking-wide">FITS-Tanza</span>
+                                        <span className="text-2xl font-extrabold text-white tracking-wide">FITS-Tanza</span>
                                         <p className="text-emerald-300 text-sm font-medium">Farmers' Information & Technology Services</p>
                                     </div>
                                 </div>
                                 
-                                <p className="text-green-100 text-base leading-relaxed mb-8 max-w-2xl">
+                                <p className="text-green-100 text-sm leading-relaxed mb-6 max-w-2xl">
                                     Empowering local farmers and communities through innovative agricultural programs, advanced training, 
                                     and comprehensive support services for sustainable farming practices.
                                 </p>
                             </div>
                             
                             {/* Enhanced Contact Information */}
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                                 <div className="flex items-start gap-3 group">
-                                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 12.414a2 2 0 10-2.828 2.828l4.243 4.243a8 8 0 111.414-1.414z" />
                                         </svg>
                                     </div>
                                     <div>
                                         <p className="text-white font-semibold text-sm">Address</p>
-                                        <p className="text-green-200 text-sm">Poblacion, Tanza, Cavite, Philippines</p>
+                                        <p className="text-green-200 text-sm">Municipal Cmpd., Municipality of Tanza, A. Soriano Hi-way, Daang Amaya I, Tanza, Philippines</p>
                                     </div>
                                 </div>
                                 
                                 <div className="flex items-start gap-3 group">
-                                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                     </div>
@@ -1072,16 +1225,16 @@ export default function Landing() {
                         
                         {/* Enhanced Office Hours & Services */}
                         <div>
-                            <div className="mb-6">
-                                <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                                    <div className="w-1 h-6 bg-gradient-to-b from-emerald-400 to-green-400 rounded-full"></div>
+                            <div className="mb-4">
+                                <h4 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                                    <div className="w-1 h-5 bg-gradient-to-b from-emerald-400 to-green-400 rounded-full"></div>
                                     Office Hours
                                 </h4>
-                                <div className="w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full"></div>
+                                <div className="w-10 h-0.5 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full"></div>
                             </div>
                             
-                            <div className="space-y-4 mb-8">
-                                <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+                            <div className="space-y-3 mb-6">
+                                <div className="bg-white/5 backdrop-blur-sm rounded-lg p-3 border border-white/10">
                                     <div className="flex items-center gap-2 mb-2">
                                         <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <circle cx="12" cy="12" r="10"/>
@@ -1093,7 +1246,7 @@ export default function Landing() {
                                     <p className="text-emerald-300 font-semibold text-sm">8:00 AM - 5:00 PM</p>
                                 </div>
                                 
-                                <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+                                <div className="bg-white/5 backdrop-blur-sm rounded-lg p-3 border border-white/10">
                                     <div className="flex items-center gap-2 mb-2">
                                         <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -1113,15 +1266,15 @@ export default function Landing() {
                     </div>
                     
                     {/* Enhanced Social Media & Connect Section */}
-                    <div className="border-t border-white/10 pt-12 mb-12">
-                        <div className="text-center mb-8">
-                            <h4 className="text-2xl font-bold text-white mb-4">Stay Connected</h4>
-                            <p className="text-green-200 text-base max-w-2xl mx-auto">
+                    <div className="border-t border-white/10 pt-8 mb-8">
+                        <div className="text-center mb-6">
+                            <h4 className="text-xl font-bold text-white mb-3">Stay Connected</h4>
+                            <p className="text-green-200 text-sm max-w-2xl mx-auto">
                                 Follow us on social media for the latest updates on agricultural programs, events, and farming innovations.
                             </p>
                         </div>
                         
-                        <div className="flex justify-center gap-6">
+                        <div className="flex justify-center gap-4">
                             {[
                                 { 
                                     href: 'https://facebook.com/fitstanza', 
@@ -1193,6 +1346,32 @@ export default function Landing() {
                 </div>
             </div>
         </footer>
+
+            {/* Back to Top Button */}
+            <button
+                className={`fixed bottom-8 left-8 z-50 w-14 h-14 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center group ${
+                    showBackToTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+                }`}
+                onClick={scrollToTop}
+                aria-label="Back to top"
+                style={{
+                    transform: showBackToTop ? 'translateY(0)' : 'translateY(16px)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+            >
+                <svg 
+                    className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth={2.5} 
+                    viewBox="0 0 24 24"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+                
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full blur opacity-0 group-hover:opacity-30 transition-opacity duration-300 -z-10"></div>
+            </button>
 
             <style>{`
                 .hero-fade-img {
