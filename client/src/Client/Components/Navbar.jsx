@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import logo from '../../Assets/Logo.png';
 import Chat from '../../Components/Chats/Chat';
-
+import logo2 from '../Assets/farmerconnect.png'; // Updated logo import
 export default function Navbar({refresh}) {
     const location = useLocation();
     // Inject Google Fonts Poppins if not already present
@@ -165,6 +165,17 @@ export default function Navbar({refresh}) {
 
     return (
         <>
+            <style>
+                {`
+                    .dropdown-animate {
+                        animation: dropdown-fade-in 0.35s cubic-bezier(.4,0,.2,1);
+                    }
+                    @keyframes dropdown-fade-in {
+                        0% { opacity: 0; transform: translateY(-24px); }
+                        100% { opacity: 1; transform: translateY(0); }
+                    }
+                `}
+            </style>
             <Chat />
             {showAlert && (
                 <div className="fixed inset-0 z-[999] flex items-center justify-center  bg-black/70 transition-all duration-300">
@@ -215,16 +226,16 @@ export default function Navbar({refresh}) {
                     </div>
                 </div>
             )}
-            <nav className="bg-white shadow-lg fixed w-full rounded-xl z-30 top-0 left-0" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                <div className="max-w-7xl mx-auto flex items-center justify-between px-2 md:px-8 py-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <nav className="bg-green-900 shadow-lg fixed w-full z-30 rounded-b-4xl top-0 left-0 " style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <div className="max-w-7xl mx-auto flex items-center justify-between  px-2 md:px-8 py-4 text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
                     <img
-                        src={logo}
+                        src={logo2}
                         alt="FITS -Tanza Logo"
                         className="w-10 h-10 object-contain ml-4 rounded-full"
                     />
                     <Link
                         to="/"
-                        className="flex items-center gap-2 font-extrabold text-2xl px-2 text-green-700 md:text-2xl"
+                        className="flex items-center gap-2 font-extrabold text-2xl px-2 text-white md:text-2xl"
                     >
                         FITS -Tanza
                     </Link>
@@ -234,11 +245,11 @@ export default function Navbar({refresh}) {
                                 <NavLink
                                     to="/"
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 text-green-700 hover:bg-green-50 px-4 py-3 rounded-lg font-semibold transition${isActive ? ' bg-green-100 text-green-900' : ''}`
+                                        `group flex items-center gap-2 text-white-700 hover:bg-green-50 hover:text-green-900 px-4 py-3 rounded-lg font-semibold transition${isActive ? ' bg-green-800 text-white' : ''}`
                                     }
                                 >
                                     <svg
-                                        className="w-5 h-5 text-green-500"
+                                    className="w-5 h-5 text-white group-hover:text-green-900"
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
@@ -267,10 +278,10 @@ export default function Navbar({refresh}) {
                                     type="button"
                                     // onClick removed for hover UX
                                     tabIndex={0}
-                                    className={`flex items-center gap-2 text-green-700 hover:bg-green-50 px-4 py-3 rounded-lg font-semibold transition focus:outline-none${infoActive ? ' bg-green-100 text-green-900' : ''}`}
+                                    className={`group flex items-center gap-2 text-white-700 hover:bg-green-50 hover:text-green-900 px-4 py-3 rounded-lg font-semibold transition focus:outline-none${infoActive ? ' bg-green-800 text-white' : ''}`}
                                 >
                                     <svg
-                                        className="w-5 h-5 text-green-500"
+                                        className="w-5 h-5 text-white group-hover:text-green-900"
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
@@ -293,7 +304,7 @@ export default function Navbar({refresh}) {
                                     </svg>
                                     {!isMidScreen && 'Info'}
                                     <svg
-                                        className={`w-4 h-4 ml-1 transition-transform duration-200 ${
+                                        className={`w-4 h-4 ml-1 transition-transform duration-200 group-hover:text-green-600 ${
                                             infoOpen ? 'rotate-180' : ''
                                         }`}
                                         fill="none"
@@ -311,8 +322,8 @@ export default function Navbar({refresh}) {
                                 <ul
                                     className={`absolute left-0 mt-2 w-44 bg-white rounded-xl shadow-lg py-2 z-40 border border-green-100 transition-all duration-200 ${
                                         infoOpen
-                                            ? 'opacity-100 translate-y-0 pointer-events-auto'
-                                            : 'opacity-0 -translate-y-2 pointer-events-none'
+                                            ? 'opacity-100 translate-y-0 pointer-events-auto dropdown-animate'
+                                            : 'opacity-0 -translate-y-6 pointer-events-none'
                                     }`}
                                 >
                                     <li>
@@ -389,10 +400,10 @@ export default function Navbar({refresh}) {
                                     type="button"
                                     // onClick removed for hover UX
                                     tabIndex={0}
-                                    className={`flex items-center gap-2 text-green-700 hover:bg-green-50 px-4 py-3 rounded-lg font-semibold transition focus:outline-none${servicesActive ? ' bg-green-100 text-green-900' : ''}`}
+                                    className={`group flex items-center gap-2 text-white-700 hover:bg-green-50 hover:text-green-900 px-4 py-3 rounded-lg font-semibold transition focus:outline-none${servicesActive ? ' bg-green-800 text-white' : ''}`}
                                 >
                                     <svg
-                                        className="w-5 h-5 text-green-500"
+                                        className="w-5 h-5 text-white group-hover:text-green-900"
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
@@ -424,8 +435,8 @@ export default function Navbar({refresh}) {
                                 <ul
                                     className={`absolute left-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-4 z-40 border border-green-100 transition-all duration-200 ${
                                         servicesOpen
-                                            ? 'opacity-100 translate-y-0 pointer-events-auto'
-                                            : 'opacity-0 -translate-y-2 pointer-events-none'
+                                            ? 'opacity-100 translate-y-0 pointer-events-auto dropdown-animate'
+                                            : 'opacity-0 -translate-y-6 pointer-events-none'
                                     }`}
                                 >
                                     <li>
@@ -523,11 +534,11 @@ export default function Navbar({refresh}) {
                                 <NavLink
                                     to="/settings/profile"
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 text-green-700 hover:bg-green-50 px-4 py-3 rounded-lg font-semibold transition${isActive ? ' bg-green-100 text-green-900' : ''}`
+                                        `group flex items-center gap-2 text-white-700 hover:bg-green-50 hover:text-green-900 px-4 py-3 rounded-lg font-semibold transition${isActive ? ' bg-green-800 text-white' : ''}`
                                     }
                                 >
                                     <svg
-                                        className="w-5 h-5 text-green-500"
+                                        className="w-5 h-5 text-white group-hover:text-green-900"
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
@@ -567,7 +578,7 @@ export default function Navbar({refresh}) {
                             </button>
                             {open && (
                                 <ul
-                                    className="absolute right-0 mt-3 w-44 bg-white rounded-2xl shadow-2xl py-2 z-[9999] border border-green-100 animate-fade-in"
+                                    className={"absolute right-0 mt-3 w-44 bg-white rounded-2xl shadow-2xl py-2 z-[9999] border border-green-100 transition-all duration-300 ease-out transform " + (open ? 'opacity-100 translate-y-0 pointer-events-auto dropdown-animate' : 'opacity-0 -translate-y-6 pointer-events-none')}
                                 >
                                     {loggedIn ? (
                                         <>
@@ -704,7 +715,7 @@ export default function Navbar({refresh}) {
                         `}
                     </style>
                     <div className="hide-scrollbar flex flex-col h-full">
-                        <div className="flex items-center justify-between px-6 py-8 border-b border-green-100">
+                        <div className="flex items-center justify-between px-6 py-8 border-b border-green-100 text-white">
                             <img
                                 src={logo}
                                 alt="FITS -Tanza Logo"
@@ -712,7 +723,7 @@ export default function Navbar({refresh}) {
                             />
                                 <NavLink
                                     to="/"
-                                className="flex items-center font-extrabold text-2xl px-2 mr-10  text-green-700 md:text-2xl"
+                                className="flex items-center font-extrabold text-2xl px-2 mr-10  text-white md:text-2xl"
                                 >
                                 FITS -Tanza
                             </NavLink>
@@ -750,7 +761,7 @@ export default function Navbar({refresh}) {
                             {loggedIn ? (
                                 <>
                                     <span className="font-semibold text-green-800 text-lg">
-                                        {user.name}
+                                        <span className="text-white">{user.name}</span>
                                     </span>
                                     <button
                                     className="mt-2 flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-600 to-green-400 text-white font-bold rounded-full shadow-lg hover:scale-105 transition-all duration-200"

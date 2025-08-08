@@ -75,24 +75,24 @@ export default function Login() {
                     background: transparent;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: linear-gradient(120deg, #22c55e 60%, #16a34a 100%);
+                    background: linear-gradient(120deg, #2563eb 60%, #1e40af 100%);
                     border-radius: 16px;
-                    border: 2px solid #bbf7d0;
-                    box-shadow: 0 2px 8px 0 rgba(34,197,94,0.10);
+                    border: 2px solid #e0e7ef;
+                    box-shadow: 0 2px 8px 0 rgba(30,64,175,0.10);
                     min-height: 36px;
                     transition: background 0.25s, border 0.25s;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: linear-gradient(120deg, #16a34a 60%, #22c55e 100%);
-                    border: 2px solid #22c55e;
+                    background: linear-gradient(120deg, #1e40af 60%, #2563eb 100%);
+                    border: 2px solid #2563eb;
                 }
                 .custom-scrollbar::-webkit-scrollbar-track {
-                    background: #bbf7d0;
+                    background: green;
                     border-radius: 16px;
                 }
                 .custom-scrollbar {
                     scrollbar-width: thin;
-                    scrollbar-color: #22c55e #bbf7d0;
+                    scrollbar-color: #2563eb #f6f8fc;
                 }
             `}</style>
                     <div className="flex flex-col items-center mb-8 ">
