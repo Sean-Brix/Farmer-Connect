@@ -94,7 +94,7 @@ export default function Sidebar({
             {/* Import Poppins font from Google Fonts */}
             <style>{`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');`}</style>
             <aside
-                className={`sidebar transition-all duration-300 w-72 bg-white backdrop-blur-xl border-r border-green-200 shadow-2xl hidden md:flex flex-col fixed left-0 top-0 z-30 h-screen max-h-screen ${iconOnlyClass}`}
+                className={`sidebar transition-all duration-300 w-64 bg-white backdrop-blur-xl border-r border-green-200 shadow-2xl hidden md:flex flex-col fixed left-0 top-0 z-30 h-screen max-h-screen ${iconOnlyClass}`}
                 style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
             >
                 <div className="flex flex-col h-full max-h-screen">
