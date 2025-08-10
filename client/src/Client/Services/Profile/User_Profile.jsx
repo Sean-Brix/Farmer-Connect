@@ -127,7 +127,7 @@ export default function Account() {
             <Navbar refresh={refreshNav} />
             <div className="relative min-h-screen bg-gray-50 mt-20">
                 {/* Blue background banner */}
-                <div className="w-full h-56 bg-gradient-to-t from-green-200 to-green-100"></div>
+                <div className="w-full h-56 bg-gradient-to-t from-gray-200 to-gray-100"></div>
                 {/* Floating profile card */}
                 <div className="w-full flex justify-center">
                     <div className="-mt-24 w-full max-w-2xl">

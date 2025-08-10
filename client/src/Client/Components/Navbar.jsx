@@ -236,7 +236,7 @@ export default function Navbar({refresh}) {
                     </div>
                 </div>
             )}
-            <nav className="bg-gradient-to-r from-emerald-800 via-green-800 to-teal-800 shadow-2xl fixed w-full z-[9999] top-0 left-0 backdrop-blur-sm border-b border-white/10" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <nav className="bg-green-800 shadow-2xl fixed w-full z-[9999] top-0 left-0 backdrop-blur-sm border-b border-white/10" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 py-3 text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
                     <img
                         src={logo2}
@@ -572,7 +572,7 @@ export default function Navbar({refresh}) {
                             }}
                         >
                             <button
-                                className="flex items-center justify-center w-11 h-11 rounded-full bg-gradient-to-tr from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-700 hover:via-teal-700 hover:to-cyan-700 transition-all duration-300 focus:outline-none shadow-lg border-2 border-white/30 hover:border-white/50 hover:scale-105"
+                                className="flex items-center justify-center w-11 h-11 rounded-full bg-green-600 hover:bg-green-700 transition-all duration-300 focus:outline-none shadow-lg border-2 border-white/30 hover:border-white/50 hover:scale-105"
                                 aria-haspopup="true"
                                 aria-expanded={open}
                                 tabIndex={0}
@@ -722,10 +722,10 @@ export default function Navbar({refresh}) {
                         >
                             <div className="flex flex-col h-full">
                                 {/* Enhanced Professional Header */}
-                                <div className="relative px-6 py-8 bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 text-white overflow-hidden">
+                                <div className="relative px-6 py-8 bg-green-600 text-white overflow-hidden">
                                     {/* Background Pattern */}
                                     <div className="absolute inset-0 opacity-10">
-                                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/20 to-transparent"></div>
+                                        <div className="absolute top-0 left-0 w-full h-full"></div>
                                     </div>
                                     
                                     <div className="relative flex items-center justify-between">
@@ -763,8 +763,8 @@ export default function Navbar({refresh}) {
                                             className={({ isActive }) =>
                                                 `flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
                                                     isActive 
-                                                        ? 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-800 border-l-4 border-emerald-600 shadow-sm transform scale-[1.02]' 
-                                                        : 'text-gray-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-emerald-700 hover:scale-[1.01]'
+                                                        ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]' 
+                                                        : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]'
                                                 }`
                                             }
                                             onClick={() => setOpen(false)}
@@ -789,8 +789,8 @@ export default function Navbar({refresh}) {
                                         <details className="group">
                                             <summary className={`flex items-center justify-between py-4 px-4 rounded-xl transition-all duration-200 font-semibold cursor-pointer list-none hover:scale-[1.01] ${
                                                 infoActive 
-                                                    ? 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-800 border-l-4 border-emerald-600 shadow-sm' 
-                                                    : 'text-gray-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-emerald-700'
+                                                    ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm' 
+                                                    : 'text-gray-700 hover:bg-green-50 hover:text-green-700'
                                             }`}>
                                                 <div className="flex items-center space-x-4">
                                                     <svg
@@ -891,8 +891,8 @@ export default function Navbar({refresh}) {
                                         <details className="group">
                                             <summary className={`flex items-center justify-between py-4 px-4 rounded-xl transition-all duration-200 font-semibold cursor-pointer list-none hover:scale-[1.01] ${
                                                 servicesActive 
-                                                    ? 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-800 border-l-4 border-emerald-600 shadow-sm' 
-                                                    : 'text-gray-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-emerald-700'
+                                                    ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm' 
+                                                    : 'text-gray-700 hover:bg-green-50 hover:text-green-700'
                                             }`}>
                                                 <div className="flex items-center space-x-4">
                                                     <svg
@@ -1021,8 +1021,8 @@ export default function Navbar({refresh}) {
                                             className={({ isActive }) =>
                                                 `flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
                                                     isActive 
-                                                        ? 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-800 border-l-4 border-emerald-600 shadow-sm transform scale-[1.02]' 
-                                                        : 'text-gray-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-emerald-700 hover:scale-[1.01]'
+                                                        ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]' 
+                                                        : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]'
                                                 }`
                                             }
                                             onClick={() => setOpen(false)}
@@ -1045,7 +1045,7 @@ export default function Navbar({refresh}) {
                                             {loggedIn ? (
                                                 <>
                                                     {/* User Profile Display */}
-                                                    <div className="flex items-center space-x-4 py-4 px-4 mb-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl">
+                                                    <div className="flex items-center space-x-4 py-4 px-4 mb-4 bg-green-50 rounded-xl">
                                                         <div className="relative">
                                                             <img 
                                                                 src={user.avatar} 
@@ -1094,7 +1094,7 @@ export default function Navbar({refresh}) {
                                                             setShowAlert(true);
                                                             setOpen(false);
                                                         }}
-                                                        className="flex items-center justify-center space-x-3 py-4 px-4 rounded-xl transition-all duration-200 font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-lg hover:shadow-xl transform hover:scale-105 w-full"
+                                                        className="flex items-center justify-center space-x-3 py-4 px-4 rounded-xl transition-all duration-200 font-semibold text-white bg-red-600 hover:bg-red-700 shadow-lg hover:shadow-xl transform hover:scale-105 w-full"
                                                     >
                                                         <svg
                                                             className="w-5 h-5 text-white"
@@ -1121,7 +1121,7 @@ export default function Navbar({refresh}) {
                                                 /* Professional Login Button */
                                                 <NavLink 
                                                     to="/login"
-                                                    className="flex items-center justify-center space-x-4 py-4 px-6 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+                                                    className="flex items-center justify-center space-x-4 py-4 px-6 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
                                                     onClick={() => setOpen(false)}
                                                 >
                                                     <svg
@@ -1145,7 +1145,7 @@ export default function Navbar({refresh}) {
                                 </div>
                                 
                                 {/* Professional Footer */}
-                                <div className="px-6 py-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
+                                <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                                     <p className="text-xs text-gray-500 text-center font-medium">
                                         © 2025 Farmer Connect. Agricultural Excellence.
                                     </p>
