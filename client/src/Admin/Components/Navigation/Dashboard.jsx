@@ -12,7 +12,6 @@ import Content from '../../Services/Inventory/Inventory.jsx';
 import Distribution from '../../Services/Distribution/Distribution.jsx';
 import Chat from '../../Services/Customer_Service/Chat_Module.jsx';
 import Survey from '../../Services/Survey/Survey.jsx';
-import Settings from '../../Services/Settings/Settings.jsx';
 import Seed_Track from '../../Services/Seed_track/Seed.jsx';
 
 // GLOBAL
@@ -45,7 +44,6 @@ export default function Dashboard() {
         distribution: () => Distribution,
         audit: () => Audit,
         survey: () => Survey,
-        settings: () => Settings,
         chat: () => Chat,
         seed: () => Seed_Track,
 
@@ -53,7 +51,7 @@ export default function Dashboard() {
         account: () => AccountProfile,
     });
 
-    const [Page, setPage] = useState(elements.current.analytics); // [ analytics, enrollment, profiles, eic, settings, audit, survey, content, distribution, chat ]
+    const [Page, setPage] = useState(elements.current.analytics); // [ analytics, enrollment, profiles, eic, audit, survey, content, distribution, chat ]
     const admin_navigate = (page) => {
         setPage(elements.current[page]);
     };

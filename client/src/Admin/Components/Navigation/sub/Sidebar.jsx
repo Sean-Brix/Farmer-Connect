@@ -58,11 +58,6 @@ const menuItems = [
         icon: <i className="fas fa-seedling h-5 w-5 sidebar-icon"></i>,
     },
     {
-        key: 'settings',
-        label: 'Settings',
-        icon: <i className="fas fa-cog h-5 w-5 sidebar-icon"></i>,
-    },
-    {
         key: 'survey',
         label: 'Survey Forms',
         icon: <i className="fas fa-poll h-5 w-5 sidebar-icon"></i>,
