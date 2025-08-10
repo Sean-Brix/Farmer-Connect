@@ -5,8 +5,8 @@ export default function About() {
 return (
     <>
         <Navbar />
-        <section className="bg-gradient-to-br from-green-50 to-green-50 min-h-screen pt-40 py-12">
-            <div className="max-w-4xl mx-auto p-8 bg-white rounded-3xl shadow-2xl flex flex-col gap-10 border border-green-200">
+        <section className="bg-white min-h-screen pt-24 sm:pt-20 md:pt-16 py-12 mt-15">
+            <div className="max-w-4xl mx-auto p-8 bg-white rounded-3xl shadow-2xl flex flex-col gap-10 border border-gray-200">
                 <div className="flex flex-col md:flex-row items-center gap-10">
                     <img
                         src={farm}
@@ -14,14 +14,14 @@ return (
                         className="w-48 h-48 rounded-full object-cover border-4 border-green-600 shadow-lg"
                     />
                     <div>
-                        <h1 className="text-4xl font-extrabold text-green-700 mb-4">About FITS - Tanza</h1>
+                        <h1 className="text-4xl font-extrabold text-gray-900 mb-4">About FITS - Tanza</h1>
                         <p className="text-lg text-gray-700 mb-4">
                             At FITS - Tanza, we are a diverse team of technologists, agronomists, and innovators united by a shared vision: to revolutionize agriculture through technology. Our platform bridges the gap between farmers, suppliers, and consumers, making agriculture smarter, more sustainable, and accessible to all.
                         </p>
                         <div className="flex flex-wrap gap-4 mt-2">
-                            <span className="inline-flex items-center px-3 py-1 bg-green-200 text-green-700 rounded-full text-sm font-medium">🌱 Agri-Tech Innovation</span>
-                            <span className="inline-flex items-center px-3 py-1 bg-green-200 text-green-700 rounded-full text-sm font-medium">🤝 Community Driven</span>
-                            <span className="inline-flex items-center px-3 py-1 bg-green-200 text-green-700 rounded-full text-sm font-medium">💡 Sustainable Solutions</span>
+                            <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">🌱 Agri-Tech Innovation</span>
+                            <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">🤝 Community Driven</span>
+                            <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">💡 Sustainable Solutions</span>
                         </div>
                     </div>
                 </div>
@@ -59,26 +59,26 @@ return (
                 <div className="mt-10">
                     <h2 className="text-2xl font-semibold text-green-600 mb-3">What We Offer</h2>
                     <div className="grid md:grid-cols-2 gap-6">
-                        <div className="bg-green-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-green-100">
-                            <h3 className="text-lg font-bold text-green-700">Smart Farm Management</h3>
+                        <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-200">
+                            <h3 className="text-lg font-bold text-green-600">Smart Farm Management</h3>
                             <p className="text-gray-700 text-sm">
                                 Our platform provides real-time analytics, crop monitoring, and resource management tools to help farmers maximize yield and minimize waste.
                             </p>
                         </div>
-                        <div className="bg-green-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-green-100">
-                            <h3 className="text-lg font-bold text-green-700">Marketplace Integration</h3>
+                        <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-200">
+                            <h3 className="text-lg font-bold text-green-600">Marketplace Integration</h3>
                             <p className="text-gray-700 text-sm">
                                 We connect farmers directly with buyers and suppliers, ensuring fair prices and transparent transactions for all parties.
                             </p>
                         </div>
-                        <div className="bg-green-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-green-100">
-                            <h3 className="text-lg font-bold text-green-700">Educational Resources</h3>
+                        <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-200">
+                            <h3 className="text-lg font-bold text-green-600">Educational Resources</h3>
                             <p className="text-gray-700 text-sm">
                                 Access a library of guides, tutorials, and expert advice to stay updated with the latest agricultural trends and best practices.
                             </p>
                         </div>
-                        <div className="bg-green-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-green-100">
-                            <h3 className="text-lg font-bold text-green-700">Community Support</h3>
+                        <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-200">
+                            <h3 className="text-lg font-bold text-green-600">Community Support</h3>
                             <p className="text-gray-700 text-sm">
                                 Join a vibrant community of farmers, experts, and enthusiasts ready to share knowledge, answer questions, and collaborate on projects.
                             </p>
@@ -91,7 +91,7 @@ return (
         
         <section className="bg-green-100 py-16">
             <div className="max-w-5xl mx-auto px-6">
-                <h2 className="text-3xl font-bold text-green-700 mb-8 text-center">Meet Our Team</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Meet Our Team</h2>
                 <div className="grid md:grid-cols-3 gap-10">
                     <div className="flex flex-col items-center bg-white rounded-xl p-6 shadow border border-green-200">
                         <div className="w-24 h-24 rounded-full mb-4 border-2 border-green-400 bg-green-50 flex items-center justify-center">
@@ -128,16 +128,16 @@ return (
         </section>
         <section className="bg-white py-16">
             <div className="max-w-4xl mx-auto px-6 text-center">
-                <h2 className="text-3xl font-bold text-green-700 mb-4">Why Choose FITS - Tanza?</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose FITS - Tanza?</h2>
                 <p className="text-lg text-gray-700 mb-8">
                     We combine deep agricultural expertise with modern technology to deliver real impact. Our commitment to sustainability, innovation, and community sets us apart.
                 </p>
                 <div className="flex flex-col md:flex-row justify-center gap-8">
-                    <div className="bg-green-50 rounded-xl shadow p-6 flex-1 border border-green-100">
+                    <div className="bg-gray-50 rounded-xl shadow p-6 flex-1 border border-gray-200">
                         <h3 className="text-xl font-semibold text-green-600 mb-2">Trusted by Farmers</h3>
                         <p className="text-gray-600">Hundreds of local farmers rely on our platform for resources, support, and growth opportunities.</p>
                     </div>
-                    <div className="bg-green-50 rounded-xl shadow p-6 flex-1 border border-green-100">
+                    <div className="bg-gray-50 rounded-xl shadow p-6 flex-1 border border-gray-200">
                         <h3 className="text-xl font-semibold text-green-600 mb-2">Award-Winning Solutions</h3>
                         <p className="text-gray-600">Recognized for excellence in agri-tech and sustainable development by industry leaders.</p>
                     </div>
@@ -147,7 +147,7 @@ return (
         {/* Even More Detail Section */}
         <section className="bg-green-100 py-16">
             <div className="max-w-4xl mx-auto px-6">
-                <h2 className="text-3xl font-bold text-green-700 mb-6 text-center">Our Impact</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Our Impact</h2>
                 <div className="grid md:grid-cols-2 gap-8">
                     <div className="flex flex-col gap-2">
                         <h3 className="text-xl font-semibold text-green-600">Empowering Local Farmers</h3>

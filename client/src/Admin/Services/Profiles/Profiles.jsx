@@ -85,12 +85,12 @@ export default function Profiles({ details }) {
                     <input
                         type="text"
                         placeholder="Search profiles..."
-                        className="modern-search-input"
+                        className="modern-search-input text-black"
                         style={{ maxWidth: '260px' }}
                         onChange={(e) => setFilter({ ...filter, search: e.target.value })}
                     />
                     <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                        <svg className="w-4 h-4 text-green-500 opacity-80 -translate-y-0.5" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-black opacity-80 -translate-y-1" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
                             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </div>

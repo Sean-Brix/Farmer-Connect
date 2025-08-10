@@ -92,7 +92,7 @@ export default function Login() {
                 }
                 .custom-scrollbar {
                     scrollbar-width: thin;
-                    scrollbar-color: #2563eb #f6f8fc;
+                       scrollbar-color: #22c55e #bbf7d0;
                 }
             `}</style>
                     <div className="flex flex-col items-center mb-8 ">

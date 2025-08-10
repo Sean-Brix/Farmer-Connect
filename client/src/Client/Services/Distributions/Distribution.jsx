@@ -1119,28 +1119,28 @@ export default function Distribution() {
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 relative"
+                className="flex min-h-screen bg-white relative"
                 style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
-                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20">
+                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-24 sm:pt-20 md:pt-16">
                         <header className="flex flex-col items-center mb-12 w-full">
-                            <span className="uppercase tracking-widest text-green-400 text-xs font-semibold mb-1 letter-spacing-wide">
+                            <span className="uppercase tracking-widest text-gray-500 text-xs font-semibold mb-1 letter-spacing-wide">
                                 Welcome to
                             </span>
                             <h1
-                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center text-green-800 "
+                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center text-gray-900 "
                                 
                             >
                                 Distribution Center
                             </h1>
-                            <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-green-400 via-green-300 to-green-200 opacity-90 shadow-lg"></div>
+                            <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-green-600 via-green-500 to-green-400 opacity-90 shadow-lg"></div>
                         </header>
 
                         <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
                             <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
                                 <button
-                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-700 hover:bg-green-800 text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400"
+                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400"
                                     onClick={handleMyRequestsClick}
                                 >
                                     <i className="fa-solid fa-list-check text-lg"></i>
@@ -1151,21 +1151,21 @@ export default function Distribution() {
                                 <div className="relative w-full sm:w-auto flex justify-center">
                                     <input
                                         type="text"
-                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border border-green-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 text-green-900 bg-white shadow transition placeholder:text-green-400 font-medium"
+                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-gray-900 bg-white shadow transition placeholder:text-gray-400 font-medium"
                                         placeholder="Search by name, category, description..."
                                         value={search}
                                         onChange={(e) =>
                                             setSearch(e.target.value)
                                         }
                                     />
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                                         <i className="fa-solid fa-magnifying-glass"></i>
                                     </span>
                                 </div>
                                 <div className="relative flex justify-center w-full sm:w-auto">
                                     <button
                                         id="modernFilterButton"
-                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-green-100 text-green-700 font-semibold border border-green-200 shadow transition focus:outline-none"
+                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-gray-50 text-gray-700 font-semibold border border-gray-300 shadow transition focus:outline-none"
                                         onClick={() => setShowFilter((f) => !f)}
                                         type="button"
                                         aria-label="Show filter options"
@@ -1181,7 +1181,7 @@ export default function Distribution() {
                                     {showFilter && (
                                         <div
                                             id="modernFilterDropdown"
-                                            className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-green-100 z-20 animate-fade-in py-2"
+                                            className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-20 animate-fade-in py-2"
                                         >
                                             {filterOptions.map((opt) => (
                                                 <button
@@ -1189,7 +1189,7 @@ export default function Distribution() {
                                                     className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
                                                         filter === opt.value
                                                             ? 'bg-green-600 text-white shadow'
-                                                            : 'text-green-900 hover:bg-green-50'
+                                                            : 'text-gray-900 hover:bg-gray-50'
                                                     }`}
                                                     onClick={() => {
                                                         setFilter(opt.value);
@@ -1207,7 +1207,7 @@ export default function Distribution() {
                         </div>
                         <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
                             {filteredItems.length === 0 ? (
-                                <div className="col-span-full text-center text-green-300 py-16 text-lg font-semibold tracking-wide">
+                                <div className="col-span-full text-center text-gray-400 py-16 text-lg font-semibold tracking-wide">
                                     No distribution items found.
                                 </div>
                             ) : (
@@ -1215,7 +1215,7 @@ export default function Distribution() {
                                     return (
                                         <div
                                             key={item.id}
-                                            className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-xl border border-green-100 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]"
+                                            className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-xl border border-gray-200 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]"
                                         >
                                             <div className="relative">
                                                 <img
@@ -1264,7 +1264,7 @@ export default function Distribution() {
                                                 </span>
                                             </div>
                                             <div className="p-5 flex flex-col flex-1">
-                                                <h3 className="text-xl font-bold mb-2 text-green-900 line-clamp-1 min-h-[28px]">
+                                                <h3 className="text-xl font-bold mb-2 text-gray-900 line-clamp-1 min-h-[28px]">
                                                     {item.Name}
                                                 </h3>
                                                 <p
@@ -1274,7 +1274,7 @@ export default function Distribution() {
                                                     {item.description}
                                                 </p>
                                                 <div className="flex items-center justify-between mb-4">
-                                                    <span className="text-sm text-green-700 font-semibold">
+                                                    <span className="text-sm text-gray-700 font-semibold">
                                                         Qty: {item.quantity}
                                                     </span>
                                                     <div className="flex items-center gap-1">
@@ -1340,7 +1340,7 @@ export default function Distribution() {
                                                 }
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === 1
-                                                        ? 'bg-green-500 text-white'
+                                                        ? 'bg-green-600 text-white'
                                                         : 'text-gray-700 hover:bg-gray-200'
                                                 }`}
                                             >
@@ -1372,7 +1372,7 @@ export default function Distribution() {
                                                             className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                                 currentPage ===
                                                                 page
-                                                                    ? 'bg-green-500 text-white'
+                                                                    ? 'bg-green-600 text-white'
                                                                     : 'text-gray-700 hover:bg-gray-200'
                                                             }`}
                                                         >
@@ -1392,7 +1392,7 @@ export default function Distribution() {
                                                 }
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === totalPages
-                                                        ? 'bg-green-500 text-white'
+                                                        ? 'bg-green-600 text-white'
                                                         : 'text-gray-700 hover:bg-gray-200'
                                                 }`}
                                             >
@@ -1410,7 +1410,7 @@ export default function Distribution() {
                                                     }
                                                     className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                         currentPage === i + 1
-                                                            ? 'bg-green-500 text-white'
+                                                            ? 'bg-green-600 text-white'
                                                             : 'text-gray-700 hover:bg-gray-200'
                                                     }`}
                                                 >
@@ -1454,10 +1454,10 @@ export default function Distribution() {
                 </main>
             </div>
             {modalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
-                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all pt-24 sm:pt-20 md:pt-16">
+                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in mx-4">
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-green-700 to-green-600">
+                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200 bg-gradient-to-r from-green-600 to-green-700">
                             <h2 className="text-xl font-bold text-white">
                                 <i className="fa-solid fa-paper-plane mr-2"></i>
                                 Request Distribution Item
@@ -1482,10 +1482,10 @@ export default function Distribution() {
                                     onError={(e) => {
                                         e.target.src = default_image;
                                     }}
-                                    className="w-16 h-16 rounded-xl object-cover border-2 border-green-700 shadow"
+                                    className="w-16 h-16 rounded-xl object-cover border-2 border-gray-300 shadow"
                                 />
                                 <div className="flex-1">
-                                    <div className="text-lg font-semibold text-green-900 truncate">
+                                    <div className="text-lg font-semibold text-gray-900 truncate">
                                         {selectedItem?.Name}
                                     </div>
                                     <div className="text-xs text-gray-500">
@@ -1498,8 +1498,8 @@ export default function Distribution() {
                                 </div>
                             </div>
 
-                            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
-                                <p className="text-sm text-green-800">
+                            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4">
+                                <p className="text-sm text-gray-700">
                                     <i className="fa-solid fa-info-circle mr-2"></i>
                                     <span className="text-red-500">*</span>{' '}
                                     indicates required fields
@@ -1520,10 +1520,10 @@ export default function Distribution() {
                                         name="pickupDate"
                                         value={requestData.pickupDate}
                                         onChange={handleInputChange}
-                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none transition ${
+                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
                                             formErrors.pickupDate
                                                 ? 'border-red-300 bg-red-50'
-                                                : 'border-gray-200'
+                                                : 'border-gray-300'
                                         }`}
                                         required
                                         min={
@@ -1552,10 +1552,10 @@ export default function Distribution() {
                                         name="quantity"
                                         value={requestData.quantity}
                                         onChange={handleInputChange}
-                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none transition ${
+                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
                                             formErrors.quantity
                                                 ? 'border-red-300 bg-red-50'
-                                                : 'border-gray-200'
+                                                : 'border-gray-300'
                                         }`}
                                         required
                                         min="1"
@@ -1594,7 +1594,7 @@ export default function Distribution() {
                                     value={requestData.request_note}
                                     onChange={handleInputChange}
                                     rows="3"
-                                    className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none transition resize-none"
+                                    className="w-full rounded-xl border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition resize-none"
                                     placeholder="Describe the purpose for this distribution item and any special requirements..."
                                 ></textarea>
                             </div>
@@ -1652,7 +1652,7 @@ export default function Distribution() {
                                         !requestData.pickupDate ||
                                         !requestData.quantity
                                             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'bg-green-700 hover:bg-green-800 text-white'
+                                            : 'bg-green-600 hover:bg-green-700 text-white'
                                     }`}
                                 >
                                     <i className="fa-solid fa-paper-plane mr-2"></i>
@@ -1664,10 +1664,10 @@ export default function Distribution() {
                 </div>
             )}
             {showMyRequestsModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all pt-24 sm:pt-20 md:pt-16">
                     <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-4 relative overflow-hidden animate-fade-in max-h-[90vh] flex flex-col">
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-green-700 to-green-600 flex-shrink-0">
+                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200 bg-gradient-to-r from-green-600 to-green-700 flex-shrink-0">
                             <h2 className="text-xl font-bold text-white">
                                 <i className="fa-solid fa-list mr-2"></i>
                                 My Distribution Requests
@@ -1684,8 +1684,8 @@ export default function Distribution() {
                         <div className="px-8 py-6 space-y-5 overflow-y-auto flex-1">
                             {myRequests.length > 0 ? (
                                 <div>
-                                    <div className="mb-6 text-sm text-gray-600 bg-green-50 p-4 rounded-xl border border-green-100">
-                                        <i className="fa-solid fa-info-circle mr-2 text-green-600"></i>
+                                    <div className="mb-6 text-sm text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                                        <i className="fa-solid fa-info-circle mr-2 text-gray-600"></i>
                                         <span className="font-medium">
                                             Found {myRequests.length} request
                                             {myRequests.length !== 1 ? 's' : ''}

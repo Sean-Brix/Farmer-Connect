@@ -122,27 +122,27 @@ export default function Eic() {
 
     const typeIcon = (type) => {
         if (type === 'Farming Equipment')
-            return <i className="fa-solid fa-seedling text-green-500"></i>;
+            return <i className="fa-solid fa-seedling text-green-600"></i>;
         if (type === 'Harvesting Tools')
-            return <i className="fa-solid fa-hand-holding text-yellow-500"></i>;
+            return <i className="fa-solid fa-hand-holding text-green-700"></i>;
         if (type === 'Irrigation Systems')
             return <i className="fa-solid fa-tint text-green-500"></i>;
         if (type === 'Storage Equipment')
-            return <i className="fa-solid fa-warehouse text-gray-500"></i>;
+            return <i className="fa-solid fa-warehouse text-gray-600"></i>;
         if (type === 'Processing Equipment')
-            return <i className="fa-solid fa-industry text-red-500"></i>;
+            return <i className="fa-solid fa-industry text-gray-700"></i>;
         if (type === 'Safety Gear')
-            return <i className="fa-solid fa-shield-alt text-orange-500"></i>;
+            return <i className="fa-solid fa-shield-alt text-green-800"></i>;
         if (type === 'Pest Control')
-            return <i className="fa-solid fa-bug text-purple-500"></i>;
+            return <i className="fa-solid fa-bug text-gray-600"></i>;
         if (type === 'Livestock Equipment')
-            return <i className="fa-solid fa-horse text-pink-500"></i>;
+            return <i className="fa-solid fa-horse text-green-700"></i>;
         if (type === 'Measuring Tools')
-            return <i className="fa-solid fa-ruler-combined text-teal-500"></i>;
+            return <i className="fa-solid fa-ruler-combined text-gray-600"></i>;
         if (type === 'Fisheries')
-            return <i className="fa-solid fa-fish text-indigo-500"></i>;
+            return <i className="fa-solid fa-fish text-green-600"></i>;
         if (type === 'Machinery')
-            return <i className="fa-solid fa-tractor text-cyan-500"></i>;
+            return <i className="fa-solid fa-tractor text-gray-700"></i>;
         return <i className="fa-solid fa-toolbox text-gray-500"></i>;
     };
 
@@ -273,12 +273,12 @@ export default function Eic() {
                         left: 50%;
                         transform: translate(-50%, -50%) scale(0.95);
                         z-index: 9999;
-                        background: rgba(37,99,235,0.98);
-                        background: linear-gradient(100deg, #2563eb 0%, #3b82f6 100%);
+                        background: rgba(34,197,94,0.98);
+                        background: linear-gradient(100deg, #22c55e 0%, #16a34a 100%);
                         color: #fff;
                         padding: 1.5rem 2.8rem;
                         border-radius: 2rem;
-                        box-shadow: 0 12px 40px 0 rgba(59,130,246,0.22);
+                        box-shadow: 0 12px 40px 0 rgba(34,197,94,0.22);
                         font-size: 1.18rem;
                         font-weight: 700;
                         display: flex;
@@ -297,9 +297,9 @@ export default function Eic() {
                             border-radius: 50%;
                             width: 2.8rem;
                             height: 2.8rem;
-                            box-shadow: 0 2px 8px 0 rgba(59,130,246,0.10);
+                            box-shadow: 0 2px 8px 0 rgba(34,197,94,0.10);
                         ">
-                            <i class="fa-solid fa-circle-check" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #3b82f688);"></i>
+                            <i class="fa-solid fa-circle-check" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #22c55e88);"></i>
                         </span>
                         <span style="letter-spacing:0.01em;">Request submitted successfully!</span>
                         <span class="eic-alert-bar" style="
@@ -307,7 +307,7 @@ export default function Eic() {
                             bottom: 0; left: 0;
                             height: 4px;
                             width: 100%;
-                            background: linear-gradient(90deg, #dbeafe 0%, #3b82f6 100%);
+                            background: linear-gradient(90deg, #dcfce7 0%, #16a34a 100%);
                             animation: eicAlertBar 2.1s linear;
                         "></span>
                     </div>
@@ -765,12 +765,11 @@ export default function Eic() {
                     left: 50%;
                     transform: translate(-50%, -50%) scale(0.95);
                     z-index: 9999;
-                    background: rgba(37,99,235,0.98);
-                    background: linear-gradient(100deg, #2563eb 0%, #3b82f6 100%);
-                    color: #fff;
+                    background: white;
+                    color: #374151;
                     padding: 2rem 3rem;
                     border-radius: 2rem;
-                    box-shadow: 0 12px 40px 0 rgba(59,130,246,0.22);
+                    box-shadow: 0 12px 40px 0 rgba(0,0,0,0.15);
                     font-size: 1.18rem;
                     font-weight: 700;
                     display: flex;
@@ -787,17 +786,17 @@ export default function Eic() {
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        background: rgba(255,255,255,0.13);
+                        background: #fef3c7;
                         border-radius: 50%;
                         width: 3rem;
                         height: 3rem;
-                        box-shadow: 0 2px 8px 0 rgba(59,130,246,0.10);
+                        box-shadow: 0 2px 8px 0 rgba(251,191,36,0.10);
                     ">
-                        <i class="fa-solid fa-exclamation-triangle" style="font-size:1.5rem; color: #fff; filter: drop-shadow(0 2px 8px #3b82f688);"></i>
+                        <i class="fa-solid fa-exclamation-triangle" style="font-size:1.5rem; color: #d97706; filter: drop-shadow(0 2px 8px #d97706);"></i>
                     </div>
                     <div>
-                        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.4rem;">Cancel Request</h3>
-                        <p style="margin: 0; font-weight: 400; opacity: 0.9; font-size: 1rem;">
+                        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.4rem; color: #374151;">Cancel Request</h3>
+                        <p style="margin: 0; font-weight: 400; color: #6b7280; font-size: 1rem;">
                             Are you sure you want to cancel your request for <strong>"${itemName}"</strong>?
                             <br><br>This action cannot be undone.
                         </p>
@@ -817,8 +816,8 @@ export default function Eic() {
                         ">Yes, Cancel Request</button>
                         <button id="keep-request-btn" style="
                             flex: 1;
-                            background: transparent;
-                            border: 2px solid rgba(255,255,255,0.3);
+                            background: #16a34a;
+                            border: 2px solid #16a34a;
                             color: #fff;
                             padding: 0.75rem 1.5rem;
                             border-radius: 1rem;
@@ -833,7 +832,7 @@ export default function Eic() {
                         bottom: 0; left: 0;
                         height: 4px;
                         width: 100%;
-                        background: linear-gradient(90deg, #dbeafe 0%, #3b82f6 100%);
+                        background: linear-gradient(90deg, #f3f4f6 0%, #6b7280 100%);
                     "></span>
                 </div>
                 <style>
@@ -843,7 +842,7 @@ export default function Eic() {
                         100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
                     }
                     #confirm-cancel-btn:hover { background: #b91c1c; transform: translateY(-2px); }
-                    #keep-request-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+                    #keep-request-btn:hover { background: #15803d; transform: translateY(-2px); }
                 </style>
             `;
             document.body.appendChild(alertDiv);
@@ -1090,28 +1089,28 @@ export default function Eic() {
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 relative"
+                className="flex min-h-screen bg-white relative"
                 style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20">
                         <header className="flex flex-col items-center mb-12 w-full">
-                            <span className="uppercase tracking-widest text-green-400 text-xs font-semibold mb-1 letter-spacing-wide">
+                            <span className="uppercase tracking-widest text-gray-600 text-xs font-semibold mb-1 letter-spacing-wide">
                                 Welcome to
                             </span>
                             <h1
-                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title text-green-800"
+                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title text-gray-800"
                                
                             >
                                 Equipment, Inputs & Commodities
                             </h1>
-                            <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-green-400 via-green-300 to-green-200 opacity-90 shadow-lg"></div>
+                            <div className="mt-4 w-24 h-2 rounded-full bg-green-500 shadow-lg"></div>
                         </header>
 
                         <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
                             <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
                                 <button
-                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-700 hover:bg-green-800 text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400"
+                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold shadow-md hover:shadow-lg transition border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
                                     onClick={handleMyRequestsClick}
                                 >
                                     <i className="fa-solid fa-list-check text-lg"></i>
@@ -1122,20 +1121,20 @@ export default function Eic() {
                                 <div className="relative w-full sm:w-auto flex justify-center">
                                     <input
                                         type="text"
-                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border border-green-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 text-green-900 bg-white shadow transition placeholder:text-green-400 font-medium"
+                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border-2 border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 text-gray-800 bg-white shadow-sm transition placeholder:text-gray-500 font-medium"
                                         placeholder="Search by name, category, description..."
                                         value={search}
                                         onChange={(e) =>
                                             setSearch(e.target.value)
                                         }
                                     />
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
                                         <i className="fa-solid fa-magnifying-glass"></i>
                                     </span>
                                 </div>
                                 <div className="relative flex justify-center w-full sm:w-auto">
                                     <button
-                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-green-100 text-green-700 font-semibold border border-green-200 shadow transition focus:outline-none"
+                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-gray-50 text-gray-700 font-semibold border-2 border-gray-300 shadow-sm hover:shadow-md transition focus:outline-none"
                                         onClick={() => setShowFilter((f) => !f)}
                                         type="button"
                                         aria-label="Show filter options"
@@ -1149,14 +1148,14 @@ export default function Eic() {
                                         ></i>
                                     </button>
                                     {showFilter && (
-                                        <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-green-100 z-20 animate-fade-in py-2">
+                                        <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border-2 border-gray-200 z-20 animate-fade-in py-2">
                                             {filterOptions.map((opt) => (
                                                 <button
                                                     key={opt.value}
                                                     className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
                                                         filter === opt.value
                                                             ? 'bg-green-600 text-white shadow'
-                                                            : 'text-green-900 hover:bg-green-50'
+                                                            : 'text-gray-800 hover:bg-gray-100'
                                                     }`}
                                                     onClick={() => {
                                                         setFilter(opt.value);
@@ -1174,7 +1173,7 @@ export default function Eic() {
                         </div>
                         <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
                             {filteredItems.length === 0 ? (
-                                <div className="col-span-full text-center text-green-300 py-16 text-lg font-semibold tracking-wide">
+                                <div className="col-span-full text-center text-gray-500 py-16 text-lg font-semibold tracking-wide">
                                     No equipment found.
                                 </div>
                             ) : (
@@ -1182,7 +1181,7 @@ export default function Eic() {
                                     return (
                                         <div
                                             key={item.id}
-                                            className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-xl border border-green-100 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]"
+                                            className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-xl border-2 border-gray-200 hover:border-green-300 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]"
                                         >
                                             <div className="relative">
                                                 <img
@@ -1198,10 +1197,10 @@ export default function Eic() {
                                                     ${
                                                         item.category ===
                                                         'Farming Equipment'
-                                                            ? 'bg-green-500'
+                                                            ? 'bg-green-600'
                                                             : item.category ===
                                                               'Harvesting Tools'
-                                                            ? 'bg-yellow-500'
+                                                            ? 'bg-green-700'
                                                             : item.category ===
                                                               'Machinery'
                                                             ? 'bg-gray-700'
@@ -1210,25 +1209,25 @@ export default function Eic() {
                                                             ? 'bg-green-500'
                                                             : item.category ===
                                                               'Storage Equipment'
-                                                            ? 'bg-purple-500'
+                                                            ? 'bg-gray-600'
                                                             : item.category ===
                                                               'Processing Equipment'
-                                                            ? 'bg-red-500'
+                                                            ? 'bg-gray-800'
                                                             : item.category ===
                                                               'Safety Gear'
-                                                            ? 'bg-orange-500'
+                                                            ? 'bg-green-800'
                                                             : item.category ===
                                                               'Pest Control'
-                                                            ? 'bg-pink-500'
+                                                            ? 'bg-gray-700'
                                                             : item.category ===
                                                               'Livestock Equipment'
-                                                            ? 'bg-indigo-500'
+                                                            ? 'bg-green-700'
                                                             : item.category ===
                                                               'Measuring Tools'
-                                                            ? 'bg-teal-500'
+                                                            ? 'bg-gray-600'
                                                             : item.category ===
                                                               'Fisheries'
-                                                            ? 'bg-cyan-500'
+                                                            ? 'bg-green-600'
                                                             : 'bg-gray-500'
                                                     }`}
                                                 >
@@ -1236,7 +1235,7 @@ export default function Eic() {
                                                 </span>
                                             </div>
                                             <div className="p-5 flex flex-col flex-1">
-                                                <h3 className="text-xl font-bold mb-2 text-green-900 line-clamp-1 min-h-[28px]">
+                                                <h3 className="text-xl font-bold mb-2 text-gray-800 line-clamp-1 min-h-[28px]">
                                                     {item.Name}
                                                 </h3>
                                                 <p
@@ -1246,7 +1245,7 @@ export default function Eic() {
                                                     {item.description}
                                                 </p>
                                                 <div className="flex items-center justify-between mb-4">
-                                                    <span className="text-sm text-green-700 font-semibold">
+                                                    <span className="text-sm text-gray-700 font-semibold">
                                                         Qty: {item.quantity}
                                                     </span>
                                                     <div className="flex items-center gap-1">
@@ -1256,7 +1255,7 @@ export default function Eic() {
                                                     </div>
                                                 </div>
                                                 <button
-                                                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 mt-auto"
+                                                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg border-2 border-green-600 hover:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 mt-auto"
                                                     onClick={() =>
                                                         handleRequestClick(item)
                                                     }
@@ -1273,7 +1272,7 @@ export default function Eic() {
                         {totalPages > 1 && (
                             <div className="flex justify-center mt-6 mb-2">
                                 <nav
-                                    className="flex items-center gap-1 bg-white rounded-lg shadow px-3 py-1.5"
+                                    className="flex items-center gap-1 bg-white rounded-lg shadow-md border-2 border-gray-200 px-3 py-1.5"
                                     aria-label="Pagination"
                                 >
                                     <button
@@ -1283,7 +1282,7 @@ export default function Eic() {
                                             )
                                         }
                                         disabled={currentPage === 1}
-                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-500 hover:bg-gray-200 hover:text-gray-700 ${
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-600 hover:bg-gray-100 hover:text-gray-800 ${
                                             currentPage === 1
                                                 ? 'opacity-50 cursor-not-allowed'
                                                 : ''
@@ -1312,8 +1311,8 @@ export default function Eic() {
                                                 }
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === 1
-                                                        ? 'bg-green-500 text-white'
-                                                        : 'text-gray-700 hover:bg-gray-200'
+                                                        ? 'bg-green-600 text-white shadow-md'
+                                                        : 'text-gray-700 hover:bg-gray-100'
                                                 }`}
                                             >
                                                 1
@@ -1344,8 +1343,8 @@ export default function Eic() {
                                                             className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                                 currentPage ===
                                                                 page
-                                                                    ? 'bg-green-500 text-white'
-                                                                    : 'text-gray-700 hover:bg-gray-200'
+                                                                    ? 'bg-green-600 text-white shadow-md'
+                                                                    : 'text-gray-700 hover:bg-gray-100'
                                                             }`}
                                                         >
                                                             {page}
@@ -1364,8 +1363,8 @@ export default function Eic() {
                                                 }
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === totalPages
-                                                        ? 'bg-green-500 text-white'
-                                                        : 'text-gray-700 hover:bg-gray-200'
+                                                        ? 'bg-green-600 text-white shadow-md'
+                                                        : 'text-gray-700 hover:bg-gray-100'
                                                 }`}
                                             >
                                                 {totalPages}
@@ -1382,8 +1381,8 @@ export default function Eic() {
                                                     }
                                                     className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                         currentPage === i + 1
-                                                            ? 'bg-green-500 text-white'
-                                                            : 'text-gray-700 hover:bg-gray-200'
+                                                            ? 'bg-green-600 text-white shadow-md'
+                                                            : 'text-gray-700 hover:bg-gray-100'
                                                     }`}
                                                 >
                                                     {i + 1}
@@ -1398,7 +1397,7 @@ export default function Eic() {
                                             )
                                         }
                                         disabled={currentPage === totalPages}
-                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-500 hover:bg-gray-200 hover:text-gray-700 ${
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-600 hover:bg-gray-100 hover:text-gray-800 ${
                                             currentPage === totalPages
                                                 ? 'opacity-50 cursor-not-allowed'
                                                 : ''
@@ -1426,16 +1425,16 @@ export default function Eic() {
                 </main>
             </div>
             {modalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
-                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-all pt-20 sm:pt-20 md:pt-16 lg:pt-20 px-4 sm:px-6 md:px-8">
+                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in border-2 border-gray-300 mt-8 sm:mt-6 md:mt-4 max-h-[calc(100vh-6rem)] sm:max-h-[calc(100vh-5rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-green-700 to-green-600">
-                            <h2 className="text-xl font-bold text-white">
+                        <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 border-b-2 border-gray-200 bg-green-600">
+                            <h2 className="text-lg sm:text-xl font-bold text-white">
                                 <i className="fa-solid fa-paper-plane mr-2"></i>
                                 Request Equipment
                             </h2>
                             <button
-                                className="text-white text-2xl hover:text-green-200 transition"
+                                className="text-white text-xl sm:text-2xl hover:text-green-200 transition"
                                 onClick={handleCloseModal}
                                 aria-label="Close"
                             >
@@ -1445,36 +1444,36 @@ export default function Eic() {
                         {/* Modal Body */}
                         <form
                             onSubmit={handleSubmit}
-                            className="px-8 py-6 space-y-5"
+                            className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 space-y-4 sm:space-y-5"
                         >
                             <div className="flex items-center gap-4 mb-4">
                                 <img
                                     src={selectedItem?.img}
                                     alt={selectedItem?.Name}
-                                    className="w-16 h-16 rounded-xl object-cover border-2 border-green-700 shadow"
+                                    className="w-16 h-16 rounded-xl object-cover border-2 border-gray-300 shadow"
                                 />
                                 <div className="flex-1">
-                                    <div className="text-lg font-semibold text-green-900 truncate">
+                                    <div className="text-lg font-semibold text-gray-800 truncate">
                                         {selectedItem?.Name}
                                     </div>
-                                    <div className="text-xs text-gray-500">
+                                    <div className="text-xs text-gray-600">
                                         {selectedItem?.category}
                                     </div>
-                                    <div className="text-xs text-gray-500">
+                                    <div className="text-xs text-gray-600">
                                         Available Stock:{' '}
                                         {selectedItem?.quantity}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
-                                <p className="text-sm text-green-800">
-                                    <i className="fa-solid fa-info-circle mr-2"></i>
+                            <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-3 mb-4">
+                                <p className="text-sm text-gray-700">
+                                    <i className="fa-solid fa-info-circle mr-2 text-green-600"></i>
                                     <span className="text-red-500">*</span>{' '}
                                     indicates required fields
                                 </p>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4 sm:gap-4 md:grid-cols-2">
                                 <div>
                                     <label
                                         htmlFor="pickupDate"
@@ -1489,10 +1488,10 @@ export default function Eic() {
                                         name="pickupDate"
                                         value={requestData.pickupDate}
                                         onChange={handleInputChange}
-                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none transition ${
+                                        className={`w-full rounded-xl border-2 px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition ${
                                             formErrors.pickupDate
-                                                ? 'border-red-300 bg-red-50'
-                                                : 'border-gray-200'
+                                                ? 'border-red-400 bg-red-50'
+                                                : 'border-gray-300'
                                         }`}
                                         required
                                         min={
@@ -1536,10 +1535,10 @@ export default function Eic() {
                                                 }));
                                             }
                                         }}
-                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none transition ${
+                                        className={`w-full rounded-xl border-2 px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition ${
                                             formErrors.returnDate
-                                                ? 'border-red-300 bg-red-50'
-                                                : 'border-gray-200'
+                                                ? 'border-red-400 bg-red-50'
+                                                : 'border-gray-300'
                                         }`}
                                         min={
                                             requestData.pickupDate
@@ -1581,10 +1580,10 @@ export default function Eic() {
                                         name="quantity"
                                         value={requestData.quantity}
                                         onChange={handleInputChange}
-                                        className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none transition ${
+                                        className={`w-full rounded-xl border-2 px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition ${
                                             formErrors.quantity
-                                                ? 'border-red-300 bg-red-50'
-                                                : 'border-gray-200'
+                                                ? 'border-red-400 bg-red-50'
+                                                : 'border-gray-300'
                                         }`}
                                         required
                                         min="1"
@@ -1623,16 +1622,16 @@ export default function Eic() {
                                     value={requestData.request_note}
                                     onChange={handleInputChange}
                                     rows="3"
-                                    className="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-600 focus:outline-none transition resize-none"
+                                    className="w-full rounded-xl border-2 border-gray-300 px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition resize-none"
                                     placeholder="Describe the purpose of borrowing this equipment and any special requirements..."
                                 ></textarea>
                             </div>
 
                             {/* Request Summary */}
                             {requestData.pickupDate && requestData.quantity && (
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4">
                                     <h4 className="text-sm font-semibold text-gray-700 mb-2">
-                                        <i className="fa-solid fa-clipboard-check mr-2"></i>
+                                        <i className="fa-solid fa-clipboard-check mr-2 text-green-600"></i>
                                         Request Summary
                                     </h4>
                                     <div className="space-y-1 text-sm text-gray-600">
@@ -1676,10 +1675,10 @@ export default function Eic() {
                                     </div>
                                 </div>
                             )}
-                            <div className="flex justify-end gap-3 pt-2">
+                            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
                                 <button
                                     type="button"
-                                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-5 py-2 rounded-xl transition focus:outline-none"
+                                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-4 sm:px-5 py-2 rounded-xl transition border-2 border-gray-300 focus:outline-none order-2 sm:order-1"
                                     onClick={handleCloseModal}
                                 >
                                     Cancel
@@ -1690,11 +1689,11 @@ export default function Eic() {
                                         !requestData.pickupDate ||
                                         !requestData.quantity
                                     }
-                                    className={`font-semibold px-6 py-2 rounded-xl shadow transition focus:outline-none ${
+                                    className={`font-semibold px-4 sm:px-6 py-2 rounded-xl shadow-md transition border-2 focus:outline-none order-1 sm:order-2 ${
                                         !requestData.pickupDate ||
                                         !requestData.quantity
-                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'bg-green-700 hover:bg-green-800 text-white'
+                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed border-gray-300'
+                                            : 'bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700'
                                     }`}
                                 >
                                     <i className="fa-solid fa-paper-plane mr-2"></i>
@@ -1706,16 +1705,16 @@ export default function Eic() {
                 </div>
             )}
             {showMyRequestsModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all">
-                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-4 relative overflow-hidden animate-fade-in max-h-[90vh] flex flex-col">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-all pt-24 sm:pt-20 md:pt-16 lg:pt-20 px-2 sm:px-4 md:px-6">
+                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-2 sm:mx-4 relative overflow-hidden animate-fade-in max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-5rem)] lg:max-h-[90vh] flex flex-col border-2 border-gray-300 mt-8 sm:mt-6 md:mt-4">
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-green-700 to-green-600 flex-shrink-0">
-                            <h2 className="text-xl font-bold text-white">
+                        <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 border-b-2 border-gray-200 bg-green-600 flex-shrink-0">
+                            <h2 className="text-lg sm:text-xl font-bold text-white">
                                 <i className="fa-solid fa-list mr-2"></i>
                                 My Requests
                             </h2>
                             <button
-                                className="text-white text-2xl hover:text-green-200 transition"
+                                className="text-white text-xl sm:text-2xl hover:text-green-200 transition"
                                 onClick={handleCloseMyRequestsModal}
                                 aria-label="Close"
                             >

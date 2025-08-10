@@ -511,11 +511,8 @@ export default function Landing() {
                 </div>
 
                 {/* Section header */}
-                <div className="text-center mb-12 relative z-10">
-                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 rounded-full px-4 py-2 mb-6 shadow-sm" data-aos="fade-down" data-aos-delay="100">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-green-700 font-bold text-xs uppercase tracking-wider">Our Foundation</span>
-                    </div>
+                <div className="text-center mb-12 relative z-10 mt-6">
+                
                     <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 mb-4 tracking-tight" data-aos="fade-up" data-aos-delay="200">
                         Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Purpose</span> & Vision
                     </h2>
@@ -653,11 +650,8 @@ export default function Landing() {
                 </div>
 
                 {/* Section header */}
-                <div className="text-center mb-10 relative z-10">
-                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100/80 to-emerald-100/80 border border-green-300/50 rounded-full px-4 py-2 mb-6 shadow-sm" data-aos="fade-down" data-aos-delay="100">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-green-700 font-bold text-xs uppercase tracking-wider">Our Expertise</span>
-                    </div>
+                <div className="text-center mt-6 mb-10 relative z-10">
+                  
                     <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 tracking-tight" data-aos="fade-up" data-aos-delay="200">
                         Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Programs</span>
                     </h2>
@@ -814,7 +808,7 @@ export default function Landing() {
                                 <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
                                 </svg>
-                                <span className="text-gray-700 font-semibold text-sm">Scroll to explore programs</span>
+                                <span className="text-gray-700 font-semibold text-sm">Scroll or Drag explore programs</span>
                                 <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                 </svg>
@@ -835,11 +829,8 @@ export default function Landing() {
                 </div>
 
                 {/* Section header */}
-                <div className="text-center mb-12 relative z-10">
-                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100/80 to-emerald-100/80 border border-green-300/50 rounded-full px-4 py-2 mb-6 shadow-sm" data-aos="fade-down" data-aos-delay="100">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-green-700 font-bold text-xs uppercase tracking-wider">Latest Updates</span>
-                    </div>
+                <div className="text-center mt-6 mb-12 relative z-10">
+                    
                     <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4 tracking-tight" data-aos="fade-up" data-aos-delay="200">
                         News & <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Updates</span>
                     </h2>
@@ -1111,14 +1102,9 @@ export default function Landing() {
         </main>
         
         {/* Professional Footer */}
-        <footer className="relative bg-gradient-to-br from-green-900 via-green-800 to-green-900 overflow-hidden" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,_theme(colors.emerald.400)_1px,_transparent_0)] bg-[30px_30px]"></div>
-            </div>
-            
+        <footer className="relative bg-green-700 overflow-hidden" style={{ fontFamily: 'Poppins, sans-serif' }}>
             {/* Top decorative bar */}
-            <div className="h-1 bg-gradient-to-r from-emerald-400 via-green-400 to-emerald-500"></div>
+            <div className="h-1 bg-white"></div>
             
             <div className="relative py-12 px-6">
                 <div className="max-w-7xl mx-auto">
@@ -1130,16 +1116,15 @@ export default function Landing() {
                             <div className="mb-6">
                                 <div className="flex items-center gap-4 mb-4">
                                     <div className="relative">
-                                        <img src={logo} alt="FITS Logo" className="w-12 h-12 rounded-2xl border-3 border-emerald-400 shadow-xl" />
-                                        <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-green-400 rounded-2xl blur opacity-25"></div>
+                                        <img src={logo} alt="FITS Logo" className="w-12 h-12 rounded-2xl border-2 border-white shadow-lg" />
                                     </div>
                                     <div>
                                         <span className="text-2xl font-extrabold text-white tracking-wide">FITS-Tanza</span>
-                                        <p className="text-emerald-300 text-sm font-medium">Farmers' Information & Technology Services</p>
+                                        <p className="text-white text-sm font-medium">Farmers' Information & Technology Services</p>
                                     </div>
                                 </div>
                                 
-                                <p className="text-green-100 text-sm leading-relaxed mb-6 max-w-2xl">
+                                <p className="text-white text-sm leading-relaxed mb-6 max-w-2xl">
                                     Empowering local farmers and communities through innovative agricultural programs, advanced training, 
                                     and comprehensive support services for sustainable farming practices.
                                 </p>
@@ -1148,40 +1133,40 @@ export default function Landing() {
                             {/* Enhanced Contact Information */}
                             <div className="space-y-3">
                                 <div className="flex items-start gap-3 group">
-                                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                        <svg className="w-4 h-4 text-green-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 12.414a2 2 0 10-2.828 2.828l4.243 4.243a8 8 0 111.414-1.414z" />
                                         </svg>
                                     </div>
                                     <div>
                                         <p className="text-white font-semibold text-sm">Address</p>
-                                        <p className="text-green-200 text-sm">Municipal Cmpd., Municipality of Tanza, A. Soriano Hi-way, Daang Amaya I, Tanza, Philippines</p>
+                                        <p className="text-white text-sm">Municipal Cmpd., Municipality of Tanza, A. Soriano Hi-way, Daang Amaya I, Tanza, Philippines</p>
                                     </div>
                                 </div>
                                 
                                 <div className="flex items-start gap-3 group">
-                                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                        <svg className="w-4 h-4 text-green-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                     </div>
                                     <div>
                                         <p className="text-white font-semibold text-sm">Email</p>
-                                        <a href="mailto:fitstanza@gmail.com" className="text-emerald-300 hover:text-emerald-200 text-sm transition-colors duration-300 underline">
+                                        <a href="mailto:fitstanza@gmail.com" className="text-white hover:text-gray-200 text-sm font-bold transition-colors duration-300">
                                             fitstanza@gmail.com
                                         </a>
                                     </div>
                                 </div>
                                 
                                 <div className="flex items-start gap-3 group">
-                                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                        <svg className="w-4 h-4 text-green-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3l2 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
                                         </svg>
                                     </div>
                                     <div>
                                         <p className="text-white font-semibold text-sm">Phone</p>
-                                        <a href="tel:+63464123456" className="text-emerald-300 hover:text-emerald-200 text-sm transition-colors duration-300 underline">
+                                        <a href="tel:+63464123456" className="text-white hover:underline text-sm transition-colors duration-300">
                                             (+63) 46 412 3456
                                         </a>
                                     </div>
@@ -1193,10 +1178,10 @@ export default function Landing() {
                         <div>
                             <div className="mb-6">
                                 <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                                    <div className="w-1 h-6 bg-gradient-to-b from-emerald-400 to-green-400 rounded-full"></div>
+                                    <div className="w-1 h-6 bg-white rounded-full"></div>
                                     Quick Links
                                 </h4>
-                                <div className="w-12 h-0.5 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full"></div>
+                                <div className="w-12 h-0.5 bg-white rounded-full"></div>
                             </div>
                             
                             <nav className="space-y-3">
@@ -1210,14 +1195,11 @@ export default function Landing() {
                                     <a
                                         key={index}
                                         href={link.href}
-                                        className="group flex items-center gap-3 text-green-200 hover:text-emerald-300 transition-all duration-300"
+                                        className="group flex items-center gap-2 text-white hover:font-bold transition-all duration-300"
                                         onClick={e => { e.preventDefault(); window.location = link.href; }}
                                     >
-                                        <div className="w-2 h-2 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                        <span className="font-medium">{link.label}</span>
-                                        <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                        </svg>
+                                        <div className="w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                        <span className="font-medium text-lg">{link.label}</span>
                                     </a>
                                 ))}
                             </nav>
@@ -1227,49 +1209,49 @@ export default function Landing() {
                         <div>
                             <div className="mb-4">
                                 <h4 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                                    <div className="w-1 h-5 bg-gradient-to-b from-emerald-400 to-green-400 rounded-full"></div>
+                                    <div className="w-1 h-5 bg-white rounded-full"></div>
                                     Office Hours
                                 </h4>
-                                <div className="w-10 h-0.5 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full"></div>
+                                <div className="w-10 h-0.5 bg-white rounded-full"></div>
                             </div>
                             
                             <div className="space-y-3 mb-6">
-                                <div className="bg-white/5 backdrop-blur-sm rounded-lg p-3 border border-white/10">
+                                <div className="bg-white/20 rounded-lg p-3 border border-white/30">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <circle cx="12" cy="12" r="10"/>
                                             <polyline points="12,6 12,12 16,14"/>
                                         </svg>
                                         <span className="text-white font-semibold text-sm">Working Days</span>
                                     </div>
-                                    <p className="text-green-200 text-sm">Monday - Friday</p>
-                                    <p className="text-emerald-300 font-semibold text-sm">8:00 AM - 5:00 PM</p>
+                                    <p className="text-white text-sm">Monday - Friday</p>
+                                    <p className="text-white font-semibold text-sm">8:00 AM - 5:00 PM</p>
                                 </div>
                                 
-                                <div className="bg-white/5 backdrop-blur-sm rounded-lg p-3 border border-white/10">
+                                <div className="bg-white/20 rounded-lg p-3 border border-white/30">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                         </svg>
                                         <span className="text-white font-semibold text-sm">Message Us</span>
                                     </div>
-                                    <a href="https://m.me/fitstanza" target="_blank" rel="noopener noreferrer" className="text-emerald-300 hover:text-emerald-200 text-sm transition-colors duration-300 underline">
+                                    <a href="https://m.me/fitstanza" target="_blank" rel="noopener noreferrer" className="text-white text-sm transition-colors duration-300 font-bold">
                                         Facebook Messenger
                                     </a>
                                 </div>
                             </div>
                             
-                            <p className="text-green-200 text-sm">
+                            <p className="text-white text-sm font-medium">
                                 For urgent concerns, please call or visit our office during working hours.
                             </p>
                         </div>
                     </div>
                     
                     {/* Enhanced Social Media & Connect Section */}
-                    <div className="border-t border-white/10 pt-8 mb-8">
+                    <div className="border-t border-white/30 pt-8 mb-8">
                         <div className="text-center mb-6">
                             <h4 className="text-xl font-bold text-white mb-3">Stay Connected</h4>
-                            <p className="text-green-200 text-sm max-w-2xl mx-auto">
+                            <p className="text-white text-base max-w-2xl mx-auto">
                                 Follow us on social media for the latest updates on agricultural programs, events, and farming innovations.
                             </p>
                         </div>
@@ -1300,33 +1282,32 @@ export default function Landing() {
                                     aria-label={social.label}
                                     className="group relative"
                                 >
-                                    <div className="w-14 h-14 bg-gradient-to-br from-emerald-500/20 to-green-500/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-emerald-400/50 transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-emerald-500/25">
-                                        <svg fill="currentColor" viewBox="0 0 24 24" className="w-7 h-7 text-emerald-300 group-hover:text-white transition-colors duration-300">
+                                    <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center border border-white/70 group-hover:border-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
+                                        <svg fill="currentColor" viewBox="0 0 24 24" className="w-7 h-7 text-green-700 transition-colors duration-300">
                                             <path d={social.icon} />
                                         </svg>
                                     </div>
-                                    <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-green-400 rounded-2xl blur opacity-0 group-hover:opacity-25 transition-opacity duration-300"></div>
                                 </a>
                             ))}
                         </div>
                     </div>
                     
                     {/* Enhanced Bottom Section */}
-                    <div className="border-t border-white/10 pt-8">
+                    <div className="border-t border-white/30 pt-8">
                         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                             <div className="text-center md:text-left">
-                                <p className="text-green-200 text-sm mb-1">
+                                <p className="text-white text-lg font-medium mb-1">
                                     &copy; {new Date().getFullYear()} FITS-Tanza. All rights reserved.
                                 </p>
-                                <p className="text-green-300 text-sm">
+                                <p className="text-white text-base">
                                     Developed by the FITS-Tanza IT Team. 
-                                    <a href="mailto:fitstanza@gmail.com" className="text-emerald-300 hover:text-emerald-200 underline ml-1 transition-colors duration-300">
+                                    <a href="mailto:fitstanza@gmail.com" className="text-white hover:text-gray-200 font-bold ml-1 transition-colors duration-300 underline">
                                         Contact Webmaster
                                     </a>
                                 </p>
                             </div>
                             
-                            <div className="flex flex-wrap justify-center gap-6 text-sm">
+                            <div className="flex flex-wrap justify-center gap-6 text-base">
                                 {[
                                     { href: '/privacy', label: 'Privacy Policy' },
                                     { href: '/terms', label: 'Terms of Service' },
@@ -1335,7 +1316,7 @@ export default function Landing() {
                                     <a
                                         key={index}
                                         href={link.href}
-                                        className="text-green-200 hover:text-emerald-300 transition-colors duration-300 underline"
+                                        className="text-white hover:font-bold transition-all duration-300"
                                     >
                                         {link.label}
                                     </a>
@@ -1349,7 +1330,7 @@ export default function Landing() {
 
             {/* Back to Top Button */}
             <button
-                className={`fixed bottom-8 left-8 z-50 w-14 h-14 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center group ${
+                className={`fixed bottom-8 left-8 z-50 w-14 h-14 bg-white text-green-700 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center group ${
                     showBackToTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
                 }`}
                 onClick={scrollToTop}
