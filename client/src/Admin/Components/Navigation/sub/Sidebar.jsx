@@ -48,16 +48,6 @@ const menuItems = [
         icon: <i className="fas fa-clipboard-list h-5 w-5 sidebar-icon"></i>,
     },
     {
-        key: 'survey',
-        label: 'Survey Forms',
-        icon: <i className="fas fa-poll h-5 w-5 sidebar-icon"></i>,
-    },
-    {
-        key: 'settings',
-        label: 'Settings',
-        icon: <i className="fas fa-cog h-5 w-5 sidebar-icon"></i>,
-    },
-    {
         key: 'chat',
         label: 'Inquiries',
         icon: <i className="fas fa-comments h-5 w-5 sidebar-icon"></i>,
@@ -66,6 +56,16 @@ const menuItems = [
         key: 'seed',
         label: 'Seed Growth Tracking',
         icon: <i className="fas fa-seedling h-5 w-5 sidebar-icon"></i>,
+    },
+    {
+        key: 'settings',
+        label: 'Settings',
+        icon: <i className="fas fa-cog h-5 w-5 sidebar-icon"></i>,
+    },
+    {
+        key: 'survey',
+        label: 'Survey Forms',
+        icon: <i className="fas fa-poll h-5 w-5 sidebar-icon"></i>,
     },
 ];
 

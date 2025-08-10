@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import logo from '../../Assets/Logo.png';
-import Chat from '../../Components/Chats/Chat';
+import Chat from '../../Components/Chats/Chat.jsx';
 import logo2 from '../Assets/farmerconnect.png'; // Updated logo import
 export default function Navbar({refresh}) {
     const location = useLocation();
