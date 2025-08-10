@@ -1,0 +1,99 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#ffffff',
+    'primaryTextColor': '#000000',
+    'primaryBorderColor': '#000000',
+    'lineColor': '#000000',
+    'secondaryColor': '#f8f8f8',
+    'tertiaryColor': '#ffffff',
+    'background': '#ffffff',
+    'mainBkg': '#ffffff',
+    'secondBkg': '#f8f8f8',
+    'tertiaryTextColor': '#000000'
+  }
+}}%%
+
+graph TD
+    %% Main System
+    A[FARMER CONNECT SYSTEM<br/>Agricultural Resource Management Platform] 
+    
+    %% Authentication Layer
+    A --> B[AUTHENTICATION MODULE]
+    B --> B1[User Login]
+    B --> B2[User Registration]
+    B --> B3[Password Reset]
+    
+    %% User Dashboard
+    A --> C[USER DASHBOARD<br/>Client Access]
+    
+    %% User Modules
+    C --> C1[Profile Management]
+    C --> C2[Seminar Enrollment]
+    C --> C3[Equipment Request - EIC]
+    C --> C4[Equipment Request - Distribution]
+    C --> C5[Landing Page Info]
+    C --> C6[User Preferences]
+    
+    %% Admin Dashboard
+    A --> D[ADMIN DASHBOARD<br/>Administrative Access]
+    
+    %% Admin Modules
+    D --> D1[User Profile Management]
+    D --> D2[Seminar Management]
+    D --> D3[Inventory Management]
+    D --> D4[EIC Equipment Control]
+    D --> D5[Distribution Management]
+    D --> D6[Analytics & Reports]
+    D --> D7[Audit Logs]
+    D --> D8[Customer Service]
+    
+    %% Module Details - User Processes
+    C1 --> C1A[Input: Personal Info<br/>Process: Update Profile<br/>Output: Updated User Data]
+    C2 --> C2A[Input: Seminar Selection<br/>Process: Register/Cancel<br/>Output: Enrollment Status]
+    C3 --> C3A[Input: Equipment Request<br/>Process: Submit for Approval<br/>Output: Request Status]
+    C4 --> C4A[Input: Distribution Request<br/>Process: Submit for Approval<br/>Output: Request Status]
+    
+    %% Module Details - Admin Processes
+    D1 --> D1A[Input: User Selection<br/>Process: Edit/Delete/Reset<br/>Output: Updated User Records]
+    D2 --> D2A[Input: Seminar Details<br/>Process: Create/Edit/Manage<br/>Output: Published Seminars]
+    D3 --> D3A[Input: Item Details<br/>Process: Add/Edit/Stock Control<br/>Output: Updated Inventory]
+    D4 --> D4A[Input: EIC Requests<br/>Process: Approve/Reject/Track<br/>Output: Equipment Transactions]
+    D5 --> D5A[Input: Distribution Requests<br/>Process: Approve/Process<br/>Output: Distribution Records]
+    D6 --> D6A[Input: Report Parameters<br/>Process: Generate Analytics<br/>Output: System Reports]
+    D7 --> D7A[Input: Filter Criteria<br/>Process: Track Activities<br/>Output: Audit Trail]
+    
+    %% Database Connections
+    B1 -.-> DB1[(User Database)]
+    B2 -.-> DB1
+    C1A -.-> DB1
+    C2A -.-> DB2[(Seminar Database)]
+    C3A -.-> DB3[(Equipment Database)]
+    C4A -.-> DB3
+    D1A -.-> DB1
+    D2A -.-> DB2
+    D3A -.-> DB3
+    D4A -.-> DB4[(Transaction Database)]
+    D5A -.-> DB4
+    D6A -.-> DB5[(Analytics Database)]
+    D7A -.-> DB6[(Audit Database)]
+    
+    %% Style Definitions
+    classDef system fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef auth fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef userDash fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef adminDash fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    classDef userModule fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef adminModule fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000
+    classDef process fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    classDef database fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+    
+    class A system
+    class B auth
+    class C userDash
+    class D adminDash
+    class B1,B2,B3 auth
+    class C1,C2,C3,C4,C5,C6 userModule
+    class D1,D2,D3,D4,D5,D6,D7,D8 adminModule
+    class C1A,C2A,C3A,C4A,D1A,D2A,D3A,D4A,D5A,D6A,D7A process
+    class DB1,DB2,DB3,DB4,DB5,DB6 database
