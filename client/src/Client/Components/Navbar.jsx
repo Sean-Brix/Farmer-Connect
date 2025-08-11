@@ -535,6 +535,32 @@ export default function Navbar({refresh}) {
                                             Distribution
                                         </NavLink>
                                     </li>
+
+                                    <li>
+                                        <NavLink
+                                            to="/report"
+                                            className={({ isActive }) =>
+                                                `flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium ${isActive ? 'bg-emerald-100 text-emerald-900' : ''}`
+                                            }
+                                        >
+                                            <svg
+                                                className="w-5 h-5 text-emerald-500"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 15h-2v-2h2zm0-4h-2V7h2z"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                />
+                                            </svg>
+
+                                            Report
+                                        </NavLink>
+                                    </li>
+                                    
                             {/* Survey link removed */}
                                 </ul>
                             </li>

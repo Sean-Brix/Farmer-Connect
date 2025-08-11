@@ -17,7 +17,6 @@ import Details_php from './TEST/details_php.jsx';
 //CLIENT 
 import Eic from './Client/Services/EIC/EIC.jsx';
 import User from './Client/Services/Profile/User_Profile.jsx';
-
 import Seminar from './Client/Services/Enrollment/Seminar.jsx';
 import Contact from './Client/Services/Info/contact.jsx';
 import About from './Client/Services/Info/About.jsx';
@@ -25,6 +24,7 @@ import Distribution from './Client/Services/Distributions/Distribution.jsx';
 import Survey from './Components/Survey/Survey.jsx';
 import My_Profile from './Admin/Components/Profile/My_Profile.jsx';
 import ForgotPassword from './Authentication/Components/ForgotPassword';
+import Farmer_Report from './Client/Services/Report/Farmer_Report.jsx';
 
 function App() {
     return (
@@ -47,7 +47,7 @@ function App() {
                 <Route path="/distribution" element={<Distribution />} />
                 <Route path="/survey" element={<Survey />} />
                 <Route path="/chat" element={<Chat />} />
-
+                <Route path="/report" element={<Farmer_Report />} />
 
                 {/* ADMIN ROUTES */}
                 <Route path="/admin" element={<Dashboard />} />
