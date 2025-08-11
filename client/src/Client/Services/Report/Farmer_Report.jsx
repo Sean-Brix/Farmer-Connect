@@ -14,7 +14,7 @@ import {
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import CropService from '../CropService';
 import CropRegistration from '../../Components/CropRegistration';
-import MonthlyReportForm from '../../Components/MonthlyReportForm';
+import DetailedCropReportModal from '../../Components/DetailedCropReportModal.jsx';
 import Navbar from '../../Components/Navbar.jsx';
 
 ChartJS.register(
@@ -571,7 +571,7 @@ export default function Farmer_Report() {
                           }}
                           className="w-full bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition-colors"
                         >
-                          Submit Monthly Report
+                          📋 Submit Detailed Crop Report
                         </button>
                       )}
                     </div>
@@ -620,7 +620,7 @@ export default function Farmer_Report() {
                       }}
                       className="w-full bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition-colors"
                     >
-                      Submit Report
+                      📋 Submit Detailed Report
                     </button>
                   </div>
                 ))}
@@ -1071,8 +1071,8 @@ export default function Farmer_Report() {
           onCropRegistered={handleCropRegistration}
         />
 
-        {/* Monthly Report Modal */}
-        <MonthlyReportForm
+        {/* Detailed Crop Report Modal */}
+        <DetailedCropReportModal
           isOpen={showMonthlyReportModal}
           onClose={() => {
             setShowMonthlyReportModal(false);

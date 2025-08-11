@@ -648,6 +648,35 @@ export class CropService {
 
     return Math.round((elapsedDays / totalDays) * 100);
   }
+
+  // Calculate expected report months based on crop timeline
+  static getExpectedReportMonths(plantingDate, harvestDate) {
+    const start = new Date(plantingDate);
+    const end = new Date(harvestDate);
+    const months = [];
+    
+    // Create a copy of start date to avoid mutation
+    const current = new Date(start);
+    
+    // Generate monthly reports from planting to harvest
+    while (current <= end) {
+      months.push({
+        month: current.getMonth() + 1, // 1-based month
+        year: current.getFullYear(),
+        date: new Date(current),
+        monthName: current.toLocaleDateString('en-US', { month: 'long' }),
+        formattedDate: current.toLocaleDateString('en-PH', { 
+          year: 'numeric', 
+          month: 'long' 
+        })
+      });
+      
+      // Move to next month
+      current.setMonth(current.getMonth() + 1);
+    }
+    
+    return months;
+  }
 }
 
 export default CropService;
