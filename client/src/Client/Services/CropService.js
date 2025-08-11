@@ -10,54 +10,102 @@ export class CropService {
           season: 'Wet/Dry', 
           maturityDays: 105, 
           avgYield: 4500, 
-          description: 'High-yielding, early maturing, resistant to tungro' 
+          description: 'High-yielding, early maturing, resistant to tungro',
+          resistance: 'Tungro, BPH, GLH',
+          features: 'Early maturing, good grain quality'
         },
         { 
           name: 'NSIC Rc216 (PSB Rc10)', 
           season: 'Wet/Dry', 
           maturityDays: 110, 
           avgYield: 5200, 
-          description: 'Medium maturing, high yield potential, good eating quality' 
+          description: 'Medium maturing, high yield potential, good eating quality',
+          resistance: 'BPH, GLH, Blast',
+          features: 'High milling recovery, premium quality'
         },
         { 
           name: 'NSIC Rc238', 
           season: 'Wet/Dry', 
           maturityDays: 115, 
           avgYield: 6000, 
-          description: 'Aromatic rice, premium quality, good for export' 
+          description: 'Aromatic rice, premium quality, good for export',
+          resistance: 'BPH, Tungro',
+          features: 'Aromatic, export quality, high market value'
         },
         { 
           name: 'NSIC Rc160 (PSB Rc14)', 
           season: 'Wet/Dry', 
           maturityDays: 120, 
           avgYield: 5800, 
-          description: 'High-yielding, good milling recovery, pest resistant' 
+          description: 'High-yielding, good milling recovery, pest resistant',
+          resistance: 'BPH, GLH, Blast, Tungro',
+          features: 'Multi-pest resistant, good milling quality'
         },
         { 
           name: 'IR64', 
           season: 'Wet/Dry', 
           maturityDays: 115, 
           avgYield: 4800, 
-          description: 'Traditional variety, widely adapted, good cooking quality' 
+          description: 'Traditional variety, widely adapted, good cooking quality',
+          resistance: 'BPH, GLH',
+          features: 'Widely adapted, stable yield'
         },
         { 
           name: 'C4-63G', 
           season: 'Wet/Dry', 
           maturityDays: 110, 
           avgYield: 5000, 
-          description: 'Hybrid variety, high yield potential, early maturing' 
+          description: 'Hybrid variety, high yield potential, early maturing',
+          resistance: 'BPH, Tungro, Blast',
+          features: 'Hybrid vigor, uniform maturity'
         },
         { 
           name: 'Dinorado', 
           season: 'Wet/Dry', 
           maturityDays: 125, 
           avgYield: 4200, 
-          description: 'Traditional aromatic variety, premium quality, red rice' 
+          description: 'Traditional aromatic variety, premium quality, red rice',
+          resistance: 'Moderate blast resistance',
+          features: 'Red pericarp, aromatic, premium market'
+        },
+        { 
+          name: 'NSIC Rc440 (Mestizo 20)', 
+          season: 'Wet/Dry', 
+          maturityDays: 112, 
+          avgYield: 5500, 
+          description: 'High-yielding inbred variety with excellent grain quality',
+          resistance: 'BPH, GLH, Tungro, Blast',
+          features: 'Superior grain quality, good eating quality'
+        },
+        { 
+          name: 'NSIC Rc480 (Mestizo 38)', 
+          season: 'Wet/Dry', 
+          maturityDays: 118, 
+          avgYield: 5900, 
+          description: 'Premium quality rice with high yield potential',
+          resistance: 'Multiple pest resistance',
+          features: 'Premium eating quality, export potential'
         }
       ],
       seasons: {
-        wet: { start: 'June', end: 'October', optimal: true },
-        dry: { start: 'December', end: 'April', optimal: true }
+        wet: { 
+          start: 'June', 
+          end: 'October', 
+          optimal: true, 
+          conditions: 'Rainfed cultivation, higher pest pressure, good for traditional varieties' 
+        },
+        dry: { 
+          start: 'December', 
+          end: 'April', 
+          optimal: true, 
+          conditions: 'Irrigated cultivation, better grain quality, lower pest incidence' 
+        },
+        offseason: { 
+          start: 'May', 
+          end: 'July', 
+          optimal: false, 
+          conditions: 'Limited irrigation, higher input costs, good prices' 
+        }
       },
       growthStages: [
         { stage: 'Seedling', days: '0-21', bbch: '10-19', description: 'Germination to 3-leaf stage' },
@@ -77,40 +125,93 @@ export class CropService {
           season: 'Wet/Dry', 
           maturityDays: 115, 
           avgYield: 8500, 
-          description: 'Hybrid yellow corn, high yield, good standability' 
+          description: 'Hybrid yellow corn, high yield, good standability',
+          resistance: 'Downy mildew, Borer',
+          features: 'Excellent standability, uniform ears'
         },
         { 
           name: 'Dekalb 818', 
           season: 'Wet/Dry', 
           maturityDays: 120, 
           avgYield: 9200, 
-          description: 'Premium hybrid, excellent grain quality, disease resistant' 
+          description: 'Premium hybrid, excellent grain quality, disease resistant',
+          resistance: 'Downy mildew, Leaf blight, Borer',
+          features: 'Premium grain quality, wide adaptability'
         },
         { 
           name: 'IPB Var 6', 
           season: 'Wet/Dry', 
           maturityDays: 110, 
           avgYield: 7800, 
-          description: 'Open-pollinated variety, good adaptation, lower cost' 
+          description: 'Open-pollinated variety, good adaptation, lower cost',
+          resistance: 'Moderate disease resistance',
+          features: 'Cost-effective, can save seeds'
         },
         { 
           name: 'Bioseed 9681', 
           season: 'Wet/Dry', 
           maturityDays: 125, 
           avgYield: 8800, 
-          description: 'Late maturing hybrid, high yield potential' 
+          description: 'Late maturing hybrid, high yield potential',
+          resistance: 'Downy mildew, Borer, Leaf spot',
+          features: 'High yield potential, good husk cover'
         },
         { 
           name: 'NK 6410', 
           season: 'Dry', 
           maturityDays: 108, 
           avgYield: 8200, 
-          description: 'Early hybrid, suitable for multiple cropping' 
+          description: 'Early hybrid, suitable for multiple cropping',
+          resistance: 'Downy mildew, Early borer',
+          features: 'Early maturity, multiple cropping suitability'
+        },
+        { 
+          name: 'Pioneer 30G68', 
+          season: 'Wet/Dry', 
+          maturityDays: 118, 
+          avgYield: 9000, 
+          description: 'High-yielding yellow hybrid with excellent kernel quality',
+          resistance: 'Downy mildew, Borer, Leaf diseases',
+          features: 'Excellent kernel quality, good dry down'
+        },
+        { 
+          name: 'SL 1103', 
+          season: 'Wet/Dry', 
+          maturityDays: 112, 
+          avgYield: 8300, 
+          description: 'Medium maturing hybrid with good stress tolerance',
+          resistance: 'Downy mildew, Drought tolerance',
+          features: 'Stress tolerant, consistent performance'
+        },
+        { 
+          name: 'Bayer NK 7328', 
+          season: 'Wet/Dry', 
+          maturityDays: 122, 
+          avgYield: 9500, 
+          description: 'Premium late-season hybrid with exceptional yield',
+          resistance: 'Multiple disease resistance',
+          features: 'Top yield potential, premium quality'
         }
       ],
       seasons: {
-        wet: { start: 'May', end: 'September', optimal: true },
-        dry: { start: 'November', end: 'March', optimal: true }
+        wet: { 
+          start: 'May', 
+          end: 'September', 
+          optimal: true, 
+          conditions: 'Rainfed possible, adequate moisture, pest management required' 
+        },
+        dry: { 
+          start: 'November', 
+          end: 'March', 
+          optimal: true, 
+          conditions: 'Irrigated, better grain quality, lower disease pressure' 
+        },
+        year_round: { 
+          start: 'January', 
+          end: 'December', 
+          optimal: false, 
+          conditions: 'With proper irrigation and management, multiple harvests possible' 
+        }
       },
       growthStages: [
         { stage: 'Emergence', days: '0-10', bbch: '10-19', description: 'Seedling emergence and establishment' },

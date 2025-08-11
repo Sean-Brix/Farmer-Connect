@@ -15,6 +15,7 @@ import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import CropService from '../CropService';
 import CropRegistration from '../../Components/CropRegistration';
 import MonthlyReportForm from '../../Components/MonthlyReportForm';
+import Navbar from '../../Components/Navbar.jsx';
 
 ChartJS.register(
   CategoryScale,
@@ -30,6 +31,10 @@ ChartJS.register(
 
 export default function Farmer_Report() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [guidelinesCategory, setGuidelinesCategory] = useState('overview');
+  const [guidelinesSearch, setGuidelinesSearch] = useState('');
+  const [guidelinesFilter, setGuidelinesFilter] = useState('all');
+  const [expandedRows, setExpandedRows] = useState(new Set());
   const [showCropRegistrationModal, setShowCropRegistrationModal] = useState(false);
   const [showMonthlyReportModal, setShowMonthlyReportModal] = useState(false);
   const [selectedCropForReport, setSelectedCropForReport] = useState(null);
@@ -116,7 +121,13 @@ export default function Farmer_Report() {
     const newCrop = {
       ...cropData,
       id: Date.now(),
-      reports: []
+      plantingDate: cropData.plantingDate,
+      expectedHarvest: cropData.expectedHarvestDate,
+      expectedYield: cropData.expectedYield,
+      status: 'Active',
+      currentStage: 'Seedling',
+      reports: [],
+      lastReportDate: null
     };
 
     setRegisteredCrops(prev => [...prev, newCrop]);
@@ -130,13 +141,33 @@ export default function Farmer_Report() {
         return {
           ...crop,
           reports: [...crop.reports, { ...reportData, id: Date.now() }],
-          currentStage: reportData.growthStage
+          currentStage: reportData.growthStage,
+          lastReportDate: reportData.reportDate
         };
       }
       return crop;
     }));
 
+    setSelectedCropForReport(null);
+    setShowMonthlyReportModal(false);
     alert('Monthly report submitted successfully!');
+  };
+
+  // Get expected report months for a crop
+  const getExpectedReportMonths = (plantingDate, harvestDate) => {
+    const months = [];
+    const start = new Date(plantingDate);
+    const end = new Date(harvestDate);
+    
+    const current = new Date(start);
+    current.setDate(1); // First day of month
+    
+    while (current <= end) {
+      months.push(current.toISOString().slice(0, 7));
+      current.setMonth(current.getMonth() + 1);
+    }
+    
+    return months;
   };
 
   // Get farmer analytics
@@ -167,15 +198,67 @@ export default function Farmer_Report() {
     };
   };
 
+  // Helper functions for guidelines
+  const toggleRowExpansion = (rowId) => {
+    const newExpanded = new Set(expandedRows);
+    if (newExpanded.has(rowId)) {
+      newExpanded.delete(rowId);
+    } else {
+      newExpanded.add(rowId);
+    }
+    setExpandedRows(newExpanded);
+  };
+
+  const getFilteredCropData = () => {
+    let allCropData = [];
+    
+    CropService.getAllCropTypes().forEach(cropType => {
+      const varieties = CropService.getCropVarieties(cropType);
+      const seasons = CropService.getOptimalSeasons(cropType);
+      const stages = CropService.getGrowthStages(cropType);
+      
+      varieties.forEach((variety, index) => {
+        allCropData.push({
+          id: `${cropType}-${index}`,
+          cropType,
+          variety,
+          seasons,
+          stages,
+          optimalSeasons: Object.entries(seasons).filter(([_, info]) => info.optimal).map(([season, _]) => season),
+          avgYield: variety.avgYield,
+          maturityDays: variety.maturityDays
+        });
+      });
+    });
+
+    // Apply search filter
+    if (guidelinesSearch) {
+      allCropData = allCropData.filter(item => 
+        item.cropType.toLowerCase().includes(guidelinesSearch.toLowerCase()) ||
+        item.variety.name.toLowerCase().includes(guidelinesSearch.toLowerCase()) ||
+        item.variety.description.toLowerCase().includes(guidelinesSearch.toLowerCase())
+      );
+    }
+
+    // Apply category filter
+    if (guidelinesFilter !== 'all') {
+      allCropData = allCropData.filter(item => item.cropType === guidelinesFilter);
+    }
+
+    return allCropData;
+  };
+
   const analytics = getFarmerAnalytics();
 
   return (
-    <div className="mt-[5%] min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto p-6">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between">
-            <div>
+    <>
+      <Navbar />
+      <div className="mt-[5%] min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto p-6">
+          {/* Header */}
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div className="flex items-center justify-between">
+              <div>
               <h1 className="text-3xl font-bold text-gray-800 flex items-center">
                 <span className="mr-3">🌾</span>
                 Farmer Crop Report Dashboard
@@ -588,319 +671,418 @@ export default function Farmer_Report() {
 
         {activeTab === 'guidelines' && (
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <h3 className="text-xl font-semibold text-gray-800 mb-6">Philippines Crop Growing Guidelines</h3>
-            
-            <div className="space-y-6">
-              {Object.entries(philippinesCrops).map(([cropType, info]) => (
-                <div key={cropType} className="border border-gray-200 rounded-lg p-6">
-                  <h4 className="text-lg font-bold text-gray-800 mb-4">{cropType}</h4>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h5 className="font-semibold text-gray-700 mb-2">Recommended Varieties</h5>
-                      <div className="space-y-2">
-                        {info.varieties.map((variety, index) => (
-                          <div key={index} className="bg-gray-50 p-3 rounded">
-                            <div className="font-medium text-gray-800">{variety.name}</div>
-                            <div className="text-sm text-gray-600">
-                              Growth: {variety.growthPeriod} days • Yield: {variety.yieldPerHectare.toLocaleString()} kg/ha
-                            </div>
-                            <div className="text-sm text-gray-700">{variety.description}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h5 className="font-semibold text-gray-700 mb-2">Growing Information</h5>
-                      <div className="space-y-3">
-                        <div>
-                          <span className="font-medium text-gray-700">Seasonality:</span>
-                          <p className="text-sm text-gray-600">{info.seasonality}</p>
-                        </div>
-                        <div>
-                          <span className="font-medium text-gray-700">Ideal Climate:</span>
-                          <p className="text-sm text-gray-600">{info.idealClimate}</p>
-                        </div>
-                        <div>
-                          <span className="font-medium text-gray-700">Growth Stages:</span>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {info.growthStages.map((stage, index) => (
-                              <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-                                {stage}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold text-gray-800">Philippines Crop Growing Guidelines</h3>
+              <div className="mt-4 md:mt-0 text-sm text-gray-600">
+                {getFilteredCropData().length} varieties available
+              </div>
             </div>
+            
+            {/* Search and Filter Controls */}
+            <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="md:col-span-2">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search crops, varieties, or descriptions..."
+                    value={guidelinesSearch}
+                    onChange={(e) => setGuidelinesSearch(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                  <svg
+                    className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              
+              <div>
+                <select
+                  value={guidelinesFilter}
+                  onChange={(e) => setGuidelinesFilter(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  <option value="all">All Crop Types</option>
+                  {CropService.getAllCropTypes().map(cropType => (
+                    <option key={cropType} value={cropType}>{cropType}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Guidelines Category Tabs */}
+            <div className="border-b border-gray-200 mb-6">
+              <nav className="-mb-px flex space-x-8">
+                {['overview', 'planting', 'growing'].map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setGuidelinesCategory(category)}
+                    className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
+                      guidelinesCategory === category
+                        ? 'border-green-500 text-green-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    {category === 'overview' && '🌾 Crop Overview'}
+                    {category === 'planting' && '🌱 Planting Guide'}
+                    {category === 'growing' && '📈 Growth Stages'}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            {/* Tabular Guidelines Content */}
+            <div className="overflow-x-auto">
+              {guidelinesCategory === 'overview' && (
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crop & Variety</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Maturity</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Yield</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Optimal Season</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {getFilteredCropData().map((item) => (
+                      <React.Fragment key={item.id}>
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div>
+                                <div className="text-sm font-medium text-gray-900">{item.variety.name}</div>
+                                <div className="text-sm text-gray-500">{item.cropType}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {item.maturityDays} days
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {CropService.formatYield(item.avgYield)}/ha
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex flex-wrap gap-1">
+                              {item.optimalSeasons.map(season => (
+                                <span key={season} className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                                  {season}
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button
+                              onClick={() => toggleRowExpansion(item.id)}
+                              className="text-green-600 hover:text-green-900 flex items-center"
+                            >
+                              {expandedRows.has(item.id) ? (
+                                <>
+                                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                  </svg>
+                                  Hide
+                                </>
+                              ) : (
+                                <>
+                                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                  </svg>
+                                  Details
+                                </>
+                              )}
+                            </button>
+                          </td>
+                        </tr>
+                        {expandedRows.has(item.id) && (
+                          <tr>
+                            <td colSpan="5" className="px-6 py-4 bg-gray-50">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                  <h4 className="font-semibold text-gray-800 mb-2">Variety Details</h4>
+                                  <p className="text-sm text-gray-600 mb-3">{item.variety.description}</p>
+                                  <div className="space-y-2">
+                                    <div className="text-sm">
+                                      <span className="font-medium text-gray-700">Resistance:</span>
+                                      <span className="ml-2 text-gray-600">{item.variety.resistance || 'Standard'}</span>
+                                    </div>
+                                    <div className="text-sm">
+                                      <span className="font-medium text-gray-700">Special Features:</span>
+                                      <span className="ml-2 text-gray-600">{item.variety.features || 'N/A'}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div>
+                                  <h4 className="font-semibold text-gray-800 mb-2">Seasonal Information</h4>
+                                  <div className="space-y-2">
+                                    {Object.entries(item.seasons).map(([season, info]) => (
+                                      <div key={season} className={`p-2 rounded border ${info.optimal ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
+                                        <div className="text-sm font-medium">
+                                          {season} Season {info.optimal && <span className="text-green-600">(Optimal)</span>}
+                                        </div>
+                                        <div className="text-xs text-gray-600">
+                                          {info.start} - {info.end}
+                                        </div>
+                                        <div className="text-xs text-gray-500 mt-1">{info.conditions}</div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+
+              {guidelinesCategory === 'planting' && (
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crop & Variety</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Best Planting Season</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Planting Window</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Harvest</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {getFilteredCropData().map((item) => {
+                      const optimalSeason = Object.entries(item.seasons).find(([_, info]) => info.optimal);
+                      return (
+                        <React.Fragment key={item.id}>
+                          <tr className="hover:bg-gray-50">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="flex items-center">
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900">{item.variety.name}</div>
+                                  <div className="text-sm text-gray-500">{item.cropType}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              {optimalSeason ? (
+                                <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                                  {optimalSeason[0]}
+                                </span>
+                              ) : (
+                                <span className="text-sm text-gray-500">Variable</span>
+                              )}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              {optimalSeason ? `${optimalSeason[1].start} - ${optimalSeason[1].end}` : 'Year-round'}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              {item.maturityDays} days
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                              <button
+                                onClick={() => toggleRowExpansion(item.id)}
+                                className="text-green-600 hover:text-green-900 flex items-center"
+                              >
+                                {expandedRows.has(item.id) ? (
+                                  <>
+                                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                    </svg>
+                                    Hide
+                                  </>
+                                ) : (
+                                  <>
+                                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                    Details
+                                  </>
+                                )}
+                              </button>
+                            </td>
+                          </tr>
+                          {expandedRows.has(item.id) && (
+                            <tr>
+                              <td colSpan="5" className="px-6 py-4 bg-gray-50">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                  {Object.entries(item.seasons).map(([season, info]) => (
+                                    <div key={season} className={`p-4 rounded-lg border-2 ${info.optimal ? 'border-green-300 bg-green-50' : 'border-gray-200 bg-gray-50'}`}>
+                                      <h4 className={`font-semibold mb-2 ${info.optimal ? 'text-green-800' : 'text-gray-600'}`}>
+                                        {season} Season
+                                        {info.optimal && <span className="ml-2 text-xs px-2 py-1 bg-green-200 text-green-800 rounded">OPTIMAL</span>}
+                                      </h4>
+                                      <div className="text-sm space-y-1">
+                                        <div><span className="font-medium">Planting:</span> {info.start}</div>
+                                        <div><span className="font-medium">Harvest:</span> {info.end}</div>
+                                        <div className="text-xs text-gray-600 mt-2">{info.conditions}</div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
+
+              {guidelinesCategory === 'growing' && (
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crop Type</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Growth Period</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Growth Stages</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {CropService.getAllCropTypes()
+                      .filter(cropType => 
+                        guidelinesFilter === 'all' || guidelinesFilter === cropType
+                      )
+                      .filter(cropType =>
+                        !guidelinesSearch || cropType.toLowerCase().includes(guidelinesSearch.toLowerCase())
+                      )
+                      .map((cropType) => {
+                        const stages = CropService.getGrowthStages(cropType);
+                        const totalDays = stages.reduce((sum, stage) => sum + stage.days, 0);
+                        return (
+                          <React.Fragment key={cropType}>
+                            <tr className="hover:bg-gray-50">
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm font-medium text-gray-900">{cropType}</div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {totalDays} days
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex flex-wrap gap-1">
+                                  {stages.slice(0, 3).map((stage, index) => (
+                                    <span key={index} className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                                      {stage.stage}
+                                    </span>
+                                  ))}
+                                  {stages.length > 3 && (
+                                    <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">
+                                      +{stages.length - 3} more
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <button
+                                  onClick={() => toggleRowExpansion(cropType)}
+                                  className="text-green-600 hover:text-green-900 flex items-center"
+                                >
+                                  {expandedRows.has(cropType) ? (
+                                    <>
+                                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                      </svg>
+                                      Hide
+                                    </>
+                                  ) : (
+                                    <>
+                                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                      </svg>
+                                      Stages
+                                    </>
+                                  )}
+                                </button>
+                              </td>
+                            </tr>
+                            {expandedRows.has(cropType) && (
+                              <tr>
+                                <td colSpan="4" className="px-6 py-4 bg-gray-50">
+                                  <div className="relative">
+                                    {/* Timeline */}
+                                    <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+                                    
+                                    <div className="space-y-6">
+                                      {stages.map((stage, index) => (
+                                        <div key={index} className="relative flex items-start">
+                                          {/* Stage indicator */}
+                                          <div className="relative z-10 flex items-center justify-center w-12 h-12 bg-white border-4 border-blue-200 rounded-full">
+                                            <span className="text-xs font-bold text-blue-600">{stage.code}</span>
+                                          </div>
+                                          
+                                          {/* Stage content */}
+                                          <div className="ml-6 flex-1">
+                                            <div className="bg-white border border-gray-200 rounded-lg p-4">
+                                              <h5 className="font-semibold text-gray-800">{stage.stage}</h5>
+                                              <div className="text-sm text-gray-600 mt-1">
+                                                <span className="font-medium">Duration:</span> {stage.days} days
+                                              </div>
+                                              <div className="text-sm text-gray-700 mt-2">{stage.description}</div>
+                                              {stage.tips && (
+                                                <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                                                  <div className="text-xs font-medium text-blue-800 mb-1">💡 Tips:</div>
+                                                  <div className="text-xs text-blue-700">{stage.tips}</div>
+                                                </div>
+                                              )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </React.Fragment>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+            {/* No results message */}
+            {getFilteredCropData().length === 0 && (
+              <div className="text-center py-12">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.5-.643-6.364-1.764"/>
+                </svg>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No crops found</h3>
+                <p className="mt-1 text-sm text-gray-500">Try adjusting your search or filter criteria.</p>
+              </div>
+            )}
           </div>
         )}
 
         {/* Crop Registration Modal */}
-        {showCropRegistrationModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold">Register New Crop</h2>
-                  <button
-                    onClick={() => setShowCropRegistrationModal(false)}
-                    className="text-white hover:text-gray-200 text-2xl font-bold"
-                  >
-                    ×
-                  </button>
-                </div>
-              </div>
-
-              <div className="p-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Crop Type *</label>
-                    <select
-                      value={newCropForm.cropType}
-                      onChange={(e) => setNewCropForm(prev => ({ ...prev, cropType: e.target.value, variety: '' }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      required
-                    >
-                      <option value="">Select Crop Type</option>
-                      {Object.keys(philippinesCrops).map(crop => (
-                        <option key={crop} value={crop}>{crop}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {newCropForm.cropType && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Variety *</label>
-                      <select
-                        value={newCropForm.variety}
-                        onChange={(e) => setNewCropForm(prev => ({ ...prev, variety: e.target.value }))}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                        required
-                      >
-                        <option value="">Select Variety</option>
-                        {philippinesCrops[newCropForm.cropType].varieties.map(variety => (
-                          <option key={variety.name} value={variety.name}>
-                            {variety.name} - {variety.growthPeriod} days, {variety.yieldPerHectare.toLocaleString()} kg/ha
-                          </option>
-                        ))}
-                      </select>
-                      
-                      {newCropForm.variety && (
-                        <div className="mt-2 p-3 bg-blue-50 rounded">
-                          <p className="text-sm text-blue-800">
-                            {philippinesCrops[newCropForm.cropType].varieties.find(v => v.name === newCropForm.variety)?.description}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Planting Date *</label>
-                    <input
-                      type="date"
-                      value={newCropForm.plantingDate}
-                      onChange={(e) => setNewCropForm(prev => ({ ...prev, plantingDate: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Area (hectares) *</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      min="0.1"
-                      value={newCropForm.area}
-                      onChange={(e) => setNewCropForm(prev => ({ ...prev, area: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="e.g., 1.5"
-                      required
-                    />
-                  </div>
-
-                  {newCropForm.cropType && newCropForm.variety && newCropForm.plantingDate && newCropForm.area && (
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-green-800 mb-2">Expected Information</h4>
-                      <div className="text-sm text-green-700 space-y-1">
-                        <p>Expected Harvest: {calculateExpectedHarvest(newCropForm.plantingDate, newCropForm.cropType, newCropForm.variety)}</p>
-                        <p>Expected Yield: {calculateExpectedYield(newCropForm.area, newCropForm.cropType, newCropForm.variety).toLocaleString()} kg</p>
-                      </div>
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
-                    <textarea
-                      value={newCropForm.notes}
-                      onChange={(e) => setNewCropForm(prev => ({ ...prev, notes: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      rows="3"
-                      placeholder="Additional notes about this crop..."
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-end space-x-4 mt-6">
-                  <button
-                    onClick={() => setShowCropRegistrationModal(false)}
-                    className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleCropRegistration}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                  >
-                    Register Crop
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        <CropRegistration
+          isOpen={showCropRegistrationModal}
+          onClose={() => setShowCropRegistrationModal(false)}
+          onCropRegistered={handleCropRegistration}
+        />
 
         {/* Monthly Report Modal */}
-        {showMonthlyReportModal && selectedCropForReport && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold">Monthly Report</h2>
-                    <p className="text-green-100">{selectedCropForReport.cropType} - {selectedCropForReport.variety}</p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setShowMonthlyReportModal(false);
-                      setSelectedCropForReport(null);
-                    }}
-                    className="text-white hover:text-gray-200 text-2xl font-bold"
-                  >
-                    ×
-                  </button>
-                </div>
-              </div>
-
-              <div className="p-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Growth Stage *</label>
-                    <select
-                      value={monthlyReportForm.growthStage}
-                      onChange={(e) => setMonthlyReportForm(prev => ({ ...prev, growthStage: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      required
-                    >
-                      <option value="">Select Current Growth Stage</option>
-                      {philippinesCrops[selectedCropForReport.cropType]?.growthStages.map(stage => (
-                        <option key={stage} value={stage}>{stage}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Plant Height (cm) *</label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={monthlyReportForm.plantHeight}
-                      onChange={(e) => setMonthlyReportForm(prev => ({ ...prev, plantHeight: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="e.g., 45"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Health Status *</label>
-                    <select
-                      value={monthlyReportForm.healthStatus}
-                      onChange={(e) => setMonthlyReportForm(prev => ({ ...prev, healthStatus: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      required
-                    >
-                      <option value="Healthy">Healthy</option>
-                      <option value="Warning">Warning</option>
-                      <option value="Critical">Critical</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Estimated Yield (kg)</label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={monthlyReportForm.estimatedYield}
-                      onChange={(e) => setMonthlyReportForm(prev => ({ ...prev, estimatedYield: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder={`Expected: ${selectedCropForReport.expectedYield.toLocaleString()} kg`}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Pests and Diseases</label>
-                    <input
-                      type="text"
-                      value={monthlyReportForm.pestsAndDiseases}
-                      onChange={(e) => setMonthlyReportForm(prev => ({ ...prev, pestsAndDiseases: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="e.g., Minor leaf spot, None"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Weather Impact</label>
-                    <input
-                      type="text"
-                      value={monthlyReportForm.weatherImpact}
-                      onChange={(e) => setMonthlyReportForm(prev => ({ ...prev, weatherImpact: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="e.g., Good rainfall, Drought stress"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Additional Notes</label>
-                    <textarea
-                      value={monthlyReportForm.notes}
-                      onChange={(e) => setMonthlyReportForm(prev => ({ ...prev, notes: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      rows="3"
-                      placeholder="Any additional observations or actions taken..."
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-end space-x-4 mt-6">
-                  <button
-                    onClick={() => {
-                      setShowMonthlyReportModal(false);
-                      setSelectedCropForReport(null);
-                    }}
-                    className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleMonthlyReportSubmission}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                  >
-                    Submit Report
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        <MonthlyReportForm
+          isOpen={showMonthlyReportModal}
+          onClose={() => {
+            setShowMonthlyReportModal(false);
+            setSelectedCropForReport(null);
+          }}
+          crop={selectedCropForReport}
+          onReportSubmitted={handleMonthlyReportSubmission}
+        />
       </div>
     </div>
+    </>
   );
 }
