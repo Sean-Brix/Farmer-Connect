@@ -875,26 +875,6 @@ function Seed_Track() {
         {/* Main Content Container */}
         <div className="flex flex-col items-center justify-center min-h-[91vh] w-full bg-white rounded-xl shadow mt-2 transition-all">
           <div className="w-full p-6">
-            {/* Statistics Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6">
-              <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-3 sm:p-4 text-center">
-                <div className="text-xl sm:text-2xl font-bold text-gray-900">{farmers.length}</div>
-                <p className="text-xs sm:text-sm text-gray-600">Total Farmers</p>
-              </div>
-              <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-3 sm:p-4 text-center">
-                <div className="text-xl sm:text-2xl font-bold text-gray-900">{sampleSeedTrackingData.length}</div>
-                <p className="text-xs sm:text-sm text-gray-600">Total Reports</p>
-              </div>
-              <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-3 sm:p-4 text-center">
-                <div className="text-xl sm:text-2xl font-bold text-green-700">{getOverviewStatistics().activeCrops}</div>
-                <p className="text-xs sm:text-sm text-green-600">Active Crops</p>
-              </div>
-              <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-3 sm:p-4 text-center">
-                <div className="text-xl sm:text-2xl font-bold text-green-700">{getOverviewStatistics().recentReports}</div>
-                <p className="text-xs sm:text-sm text-green-600">Recent Reports</p>
-              </div>
-            </div>
-
             {/* Enhanced Navigation Tabs - 60-30-10 color scheme */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-6">
           <div className="border-b border-gray-100">
@@ -1115,77 +1095,78 @@ function Seed_Track() {
 
             {/* Enhanced Filters - 60-30-10 color scheme */}
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 mb-6">
-              {/* Search Bar */}
-              <div className="p-4 border-b border-gray-100">
-                <div className="relative max-w-md mx-auto">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search farmers by name or email..."
-                    value={filters.search || ''}
-                    onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                    className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-gray-700 placeholder-gray-400"
-                  />
-                </div>
+              <div className="flex items-center gap-2 mb-4">
+                <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span className="text-sm font-medium text-gray-700">Search & Filter:</span>
               </div>
 
-              {/* Filters */}
-              <div className="px-4 pb-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  <span className="text-sm font-medium text-gray-700">Filter by:</span>
+              {/* Search Bar and Filters in horizontal layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                {/* Search Bar - positioned on the left */}
+                <div className="lg:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search farmers by name or email..."
+                      value={filters.search || ''}
+                      onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-gray-700 placeholder-gray-400"
+                    />
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <select
-                      value={filters.status}
-                      onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                    >
-                      <option value="all">All Status</option>
-                      <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                    <select
-                      value={filters.location}
-                      onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value }))}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                    >
-                      <option value="all">All Locations</option>
-                      <option value="laguna">Laguna</option>
-                      <option value="nueva ecija">Nueva Ecija</option>
-                      <option value="bulacan">Bulacan</option>
-                      <option value="bataan">Bataan</option>
-                      <option value="pampanga">Pampanga</option>
-                      <option value="tarlac">Tarlac</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Items per page</label>
-                    <select
-                      value={itemsPerPage}
-                      onChange={(e) => {
-                        setItemsPerPage(Number(e.target.value));
-                        setCurrentPage(1);
-                      }}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                    >
-                      <option value="5">5 per page</option>
-                      <option value="10">10 per page</option>
-                      <option value="20">20 per page</option>
-                      <option value="50">50 per page</option>
-                    </select>
-                  </div>
+
+                {/* Filters */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                  <select
+                    value={filters.status}
+                    onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                  <select
+                    value={filters.location}
+                    onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value }))}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                  >
+                    <option value="all">All Locations</option>
+                    <option value="laguna">Laguna</option>
+                    <option value="nueva ecija">Nueva Ecija</option>
+                    <option value="bulacan">Bulacan</option>
+                    <option value="bataan">Bataan</option>
+                    <option value="pampanga">Pampanga</option>
+                    <option value="tarlac">Tarlac</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Items per page</label>
+                  <select
+                    value={itemsPerPage}
+                    onChange={(e) => {
+                      setItemsPerPage(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                  >
+                    <option value="5">5 per page</option>
+                    <option value="10">10 per page</option>
+                    <option value="20">20 per page</option>
+                    <option value="50">50 per page</option>
+                  </select>
                 </div>
               </div>
             </div>

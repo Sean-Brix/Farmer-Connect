@@ -507,56 +507,65 @@ function Chat_Module() {
             {/* Pending Inquiry List */}
             <div className="xl:col-span-2">
               <div className="bg-white rounded-xl shadow-lg border border-gray-200">
-                {/* Search Bar */}
+                {/* Search and Filters Section */}
                 <div className="p-4 border-b border-gray-100">
-                  <div className="relative max-w-md mx-auto">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Search pending messages..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-gray-700 placeholder-gray-400"
-                    />
-                  </div>
-                </div>
-
-                {/* Filters for Pending */}
-                <div className="px-4 pb-4 border-b border-gray-100">
-                  <div className="flex items-center gap-2 mb-3">
+                  <div className="flex items-center gap-2 mb-4">
                     <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="text-sm font-medium text-gray-700">Filter by:</span>
+                    <span className="text-sm font-medium text-gray-700">Search & Filter:</span>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <select
-                      value={filterCategory}
-                      onChange={(e) => setFilterCategory(e.target.value)}
-                      className="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-sm text-gray-700"
-                    >
-                      <option value="all">All Categories</option>
-                      <option value="Seminar">Seminar</option>
-                      <option value="Equipment">Equipment</option>
-                      <option value="Account">Account</option>
-                      <option value="General">General</option>
-                    </select>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                    {/* Search Bar - positioned on the left */}
+                    <div className="lg:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="Search pending messages..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-gray-700 placeholder-gray-400"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Filters */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                      <select
+                        value={filterCategory}
+                        onChange={(e) => setFilterCategory(e.target.value)}
+                        className="w-full px-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-sm text-gray-700"
+                      >
+                        <option value="all">All Categories</option>
+                        <option value="Seminar">Seminar</option>
+                        <option value="Equipment">Equipment</option>
+                        <option value="Account">Account</option>
+                        <option value="General">General</option>
+                      </select>
+                    </div>
                     
-                    <select
-                      value={filterPriority}
-                      onChange={(e) => setFilterPriority(e.target.value)}
-                      className="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-sm text-gray-700"
-                    >
-                      <option value="all">All Priority</option>
-                      <option value="low">Low</option>
-                      <option value="medium">Medium</option>
-                      <option value="high">High</option>
-                      <option value="urgent">Urgent</option>
-                    </select>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                      <select
+                        value={filterPriority}
+                        onChange={(e) => setFilterPriority(e.target.value)}
+                        className="w-full px-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-sm text-gray-700"
+                      >
+                        <option value="all">All Priority</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 
@@ -748,66 +757,78 @@ function Chat_Module() {
             {/* Inquiry List */}
             <div className="xl:col-span-2">
               <div className="bg-white rounded-xl shadow-lg border border-gray-200">
-                {/* Search Bar */}
+                {/* Search and Filters Section */}
                 <div className="p-4 border-b border-gray-100">
-                  <div className="relative max-w-md mx-auto">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Search in-progress inquiries..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-gray-700 placeholder-gray-400"
-                    />
-                  </div>
-                </div>
-
-                {/* Filters */}
-                <div className="px-4 pb-4 border-b border-gray-100">
-                  <div className="flex items-center gap-2 mb-3">
+                  <div className="flex items-center gap-2 mb-4">
                     <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="text-sm font-medium text-gray-700">Filter by:</span>
+                    <span className="text-sm font-medium text-gray-700">Search & Filter:</span>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <select
-                      value={filterStatus}
-                      onChange={(e) => setFilterStatus(e.target.value)}
-                      className="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-sm text-gray-700"
-                    >
-                      <option value="all">All Status</option>
-                      <option value="pending">Pending</option>
-                      <option value="in-progress">In Progress</option>
-                    </select>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                    {/* Search Bar - positioned on the left */}
+                    <div className="lg:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="Search in-progress inquiries..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-gray-700 placeholder-gray-400"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Filters */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                      <select
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                        className="w-full px-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-sm text-gray-700"
+                      >
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                      </select>
+                    </div>
                     
-                    <select
-                      value={filterCategory}
-                      onChange={(e) => setFilterCategory(e.target.value)}
-                      className="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-sm text-gray-700"
-                    >
-                      <option value="all">All Categories</option>
-                      <option value="Seminar">Seminar</option>
-                      <option value="Equipment">Equipment</option>
-                      <option value="Account">Account</option>
-                      <option value="General">General</option>
-                    </select>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                      <select
+                        value={filterCategory}
+                        onChange={(e) => setFilterCategory(e.target.value)}
+                        className="w-full px-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-sm text-gray-700"
+                      >
+                        <option value="all">All Categories</option>
+                        <option value="Seminar">Seminar</option>
+                        <option value="Equipment">Equipment</option>
+                        <option value="Account">Account</option>
+                        <option value="General">General</option>
+                      </select>
+                    </div>
                     
-                    <select
-                      value={filterPriority}
-                      onChange={(e) => setFilterPriority(e.target.value)}
-                      className="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-sm text-gray-700"
-                    >
-                      <option value="all">All Priority</option>
-                      <option value="low">Low</option>
-                      <option value="medium">Medium</option>
-                      <option value="high">High</option>
-                      <option value="urgent">Urgent</option>
-                    </select>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                      <select
+                        value={filterPriority}
+                        onChange={(e) => setFilterPriority(e.target.value)}
+                        className="w-full px-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-white text-sm text-gray-700"
+                      >
+                        <option value="all">All Priority</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 

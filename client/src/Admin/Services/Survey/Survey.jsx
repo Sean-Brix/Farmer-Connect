@@ -9,6 +9,11 @@ function Survey() {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewSurvey, setPreviewSurvey] = useState(null);
 
+  // Search and filter state
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+
   // Form state for creating/editing surveys
   const [formData, setFormData] = useState({
     title: '',
@@ -23,8 +28,8 @@ function Survey() {
     setSurveys([
       {
         id: 1,
-        title: 'Farmer Satisfaction Survey',
-        description: 'Annual survey to measure farmer satisfaction with our services',
+        title: 'Farmer Satisfaction Survey Forms',
+        description: 'Annual survey to measure farmer satisfaction with our services and support programs',
         status: 'active',
         category: 'feedback',
         createdAt: '2024-01-15',
@@ -32,24 +37,140 @@ function Survey() {
         fields: [
           { id: 1, type: 'text', label: 'Full Name', required: true, placeholder: 'Enter your full name' },
           { id: 2, type: 'email', label: 'Email Address', required: true, placeholder: 'Enter your email' },
-          { id: 3, type: 'select', label: 'Farm Type', required: true, options: ['Rice', 'Corn', 'Vegetables', 'Livestock'] },
+          { id: 3, type: 'select', label: 'Farm Type', required: true, options: ['Rice', 'Corn', 'Vegetables', 'Livestock', 'Mixed Farming'] },
           { id: 4, type: 'radio', label: 'Overall Satisfaction', required: true, options: ['Very Satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very Dissatisfied'] },
           { id: 5, type: 'textarea', label: 'Additional Comments', required: false, placeholder: 'Any additional feedback...' }
         ]
       },
       {
         id: 2,
-        title: 'Equipment Usage Assessment',
-        description: 'Survey to understand equipment usage patterns and needs',
+        title: 'Equipment Usage Assessment Forms',
+        description: 'Survey to understand equipment usage patterns and farming equipment needs',
         status: 'draft',
         category: 'equipment',
         createdAt: '2024-01-10',
         updatedAt: '2024-01-12',
         fields: [
           { id: 1, type: 'text', label: 'Farmer Name', required: true, placeholder: 'Enter your name' },
-          { id: 2, type: 'checkbox', label: 'Equipment Used', required: true, options: ['Tractor', 'Harvester', 'Planter', 'Irrigation System'] },
+          { id: 2, type: 'checkbox', label: 'Equipment Used', required: true, options: ['Tractor', 'Harvester', 'Planter', 'Irrigation System', 'Thresher'] },
           { id: 3, type: 'number', label: 'Years of Experience', required: true, placeholder: 'Enter years' },
           { id: 4, type: 'date', label: 'Last Equipment Usage', required: false }
+        ]
+      },
+      {
+        id: 3,
+        title: 'Agricultural Training Feedback Forms',
+        description: 'Collect feedback on agricultural training programs and seminars',
+        status: 'active',
+        category: 'seminar',
+        createdAt: '2024-02-01',
+        updatedAt: '2024-02-05',
+        fields: [
+          { id: 1, type: 'text', label: 'Participant Name', required: true, placeholder: 'Enter your full name' },
+          { id: 2, type: 'email', label: 'Contact Email', required: true, placeholder: 'your.email@example.com' },
+          { id: 3, type: 'select', label: 'Training Program', required: true, options: ['Crop Management', 'Pest Control', 'Irrigation Techniques', 'Organic Farming', 'Post-Harvest Processing'] },
+          { id: 4, type: 'radio', label: 'Training Quality', required: true, options: ['Excellent', 'Good', 'Average', 'Poor'] },
+          { id: 5, type: 'radio', label: 'Instructor Effectiveness', required: true, options: ['Very Effective', 'Effective', 'Somewhat Effective', 'Not Effective'] },
+          { id: 6, type: 'checkbox', label: 'Topics Most Helpful', required: false, options: ['Theory Sessions', 'Practical Demonstrations', 'Q&A Sessions', 'Handout Materials', 'Field Visits'] },
+          { id: 7, type: 'textarea', label: 'Suggestions for Improvement', required: false, placeholder: 'Please share your suggestions...' }
+        ]
+      },
+      {
+        id: 4,
+        title: 'Crop Production Data Collection Forms',
+        description: 'Gather detailed information about crop production and farming practices',
+        status: 'active',
+        category: 'agriculture',
+        createdAt: '2024-02-10',
+        updatedAt: '2024-02-15',
+        fields: [
+          { id: 1, type: 'text', label: 'Farm Name/ID', required: true, placeholder: 'Enter farm identifier' },
+          { id: 2, type: 'text', label: 'Farmer Name', required: true, placeholder: 'Enter farmer name' },
+          { id: 3, type: 'number', label: 'Farm Size (hectares)', required: true, placeholder: 'Enter farm size' },
+          { id: 4, type: 'select', label: 'Primary Crop', required: true, options: ['Rice', 'Corn', 'Wheat', 'Soybeans', 'Vegetables', 'Fruits'] },
+          { id: 5, type: 'checkbox', label: 'Secondary Crops', required: false, options: ['Rice', 'Corn', 'Vegetables', 'Legumes', 'Root Crops'] },
+          { id: 6, type: 'radio', label: 'Farming Method', required: true, options: ['Conventional', 'Organic', 'Integrated', 'Hydroponic'] },
+          { id: 7, type: 'number', label: 'Expected Yield (tons)', required: false, placeholder: 'Estimated yield' },
+          { id: 8, type: 'date', label: 'Planting Date', required: false },
+          { id: 9, type: 'date', label: 'Expected Harvest Date', required: false }
+        ]
+      },
+      {
+        id: 5,
+        title: 'Equipment Request Forms',
+        description: 'Form for farmers to request agricultural equipment and tools',
+        status: 'active',
+        category: 'equipment',
+        createdAt: '2024-02-20',
+        updatedAt: '2024-02-25',
+        fields: [
+          { id: 1, type: 'text', label: 'Applicant Name', required: true, placeholder: 'Enter your full name' },
+          { id: 2, type: 'text', label: 'Farm Location', required: true, placeholder: 'Enter farm address' },
+          { id: 3, type: 'email', label: 'Contact Email', required: true, placeholder: 'your.email@example.com' },
+          { id: 4, type: 'text', label: 'Phone Number', required: true, placeholder: 'Enter phone number' },
+          { id: 5, type: 'select', label: 'Equipment Type', required: true, options: ['Tractor', 'Harvester', 'Planter', 'Irrigation Equipment', 'Processing Equipment'] },
+          { id: 6, type: 'radio', label: 'Request Type', required: true, options: ['Purchase', 'Rental', 'Loan', 'Lease'] },
+          { id: 7, type: 'number', label: 'Farm Size (hectares)', required: true, placeholder: 'Enter farm size' },
+          { id: 8, type: 'date', label: 'Required Date', required: true },
+          { id: 9, type: 'textarea', label: 'Additional Requirements', required: false, placeholder: 'Specify any additional requirements...' }
+        ]
+      },
+      {
+        id: 6,
+        title: 'Pest and Disease Report Forms',
+        description: 'Report crop pests and diseases for early intervention and management',
+        status: 'draft',
+        category: 'agriculture',
+        createdAt: '2024-03-01',
+        updatedAt: '2024-03-03',
+        fields: [
+          { id: 1, type: 'text', label: 'Reporter Name', required: true, placeholder: 'Enter your name' },
+          { id: 2, type: 'text', label: 'Farm Location', required: true, placeholder: 'Enter location details' },
+          { id: 3, type: 'date', label: 'Date Observed', required: true },
+          { id: 4, type: 'select', label: 'Affected Crop', required: true, options: ['Rice', 'Corn', 'Vegetables', 'Fruits', 'Other'] },
+          { id: 5, type: 'radio', label: 'Issue Type', required: true, options: ['Pest Infestation', 'Plant Disease', 'Nutrient Deficiency', 'Weather Damage'] },
+          { id: 6, type: 'checkbox', label: 'Symptoms Observed', required: true, options: ['Leaf Discoloration', 'Wilting', 'Insect Damage', 'Fungal Growth', 'Stunted Growth'] },
+          { id: 7, type: 'radio', label: 'Severity Level', required: true, options: ['Low (< 10% affected)', 'Medium (10-30% affected)', 'High (30-50% affected)', 'Critical (> 50% affected)'] },
+          { id: 8, type: 'textarea', label: 'Detailed Description', required: false, placeholder: 'Describe the issue in detail...' },
+          { id: 9, type: 'file', label: 'Upload Photos', required: false }
+        ]
+      },
+      {
+        id: 7,
+        title: 'Market Price Information Forms',
+        description: 'Collect and update market prices for agricultural products',
+        status: 'inactive',
+        category: 'general',
+        createdAt: '2024-03-10',
+        updatedAt: '2024-03-12',
+        fields: [
+          { id: 1, type: 'text', label: 'Market Name', required: true, placeholder: 'Enter market name' },
+          { id: 2, type: 'text', label: 'Location', required: true, placeholder: 'Market location' },
+          { id: 3, type: 'date', label: 'Price Date', required: true },
+          { id: 4, type: 'select', label: 'Product Category', required: true, options: ['Grains', 'Vegetables', 'Fruits', 'Livestock', 'Dairy'] },
+          { id: 5, type: 'text', label: 'Product Name', required: true, placeholder: 'Specific product name' },
+          { id: 6, type: 'number', label: 'Price per Unit', required: true, placeholder: 'Enter price' },
+          { id: 7, type: 'select', label: 'Unit', required: true, options: ['Kilogram', 'Piece', 'Bundle', 'Sack', 'Box'] },
+          { id: 8, type: 'radio', label: 'Quality Grade', required: false, options: ['Premium', 'Grade A', 'Grade B', 'Standard'] }
+        ]
+      },
+      {
+        id: 8,
+        title: 'Weather Impact Assessment Forms',
+        description: 'Assess the impact of weather conditions on crop production',
+        status: 'active',
+        category: 'agriculture',
+        createdAt: '2024-03-15',
+        updatedAt: '2024-03-18',
+        fields: [
+          { id: 1, type: 'text', label: 'Farm Identifier', required: true, placeholder: 'Enter farm ID or name' },
+          { id: 2, type: 'date', label: 'Assessment Date', required: true },
+          { id: 3, type: 'select', label: 'Weather Event', required: true, options: ['Drought', 'Flood', 'Storm', 'Hail', 'Frost', 'Excessive Heat'] },
+          { id: 4, type: 'radio', label: 'Event Duration', required: true, options: ['1-3 days', '4-7 days', '1-2 weeks', 'More than 2 weeks'] },
+          { id: 5, type: 'checkbox', label: 'Affected Crops', required: true, options: ['Rice', 'Corn', 'Vegetables', 'Fruits', 'Livestock Feed'] },
+          { id: 6, type: 'number', label: 'Estimated Loss (%)', required: false, placeholder: 'Percentage of crop loss' },
+          { id: 7, type: 'radio', label: 'Recovery Potential', required: false, options: ['Full Recovery Expected', 'Partial Recovery', 'Total Loss', 'Uncertain'] },
+          { id: 8, type: 'textarea', label: 'Mitigation Measures Taken', required: false, placeholder: 'Describe actions taken...' }
         ]
       }
     ]);
@@ -127,11 +248,11 @@ function Survey() {
   // Save survey
   const saveSurvey = () => {
     if (!formData.title.trim()) {
-      alert('Please enter a survey title');
+      alert('Please enter a survey form title');
       return;
     }
     if (formData.fields.length === 0) {
-      alert('Please add at least one field to the survey');
+      alert('Please add at least one field to the survey form');
       return;
     }
 
@@ -194,6 +315,20 @@ function Survey() {
     }
   };
 
+  // Filter surveys based on search term and filters
+  const filteredSurveys = surveys.filter(survey => {
+    const matchesSearch = survey.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         survey.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || survey.status === statusFilter;
+    const matchesCategory = categoryFilter === 'all' || survey.category === categoryFilter;
+    
+    return matchesSearch && matchesStatus && matchesCategory;
+  });
+
+  // Get unique categories from surveys
+  const uniqueCategories = [...new Set(surveys.map(survey => survey.category))];
+  const uniqueStatuses = [...new Set(surveys.map(survey => survey.status))];
+
   return (
     <div className="min-h-screen bg-white py-8 px-2 md:px-6 relative">
       <div className="max-w-7xl mx-auto">
@@ -206,7 +341,7 @@ function Survey() {
               </svg>
             </span>
             <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
-              Survey Management
+              Survey Forms Management
             </span>
           </span>
           <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
@@ -226,7 +361,7 @@ function Survey() {
               }`}
             >
               <span className="text-lg">📋</span>
-              <span>Survey List</span>
+              <span>Survey Forms List</span>
             </button>
             <button
               onClick={() => { resetForm(); setActiveTab('create'); }}
@@ -237,7 +372,7 @@ function Survey() {
               }`}
             >
               <span className="text-lg">✨</span>
-              <span>Create Survey</span>
+              <span>Create Survey Form</span>
             </button>
           </div>
         </div>
@@ -245,31 +380,136 @@ function Survey() {
         {/* Survey List */}
         {activeTab === 'list' && (
           <div className="bg-white rounded-xl shadow-lg p-6 max-w-5xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">All Surveys</h2>
-              <div className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
-                Total: {surveys.length} surveys
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
+              <h2 className="text-xl font-semibold text-gray-900">All Survey Forms</h2>
+              <div className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full border self-start lg:self-center">
+                {filteredSurveys.length} of {surveys.length} survey forms
+              </div>
+            </div>
+
+            {/* Search and Filter Bar */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
+              <div className="flex flex-col lg:flex-row gap-4">
+                {/* Search Bar - Left positioned */}
+                <div className="flex-1 lg:max-w-md">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Search Surveys</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search by title or description..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                    />
+                    {searchTerm && (
+                      <button
+                        onClick={() => setSearchTerm('')}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      >
+                        <svg className="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Filters */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                    >
+                      <option value="all">All Status</option>
+                      {uniqueStatuses.map(status => (
+                        <option key={status} value={status}>
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <select
+                      value={categoryFilter}
+                      onChange={(e) => setCategoryFilter(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                    >
+                      <option value="all">All Categories</option>
+                      {uniqueCategories.map(category => (
+                        <option key={category} value={category}>
+                          {category.charAt(0).toUpperCase() + category.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Clear Filters Button */}
+                  {(searchTerm || statusFilter !== 'all' || categoryFilter !== 'all') && (
+                    <div className="flex items-end">
+                      <button
+                        onClick={() => {
+                          setSearchTerm('');
+                          setStatusFilter('all');
+                          setCategoryFilter('all');
+                        }}
+                        className="px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all duration-200 font-medium flex items-center gap-2"
+                      >
+                        <span>🔄</span>
+                        Clear Filters
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
             {surveys.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-gray-300 text-6xl mb-4">📋</div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No surveys yet</h3>
-                <p className="text-gray-500 mb-6">Create your first survey to get started collecting valuable data</p>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No survey forms yet</h3>
+                <p className="text-gray-500 mb-6">Create your first survey form to get started collecting valuable data</p>
                 <button
                   onClick={() => { resetForm(); setActiveTab('create'); }}
                   className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 font-medium"
                 >
                   <span className="inline-flex items-center gap-2">
                     <span>✨</span>
-                    Create Your First Survey
+                    Create Your First Survey Form
+                  </span>
+                </button>
+              </div>
+            ) : filteredSurveys.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-gray-300 text-6xl mb-4">🔍</div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No survey forms found</h3>
+                <p className="text-gray-500 mb-6">No survey forms match your current search and filter criteria.</p>
+                <button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setStatusFilter('all');
+                    setCategoryFilter('all');
+                  }}
+                  className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 font-medium"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <span>🔄</span>
+                    Clear All Filters
                   </span>
                 </button>
               </div>
             ) : (
               <div className="grid gap-6">
-                {surveys.map((survey) => (
+                {filteredSurveys.map((survey) => (
                   <div key={survey.id} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 hover:border-green-200">
                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
                       <div className="flex-1">
@@ -342,7 +582,7 @@ function Survey() {
             <div className="flex-1 bg-white rounded-xl shadow-lg p-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
                 <h2 className="text-xl font-semibold text-gray-900">
-                  {selectedSurvey ? 'Edit Survey' : 'Create New Survey'}
+                  {selectedSurvey ? 'Edit Survey Form' : 'Create New Survey Form'}
                 </h2>
                 <button
                   onClick={() => setActiveTab('list')}
@@ -358,13 +598,13 @@ function Survey() {
                 <h3 className="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">Basic Information</h3>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Survey Title *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Survey Form Title *</label>
                     <input
                       type="text"
                       value={formData.title}
                       onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                      placeholder="Enter survey title"
+                      placeholder="Enter survey form title"
                     />
                   </div>
                   <div>
@@ -388,7 +628,7 @@ function Survey() {
                       onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                       rows={3}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 resize-none"
-                      placeholder="Enter survey description"
+                      placeholder="Enter survey form description"
                     />
                   </div>
                   <div>
@@ -531,7 +771,7 @@ function Survey() {
                   className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center gap-2"
                 >
                   <span>{selectedSurvey ? '💾' : '✨'}</span>
-                  {selectedSurvey ? 'Update Survey' : 'Create Survey'}
+                  {selectedSurvey ? 'Update Survey Form' : 'Create Survey Form'}
                 </button>
                 <button
                   onClick={() => {
@@ -549,7 +789,7 @@ function Survey() {
             {/* Sidebar for Field Types */}
             <div className="w-80 bg-white rounded-xl shadow-lg p-6 h-fit sticky top-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">Add Field Types</h3>
-              <p className="text-sm text-gray-600 mb-6">Click on a field type to add it to your survey</p>
+              <p className="text-sm text-gray-600 mb-6">Click on a field type to add it to your survey form</p>
               
               <div className="space-y-3">
                 {fieldTypes.map((type) => (
@@ -640,16 +880,16 @@ function Survey() {
           </div>
         )}
 
-        {/* Survey Preview Modal */}
+        {/* Survey Form Preview Modal */}
         {showPreviewModal && previewSurvey && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
               {/* Modal Header */}
               <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-xl">
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
                     <span>👁️</span>
-                    Survey Preview
+                    Survey Form Preview
                   </h3>
                   <p className="text-sm text-gray-600">How this survey will appear to users</p>
                 </div>
@@ -665,7 +905,7 @@ function Survey() {
                 </button>
               </div>
 
-              {/* Survey Preview Content */}
+              {/* Survey Form Preview Content */}
               <div className="p-6">
                 {/* Survey Header */}
                 <div className="mb-8">
