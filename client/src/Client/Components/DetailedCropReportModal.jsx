@@ -284,8 +284,8 @@ const DetailedCropReportModal = ({ isOpen, onClose, crop, onReportSubmitted }) =
     switch (currentSection) {
       case 0: // Basic Plant Information
         return (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Report Date *
@@ -321,7 +321,7 @@ const DetailedCropReportModal = ({ isOpen, onClose, crop, onReportSubmitted }) =
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Average Plant Height (cm) *
@@ -987,38 +987,38 @@ const DetailedCropReportModal = ({ isOpen, onClose, crop, onReportSubmitted }) =
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 sm:p-6 pt-20 sm:pt-24">
+      <div className="bg-white rounded-lg shadow-2xl max-w-5xl w-full max-h-[calc(95vh-6rem)] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white p-6">
+        <div className="bg-green-800 text-white p-4 sm:p-6 flex-shrink-0 border-b-4 border-green-400">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold">Detailed Crop Report</h2>
+            <div className="min-w-0 flex-1 mr-4">
+              <h2 className="text-lg sm:text-2xl font-bold truncate text-white">Detailed Crop Report</h2>
               {crop && (
-                <p className="text-green-100 mt-1">
+                <p className="text-green-100 mt-1 text-sm sm:text-base truncate">
                   {crop.cropType} - {crop.variety} | Area: {crop.area} ha
                 </p>
               )}
             </div>
             <button
               onClick={onClose}
-              className="text-white hover:text-gray-200 transition-colors"
+              className="text-white hover:text-gray-300 transition-colors flex-shrink-0"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
 
           {/* Progress Bar */}
-          <div className="mt-4">
-            <div className="flex justify-between text-sm text-green-100 mb-2">
+          <div className="mt-3 sm:mt-4">
+            <div className="flex justify-between text-xs sm:text-sm text-green-100 mb-2">
               <span>Section {currentSection + 1} of {sections.length}</span>
               <span>{Math.round(((currentSection + 1) / sections.length) * 100)}% Complete</span>
             </div>
             <div className="w-full bg-green-700 rounded-full h-2">
               <div 
-                className="bg-white h-2 rounded-full transition-all duration-300"
+                className="bg-green-300 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
               ></div>
             </div>
@@ -1026,24 +1026,25 @@ const DetailedCropReportModal = ({ isOpen, onClose, crop, onReportSubmitted }) =
         </div>
 
         {/* Section Navigation */}
-        <div className="border-b border-gray-200 p-4">
-          <div className="flex items-center space-x-4 overflow-x-auto">
+        <div className="border-b border-gray-200 p-3 sm:p-4 flex-shrink-0 bg-gray-50">
+          <div className="flex items-center space-x-2 sm:space-x-4 overflow-x-auto">
             {sections.map((section, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentSection(index)}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-lg whitespace-nowrap transition-colors ${
+                className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-lg whitespace-nowrap transition-colors text-xs sm:text-sm ${
                   index === currentSection
                     ? 'bg-green-100 text-green-800 border border-green-300'
                     : index < currentSection
-                    ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                    : 'bg-gray-50 text-gray-600 border border-gray-200'
+                    ? 'bg-green-50 text-green-700 border border-green-200'
+                    : 'bg-white text-gray-600 border border-gray-200'
                 }`}
               >
-                <span className="text-lg">{section.icon}</span>
-                <span className="text-sm font-medium">{section.title}</span>
+                <span className="text-sm sm:text-lg">{section.icon}</span>
+                <span className="font-medium hidden sm:inline">{section.title}</span>
+                <span className="font-medium sm:hidden">{section.title.split(' ')[0]}</span>
                 {index < currentSection && (
-                  <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 )}
@@ -1053,10 +1054,10 @@ const DetailedCropReportModal = ({ isOpen, onClose, crop, onReportSubmitted }) =
         </div>
 
         {/* Section Content */}
-        <div className="p-6 max-h-[60vh] overflow-y-auto">
+        <div className="p-4 sm:p-6 flex-1 overflow-y-auto">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-gray-800 flex items-center">
-              <span className="text-2xl mr-3">{sections[currentSection].icon}</span>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 flex items-center">
+              <span className="text-xl sm:text-2xl mr-2 sm:mr-3">{sections[currentSection].icon}</span>
               {sections[currentSection].title}
             </h3>
             <p className="text-sm text-gray-600 mt-1">{sections[currentSection].description}</p>
@@ -1066,33 +1067,35 @@ const DetailedCropReportModal = ({ isOpen, onClose, crop, onReportSubmitted }) =
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 px-6 py-4 flex items-center justify-between">
+        <div className="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between flex-shrink-0 border-t">
           <button
             onClick={prevSection}
             disabled={currentSection === 0}
-            className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
+            className={`flex items-center px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm sm:text-base ${
               currentSection === 0
                 ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
             }`}
           >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Previous
+            <span className="hidden sm:inline">Previous</span>
+            <span className="sm:hidden">Prev</span>
           </button>
 
-          <div className="text-sm text-gray-600">
+          <div className="text-xs sm:text-sm text-gray-600 font-medium">
             {currentSection + 1} / {sections.length}
           </div>
 
           {currentSection < sections.length - 1 ? (
             <button
               onClick={nextSection}
-              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              className="flex items-center px-3 sm:px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm sm:text-base"
             >
-              Next
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span className="hidden sm:inline">Next</span>
+              <span className="sm:hidden">Next</span>
+              <svg className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
@@ -1100,20 +1103,22 @@ const DetailedCropReportModal = ({ isOpen, onClose, crop, onReportSubmitted }) =
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="flex items-center px-4 sm:px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50 text-sm sm:text-base"
             >
               {loading ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <svg className="animate-spin -ml-1 mr-2 sm:mr-3 h-3 w-3 sm:h-4 sm:w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Submitting...
+                  <span className="hidden sm:inline">Submitting...</span>
+                  <span className="sm:hidden">Submit...</span>
                 </>
               ) : (
                 <>
-                  Submit Report
-                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span className="hidden sm:inline">Submit Report</span>
+                  <span className="sm:hidden">Submit</span>
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </>

@@ -145,51 +145,55 @@ const CropRegistration = ({ isOpen, onClose, onCropRegistered }) => {
   const cropInfo = formData.cropType ? CropService.getCropInfo(formData.cropType) : null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 sm:p-6 pt-20 sm:pt-24">
+      <div className="bg-white rounded-lg shadow-2xl max-w-5xl w-full max-h-[calc(95vh-6rem)] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-6">
+        <div className="bg-green-800 text-white p-4 sm:p-6 flex-shrink-0 border-b-4 border-green-400">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Register New Crop</h2>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Register New Crop</h2>
+              <p className="text-green-100 mt-1 sm:mt-2 text-sm sm:text-base">Add a new crop to your farm management system</p>
+            </div>
             <button
               onClick={onClose}
-              className="text-white hover:text-gray-200 text-2xl font-bold"
+              className="text-white hover:text-gray-300 transition-colors ml-4 flex-shrink-0"
               disabled={loading}
             >
-              ×
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           </div>
-          <p className="text-green-100 mt-2">Add a new crop to your farm management system</p>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1">
           {/* Recommendations Section */}
           {recommendations.length > 0 && (
-            <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-semibold text-blue-800 mb-2">🌟 Recommended Crops for This Season</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="mb-4 sm:mb-6 bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4">
+              <h3 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">🌟 Recommended Crops for This Season</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
                 {recommendations.map((rec, index) => (
                   <div 
                     key={index}
                     className={`p-3 rounded cursor-pointer transition-colors ${
                       formData.cropType === rec.cropType 
-                        ? 'bg-blue-200 border-blue-400 border-2' 
-                        : 'bg-white border border-blue-200 hover:bg-blue-50'
+                        ? 'bg-green-100 border-green-500 border-2 text-gray-800' 
+                        : 'bg-white border border-gray-300 hover:bg-gray-50 text-gray-700'
                     }`}
                     onClick={() => handleInputChange('cropType', rec.cropType)}
                   >
-                    <div className="font-medium text-blue-800">{rec.cropType}</div>
-                    <div className="text-xs text-blue-600">{rec.reason}</div>
+                    <div className="font-medium">{rec.cropType}</div>
+                    <div className="text-xs text-gray-600">{rec.reason}</div>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
             {/* Form Section */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-800">Crop Information</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">Crop Information</h3>
               
               {/* Crop Type */}
               <div>
@@ -382,26 +386,30 @@ const CropRegistration = ({ isOpen, onClose, onCropRegistered }) => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-end space-x-4 mt-6 pt-4 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-6 pt-4 border-t border-gray-200">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="w-full sm:w-auto px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
               disabled={loading}
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              className="w-full sm:w-auto px-4 sm:px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm sm:text-base"
               disabled={loading || !formData.cropType || !formData.variety || !formData.plantingDate || !formData.area}
             >
               {loading ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Registering...
+                  <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-white mr-2"></div>
+                  <span className="hidden sm:inline">Registering...</span>
+                  <span className="sm:hidden">Register...</span>
                 </>
               ) : (
-                'Register Crop'
+                <>
+                  <span className="hidden sm:inline">Register Crop</span>
+                  <span className="sm:hidden">Register</span>
+                </>
               )}
             </button>
           </div>
