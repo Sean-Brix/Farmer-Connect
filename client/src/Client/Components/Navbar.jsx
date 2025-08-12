@@ -1038,33 +1038,6 @@ export default function Navbar({refresh}) {
                                             </div>
                                         </details>
 
-                                        {/* Profile Settings Link - Only show for logged in users */}
-                                        {loggedIn && (
-                                            <NavLink 
-                                                to="/settings/profile"
-                                                className={({ isActive }) =>
-                                                    `flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
-                                                        isActive 
-                                                            ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]' 
-                                                            : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]'
-                                                    }`
-                                                }
-                                                onClick={() => setOpen(false)}
-                                            >
-                                                <svg
-                                                    className="w-6 h-6 text-emerald-600"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <circle cx="12" cy="7" r="4" />
-                                                    <path d="M5.5 21a8.38 8.38 0 0113 0" />
-                                                </svg>
-                                                <span>Profile Settings</span>
-                                            </NavLink>
-                                        )}
-
                                         {/* Reports Link - Only show for logged in users */}
                                         {loggedIn && (
                                             <NavLink 
@@ -1114,6 +1087,31 @@ export default function Navbar({refresh}) {
                                                             <p className="text-sm text-emerald-600">Active Member</p>
                                                         </div>
                                                     </div>
+                                                    
+                                                    {/* Profile Settings Link */}
+                                                    <NavLink 
+                                                        to="/settings/profile"
+                                                        className={({ isActive }) =>
+                                                            `flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
+                                                                isActive 
+                                                                    ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
+                                                                    : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
+                                                            }`
+                                                        }
+                                                        onClick={() => setOpen(false)}
+                                                    >
+                                                        <svg
+                                                            className="w-5 h-5 text-emerald-500"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <circle cx="12" cy="7" r="4" />
+                                                            <path d="M5.5 21a8.38 8.38 0 0113 0" />
+                                                        </svg>
+                                                        <span>Profile Settings</span>
+                                                    </NavLink>
                                                     
                                                     {/* Admin Panel Link */}
                                                     <NavLink 
