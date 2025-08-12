@@ -278,6 +278,8 @@ export default function Navbar({refresh}) {
                                 className="relative group"
                                 onMouseEnter={() => {
                                     if (window.infoMenuTimeout) clearTimeout(window.infoMenuTimeout);
+                                    if (window.servicesMenuTimeout) clearTimeout(window.servicesMenuTimeout);
+                                    setServicesOpen(false);
                                     setInfoOpen(true);
                                 }}
                                 onMouseLeave={() => {
@@ -399,6 +401,8 @@ export default function Navbar({refresh}) {
                                 className="relative group"
                                 onMouseEnter={() => {
                                     if (window.servicesMenuTimeout) clearTimeout(window.servicesMenuTimeout);
+                                    if (window.infoMenuTimeout) clearTimeout(window.infoMenuTimeout);
+                                    setInfoOpen(false);
                                     setServicesOpen(true);
                                 }}
                                 onMouseLeave={() => {
@@ -564,115 +568,59 @@ export default function Navbar({refresh}) {
                             {/* Survey link removed */}
                                 </ul>
                             </li>
-                            <li>
-                                <NavLink
-                                    to="/settings/profile"
-                                    className={({ isActive }) =>
-                                        `group flex items-center gap-2 text-white/90 hover:bg-white/10 hover:text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-300 hover:shadow-lg backdrop-blur-sm ${isActive ? 'bg-white/15 text-white shadow-md' : ''}`
-                                    }
-                                >
-                                    <svg
-                                        className="w-5 h-5 text-white/80 group-hover:text-white transition-colors duration-300"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle cx="12" cy="7" r="4" />
-                                        <path d="M5.5 21a8.38 8.38 0 0113 0" />
-                                    </svg>
-                                    {!isMidScreen && 'Profile Settings'}
-                                </NavLink>
-                            </li>
                         </ul>
                     </div>
                     <div className="flex items-center gap-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                        <div
-                            className="relative hidden md:block"
-                            onMouseEnter={() => {
-                                if (closeProfileTimeout.current) clearTimeout(closeProfileTimeout.current);
-                                setOpen(true);
-                            }}
-                            onMouseLeave={() => {
-                                closeProfileTimeout.current = setTimeout(() => setOpen(false), 250); // 250ms delay
-                            }}
-                        >
-                            <button
-                                className="flex items-center justify-center w-11 h-11 rounded-full bg-green-600 hover:bg-green-700 transition-all duration-300 focus:outline-none shadow-lg border-2 border-white/30 hover:border-white/50 hover:scale-105"
-                                aria-haspopup="true"
-                                aria-expanded={open}
-                                tabIndex={0}
+                        {loggedIn ? (
+                            <div
+                                className="relative hidden md:block"
+                                onMouseEnter={() => {
+                                    if (closeProfileTimeout.current) clearTimeout(closeProfileTimeout.current);
+                                    setOpen(true);
+                                }}
+                                onMouseLeave={() => {
+                                    closeProfileTimeout.current = setTimeout(() => setOpen(false), 250); // 250ms delay
+                                }}
                             >
-                                <img
-                                    src={user.avatar}
-                                    alt="User Avatar"
-                                    className="w-9 h-9 rounded-full object-cover"
-                                />
-                                <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 border-2 border-white rounded-full shadow-sm"></span>
-                            </button>
-                            {open && (
-                                <ul
-                                    className={"absolute right-0 mt-3 w-48 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl py-3 z-[70] border border-white/30 transition-all duration-300 ease-out transform " + (open ? 'opacity-100 translate-y-0 pointer-events-auto dropdown-animate' : 'opacity-0 -translate-y-6 pointer-events-none')}
+                                <button
+                                    className="flex items-center justify-center w-11 h-11 rounded-full bg-green-600 hover:bg-green-700 transition-all duration-300 focus:outline-none shadow-lg border-2 border-white/30 hover:border-white/50 hover:scale-105"
+                                    aria-haspopup="true"
+                                    aria-expanded={open}
+                                    tabIndex={0}
                                 >
-                                    {loggedIn ? (
-                                        <>
-                                            <li>
-                                                <button
-                                                    className="w-full text-left flex items-center gap-3 px-6 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-medium"
-                                                    onClick={() => {
-                                                        setShowAlert(true);
-                                                        setOpen(false);
-                                                    }}
-                                                >
-                                                    <svg
-                                                        className="w-5 h-5 text-red-500"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            d="M17 16l4-4m0 0l-4-4m4 4H7"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                        <path
-                                                            d="M3 12a9 9 0 0118 0"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                    </svg>
-                                                    Logout
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <Link
-                                                    to="/admin"
-                                                    className="flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium"
-                                                    onClick={() => setOpen(false)}
-                                                >
-                                                    <svg
-                                                        className="w-5 h-5 text-emerald-500"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            d="M12 11V7m0 0V3m0 4h4m-4 0H8m8 8v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4a2 2 0 012-2h8a2 2 0 012 2z"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                    </svg>
-                                                    Admin Panel
-                                                </Link>
-                                            </li>
-                                            
-                                        </>
-                                    ) : (
+                                    <img
+                                        src={user.avatar}
+                                        alt="User Avatar"
+                                        className="w-9 h-9 rounded-full object-cover"
+                                    />
+                                    <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 border-2 border-white rounded-full shadow-sm"></span>
+                                </button>
+                                {open && (
+                                    <ul
+                                        className={"absolute right-0 mt-3 w-48 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl py-3 z-[70] border border-white/30 transition-all duration-300 ease-out transform " + (open ? 'opacity-100 translate-y-0 pointer-events-auto dropdown-animate' : 'opacity-0 -translate-y-6 pointer-events-none')}
+                                    >
                                         <li>
                                             <Link
-                                                to="/login"
+                                                to="/settings/profile"
+                                                className="flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium"
+                                                onClick={() => setOpen(false)}
+                                            >
+                                                <svg
+                                                    className="w-5 h-5 text-emerald-500"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <circle cx="12" cy="7" r="4" />
+                                                    <path d="M5.5 21a8.38 8.38 0 0113 0" />
+                                                </svg>
+                                                Profile Settings
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                to="/admin"
                                                 className="flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium"
                                                 onClick={() => setOpen(false)}
                                             >
@@ -684,18 +632,67 @@ export default function Navbar({refresh}) {
                                                     viewBox="0 0 24 24"
                                                 >
                                                     <path
-                                                        d="M5 12h14M12 5l7 7-7 7"
+                                                        d="M12 11V7m0 0V3m0 4h4m-4 0H8m8 8v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4a2 2 0 012-2h8a2 2 0 012 2z"
                                                         strokeLinecap="round"
                                                         strokeLinejoin="round"
                                                     />
                                                 </svg>
-                                                Login
+                                                Admin Panel
                                             </Link>
                                         </li>
-                                    )}
-                                </ul>
-                            )}
-                        </div>
+                                        <li>
+                                            <button
+                                                className="w-full text-left flex items-center gap-3 px-6 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-medium"
+                                                onClick={() => {
+                                                    setShowAlert(true);
+                                                    setOpen(false);
+                                                }}
+                                            >
+                                                <svg
+                                                    className="w-5 h-5 text-red-500"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        d="M17 16l4-4m0 0l-4-4m4 4H7"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                    <path
+                                                        d="M3 12a9 9 0 0118 0"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                                Logout
+                                            </button>
+                                        </li>
+                                    </ul>
+                                )}
+                            </div>
+                        ) : (
+                            <Link
+                                to="/login"
+                                className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all duration-300 font-semibold shadow-lg border border-white/20 hover:border-white/40 backdrop-blur-sm hover:scale-105"
+                            >
+                                <svg
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M5 12h14M12 5l7 7-7 7"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                                Login
+                            </Link>
+                        )}
                         <button
                             onClick={() => {
                                 console.log('Mobile menu button clicked, current open state:', open);
@@ -1041,30 +1038,62 @@ export default function Navbar({refresh}) {
                                             </div>
                                         </details>
 
-                                        {/* Profile Settings Link */}
-                                        <NavLink 
-                                            to="/settings/profile"
-                                            className={({ isActive }) =>
-                                                `flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
-                                                    isActive 
-                                                        ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]' 
-                                                        : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]'
-                                                }`
-                                            }
-                                            onClick={() => setOpen(false)}
-                                        >
-                                            <svg
-                                                className="w-6 h-6 text-emerald-600"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                viewBox="0 0 24 24"
+                                        {/* Profile Settings Link - Only show for logged in users */}
+                                        {loggedIn && (
+                                            <NavLink 
+                                                to="/settings/profile"
+                                                className={({ isActive }) =>
+                                                    `flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
+                                                        isActive 
+                                                            ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]' 
+                                                            : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]'
+                                                    }`
+                                                }
+                                                onClick={() => setOpen(false)}
                                             >
-                                                <circle cx="12" cy="7" r="4" />
-                                                <path d="M5.5 21a8.38 8.38 0 0113 0" />
-                                            </svg>
-                                            <span>Profile Settings</span>
-                                        </NavLink>
+                                                <svg
+                                                    className="w-6 h-6 text-emerald-600"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <circle cx="12" cy="7" r="4" />
+                                                    <path d="M5.5 21a8.38 8.38 0 0113 0" />
+                                                </svg>
+                                                <span>Profile Settings</span>
+                                            </NavLink>
+                                        )}
+
+                                        {/* Reports Link - Only show for logged in users */}
+                                        {loggedIn && (
+                                            <NavLink 
+                                                to="/report"
+                                                className={({ isActive }) =>
+                                                    `flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
+                                                        isActive 
+                                                            ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]' 
+                                                            : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]'
+                                                    }`
+                                                }
+                                                onClick={() => setOpen(false)}
+                                            >
+                                                <svg
+                                                    className="w-6 h-6 text-emerald-600"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        d="M9 17v-2m3 2v-4m3 4v-6m2 10H4a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293L12 5.586a1 1 0 00.707.293H20a2 2 0 012 2v11a2 2 0 01-2 2z"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                                <span>Farmer Reports</span>
+                                            </NavLink>
+                                        )}
                                         
                                         {/* User Authentication Section */}
                                         <div className="pt-6 mt-6 border-t border-gray-200">
@@ -1144,27 +1173,64 @@ export default function Navbar({refresh}) {
                                                     </button>
                                                 </>
                                             ) : (
-                                                /* Professional Login Button */
-                                                <NavLink 
-                                                    to="/login"
-                                                    className="flex items-center justify-center space-x-4 py-4 px-6 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
-                                                    onClick={() => setOpen(false)}
-                                                >
-                                                    <svg
-                                                        className="w-5 h-5 text-white"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        viewBox="0 0 24 24"
+                                                <>
+                                                    {/* Anonymous User Message */}
+                                                    <div className="flex items-center space-x-4 py-4 px-4 mb-4 bg-gray-50 rounded-xl border border-gray-200">
+                                                        <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
+                                                            <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                            </svg>
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-semibold text-gray-700">Guest User</p>
+                                                            <p className="text-sm text-gray-500">Please login to access all features</p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Professional Login Button */}
+                                                    <NavLink 
+                                                        to="/login"
+                                                        className="flex items-center justify-center space-x-4 py-4 px-6 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+                                                        onClick={() => setOpen(false)}
                                                     >
-                                                        <path
-                                                            d="M5 12h14M12 5l7 7-7 7"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                    </svg>
-                                                    <span>Login</span>
-                                                </NavLink>
+                                                        <svg
+                                                            className="w-5 h-5 text-white"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                d="M5 12h14M12 5l7 7-7 7"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            />
+                                                        </svg>
+                                                        <span>Login to Get Started</span>
+                                                    </NavLink>
+                                                    
+                                                    {/* Sign Up Option */}
+                                                    <NavLink 
+                                                        to="/register"
+                                                        className="flex items-center justify-center space-x-4 py-3 px-6 mt-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium border border-gray-300"
+                                                        onClick={() => setOpen(false)}
+                                                    >
+                                                        <svg
+                                                            className="w-5 h-5 text-gray-600"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            />
+                                                        </svg>
+                                                        <span>Create Account</span>
+                                                    </NavLink>
+                                                </>
                                             )}
                                         </div>
                                     </nav>

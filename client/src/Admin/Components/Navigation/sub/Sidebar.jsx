@@ -125,7 +125,7 @@ export default function Sidebar({
                     <div className="p-6 border-t border-green-200 flex flex-col items-center mt-auto bg-white shadow-inner">
                         <div
                             className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-green-100/60 rounded-xl p-3 transition shadow-sm"
-                            onClick={() => navigate('/admin/profile')}
+                            onClick={() => navigate('/settings/profile')}
                             style={{ minHeight: '4.2rem' }}
                         >
                             <img

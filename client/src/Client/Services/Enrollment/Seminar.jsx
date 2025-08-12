@@ -655,12 +655,15 @@ export default function Seminar() {
 function SeminarDetails({ seminar, onClose }) {
     if (!seminar) {
         return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm pt-24 sm:pt-20 md:pt-16 lg:pt-20 px-4 sm:px-6 md:px-8">
-                <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border-2 border-gray-300 mt-8 sm:mt-6 md:mt-4">
-                    <p className="text-gray-700 font-semibold">Loading...</p>
+            <div className="fixed top-16 left-0 right-0 bottom-0 z-[1000] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+                <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-200 max-w-md w-full">
+                    <div className="flex items-center justify-center mb-4">
+                        <div className="w-12 h-12 border-4 border-green-200 border-t-green-600 rounded-full animate-spin"></div>
+                    </div>
+                    <p className="text-gray-700 font-semibold text-center mb-6">Loading seminar details...</p>
                     <button
                         onClick={onClose}
-                        className="mt-4 px-6 py-2 bg-gray-200 text-gray-800 rounded-xl font-bold shadow hover:bg-gray-300 transition border border-gray-300"
+                        className="w-full px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl font-semibold transition-colors duration-200"
                     >
                         Close
                     </button>
@@ -670,98 +673,165 @@ function SeminarDetails({ seminar, onClose }) {
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md pt-24 sm:pt-20 md:pt-16 lg:pt-20 px-4 sm:px-6 md:px-8">
-            <div className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full flex flex-col overflow-hidden animate-fade-in max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-5rem)] lg:max-h-[90vh] border-2 border-gray-300 mt-8 sm:mt-6 md:mt-4">
-                {/* Seminar Image on Top, Large and Responsive */}
-                <div className="w-full flex-shrink-0 bg-gray-100 flex items-center justify-center">
-                    <img
-                        src={seminar.photo}
-                        alt={seminar.title}
-                        className="object-contain w-full max-h-[300px] sm:max-h-[350px] md:max-h-[400px] rounded-t-3xl shadow-lg"
-                        style={{ background: '#f3f4f6' }}
-                    />
-                </div>
-                {/* Seminar Details, Scrollable if needed */}
-                <div
-                    className="flex-1 p-6 sm:p-8 md:p-10 flex flex-col relative overflow-y-auto"
-                    style={{ maxHeight: 'calc(90vh - 300px)' }}
-                >
+        <div className="fixed top-16 left-0 right-0 bottom-0 z-[1000] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+            <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden animate-fade-in border border-gray-200">
+                {/* Header with Close Button */}
+                <div className="sticky top-0 z-10 bg-gradient-to-r from-green-600 to-green-700 px-6 py-4 flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                            <i className="fa-solid fa-graduation-cap text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-bold text-white">Seminar Details</h2>
+                            <p className="text-sm text-white/90">Complete information & enrollment</p>
+                        </div>
+                    </div>
                     <button
                         onClick={onClose}
-                        className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-xl sm:text-2xl focus:outline-none"
+                        className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white hover:text-white transition-all duration-200 group"
                         aria-label="Close"
                     >
-                        <i className="fa-solid fa-xmark"></i>
+                        <i className="fa-solid fa-xmark text-lg group-hover:rotate-90 transition-transform duration-200"></i>
                     </button>
-                    <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-3 mt-2 tracking-tight">
-                        {seminar.title}
-                    </h2>
-                    <div className="flex flex-wrap gap-3 mb-6">
-                        <span className="inline-flex items-center gap-1 text-xs text-gray-800 bg-gray-100 px-3 py-1 rounded-lg font-semibold border border-gray-300 shadow-sm">
-                            <i className="fa-solid fa-user text-green-600"></i>
-                            {seminar.speaker}
-                        </span>
-                        <span className="inline-flex items-center gap-1 text-xs text-gray-800 bg-gray-100 px-3 py-1 rounded-lg font-semibold border border-gray-300 shadow-sm">
-                            <i className="fa-solid fa-location-dot text-green-600"></i>
-                            {seminar.location}
-                        </span>
-                        <span className="inline-flex items-center gap-1 text-xs text-gray-800 bg-gray-100 px-3 py-1 rounded-lg font-semibold border border-gray-300 shadow-sm">
-                            <i className="fa-solid fa-layer-group text-green-600"></i>
-                            {seminar.category}
-                        </span>
-                        <span
-                            className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-lg font-semibold border shadow-sm
-                                ${
-                                    seminar.totalParticipants >=
-                                    seminar.capacity
-                                        ? 'bg-red-100 text-red-900 border-red-200'
-                                        : seminar.totalParticipants >=
-                                          seminar.capacity * 0.8
-                                        ? 'bg-yellow-100 text-yellow-900 border-yellow-200'
-                                        : 'bg-green-100 text-green-900 border-green-200'
-                                }`}
-                            title="Current participants / Total capacity"
-                        >
-                            <i className="fa-solid fa-users"></i>
-                            {seminar.totalParticipants} / {seminar.capacity}{' '}
-                            Participants
-                        </span>
-                        <span
-                            className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-lg font-semibold border shadow-sm
-                                ${
-                                    seminar.status === 'Completed'
-                                        ? 'bg-gray-100 text-gray-900 border-gray-200'
-                                        : seminar.status === 'Ongoing'
-                                        ? 'bg-blue-100 text-blue-900 border-blue-200'
-                                        : seminar.status === 'Cancelled'
-                                        ? 'bg-red-100 text-red-900 border-red-200'
-                                        : 'bg-green-100 text-green-900 border-green-200'
-                                }`}
-                        >
-                            <i
-                                className={`fa-solid ${
-                                    seminar.status === 'Completed'
-                                        ? 'fa-circle-check'
-                                        : seminar.status === 'Ongoing'
-                                        ? 'fa-circle-play'
-                                        : seminar.status === 'Cancelled'
-                                        ? 'fa-circle-xmark'
-                                        : 'fa-clock'
-                                }`}
-                            ></i>
-                            {seminar.status}
-                        </span>
+                </div>
+
+                {/* Scrollable Content */}
+                <div className="overflow-y-auto max-h-[calc(85vh-80px)]">
+                    {/* Image Section */}
+                    <div className="relative">
+                        <img
+                            src={seminar.photo}
+                            alt={seminar.title}
+                            className="w-full h-64 sm:h-80 object-cover"
+                            style={{ background: 'linear-gradient(45deg, #f3f4f6, #e5e7eb)' }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                        
+                        {/* Status Badge on Image */}
+                        <div className="absolute top-4 right-4">
+                            <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold shadow-lg backdrop-blur-sm ${
+                                seminar.status === 'Ongoing'
+                                    ? 'bg-green-500/90 text-white border border-green-400'
+                                    : seminar.status === 'Completed'
+                                    ? 'bg-gray-500/90 text-white border border-gray-400'
+                                    : seminar.status === 'Cancelled'
+                                    ? 'bg-red-500/90 text-white border border-red-400'
+                                    : 'bg-blue-500/90 text-white border border-blue-400'
+                            }`}>
+                                <i className={`fa-solid ${
+                                    seminar.status === 'Ongoing' ? 'fa-circle-play' :
+                                    seminar.status === 'Completed' ? 'fa-circle-check' :
+                                    seminar.status === 'Cancelled' ? 'fa-circle-xmark' : 'fa-clock'
+                                }`}></i>
+                                {seminar.status}
+                            </span>
+                        </div>
                     </div>
-                    <div className="text-green-800 text-base mb-8 whitespace-pre-line leading-relaxed font-medium">
-                        {seminar.description}
-                    </div>
-                    <div className="flex justify-end mt-auto">
-                        <button
-                            onClick={onClose}
-                            className="px-6 sm:px-8 py-2 rounded-xl bg-green-600 text-white font-bold shadow hover:bg-green-700 transition border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
-                        >
-                            Close
-                        </button>
+
+                    {/* Content Section */}
+                    <div className="p-6 sm:p-8 space-y-8">
+                        {/* Title Section */}
+                        <div className="text-center">
+                            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+                                {seminar.title}
+                            </h3>
+                            <div className="w-24 h-1 bg-gradient-to-r from-green-500 to-green-600 mx-auto rounded-full"></div>
+                        </div>
+
+                        {/* Key Information Cards */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                                        <i className="fa-solid fa-user-tie text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-semibold text-blue-700 uppercase tracking-wider">Speaker</p>
+                                        <p className="text-sm font-bold text-gray-900">{seminar.speaker}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                                        <i className="fa-solid fa-location-dot text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-semibold text-purple-700 uppercase tracking-wider">Location</p>
+                                        <p className="text-sm font-bold text-gray-900">{seminar.location}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                                        <i className="fa-solid fa-layer-group text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-semibold text-green-700 uppercase tracking-wider">Category</p>
+                                        <p className="text-sm font-bold text-gray-900">{seminar.category}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={`rounded-xl p-4 border ${
+                                seminar.totalParticipants >= seminar.capacity
+                                    ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-200'
+                                    : seminar.totalParticipants >= seminar.capacity * 0.8
+                                    ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200'
+                                    : 'bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200'
+                            }`}>
+                                <div className="flex items-center space-x-3">
+                                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                                        seminar.totalParticipants >= seminar.capacity
+                                            ? 'bg-red-500'
+                                            : seminar.totalParticipants >= seminar.capacity * 0.8
+                                            ? 'bg-yellow-500'
+                                            : 'bg-emerald-500'
+                                    }`}>
+                                        <i className="fa-solid fa-users text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p className={`text-xs font-semibold uppercase tracking-wider ${
+                                            seminar.totalParticipants >= seminar.capacity
+                                                ? 'text-red-700'
+                                                : seminar.totalParticipants >= seminar.capacity * 0.8
+                                                ? 'text-yellow-700'
+                                                : 'text-emerald-700'
+                                        }`}>Capacity</p>
+                                        <p className="text-sm font-bold text-gray-900">
+                                            {seminar.totalParticipants} / {seminar.capacity}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Description Section */}
+                        <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-200">
+                            <div className="flex items-center space-x-2 mb-4">
+                                <div className="w-8 h-8 bg-gray-600 rounded-lg flex items-center justify-center">
+                                    <i className="fa-solid fa-file-text text-white text-sm"></i>
+                                </div>
+                                <h4 className="text-lg font-bold text-gray-900">About This Seminar</h4>
+                            </div>
+                            <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+                                {seminar.description}
+                            </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+                            <button
+                                onClick={onClose}
+                                className="flex-1 px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2"
+                            >
+                                <i className="fa-solid fa-arrow-left"></i>
+                                <span>Back to Seminars</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

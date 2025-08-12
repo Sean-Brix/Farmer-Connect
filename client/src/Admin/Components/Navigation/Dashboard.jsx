@@ -676,9 +676,9 @@ export default function Dashboard() {
                             onClick={() => {
                                 if (window.innerWidth <= 751) {
                                     setMobileMenuOpen(false);
-                                    setTimeout(() => setShowAccountPanel(true), 300);
+                                    setTimeout(() => navigate('/settings/profile'), 300);
                                 } else {
-                                    setPage(elements.current['account']);
+                                    navigate('/settings/profile');
                                 }
                             }}
                             style={{ minHeight: '4.2rem' }}
