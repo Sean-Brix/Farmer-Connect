@@ -45,7 +45,12 @@ export default function Farmer_Report() {
   // Calendar states
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [calendarView, setCalendarView] = useState('month');
+  const [calendarView, setCalendarView] = useState('calendar');
+  
+  // Crop details states
+  const [expandedCrop, setExpandedCrop] = useState(null);
+  const [showDetailedReportModal, setShowDetailedReportModal] = useState(false);
+  const [selectedReportCrop, setSelectedReportCrop] = useState(null);
 
   // Form states
   const [newCrop, setNewCrop] = useState({
@@ -65,7 +70,27 @@ export default function Farmer_Report() {
     healthStatus: 'Healthy',
     estimatedYield: '',
     weatherImpact: '',
-    notes: ''
+    notes: '',
+    // Monthly report specific fields
+    pestsObserved: '',
+    diseasesObserved: '',
+    fertilizersApplied: '',
+    pesticideApplications: '',
+    irrigationFrequency: '',
+    soilCondition: '',
+    majorActivities: '',
+    challenges: '',
+    plannedActions: '',
+    actualYield: '',
+    costs: {
+      seeds: '',
+      fertilizer: '',
+      pesticides: '',
+      labor: '',
+      irrigation: '',
+      equipment: '',
+      others: ''
+    }
   });
 
   // Weather state for Tanza, Cavite (14.4, 120.9)
@@ -190,6 +215,32 @@ export default function Farmer_Report() {
     return Math.min(Math.max(Math.round((daysElapsed / totalDays) * 100), 0), 100);
   };
 
+  const getReportStatus = (crop) => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    // Check if farmer has submitted report for current month
+    const hasCurrentMonthReport = crop.reports?.some(report => {
+      const reportDate = new Date(report.reportDate);
+      return reportDate.getMonth() === currentMonth && reportDate.getFullYear() === currentYear;
+    });
+    
+    const plantingDate = new Date(crop.plantingDate);
+    const isActiveCrop = plantingDate <= now && crop.status === 'Active';
+    
+    if (!isActiveCrop) return 'not-required';
+    if (hasCurrentMonthReport) return 'submitted';
+    if (now.getDate() > 25) return 'overdue'; // Reports due by 25th of each month
+    return 'pending';
+  };
+
+  const getNextReportDue = (crop) => {
+    const now = new Date();
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 25);
+    return nextMonth.toISOString().split('T')[0];
+  };
+
   const handleAddCrop = () => {
     if (!newCrop.cropType || !newCrop.variety || !newCrop.plantingDate) {
       alert('Please fill in all required fields');
@@ -227,7 +278,14 @@ export default function Farmer_Report() {
       id: Date.now(),
       cropId: selectedCropForReport.id,
       cropType: selectedCropForReport.cropType,
-      variety: selectedCropForReport.variety
+      variety: selectedCropForReport.variety,
+      submissionDate: new Date().toISOString(),
+      weatherConditions: weatherData?.current ? {
+        temperature: weatherData.current.temperature_2m,
+        humidity: weatherData.current.relative_humidity_2m,
+        precipitation: weatherData.current.precipitation,
+        windSpeed: weatherData.current.wind_speed_10m
+      } : null
     };
 
     setRegisteredCrops(prev => prev.map(crop => 
@@ -243,9 +301,29 @@ export default function Farmer_Report() {
       healthStatus: 'Healthy',
       estimatedYield: '',
       weatherImpact: '',
-      notes: ''
+      notes: '',
+      pestsObserved: '',
+      diseasesObserved: '',
+      fertilizersApplied: '',
+      pesticideApplications: '',
+      irrigationFrequency: '',
+      soilCondition: '',
+      majorActivities: '',
+      challenges: '',
+      plannedActions: '',
+      actualYield: '',
+      costs: {
+        seeds: '',
+        fertilizer: '',
+        pesticides: '',
+        labor: '',
+        irrigation: '',
+        equipment: '',
+        others: ''
+      }
     });
     setShowMonthlyReportModal(false);
+    setShowDetailedReportModal(false);
     setSelectedCropForReport(null);
   };
 
@@ -601,352 +679,690 @@ export default function Farmer_Report() {
             </div>
           )}
 
-          {/* Crops Tab */}
+          {/* Crops Tab - Enhanced with Expandable Details */}
           {activeTab === 'crops' && (
-            <div className="bg-white border rounded-lg shadow-sm overflow-x-auto">
-              <div className="px-4 py-3 border-b bg-gray-50">
-                <h3 className="font-semibold text-gray-800">🌱 All Registered Crops</h3>
+            <div className="space-y-6">
+              {/* Crops Overview Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white border rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">Active Crops</p>
+                      <p className="text-2xl font-bold text-green-700">{registeredCrops.filter(c => c.status === 'Active').length}</p>
+                    </div>
+                    <div className="text-2xl">🌱</div>
+                  </div>
+                </div>
+                <div className="bg-white border rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">Total Area</p>
+                      <p className="text-2xl font-bold text-green-700">{registeredCrops.reduce((sum, c) => sum + parseFloat(c.area || 0), 0).toFixed(1)} ha</p>
+                    </div>
+                    <div className="text-2xl">🏞️</div>
+                  </div>
+                </div>
+                <div className="bg-white border rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">Weather Status</p>
+                      <p className="text-lg font-bold text-blue-700">
+                        {weatherData?.current ? `${Math.round(weatherData.current.temperature_2m)}°C` : 'Loading...'}
+                      </p>
+                    </div>
+                    <div className="text-2xl">🌤️</div>
+                  </div>
+                </div>
               </div>
-              <table className="min-w-full text-sm">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-3 py-2 text-left font-medium text-gray-600">Crop Details</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-600">Planting Date</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-600">Progress</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-600">Area</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-600">Expected Yield</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-600">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cropRows.map(row => (
-                    <tr key={row.id} className="border-b last:border-0 hover:bg-gray-50">
-                      <td className="px-3 py-2">
-                        <div className="font-medium text-gray-800">{row.cropType}</div>
-                        <div className="text-xs text-gray-500">{row.variety} • {row.currentStage}</div>
-                      </td>
-                      <td className="px-3 py-2 text-center text-sm">{row.plantingDate}</td>
-                      <td className="px-3 py-2 text-center">
-                        <div className="flex items-center justify-center">
-                          <div className="w-16 bg-gray-200 h-2 rounded-full mr-2">
-                            <div className="h-2 rounded-full bg-green-500" style={{ width: `${row.progress}%` }}></div>
-                          </div>
-                          <span className="text-xs">{row.progress}%</span>
+
+              {/* Detailed Crops Table */}
+              <div className="bg-white border rounded-lg shadow-sm overflow-hidden">
+                <div className="px-4 py-3 border-b bg-gray-50">
+                  <h3 className="font-semibold text-gray-800">🌱 Detailed Crop Management</h3>
+                  <p className="text-sm text-gray-600 mt-1">Click on any crop to view detailed information and weather integration</p>
+                </div>
+                
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-medium text-gray-600">Crop Details</th>
+                        <th className="px-4 py-3 text-center font-medium text-gray-600">Planting Info</th>
+                        <th className="px-4 py-3 text-center font-medium text-gray-600">Progress</th>
+                        <th className="px-4 py-3 text-center font-medium text-gray-600">Expected Yield</th>
+                        <th className="px-4 py-3 text-center font-medium text-gray-600">Report Status</th>
+                        <th className="px-4 py-3 text-center font-medium text-gray-600">Weather Suitability</th>
+                        <th className="px-4 py-3 text-center font-medium text-gray-600">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cropRows.map(crop => {
+                        const reportStatus = getReportStatus(crop);
+                        const isExpanded = expandedCrop === crop.id;
+                        return (
+                          <React.Fragment key={crop.id}>
+                            <tr className="border-b hover:bg-gray-50 cursor-pointer" 
+                                onClick={() => setExpandedCrop(isExpanded ? null : crop.id)}>
+                              <td className="px-4 py-3">
+                                <div className="flex items-center gap-3">
+                                  <button className="text-gray-400 hover:text-gray-600">
+                                    {isExpanded ? '▼' : '▶'}
+                                  </button>
+                                  <div>
+                                    <div className="font-medium text-gray-800">{crop.cropType}</div>
+                                    <div className="text-xs text-gray-500">{crop.variety} • {crop.area} ha</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <div className="text-sm">
+                                  <div>Planted: {crop.plantingDate}</div>
+                                  <div className="text-xs text-gray-500">Expected: {crop.expectedHarvest}</div>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <div className="flex items-center justify-center">
+                                  <div className="w-16 bg-gray-200 h-2 rounded-full mr-2">
+                                    <div className="h-2 rounded-full bg-green-500" style={{ width: `${crop.progress}%` }}></div>
+                                  </div>
+                                  <span className="text-xs font-semibold">{crop.progress}%</span>
+                                </div>
+                                <div className="text-xs text-gray-500 mt-1">{crop.currentStage}</div>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <div className="font-semibold text-green-700">{crop.expectedYield} kg</div>
+                                <div className="text-xs text-gray-500">
+                                  {(crop.expectedYield / parseFloat(crop.area)).toFixed(0)} kg/ha
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <span className={`px-2 py-1 text-xs rounded-full font-semibold ${
+                                  reportStatus === 'submitted' ? 'bg-green-100 text-green-700' :
+                                  reportStatus === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                                  reportStatus === 'overdue' ? 'bg-red-100 text-red-700' :
+                                  'bg-gray-100 text-gray-700'
+                                }`}>
+                                  {reportStatus === 'submitted' ? '✅ Current' :
+                                   reportStatus === 'pending' ? '⏰ Due Soon' :
+                                   reportStatus === 'overdue' ? '🚨 Overdue' : 'N/A'}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                {weatherData?.current ? (
+                                  <div className="text-xs">
+                                    <div className="font-semibold">
+                                      {weatherData.current.temperature_2m >= 20 && weatherData.current.temperature_2m <= 30 
+                                        ? '🟢 Optimal' 
+                                        : weatherData.current.temperature_2m > 30 
+                                        ? '🟡 Too Hot' 
+                                        : '🔵 Cool'}
+                                    </div>
+                                    <div className="text-gray-500">{Math.round(weatherData.current.temperature_2m)}°C</div>
+                                  </div>
+                                ) : (
+                                  <div className="text-xs text-gray-500">Loading...</div>
+                                )}
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                <div className="flex gap-1 justify-center">
+                                  <button 
+                                    onClick={(e) => { 
+                                      e.stopPropagation();
+                                      setSelectedCropForReport(crop); 
+                                      setShowDetailedReportModal(true); 
+                                    }}
+                                    className="text-xs px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                  >
+                                    Report
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                            
+                            {/* Expanded Details Row */}
+                            {isExpanded && (
+                              <tr className="bg-gray-50 border-b">
+                                <td colSpan="7" className="px-4 py-6">
+                                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    {/* Crop Details */}
+                                    <div className="space-y-4">
+                                      <h4 className="font-semibold text-gray-800 border-b pb-2">📋 Crop Information</h4>
+                                      <div className="space-y-2 text-sm">
+                                        <div className="grid grid-cols-2 gap-2">
+                                          <span className="text-gray-600">Days Planted:</span>
+                                          <span className="font-semibold">{crop.daysFromPlanting} days</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2">
+                                          <span className="text-gray-600">Current Stage:</span>
+                                          <span className="font-semibold">{crop.currentStage}</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2">
+                                          <span className="text-gray-600">Latest Height:</span>
+                                          <span className="font-semibold">{crop.latestHeight} cm</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2">
+                                          <span className="text-gray-600">Status:</span>
+                                          <span className={`font-semibold ${crop.status === 'Active' ? 'text-green-600' : 'text-gray-600'}`}>
+                                            {crop.status}
+                                          </span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2">
+                                          <span className="text-gray-600">Yield per Ha:</span>
+                                          <span className="font-semibold text-green-700">
+                                            {(crop.expectedYield / parseFloat(crop.area)).toFixed(0)} kg/ha
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Weather Integration */}
+                                    <div className="space-y-4">
+                                      <h4 className="font-semibold text-gray-800 border-b pb-2">🌤️ Weather Analysis</h4>
+                                      {weatherData?.current ? (
+                                        <div className="space-y-2 text-sm">
+                                          <div className="grid grid-cols-2 gap-2">
+                                            <span className="text-gray-600">Temperature:</span>
+                                            <span className="font-semibold">{Math.round(weatherData.current.temperature_2m)}°C</span>
+                                          </div>
+                                          <div className="grid grid-cols-2 gap-2">
+                                            <span className="text-gray-600">Humidity:</span>
+                                            <span className="font-semibold">{weatherData.current.relative_humidity_2m}%</span>
+                                          </div>
+                                          <div className="grid grid-cols-2 gap-2">
+                                            <span className="text-gray-600">Wind Speed:</span>
+                                            <span className="font-semibold">{Math.round(weatherData.current.wind_speed_10m)} km/h</span>
+                                          </div>
+                                          <div className="grid grid-cols-2 gap-2">
+                                            <span className="text-gray-600">Precipitation:</span>
+                                            <span className="font-semibold">{weatherData.current.precipitation} mm</span>
+                                          </div>
+                                          <div className="mt-3 p-2 bg-blue-50 rounded-lg">
+                                            <div className="text-xs font-semibold text-blue-800">Weather Recommendation:</div>
+                                            <div className="text-xs text-blue-700 mt-1">
+                                              {weatherData.current.temperature_2m > 35 ? 'Consider additional irrigation due to high temperature' :
+                                               weatherData.current.precipitation > 5 ? 'Monitor for water-logging and fungal diseases' :
+                                               weatherData.current.relative_humidity_2m > 80 ? 'High humidity - watch for pest activity' :
+                                               'Weather conditions are favorable for crop growth'}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <div className="text-sm text-gray-500">Loading weather data...</div>
+                                      )}
+                                      
+                                      {/* Soil conditions if available */}
+                                      {weatherData?.hourly && (
+                                        <div className="mt-4">
+                                          <div className="text-xs font-semibold text-gray-700 mb-2">Soil Conditions:</div>
+                                          <div className="space-y-1 text-xs">
+                                            <div className="grid grid-cols-2 gap-2">
+                                              <span className="text-gray-600">Surface Moisture:</span>
+                                              <span className="font-semibold">
+                                                {weatherData.hourly.soil_moisture_0_to_1cm?.[0] ? 
+                                                  `${(weatherData.hourly.soil_moisture_0_to_1cm[0] * 100).toFixed(1)}%` : 'N/A'}
+                                              </span>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-2">
+                                              <span className="text-gray-600">Soil Temp:</span>
+                                              <span className="font-semibold">
+                                                {weatherData.hourly.soil_temperature_0cm?.[0] ? 
+                                                  `${Math.round(weatherData.hourly.soil_temperature_0cm[0])}°C` : 'N/A'}
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+
+                                    {/* Recent Reports */}
+                                    <div className="space-y-4">
+                                      <h4 className="font-semibold text-gray-800 border-b pb-2">📊 Recent Reports</h4>
+                                      {crop.reports && crop.reports.length > 0 ? (
+                                        <div className="space-y-2">
+                                          {crop.reports.slice(-3).reverse().map((report, idx) => (
+                                            <div key={idx} className="bg-white p-3 rounded-lg border text-sm">
+                                              <div className="flex justify-between items-start mb-2">
+                                                <span className="font-semibold text-gray-800">{report.reportDate}</span>
+                                                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                                                  {report.growthStage}
+                                                </span>
+                                              </div>
+                                              <div className="text-xs text-gray-600">
+                                                Height: {report.plantHeight}cm • Status: {report.healthStatus}
+                                              </div>
+                                              {report.notes && (
+                                                <div className="text-xs text-gray-500 mt-1 truncate">
+                                                  {report.notes}
+                                                </div>
+                                              )}
+                                            </div>
+                                          ))}
+                                          {crop.reports.length > 3 && (
+                                            <div className="text-xs text-gray-500 text-center">
+                                              +{crop.reports.length - 3} more reports
+                                            </div>
+                                          )}
+                                        </div>
+                                      ) : (
+                                        <div className="text-sm text-gray-500 text-center py-4">
+                                          No reports submitted yet
+                                        </div>
+                                      )}
+                                      
+                                      <button 
+                                        onClick={() => { 
+                                          setSelectedCropForReport(crop); 
+                                          setShowDetailedReportModal(true); 
+                                        }}
+                                        className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-semibold"
+                                      >
+                                        Add Monthly Report
+                                      </button>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </React.Fragment>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                  
+                  {cropRows.length === 0 && (
+                    <div className="text-center py-12">
+                      <div className="text-gray-400 text-4xl mb-4">🌱</div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">No crops registered</h3>
+                      <p className="text-gray-600 mb-4">Start by registering your first crop</p>
+                      <button onClick={() => setShowCropRegistrationModal(true)}
+                        className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold">
+                        Register First Crop
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Weather-Based Crop Recommendations */}
+              {weatherData?.current && (
+                <div className="bg-white border rounded-lg shadow-sm p-4">
+                  <h3 className="font-semibold text-gray-800 mb-4">🌤️ Weather-Based Recommendations</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-blue-800 mb-2">Current Conditions Impact</h4>
+                      <div className="text-sm text-blue-700 space-y-1">
+                        <div>Temperature: {Math.round(weatherData.current.temperature_2m)}°C</div>
+                        <div>Humidity: {weatherData.current.relative_humidity_2m}%</div>
+                        <div className="text-xs mt-2">
+                          {weatherData.current.temperature_2m > 30 ? 
+                            '⚠️ High temperature - increase irrigation frequency' :
+                            weatherData.current.temperature_2m < 15 ?
+                            '🌡️ Cool weather - monitor cold-sensitive crops' :
+                            '✅ Temperature is suitable for most crops'}
                         </div>
-                      </td>
-                      <td className="px-3 py-2 text-center text-sm">{row.area} ha</td>
-                      <td className="px-3 py-2 text-center text-sm">{row.expectedYield} kg</td>
-                      <td className="px-3 py-2 text-center">
-                        <button onClick={() => { setSelectedCropForReport(row); setShowMonthlyReportModal(true); }}
-                          className="text-blue-600 underline text-xs hover:text-blue-800">
-                          Add Report
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-green-800 mb-2">Action Items</h4>
+                      <div className="text-sm text-green-700 space-y-1">
+                        {weatherData.current.precipitation > 0 && <div>• Check drainage systems</div>}
+                        {weatherData.current.relative_humidity_2m > 80 && <div>• Monitor for fungal diseases</div>}
+                        {weatherData.current.wind_speed_10m > 20 && <div>• Secure tall plants and supports</div>}
+                        {weatherData.current.temperature_2m > 35 && <div>• Provide shade for sensitive crops</div>}
+                        <div>• Submit monthly reports by 25th</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
-          {/* Reports Tab */}
+          {/* Reports Tab - Calendar First */}
           {activeTab === 'reports' && (
             <div className="space-y-6">
-              {/* View Toggle and Analytics */}
-              <div className="flex flex-col md:flex-row gap-4 justify-between items-start">
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setCalendarView('table')}
-                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                      calendarView === 'table' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    📋 Table View
-                  </button>
-                  <button
-                    onClick={() => setCalendarView('calendar')}
-                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                      calendarView === 'calendar' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    📅 Calendar View
-                  </button>
+              {/* Reports Overview */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-white border rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">Pending Reports</p>
+                      <p className="text-2xl font-bold text-orange-700">
+                        {registeredCrops.filter(crop => getReportStatus(crop) === 'pending').length}
+                      </p>
+                    </div>
+                    <div className="text-2xl">⏰</div>
+                  </div>
                 </div>
-                
-                {/* Reports Analytics */}
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div className="bg-white border rounded-lg p-3 shadow-sm">
-                    <div className="text-lg font-bold text-green-700">{allReports.length}</div>
-                    <div className="text-xs text-gray-600">Total Reports</div>
-                  </div>
-                  <div className="bg-white border rounded-lg p-3 shadow-sm">
-                    <div className="text-lg font-bold text-blue-700">
-                      {new Set(allReports.map(r => r.cropType)).size}
+                <div className="bg-white border rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">Overdue Reports</p>
+                      <p className="text-2xl font-bold text-red-700">
+                        {registeredCrops.filter(crop => getReportStatus(crop) === 'overdue').length}
+                      </p>
                     </div>
-                    <div className="text-xs text-gray-600">Crops Tracked</div>
+                    <div className="text-2xl">🚨</div>
                   </div>
-                  <div className="bg-white border rounded-lg p-3 shadow-sm">
-                    <div className="text-lg font-bold text-purple-700">
-                      {Math.round(allReports.length / Math.max(registeredCrops.length, 1) * 10) / 10}
+                </div>
+                <div className="bg-white border rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">Submitted This Month</p>
+                      <p className="text-2xl font-bold text-green-700">
+                        {registeredCrops.filter(crop => getReportStatus(crop) === 'submitted').length}
+                      </p>
                     </div>
-                    <div className="text-xs text-gray-600">Avg Reports/Crop</div>
+                    <div className="text-2xl">✅</div>
                   </div>
+                </div>
+                <div className="bg-white border rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">Total Reports</p>
+                      <p className="text-2xl font-bold text-blue-700">{allReports.length}</p>
+                    </div>
+                    <div className="text-2xl">📋</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Monthly Reporting Requirements */}
+              <div className="bg-white border rounded-lg shadow-sm">
+                <div className="px-4 py-3 border-b bg-gray-50">
+                  <h3 className="font-semibold text-gray-800">📋 Monthly Reporting Status</h3>
+                  <p className="text-sm text-gray-600 mt-1">Reports are due by the 25th of each month for all active crops</p>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-3 py-2 text-left font-medium text-gray-600">Crop</th>
+                        <th className="px-3 py-2 text-center font-medium text-gray-600">Current Stage</th>
+                        <th className="px-3 py-2 text-center font-medium text-gray-600">Report Status</th>
+                        <th className="px-3 py-2 text-center font-medium text-gray-600">Last Report</th>
+                        <th className="px-3 py-2 text-center font-medium text-gray-600">Next Due</th>
+                        <th className="px-3 py-2 text-center font-medium text-gray-600">Weather Info</th>
+                        <th className="px-3 py-2 text-center font-medium text-gray-600">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {registeredCrops.map(crop => {
+                        const status = getReportStatus(crop);
+                        const lastReport = crop.reports && crop.reports.length > 0 
+                          ? crop.reports[crop.reports.length - 1] 
+                          : null;
+                        return (
+                          <tr key={crop.id} className="border-b last:border-0 hover:bg-gray-50">
+                            <td className="px-3 py-2">
+                              <div className="font-medium text-gray-800">{crop.cropType}</div>
+                              <div className="text-xs text-gray-500">{crop.variety} • {crop.area} ha</div>
+                            </td>
+                            <td className="px-3 py-2 text-center text-sm">{crop.currentStage}</td>
+                            <td className="px-3 py-2 text-center">
+                              <span className={`px-2 py-1 text-xs rounded-full font-semibold ${
+                                status === 'submitted' ? 'bg-green-100 text-green-700' :
+                                status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                                status === 'overdue' ? 'bg-red-100 text-red-700' :
+                                'bg-gray-100 text-gray-700'
+                              }`}>
+                                {status === 'submitted' ? '✅ Submitted' :
+                                 status === 'pending' ? '⏰ Pending' :
+                                 status === 'overdue' ? '🚨 Overdue' : 'Not Required'}
+                              </span>
+                            </td>
+                            <td className="px-3 py-2 text-center text-sm">
+                              {lastReport ? lastReport.reportDate : 'None'}
+                            </td>
+                            <td className="px-3 py-2 text-center text-sm">
+                              {status !== 'not-required' ? getNextReportDue(crop) : '—'}
+                            </td>
+                            <td className="px-3 py-2 text-center text-sm">
+                              {weatherData?.current ? (
+                                <div className="text-xs">
+                                  <div>{Math.round(weatherData.current.temperature_2m)}°C</div>
+                                  <div className="text-gray-500">{weatherData.current.relative_humidity_2m}% RH</div>
+                                </div>
+                              ) : 'Loading...'}
+                            </td>
+                            <td className="px-3 py-2 text-center">
+                              {status === 'pending' || status === 'overdue' ? (
+                                <button 
+                                  onClick={() => { 
+                                    setSelectedCropForReport(crop); 
+                                    setShowDetailedReportModal(true); 
+                                  }}
+                                  className={`text-xs px-3 py-1 rounded-lg font-semibold transition-colors ${
+                                    status === 'overdue' 
+                                      ? 'bg-red-600 text-white hover:bg-red-700' 
+                                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                                  }`}
+                                >
+                                  {status === 'overdue' ? 'Submit Now!' : 'Submit Report'}
+                                </button>
+                              ) : status === 'submitted' ? (
+                                <span className="text-xs text-green-600 font-semibold">Complete</span>
+                              ) : (
+                                <span className="text-xs text-gray-500">—</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
               {/* Calendar View */}
-              {calendarView === 'calendar' && (
-                <div className="bg-white border rounded-lg shadow-sm">
-                  <div className="px-4 py-3 border-b bg-gray-50 flex justify-between items-center">
-                    <h3 className="font-semibold text-gray-800">📅 Monthly Report Calendar</h3>
-                    <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => {
-                          const newMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-                          const newYear = currentMonth === 0 ? currentYear - 1 : currentYear;
-                          setCurrentMonth(newMonth);
-                          setCurrentYear(newYear);
-                        }}
-                        className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
-                      >
-                        ‹ Prev
-                      </button>
-                      <span className="font-semibold text-gray-800 min-w-[120px] text-center">
-                        {new Date(currentYear, currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                      </span>
-                      <button
-                        onClick={() => {
-                          const newMonth = currentMonth === 11 ? 0 : currentMonth + 1;
-                          const newYear = currentMonth === 11 ? currentYear + 1 : currentYear;
-                          setCurrentMonth(newMonth);
-                          setCurrentYear(newYear);
-                        }}
-                        className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
-                      >
-                        Next ›
-                      </button>
-                    </div>
+              <div className="bg-white border rounded-lg shadow-sm">
+                <div className="px-4 py-3 border-b bg-gray-50 flex justify-between items-center">
+                  <h3 className="font-semibold text-gray-800">📅 Monthly Report Calendar</h3>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => {
+                        const newMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+                        const newYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+                        setCurrentMonth(newMonth);
+                        setCurrentYear(newYear);
+                      }}
+                      className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+                    >
+                      ‹ Prev
+                    </button>
+                    <span className="font-semibold text-gray-800 min-w-[120px] text-center">
+                      {new Date(currentYear, currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                    </span>
+                    <button
+                      onClick={() => {
+                        const newMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+                        const newYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+                        setCurrentMonth(newMonth);
+                        setCurrentYear(newYear);
+                      }}
+                      className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+                    >
+                      Next ›
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="p-4">
+                  {/* Calendar Grid */}
+                  <div className="grid grid-cols-7 gap-1">
+                    {/* Day Headers */}
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                      <div key={day} className="p-2 text-center text-sm font-semibold text-gray-600 bg-gray-50 rounded">
+                        {day}
+                      </div>
+                    ))}
+                    
+                    {/* Calendar Days */}
+                    {(() => {
+                      const firstDay = new Date(currentYear, currentMonth, 1);
+                      const lastDay = new Date(currentYear, currentMonth + 1, 0);
+                      const startDate = new Date(firstDay);
+                      startDate.setDate(startDate.getDate() - firstDay.getDay());
+                      
+                      const days = [];
+                      for (let d = 0; d < 42; d++) {
+                        const currentDate = new Date(startDate);
+                        currentDate.setDate(startDate.getDate() + d);
+                        
+                        const isCurrentMonth = currentDate.getMonth() === currentMonth;
+                        const isToday = currentDate.toDateString() === new Date().toDateString();
+                        const isDueDate = currentDate.getDate() === 25 && isCurrentMonth;
+                        
+                        // Get reports for this day
+                        const dayReports = allReports.filter(report => {
+                          const reportDate = new Date(report.reportDate);
+                          return reportDate.toDateString() === currentDate.toDateString();
+                        });
+                        
+                        // Get crops expected to be harvested this day
+                        const harvestingCrops = registeredCrops.filter(crop => {
+                          const harvestDate = new Date(crop.expectedHarvest);
+                          return harvestDate.toDateString() === currentDate.toDateString();
+                        });
+                        
+                        days.push(
+                          <div key={d} className={`min-h-[100px] p-1 border rounded ${
+                            isCurrentMonth ? 'bg-white' : 'bg-gray-50'
+                          } ${isToday ? 'ring-2 ring-blue-500' : ''} ${
+                            isDueDate ? 'ring-2 ring-orange-500' : ''
+                          }`}>
+                            <div className={`text-sm font-semibold flex justify-between items-start ${
+                              isCurrentMonth ? 'text-gray-800' : 'text-gray-400'
+                            }`}>
+                              <span>{currentDate.getDate()}</span>
+                              {isDueDate && (
+                                <span className="text-xs bg-orange-500 text-white px-1 rounded">DUE</span>
+                              )}
+                            </div>
+                            
+                            {/* Report indicators */}
+                            {dayReports.map((report, idx) => (
+                              <div key={idx} className="text-xs bg-green-100 text-green-800 px-1 py-0.5 rounded mb-1 truncate"
+                                   title={`${report.cropType} - ${report.growthStage}`}>
+                                📋 {report.cropType}
+                              </div>
+                            ))}
+                            
+                            {/* Harvest indicators */}
+                            {harvestingCrops.map((crop, idx) => (
+                              <div key={idx} className="text-xs bg-orange-100 text-orange-800 px-1 py-0.5 rounded mb-1 truncate"
+                                   title={`Expected harvest: ${crop.cropType}`}>
+                                🌾 {crop.cropType}
+                              </div>
+                            ))}
+                            
+                            {/* Weather info for today */}
+                            {isToday && weatherData?.current && (
+                              <div className="text-xs bg-blue-100 text-blue-800 px-1 py-0.5 rounded">
+                                🌤️ {Math.round(weatherData.current.temperature_2m)}°C
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
+                      return days;
+                    })()}
                   </div>
                   
-                  <div className="p-4">
-                    {/* Calendar Grid */}
-                    <div className="grid grid-cols-7 gap-1">
-                      {/* Day Headers */}
-                      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                        <div key={day} className="p-2 text-center text-sm font-semibold text-gray-600 bg-gray-50 rounded">
-                          {day}
-                        </div>
-                      ))}
-                      
-                      {/* Calendar Days */}
-                      {(() => {
-                        const firstDay = new Date(currentYear, currentMonth, 1);
-                        const lastDay = new Date(currentYear, currentMonth + 1, 0);
-                        const startDate = new Date(firstDay);
-                        startDate.setDate(startDate.getDate() - firstDay.getDay());
-                        
-                        const days = [];
-                        for (let d = 0; d < 42; d++) {
-                          const currentDate = new Date(startDate);
-                          currentDate.setDate(startDate.getDate() + d);
-                          
-                          const isCurrentMonth = currentDate.getMonth() === currentMonth;
-                          const dayReports = allReports.filter(report => {
-                            const reportDate = new Date(report.reportDate);
-                            return reportDate.toDateString() === currentDate.toDateString();
-                          });
-                          
-                          // Get crops expected to be harvested this day
-                          const harvestingCrops = registeredCrops.filter(crop => {
-                            const harvestDate = new Date(crop.expectedHarvest);
-                            return harvestDate.toDateString() === currentDate.toDateString();
-                          });
-                          
-                          days.push(
-                            <div key={d} className={`min-h-[80px] p-1 border rounded ${
-                              isCurrentMonth ? 'bg-white' : 'bg-gray-50'
-                            } ${currentDate.toDateString() === new Date().toDateString() ? 'ring-2 ring-blue-500' : ''}`}>
-                              <div className={`text-sm font-semibold ${
-                                isCurrentMonth ? 'text-gray-800' : 'text-gray-400'
-                              }`}>
-                                {currentDate.getDate()}
-                              </div>
-                              
-                              {/* Report indicators */}
-                              {dayReports.map((report, idx) => (
-                                <div key={idx} className="text-xs bg-green-100 text-green-800 px-1 py-0.5 rounded mb-1 truncate"
-                                     title={`${report.cropType} - ${report.growthStage}`}>
-                                  📋 {report.cropType}
-                                </div>
-                              ))}
-                              
-                              {/* Harvest indicators */}
-                              {harvestingCrops.map((crop, idx) => (
-                                <div key={idx} className="text-xs bg-orange-100 text-orange-800 px-1 py-0.5 rounded mb-1 truncate"
-                                     title={`Expected harvest: ${crop.cropType}`}>
-                                  🌾 {crop.cropType}
-                                </div>
-                              ))}
-                            </div>
-                          );
-                        }
-                        return days;
-                      })()}
+                  {/* Legend */}
+                  <div className="mt-4 flex flex-wrap gap-4 text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-green-100 rounded"></div>
+                      <span>📋 Report Submitted</span>
                     </div>
-                    
-                    {/* Legend */}
-                    <div className="mt-4 flex flex-wrap gap-4 text-sm">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-green-100 rounded"></div>
-                        <span>📋 Report Submitted</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-orange-100 rounded"></div>
-                        <span>🌾 Expected Harvest</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-blue-500 rounded"></div>
-                        <span>Today</span>
-                      </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-orange-100 rounded"></div>
+                      <span>🌾 Expected Harvest</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-blue-100 rounded"></div>
+                      <span>🌤️ Weather Info</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-blue-500 rounded"></div>
+                      <span>Today</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-orange-500 rounded"></div>
+                      <span>Report Due Date (25th)</span>
                     </div>
                   </div>
                 </div>
-              )}
-
-              {/* Table View */}
-              {calendarView === 'table' && (
-                <div className="bg-white border rounded-lg shadow-sm overflow-x-auto">
-                  <div className="px-4 py-3 border-b bg-gray-50">
-                    <h3 className="font-semibold text-gray-800">📋 All Crop Reports</h3>
-                  </div>
-                  <table className="min-w-full text-sm">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-3 py-2 text-left font-medium text-gray-600">Report Date</th>
-                        <th className="px-3 py-2 text-center font-medium text-gray-600">Crop</th>
-                        <th className="px-3 py-2 text-center font-medium text-gray-600">Growth Stage</th>
-                        <th className="px-3 py-2 text-center font-medium text-gray-600">Height (cm)</th>
-                        <th className="px-3 py-2 text-center font-medium text-gray-600">Health Status</th>
-                        <th className="px-3 py-2 text-center font-medium text-gray-600">Weather Impact</th>
-                        <th className="px-3 py-2 text-left font-medium text-gray-600">Notes</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {allReports.sort((a, b) => new Date(b.reportDate) - new Date(a.reportDate)).map(r => (
-                        <tr key={r.id} className="border-b last:border-0 hover:bg-gray-50">
-                          <td className="px-3 py-2 text-sm font-medium">{r.reportDate}</td>
-                          <td className="px-3 py-2 text-center text-sm">{r.cropType} ({r.variety})</td>
-                          <td className="px-3 py-2 text-center text-sm">{r.growthStage}</td>
-                          <td className="px-3 py-2 text-center text-sm">{r.plantHeight}</td>
-                          <td className="px-3 py-2 text-center">
-                            <span className={`px-2 py-1 text-xs rounded-full font-semibold ${
-                              r.healthStatus === 'Healthy' ? 'bg-green-100 text-green-700' :
-                              r.healthStatus === 'Warning' ? 'bg-yellow-100 text-yellow-700' :
-                              'bg-red-100 text-red-700'
-                            }`}>
-                              {r.healthStatus}
-                            </span>
-                          </td>
-                          <td className="px-3 py-2 text-center text-sm">{r.weatherImpact || '—'}</td>
-                          <td className="px-3 py-2 text-sm max-w-xs truncate" title={r.notes}>{r.notes}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  {allReports.length === 0 && (
-                    <div className="text-center py-12">
-                      <div className="text-gray-400 text-4xl mb-4">📋</div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">No reports yet</h3>
-                      <p className="text-gray-600">Start tracking by adding your first crop report</p>
-                    </div>
-                  )}
-                </div>
-              )}
+              </div>
 
               {/* Report Analytics Charts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Growth Stage Distribution */}
+                {/* Report Submission Trends */}
                 <div className="bg-white border rounded-lg shadow-sm p-4">
-                  <h3 className="font-semibold text-gray-800 mb-4">📊 Growth Stage Distribution</h3>
-                  {allReports.length > 0 ? (
-                    <div className="h-64">
-                      <Pie
-                        data={{
-                          labels: [...new Set(allReports.map(r => r.growthStage))],
-                          datasets: [{
-                            data: [...new Set(allReports.map(r => r.growthStage))].map(stage => 
-                              allReports.filter(r => r.growthStage === stage).length
-                            ),
-                            backgroundColor: [
-                              'rgba(34, 197, 94, 0.8)',
-                              'rgba(59, 130, 246, 0.8)',
-                              'rgba(245, 158, 11, 0.8)',
-                              'rgba(239, 68, 68, 0.8)',
-                              'rgba(139, 92, 246, 0.8)'
-                            ]
-                          }]
-                        }}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          plugins: {
-                            legend: {
-                              position: 'bottom'
-                            }
+                  <h3 className="font-semibold text-gray-800 mb-4">📊 Monthly Report Submission Trends</h3>
+                  <div className="h-64">
+                    <Line
+                      data={{
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                          label: 'Reports Submitted',
+                          data: [12, 8, 15, 10, 6, 9],
+                          borderColor: 'rgba(34, 197, 94, 1)',
+                          backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                          tension: 0.4,
+                          fill: true
+                        }, {
+                          label: 'Reports Due',
+                          data: [15, 12, 18, 14, 10, 12],
+                          borderColor: 'rgba(245, 158, 11, 1)',
+                          backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                          tension: 0.4,
+                          fill: true
+                        }]
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                          y: {
+                            beginAtZero: true
                           }
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="h-64 flex items-center justify-center text-gray-500">
-                      <div className="text-center">
-                        <div className="text-4xl mb-2">📊</div>
-                        <p>No reports data available</p>
-                      </div>
-                    </div>
-                  )}
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
 
-                {/* Plant Height Trends */}
+                {/* Report Compliance Rate */}
                 <div className="bg-white border rounded-lg shadow-sm p-4">
-                  <h3 className="font-semibold text-gray-800 mb-4">📈 Plant Height Trends</h3>
-                  {allReports.length > 0 ? (
-                    <div className="h-64">
-                      <Line
-                        data={{
-                          labels: allReports
-                            .sort((a, b) => new Date(a.reportDate) - new Date(b.reportDate))
-                            .map(r => new Date(r.reportDate).toLocaleDateString()),
-                          datasets: [{
-                            label: 'Plant Height (cm)',
-                            data: allReports
-                              .sort((a, b) => new Date(a.reportDate) - new Date(b.reportDate))
-                              .map(r => parseFloat(r.plantHeight || 0)),
-                            borderColor: 'rgba(34, 197, 94, 1)',
-                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                          }]
-                        }}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          scales: {
-                            y: {
-                              beginAtZero: true
-                            }
+                  <h3 className="font-semibold text-gray-800 mb-4">📈 Report Compliance Rate</h3>
+                  <div className="h-64">
+                    <Doughnut
+                      data={{
+                        labels: ['Submitted On Time', 'Late Submissions', 'Pending'],
+                        datasets: [{
+                          data: [75, 15, 10],
+                          backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                          ],
+                          borderWidth: 2,
+                          borderColor: '#fff'
+                        }]
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: {
+                            position: 'bottom'
                           }
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="h-64 flex items-center justify-center text-gray-500">
-                      <div className="text-center">
-                        <div className="text-4xl mb-2">📈</div>
-                        <p>No height data available</p>
-                      </div>
-                    </div>
-                  )}
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -1422,6 +1838,257 @@ export default function Farmer_Report() {
                   className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                   Add Report
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Detailed Monthly Report Modal */}
+        {showDetailedReportModal && selectedCropForReport && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    📋 Monthly Report - {selectedCropForReport.cropType} ({selectedCropForReport.variety})
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Area: {selectedCropForReport.area} ha • Planted: {selectedCropForReport.plantingDate}
+                  </p>
+                </div>
+                <button onClick={() => setShowDetailedReportModal(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+              </div>
+              
+              <div className="p-6">
+                {/* Current Weather Integration */}
+                {weatherData?.current && (
+                  <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+                    <h4 className="font-semibold text-blue-800 mb-3">🌤️ Current Weather Conditions</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-600">Temperature:</span>
+                        <div className="font-semibold text-blue-700">{Math.round(weatherData.current.temperature_2m)}°C</div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Humidity:</span>
+                        <div className="font-semibold text-blue-700">{weatherData.current.relative_humidity_2m}%</div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Precipitation:</span>
+                        <div className="font-semibold text-blue-700">{weatherData.current.precipitation} mm</div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Wind Speed:</span>
+                        <div className="font-semibold text-blue-700">{Math.round(weatherData.current.wind_speed_10m)} km/h</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Basic Information */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800 border-b pb-2">📋 Basic Report Information</h4>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Report Date *</label>
+                        <input type="date" value={newReport.reportDate} 
+                          onChange={(e) => setNewReport({...newReport, reportDate: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Growth Stage *</label>
+                        <select value={newReport.growthStage} 
+                          onChange={(e) => setNewReport({...newReport, growthStage: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                          <option value="">Select stage</option>
+                          <option value="Seedling">Seedling</option>
+                          <option value="Vegetative">Vegetative</option>
+                          <option value="Flowering">Flowering</option>
+                          <option value="Fruiting">Fruiting</option>
+                          <option value="Maturity">Maturity</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Plant Height (cm) *</label>
+                        <input type="number" value={newReport.plantHeight} 
+                          onChange={(e) => setNewReport({...newReport, plantHeight: e.target.value})}
+                          placeholder="e.g., 45"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Health Status</label>
+                        <select value={newReport.healthStatus} 
+                          onChange={(e) => setNewReport({...newReport, healthStatus: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                          <option value="Healthy">Healthy</option>
+                          <option value="Warning">Warning</option>
+                          <option value="Poor">Poor</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Estimated Yield (kg)</label>
+                        <input type="number" value={newReport.estimatedYield} 
+                          onChange={(e) => setNewReport({...newReport, estimatedYield: e.target.value})}
+                          placeholder="e.g., 5000"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Soil Condition</label>
+                        <select value={newReport.soilCondition} 
+                          onChange={(e) => setNewReport({...newReport, soilCondition: e.target.value})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                          <option value="">Select condition</option>
+                          <option value="Excellent">Excellent</option>
+                          <option value="Good">Good</option>
+                          <option value="Fair">Fair</option>
+                          <option value="Poor">Poor</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Management Activities */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800 border-b pb-2">🌿 Management Activities</h4>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Pests Observed</label>
+                      <input type="text" value={newReport.pestsObserved} 
+                        onChange={(e) => setNewReport({...newReport, pestsObserved: e.target.value})}
+                        placeholder="e.g., Aphids, Spider mites"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Diseases Observed</label>
+                      <input type="text" value={newReport.diseasesObserved} 
+                        onChange={(e) => setNewReport({...newReport, diseasesObserved: e.target.value})}
+                        placeholder="e.g., Leaf spot, Powdery mildew"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Fertilizers Applied</label>
+                      <input type="text" value={newReport.fertilizersApplied} 
+                        onChange={(e) => setNewReport({...newReport, fertilizersApplied: e.target.value})}
+                        placeholder="e.g., NPK 14-14-14, 50kg"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Pesticide Applications</label>
+                      <input type="text" value={newReport.pesticideApplications} 
+                        onChange={(e) => setNewReport({...newReport, pesticideApplications: e.target.value})}
+                        placeholder="e.g., Insecticide spray for aphids"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Irrigation Frequency</label>
+                      <select value={newReport.irrigationFrequency} 
+                        onChange={(e) => setNewReport({...newReport, irrigationFrequency: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <option value="">Select frequency</option>
+                        <option value="Daily">Daily</option>
+                        <option value="Every 2 days">Every 2 days</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="As needed">As needed</option>
+                        <option value="Rain-fed">Rain-fed</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Full-width sections */}
+                <div className="mt-6 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Major Activities This Month</label>
+                    <textarea value={newReport.majorActivities} 
+                      onChange={(e) => setNewReport({...newReport, majorActivities: e.target.value})}
+                      placeholder="e.g., Transplanting, weeding, fertilizer application..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-20" />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Challenges Faced</label>
+                    <textarea value={newReport.challenges} 
+                      onChange={(e) => setNewReport({...newReport, challenges: e.target.value})}
+                      placeholder="e.g., Pest infestation, drought stress, equipment issues..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-20" />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Planned Actions for Next Month</label>
+                    <textarea value={newReport.plannedActions} 
+                      onChange={(e) => setNewReport({...newReport, plannedActions: e.target.value})}
+                      placeholder="e.g., Apply growth booster, pest monitoring, harvest preparation..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-20" />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
+                    <textarea value={newReport.notes} 
+                      onChange={(e) => setNewReport({...newReport, notes: e.target.value})}
+                      placeholder="Any other observations, treatments applied, or important notes..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-24" />
+                  </div>
+                </div>
+
+                {/* Cost Tracking */}
+                <div className="mt-6">
+                  <h4 className="font-semibold text-gray-800 border-b pb-2 mb-4">💰 Monthly Costs (Optional)</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Seeds (₱)</label>
+                      <input type="number" value={newReport.costs.seeds} 
+                        onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, seeds: e.target.value}})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Fertilizer (₱)</label>
+                      <input type="number" value={newReport.costs.fertilizer} 
+                        onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, fertilizer: e.target.value}})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Pesticides (₱)</label>
+                      <input type="number" value={newReport.costs.pesticides} 
+                        onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, pesticides: e.target.value}})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Labor (₱)</label>
+                      <input type="number" value={newReport.costs.labor} 
+                        onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, labor: e.target.value}})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-6 py-4 border-t bg-gray-50 flex justify-between items-center">
+                <div className="text-sm text-gray-600">
+                  * Required fields. Weather data will be automatically included.
+                </div>
+                <div className="flex space-x-3">
+                  <button onClick={() => setShowDetailedReportModal(false)}
+                    className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                    Cancel
+                  </button>
+                  <button onClick={handleAddReport}
+                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold">
+                    Submit Monthly Report
+                  </button>
+                </div>
               </div>
             </div>
           </div>
