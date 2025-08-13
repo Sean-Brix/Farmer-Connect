@@ -1,0 +1,223 @@
+{
+  "sampleReports": [
+    {
+      "id": 1,
+      "farmerId": "F001",
+      "farmerName": "Juan Dela Cruz",
+      "reportDate": "2024-01-15",
+      "cropId": 1,
+      "cropName": "Rice (Palay)",
+      "variety": "IR64",
+      "stage": "Vegetative",
+      "areaPlanted": 2.5,
+      "plantingDate": "2023-12-20",
+      "expectedHarvest": "2024-04-20",
+      "progress": {
+        "currentStage": "Vegetative",
+        "completionPercentage": 60,
+        "daysFromPlanting": 26,
+        "daysToHarvest": 95
+      },
+      "conditions": {
+        "weather": "Favorable",
+        "soilMoisture": "Adequate",
+        "pestPressure": "Low",
+        "diseaseIncidence": "None"
+      },
+      "activities": [
+        "Applied first topdressing of urea fertilizer",
+        "Maintained 3cm water level",
+        "Conducted weed control",
+        "Monitored for pest activity"
+      ],
+      "inputs": {
+        "fertilizer": "50kg Urea per hectare",
+        "pesticides": "None",
+        "labor": "2 person-days per hectare",
+        "waterUsage": "Continuous flooding"
+      },
+      "observations": "Plants showing healthy green color, good tillering observed, no signs of nutrient deficiency",
+      "challenges": "Minor weed pressure in some areas",
+      "nextActions": [
+        "Continue water management",
+        "Monitor for brown planthopper",
+        "Prepare for next fertilizer application"
+      ],
+      "costs": {
+        "fertilizer": 2500,
+        "labor": 1500,
+        "water": 800,
+        "others": 300
+      },
+      "photos": ["rice_field_jan15.jpg"],
+      "gpsCoordinates": {
+        "latitude": 14.4123,
+        "longitude": 120.9456
+      }
+    },
+    {
+      "id": 2,
+      "farmerId": "F002",
+      "farmerName": "Maria Santos",
+      "reportDate": "2024-01-20",
+      "cropId": 3,
+      "cropName": "Tomato",
+      "variety": "Cherokee Purple",
+      "stage": "Fruit Development",
+      "areaPlanted": 0.5,
+      "plantingDate": "2023-11-15",
+      "expectedHarvest": "2024-02-15",
+      "progress": {
+        "currentStage": "Fruit Development",
+        "completionPercentage": 85,
+        "daysFromPlanting": 66,
+        "daysToHarvest": 26
+      },
+      "conditions": {
+        "weather": "Ideal",
+        "soilMoisture": "Good",
+        "pestPressure": "Moderate",
+        "diseaseIncidence": "Early blight spotted"
+      },
+      "activities": [
+        "Harvested first batch of ripe tomatoes",
+        "Applied fungicide for early blight",
+        "Pruned lower leaves",
+        "Adjusted irrigation schedule"
+      ],
+      "inputs": {
+        "fertilizer": "NPK 16-16-16, 2kg",
+        "pesticides": "Copper-based fungicide",
+        "labor": "3 person-days",
+        "waterUsage": "Drip irrigation, 2 hours daily"
+      },
+      "observations": "First harvest yielded 25kg of premium quality tomatoes, some plants showing early blight symptoms on lower leaves",
+      "challenges": "Early blight disease appearing due to recent humid weather",
+      "nextActions": [
+        "Continue regular harvesting",
+        "Monitor disease progression",
+        "Improve air circulation"
+      ],
+      "costs": {
+        "fertilizer": 800,
+        "pesticides": 1200,
+        "labor": 2250,
+        "water": 400
+      },
+      "photos": ["tomato_harvest_jan20.jpg", "early_blight_symptoms.jpg"],
+      "gpsCoordinates": {
+        "latitude": 14.4089,
+        "longitude": 120.9423
+      }
+    },
+    {
+      "id": 3,
+      "farmerId": "F003",
+      "farmerName": "Pedro Reyes",
+      "reportDate": "2024-01-10",
+      "cropId": 2,
+      "cropName": "Corn",
+      "variety": "Pioneer 30G95",
+      "stage": "Flowering",
+      "areaPlanted": 1.2,
+      "plantingDate": "2023-11-25",
+      "expectedHarvest": "2024-03-05",
+      "progress": {
+        "currentStage": "Flowering",
+        "completionPercentage": 70,
+        "daysFromPlanting": 46,
+        "daysToHarvest": 54
+      },
+      "conditions": {
+        "weather": "Good",
+        "soilMoisture": "Adequate",
+        "pestPressure": "High",
+        "diseaseIncidence": "None"
+      },
+      "activities": [
+        "Observed tasseling in 80% of plants",
+        "Applied insecticide for corn borer control",
+        "Side-dressed with additional nitrogen",
+        "Conducted soil cultivation"
+      ],
+      "inputs": {
+        "fertilizer": "Urea 60kg per hectare",
+        "pesticides": "Bt insecticide for corn borer",
+        "labor": "2.5 person-days per hectare",
+        "waterUsage": "Rain-fed with supplemental irrigation"
+      },
+      "observations": "Excellent stand establishment, uniform growth, good ear formation expected based on tassel quality",
+      "challenges": "Increased corn borer pressure requiring immediate intervention",
+      "nextActions": [
+        "Monitor pollination success",
+        "Continue corn borer monitoring",
+        "Prepare for ear development stage"
+      ],
+      "costs": {
+        "fertilizer": 3600,
+        "pesticides": 2800,
+        "labor": 3000,
+        "irrigation": 1000
+      },
+      "photos": ["corn_tasseling_jan10.jpg"],
+      "gpsCoordinates": {
+        "latitude": 14.4156,
+        "longitude": 120.9378
+      }
+    }
+  ],
+  "monthlyTrends": {
+    "2024": {
+      "January": {
+        "totalReports": 45,
+        "activeCrops": 8,
+        "averageYield": 4.2,
+        "commonIssues": ["Pest pressure", "Water management", "Disease control"],
+        "weatherImpact": "Favorable",
+        "marketPrices": {
+          "rice": 22,
+          "corn": 18,
+          "tomato": 65,
+          "eggplant": 42
+        }
+      },
+      "December": {
+        "totalReports": 52,
+        "activeCrops": 12,
+        "averageYield": 3.8,
+        "commonIssues": ["Cool weather adaptation", "Irrigation needs", "Harvest timing"],
+        "weatherImpact": "Good",
+        "marketPrices": {
+          "rice": 24,
+          "corn": 16,
+          "tomato": 70,
+          "eggplant": 38
+        }
+      }
+    }
+  },
+  "performanceMetrics": {
+    "cropProductivity": {
+      "rice": {
+        "averageYield": 4.5,
+        "targetYield": 5.0,
+        "efficiency": 90
+      },
+      "corn": {
+        "averageYield": 3.8,
+        "targetYield": 4.5,
+        "efficiency": 84
+      },
+      "tomato": {
+        "averageYield": 18.5,
+        "targetYield": 22.0,
+        "efficiency": 84
+      }
+    },
+    "farmerParticipation": {
+      "totalFarmers": 156,
+      "activeReporters": 98,
+      "reportingRate": 63
+    }
+  }
+}

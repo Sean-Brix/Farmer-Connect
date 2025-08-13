@@ -1,0 +1,624 @@
+{
+  "cropCategories": {
+    "cereals": {
+      "name": "Cereals & Grains",
+      "icon": "🌾",
+      "description": "Staple crops that form the foundation of Filipino agriculture"
+    },
+    "vegetables": {
+      "name": "Vegetables",
+      "icon": "🥬",
+      "description": "Nutritious vegetables for year-round cultivation"
+    },
+    "fruits": {
+      "name": "Fruits",
+      "icon": "🍎",
+      "description": "Tropical and subtropical fruit varieties"
+    },
+    "legumes": {
+      "name": "Legumes",
+      "icon": "🫘",
+      "description": "Protein-rich crops that improve soil fertility"
+    },
+    "root_crops": {
+      "name": "Root Crops",
+      "icon": "🥔",
+      "description": "Underground storage organs providing carbohydrates"
+    },
+    "herbs_spices": {
+      "name": "Herbs & Spices",
+      "icon": "🌿",
+      "description": "Aromatic plants for culinary and medicinal use"
+    }
+  },
+  "crops": [
+    {
+      "id": 1,
+      "name": "Rice (Palay)",
+      "category": "cereals",
+      "varieties": ["IR64", "PSB Rc82", "NSIC Rc222", "Dinorado", "Jasmine"],
+      "plantingSeasons": ["Wet Season (Jun-Oct)", "Dry Season (Nov-May)"],
+      "growingPeriod": "120-150 days",
+      "waterRequirements": "High (flooded fields)",
+      "expectedYield": "4-6 tons/hectare",
+      "soilType": "Clay loam, well-drained",
+      "climate": "Tropical, warm and humid",
+      "spacing": "20cm x 20cm",
+      "fertilizer": "NPK 14-14-14 at planting, Urea for topdressing",
+      "keyTips": [
+        "Maintain 2-5cm water level during vegetative stage",
+        "Transplant seedlings at 21-25 days old",
+        "Apply fertilizer in split applications",
+        "Control weeds during first 45 days",
+        "Harvest when 80-85% of grains are golden yellow"
+      ],
+      "commonPests": ["Rice bug", "Stem borer", "Brown planthopper"],
+      "diseases": ["Rice blast", "Bacterial leaf blight", "Sheath blight"],
+      "stages": [
+        {
+          "stage": "Land Preparation",
+          "duration": "2-3 weeks",
+          "description": "Plow and harrow fields, level for proper water management",
+          "activities": ["Plowing", "Harrowing", "Leveling", "Bund repair"]
+        },
+        {
+          "stage": "Seedling",
+          "duration": "21-25 days",
+          "description": "Prepare seedbed and grow healthy seedlings",
+          "activities": ["Seed selection", "Seedbed preparation", "Sowing", "Nursery care"]
+        },
+        {
+          "stage": "Transplanting",
+          "duration": "1-2 weeks",
+          "description": "Move seedlings to main field",
+          "activities": ["Field flooding", "Transplanting", "Gap filling"]
+        },
+        {
+          "stage": "Vegetative",
+          "duration": "40-50 days",
+          "description": "Active growth and tillering phase",
+          "activities": ["Water management", "Fertilizer application", "Weed control"]
+        },
+        {
+          "stage": "Reproductive",
+          "duration": "30-35 days",
+          "description": "Flowering and grain formation",
+          "activities": ["Panicle emergence", "Flowering", "Grain filling"]
+        },
+        {
+          "stage": "Maturity",
+          "duration": "15-20 days",
+          "description": "Grain ripening and harvest preparation",
+          "activities": ["Field drying", "Harvest preparation", "Harvesting"]
+        }
+      ],
+      "marketPrice": "₱20-25 per kg",
+      "profitability": "High",
+      "difficulty": "Moderate",
+      "image": "rice_field.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Corn",
+      "category": "cereals",
+      "varieties": ["Pioneer 30G95", "Dekalb 9108", "NK 6410", "Sweet corn varieties"],
+      "plantingSeasons": ["Dry Season (Nov-Feb)", "Wet Season (May-Aug)"],
+      "growingPeriod": "90-120 days",
+      "waterRequirements": "Medium (600-800mm total)",
+      "expectedYield": "3-5 tons/hectare",
+      "soilType": "Well-drained loam, pH 6.0-7.0",
+      "climate": "Warm, adequate rainfall or irrigation",
+      "spacing": "75cm x 25cm",
+      "fertilizer": "Complete fertilizer 14-14-14, side-dress with Urea",
+      "keyTips": [
+        "Plant 2-3 seeds per hill, thin to strongest seedling",
+        "Hill up soil around plants at 30-45 days",
+        "Side-dress with nitrogen at knee-high stage",
+        "Control corn borer with proper timing",
+        "Harvest when husks are brown and dry"
+      ],
+      "commonPests": ["Corn borer", "Fall armyworm", "Corn rootworm"],
+      "diseases": ["Corn rust", "Leaf blight", "Ear rot"],
+      "stages": [
+        {
+          "stage": "Land Preparation",
+          "duration": "1-2 weeks",
+          "description": "Prepare well-drained fields with proper tillage",
+          "activities": ["Deep plowing", "Harrowing", "Furrowing"]
+        },
+        {
+          "stage": "Planting",
+          "duration": "1 week",
+          "description": "Direct seeding in the field",
+          "activities": ["Seed treatment", "Planting", "Initial fertilizer application"]
+        },
+        {
+          "stage": "Emergence",
+          "duration": "1-2 weeks",
+          "description": "Seedling emergence and establishment",
+          "activities": ["Monitoring germination", "Replanting gaps", "Early pest control"]
+        },
+        {
+          "stage": "Vegetative",
+          "duration": "45-60 days",
+          "description": "Active growth and development",
+          "activities": ["Hilling up", "Side-dressing", "Weed control", "Pest monitoring"]
+        },
+        {
+          "stage": "Flowering",
+          "duration": "2-3 weeks",
+          "description": "Tasseling and silking stage",
+          "activities": ["Pollination monitoring", "Water management", "Nutrient management"]
+        },
+        {
+          "stage": "Grain Filling",
+          "duration": "30-40 days",
+          "description": "Kernel development and maturation",
+          "activities": ["Disease monitoring", "Water stress prevention", "Harvest preparation"]
+        }
+      ],
+      "marketPrice": "₱15-20 per kg",
+      "profitability": "High",
+      "difficulty": "Easy",
+      "image": "corn_field.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Tomato",
+      "category": "vegetables",
+      "varieties": ["Cherokee Purple", "Determinate hybrids", "Cherry tomatoes", "Roma"],
+      "plantingSeasons": ["Cool Season (Oct-Mar)", "Highland areas year-round"],
+      "growingPeriod": "90-120 days",
+      "waterRequirements": "Medium-High (consistent moisture)",
+      "expectedYield": "15-25 tons/hectare",
+      "soilType": "Well-drained, fertile loam, pH 6.0-6.8",
+      "climate": "Cool to warm, avoid extreme heat and heavy rains",
+      "spacing": "60cm x 40cm",
+      "fertilizer": "High phosphorus at planting, regular NPK applications",
+      "keyTips": [
+        "Start from healthy seedlings in nursery",
+        "Provide sturdy support systems (stakes/cages)",
+        "Prune suckers regularly for better fruit quality",
+        "Maintain consistent soil moisture",
+        "Harvest when fruits show color break"
+      ],
+      "commonPests": ["Fruit borer", "Whitefly", "Aphids", "Thrips"],
+      "diseases": ["Early blight", "Late blight", "Bacterial wilt", "Fusarium wilt"],
+      "stages": [
+        {
+          "stage": "Nursery",
+          "duration": "25-30 days",
+          "description": "Seedling production in protected environment",
+          "activities": ["Seed sowing", "Seedling care", "Hardening off"]
+        },
+        {
+          "stage": "Transplanting",
+          "duration": "1 week",
+          "description": "Moving seedlings to main field",
+          "activities": ["Land preparation", "Transplanting", "Initial care"]
+        },
+        {
+          "stage": "Establishment",
+          "duration": "2-3 weeks",
+          "description": "Root establishment and early growth",
+          "activities": ["Staking", "First cultivation", "Pest monitoring"]
+        },
+        {
+          "stage": "Vegetative Growth",
+          "duration": "30-40 days",
+          "description": "Rapid plant development",
+          "activities": ["Pruning", "Fertilizer application", "Disease prevention"]
+        },
+        {
+          "stage": "Flowering",
+          "duration": "2-3 weeks",
+          "description": "Flower development and fruit set",
+          "activities": ["Pollination support", "Flower cluster management", "Nutrient adjustment"]
+        },
+        {
+          "stage": "Fruit Development",
+          "duration": "30-45 days",
+          "description": "Fruit growth and ripening",
+          "activities": ["Regular harvesting", "Quality monitoring", "Post-harvest handling"]
+        }
+      ],
+      "marketPrice": "₱40-80 per kg",
+      "profitability": "Very High",
+      "difficulty": "Moderate-High",
+      "image": "tomato_field.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Eggplant",
+      "category": "vegetables",
+      "varieties": ["Long purple", "Round purple", "Japanese varieties", "Thai eggplant"],
+      "plantingSeasons": ["Year-round with proper management"],
+      "growingPeriod": "90-150 days",
+      "waterRequirements": "Medium (regular but not excessive)",
+      "expectedYield": "10-20 tons/hectare",
+      "soilType": "Well-drained, fertile soil, pH 6.0-7.0",
+      "climate": "Warm, humid tropical climate",
+      "spacing": "60cm x 50cm",
+      "fertilizer": "Balanced NPK with additional potassium during fruiting",
+      "keyTips": [
+        "Support heavy fruiting branches with stakes",
+        "Regular harvesting encourages continuous production",
+        "Monitor for fruit and shoot borer damage",
+        "Provide good air circulation to prevent diseases",
+        "Harvest young fruits for best quality"
+      ],
+      "commonPests": ["Fruit and shoot borer", "Aphids", "Jassids", "Spider mites"],
+      "diseases": ["Bacterial wilt", "Damping off", "Leaf spot", "Mosaic virus"],
+      "stages": [
+        {
+          "stage": "Nursery",
+          "duration": "30-35 days",
+          "description": "Seedling production in controlled environment",
+          "activities": ["Seed sowing", "Nursery management", "Seedling hardening"]
+        },
+        {
+          "stage": "Transplanting",
+          "duration": "1 week",
+          "description": "Field establishment",
+          "activities": ["Field preparation", "Transplanting", "Initial watering"]
+        },
+        {
+          "stage": "Vegetative Growth",
+          "duration": "35-45 days",
+          "description": "Plant establishment and growth",
+          "activities": ["Staking", "Cultivation", "Fertilizer application"]
+        },
+        {
+          "stage": "Flowering",
+          "duration": "2-3 weeks",
+          "description": "Flower production and fruit set",
+          "activities": ["Flower monitoring", "Pest control", "Nutrient management"]
+        },
+        {
+          "stage": "Fruit Production",
+          "duration": "60-90 days",
+          "description": "Continuous fruiting period",
+          "activities": ["Regular harvesting", "Pruning", "Disease management"]
+        }
+      ],
+      "marketPrice": "₱30-50 per kg",
+      "profitability": "High",
+      "difficulty": "Easy-Moderate",
+      "image": "eggplant_field.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Sweet Potato",
+      "category": "root_crops",
+      "varieties": ["Orange flesh", "Purple flesh", "White flesh", "NSIC SP-1"],
+      "plantingSeasons": ["Dry Season (Nov-Apr)", "Year-round in suitable areas"],
+      "growingPeriod": "90-120 days",
+      "waterRequirements": "Low-Medium (drought tolerant)",
+      "expectedYield": "8-15 tons/hectare",
+      "soilType": "Well-drained, loose soil, pH 5.8-6.2",
+      "climate": "Warm tropical climate, frost-sensitive",
+      "spacing": "80cm x 30cm",
+      "fertilizer": "Low nitrogen, moderate phosphorus and potassium",
+      "keyTips": [
+        "Use healthy vine cuttings for planting",
+        "Ridge planting improves drainage and tuber quality",
+        "Avoid excessive nitrogen to prevent vine growth over tuber development",
+        "Hill up soil around plants as they grow",
+        "Harvest carefully to avoid damaging tubers"
+      ],
+      "commonPests": ["Sweet potato weevil", "Wire worms", "Flea beetles"],
+      "diseases": ["Sweet potato virus", "Black rot", "Soft rot"],
+      "stages": [
+        {
+          "stage": "Land Preparation",
+          "duration": "1-2 weeks",
+          "description": "Ridge preparation for good drainage",
+          "activities": ["Plowing", "Ridging", "Organic matter incorporation"]
+        },
+        {
+          "stage": "Planting",
+          "duration": "1 week",
+          "description": "Vine cutting establishment",
+          "activities": ["Cutting selection", "Planting", "Initial watering"]
+        },
+        {
+          "stage": "Establishment",
+          "duration": "2-3 weeks",
+          "description": "Root development and vine establishment",
+          "activities": ["Root monitoring", "Weed control", "Pest monitoring"]
+        },
+        {
+          "stage": "Vine Development",
+          "duration": "30-40 days",
+          "description": "Active vine growth phase",
+          "activities": ["Vine training", "Fertilizer application", "Cultivation"]
+        },
+        {
+          "stage": "Tuber Formation",
+          "duration": "40-50 days",
+          "description": "Underground tuber development",
+          "activities": ["Reduced watering", "Hill up soil", "Harvest preparation"]
+        }
+      ],
+      "marketPrice": "₱25-40 per kg",
+      "profitability": "Moderate",
+      "difficulty": "Easy",
+      "image": "sweet_potato_field.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Mango",
+      "category": "fruits",
+      "varieties": ["Carabao", "Pico", "Indian Mango", "Kent", "Tommy Atkins"],
+      "plantingSeasons": ["Rainy season planting (Jun-Sep)"],
+      "growingPeriod": "3-5 years to first harvest",
+      "waterRequirements": "Medium (drought tolerant when established)",
+      "expectedYield": "50-150 kg per tree",
+      "soilType": "Well-drained, deep soil, pH 6.0-7.5",
+      "climate": "Tropical, dry season for flowering",
+      "spacing": "8m x 8m to 10m x 10m",
+      "fertilizer": "Balanced NPK, higher potassium during fruiting",
+      "keyTips": [
+        "Plant grafted varieties for consistent quality",
+        "Prune regularly to maintain shape and air circulation",
+        "Apply flower inducer during appropriate season",
+        "Thin fruits for better size and quality",
+        "Harvest at proper maturity for best flavor"
+      ],
+      "commonPests": ["Mango seed weevil", "Scale insects", "Fruit flies"],
+      "diseases": ["Anthracnose", "Powdery mildew", "Bacterial black spot"],
+      "stages": [
+        {
+          "stage": "Establishment",
+          "duration": "1-2 years",
+          "description": "Young tree establishment and growth",
+          "activities": ["Planting", "Training", "Protection from wind"]
+        },
+        {
+          "stage": "Juvenile Growth",
+          "duration": "2-3 years",
+          "description": "Vegetative growth and canopy development",
+          "activities": ["Pruning", "Fertilization", "Pest management"]
+        },
+        {
+          "stage": "Flowering Induction",
+          "duration": "Annual cycle",
+          "description": "Promoting flower development",
+          "activities": ["Stress application", "Flower inducer", "Nutrition management"]
+        },
+        {
+          "stage": "Flowering",
+          "duration": "1-2 months",
+          "description": "Flower development and pollination",
+          "activities": ["Pollination support", "Pest control", "Disease prevention"]
+        },
+        {
+          "stage": "Fruit Development",
+          "duration": "3-4 months",
+          "description": "Fruit growth and maturation",
+          "activities": ["Fruit thinning", "Support heavy branches", "Quality monitoring"]
+        },
+        {
+          "stage": "Harvest",
+          "duration": "1-2 months",
+          "description": "Harvesting mature fruits",
+          "activities": ["Maturity assessment", "Careful harvesting", "Post-harvest handling"]
+        }
+      ],
+      "marketPrice": "₱80-150 per kg",
+      "profitability": "Very High",
+      "difficulty": "Moderate",
+      "image": "mango_tree.jpg"
+    },
+    {
+      "id": 7,
+      "name": "Mungbean",
+      "category": "legumes",
+      "varieties": ["NSIC Mg-14", "NSIC Mg-25", "Local varieties"],
+      "plantingSeasons": ["Dry Season (Nov-Feb)", "After rice harvest"],
+      "growingPeriod": "60-65 days",
+      "waterRequirements": "Low-Medium (drought tolerant)",
+      "expectedYield": "1-1.5 tons/hectare",
+      "soilType": "Well-drained, pH 6.0-7.0",
+      "climate": "Warm, dry conditions preferred",
+      "spacing": "30cm x 10cm",
+      "fertilizer": "Low nitrogen (fixes own nitrogen), phosphorus and potassium",
+      "keyTips": [
+        "Excellent rotation crop after rice",
+        "Inoculate seeds with rhizobia for better nitrogen fixation",
+        "Harvest pods when they turn brown and dry",
+        "Multiple harvests possible (3-4 times)",
+        "Good cash crop with quick returns"
+      ],
+      "commonPests": ["Pod borer", "Aphids", "Thrips"],
+      "diseases": ["Mosaic virus", "Powdery mildew", "Root rot"],
+      "stages": [
+        {
+          "stage": "Land Preparation",
+          "duration": "1 week",
+          "description": "Minimal tillage preparation",
+          "activities": ["Light plowing", "Leveling", "Seed bed preparation"]
+        },
+        {
+          "stage": "Planting",
+          "duration": "1 week",
+          "description": "Direct seeding in rows",
+          "activities": ["Seed treatment", "Sowing", "Light irrigation"]
+        },
+        {
+          "stage": "Germination",
+          "duration": "1 week",
+          "description": "Seed germination and emergence",
+          "activities": ["Monitoring emergence", "Gap filling", "Early pest control"]
+        },
+        {
+          "stage": "Vegetative Growth",
+          "duration": "25-30 days",
+          "description": "Plant development and nodulation",
+          "activities": ["Weed control", "Cultivation", "Fertilizer application"]
+        },
+        {
+          "stage": "Flowering",
+          "duration": "1-2 weeks",
+          "description": "Flower production and pod set",
+          "activities": ["Pollination monitoring", "Pest control", "Water management"]
+        },
+        {
+          "stage": "Pod Development",
+          "duration": "20-25 days",
+          "description": "Pod filling and maturation",
+          "activities": ["Multiple harvests", "Quality assessment", "Drying"]
+        }
+      ],
+      "marketPrice": "₱60-80 per kg",
+      "profitability": "High",
+      "difficulty": "Easy",
+      "image": "mungbean_field.jpg"
+    },
+    {
+      "id": 8,
+      "name": "Chili Pepper",
+      "category": "herbs_spices",
+      "varieties": ["Siling labuyo", "Bird's eye chili", "Cayenne", "Bell pepper"],
+      "plantingSeasons": ["Dry Season (Nov-Apr)", "Protected cultivation year-round"],
+      "growingPeriod": "90-120 days",
+      "waterRequirements": "Medium (consistent but not excessive)",
+      "expectedYield": "5-10 tons/hectare",
+      "soilType": "Well-drained, fertile soil, pH 6.0-7.0",
+      "climate": "Warm tropical climate, avoid waterlogging",
+      "spacing": "50cm x 40cm",
+      "fertilizer": "Balanced NPK with emphasis on potassium during fruiting",
+      "keyTips": [
+        "Start from healthy nursery seedlings",
+        "Provide support for heavy-fruiting varieties",
+        "Regular harvesting promotes continuous production",
+        "Handle with care - avoid contact with eyes",
+        "Dry thoroughly for long-term storage"
+      ],
+      "commonPests": ["Aphids", "Thrips", "Fruit borer", "Spider mites"],
+      "diseases": ["Bacterial spot", "Anthracnose", "Mosaic virus", "Damping off"],
+      "stages": [
+        {
+          "stage": "Nursery",
+          "duration": "25-30 days",
+          "description": "Seedling production in nursery",
+          "activities": ["Seed sowing", "Nursery management", "Hardening"]
+        },
+        {
+          "stage": "Transplanting",
+          "duration": "1 week",
+          "description": "Field establishment",
+          "activities": ["Land preparation", "Transplanting", "Initial care"]
+        },
+        {
+          "stage": "Vegetative Growth",
+          "duration": "30-40 days",
+          "description": "Plant establishment and growth",
+          "activities": ["Staking", "Cultivation", "Pest monitoring"]
+        },
+        {
+          "stage": "Flowering",
+          "duration": "2-3 weeks",
+          "description": "Flower development and fruit set",
+          "activities": ["Pollination", "Nutrient management", "Disease prevention"]
+        },
+        {
+          "stage": "Fruit Production",
+          "duration": "60-90 days",
+          "description": "Continuous harvesting period",
+          "activities": ["Regular harvesting", "Quality grading", "Post-harvest processing"]
+        }
+      ],
+      "marketPrice": "₱100-200 per kg",
+      "profitability": "Very High",
+      "difficulty": "Moderate",
+      "image": "chili_field.jpg"
+    }
+  ],
+  "farmingCalendar": {
+    "january": {
+      "season": "Cool Dry Season",
+      "plantingActivities": ["Vegetable transplanting", "Upland rice", "Mungbean"],
+      "harvestActivities": ["Sweet potato", "Late corn", "Cool season vegetables"],
+      "maintenance": ["Irrigation system check", "Pest monitoring", "Equipment maintenance"],
+      "weatherConsiderations": "Cool temperatures, minimal rainfall"
+    },
+    "february": {
+      "season": "Cool Dry Season",
+      "plantingActivities": ["Corn", "Vegetables", "Root crops"],
+      "harvestActivities": ["Rice (irrigated)", "Early vegetables"],
+      "maintenance": ["Land preparation for wet season", "Seed preparation", "Tool maintenance"],
+      "weatherConsiderations": "Cool and dry, good for field preparation"
+    },
+    "march": {
+      "season": "Hot Dry Season",
+      "plantingActivities": ["Heat-tolerant vegetables", "Corn", "Root crops"],
+      "harvestActivities": ["Cool season crops", "Early fruits"],
+      "maintenance": ["Irrigation system repair", "Nursery establishment", "Soil preparation"],
+      "weatherConsiderations": "Rising temperatures, limited rainfall"
+    },
+    "april": {
+      "season": "Hot Dry Season",
+      "plantingActivities": ["Heat-resistant varieties", "Nursery preparation"],
+      "harvestActivities": ["Corn", "Summer vegetables"],
+      "maintenance": ["Equipment preparation", "Seed sourcing", "Water conservation"],
+      "weatherConsiderations": "Hottest month, water stress common"
+    },
+    "may": {
+      "season": "Pre-Wet Season",
+      "plantingActivities": ["Rice nursery", "Early corn", "Quick-maturing vegetables"],
+      "harvestActivities": ["Dry season vegetables", "Root crops"],
+      "maintenance": ["Field preparation", "Drainage system check", "Planting material preparation"],
+      "weatherConsiderations": "Increasing humidity, sporadic rains"
+    },
+    "june": {
+      "season": "Early Wet Season",
+      "plantingActivities": ["Rice transplanting", "Wet season corn", "Long-season vegetables"],
+      "harvestActivities": ["Summer fruits", "Early plantings"],
+      "maintenance": ["Major planting season", "Pest control preparation", "Field drainage"],
+      "weatherConsiderations": "Rainy season begins, flooding possible"
+    },
+    "july": {
+      "season": "Wet Season Peak",
+      "plantingActivities": ["Continued rice planting", "Flood-tolerant crops"],
+      "harvestActivities": ["Early wet season plantings"],
+      "maintenance": ["Flood management", "Disease prevention", "Weed control"],
+      "weatherConsiderations": "Heavy rains, typhoon season"
+    },
+    "august": {
+      "season": "Wet Season Peak",
+      "plantingActivities": ["Late rice varieties", "Vegetables in protected areas"],
+      "harvestActivities": ["Corn", "Quick vegetables"],
+      "maintenance": ["Typhoon preparation", "Crop protection", "Drainage maintenance"],
+      "weatherConsiderations": "Peak typhoon season, heavy rainfall"
+    },
+    "september": {
+      "season": "Late Wet Season",
+      "plantingActivities": ["Post-typhoon replanting", "Short-season crops"],
+      "harvestActivities": ["Wet season corn", "Early rice varieties"],
+      "maintenance": ["Damage assessment", "Replanting activities", "Pest control"],
+      "weatherConsiderations": "Continued rains, typhoon threats"
+    },
+    "october": {
+      "season": "Transitional",
+      "plantingActivities": ["Cool season vegetables", "Dry season preparations"],
+      "harvestActivities": ["Main rice crop", "Wet season vegetables"],
+      "maintenance": ["Post-harvest activities", "Field cleaning", "Dry season preparation"],
+      "weatherConsiderations": "Decreasing rainfall, cooler temperatures"
+    },
+    "november": {
+      "season": "Early Dry Season",
+      "plantingActivities": ["Dry season rice", "Cool vegetables", "Root crops"],
+      "harvestActivities": ["Main rice harvest", "Late vegetables"],
+      "maintenance": ["Harvest operations", "Post-harvest processing", "Field preparation"],
+      "weatherConsiderations": "Dry season begins, cooler temperatures"
+    },
+    "december": {
+      "season": "Cool Dry Season",
+      "plantingActivities": ["Cool season crops", "High-value vegetables"],
+      "harvestActivities": ["Rice", "Root crops", "Fruits"],
+      "maintenance": ["Year-end planning", "Equipment overhaul", "Input procurement"],
+      "weatherConsiderations": "Cool and dry, ideal for many crops"
+    }
+  }
+}
