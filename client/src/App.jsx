@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './Authentication/Components/Login.jsx';
 import Landing from './Client/Services/Landing/Landing.jsx';
 import Chat from './Components/Chats/Chat.jsx';
+import ChatSupport from './Components/Chats/ChatSupport.jsx';
 
 //ADMIN
 import Dashboard from '../src/Admin/Components/Navigation/Dashboard.jsx';
@@ -45,6 +46,7 @@ function App() {
                 <Route path="/distribution" element={<Distribution />} />
                 <Route path="/survey" element={<Survey />} />
                 <Route path="/chat" element={<Chat />} />
+                <Route path="/chat-support" element={<ChatSupport />} />
                 <Route path="/report" element={<Farmer_Report />} />
 
                 {/* ADMIN ROUTES */}

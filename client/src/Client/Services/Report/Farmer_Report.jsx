@@ -368,39 +368,17 @@ export default function Farmer_Report() {
   return (
     <>
       <Navbar />
-      <div className="mt-16 min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50">
+      <div className="pt-20 min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
-          <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-6 lg:p-8 mb-8">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between space-y-4 lg:space-y-0">
-              <div className="flex-1">
-                <div className="flex items-center space-x-3 mb-3">
-                  <div className="p-3 bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg">
-                    <span className="text-2xl text-white">🌾</span>
-                  </div>
-                  <div>
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
-                      Farmer Dashboard
-                    </h1>
-                    <div className="h-1 w-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full mt-1"></div>
-                  </div>
-                </div>
-                <p className="text-gray-600 text-lg">
-                  Welcome back, <span className="font-semibold text-gray-800">{farmerProfile.name}</span>! 
-                  Track your crops and submit monthly reports.
-                </p>
-              </div>
-              <div className="lg:text-right">
-                <div className="bg-gradient-to-r from-gray-50 to-green-50 rounded-lg p-4 border border-gray-200">
-                  <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Farm Location</div>
-                  <div className="font-bold text-gray-900 text-lg">{farmerProfile.location}</div>
-                  <div className="text-sm text-gray-600 mt-2 flex items-center">
-                    <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                    Farm Size: {farmerProfile.farmSize} hectares
-                  </div>
-                </div>
-              </div>
+          <div className="text-center mb-12">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
+              Welcome to
             </div>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-6">
+              Farmer Reports & Dashboard
+            </h1>
+            <div className="w-24 h-1 bg-green-500 mx-auto rounded-full"></div>
           </div>
 
         {/* Navigation Tabs */}
