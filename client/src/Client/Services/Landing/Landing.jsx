@@ -331,11 +331,11 @@ export default function Landing() {
                     style={{mixBlendMode: 'multiply'}}
                 />
                 {/* Responsive flex: column on small screens, row on md+ */}
-                <div className="flex flex-col md:flex-row w-full items-center justify-center">
+                <div className="flex flex-col  md:flex-row w-full items-center justify-center">
                     {/* Left: Professional Headline and Description */}
                     <div className="flex-1 pr-[2vw] min-w-[320px] relative z-30 w-full md:w-auto">
                         {/* Premium badge */}
-                        <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 rounded-full px-4 py-2 mb-6" data-aos="fade-right" data-aos-delay="100">
+                        <div className="inline-flex items-center gap-2 mt-[25%] sm:mt-0 bg-green-50 border border-green-200 rounded-full px-4 py-2 mb-6" data-aos="fade-right" data-aos-delay="100">
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                             <span className="text-green-700 font-semibold text-sm uppercase tracking-wide">
                                 Transforming Agriculture

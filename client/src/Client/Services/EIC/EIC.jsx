@@ -1093,7 +1093,7 @@ export default function Eic() {
                 style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
-                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-20">
+                    <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-[8vh]">
                         <header className="flex flex-col items-center mb-12 w-full">
                             <span className="uppercase tracking-widest text-gray-600 text-xs font-semibold mb-1 letter-spacing-wide">
                                 Welcome to

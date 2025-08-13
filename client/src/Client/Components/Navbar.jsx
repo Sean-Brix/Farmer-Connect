@@ -175,6 +175,54 @@ export default function Navbar({refresh}) {
                         0% { opacity: 0; transform: translateY(-24px); }
                         100% { opacity: 1; transform: translateY(0); }
                     }
+                    
+                    /* Mobile Menu Animations */
+                    @keyframes mobileBackdropFadeIn {
+                        0% { 
+                            opacity: 0; 
+                        }
+                        100% { 
+                            opacity: 1; 
+                        }
+                    }
+                    
+                    @keyframes mobileSlideInLeft {
+                        0% { 
+                            transform: translateX(-100%); 
+                            opacity: 0;
+                        }
+                        100% { 
+                            transform: translateX(0); 
+                            opacity: 1;
+                        }
+                    }
+                    
+                    /* Mobile Menu Item Stagger Animation */
+                    .mobile-menu-item {
+                        animation: mobileItemSlideIn 0.4s ease-out forwards;
+                        opacity: 0;
+                        transform: translateX(-20px);
+                    }
+                    
+                    .mobile-menu-item:nth-child(1) { animation-delay: 0.1s; }
+                    .mobile-menu-item:nth-child(2) { animation-delay: 0.15s; }
+                    .mobile-menu-item:nth-child(3) { animation-delay: 0.2s; }
+                    .mobile-menu-item:nth-child(4) { animation-delay: 0.25s; }
+                    .mobile-menu-item:nth-child(5) { animation-delay: 0.3s; }
+                    .mobile-menu-item:nth-child(6) { animation-delay: 0.35s; }
+                    .mobile-menu-item:nth-child(7) { animation-delay: 0.4s; }
+                    
+                    @keyframes mobileItemSlideIn {
+                        0% { 
+                            opacity: 0; 
+                            transform: translateX(-20px); 
+                        }
+                        100% { 
+                            opacity: 1; 
+                            transform: translateX(0); 
+                        }
+                    }
+                    
                     .mobile-sidebar-force {
                         z-index: 9999 !important;
                         position: fixed !important;
@@ -183,6 +231,68 @@ export default function Navbar({refresh}) {
                     .mobile-backdrop-force {
                         z-index: 9998 !important;
                         position: fixed !important;
+                    }
+                    
+                    /* Smooth underline animation for navbar links */
+                    .nav-link-animated {
+                        position: relative;
+                        font-size: 16px;
+                        color: rgba(255, 255, 255, 0.85);
+                        font-weight: 500;
+                        cursor: pointer;
+                        text-transform: none;
+                        transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+                        transition-duration: 400ms;
+                        transition-property: color, transform;
+                        padding: 0.75rem 1rem;
+                        border-radius: 0.5rem;
+                    }
+                    
+                    .nav-link-animated:focus,
+                    .nav-link-animated:hover,
+                    .nav-link-animated.active {
+                        color: #ffffff;
+                        transform: translateY(-1px);
+                    }
+                    
+                    /* Text-only underline effect */
+                    .nav-text-underline {
+                        position: relative;
+                        display: inline-block;
+                    }
+                    
+                    .nav-link-animated:focus .nav-text-underline:after,
+                    .nav-link-animated:hover .nav-text-underline:after,
+                    .nav-link-animated.active .nav-text-underline:after {
+                        width: 100%;
+                        left: 0%;
+                    }
+                    
+                    .nav-text-underline:after {
+                        content: "";
+                        pointer-events: none;
+                        bottom: -4px;
+                        left: 50%;
+                        position: absolute;
+                        width: 0%;
+                        height: 3px;
+                        background: linear-gradient(90deg, #ffffff, #f0fdf4, #ffffff);
+                        border-radius: 2px;
+                        transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+                        transition-duration: 400ms;
+                        transition-property: width, left;
+                        box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+                    }
+                    
+                    /* Enhanced dropdown animations */
+                    .nav-link-animated svg {
+                        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+                        transition: all 0.3s ease;
+                    }
+                    
+                    .nav-link-animated:hover svg,
+                    .nav-link-animated.active svg {
+                        transform: scale(1.05);
                     }
                 `}
             </style>
@@ -236,30 +346,30 @@ export default function Navbar({refresh}) {
                     </div>
                 </div>
             )}
-            <nav className="bg-green-800 shadow-2xl fixed w-full z-[9999] top-0 left-0 backdrop-blur-sm border-b border-white/10" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 py-3 text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <nav className="bg-gradient-to-r from-green-700 via-green-800 to-emerald-800 shadow-xl fixed w-full z-[9999] top-0 left-0 backdrop-blur-md border-b border-white/10" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 py-4 text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
                     <img
                         src={logo2}
                         alt="FITS -Tanza Logo"
-                        className="w-12 h-12 object-contain ml-2 rounded-full shadow-lg ring-2 ring-white/20"
+                        className="w-12 h-12 object-contain ml-2 rounded-full shadow-lg ring-2 ring-white/30"
                     />
                     <Link
                         to="/"
-                        className="flex items-center gap-3 font-bold text-xl px-3 text-white md:text-2xl hover:text-emerald-200 transition-colors duration-200"
+                        className="flex items-center gap-3 font-bold text-xl px-3 text-white md:text-2xl hover:text-white/90 transition-colors duration-300"
                     >
                         FITS -Tanza
                     </Link>
                     <div className="flex-1 flex justify-center">
-                        <ul className="hidden md:flex items-center gap-1 lg:gap-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                        <ul className="hidden md:flex items-center gap-6 lg:gap-8" style={{ fontFamily: 'Poppins, sans-serif' }}>
                             <li>
                                 <NavLink
                                     to="/"
                                     className={({ isActive }) =>
-                                        `group flex items-center gap-2 text-white/90 hover:bg-white/10 hover:text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-300 hover:shadow-lg backdrop-blur-sm ${isActive ? 'bg-white/15 text-white shadow-md' : ''}`
+                                        `nav-link-animated group flex items-center gap-2 px-4 py-3 font-medium transition-all duration-300 ${isActive ? 'active' : ''}`
                                     }
                                 >
                                     <svg
-                                        className="w-5 h-5 text-white/80 group-hover:text-white transition-colors duration-300"
+                                        className="w-5 h-5 transition-colors duration-300"
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
@@ -271,7 +381,7 @@ export default function Navbar({refresh}) {
                                             strokeLinejoin="round"
                                         />
                                     </svg>
-                                    {!isMidScreen && 'Home'}
+                                    {!isMidScreen && <span className="nav-text-underline">Home</span>}
                                 </NavLink>
                             </li>
                             <li 
@@ -289,10 +399,10 @@ export default function Navbar({refresh}) {
                                 <button
                                     type="button"
                                     tabIndex={0}
-                                    className={`group flex items-center gap-2 text-white/90 hover:bg-white/10 hover:text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-300 focus:outline-none hover:shadow-lg backdrop-blur-sm ${infoActive ? 'bg-white/15 text-white shadow-md' : ''}`}
+                                    className={`nav-link-animated group flex items-center gap-2 px-4 py-3 font-medium transition-all duration-300 focus:outline-none ${infoActive ? 'active' : ''}`}
                                 >
                                     <svg
-                                        className="w-5 h-5 text-white/80 group-hover:text-white transition-colors duration-300"
+                                        className="w-5 h-5 transition-colors duration-300"
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
@@ -313,9 +423,9 @@ export default function Navbar({refresh}) {
                                             strokeLinejoin="round"
                                         />
                                     </svg>
-                                    {!isMidScreen && 'Info'}
+                                    {!isMidScreen && <span className="nav-text-underline">Info</span>}
                                     <svg
-                                        className={`w-4 h-4 ml-1 transition-transform duration-200 text-white/70 group-hover:text-white ${
+                                        className={`w-4 h-4 ml-1 transition-transform duration-300 ${
                                             infoOpen ? 'rotate-180' : ''
                                         }`}
                                         fill="none"
@@ -331,21 +441,22 @@ export default function Navbar({refresh}) {
                                     </svg>
                                 </button>
                                 <ul
-                                    className={`absolute left-0 mt-2 w-48 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl py-3 z-[60] border border-white/20 transition-all duration-300 ${
+                                    className={`absolute left-0 mt-3 w-52 bg-white/98 backdrop-blur-xl rounded-2xl shadow-2xl py-2 z-[60] border border-white/30 transition-all duration-300 ${
                                         infoOpen
                                             ? 'opacity-100 translate-y-0 pointer-events-auto dropdown-animate'
                                             : 'opacity-0 -translate-y-6 pointer-events-none'
                                     }`}
+                                    style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
                                 >
                                     <li>
                                         <NavLink
                                             to="/about"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium ${isActive ? 'bg-emerald-100 text-emerald-900' : ''}`
+                                                `flex items-center gap-3 px-5 py-3 text-slate-700 hover:bg-green-50 hover:text-green-800 rounded-xl transition-all duration-200 font-medium mx-2 ${isActive ? 'bg-green-100 text-green-900' : ''}`
                                             }
                                         >
                                             <svg
-                                                className="w-5 h-5 text-emerald-500"
+                                                className="w-5 h-5 text-green-600"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -371,11 +482,11 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/contact"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium ${isActive ? 'bg-emerald-100 text-emerald-900' : ''}`
+                                                `flex items-center gap-3 px-5 py-3 text-slate-700 hover:bg-green-50 hover:text-green-800 rounded-xl transition-all duration-200 font-medium mx-2 ${isActive ? 'bg-green-100 text-green-900' : ''}`
                                             }
                                         >
                                             <svg
-                                                className="w-5 h-5 text-emerald-500"
+                                                className="w-5 h-5 text-green-600"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -412,10 +523,10 @@ export default function Navbar({refresh}) {
                                 <button
                                     type="button"
                                     tabIndex={0}
-                                    className={`group flex items-center gap-2 text-white/90 hover:bg-white/10 hover:text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-300 focus:outline-none hover:shadow-lg backdrop-blur-sm ${servicesActive ? 'bg-white/15 text-white shadow-md' : ''}`}
+                                    className={`nav-link-animated group flex items-center gap-2 px-4 py-3 font-medium transition-all duration-300 focus:outline-none ${servicesActive ? 'active' : ''}`}
                                 >
                                     <svg
-                                        className="w-5 h-5 text-white/80 group-hover:text-white transition-colors duration-300"
+                                        className="w-5 h-5 transition-colors duration-300"
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
@@ -427,9 +538,9 @@ export default function Navbar({refresh}) {
                                             strokeLinejoin="round"
                                         />
                                     </svg>
-                                    {!isMidScreen && 'Services'}
+                                    {!isMidScreen && <span className="nav-text-underline">Services</span>}
                                     <svg
-                                        className={`w-4 h-4 ml-1 transition-transform duration-200 text-white/70 group-hover:text-white ${
+                                        className={`w-4 h-4 ml-1 transition-transform duration-300 ${
                                             servicesOpen ? 'rotate-180' : ''
                                         }`}
                                         fill="none"
@@ -699,7 +810,7 @@ export default function Navbar({refresh}) {
                         ) : (
                             <Link
                                 to="/login"
-                                className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all duration-300 font-semibold shadow-lg border border-white/20 hover:border-white/40 backdrop-blur-sm hover:scale-105"
+                                className="nav-link-animated hidden md:flex items-center gap-2 px-4 py-3 transition-all duration-300 font-medium"
                             >
                                 <svg
                                     className="w-5 h-5"
@@ -714,7 +825,7 @@ export default function Navbar({refresh}) {
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                Login
+                                <span className="nav-text-underline">Login</span>
                             </Link>
                         )}
                         <button
@@ -750,26 +861,29 @@ export default function Navbar({refresh}) {
                 {/* PROFESSIONAL MOBILE NAVBAR WITH NESTED DROPDOWNS */}
                 {open && createPortal(
                     <>
-                        {/* Professional Backdrop */}
+                        {/* Professional Backdrop with fade-in animation */}
                         <div 
-                            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[999998] md:hidden"
+                            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[999998] md:hidden animate-fade-in"
                             onClick={() => setOpen(false)}
                             style={{ 
-                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                                animation: 'mobileBackdropFadeIn 0.3s ease-out forwards'
                             }}
                         />
                         
-                        {/* Professional Mobile Sidebar */}
+                        {/* Professional Mobile Sidebar with slide-in animation */}
                         <div 
-                            className="fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-[999999] md:hidden transform transition-transform duration-300 ease-out"
+                            className="fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-[999999] md:hidden animate-slide-in-left"
                             style={{
                                 fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-                                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)'
+                                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+                                animation: 'mobileSlideInLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+                                transform: 'translateX(-100%)'
                             }}
                         >
                             <div className="flex flex-col h-full">
                                 {/* Enhanced Professional Header */}
-                                <div className="relative px-6 py-8 bg-green-600 text-white overflow-hidden">
+                                <div className="relative px-6 py-3 bg-green-800 text-white overflow-hidden">
                                     {/* Background Pattern */}
                                     <div className="absolute inset-0 opacity-10">
                                         <div className="absolute top-0 left-0 w-full h-full"></div>
@@ -783,11 +897,11 @@ export default function Navbar({refresh}) {
                                                     alt="Farmer Connect" 
                                                     className="h-14 w-14 rounded-full border-3 border-white/30 shadow-lg object-cover"
                                                 />
-                                                <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 border-2 border-white rounded-full shadow-sm"></div>
+                                               
                                             </div>
                                             <div>
                                                 <h2 className="text-xl font-bold tracking-tight leading-tight">Farmer Connect</h2>
-                                                <p className="text-emerald-100 text-sm font-medium opacity-90">Agricultural Solutions</p>
+                                              
                                             </div>
                                         </div>
                                         <button
@@ -808,7 +922,7 @@ export default function Navbar({refresh}) {
                                         <NavLink 
                                             to="/" 
                                             className={({ isActive }) =>
-                                                `flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
+                                                `mobile-menu-item flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
                                                     isActive 
                                                         ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]' 
                                                         : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]'
@@ -833,7 +947,7 @@ export default function Navbar({refresh}) {
                                         </NavLink>
 
                                         {/* Info Dropdown with Professional Styling */}
-                                        <details className="group">
+                                        <details className="mobile-menu-item group">
                                             <summary className={`flex items-center justify-between py-4 px-4 rounded-xl transition-all duration-200 font-semibold cursor-pointer list-none hover:scale-[1.01] ${
                                                 infoActive 
                                                     ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm' 
@@ -935,7 +1049,7 @@ export default function Navbar({refresh}) {
                                         </details>
 
                                         {/* Services Dropdown with Professional Styling */}
-                                        <details className="group">
+                                        <details className="mobile-menu-item group">
                                             <summary className={`flex items-center justify-between py-4 px-4 rounded-xl transition-all duration-200 font-semibold cursor-pointer list-none hover:scale-[1.01] ${
                                                 servicesActive 
                                                     ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm' 
@@ -1093,7 +1207,7 @@ export default function Navbar({refresh}) {
                                             <NavLink 
                                                 to="/report"
                                                 className={({ isActive }) =>
-                                                    `flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
+                                                    `mobile-menu-item flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
                                                         isActive 
                                                             ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]' 
                                                             : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]'
@@ -1142,7 +1256,7 @@ export default function Navbar({refresh}) {
                                                     <NavLink 
                                                         to="/settings/profile"
                                                         className={({ isActive }) =>
-                                                            `flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
+                                                            `mobile-menu-item flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
                                                                 isActive 
                                                                     ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
                                                                     : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
@@ -1167,7 +1281,7 @@ export default function Navbar({refresh}) {
                                                     <NavLink 
                                                         to="/admin"
                                                         className={({ isActive }) =>
-                                                            `flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
+                                                            `mobile-menu-item flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
                                                                 isActive 
                                                                     ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
                                                                     : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
@@ -1197,7 +1311,7 @@ export default function Navbar({refresh}) {
                                                             setShowAlert(true);
                                                             setOpen(false);
                                                         }}
-                                                        className="flex items-center justify-center space-x-3 py-4 px-4 rounded-xl transition-all duration-200 font-semibold text-white bg-red-600 hover:bg-red-700 shadow-lg hover:shadow-xl transform hover:scale-105 w-full"
+                                                        className="mobile-menu-item flex items-center justify-center space-x-3 py-4 px-4 rounded-xl transition-all duration-200 font-semibold text-white bg-red-600 hover:bg-red-700 shadow-lg hover:shadow-xl transform hover:scale-105 w-full"
                                                     >
                                                         <svg
                                                             className="w-5 h-5 text-white"
@@ -1238,7 +1352,7 @@ export default function Navbar({refresh}) {
                                                     {/* Professional Login Button */}
                                                     <NavLink 
                                                         to="/login"
-                                                        className="flex items-center justify-center space-x-4 py-4 px-6 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+                                                        className="mobile-menu-item flex items-center justify-center space-x-4 py-4 px-6 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
                                                         onClick={() => setOpen(false)}
                                                     >
                                                         <svg

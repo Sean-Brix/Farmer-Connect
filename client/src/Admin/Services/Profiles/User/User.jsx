@@ -82,7 +82,7 @@ export default function User({ user, details, refetchRow }) {
                     account?.access === 'Super Admin'
                         ? 'bg-red-500 text-white border border-red-400'
                         : account?.access === 'Admin'
-                        ? 'bg-green-500 text-white border border-green-400'
+                        ? 'bg-blue-500 text-white border border-blue-400'
                         : 'bg-green-500 text-white border border-green-400'
                 }`} style={{letterSpacing: '0.03em'}}>
                     {account?.access}

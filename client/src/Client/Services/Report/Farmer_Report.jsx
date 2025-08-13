@@ -368,8 +368,8 @@ export default function Farmer_Report() {
   return (
     <>
       <Navbar />
-      <div className="pt-20 min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="pt-[14vh] min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="text-center mb-12">
             <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">

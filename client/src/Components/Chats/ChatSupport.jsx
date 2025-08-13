@@ -168,10 +168,10 @@ export default function ChatSupport() {
             <Navbar />
             
             {/* Main Chat Support Page - Professional Modal-like Layout */}
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50 to-gray-100 p-4 pt-32">
-                <div className="container mx-auto max-w-6xl">
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50 to-gray-100 p-4 pt-[16vh]">
+                <div className="container mx-auto max-w-5xl">
                     {/* Professional Page Header - EIC Style */}
-                    <div className="text-center mb-12 mt-8">
+                    <div className="text-center mb-12">
                         <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
                             Welcome to
                         </div>
