@@ -160,7 +160,7 @@ export default function Navbar({refresh}) {
     // Helper: is any of the Info links active?
     const infoActive = ['/about', '/contact'].some((path) => location.pathname.startsWith(path));
     // Helper: is any of the Services links active?
-    const servicesActive = ['/seminar', '/eic', '/distribution', '/chat-support'].some((path) => location.pathname.startsWith(path));
+    const servicesActive = ['/seminar', '/eic', '/distribution', '/chat-support', '/report'].some((path) => location.pathname.startsWith(path));
 
     const closeProfileTimeout = useRef();
 

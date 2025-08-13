@@ -123,9 +123,9 @@ export default function Profiles({ details }) {
                             <option value="Indigenous People">Indigenous People</option>
                         </select>
                     </div>
-                    <div className="flex-none ml-auto min-w-[110px] w-full sm:w-auto mt-2 sm:mt-0">
+                    <div className="flex-none ml-auto min-w-[110px] w-full  sm:w-auto mt-2 sm:mt-0">
                         <select
-                            className="sortby-select w-full sm:w-auto"
+                            className="sortby-select w-full sm:w-auto "
                             onChange={(e) => setFilter({ ...filter, order: e.target.value })}
                         >
                             <option value="none" >Sort by</option>

@@ -27,32 +27,52 @@ export default function User({ user, details, refetchRow }) {
     const Modal = ({ open, onClose, children }) => {
         if (!open) return null;
         return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 transition-opacity">
-                <div className="bg-white rounded-3xl shadow-2xl max-w-5xl w-full relative animate-fade-in max-h-[95vh] flex flex-col border border-green-100">
-                    <button
-                        onClick={onClose}
-                        className="absolute top-5 right-5 text-gray-400 hover:text-green-600 text-2xl font-bold focus:outline-none transition-colors"
-                        aria-label="Close"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-7 w-7"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70  transition-all duration-300">
+                <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full mx-4 relative animate-fade-in max-h-[90vh] flex flex-col border border-gray-200">
+                    <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white rounded-t-2xl">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-gray-600 rounded-xl shadow-sm">
+                                <svg
+                                    className="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M5.121 17.804A13.937 13.937 0 0112 15c2.485 0 4.797.607 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900">{editBtn ? 'Edit User Details' : 'User Profile Details'}</h2>
+                                <p className="text-sm text-gray-600">Manage user information and settings</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all duration-200 focus:outline-none"
+                            aria-label="Close"
                         >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
-                    </button>
-                    <div
-                        className="p-10 overflow-y-auto scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-green-50"
-                        style={{ maxHeight: '85vh' }}
-                    >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
                         {children}
                     </div>
                 </div>
@@ -119,29 +139,11 @@ export default function User({ user, details, refetchRow }) {
             </td>
             {/* Modal for Details */}
             <Modal open={isExpanded} onClose={() => setIsExpanded(false)}>
-                <h2 className="text-2xl font-bold mb-6 text-green-700 flex items-center gap-2">
-                    <svg
-                        className="w-6 h-6 text-green-500"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5.121 17.804A13.937 13.937 0 0112 15c2.485 0 4.797.607 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg>
-                    User Details
-                </h2>
-                <div className="mb-4">
-                    <User_Details
-                        user={account}
-                        isEdit={editBtn}
-                        refetchRow={refetchRow}
-                    />
-                </div>
+                <User_Details
+                    user={account}
+                    isEdit={editBtn}
+                    refetchRow={refetchRow}
+                />
             </Modal>
         </>
     );

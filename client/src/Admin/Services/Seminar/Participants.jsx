@@ -8,6 +8,10 @@ export default function Participants({ data, toggleOff }) {
     const [showSelect, setShowSelect] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [bulkStatus, setBulkStatus] = useState('Registered');
+    
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const [participantsPerPage] = useState(10);
 
     const queryClient = useQueryClient();
     const [initLoad, setInitLoad] = useState(true);
@@ -137,6 +141,22 @@ export default function Participants({ data, toggleOff }) {
             );
         }) || [];
 
+    // Pagination calculations
+    const totalParticipants = filteredParticipants.length;
+    const totalPages = Math.ceil(totalParticipants / participantsPerPage);
+    const startIndex = (currentPage - 1) * participantsPerPage;
+    const endIndex = startIndex + participantsPerPage;
+    const currentParticipants = filteredParticipants.slice(startIndex, endIndex);
+
+    // Reset to first page when search term changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     const handleBulkStatusChange = (e) => {
         setBulkStatus(e.target.value);
     };
@@ -182,212 +202,334 @@ export default function Participants({ data, toggleOff }) {
         (filteredParticipants ? filteredParticipants.length > 0 : 0);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-            <div className="relative w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl p-4 md:p-8 border border-blue-100 flex flex-col max-h-[97vh] transition-all duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+            <div className="relative w-full max-w-6xl mx-auto bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col max-h-[95vh] overflow-hidden">
                 {/* HEADER */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-8 mb-6 border-b pb-6">
-                    <div className="min-w-0 flex-1">
-                        <h2 className="text-2xl md:text-4xl font-extrabold mb-2 text-blue-900 tracking-tight leading-tight truncate">
-                            {data.title}
-                        </h2>
-                        <div className="flex flex-wrap gap-x-10 gap-y-2 text-blue-700 text-base md:text-lg font-medium">
-                            <div className="flex flex-col min-w-[120px]">
-                                <span className="break-all">
-                                    <span className="font-semibold text-blue-900">Speaker:</span>{' '}
-                                    <span className="break-all inline-block align-middle">{data.speaker}</span>
-                                </span>
-                                <span className="break-all mt-1">
-                                    <span className="font-semibold text-blue-900">Location:</span>{' '}
-                                    <span className="break-all inline-block align-middle">{data.location}</span>
-                                </span>
+                <div className="bg-gray-50 border-b border-gray-200 px-6 py-5">
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="p-2 bg-green-600 rounded-lg">
+                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                                    </svg>
+                                </div>
+                                <h2 className="text-xl font-bold text-gray-900 truncate">
+                                    Participants - {data.title}
+                                </h2>
                             </div>
-                            <div className="flex flex-col min-w-[120px]">
-                                <span className="break-all">
-                                    <span className="font-semibold text-blue-900">Status:</span>{' '}{data.status}
-                                </span>
-                                <span className="break-all mt-1">
-                                    <span className="font-semibold text-blue-900">Dates:</span>{' '}
-                                    {new Date(data.start_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
-                                    {' '}–{' '}
-                                    {new Date(data.end_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
-                                </span>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                <div className="bg-white rounded-lg p-3 border border-gray-200">
+                                    <div className="space-y-1">
+                                        <div><span className="font-medium text-gray-700">Speaker:</span> <span className="text-gray-900">{data.speaker}</span></div>
+                                        <div><span className="font-medium text-gray-700">Location:</span> <span className="text-gray-900">{data.location}</span></div>
+                                    </div>
+                                </div>
+                                <div className="bg-white rounded-lg p-3 border border-gray-200">
+                                    <div className="space-y-1">
+                                        <div><span className="font-medium text-gray-700">Status:</span> <span className="text-gray-900">{data.status}</span></div>
+                                        <div><span className="font-medium text-gray-700">Duration:</span> <span className="text-gray-900">
+                                            {new Date(data.start_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                                            {' '}–{' '}
+                                            {new Date(data.end_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                                        </span></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <button
+                            onClick={toggleOff}
+                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            aria-label="Close"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
-                    <button
-                        onClick={toggleOff}
-                        className="absolute top-3 right-3 md:static md:ml-4 bg-white border border-blue-200 hover:bg-blue-100 text-blue-700 rounded-full w-10 h-10 flex items-center justify-center shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        aria-label="Close"
-                    >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
                 </div>
 
                 {/* CONTROLS */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                    <div className="flex flex-col sm:flex-row gap-2 w-full md:w-2/3">
-                        <input
-                            type="text"
-                            placeholder="Search participants..."
-                            className="border border-blue-200 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 rounded-xl px-3 py-1 w-48 md:w-56 transition text-base shadow bg-white placeholder-gray-400"
-                            onChange={handleSearchChange}
-                            value={searchTerm}
-                            autoComplete="off"
-                            style={{ WebkitBoxShadow: '0 0 0 1000px white inset', boxShadow: '0 0 0 1000px white inset' }}
-                        />
-                        <button
-                            onClick={() => setStatsVisible(!statsVisible)}
-                            className="bg-gradient-to-r from-blue-200 to-blue-400 hover:from-blue-300 hover:to-blue-500 text-blue-900 font-semibold px-4 py-2 rounded-xl transition text-base shadow border border-blue-200"
-                        >
-                            {statsVisible ? 'Hide Stats' : 'Show Stats'}
-                        </button>
-                    </div>
+                <div className="bg-white border-b border-gray-200 px-6 py-4">
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                        {/* Left: Search and Stats */}
+                        <div className="flex flex-col sm:flex-row gap-3 flex-1">
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search participants..."
+                                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 text-sm w-64"
+                                    onChange={handleSearchChange}
+                                    value={searchTerm}
+                                    autoComplete="off"
+                                />
+                            </div>
+                            <button
+                                onClick={() => setStatsVisible(!statsVisible)}
+                                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors duration-200 text-sm border border-gray-300"
+                            >
+                                {statsVisible ? 'Hide Statistics' : 'Show Statistics'}
+                            </button>
+                        </div>
 
-                    {/* SELECT MULTIPLE */}
-                    <div className="flex flex-wrap gap-2 items-center mt-2 md:mt-0">
-                        <button
-                            onClick={() => setShowSelect(!showSelect)}
-                            className={`font-semibold px-4 py-2 rounded-xl transition text-base shadow border ${showSelect ? 'bg-gradient-to-r from-red-500 to-red-400 hover:from-red-600 hover:to-red-500 text-white border-red-300' : 'bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white border-blue-300'}`}
-                        >
-                            {showSelect ? 'Cancel' : 'Select Multiple'}
-                        </button>
+                        {/* Right: Selection Controls */}
+                        <div className="flex flex-wrap gap-2 items-center">
+                            <button
+                                onClick={() => setShowSelect(!showSelect)}
+                                className={`px-4 py-2 font-medium rounded-lg transition-colors duration-200 text-sm ${
+                                    showSelect 
+                                        ? 'bg-red-600 hover:bg-red-700 text-white border border-red-600' 
+                                        : 'bg-green-600 hover:bg-green-700 text-white border border-green-600'
+                                }`}
+                            >
+                                {showSelect ? 'Cancel Selection' : 'Select Multiple'}
+                            </button>
 
-                        {showSelect && (
-                            <>
-                                <button
-                                    onClick={handleSelectAll}
-                                    className={`bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold px-4 py-2 rounded-xl transition text-base shadow border border-blue-200 ${filteredParticipants.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    disabled={filteredParticipants.length === 0}
-                                >
-                                    {isAllSelected ? 'Deselect All' : 'Select All'}
-                                </button>
-                                <select
-                                    className="border border-blue-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition text-base bg-white"
-                                    value={bulkStatus}
-                                    onChange={handleBulkStatusChange}
-                                >
-                                    <option value="Registered">Registered</option>
-                                    <option value="Attended">Attended</option>
-                                    <option value="Cancelled">Cancelled</option>
-                                    <option value="Not Attended">Not Attended</option>
-                                </select>
-                                <button
-                                    onClick={handleUpdateBulkStatus}
-                                    className="bg-gradient-to-r from-green-500 to-green-400 hover:from-green-600 hover:to-green-500 text-white font-semibold px-4 py-2 rounded-xl transition text-base shadow border border-green-300"
-                                >
-                                    Update Selected
-                                </button>
-                            </>
-                        )}
+                            {showSelect && (
+                                <>
+                                    <button
+                                        onClick={handleSelectAll}
+                                        className={`px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors duration-200 text-sm border border-gray-300 ${
+                                            filteredParticipants.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                                        }`}
+                                        disabled={filteredParticipants.length === 0}
+                                    >
+                                        {isAllSelected ? 'Deselect All' : 'Select All'}
+                                    </button>
+                                    <select
+                                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 text-sm bg-white"
+                                        value={bulkStatus}
+                                        onChange={handleBulkStatusChange}
+                                    >
+                                        <option value="Registered">Registered</option>
+                                        <option value="Attended">Attended</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                        <option value="Not Attended">Not Attended</option>
+                                    </select>
+                                    <button
+                                        onClick={handleUpdateBulkStatus}
+                                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 text-sm border border-green-600"
+                                        disabled={selectedParticipants.length === 0}
+                                    >
+                                        Update Selected ({selectedParticipants.length})
+                                    </button>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                {/* STATS */}
+                {/* STATISTICS */}
                 {statsVisible && (
-                    <div className="mb-6 p-4 border rounded-2xl bg-gradient-to-r from-blue-50 via-white to-blue-100 flex flex-wrap gap-6 justify-between shadow-inner">
-                        <div className="flex flex-col items-center min-w-[70px]">
-                            <span className="text-2xl font-extrabold text-blue-700">{total}</span>
-                            <span className="text-xs text-gray-500">Total</span>
-                        </div>
-                        <div className="flex flex-col items-center min-w-[70px]">
-                            <span className="text-2xl font-extrabold text-green-700">{attended}</span>
-                            <span className="text-xs text-gray-500">Attended</span>
-                        </div>
-                        <div className="flex flex-col items-center min-w-[70px]">
-                            <span className="text-2xl font-extrabold text-blue-700">{registered}</span>
-                            <span className="text-xs text-gray-500">Registered</span>
-                        </div>
-                        <div className="flex flex-col items-center min-w-[70px]">
-                            <span className="text-2xl font-extrabold text-red-700">{cancelled}</span>
-                            <span className="text-xs text-gray-500">Cancelled</span>
-                        </div>
-                        <div className="flex flex-col items-center min-w-[70px]">
-                            <span className="text-2xl font-extrabold text-yellow-700">{noShow}</span>
-                            <span className="text-xs text-gray-500">Not Attended</span>
+                    <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                                <div className="text-2xl font-bold text-gray-900">{total}</div>
+                                <div className="text-sm text-gray-600 font-medium">Total</div>
+                            </div>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                                <div className="text-2xl font-bold text-green-600">{attended}</div>
+                                <div className="text-sm text-gray-600 font-medium">Attended</div>
+                            </div>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                                <div className="text-2xl font-bold text-blue-600">{registered}</div>
+                                <div className="text-sm text-gray-600 font-medium">Registered</div>
+                            </div>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                                <div className="text-2xl font-bold text-red-600">{cancelled}</div>
+                                <div className="text-sm text-gray-600 font-medium">Cancelled</div>
+                            </div>
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                                <div className="text-2xl font-bold text-yellow-600">{noShow}</div>
+                                <div className="text-sm text-gray-600 font-medium">Not Attended</div>
+                            </div>
                         </div>
                     </div>
                 )}
 
                 {/* PARTICIPANTS TABLE */}
                 {section === 'participants' && (
-                    <div className="overflow-x-auto rounded-2xl shadow-xl border border-blue-100 bg-white flex-1 min-h-0" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <table className="min-w-full text-base text-left text-gray-700">
-                            <thead className="text-xs uppercase bg-gradient-to-r from-blue-50 to-blue-100">
-                                <tr>
-                                    <th className="px-4 py-3 font-bold whitespace-nowrap">Full Name</th>
-                                    <th className="px-4 py-3 font-bold whitespace-nowrap">Email</th>
-                                    <th className="px-3 py-3 font-bold whitespace-nowrap">Status</th>
-                                    <th className="px-4 py-3 font-bold whitespace-nowrap">Registration Date</th>
-                                    <th className="px-3 py-3 font-bold whitespace-nowrap">Actions</th>
-                                    {showSelect && (
-                                        <th className="px-3 py-3 font-bold whitespace-nowrap">Select</th>
-                                    )}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {initLoad ? (
+                    <div className="flex-1 overflow-hidden">
+                        <div className="overflow-x-auto h-full">
+                            <table className="min-w-full text-sm">
+                                <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
                                     <tr>
-                                        <td colSpan={showSelect ? 7 : 6} className="px-4 py-16 text-center text-base font-semibold bg-blue-50">
-                                            <div className="flex flex-col items-center justify-center">
-                                                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500 mb-4"></div>
-                                                <p className="text-gray-700 text-lg font-semibold">Loading...</p>
-                                            </div>
-                                        </td>
+                                        <th className="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">
+                                            Full Name
+                                        </th>
+                                        <th className="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">
+                                            Email
+                                        </th>
+                                        <th className="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th className="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">
+                                            Registration Date
+                                        </th>
+                                        <th className="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">
+                                            Actions
+                                        </th>
+                                        {showSelect && (
+                                            <th className="px-6 py-3 text-center font-medium text-gray-700 uppercase tracking-wider">
+                                                Select
+                                            </th>
+                                        )}
                                     </tr>
-                                ) : error ? (
-                                    <tr>
-                                        <td colSpan={showSelect ? 7 : 6} className="px-4 py-16 text-center text-base font-semibold bg-blue-50">Error: {error.message}</td>
-                                    </tr>
-                                ) : filteredParticipants.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={showSelect ? 7 : 6} className="px-4 py-16 text-center text-base font-semibold bg-blue-50">No participants found.</td>
-                                    </tr>
-                                ) : (
-                                    filteredParticipants.map((user, index) => (
-                                        <tr key={index} className="bg-white border-b hover:bg-blue-50 transition">
-                                            <td className="px-4 py-3 max-w-[120px] md:max-w-[220px] truncate">
-                                                <span className="font-bold text-blue-900 truncate block">{user.info.fullName}</span>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {initLoad ? (
+                                        <tr>
+                                            <td colSpan={showSelect ? 6 : 5} className="px-6 py-16 text-center">
+                                                <div className="flex flex-col items-center justify-center">
+                                                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-green-600 border-t-transparent mb-3"></div>
+                                                    <p className="text-gray-600 font-medium">Loading participants...</p>
+                                                </div>
                                             </td>
-                                            <td className="px-4 py-3 max-w-[140px] md:max-w-[260px] truncate">
-                                                <span className="text-blue-700 truncate block">{user.info.email}</span>
-                                            </td>
-                                            <td className="px-3 py-3">
-                                                <span className={`text-xs font-bold px-3 py-1 rounded-full shadow-sm ${user.status === 'Registered' ? 'bg-blue-100 text-blue-800' : user.status === 'Attended' ? 'bg-green-100 text-green-800' : user.status === 'Cancelled' ? 'bg-red-100 text-red-800' : user.status === 'Not Attended' ? 'bg-gray-100 text-gray-800' : 'bg-yellow-100 text-yellow-800'}`}>{user.status || 'loading'}</span>
-                                            </td>
-                                            <td className="px-4 py-3 max-w-[100px] md:max-w-[180px] truncate">
-                                                <span className="text-gray-500 truncate block">{user.createdAt}</span>
-                                            </td>
-                                            <td className="px-3 py-3">
-                                                <select
-                                                    className="border border-blue-200 rounded-lg px-3 py-1 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition bg-white text-sm"
-                                                    value={user.status || 'loading'}
-                                                    onChange={(e) => handleStatusUpdate(e, user.id)}
-                                                    autoComplete="off"
-                                                    style={{ WebkitBoxShadow: '0 0 0 1000px white inset', boxShadow: '0 0 0 1000px white inset' }}
-                                                >
-                                                    <option value="Registered">Registered</option>
-                                                    <option value="Attended">Attended</option>
-                                                    <option value="Cancelled">Cancelled</option>
-                                                    <option value="Not Attended">Not Attended</option>
-                                                </select>
-                                            </td>
-                                            {showSelect && (
-                                                <td className="px-3 py-3 text-center">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedParticipants.includes(user.id)}
-                                                        onChange={() => handleToggleSelectParticipant(user.id)}
-                                                        className="w-5 h-5 accent-blue-500 rounded-lg border-blue-300"
-                                                    />
-                                                </td>
-                                            )}
                                         </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
+                                    ) : error ? (
+                                        <tr>
+                                            <td colSpan={showSelect ? 6 : 5} className="px-6 py-16 text-center">
+                                                <div className="text-red-600 font-medium">Error: {error.message}</div>
+                                            </td>
+                                        </tr>
+                                    ) : totalParticipants === 0 ? (
+                                        <tr>
+                                            <td colSpan={showSelect ? 6 : 5} className="px-6 py-16 text-center">
+                                                <div className="text-gray-500 font-medium">No participants found.</div>
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        currentParticipants.map((user, index) => (
+                                            <tr key={index} className="hover:bg-gray-50 transition-colors duration-150">
+                                                <td className="px-6 py-4">
+                                                    <div className="font-medium text-gray-900 truncate max-w-[200px]">
+                                                        {user.info.fullName}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="text-gray-700 truncate max-w-[250px]">
+                                                        {user.info.email}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                                                        user.status === 'Registered' ? 'bg-blue-100 text-blue-800' :
+                                                        user.status === 'Attended' ? 'bg-green-100 text-green-800' :
+                                                        user.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                                                        user.status === 'Not Attended' ? 'bg-gray-100 text-gray-800' :
+                                                        'bg-yellow-100 text-yellow-800'
+                                                    }`}>
+                                                        {user.status || 'Loading'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-gray-700">
+                                                    {user.createdAt}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <select
+                                                        className="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 bg-white"
+                                                        value={user.status || 'loading'}
+                                                        onChange={(e) => handleStatusUpdate(e, user.id)}
+                                                        autoComplete="off"
+                                                    >
+                                                        <option value="Registered">Registered</option>
+                                                        <option value="Attended">Attended</option>
+                                                        <option value="Cancelled">Cancelled</option>
+                                                        <option value="Not Attended">Not Attended</option>
+                                                    </select>
+                                                </td>
+                                                {showSelect && (
+                                                    <td className="px-6 py-4 text-center">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedParticipants.includes(user.id)}
+                                                            onChange={() => handleToggleSelectParticipant(user.id)}
+                                                            className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                                                        />
+                                                    </td>
+                                                )}
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        {/* Pagination Controls */}
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-between border-t border-gray-200 bg-white px-6 py-4">
+                                <div className="flex items-center text-sm text-gray-700">
+                                    <span>
+                                        Showing {startIndex + 1} to {Math.min(endIndex, totalParticipants)} of {totalParticipants} participants
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => handlePageChange(currentPage - 1)}
+                                        disabled={currentPage === 1}
+                                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                                            currentPage === 1
+                                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        }`}
+                                    >
+                                        Previous
+                                    </button>
+                                    
+                                    <div className="flex items-center gap-1">
+                                        {[...Array(totalPages)].map((_, index) => {
+                                            const page = index + 1;
+                                            if (
+                                                page === 1 ||
+                                                page === totalPages ||
+                                                (page >= currentPage - 1 && page <= currentPage + 1)
+                                            ) {
+                                                return (
+                                                    <button
+                                                        key={page}
+                                                        onClick={() => handlePageChange(page)}
+                                                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                                                            currentPage === page
+                                                                ? 'bg-green-600 text-white'
+                                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                        }`}
+                                                    >
+                                                        {page}
+                                                    </button>
+                                                );
+                                            } else if (
+                                                page === currentPage - 2 ||
+                                                page === currentPage + 2
+                                            ) {
+                                                return (
+                                                    <span key={page} className="px-1 text-gray-400">
+                                                        ...
+                                                    </span>
+                                                );
+                                            }
+                                            return null;
+                                        })}
+                                    </div>
+                                    
+                                    <button
+                                        onClick={() => handlePageChange(currentPage + 1)}
+                                        disabled={currentPage === totalPages}
+                                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                                            currentPage === totalPages
+                                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        }`}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

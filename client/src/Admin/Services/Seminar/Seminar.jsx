@@ -7,6 +7,58 @@ import Edit_Seminar from './Edit_Seminar';
 import Participants from './Participants';
 import Add_Program from './Add_Program';
 
+// Professional Delete Confirmation Modal
+function DeleteConfirmationModal({ isOpen, onClose, onConfirm, seminarTitle }) {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+            <div className="bg-white rounded-xl shadow-2xl max-w-md w-full border border-gray-200 overflow-hidden">
+                {/* Header */}
+                <div className="bg-red-50 border-b border-red-200 px-6 py-4">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-red-600 rounded-lg">
+                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                            </svg>
+                        </div>
+                        <h3 className="text-lg font-bold text-red-800">Delete Seminar</h3>
+                    </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                    <p className="text-gray-700 mb-2">
+                        Are you sure you want to delete this seminar?
+                    </p>
+                    <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                        <p className="font-medium text-gray-900 text-sm">"{seminarTitle}"</p>
+                    </div>
+                    <p className="text-red-600 text-sm mt-3 font-medium">
+                        ⚠️ This action cannot be undone. All participant data will be permanently deleted.
+                    </p>
+                </div>
+
+                {/* Footer */}
+                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end gap-3">
+                    <button
+                        onClick={onClose}
+                        className="px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-50 border border-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={onConfirm}
+                        className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 shadow-sm"
+                    >
+                        Delete Seminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function Seminar() {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -17,6 +69,8 @@ export default function Seminar() {
     const [selectMode, setSelectMode] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [seminarToDelete, setSeminarToDelete] = useState(null);
     const itemsPerPage = 6;
     const editData = useRef(null);
     const participantsData = useRef(null);
@@ -73,7 +127,10 @@ export default function Seminar() {
     };
 
     const handleDeleteSelected = async () => {
-        if (!confirm('Are You Sure?')) return;
+        if (selectedItems.length === 0) return;
+
+        // For bulk delete, we'll use the original simple confirm for now
+        if (!confirm(`Are you sure you want to delete ${selectedItems.length} seminar(s)?`)) return;
 
         selectedItems.forEach((idx) => {
             mutation.mutate(programList[idx].id);
@@ -81,6 +138,24 @@ export default function Seminar() {
 
         setSelectedItems([]);
         setSelectMode(false);
+    };
+
+    const handleDeleteSingle = (seminar) => {
+        setSeminarToDelete(seminar);
+        setShowDeleteModal(true);
+    };
+
+    const confirmDelete = () => {
+        if (seminarToDelete) {
+            mutation.mutate(seminarToDelete.id);
+            setShowDeleteModal(false);
+            setSeminarToDelete(null);
+        }
+    };
+
+    const cancelDelete = () => {
+        setShowDeleteModal(false);
+        setSeminarToDelete(null);
     };
 
     const edit_seminar = async (e, seminar) => {
@@ -196,15 +271,6 @@ export default function Seminar() {
                   </div>
                 </div>
 
-                {showAdd && (
-                    <Add_Program
-                        programList={programList}
-                        setShowAdd={setShowAdd}
-                        search={search}
-                        searchFilter={searchFilter}
-                        statusFilter={statusFilter}
-                    />
-                )}
                 {showEdit && (
                     <Edit_Seminar
                         data={editData.current}
@@ -278,11 +344,7 @@ export default function Seminar() {
                                             Edit
                                         </button>
                                         <button
-                                            onClick={() => {
-                                                if (window.confirm('Are you sure you want to delete this seminar?')) {
-                                                    mutation.mutate(item.id);
-                                                }
-                                            }}
+                                            onClick={() => handleDeleteSingle(item)}
                                             className="flex-1 min-w-[120px] bg-red-500 hover:bg-red-600 text-white cursor-pointer px-4 py-2 rounded-lg text-base font-semibold transition shadow-sm flex items-center justify-center"
                                             aria-label="Delete seminar"
                                             title="Delete seminar"
@@ -396,6 +458,49 @@ export default function Seminar() {
                     }
                 }
             `}</style>
+
+            {/* Modals */}
+            {showAdd && (
+                <Add_Program
+                    setShowAdd={setShowAdd}
+                    search={search}
+                    searchFilter={searchFilter}
+                    statusFilter={statusFilter}
+                />
+            )}
+
+            {showEdit && editData.current && (
+                <Edit_Seminar
+                    data={editData.current}
+                    toggleOff={() => {
+                        setShowEdit(false);
+                        editData.current = null;
+                    }}
+                    setProgramList={() => {
+                        queryClient.invalidateQueries({
+                            queryKey: ['seminars', search, searchFilter, statusFilter],
+                        });
+                    }}
+                />
+            )}
+
+            {showParticipants && participantsData.current && (
+                <Participants
+                    data={participantsData.current}
+                    toggleOff={() => {
+                        setShowParticipants(false);
+                        participantsData.current = null;
+                    }}
+                />
+            )}
+
+            {/* Delete Confirmation Modal */}
+            <DeleteConfirmationModal
+                isOpen={showDeleteModal}
+                onClose={cancelDelete}
+                onConfirm={confirmDelete}
+                seminarTitle={seminarToDelete?.title || ''}
+            />
         </div>
     );
 }
