@@ -310,7 +310,7 @@ function Survey() {
     switch (status) {
       case 'active': return 'bg-green-100 text-green-800 border border-green-200';
       case 'draft': return 'bg-gray-100 text-gray-800 border border-gray-200';
-      case 'inactive': return 'bg-red-100 text-red-800 border border-red-200';
+      case 'inactive': return 'bg-gray-200 text-gray-800 border border-gray-300';
       default: return 'bg-gray-100 text-gray-800 border border-gray-200';
     }
   };
@@ -525,15 +525,15 @@ function Survey() {
                         <p className="text-gray-600 mb-4 leading-relaxed">{survey.description}</p>
                         <div className="flex flex-wrap gap-6 text-sm text-gray-500">
                           <span className="flex items-center gap-1">
-                            <span className="text-green-500">📝</span>
+                            <span className="text-green-600">📝</span>
                             {survey.fields.length} fields
                           </span>
                           <span className="flex items-center gap-1">
-                            <span className="text-blue-500">📅</span>
+                            <span className="text-gray-600">📅</span>
                             Created: {survey.createdAt}
                           </span>
                           <span className="flex items-center gap-1">
-                            <span className="text-purple-500">🔄</span>
+                            <span className="text-gray-600">🔄</span>
                             Updated: {survey.updatedAt}
                           </span>
                         </div>
@@ -677,7 +677,7 @@ function Survey() {
                           </div>
                           <button
                             onClick={() => removeField(field.id)}
-                            className="text-gray-600 hover:text-red-600 transition-colors duration-200 p-2 hover:bg-red-50 rounded-lg"
+                            className="text-gray-600 hover:text-gray-800 transition-colors duration-200 p-2 hover:bg-gray-100 rounded-lg"
                             title="Remove field"
                           >
                             🗑️
@@ -747,7 +747,7 @@ function Survey() {
                                   {field.options.length > 1 && (
                                     <button
                                       onClick={() => removeOption(field.id, optionIndex)}
-                                      className="text-gray-600 hover:text-red-600 transition-colors duration-200 p-2 hover:bg-red-50 rounded-lg"
+                                      className="text-gray-600 hover:text-gray-800 transition-colors duration-200 p-2 hover:bg-gray-100 rounded-lg"
                                       title="Remove option"
                                     >
                                       ❌
@@ -850,7 +850,7 @@ function Survey() {
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
               <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="text-red-500">⚠️</span>
+                <span className="text-gray-600">⚠️</span>
                 Confirm Delete
               </h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
@@ -860,7 +860,7 @@ function Survey() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => deleteSurvey(surveyToDelete?.id)}
-                  className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-all duration-200 font-medium flex items-center justify-center gap-2 hover:shadow-lg"
+                  className="bg-red-800 text-white px-6 py-3 rounded-lg hover:bg-red-500 transition-all duration-200 font-medium flex items-center justify-center gap-2 hover:shadow-lg"
                 >
                   <span>🗑️</span>
                   Delete Survey
@@ -935,7 +935,7 @@ function Survey() {
                           <span className="flex items-center gap-2">
                             <span className="text-green-600 font-semibold">#{index + 1}</span>
                             {field.label}
-                            {field.required && <span className="text-red-500 ml-1">*</span>}
+                            {field.required && <span className="text-gray-700 ml-1">*</span>}
                           </span>
                         </label>
                         

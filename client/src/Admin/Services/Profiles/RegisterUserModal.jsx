@@ -226,7 +226,7 @@ class RegisterUserModal extends Component {
         if (register === 'third') stepIndex = 2;
 
         return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80  transition-opacity">
                 <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl max-w-4xl w-full mx-6 relative max-h-[95vh] flex flex-col border border-white/20" style={{boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'}}>
                     <button
                         onClick={() => {

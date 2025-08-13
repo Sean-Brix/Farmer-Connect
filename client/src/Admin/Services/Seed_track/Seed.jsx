@@ -27,8 +27,8 @@ ChartJS.register(
 
 function Seed_Track() {
   const [activeTab, setActiveTab] = useState('overview');
-  const [openFarmerTabs, setOpenFarmerTabs] = useState([]); // Array of farmer objects for multiple tabs
-  const [activeFarmerId, setActiveFarmerId] = useState(null); // Currently active farmer tab
+  const [openFarmerTabs, setOpenFarmerTabs] = useState([]);
+  const [activeFarmerId, setActiveFarmerId] = useState(null);
   const [selectedFarmerTab, setSelectedFarmerTab] = useState('reports');
   const [showCropReportsModal, setShowCropReportsModal] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
@@ -42,6 +42,13 @@ function Seed_Track() {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Filter state
+  const [filters, setFilters] = useState({
+    search: '',
+    status: 'all',
+    location: 'all'
+  });
 
   // Alert state
   const [alert, setAlert] = useState({
@@ -687,13 +694,6 @@ function Seed_Track() {
     }
   ]);
 
-  // Filters
-  const [filters, setFilters] = useState({
-    status: 'all',
-    location: 'all',
-    cropType: 'all'
-  });
-
   // BBCH Scale Mappings for different crops
   const getBBCHStages = (cropType) => {
     const stages = {
@@ -801,51 +801,51 @@ function Seed_Track() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Alert */}
         {alert && alert.show && (
           <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg border-l-4 max-w-sm ${
             alert.type === 'success' 
-              ? 'bg-green-50 border-green-400 text-green-800' 
-              : 'bg-red-50 border-red-400 text-red-800'
+              ? 'bg-green-50 border-green-500 text-green-800' 
+              : 'bg-gray-50 border-gray-500 text-gray-800'
           }`}>
             <span className="font-medium text-sm">{alert.message}</span>
           </div>
         )}
 
         {/* Professional Title Section */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-3 mb-3">
-            <div className="p-3 bg-green-100 rounded-full">
+        <div className="text-center mb-8 sm:mt-20">
+          <div className="inline-flex items-center gap-3 mb-4">
+            <div className="p-3 bg-green-100 rounded-xl border border-green-200">
               <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-              Seed Tracking
+            <h1 className="text-3xl sm:text-4xl font-bold text-black">
+              Seed Tracking System
             </h1>
           </div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Monitor and track farmer seed planting progress and crop reports
+            Monitor and track farmer seed planting progress with comprehensive crop reports
           </p>
         </div>
 
         {/* Main Content Container */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-4 sm:p-6 lg:p-8">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
+          <div className="p-6 lg:p-8">
             {/* Navigation Tabs */}
             <div className="border-b border-gray-200 mb-8">
               <nav className="flex space-x-8 overflow-x-auto">
                 <button
                   onClick={() => setActiveTab('overview')}
-                  className={`py-3 px-1 text-sm font-medium border-b-2 whitespace-nowrap flex items-center gap-2 ${
+                  className={`py-3 px-1 text-sm font-semibold border-b-2 whitespace-nowrap flex items-center gap-2 transition-colors duration-200 ${
                     activeTab === 'overview'
-                      ? 'border-green-500 text-green-600'
+                      ? 'border-green-600 text-green-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   Overview
@@ -857,7 +857,7 @@ function Seed_Track() {
                     key={farmer.farmerId}
                     className={`flex items-center border-b-2 ${
                       activeFarmerId === farmer.farmerId && activeTab === 'farmer'
-                        ? 'border-green-500'
+                        ? 'border-green-600'
                         : 'border-transparent'
                     }`}
                   >
@@ -866,13 +866,13 @@ function Seed_Track() {
                         setActiveFarmerId(farmer.farmerId);
                         setActiveTab('farmer');
                       }}
-                      className={`py-3 px-1 text-sm font-medium whitespace-nowrap flex items-center gap-2 ${
+                      className={`py-3 px-1 text-sm font-semibold whitespace-nowrap flex items-center gap-2 transition-colors duration-200 ${
                         activeFarmerId === farmer.farmerId && activeTab === 'farmer'
                           ? 'text-green-600'
                           : 'text-gray-500 hover:text-gray-700'
                       }`}
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                       <span className="hidden sm:inline">{farmer.name}</span>
@@ -880,9 +880,9 @@ function Seed_Track() {
                     </button>
                     <button
                       onClick={(e) => closeFarmerTab(farmer.farmerId, e)}
-                      className="ml-1 p-1 text-gray-400 hover:text-gray-600 rounded"
+                      className="ml-2 p-1 text-gray-400 hover:text-gray-600 rounded-md transition-colors duration-200"
                     >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </button>
@@ -894,64 +894,64 @@ function Seed_Track() {
             {/* Tab Content */}
         {activeTab === 'overview' && (
           <div>
-            {/* Overview Statistics - Enhanced 60-30-10 color scheme */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+            {/* Overview Statistics - Clean Professional Design */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {(() => {
                 const stats = getOverviewStatistics();
                 return (
                   <>
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
+                    <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200">
                       <div className="flex items-center">
-                        <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
-                          <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <div className="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
+                          <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </div>
                         <div className="ml-4">
-                          <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.totalFarmers}</h3>
-                          <p className="text-sm text-gray-600">Total Farmers</p>
+                          <h3 className="text-2xl font-bold text-black">{stats.totalFarmers}</h3>
+                          <p className="text-sm text-gray-600 font-medium">Total Farmers</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
+                    <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200">
                       <div className="flex items-center">
-                        <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center">
                           <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </div>
                         <div className="ml-4">
-                          <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.totalReports}</h3>
-                          <p className="text-sm text-gray-600">Total Reports</p>
+                          <h3 className="text-2xl font-bold text-black">{stats.totalReports}</h3>
+                          <p className="text-sm text-gray-600 font-medium">Total Reports</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
+                    <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200">
                       <div className="flex items-center">
-                        <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
-                          <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <div className="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
+                          <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </div>
                         <div className="ml-4">
-                          <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.activeCrops}</h3>
-                          <p className="text-sm text-gray-600">Active Crops</p>
+                          <h3 className="text-2xl font-bold text-black">{stats.activeCrops}</h3>
+                          <p className="text-sm text-gray-600 font-medium">Active Crops</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
+                    <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200">
                       <div className="flex items-center">
-                        <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center">
                           <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </div>
                         <div className="ml-4">
-                          <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{stats.recentReports}</h3>
-                          <p className="text-sm text-gray-600">Recent Reports</p>
+                          <h3 className="text-2xl font-bold text-black">{stats.recentReports}</h3>
+                          <p className="text-sm text-gray-600 font-medium">Recent Reports</p>
                         </div>
                       </div>
                     </div>
@@ -960,54 +960,210 @@ function Seed_Track() {
               })()}
             </div>
 
-            {/* Analytics Charts - Enhanced 60-30-10 color scheme */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            {/* Analytics Charts - Modern Design with 3 charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
               {(() => {
                 const stats = getOverviewStatistics();
                 
-                // Crop Distribution Chart Data
+                // Modern Crop Distribution Chart Data with gradient-inspired colors
                 const cropChartData = {
                   labels: Object.keys(stats.cropDistribution),
                   datasets: [{
                     data: Object.values(stats.cropDistribution),
                     backgroundColor: [
-                      '#FF6384',
-                      '#36A2EB',
-                      '#FFCE56',
-                      '#4BC0C0',
-                      '#9966FF',
-                      '#FF9F40'
+                      '#10B981', // Emerald 500
+                      '#059669', // Emerald 600  
+                      '#047857', // Emerald 700
+                      '#065F46', // Emerald 800
+                      '#6B7280', // Gray 500
+                      '#4B5563'  // Gray 600
                     ],
-                    borderWidth: 2,
-                    borderColor: '#fff'
+                    borderWidth: 0,
+                    hoverBorderWidth: 2,
+                    hoverBorderColor: '#ffffff',
+                    hoverOffset: 8
                   }]
                 };
 
-                // Health Status Chart Data
+                // Modern Health Status Chart Data with enhanced styling
                 const healthChartData = {
                   labels: Object.keys(stats.healthDistribution),
                   datasets: [{
-                    label: 'Number of Reports',
+                    label: 'Reports',
                     data: Object.values(stats.healthDistribution),
                     backgroundColor: [
-                      '#10B981', // Healthy - Green
-                      '#F59E0B', // Warning - Yellow
-                      '#EF4444', // Critical - Red
-                      '#6B7280'  // Unknown - Gray
+                      '#10B981', // Healthy - Emerald
+                      '#6B7280', // Warning - Gray  
+                      '#374151', // Critical - Dark Gray
+                      '#9CA3AF'  // Unknown - Light Gray
                     ],
-                    borderWidth: 1
+                    borderWidth: 0,
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    barThickness: 40,
+                    maxBarThickness: 50
                   }]
                 };
 
-                const chartOptions = {
+                // Monthly Reports Trend Chart Data
+                const monthlyTrendData = {
+                  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                  datasets: [{
+                    label: 'Reports Submitted',
+                    data: [12, 19, 15, 25, 22, 30, 28, 35],
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#10B981',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 8
+                  }]
+                };
+
+                // Modern chart options with enhanced styling
+                const modernChartOptions = {
                   responsive: true,
                   maintainAspectRatio: false,
                   plugins: {
                     legend: {
                       position: 'bottom',
                       labels: {
-                        padding: 20,
-                        usePointStyle: true
+                        padding: 24,
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        color: '#374151',
+                        font: {
+                          size: 13,
+                          weight: '500',
+                          family: 'Inter, system-ui, sans-serif'
+                        },
+                        generateLabels: function(chart) {
+                          const data = chart.data;
+                          if (data.labels.length && data.datasets.length) {
+                            return data.labels.map((label, i) => {
+                              const meta = chart.getDatasetMeta(0);
+                              const style = meta.controller.getStyle(i);
+                              return {
+                                text: label,
+                                fillStyle: style.backgroundColor,
+                                strokeStyle: style.borderColor,
+                                lineWidth: style.borderWidth,
+                                pointStyle: 'circle',
+                                hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
+                                index: i
+                              };
+                            });
+                          }
+                          return [];
+                        }
+                      }
+                    },
+                    tooltip: {
+                      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                      titleColor: '#ffffff',
+                      bodyColor: '#ffffff',
+                      borderColor: '#10B981',
+                      borderWidth: 1,
+                      cornerRadius: 8,
+                      padding: 12,
+                      titleFont: {
+                        size: 14,
+                        weight: '600'
+                      },
+                      bodyFont: {
+                        size: 13,
+                        weight: '400'
+                      }
+                    }
+                  }
+                };
+
+                const modernBarOptions = {
+                  ...modernChartOptions,
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      border: {
+                        display: false
+                      },
+                      grid: {
+                        color: '#F3F4F6',
+                        drawBorder: false
+                      },
+                      ticks: {
+                        stepSize: 1,
+                        color: '#6B7280',
+                        font: {
+                          size: 12,
+                          weight: '500'
+                        },
+                        padding: 8
+                      }
+                    },
+                    x: {
+                      border: {
+                        display: false
+                      },
+                      grid: {
+                        display: false
+                      },
+                      ticks: {
+                        color: '#6B7280',
+                        font: {
+                          size: 12,
+                          weight: '500'
+                        },
+                        padding: 8
+                      }
+                    }
+                  }
+                };
+
+                const modernLineOptions = {
+                  ...modernChartOptions,
+                  plugins: {
+                    ...modernChartOptions.plugins,
+                    legend: {
+                      display: false
+                    }
+                  },
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      border: {
+                        display: false
+                      },
+                      grid: {
+                        color: '#F3F4F6',
+                        drawBorder: false
+                      },
+                      ticks: {
+                        color: '#6B7280',
+                        font: {
+                          size: 12,
+                          weight: '500'
+                        },
+                        padding: 8
+                      }
+                    },
+                    x: {
+                      border: {
+                        display: false
+                      },
+                      grid: {
+                        display: false
+                      },
+                      ticks: {
+                        color: '#6B7280',
+                        font: {
+                          size: 12,
+                          weight: '500'
+                        },
+                        padding: 8
                       }
                     }
                   }
@@ -1015,37 +1171,80 @@ function Seed_Track() {
 
                 return (
                   <>
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                        Crop Distribution
-                      </h3>
-                      <div style={{ height: '300px' }}>
-                        <Doughnut data={cropChartData} options={chartOptions} />
+                    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+                      <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-lg font-semibold text-black flex items-center gap-2">
+                          <div className="p-2 bg-green-100 rounded-lg">
+                            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </div>
+                          Crop Distribution
+                        </h3>
+                        <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                          {Object.values(stats.cropDistribution).reduce((a, b) => a + b, 0)} total crops
+                        </span>
                       </div>
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                        Health Status Distribution
-                      </h3>
-                      <div style={{ height: '300px' }}>
-                        <Bar data={healthChartData} options={{
-                          ...chartOptions,
-                          scales: {
-                            y: {
-                              beginAtZero: true,
-                              ticks: {
-                                stepSize: 1
-                              }
+                      <div className="relative" style={{ height: '280px' }}>
+                        <Doughnut data={cropChartData} options={{
+                          ...modernChartOptions,
+                          cutout: '65%',
+                          plugins: {
+                            ...modernChartOptions.plugins,
+                            legend: {
+                              ...modernChartOptions.plugins.legend,
+                              position: 'bottom'
                             }
                           }
                         }} />
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-black">
+                              {Object.keys(stats.cropDistribution).length}
+                            </div>
+                            <div className="text-sm text-gray-500 font-medium">
+                              Types
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+                      <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-lg font-semibold text-black flex items-center gap-2">
+                          <div className="p-2 bg-green-100 rounded-lg">
+                            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </div>
+                          Health Status
+                        </h3>
+                        <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                          {Object.values(stats.healthDistribution).reduce((a, b) => a + b, 0)} reports
+                        </span>
+                      </div>
+                      <div style={{ height: '280px' }}>
+                        <Bar data={healthChartData} options={modernBarOptions} />
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+                      <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-lg font-semibold text-black flex items-center gap-2">
+                          <div className="p-2 bg-green-100 rounded-lg">
+                            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </div>
+                          Monthly Trend
+                        </h3>
+                        <span className="text-sm text-green-600 bg-green-100 px-3 py-1 rounded-full font-medium">
+                           +12% growth
+                        </span>
+                      </div>
+                      <div style={{ height: '280px' }}>
+                        <Line data={monthlyTrendData} options={modernLineOptions} />
                       </div>
                     </div>
                   </>
@@ -1053,13 +1252,15 @@ function Seed_Track() {
               })()}
             </div>
 
-            {/* Enhanced Filters - 60-30-10 color scheme */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 mb-6">
-              <div className="flex items-center gap-2 mb-4">
-                <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <span className="text-sm font-medium text-gray-700">Search & Filter:</span>
+            {/* Filters Section - Clean Professional Design */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-black flex items-center gap-2">
+                  <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Search & Filter
+                </h3>
               </div>
 
               {/* Search Bar and Filters in horizontal layout */}
@@ -1131,19 +1332,19 @@ function Seed_Track() {
               </div>
             </div>
 
-            {/* Enhanced Farmers Table - 60-30-10 color scheme */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+            {/* Farmers Table - Clean Professional Design */}
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
               {/* Table Header */}
               <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-black flex items-center gap-2">
                     <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     Farmers Directory
                   </h3>
-                  <div className="text-sm text-gray-600">
-                    Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, getFilteredFarmers().length)} of {getFilteredFarmers().length} farmers
+                  <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                    {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, getFilteredFarmers().length)} of {getFilteredFarmers().length} farmers
                   </div>
                 </div>
               </div>
@@ -1153,61 +1354,59 @@ function Seed_Track() {
                 <table className="w-full">
                   <thead className="bg-gray-50 border-b border-gray-200">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Farmer</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crops</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reports</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Farmer</th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Contact</th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Location</th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Crops</th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Reports</th>
+                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
+                      <th className="px-3 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white divide-y divide-gray-100">
                     {getPaginatedFarmers().map((farmer) => (
-                      <tr key={farmer.id} className="hover:bg-gray-50 transition-colors duration-200">
-                        <td className="px-6 py-4 whitespace-nowrap">
+                      <tr key={farmer.id} className="hover:bg-gray-50 transition-colors duration-150">
+                        <td className="px-6 py-3 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-700 font-bold text-sm border border-gray-200">
-                              {farmer.name.split(' ').map(n => n[0]).join('')}
-                            </div>
-                            <div className="ml-3">
-                              <div className="text-sm font-medium text-gray-900">{farmer.name}</div>
+                            <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                            <div className="ml-0">
+                              <div className="text-sm font-semibold text-black">{farmer.name}</div>
                               <div className="text-xs text-gray-500">ID: {farmer.id}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{farmer.email}</div>
-                          <div className="text-sm text-gray-500">{farmer.phone}</div>
+                        <td className="px-6 py-3 whitespace-nowrap">
+                          <div className="text-sm text-black">{farmer.email}</div>
+                          <div className="text-sm text-gray-600">{farmer.phone}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{farmer.location}</div>
+                        <td className="px-6 py-3 whitespace-nowrap">
+                          <div className="text-sm text-black">{farmer.location}</div>
                           <div className="text-xs text-gray-500">Joined: {farmer.joinDate}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-3 whitespace-nowrap">
                           <div className="flex flex-wrap gap-1">
                             {farmer.cropTypes.map((crop, index) => (
-                              <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+                              <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-300">
                                 {crop}
                               </span>
                             ))}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <div className="text-sm font-medium text-gray-900">{farmer.totalReports}</div>
+                        <td className="px-6 py-3 whitespace-nowrap text-center">
+                          <div className="text-sm font-semibold text-black">{farmer.totalReports}</div>
                           <div className="text-xs text-gray-500">reports</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            farmer.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        <td className="px-3 py-3 whitespace-nowrap">
+                          <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
+                            farmer.status === 'Active' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-gray-100 text-gray-700 border border-gray-200'
                           }`}>
                             {farmer.status}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <td className="px-3 py-3 whitespace-nowrap text-right">
                           <button
                             onClick={() => openFarmerTab({ farmerId: farmer.id, name: farmer.name, ...farmer })}
-                            className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200"
+                            className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 rounded-lg transition-colors duration-200"
                           >
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                               <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" />
@@ -1222,17 +1421,17 @@ function Seed_Track() {
                 </table>
               </div>
 
-              {/* Pagination */}
+              {/* Pagination - Clean Design */}
               <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="text-sm text-gray-700">
+                  <div className="text-sm text-gray-600 font-medium">
                     Page {currentPage} of {getTotalPages()}
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1">
                     <button
                       onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                       disabled={currentPage === 1}
-                      className="px-3 py-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                     >
                       Previous
                     </button>
@@ -1245,9 +1444,9 @@ function Seed_Track() {
                           <button
                             key={pageNum}
                             onClick={() => setCurrentPage(pageNum)}
-                            className={`px-3 py-1 text-sm font-medium rounded-md transition-colors duration-200 ${
+                            className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
                               currentPage === pageNum
-                                ? 'bg-green-600 text-white'
+                                ? 'bg-green-600 text-white border border-green-600'
                                 : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                             }`}
                           >
@@ -1260,7 +1459,7 @@ function Seed_Track() {
                     <button
                       onClick={() => setCurrentPage(Math.min(getTotalPages(), currentPage + 1))}
                       disabled={currentPage === getTotalPages()}
-                      className="px-3 py-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                     >
                       Next
                     </button>
@@ -1279,14 +1478,11 @@ function Seed_Track() {
           return (
             <div className="bg-white rounded-xl shadow-lg border border-gray-200">
               {/* Enhanced Farmer Header */}
-              <div className="border-b border-gray-100 p-4 sm:p-6">
+              <div className="border-b border-gray-100 p-4 sm:p-5">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center">
-                    <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center text-gray-700 font-bold text-xl border border-gray-200">
-                      {currentFarmer.name.split(' ').map(n => n[0]).join('')}
-                    </div>
-                    <div className="ml-4">
-                      <h2 className="text-2xl font-bold text-gray-900">{currentFarmer.name}</h2>
+                    <div className="ml-0">
+                      <h2 className="text-xl font-bold text-gray-900">{currentFarmer.name}</h2>
                       <p className="text-gray-600">{currentFarmer.email}</p>
                       <p className="text-gray-600">{currentFarmer.location}</p>
                     </div>
@@ -1757,20 +1953,20 @@ function Seed_Track() {
                     
                     <div className="mt-4 flex flex-wrap gap-4 text-sm">
                       <div className="flex items-center">
-                        <div className="w-4 h-4 bg-green-50 border border-green-300 rounded mr-2"></div>
-                        <span className="text-gray-600">Report Submitted</span>
+                        <div className="w-4 h-4 bg-green-500 rounded mr-2"></div>
+                        <span className="text-gray-700">Report Submitted</span>
                       </div>
                       <div className="flex items-center">
-                        <div className="w-4 h-4 bg-yellow-50 border border-yellow-300 rounded mr-2"></div>
-                        <span className="text-gray-600">Current Month</span>
+                        <div className="w-4 h-4 bg-gray-500 rounded mr-2"></div>
+                        <span className="text-gray-700">Current Month</span>
                       </div>
                       <div className="flex items-center">
-                        <div className="w-4 h-4 bg-red-50 border border-red-300 rounded mr-2"></div>
-                        <span className="text-gray-600">Missing Report</span>
+                        <div className="w-4 h-4 bg-gray-300 rounded mr-2"></div>
+                        <span className="text-gray-700">Missing Report</span>
                       </div>
                       <div className="flex items-center">
-                        <div className="w-4 h-4 bg-gray-50 border border-gray-300 rounded mr-2"></div>
-                        <span className="text-gray-600">Future Report</span>
+                        <div className="w-4 h-4 bg-gray-100 border border-gray-300 rounded mr-2"></div>
+                        <span className="text-gray-700">Future Report</span>
                       </div>
                     </div>
                   </div>
@@ -1794,9 +1990,9 @@ function Seed_Track() {
                           {/* Report Header */}
                           <div className={`px-4 py-3 border-l-4 ${
                             report.healthStatus === 'Healthy' ? 'bg-green-50 border-green-500' :
-                            report.healthStatus === 'Warning' ? 'bg-yellow-50 border-yellow-500' :
-                            report.healthStatus === 'Critical' ? 'bg-red-50 border-red-500' :
-                            'bg-gray-50 border-gray-500'
+                            report.healthStatus === 'Warning' ? 'bg-gray-50 border-gray-500' :
+                            report.healthStatus === 'Critical' ? 'bg-gray-100 border-gray-600' :
+                            'bg-white border-gray-400'
                           }`}>
                             <div className="flex items-center justify-between mb-2">
                               <h4 className="text-base font-semibold text-gray-800 flex items-center">
@@ -1807,9 +2003,9 @@ function Seed_Track() {
                               </h4>
                               <div className="flex items-center space-x-3">
                                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                  report.healthStatus === 'Healthy' ? 'bg-green-500 text-white' :
-                                  report.healthStatus === 'Warning' ? 'bg-yellow-500 text-white' :
-                                  report.healthStatus === 'Critical' ? 'bg-red-500 text-white' :
+                                  report.healthStatus === 'Healthy' ? 'bg-green-600 text-white' :
+                                  report.healthStatus === 'Warning' ? 'bg-gray-600 text-white' :
+                                  report.healthStatus === 'Critical' ? 'bg-black text-white' :
                                   'bg-gray-500 text-white'
                                 }`}>
                                   {report.healthStatus}
@@ -1822,7 +2018,7 @@ function Seed_Track() {
                             
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mt-3">
                               <div className="flex items-center bg-white rounded p-2 border border-gray-100">
-                                <svg className="w-4 h-4 text-blue-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                   <path d="M7 21l3-9 9-3-3 9-9 3z" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                                 <div>
@@ -1840,7 +2036,7 @@ function Seed_Track() {
                                 </div>
                               </div>
                               <div className="flex items-center bg-white rounded p-2 border border-gray-100">
-                                <svg className="w-4 h-4 text-orange-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-gray-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                   <path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                                 <div>
@@ -1849,7 +2045,7 @@ function Seed_Track() {
                                 </div>
                               </div>
                               <div className="flex items-center bg-white rounded p-2 border border-gray-100">
-                                <svg className="w-4 h-4 text-sky-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-gray-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                   <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                                 <div>
@@ -1862,14 +2058,14 @@ function Seed_Track() {
                           
                           {/* Report Notes */}
                           {report.notes && (
-                            <div className="px-4 py-3 bg-blue-50 border-t border-blue-100">
+                            <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
                               <div className="flex items-start space-x-2">
-                                <svg className="w-4 h-4 text-blue-600 mt-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-gray-600 mt-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                   <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                                 <div>
-                                  <p className="text-blue-800 font-medium text-sm mb-1">Additional Notes:</p>
-                                  <p className="text-blue-700 text-sm">{report.notes}</p>
+                                  <p className="text-gray-800 font-medium text-sm mb-1">Additional Notes:</p>
+                                  <p className="text-gray-700 text-sm">{report.notes}</p>
                                 </div>
                               </div>
                             </div>

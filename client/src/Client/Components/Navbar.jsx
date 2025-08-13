@@ -347,7 +347,7 @@ export default function Navbar({refresh}) {
                 </div>
             )}
             <nav className="bg-gradient-to-r from-green-700 via-green-800 to-emerald-800 shadow-xl fixed w-full z-[9999] top-0 left-0 backdrop-blur-md border-b border-white/10" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 py-4 text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 py-2 text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
                     <img
                         src={logo2}
                         alt="FITS -Tanza Logo"
@@ -423,7 +423,7 @@ export default function Navbar({refresh}) {
                                             strokeLinejoin="round"
                                         />
                                     </svg>
-                                    {!isMidScreen && <span className="nav-text-underline">Info</span>}
+                                    {!isMidScreen && <span className="nav-text-underline">Information</span>}
                                     <svg
                                         className={`w-4 h-4 ml-1 transition-transform duration-300 ${
                                             infoOpen ? 'rotate-180' : ''
@@ -883,7 +883,7 @@ export default function Navbar({refresh}) {
                         >
                             <div className="flex flex-col h-full">
                                 {/* Enhanced Professional Header */}
-                                <div className="relative px-6 py-3 bg-green-800 text-white overflow-hidden">
+                                <div className="relative px-6 py-2 bg-green-800 text-white overflow-hidden">
                                     {/* Background Pattern */}
                                     <div className="absolute inset-0 opacity-10">
                                         <div className="absolute top-0 left-0 w-full h-full"></div>
