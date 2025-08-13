@@ -412,7 +412,7 @@ export default function Dashboard() {
                                     className="text-lg md:text-2xl font-bold text-green-900 tracking-tight professional-navbar-title"
                                     style={{ userSelect: 'none', letterSpacing: '-0.5px', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
-                                   DASHBOARD  
+                                   DASHBOARD
                                 </h1>
                             </div>
                         </div>
