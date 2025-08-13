@@ -1,11 +1,13 @@
 
 import User from './User/User.jsx';
+import RegisterUserModal from './RegisterUserModal.jsx';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function Profiles({ details }) {
     const queryClient = useQueryClient();
     const [refreshToken, setRefreshToken] = useState(Date.now());
+    const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [filter, setFilter] = useState({
         roles: 'none',
         client_profile: 'none',
@@ -134,6 +136,19 @@ export default function Profiles({ details }) {
                             <option value="updated_at">Recently Updated</option>
                         </select>
                     </div>
+                </div>
+
+                {/* Register New User Button */}
+                <div className="flex justify-end mb-6">
+                    <button
+                        onClick={() => setShowRegisterModal(true)}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-lg hover:bg-green-700 hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                        Register New User
+                    </button>
                 </div>
 
                 {/* LIST - tabular layout */}
@@ -368,6 +383,16 @@ export default function Profiles({ details }) {
                     }
                 }
             `}</style>
+            
+            {/* Register User Modal */}
+            <RegisterUserModal
+                open={showRegisterModal}
+                onClose={() => setShowRegisterModal(false)}
+                onSuccess={() => {
+                    setRefreshToken(Date.now());
+                    queryClient.invalidateQueries(['accounts']);
+                }}
+            />
         </div>
     );
 }

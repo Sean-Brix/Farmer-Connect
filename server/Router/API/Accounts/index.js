@@ -12,4 +12,7 @@ router.use('/picture', picture);
 import all from './all.js';
 router.use('/all', all);
 
+import register from './register.js';
+router.use('/register', register);
+
 export default router;

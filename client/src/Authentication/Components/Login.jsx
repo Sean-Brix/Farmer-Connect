@@ -209,7 +209,6 @@ export default function Login() {
                             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5 mr-2" />
                             Google
                         </button> */}
-                        <p className=" text-center text-sm text-gray-700">Don't have an account? <Link to="/register" className="text-green-600 hover:underline">Sign up</Link></p>
                         <div className="mt-2 text-center text-xs text-gray-400">
                             <Link to="/terms" className="hover:underline">Terms & Conditions</Link>
                         </div>

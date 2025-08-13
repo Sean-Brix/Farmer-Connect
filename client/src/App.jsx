@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // COMPONENTS
 import Login from './Authentication/Components/Login.jsx';
-import Register from './Authentication/Components/Register.jsx';
 import Landing from './Client/Services/Landing/Landing.jsx';
 import Chat from './Components/Chats/Chat.jsx';
 
@@ -32,7 +31,6 @@ function App() {
             <Routes>
                 {/* AUTHENTICATION */}
                 <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
 
                 {/* CLIENT ROUTES */}
