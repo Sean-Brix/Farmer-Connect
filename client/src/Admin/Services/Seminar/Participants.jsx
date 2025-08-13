@@ -178,32 +178,35 @@ export default function Participants({ data, toggleOff }) {
     };
 
     const handleSelectAll = () => {
-        if (
-            selectedParticipants.length ===
-            (filteredParticipants
-                ? filteredParticipants.map((p) => p.id).length
-                : 0)
-        ) {
-            setSelectedParticipants([]);
-        } else {
-            setSelectedParticipants(
-                filteredParticipants
-                    ? filteredParticipants.map((p) => p.id)
-                    : []
+        // Get IDs of current page participants
+        const currentPageIds = currentParticipants.map((p) => p.id);
+        const allCurrentPageSelected = currentPageIds.every(id => 
+            selectedParticipants.includes(id)
+        );
+        
+        if (allCurrentPageSelected && currentPageIds.length > 0) {
+            // Deselect all participants on current page
+            setSelectedParticipants(prev => 
+                prev.filter(id => !currentPageIds.includes(id))
             );
+        } else {
+            // Select all participants on current page
+            setSelectedParticipants(prev => {
+                const newIds = currentPageIds.filter(id => !prev.includes(id));
+                return [...prev, ...newIds];
+            });
         }
     };
 
-    const isAllSelected =
-        selectedParticipants.length ===
-            (filteredParticipants
-                ? filteredParticipants.map((p) => p.id).length
-                : 0) &&
-        (filteredParticipants ? filteredParticipants.length > 0 : 0);
+    const isAllCurrentPageSelected =
+        currentParticipants.length > 0 &&
+        currentParticipants.every(participant => 
+            selectedParticipants.includes(participant.id)
+        );
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-            <div className="relative w-full max-w-6xl mx-auto bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col max-h-[95vh] overflow-hidden">
+            <div className="relative w-full max-w-6xl mx-auto bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col h-[95vh] sm:max-h-[95vh] overflow-hidden">
                 {/* HEADER */}
                 <div className="bg-gray-50 border-b border-gray-200 px-6 py-5">
                     <div className="flex items-start justify-between gap-4">
@@ -295,11 +298,11 @@ export default function Participants({ data, toggleOff }) {
                                     <button
                                         onClick={handleSelectAll}
                                         className={`px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors duration-200 text-sm border border-gray-300 ${
-                                            filteredParticipants.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                                            currentParticipants.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
                                         }`}
-                                        disabled={filteredParticipants.length === 0}
+                                        disabled={currentParticipants.length === 0}
                                     >
-                                        {isAllSelected ? 'Deselect All' : 'Select All'}
+                                        {isAllCurrentPageSelected ? 'Deselect Page' : 'Select Page'}
                                     </button>
                                     <select
                                         className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 text-sm bg-white"
@@ -354,28 +357,28 @@ export default function Participants({ data, toggleOff }) {
 
                 {/* PARTICIPANTS TABLE */}
                 {section === 'participants' && (
-                    <div className="flex-1 overflow-hidden">
-                        <div className="overflow-x-auto h-full">
+                    <div className="flex-1 overflow-hidden border border-gray-200 rounded-lg flex flex-col">
+                        <div className="overflow-x-auto overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" style={{ maxHeight: 'calc(100vh - 300px)', minHeight: '150px' }}>
                             <table className="min-w-full text-sm">
-                                <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
+                                <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
                                     <tr>
-                                        <th className="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider text-xs sm:text-sm">
                                             Full Name
                                         </th>
-                                        <th className="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider text-xs sm:text-sm">
                                             Email
                                         </th>
-                                        <th className="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider text-xs sm:text-sm">
                                             Status
                                         </th>
-                                        <th className="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider text-xs sm:text-sm hidden sm:table-cell">
                                             Registration Date
                                         </th>
-                                        <th className="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">
+                                        <th className="px-3 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider text-xs sm:text-sm">
                                             Actions
                                         </th>
                                         {showSelect && (
-                                            <th className="px-6 py-3 text-center font-medium text-gray-700 uppercase tracking-wider">
+                                            <th className="px-3 sm:px-6 py-3 text-center font-medium text-gray-700 uppercase tracking-wider text-xs sm:text-sm">
                                                 Select
                                             </th>
                                         )}
@@ -384,40 +387,40 @@ export default function Participants({ data, toggleOff }) {
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {initLoad ? (
                                         <tr>
-                                            <td colSpan={showSelect ? 6 : 5} className="px-6 py-16 text-center">
+                                            <td colSpan={showSelect ? 6 : 5} className="px-3 sm:px-6 py-16 text-center">
                                                 <div className="flex flex-col items-center justify-center">
                                                     <div className="animate-spin rounded-full h-8 w-8 border-2 border-green-600 border-t-transparent mb-3"></div>
-                                                    <p className="text-gray-600 font-medium">Loading participants...</p>
+                                                    <p className="text-gray-600 font-medium text-sm">Loading participants...</p>
                                                 </div>
                                             </td>
                                         </tr>
                                     ) : error ? (
                                         <tr>
-                                            <td colSpan={showSelect ? 6 : 5} className="px-6 py-16 text-center">
-                                                <div className="text-red-600 font-medium">Error: {error.message}</div>
+                                            <td colSpan={showSelect ? 6 : 5} className="px-3 sm:px-6 py-16 text-center">
+                                                <div className="text-red-600 font-medium text-sm">Error: {error.message}</div>
                                             </td>
                                         </tr>
                                     ) : totalParticipants === 0 ? (
                                         <tr>
-                                            <td colSpan={showSelect ? 6 : 5} className="px-6 py-16 text-center">
-                                                <div className="text-gray-500 font-medium">No participants found.</div>
+                                            <td colSpan={showSelect ? 6 : 5} className="px-3 sm:px-6 py-16 text-center">
+                                                <div className="text-gray-500 font-medium text-sm">No participants found.</div>
                                             </td>
                                         </tr>
                                     ) : (
                                         currentParticipants.map((user, index) => (
                                             <tr key={index} className="hover:bg-gray-50 transition-colors duration-150">
-                                                <td className="px-6 py-4">
-                                                    <div className="font-medium text-gray-900 truncate max-w-[200px]">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                                                    <div className="font-medium text-gray-900 truncate max-w-[120px] sm:max-w-[200px] text-sm">
                                                         {user.info.fullName}
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="text-gray-700 truncate max-w-[250px]">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                                                    <div className="text-gray-700 truncate max-w-[140px] sm:max-w-[250px] text-sm">
                                                         {user.info.email}
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                                                    <span className={`inline-flex px-1 sm:px-2 py-1 text-xs font-medium rounded-full ${
                                                         user.status === 'Registered' ? 'bg-blue-100 text-blue-800' :
                                                         user.status === 'Attended' ? 'bg-green-100 text-green-800' :
                                                         user.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
@@ -427,12 +430,12 @@ export default function Participants({ data, toggleOff }) {
                                                         {user.status || 'Loading'}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 text-gray-700">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-gray-700 text-sm hidden sm:table-cell">
                                                     {user.createdAt}
                                                 </td>
-                                                <td className="px-6 py-4">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4">
                                                     <select
-                                                        className="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 bg-white"
+                                                        className="text-xs sm:text-sm border border-gray-300 rounded-lg px-2 sm:px-3 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 bg-white w-full sm:w-auto"
                                                         value={user.status || 'loading'}
                                                         onChange={(e) => handleStatusUpdate(e, user.id)}
                                                         autoComplete="off"
@@ -444,7 +447,7 @@ export default function Participants({ data, toggleOff }) {
                                                     </select>
                                                 </td>
                                                 {showSelect && (
-                                                    <td className="px-6 py-4 text-center">
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-center">
                                                         <input
                                                             type="checkbox"
                                                             checked={selectedParticipants.includes(user.id)}
@@ -462,71 +465,143 @@ export default function Participants({ data, toggleOff }) {
                         
                         {/* Pagination Controls */}
                         {totalPages > 1 && (
-                            <div className="flex items-center justify-between border-t border-gray-200 bg-white px-6 py-4">
-                                <div className="flex items-center text-sm text-gray-700">
-                                    <span>
-                                        Showing {startIndex + 1} to {Math.min(endIndex, totalParticipants)} of {totalParticipants} participants
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-2">
+                            <div className="border-t-2 border-gray-200 bg-white flex-shrink-0 sticky bottom-0">
+                                {/* Mobile Pagination */}
+                                <div className="flex items-center justify-between px-4 py-4 sm:hidden bg-gray-50">
                                     <button
                                         onClick={() => handlePageChange(currentPage - 1)}
                                         disabled={currentPage === 1}
-                                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                                        className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
                                             currentPage === 1
                                                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                : 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800'
                                         }`}
                                     >
-                                        Previous
+                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                        </svg>
+                                        Prev
                                     </button>
                                     
-                                    <div className="flex items-center gap-1">
-                                        {[...Array(totalPages)].map((_, index) => {
-                                            const page = index + 1;
-                                            if (
-                                                page === 1 ||
-                                                page === totalPages ||
-                                                (page >= currentPage - 1 && page <= currentPage + 1)
-                                            ) {
-                                                return (
-                                                    <button
-                                                        key={page}
-                                                        onClick={() => handlePageChange(page)}
-                                                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                                                            currentPage === page
-                                                                ? 'bg-green-600 text-white'
-                                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                                        }`}
-                                                    >
-                                                        {page}
-                                                    </button>
-                                                );
-                                            } else if (
-                                                page === currentPage - 2 ||
-                                                page === currentPage + 2
-                                            ) {
-                                                return (
-                                                    <span key={page} className="px-1 text-gray-400">
-                                                        ...
-                                                    </span>
-                                                );
-                                            }
-                                            return null;
-                                        })}
+                                    <div className="flex items-center gap-2 min-w-0 bg-white px-4 py-2 rounded-lg border border-gray-200">
+                                        <div className="text-center">
+                                            <div className="text-sm text-gray-700 font-bold whitespace-nowrap">
+                                                {currentPage} / {totalPages}
+                                            </div>
+                                            <div className="text-xs text-gray-500">
+                                                {totalParticipants} total
+                                            </div>
+                                        </div>
                                     </div>
                                     
                                     <button
                                         onClick={() => handlePageChange(currentPage + 1)}
                                         disabled={currentPage === totalPages}
-                                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                                        className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
                                             currentPage === totalPages
                                                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                : 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800'
                                         }`}
                                     >
                                         Next
+                                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                        </svg>
                                     </button>
+                                </div>
+
+                                {/* Desktop Pagination */}
+                                <div className="hidden sm:flex sm:items-center sm:justify-between px-6 py-4">
+                                    <div className="flex items-center text-sm text-gray-700">
+                                        <span>
+                                            Showing {startIndex + 1} to {Math.min(endIndex, totalParticipants)} of {totalParticipants} participants
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            onClick={() => handlePageChange(currentPage - 1)}
+                                            disabled={currentPage === 1}
+                                            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                                                currentPage === 1
+                                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                            }`}
+                                        >
+                                            Previous
+                                        </button>
+                                        
+                                        <div className="flex items-center gap-1 mx-2">
+                                            {[...Array(totalPages)].map((_, index) => {
+                                                const page = index + 1;
+                                                
+                                                // Show fewer pages on medium screens
+                                                const showOnMd = (
+                                                    page === 1 ||
+                                                    page === totalPages ||
+                                                    (page >= currentPage - 1 && page <= currentPage + 1)
+                                                );
+                                                
+                                                // Show more pages on large screens  
+                                                const showOnLg = (
+                                                    page === 1 ||
+                                                    page === totalPages ||
+                                                    (page >= currentPage - 2 && page <= currentPage + 2)
+                                                );
+                                                
+                                                if (showOnMd) {
+                                                    return (
+                                                        <button
+                                                            key={page}
+                                                            onClick={() => handlePageChange(page)}
+                                                            className={`hidden md:inline-flex px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                                                                currentPage === page
+                                                                    ? 'bg-green-600 text-white'
+                                                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                            }`}
+                                                        >
+                                                            {page}
+                                                        </button>
+                                                    );
+                                                } else if (showOnLg) {
+                                                    return (
+                                                        <button
+                                                            key={page}
+                                                            onClick={() => handlePageChange(page)}
+                                                            className={`hidden lg:inline-flex px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                                                                currentPage === page
+                                                                    ? 'bg-green-600 text-white'
+                                                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                            }`}
+                                                        >
+                                                            {page}
+                                                        </button>
+                                                    );
+                                                } else if (
+                                                    (page === currentPage - 2 || page === currentPage + 2) ||
+                                                    (page === currentPage - 3 || page === currentPage + 3)
+                                                ) {
+                                                    return (
+                                                        <span key={page} className="hidden lg:inline-flex px-1 text-gray-400">
+                                                            ...
+                                                        </span>
+                                                    );
+                                                }
+                                                return null;
+                                            })}
+                                        </div>
+                                        
+                                        <button
+                                            onClick={() => handlePageChange(currentPage + 1)}
+                                            disabled={currentPage === totalPages}
+                                            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                                                currentPage === totalPages
+                                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                            }`}
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         )}

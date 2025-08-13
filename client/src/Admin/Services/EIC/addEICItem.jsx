@@ -206,152 +206,206 @@ const AddEICItemModal = ({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-2">
-            <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-lg relative border border-green-100 transition-all">
-                <button
-                    className="absolute top-3 right-3 text-green-400 hover:text-green-700 text-2xl font-bold transition focus:outline-none focus:ring-2 focus:ring-green-200"
-                    onClick={handleClose}
-                    aria-label="Close"
-                >
-                    ×
-                </button>
-                <h2 className="text-xl font-bold mb-6 text-green-800 text-center tracking-tight">
-                    Add EIC Item
-                </h2>
-                <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                    {/* Name Input with Dropdown */}
-                    <div className="relative">
-                        <input
-                            type="text"
-                            value={nameInput}
-                            onChange={handleNameInputChange}
-                            onFocus={() => setShowDropdown(true)}
-                            onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
-                            placeholder="Item Name"
-                            className="border border-green-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-300 bg-green-50 w-full text-base transition placeholder-gray-400"
-                            required
-                        />
-                        {showDropdown && filteredItems.length > 0 && (
-                            <div className="absolute top-full left-0 right-0 bg-white border border-green-200 rounded-b-lg max-h-44 overflow-y-auto z-20 shadow-xl">
-                                {filteredItems.map((item, index) => (
-                                    <div
-                                        key={item.id || index}
-                                        className="px-4 py-2 hover:bg-green-50 cursor-pointer text-sm transition"
-                                        onClick={() => handleNameSelect(item.name)}
-                                    >
-                                        {item.name}
-                                    </div>
-                                ))}
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto border border-gray-200">
+                {/* HEADER */}
+                <div className="bg-gray-50 border-b border-gray-200 px-6 py-5">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-600 rounded-lg">
+                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                </svg>
                             </div>
-                        )}
-                        {isNewItem && nameInput.trim() !== '' && (
-                            <div className="mt-1 text-xs text-teal-600 font-medium flex items-center gap-1">
-                                <svg className='w-4 h-4 inline' fill='none' stroke='currentColor' strokeWidth='2' viewBox='0 0 24 24'><path d='M5 13l4 4L19 7' strokeLinecap='round' strokeLinejoin='round'/></svg>
-                                Creating a new item
-                            </div>
-                        )}
+                            <h2 className="text-xl font-bold text-gray-900">Add EIC Item</h2>
+                        </div>
+                        <button
+                            onClick={handleClose}
+                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            aria-label="Close"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
-
-                    {/* Quantity Input */}
-                    <input
-                        type="number"
-                        name="quantity"
-                        value={form.quantity}
-                        onChange={handleChange}
-                        placeholder="Quantity"
-                        className="border border-green-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-300 bg-green-50 w-full text-base transition placeholder-gray-400"
-                        min="1"
-                        required
-                    />
-
-                    {/* Conditional Fields - Only show if it's a new item */}
-                    {isNewItem && (
-                        <>
-                            {/* Description Input */}
+                </div>
+                
+                {/* FORM */}
+                <form className="p-6" onSubmit={handleSubmit}>
+                    <div className="space-y-6">
+                        {/* Name Input with Dropdown */}
+                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 relative">
+                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                Item Name
+                            </label>
                             <input
                                 type="text"
-                                name="description"
-                                value={form.description}
-                                onChange={handleChange}
-                                placeholder="Description"
-                                className="border border-green-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-300 bg-green-50 w-full text-base transition placeholder-gray-400"
+                                value={nameInput}
+                                onChange={handleNameInputChange}
+                                onFocus={() => setShowDropdown(true)}
+                                onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+                                placeholder="Enter or select item name"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                required
                             />
-
-                            {/* Category Dropdown */}
-                            <select
-                                name="category"
-                                value={form.category}
-                                onChange={handleChange}
-                                className="border border-green-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-300 bg-green-50 w-full text-base transition"
-                            >
-                                {categories.map((cat) => (
-                                    <option key={cat} value={cat}>
-                                        {cat}
-                                    </option>
-                                ))}
-                            </select>
-
-                            {/* Image Upload */}
-                            <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700">
-                                    Item Image (Optional)
-                                </label>
-                                <div className="flex items-center space-x-2">
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                        className="hidden"
-                                        id="image-upload"
-                                    />
-                                    <label
-                                        htmlFor="image-upload"
-                                        className="flex items-center px-3 py-2 bg-green-100 text-green-700 rounded-lg cursor-pointer hover:bg-green-200 transition text-sm font-medium"
-                                    >
-                                        <svg
-                                            className="w-4 h-4 mr-2"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
+                            {showDropdown && filteredItems.length > 0 && (
+                                <div className="absolute top-full left-4 right-4 bg-white border border-gray-300 rounded-lg max-h-44 overflow-y-auto z-20 shadow-xl mt-1">
+                                    {filteredItems.map((item, index) => (
+                                        <div
+                                            key={item.id || index}
+                                            className="px-4 py-3 hover:bg-green-50 cursor-pointer text-sm border-b border-gray-100 last:border-b-0 transition-colors duration-200"
+                                            onClick={() => handleNameSelect(item.name)}
                                         >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                            />
-                                        </svg>
-                                        Choose Image
-                                    </label>
-                                    {selectedImage && (
-                                        <button
-                                            type="button"
-                                            onClick={removeImage}
-                                            className="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200 transition font-medium"
-                                        >
-                                            Remove
-                                        </button>
-                                    )}
+                                            {item.name}
+                                        </div>
+                                    ))}
                                 </div>
-                                {imagePreview && (
-                                    <div className="mt-2">
-                                        <img
-                                            src={imagePreview}
-                                            alt="Preview"
-                                            className="w-20 h-20 object-cover rounded-lg border-2 border-green-200"
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        </>
-                    )}
+                            )}
+                            {isNewItem && nameInput.trim() !== '' && (
+                                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                    <p className="text-sm text-green-700 font-medium flex items-center gap-2">
+                                        <svg className='w-4 h-4 text-green-600' fill='none' stroke='currentColor' strokeWidth='2' viewBox='0 0 24 24'>
+                                            <path d='M5 13l4 4L19 7' strokeLinecap='round' strokeLinejoin='round'/>
+                                        </svg>
+                                        Creating a new item
+                                    </p>
+                                </div>
+                            )}
+                        </div>
 
-                    <button
-                        type="submit"
-                        className="bg-green-600 text-white font-bold py-2.5 rounded-lg hover:bg-green-700 transition mt-2 w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-green-300 text-base"
-                    >
-                        Add EIC Item
-                    </button>
+                        {/* Quantity Input */}
+                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                Quantity
+                            </label>
+                            <input
+                                type="number"
+                                name="quantity"
+                                value={form.quantity}
+                                onChange={handleChange}
+                                placeholder="Enter quantity"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                min="1"
+                                required
+                            />
+                        </div>
+
+                        {/* Conditional Fields - Only show if it's a new item */}
+                        {isNewItem && (
+                            <>
+                                {/* Description Input */}
+                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                        Description
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="description"
+                                        value={form.description}
+                                        onChange={handleChange}
+                                        placeholder="Enter item description"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                    />
+                                </div>
+
+                                {/* Category Dropdown */}
+                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                        Category
+                                    </label>
+                                    <select
+                                        name="category"
+                                        value={form.category}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                    >
+                                        {categories.map((cat) => (
+                                            <option key={cat} value={cat}>
+                                                {cat}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                {/* Image Upload */}
+                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                        Item Image (Optional)
+                                    </label>
+                                    <div className="flex flex-wrap items-center gap-3 mb-3">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                            className="hidden"
+                                            id="image-upload"
+                                        />
+                                        <label
+                                            htmlFor="image-upload"
+                                            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg cursor-pointer hover:bg-green-700 transition-colors duration-200 text-sm font-medium shadow-sm"
+                                        >
+                                            <svg
+                                                className="w-4 h-4 mr-2"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                                />
+                                            </svg>
+                                            Choose Image
+                                        </label>
+                                        {selectedImage && (
+                                            <button
+                                                type="button"
+                                                onClick={removeImage}
+                                                className="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200 transition-colors duration-200 font-medium border border-red-200"
+                                            >
+                                                Remove
+                                            </button>
+                                        )}
+                                    </div>
+                                    {imagePreview && (
+                                        <div className="mb-3">
+                                            <img
+                                                src={imagePreview}
+                                                alt="Preview"
+                                                className="w-24 h-24 object-cover rounded-lg border-2 border-green-300 shadow-sm"
+                                            />
+                                        </div>
+                                    )}
+                                    <p className="text-xs text-gray-500">
+                                        Supported formats: JPEG, PNG, GIF. Max size: 5MB.
+                                    </p>
+                                </div>
+                            </>
+                        )}
+
+                    </div>
+
+                    {/* Buttons */}
+                    <div className="border-t border-gray-200 px-6 py-4 bg-gray-50 -mx-6 -mb-6 rounded-b-xl">
+                        <div className="flex flex-col sm:flex-row justify-end gap-3">
+                            <button
+                                type="button"
+                                onClick={handleClose}
+                                className="px-6 py-3 text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className="px-6 py-3 text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                            >
+                                Add EIC Item
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
