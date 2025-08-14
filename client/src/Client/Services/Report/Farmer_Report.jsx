@@ -356,143 +356,174 @@ export default function Farmer_Report() {
       <Navbar />
       <div className="pt-[14vh] min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-              Farmer Dashboard - {farmerProfile.name}
-            </h1>
-            <p className="text-gray-600">{farmerProfile.location} • {farmerProfile.farmSize} hectares</p>
+          {/* Professional Header - EIC Style */}
+          <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
+            <span className="inline-flex items-center justify-center gap-3 w-full">
+              <span className="rounded-full bg-green-100 p-2">
+                <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+              <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
+                Farmer Dashboard
+              </span>
+            </span>
+            <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
+              Monitor your crops and farming activities - {farmerProfile.name}
+            </span>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-gray-600 mt-2">
+              <div className="flex items-center gap-1">
+                <span className="text-sm">📍</span>
+                <span className="font-medium">{farmerProfile.location}</span>
+              </div>
+              <span className="hidden sm:inline text-gray-400">•</span>
+              <div className="flex items-center gap-1">
+                <span className="text-sm">🏞️</span>
+                <span className="font-medium">{farmerProfile.farmSize} hectares</span>
+              </div>
+            </div>
           </div>
 
-          {/* Tabs */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            {[
-              { id: 'overview', label: '📊 Overview' },
-              { id: 'crops', label: '🌱 Crops' },
-              { id: 'reports', label: '📋 Reports' },
-              { id: 'weather', label: '🌤️ Weather' },
-              { id: 'guidelines', label: '📚 Guidelines' }
-            ].map(t => (
-              <button key={t.id} onClick={() => setActiveTab(t.id)}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                  activeTab === t.id
-                    ? 'bg-green-600 text-white shadow-lg'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-green-50 shadow-sm'
-                }`}>
-                {t.label}
-              </button>
-            ))}
-            <div className="ml-auto">
-              <button onClick={() => setShowCropRegistrationModal(true)} 
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors shadow-sm">
-                + Add Crop
+          {/* Divider between title and navigation */}
+          <hr className="border-t border-gray-300 my-6 w-full max-w-5xl mx-auto" />
+
+          {/* Professional Navigation Tabs - Integrated Design */}
+          <div className="max-w-5xl mx-auto mb-8">
+            <div className="flex flex-wrap gap-2 justify-center">
+              {[
+                { id: 'overview', label: 'Overview', icon: '📊' },
+                { id: 'crops', label: 'My Crops', icon: '🌱' },
+                { id: 'reports', label: 'Reports', icon: '📋' },
+                { id: 'weather', label: 'Weather', icon: '🌤️' },
+                { id: 'guidelines', label: 'Guidelines', icon: '📚' }
+              ].map(t => (
+                <button 
+                  key={t.id} 
+                  onClick={() => setActiveTab(t.id)}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    activeTab === t.id
+                      ? 'bg-green-600 text-white shadow-lg scale-105'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:bg-green-50 hover:border-green-200 hover:text-green-700 shadow-sm'
+                  }`}
+                >
+                  <span className="text-base">{t.icon}</span>
+                  <span>{t.label}</span>
+                </button>
+              ))}
+              <button 
+                onClick={() => setShowCropRegistrationModal(true)} 
+                className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-xl ml-4"
+              >
+                <span className="text-lg">+</span>
+                <span>Add Crop</span>
               </button>
             </div>
           </div>
 
           {/* Overview Tab */}
           {activeTab === 'overview' && (
-            <div className="space-y-6">
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white p-4 rounded-lg border shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Active Crops</p>
-                      <p className="text-2xl font-bold text-green-700">{registeredCrops.filter(c => c.status === 'Active').length}</p>
+            <div className="space-y-8">
+              {/* Professional Quick Stats Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                      <span className="text-xl">🌱</span>
                     </div>
-                    <div className="text-2xl">🌱</div>
+                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">ACTIVE</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Active Crops</p>
+                    <p className="text-3xl font-bold text-gray-800">{registeredCrops.filter(c => c.status === 'Active').length}</p>
                   </div>
                 </div>
-                <div className="bg-white p-4 rounded-lg border shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Avg Progress</p>
-                      <p className="text-2xl font-bold text-green-700">{cropRows.length > 0 ? Math.round(cropRows.reduce((a, b) => a + b.progress, 0) / cropRows.length) : 0}%</p>
+                
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                      <span className="text-xl">📈</span>
                     </div>
-                    <div className="text-2xl">📈</div>
+                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">AVG</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Avg Progress</p>
+                    <p className="text-3xl font-bold text-gray-800">{cropRows.length > 0 ? Math.round(cropRows.reduce((a, b) => a + b.progress, 0) / cropRows.length) : 0}<span className="text-lg text-gray-500">%</span></p>
                   </div>
                 </div>
-                <div className="bg-white p-4 rounded-lg border shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Reports Logged</p>
-                      <p className="text-2xl font-bold text-green-700">{allReports.length}</p>
+                
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                      <span className="text-xl">📋</span>
                     </div>
-                    <div className="text-2xl">📋</div>
+                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">TOTAL</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Reports Logged</p>
+                    <p className="text-3xl font-bold text-gray-800">{allReports.length}</p>
                   </div>
                 </div>
-                <div className="bg-white p-4 rounded-lg border shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Total Area</p>
-                      <p className="text-2xl font-bold text-green-700">{registeredCrops.reduce((sum, c) => sum + parseFloat(c.area || 0), 0).toFixed(1)} ha</p>
+                
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                      <span className="text-xl">🏞️</span>
                     </div>
-                    <div className="text-2xl">🏞️</div>
+                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">AREA</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Total Area</p>
+                    <p className="text-3xl font-bold text-gray-800">{registeredCrops.reduce((sum, c) => sum + parseFloat(c.area || 0), 0).toFixed(1)}<span className="text-lg text-gray-500"> ha</span></p>
                   </div>
                 </div>
               </div>
 
-              {/* Charts Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Professional Charts Section */}
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                 {/* Crop Progress Chart */}
-                <div className="bg-white border rounded-lg shadow-sm p-4">
-                  <h3 className="font-semibold text-gray-800 mb-4">🌱 Crop Progress Overview</h3>
+                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-sm">
+                      <span className="text-xl">🌱</span>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-800">Crop Progress Overview</h3>
+                      <p className="text-sm text-gray-500">Track the growth progress of your crops</p>
+                    </div>
+                  </div>
                   {cropRows.length > 0 ? (
-                    <div className="h-64">
+                    <div className="h-80">
                       <Bar
                         data={{
-                          labels: cropRows.map(c => `${c.cropType} (${c.variety})`),
+                          labels: cropRows.map(c => `${c.cropType}\n(${c.variety})`),
                           datasets: [{
                             label: 'Progress (%)',
                             data: cropRows.map(c => c.progress),
-                            backgroundColor: 'rgba(34, 197, 94, 0.8)',
-                            borderColor: 'rgba(34, 197, 94, 1)',
-                            borderWidth: 1
-                          }]
-                        }}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          scales: {
-                            y: {
-                              beginAtZero: true,
-                              max: 100
-                            }
-                          }
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="h-64 flex items-center justify-center text-gray-500">
-                      <div className="text-center">
-                        <div className="text-4xl mb-2">📊</div>
-                        <p>No crops data to display</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Area Distribution Chart */}
-                <div className="bg-white border rounded-lg shadow-sm p-4">
-                  <h3 className="font-semibold text-gray-800 mb-4">🏞️ Land Area Distribution</h3>
-                  {registeredCrops.length > 0 ? (
-                    <div className="h-64">
-                      <Doughnut
-                        data={{
-                          labels: registeredCrops.map(c => c.cropType),
-                          datasets: [{
-                            data: registeredCrops.map(c => parseFloat(c.area || 0)),
-                            backgroundColor: [
-                              'rgba(34, 197, 94, 0.8)',
-                              'rgba(59, 130, 246, 0.8)',
-                              'rgba(245, 158, 11, 0.8)',
-                              'rgba(239, 68, 68, 0.8)',
-                              'rgba(139, 92, 246, 0.8)',
-                              'rgba(236, 72, 153, 0.8)'
-                            ],
+                            backgroundColor: cropRows.map((_, i) => {
+                              const colors = [
+                                'rgba(34, 197, 94, 0.8)',
+                                'rgba(22, 163, 74, 0.8)', 
+                                'rgba(21, 128, 61, 0.8)',
+                                'rgba(134, 239, 172, 0.8)',
+                                'rgba(187, 247, 208, 0.8)',
+                                'rgba(74, 222, 128, 0.8)'
+                              ];
+                              return colors[i % colors.length];
+                            }),
+                            borderColor: cropRows.map((_, i) => {
+                              const colors = [
+                                'rgba(34, 197, 94, 1)',
+                                'rgba(22, 163, 74, 1)', 
+                                'rgba(21, 128, 61, 1)',
+                                'rgba(134, 239, 172, 1)',
+                                'rgba(187, 247, 208, 1)',
+                                'rgba(74, 222, 128, 1)'
+                              ];
+                              return colors[i % colors.length];
+                            }),
                             borderWidth: 2,
-                            borderColor: '#fff'
+                            borderRadius: 12,
+                            borderSkipped: false,
                           }]
                         }}
                         options={{
@@ -500,27 +531,200 @@ export default function Farmer_Report() {
                           maintainAspectRatio: false,
                           plugins: {
                             legend: {
-                              position: 'bottom'
+                              display: false
+                            },
+                            tooltip: {
+                              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                              titleColor: '#fff',
+                              bodyColor: '#fff',
+                              borderColor: 'rgba(34, 197, 94, 1)',
+                              borderWidth: 1,
+                              cornerRadius: 8,
+                              displayColors: false,
+                              callbacks: {
+                                title: function(context) {
+                                  return context[0].label.split('\n')[0];
+                                },
+                                label: function(context) {
+                                  return `Progress: ${context.parsed.y}%`;
+                                }
+                              }
+                            }
+                          },
+                          scales: {
+                            y: {
+                              beginAtZero: true,
+                              max: 100,
+                              grid: {
+                                color: 'rgba(0, 0, 0, 0.05)',
+                                borderColor: 'rgba(0, 0, 0, 0.1)'
+                              },
+                              ticks: {
+                                color: '#6b7280',
+                                font: {
+                                  size: 12,
+                                  weight: '500'
+                                },
+                                callback: function(value) {
+                                  return value + '%';
+                                }
+                              }
+                            },
+                            x: {
+                              grid: {
+                                display: false
+                              },
+                              ticks: {
+                                color: '#6b7280',
+                                font: {
+                                  size: 11,
+                                  weight: '500'
+                                },
+                                maxRotation: 45
+                              }
                             }
                           }
                         }}
                       />
                     </div>
                   ) : (
-                    <div className="h-64 flex items-center justify-center text-gray-500">
+                    <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg">
                       <div className="text-center">
-                        <div className="text-4xl mb-2">🥧</div>
-                        <p>No area data to display</p>
+                        <div className="text-6xl mb-4 opacity-30">📊</div>
+                        <p className="text-gray-500 font-medium">No crops data to display</p>
+                        <p className="text-sm text-gray-400 mt-1">Add some crops to see progress charts</p>
                       </div>
                     </div>
                   )}
                 </div>
 
+                {/* Area Distribution Chart */}
+                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-sm">
+                      <span className="text-xl">🏞️</span>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-800">Land Area Distribution</h3>
+                      <p className="text-sm text-gray-500">How your farmland is allocated</p>
+                    </div>
+                  </div>
+                  {registeredCrops.length > 0 ? (
+                    <div className="h-80">
+                      <Doughnut
+                        data={{
+                          labels: registeredCrops.map(c => c.cropType),
+                          datasets: [{
+                            data: registeredCrops.map(c => parseFloat(c.area || 0)),
+                            backgroundColor: [
+                              'rgba(34, 197, 94, 0.85)',
+                              'rgba(22, 163, 74, 0.85)',
+                              'rgba(21, 128, 61, 0.85)',
+                              'rgba(16, 185, 129, 0.85)',
+                              'rgba(134, 239, 172, 0.85)',
+                              'rgba(187, 247, 208, 0.85)'
+                            ],
+                            borderWidth: 4,
+                            borderColor: '#fff',
+                            hoverBorderWidth: 6,
+                            hoverBorderColor: '#fff',
+                            hoverBackgroundColor: [
+                              'rgba(34, 197, 94, 0.95)',
+                              'rgba(22, 163, 74, 0.95)',
+                              'rgba(21, 128, 61, 0.95)',
+                              'rgba(16, 185, 129, 0.95)',
+                              'rgba(134, 239, 172, 0.95)',
+                              'rgba(187, 247, 208, 0.95)'
+                            ]
+                          }]
+                        }}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          cutout: '60%',
+                          plugins: {
+                            legend: {
+                              position: 'bottom',
+                              labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: {
+                                  size: 12,
+                                  weight: '500'
+                                },
+                                color: '#374151',
+                                generateLabels: function(chart) {
+                                  const data = chart.data;
+                                  if (data.labels.length && data.datasets.length) {
+                                    return data.labels.map((label, i) => {
+                                      const dataset = data.datasets[0];
+                                      const value = dataset.data[i];
+                                      const total = dataset.data.reduce((a, b) => a + b, 0);
+                                      const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                      return {
+                                        text: `${label}: ${value} ha (${percentage}%)`,
+                                        fillStyle: dataset.backgroundColor[i],
+                                        strokeStyle: dataset.borderColor,
+                                        lineWidth: dataset.borderWidth,
+                                        hidden: false,
+                                        index: i
+                                      };
+                                    });
+                                  }
+                                  return [];
+                                }
+                              }
+                            },
+                            tooltip: {
+                              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                              titleColor: '#fff',
+                              bodyColor: '#fff',
+                              borderColor: 'rgba(34, 197, 94, 1)',
+                              borderWidth: 1,
+                              cornerRadius: 8,
+                              displayColors: true,
+                              callbacks: {
+                                label: function(context) {
+                                  const label = context.label || '';
+                                  const value = context.parsed;
+                                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                  const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                  return `${label}: ${value} ha (${percentage}%)`;
+                                }
+                              }
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg">
+                      <div className="text-center">
+                        <div className="text-6xl mb-4 opacity-30">🏞️</div>
+                        <p className="text-gray-500 font-medium">No area data to display</p>
+                        <p className="text-sm text-gray-400 mt-1">Register crops to see area distribution</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Additional Professional Charts Row */}
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                 {/* Expected Yield Chart */}
-                <div className="bg-white border rounded-lg shadow-sm p-4">
-                  <h3 className="font-semibold text-gray-800 mb-4">📈 Expected Yield Comparison</h3>
+                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-sm">
+                      <span className="text-xl">📈</span>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-800">Expected Yield Comparison</h3>
+                      <p className="text-sm text-gray-500">Projected harvest yields for your crops</p>
+                    </div>
+                  </div>
                   {cropRows.length > 0 ? (
-                    <div className="h-64">
+                    <div className="h-80">
                       <Line
                         data={{
                           labels: cropRows.map(c => c.cropType),
@@ -530,51 +734,182 @@ export default function Farmer_Report() {
                             borderColor: 'rgba(34, 197, 94, 1)',
                             backgroundColor: 'rgba(34, 197, 94, 0.1)',
                             tension: 0.4,
-                            fill: true
+                            fill: true,
+                            pointBackgroundColor: 'rgba(34, 197, 94, 1)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 3,
+                            pointRadius: 8,
+                            pointHoverRadius: 10,
+                            pointHoverBorderWidth: 4,
+                            borderWidth: 3,
+                            pointStyle: 'circle'
                           }]
                         }}
                         options={{
                           responsive: true,
                           maintainAspectRatio: false,
+                          plugins: {
+                            legend: {
+                              display: false
+                            },
+                            tooltip: {
+                              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                              titleColor: '#fff',
+                              bodyColor: '#fff',
+                              borderColor: 'rgba(34, 197, 94, 1)',
+                              borderWidth: 1,
+                              cornerRadius: 8,
+                              displayColors: false,
+                              callbacks: {
+                                title: function(context) {
+                                  return context[0].label;
+                                },
+                                label: function(context) {
+                                  return `Expected Yield: ${context.parsed.y} kg`;
+                                }
+                              }
+                            }
+                          },
                           scales: {
                             y: {
-                              beginAtZero: true
+                              beginAtZero: true,
+                              grid: {
+                                color: 'rgba(0, 0, 0, 0.05)',
+                                borderColor: 'rgba(0, 0, 0, 0.1)'
+                              },
+                              ticks: {
+                                color: '#6b7280',
+                                font: {
+                                  size: 12,
+                                  weight: '500'
+                                },
+                                callback: function(value) {
+                                  return value + ' kg';
+                                }
+                              }
+                            },
+                            x: {
+                              grid: {
+                                display: false
+                              },
+                              ticks: {
+                                color: '#6b7280',
+                                font: {
+                                  size: 12,
+                                  weight: '500'
+                                }
+                              }
                             }
+                          },
+                          interaction: {
+                            intersect: false,
+                            mode: 'index'
                           }
                         }}
                       />
                     </div>
                   ) : (
-                    <div className="h-64 flex items-center justify-center text-gray-500">
+                    <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg">
                       <div className="text-center">
-                        <div className="text-4xl mb-2">📈</div>
-                        <p>No yield data to display</p>
+                        <div className="text-6xl mb-4 opacity-30">📈</div>
+                        <p className="text-gray-500 font-medium">No yield data to display</p>
+                        <p className="text-sm text-gray-400 mt-1">Add crop details to see yield projections</p>
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Monthly Report Trend */}
-                <div className="bg-white border rounded-lg shadow-sm p-4">
-                  <h3 className="font-semibold text-gray-800 mb-4">📊 Monthly Report Activity</h3>
-                  <div className="h-64">
+                {/* Monthly Report Activity */}
+                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-sm">
+                      <span className="text-xl">📊</span>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-800">Monthly Report Activity</h3>
+                      <p className="text-sm text-gray-500">Track your reporting consistency</p>
+                    </div>
+                  </div>
+                  <div className="h-80">
                     <Bar
                       data={{
                         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                         datasets: [{
                           label: 'Reports Submitted',
                           data: [12, 8, 15, 10, 6, 9],
-                          backgroundColor: 'rgba(59, 130, 246, 0.8)',
-                          borderColor: 'rgba(59, 130, 246, 1)',
-                          borderWidth: 1
+                          backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(22, 163, 74, 0.8)',
+                            'rgba(21, 128, 61, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(74, 222, 128, 0.8)',
+                            'rgba(134, 239, 172, 0.8)'
+                          ],
+                          borderColor: [
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(22, 163, 74, 1)',
+                            'rgba(21, 128, 61, 1)',
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(74, 222, 128, 1)',
+                            'rgba(134, 239, 172, 1)'
+                          ],
+                          borderWidth: 2,
+                          borderRadius: 12,
+                          borderSkipped: false,
                         }]
                       }}
                       options={{
                         responsive: true,
                         maintainAspectRatio: false,
+                        plugins: {
+                          legend: {
+                            display: false
+                          },
+                          tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            displayColors: false,
+                            callbacks: {
+                              title: function(context) {
+                                return context[0].label;
+                              },
+                              label: function(context) {
+                                return `Reports: ${context.parsed.y}`;
+                              }
+                            }
+                          }
+                        },
                         scales: {
                           y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            grid: {
+                              color: 'rgba(0, 0, 0, 0.05)',
+                              borderColor: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                              color: '#6b7280',
+                              font: {
+                                size: 12,
+                                weight: '500'
+                              },
+                              stepSize: 5
+                            }
+                          },
+                          x: {
+                            grid: {
+                              display: false
+                            },
+                            ticks: {
+                              color: '#6b7280',
+                              font: {
+                                size: 12,
+                                weight: '500'
+                              }
+                            }
                           }
                         }
                       }}
@@ -583,155 +918,155 @@ export default function Farmer_Report() {
                 </div>
               </div>
 
-              {/* Crop Overview Table */}
-              <div className="bg-white border rounded-lg shadow-sm overflow-x-auto">
-                <div className="px-4 py-3 border-b bg-gray-50">
-                  <h3 className="font-semibold text-gray-800">🌱 Crop Overview</h3>
+              {/* Professional Crop Overview Table */}
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-lg">
+                      <span className="text-sm">🌱</span>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-800">Crop Overview</h3>
+                  </div>
                 </div>
-                <table className="min-w-full text-sm">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-3 py-2 text-left font-medium text-gray-600">Crop</th>
-                      <th className="px-3 py-2 text-center font-medium text-gray-600">Stage</th>
-                      <th className="px-3 py-2 text-center font-medium text-gray-600">Progress</th>
-                      <th className="px-3 py-2 text-center font-medium text-gray-600">Area</th>
-                      <th className="px-3 py-2 text-center font-medium text-gray-600">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cropRows.map(row => (
-                      <tr key={row.id} className="border-b last:border-0 hover:bg-gray-50">
-                        <td className="px-3 py-2 font-medium text-gray-800">
-                          {row.cropType}
-                          <span className="text-xs text-gray-400 ml-1">({row.variety})</span>
-                        </td>
-                        <td className="px-3 py-2 text-center text-sm">{row.currentStage}</td>
-                        <td className="px-3 py-2 text-center">
-                          <div className="w-full bg-gray-200 h-2 rounded-full">
-                            <div className="h-2 rounded-full bg-green-500" style={{ width: `${row.progress}%` }}></div>
-                          </div>
-                          <span className="text-xs text-gray-600 mt-1">{row.progress}%</span>
-                        </td>
-                        <td className="px-3 py-2 text-center text-sm">{row.area} ha</td>
-                        <td className="px-3 py-2 text-center">
-                          <button onClick={() => { setSelectedCropForReport(row); setShowMonthlyReportModal(true); }}
-                            className="text-blue-600 underline text-xs hover:text-blue-800">
-                            Add Report
-                          </button>
-                        </td>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crop</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Stage</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Area</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Yield</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {cropRows.length === 0 && (
-                  <div className="text-center py-12">
-                    <div className="text-gray-400 text-4xl mb-4">🌱</div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No crops registered</h3>
-                    <p className="text-gray-600 mb-4">Start by registering your first crop</p>
-                    <button onClick={() => setShowCropRegistrationModal(true)}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                      Register First Crop
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Weather Summary */}
-              <div className="bg-white border rounded-lg shadow-sm p-4">
-                <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                  🌤️ Today's Weather - {LOCATION.name}
-                  <button onClick={fetchWeatherData} 
-                    className="ml-2 px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors">
-                    Refresh
-                  </button>
-                </h3>
-                {weatherLoading && <p className="text-sm text-gray-600">Loading weather data...</p>}
-                {weatherError && (
-                  <div className="text-red-600 text-sm mb-4 p-3 bg-red-50 rounded-lg">
-                    {weatherError}
-                    <button onClick={fetchWeatherData} 
-                      className="ml-2 px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700">
-                      Retry
-                    </button>
-                  </div>
-                )}
-                {weatherData?.current && (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                    <div className="bg-green-50 p-3 rounded-lg">
-                      <p className="text-gray-500 text-xs uppercase tracking-wide">Temperature</p>
-                      <p className="font-semibold text-lg">{Math.round(weatherData.current.temperature_2m)}°C</p>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {cropRows.map(row => (
+                        <tr key={row.id} className="hover:bg-gray-50 transition-colors duration-150">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center">
+                              <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                <span className="text-sm">🌱</span>
+                              </div>
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-gray-800">{row.cropType}</div>
+                                <div className="text-xs text-gray-500">({row.variety})</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">
+                              {row.currentStage}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <div className="flex items-center justify-center">
+                              <div className="w-16 bg-gray-200 h-2 rounded-full mr-2">
+                                <div className="h-2 rounded-full bg-green-500" style={{ width: `${row.progress}%` }}></div>
+                              </div>
+                              <span className="text-sm text-gray-600">{row.progress}%</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-center text-sm text-gray-800">{row.area} ha</td>
+                          <td className="px-6 py-4 text-center text-sm text-gray-800">{row.expectedYield} kg</td>
+                          <td className="px-6 py-4 text-center">
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">
+                              Active
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {cropRows.length === 0 && (
+                    <div className="text-center py-12">
+                      <div className="text-6xl mb-4 opacity-30">🌱</div>
+                      <h3 className="text-lg font-medium text-gray-800 mb-2">No crops registered</h3>
+                      <p className="text-gray-600 mb-6">Start by registering your first crop to see detailed overview</p>
+                      <button 
+                        onClick={() => setShowCropRegistrationModal(true)}
+                        className="w-full sm:w-auto px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-semibold shadow-md hover:shadow-lg"
+                      >
+                        🌱 Register First Crop
+                      </button>
                     </div>
-                    <div className="bg-blue-50 p-3 rounded-lg">
-                      <p className="text-gray-500 text-xs uppercase tracking-wide">Humidity</p>
-                      <p className="font-semibold text-lg">{weatherData.current.relative_humidity_2m}%</p>
-                    </div>
-                    <div className="bg-yellow-50 p-3 rounded-lg">
-                      <p className="text-gray-500 text-xs uppercase tracking-wide">Precipitation</p>
-                      <p className="font-semibold text-lg">{weatherData.current.precipitation} mm</p>
-                    </div>
-                    <div className="bg-orange-50 p-3 rounded-lg">
-                      <p className="text-gray-500 text-xs uppercase tracking-wide">Wind</p>
-                      <p className="font-semibold text-lg">{Math.round(weatherData.current.wind_speed_10m)} km/h</p>
-                    </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           )}
 
           {/* Crops Tab - Enhanced with Expandable Details */}
           {activeTab === 'crops' && (
-            <div className="space-y-6">
-              {/* Crops Overview Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white border rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Active Crops</p>
-                      <p className="text-2xl font-bold text-green-700">{registeredCrops.filter(c => c.status === 'Active').length}</p>
+            <div className="space-y-8">
+              {/* Professional Crops Overview Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                      <span className="text-xl">🌱</span>
                     </div>
-                    <div className="text-2xl">🌱</div>
+                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">ACTIVE</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Active Crops</p>
+                    <p className="text-3xl font-bold text-gray-800">{registeredCrops.filter(c => c.status === 'Active').length}</p>
                   </div>
                 </div>
-                <div className="bg-white border rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Total Area</p>
-                      <p className="text-2xl font-bold text-green-700">{registeredCrops.reduce((sum, c) => sum + parseFloat(c.area || 0), 0).toFixed(1)} ha</p>
+                
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                      <span className="text-xl">🏞️</span>
                     </div>
-                    <div className="text-2xl">🏞️</div>
+                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">TOTAL</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Total Area</p>
+                    <p className="text-3xl font-bold text-gray-800">{registeredCrops.reduce((sum, c) => sum + parseFloat(c.area || 0), 0).toFixed(1)}<span className="text-lg text-gray-500"> ha</span></p>
                   </div>
                 </div>
-                <div className="bg-white border rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Weather Status</p>
-                      <p className="text-lg font-bold text-blue-700">
-                        {weatherData?.current ? `${Math.round(weatherData.current.temperature_2m)}°C` : 'Loading...'}
-                      </p>
+                
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
+                      <span className="text-xl">🌤️</span>
                     </div>
-                    <div className="text-2xl">🌤️</div>
+                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">LIVE</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Weather Status</p>
+                    <p className="text-3xl font-bold text-gray-800">
+                      {weatherData?.current ? `${Math.round(weatherData.current.temperature_2m)}°C` : 'Loading...'}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              {/* Detailed Crops Table */}
-              <div className="bg-white border rounded-lg shadow-sm overflow-hidden">
-                <div className="px-4 py-3 border-b bg-gray-50">
-                  <h3 className="font-semibold text-gray-800">🌱 Detailed Crop Management</h3>
-                  <p className="text-sm text-gray-600 mt-1">Click on any crop to view detailed information and weather integration</p>
+              {/* Professional Detailed Crops Table */}
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-lg">
+                      <span className="text-sm">🌱</span>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-800">Detailed Crop Management</h3>
+                      <p className="text-sm text-gray-500">Monitor your crops with integrated weather data and reporting tools</p>
+                    </div>
+                  </div>
                 </div>
                 
                 <div className="overflow-x-auto">
-                  <table className="min-w-full text-sm">
+                  <table className="min-w-full">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-3 text-left font-medium text-gray-600">Crop Details</th>
-                        <th className="px-4 py-3 text-center font-medium text-gray-600">Planting Info</th>
-                        <th className="px-4 py-3 text-center font-medium text-gray-600">Progress</th>
-                        <th className="px-4 py-3 text-center font-medium text-gray-600">Expected Yield</th>
-                        <th className="px-4 py-3 text-center font-medium text-gray-600">Report Status</th>
-                        <th className="px-4 py-3 text-center font-medium text-gray-600">Weather Suitability</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crop Details</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Planting Info</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Yield</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Report Status</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         <th className="px-4 py-3 text-center font-medium text-gray-600">Actions</th>
                       </tr>
                     </thead>
@@ -803,17 +1138,27 @@ export default function Farmer_Report() {
                                   <div className="text-xs text-gray-500">Loading...</div>
                                 )}
                               </td>
-                              <td className="px-4 py-3 text-center">
-                                <div className="flex gap-1 justify-center">
+                              <td className="px-4 py-3">
+                                <div className="flex flex-col sm:flex-row gap-2 justify-center items-center min-w-0">
                                   <button 
                                     onClick={(e) => { 
                                       e.stopPropagation();
                                       setSelectedCropForReport(crop); 
                                       setShowDetailedReportModal(true); 
                                     }}
-                                    className="text-xs px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                    className="w-full sm:w-auto text-xs px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium whitespace-nowrap shadow-sm hover:shadow-md"
                                   >
-                                    Report
+                                    📊 View Report
+                                  </button>
+                                  <button 
+                                    onClick={(e) => { 
+                                      e.stopPropagation();
+                                      setSelectedCropForReport(crop); 
+                                      setShowMonthlyReportModal(true); 
+                                    }}
+                                    className="w-full sm:w-auto text-xs px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 font-medium whitespace-nowrap shadow-sm hover:shadow-md"
+                                  >
+                                    📋 Add Report
                                   </button>
                                 </div>
                               </td>
@@ -1019,133 +1364,172 @@ export default function Farmer_Report() {
             </div>
           )}
 
-          {/* Reports Tab - Calendar First */}
+          {/* Reports Tab - Professional Layout */}
           {activeTab === 'reports' && (
-            <div className="space-y-6">
-              {/* Reports Overview */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-white border rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Pending Reports</p>
-                      <p className="text-2xl font-bold text-orange-700">
-                        {registeredCrops.filter(crop => getReportStatus(crop) === 'pending').length}
-                      </p>
+            <div className="space-y-8">
+              {/* Professional Reports Overview Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl shadow-sm">
+                      <span className="text-xl">⏰</span>
                     </div>
-                    <div className="text-2xl">⏰</div>
+                    <span className="text-xs font-semibold text-orange-600 bg-orange-100 px-2 py-1 rounded-full">PENDING</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Pending Reports</p>
+                    <p className="text-3xl font-bold text-gray-800">
+                      {registeredCrops.filter(crop => getReportStatus(crop) === 'pending').length}
+                    </p>
                   </div>
                 </div>
-                <div className="bg-white border rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Overdue Reports</p>
-                      <p className="text-2xl font-bold text-red-700">
-                        {registeredCrops.filter(crop => getReportStatus(crop) === 'overdue').length}
-                      </p>
+                
+                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-red-100 to-red-200 rounded-xl shadow-sm">
+                      <span className="text-xl">🚨</span>
                     </div>
-                    <div className="text-2xl">🚨</div>
+                    <span className="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded-full">OVERDUE</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Overdue Reports</p>
+                    <p className="text-3xl font-bold text-gray-800">
+                      {registeredCrops.filter(crop => getReportStatus(crop) === 'overdue').length}
+                    </p>
                   </div>
                 </div>
-                <div className="bg-white border rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Submitted This Month</p>
-                      <p className="text-2xl font-bold text-green-700">
-                        {registeredCrops.filter(crop => getReportStatus(crop) === 'submitted').length}
-                      </p>
+                
+                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-sm">
+                      <span className="text-xl">✅</span>
                     </div>
-                    <div className="text-2xl">✅</div>
+                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">COMPLETED</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Submitted This Month</p>
+                    <p className="text-3xl font-bold text-gray-800">
+                      {registeredCrops.filter(crop => getReportStatus(crop) === 'submitted').length}
+                    </p>
                   </div>
                 </div>
-                <div className="bg-white border rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Total Reports</p>
-                      <p className="text-2xl font-bold text-blue-700">{allReports.length}</p>
+                
+                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl shadow-sm">
+                      <span className="text-xl">📋</span>
                     </div>
-                    <div className="text-2xl">📋</div>
+                    <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">TOTAL</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Total Reports</p>
+                    <p className="text-3xl font-bold text-gray-800">{allReports.length}</p>
                   </div>
                 </div>
               </div>
 
-              {/* Monthly Reporting Requirements */}
-              <div className="bg-white border rounded-lg shadow-sm">
-                <div className="px-4 py-3 border-b bg-gray-50">
-                  <h3 className="font-semibold text-gray-800">📋 Monthly Reporting Status</h3>
-                  <p className="text-sm text-gray-600 mt-1">Reports are due by the 25th of each month for all active crops</p>
+              {/* Professional Monthly Reporting Requirements */}
+              <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
+                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-lg">
+                      <span className="text-sm">📋</span>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-800">Monthly Reporting Status</h3>
+                      <p className="text-sm text-gray-500">Reports are due by the 25th of each month for all active crops</p>
+                    </div>
+                  </div>
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="min-w-full text-sm">
+                  <table className="min-w-full">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-3 py-2 text-left font-medium text-gray-600">Crop</th>
-                        <th className="px-3 py-2 text-center font-medium text-gray-600">Current Stage</th>
-                        <th className="px-3 py-2 text-center font-medium text-gray-600">Report Status</th>
-                        <th className="px-3 py-2 text-center font-medium text-gray-600">Last Report</th>
-                        <th className="px-3 py-2 text-center font-medium text-gray-600">Next Due</th>
-                        <th className="px-3 py-2 text-center font-medium text-gray-600">Weather Info</th>
-                        <th className="px-3 py-2 text-center font-medium text-gray-600">Actions</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crop Details</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Current Stage</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Report Status</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Last Report</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Next Due</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Weather Info</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="bg-white divide-y divide-gray-200">
                       {registeredCrops.map(crop => {
                         const status = getReportStatus(crop);
                         const lastReport = crop.reports && crop.reports.length > 0 
                           ? crop.reports[crop.reports.length - 1] 
                           : null;
                         return (
-                          <tr key={crop.id} className="border-b last:border-0 hover:bg-gray-50">
-                            <td className="px-3 py-2">
-                              <div className="font-medium text-gray-800">{crop.cropType}</div>
-                              <div className="text-xs text-gray-500">{crop.variety} • {crop.area} ha</div>
+                          <tr key={crop.id} className="hover:bg-gray-50 transition-colors duration-150">
+                            <td className="px-6 py-4">
+                              <div className="flex items-center">
+                                <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                  <span className="text-sm">🌱</span>
+                                </div>
+                                <div className="ml-4">
+                                  <div className="text-sm font-medium text-gray-800">{crop.cropType}</div>
+                                  <div className="text-xs text-gray-500">{crop.variety} • {crop.area} ha</div>
+                                </div>
+                              </div>
                             </td>
-                            <td className="px-3 py-2 text-center text-sm">{crop.currentStage}</td>
-                            <td className="px-3 py-2 text-center">
-                              <span className={`px-2 py-1 text-xs rounded-full font-semibold ${
-                                status === 'submitted' ? 'bg-green-100 text-green-700' :
-                                status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                status === 'overdue' ? 'bg-red-100 text-red-700' :
-                                'bg-gray-100 text-gray-700'
+                            <td className="px-6 py-4 text-center">
+                              <span className="inline-flex px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">
+                                {crop.currentStage}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
+                                status === 'submitted' ? 'bg-green-100 text-green-800' :
+                                status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                status === 'overdue' ? 'bg-red-100 text-red-800' :
+                                'bg-gray-100 text-gray-800'
                               }`}>
                                 {status === 'submitted' ? '✅ Submitted' :
                                  status === 'pending' ? '⏰ Pending' :
                                  status === 'overdue' ? '🚨 Overdue' : 'Not Required'}
                               </span>
                             </td>
-                            <td className="px-3 py-2 text-center text-sm">
+                            <td className="px-6 py-4 text-center text-sm text-gray-800">
                               {lastReport ? lastReport.reportDate : 'None'}
                             </td>
-                            <td className="px-3 py-2 text-center text-sm">
+                            <td className="px-6 py-4 text-center text-sm text-gray-800">
                               {status !== 'not-required' ? getNextReportDue(crop) : '—'}
                             </td>
-                            <td className="px-3 py-2 text-center text-sm">
+                            <td className="px-6 py-4 text-center">
                               {weatherData?.current ? (
                                 <div className="text-xs">
-                                  <div>{Math.round(weatherData.current.temperature_2m)}°C</div>
+                                  <div className="font-medium text-gray-800">{Math.round(weatherData.current.temperature_2m)}°C</div>
                                   <div className="text-gray-500">{weatherData.current.relative_humidity_2m}% RH</div>
                                 </div>
-                              ) : 'Loading...'}
-                            </td>
-                            <td className="px-3 py-2 text-center">
-                              {status === 'pending' || status === 'overdue' ? (
-                                <button 
-                                  onClick={() => { 
-                                    setSelectedCropForReport(crop); 
-                                    setShowDetailedReportModal(true); 
-                                  }}
-                                  className={`text-xs px-3 py-1 rounded-lg font-semibold transition-colors ${
-                                    status === 'overdue' 
-                                      ? 'bg-red-600 text-white hover:bg-red-700' 
-                                      : 'bg-blue-600 text-white hover:bg-blue-700'
-                                  }`}
-                                >
-                                  {status === 'overdue' ? 'Submit Now!' : 'Submit Report'}
-                                </button>
-                              ) : status === 'submitted' ? (
-                                <span className="text-xs text-green-600 font-semibold">Complete</span>
                               ) : (
-                                <span className="text-xs text-gray-500">—</span>
+                                <span className="text-xs text-gray-500">Loading...</span>
                               )}
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              <div className="flex justify-center">
+                                {status === 'pending' || status === 'overdue' ? (
+                                  <button 
+                                    onClick={() => { 
+                                      setSelectedCropForReport(crop); 
+                                      setShowDetailedReportModal(true); 
+                                    }}
+                                    className={`inline-flex items-center px-3 py-2 text-xs font-semibold rounded-lg transition-colors duration-200 ${
+                                      status === 'overdue' 
+                                        ? 'bg-red-600 text-white hover:bg-red-700 shadow-sm hover:shadow-md' 
+                                        : 'bg-green-600 text-white hover:bg-green-700 shadow-sm hover:shadow-md'
+                                    }`}
+                                  >
+                                    {status === 'overdue' ? 'Submit Now!' : 'Submit Report'}
+                                  </button>
+                                ) : status === 'submitted' ? (
+                                  <span className="inline-flex items-center px-3 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">
+                                    Complete
+                                  </span>
+                                ) : (
+                                  <span className="text-xs text-gray-500">—</span>
+                                )}
+                              </div>
                             </td>
                           </tr>
                         );
@@ -1155,10 +1539,18 @@ export default function Farmer_Report() {
                 </div>
               </div>
 
-              {/* Calendar View */}
-              <div className="bg-white border rounded-lg shadow-sm">
-                <div className="px-4 py-3 border-b bg-gray-50 flex justify-between items-center">
-                  <h3 className="font-semibold text-gray-800">📅 Monthly Report Calendar</h3>
+              {/* Professional Calendar View */}
+              <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
+                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-lg">
+                      <span className="text-sm">📅</span>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-800">Monthly Report Calendar</h3>
+                      <p className="text-sm text-gray-500">Track reporting deadlines and activities</p>
+                    </div>
+                  </div>
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => {
@@ -1167,11 +1559,11 @@ export default function Farmer_Report() {
                         setCurrentMonth(newMonth);
                         setCurrentYear(newYear);
                       }}
-                      className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+                      className="flex items-center justify-center w-10 h-10 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
                     >
-                      ‹ Prev
+                      ‹
                     </button>
-                    <span className="font-semibold text-gray-800 min-w-[120px] text-center">
+                    <span className="text-lg font-semibold text-gray-800 min-w-[140px] text-center">
                       {new Date(currentYear, currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                     </span>
                     <button
@@ -1181,19 +1573,19 @@ export default function Farmer_Report() {
                         setCurrentMonth(newMonth);
                         setCurrentYear(newYear);
                       }}
-                      className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+                      className="flex items-center justify-center w-10 h-10 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
                     >
-                      Next ›
+                      ›
                     </button>
                   </div>
                 </div>
                 
-                <div className="p-4">
-                  {/* Calendar Grid */}
-                  <div className="grid grid-cols-7 gap-1">
+                <div className="p-6">
+                  {/* Modern Calendar Grid */}
+                  <div className="grid grid-cols-7 gap-2">
                     {/* Day Headers */}
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="p-2 text-center text-sm font-semibold text-gray-600 bg-gray-50 rounded">
+                      <div key={day} className="p-3 text-center text-sm font-semibold text-gray-600 bg-gray-50 rounded-lg">
                         {day}
                       </div>
                     ))}
@@ -1607,8 +1999,8 @@ export default function Farmer_Report() {
                 </div>
               </div>
 
-              {/* Crops Library Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Crops Library Grid - Equal Height Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
                 {cropGuidelinesData.crops
                   .filter(crop => {
                     const matchesSearch = crop.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -1617,67 +2009,70 @@ export default function Farmer_Report() {
                     return matchesSearch && matchesCategory;
                   })
                   .map(crop => (
-                    <div key={crop.id} className="bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                      <div className="p-4">
+                    <div key={crop.id} className="bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
+                      <div className="p-4 flex-1 flex flex-col">
                         <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <h3 className="font-semibold text-gray-800 text-lg">{crop.name}</h3>
-                            <p className="text-sm text-gray-600">
+                          <div className="flex-1 min-w-0 mr-3">
+                            <h3 className="font-semibold text-gray-800 text-lg truncate">{crop.name}</h3>
+                            <p className="text-sm text-gray-600 truncate">
                               {cropGuidelinesData.cropCategories[crop.category]?.icon} {cropGuidelinesData.cropCategories[crop.category]?.name}
                             </p>
                           </div>
-                          <div className="text-right">
+                          <div className="text-right flex-shrink-0">
                             <div className="text-xs text-gray-500">Growing Period</div>
-                            <div className="text-sm font-semibold">{crop.growingPeriod}</div>
+                            <div className="text-sm font-semibold whitespace-nowrap">{crop.growingPeriod}</div>
                           </div>
                         </div>
 
-                        <div className="space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Expected Yield:</span>
-                            <span className="font-semibold text-green-700">{crop.expectedYield}</span>
+                        <div className="space-y-2 text-sm flex-1">
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-600 flex-shrink-0">Expected Yield:</span>
+                            <span className="font-semibold text-green-700 truncate ml-2">{crop.expectedYield}</span>
                           </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Water Requirements:</span>
-                            <span className="font-semibold">{crop.waterRequirements}</span>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-600 flex-shrink-0">Water Requirements:</span>
+                            <span className="font-semibold truncate ml-2">{crop.waterRequirements}</span>
                           </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Difficulty:</span>
-                            <span className={`font-semibold ${
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-600 flex-shrink-0">Difficulty:</span>
+                            <span className={`font-semibold flex-shrink-0 ml-2 ${
                               crop.difficulty === 'Easy' ? 'text-green-600' :
                               crop.difficulty === 'Moderate' ? 'text-yellow-600' : 'text-red-600'
                             }`}>
                               {crop.difficulty}
                             </span>
                           </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Market Price:</span>
-                            <span className="font-semibold text-blue-700">{crop.marketPrice}</span>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-600 flex-shrink-0">Market Price:</span>
+                            <span className="font-semibold text-blue-700 truncate ml-2">{crop.marketPrice}</span>
                           </div>
                         </div>
 
                         <div className="mt-3 pt-3 border-t">
                           <div className="text-xs text-gray-500 mb-2">Key Varieties:</div>
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex flex-wrap gap-1 min-h-[24px]">
                             {crop.varieties.slice(0, 3).map((variety, idx) => (
-                              <span key={idx} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                              <span key={idx} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs truncate max-w-[80px]">
                                 {variety}
                               </span>
                             ))}
                             {crop.varieties.length > 3 && (
-                              <span className="text-gray-500 text-xs">+{crop.varieties.length - 3} more</span>
+                              <span className="text-gray-500 text-xs flex-shrink-0">+{crop.varieties.length - 3} more</span>
                             )}
                           </div>
                         </div>
-
+                      </div>
+                      
+                      {/* Fixed Position Button */}
+                      <div className="p-4 pt-0">
                         <button
                           onClick={() => {
                             setSelectedCrop(crop);
                             setShowCropDetail(true);
                           }}
-                          className="w-full mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-semibold"
+                          className="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-semibold shadow-sm hover:shadow-md"
                         >
-                          View Full Guide
+                          📖 View Full Guide
                         </button>
                       </div>
                     </div>
@@ -1729,20 +2124,34 @@ export default function Farmer_Report() {
           )}
         </div>
 
-        {/* Modals */}
+        {/* Professional Modals */}
         {showCropRegistrationModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="px-6 py-4 border-b bg-gray-50">
-                <h3 className="text-lg font-semibold text-gray-800">🌱 Register New Crop</h3>
+          <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8 overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full min-h-fit my-auto">
+              {/* Modal Header */}
+              <div className="px-4 sm:px-6 py-4 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-10 h-10 bg-green-600 rounded-lg">
+                    <span className="text-white text-lg">🌱</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-800">Register New Crop</h3>
+                    <p className="text-xs sm:text-sm text-gray-600">Add a new crop to your farming portfolio</p>
+                  </div>
+                </div>
               </div>
-              <div className="p-6">
+              
+              {/* Modal Body */}
+              <div className="p-4 sm:p-6">
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Crop Type</label>
-                      <select value={newCrop.cropType} onChange={(e) => setNewCrop({...newCrop, cropType: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Crop Type *</label>
+                      <select 
+                        value={newCrop.cropType} 
+                        onChange={(e) => setNewCrop({...newCrop, cropType: e.target.value})}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      >
                         <option value="">Select crop type</option>
                         <option value="Rice">Rice (Palay)</option>
                         <option value="Corn">Corn</option>
@@ -1751,34 +2160,92 @@ export default function Farmer_Report() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Variety</label>
-                      <input type="text" value={newCrop.variety} onChange={(e) => setNewCrop({...newCrop, variety: e.target.value})}
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Variety *</label>
+                      <input 
+                        type="text" 
+                        value={newCrop.variety} 
+                        onChange={(e) => setNewCrop({...newCrop, variety: e.target.value})}
                         placeholder="e.g., IR64, Sweet variety"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      />
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Planting Date</label>
-                      <input type="date" value={newCrop.plantingDate} onChange={(e) => setNewCrop({...newCrop, plantingDate: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Planting Date *</label>
+                      <input 
+                        type="date" 
+                        value={newCrop.plantingDate} 
+                        onChange={(e) => setNewCrop({...newCrop, plantingDate: e.target.value})}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Area (hectares)</label>
-                      <input type="number" step="0.1" value={newCrop.area} onChange={(e) => setNewCrop({...newCrop, area: e.target.value})}
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Area (hectares) *</label>
+                      <input 
+                        type="number" 
+                        step="0.1" 
+                        value={newCrop.area} 
+                        onChange={(e) => setNewCrop({...newCrop, area: e.target.value})}
                         placeholder="e.g., 1.5"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      />
                     </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Expected Yield (kg)</label>
+                      <input 
+                        type="number" 
+                        value={newCrop.expectedYield} 
+                        onChange={(e) => setNewCrop({...newCrop, expectedYield: e.target.value})}
+                        placeholder="e.g., 5000"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Current Stage</label>
+                      <select 
+                        value={newCrop.currentStage} 
+                        onChange={(e) => setNewCrop({...newCrop, currentStage: e.target.value})}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      >
+                        <option value="Seedling">Seedling</option>
+                        <option value="Vegetative">Vegetative</option>
+                        <option value="Flowering">Flowering</option>
+                        <option value="Fruiting">Fruiting</option>
+                        <option value="Maturity">Maturity</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Additional Notes</label>
+                    <textarea 
+                      value={newCrop.notes} 
+                      onChange={(e) => setNewCrop({...newCrop, notes: e.target.value})}
+                      placeholder="Any additional information about this crop..."
+                      rows="2"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                    />
                   </div>
                 </div>
               </div>
-              <div className="px-6 py-4 border-t bg-gray-50 flex justify-end space-x-3">
-                <button onClick={() => setShowCropRegistrationModal(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+              
+              {/* Modal Footer */}
+              <div className="px-4 sm:px-6 py-3 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row justify-end gap-2">
+                <button 
+                  onClick={() => setShowCropRegistrationModal(false)}
+                  className="w-full sm:w-auto px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+                >
                   Cancel
                 </button>
-                <button onClick={handleAddCrop}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                <button 
+                  onClick={handleAddCrop}
+                  className="w-full sm:w-auto px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium shadow-sm hover:shadow-md"
+                >
                   Register Crop
                 </button>
               </div>
@@ -1787,25 +2254,42 @@ export default function Farmer_Report() {
         )}
 
         {showMonthlyReportModal && selectedCropForReport && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="px-6 py-4 border-b bg-gray-50">
-                <h3 className="text-lg font-semibold text-gray-800">
-                  📋 Add Report for {selectedCropForReport.cropType}
-                </h3>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Report Date</label>
-                    <input type="date" value={newReport.reportDate} onChange={(e) => setNewReport({...newReport, reportDate: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+          <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8">
+            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full min-h-fit my-auto">
+              {/* Modal Header */}
+              <div className="px-4 sm:px-6 py-3 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg">
+                    <span className="text-white text-sm">📋</span>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                      Add Report for {selectedCropForReport.cropType}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-gray-600">Record progress and observations</p>
+                  </div>
+                </div>
+              </div>
+              {/* Modal Body */}
+              <div className="p-4 sm:p-6">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Growth Stage</label>
-                      <select value={newReport.growthStage} onChange={(e) => setNewReport({...newReport, growthStage: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Report Date *</label>
+                      <input 
+                        type="date" 
+                        value={newReport.reportDate} 
+                        onChange={(e) => setNewReport({...newReport, reportDate: e.target.value})}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Growth Stage *</label>
+                      <select 
+                        value={newReport.growthStage} 
+                        onChange={(e) => setNewReport({...newReport, growthStage: e.target.value})}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      >
                         <option value="">Select stage</option>
                         <option value="Seedling">Seedling</option>
                         <option value="Vegetative">Vegetative</option>
@@ -1814,28 +2298,58 @@ export default function Farmer_Report() {
                         <option value="Maturity">Maturity</option>
                       </select>
                     </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Plant Height (cm)</label>
-                      <input type="number" value={newReport.plantHeight} onChange={(e) => setNewReport({...newReport, plantHeight: e.target.value})}
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Plant Height (cm)</label>
+                      <input 
+                        type="number" 
+                        value={newReport.plantHeight} 
+                        onChange={(e) => setNewReport({...newReport, plantHeight: e.target.value})}
                         placeholder="e.g., 45"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Health Status</label>
+                      <select 
+                        value={newReport.healthStatus || 'Good'} 
+                        onChange={(e) => setNewReport({...newReport, healthStatus: e.target.value})}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      >
+                        <option value="Excellent">Excellent</option>
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Poor">Poor</option>
+                      </select>
                     </div>
                   </div>
+                  
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-                    <textarea value={newReport.notes} onChange={(e) => setNewReport({...newReport, notes: e.target.value})}
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Observations & Notes</label>
+                    <textarea 
+                      value={newReport.notes} 
+                      onChange={(e) => setNewReport({...newReport, notes: e.target.value})}
                       placeholder="Observations, problems, treatments applied..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-24" />
+                      rows="2"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                    />
                   </div>
                 </div>
               </div>
-              <div className="px-6 py-4 border-t bg-gray-50 flex justify-end space-x-3">
-                <button onClick={() => setShowMonthlyReportModal(false)}
-                  className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+              {/* Modal Footer */}
+              <div className="px-4 sm:px-6 py-3 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row justify-end gap-2">
+                <button 
+                  onClick={() => setShowMonthlyReportModal(false)}
+                  className="w-full sm:w-auto px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+                >
                   Cancel
                 </button>
-                <button onClick={handleAddReport}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                <button 
+                  onClick={handleAddReport}
+                  className="w-full sm:w-auto px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium shadow-sm hover:shadow-md"
+                >
                   Add Report
                 </button>
               </div>
@@ -1843,267 +2357,399 @@ export default function Farmer_Report() {
           </div>
         )}
 
-        {/* Detailed Monthly Report Modal */}
+        {/* Professional Detailed Monthly Report Modal */}
         {showDetailedReportModal && selectedCropForReport && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-800">
-                    📋 Monthly Report - {selectedCropForReport.cropType} ({selectedCropForReport.variety})
-                  </h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Area: {selectedCropForReport.area} ha • Planted: {selectedCropForReport.plantingDate}
-                  </p>
+          <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8">
+            <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full min-h-fit my-auto max-h-[90vh] overflow-y-auto">
+              {/* Modal Header */}
+              <div className="px-4 sm:px-6 py-3 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg shadow-sm">
+                      <span className="text-white text-sm">📊</span>
+                    </div>
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                        Monthly Report - {selectedCropForReport.cropType}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                        {selectedCropForReport.variety} • {selectedCropForReport.area} ha • Planted: {selectedCropForReport.plantingDate}
+                      </p>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setShowDetailedReportModal(false)}
+                    className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-white/80 rounded-lg transition-all duration-200 hover:shadow-sm"
+                  >
+                    <span className="text-xl font-light">&times;</span>
+                  </button>
                 </div>
-                <button onClick={() => setShowDetailedReportModal(false)}
-                  className="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
               </div>
               
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 {/* Current Weather Integration */}
                 {weatherData?.current && (
-                  <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-                    <h4 className="font-semibold text-blue-800 mb-3">🌤️ Current Weather Conditions</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-600">Temperature:</span>
-                        <div className="font-semibold text-blue-700">{Math.round(weatherData.current.temperature_2m)}°C</div>
+                  <div className="mb-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="flex items-center justify-center w-6 h-6 bg-gray-600 rounded-lg">
+                        <span className="text-white text-xs">🌤️</span>
                       </div>
-                      <div>
-                        <span className="text-gray-600">Humidity:</span>
-                        <div className="font-semibold text-blue-700">{weatherData.current.relative_humidity_2m}%</div>
+                      <h4 className="text-sm sm:text-lg font-bold text-gray-800">Current Weather Conditions</h4>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      <div className="bg-white p-2 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow duration-200">
+                        <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Temperature</div>
+                        <div className="text-lg font-bold text-gray-800">{Math.round(weatherData.current.temperature_2m)}°C</div>
                       </div>
-                      <div>
-                        <span className="text-gray-600">Precipitation:</span>
-                        <div className="font-semibold text-blue-700">{weatherData.current.precipitation} mm</div>
+                      <div className="bg-white p-3 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow duration-200">
+                        <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Humidity</div>
+                        <div className="text-lg font-bold text-gray-800">{weatherData.current.relative_humidity_2m}%</div>
                       </div>
-                      <div>
-                        <span className="text-gray-600">Wind Speed:</span>
-                        <div className="font-semibold text-blue-700">{Math.round(weatherData.current.wind_speed_10m)} km/h</div>
+                      <div className="bg-white p-3 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow duration-200">
+                        <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Precipitation</div>
+                        <div className="text-lg font-bold text-gray-800">{weatherData.current.precipitation} mm</div>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow duration-200">
+                        <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Wind Speed</div>
+                        <div className="text-lg font-bold text-gray-800">{Math.round(weatherData.current.wind_speed_10m)} km/h</div>
                       </div>
                     </div>
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                   {/* Basic Information */}
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-800 border-b pb-2">📋 Basic Report Information</h4>
+                  <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg">
+                        <span className="text-white text-sm">📋</span>
+                      </div>
+                      <h4 className="text-lg font-bold text-gray-800">Basic Report Information</h4>
+                    </div>
                     
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Report Date *</label>
-                        <input type="date" value={newReport.reportDate} 
-                          onChange={(e) => setNewReport({...newReport, reportDate: e.target.value})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">Report Date *</label>
+                          <input 
+                            type="date" 
+                            value={newReport.reportDate} 
+                            onChange={(e) => setNewReport({...newReport, reportDate: e.target.value})}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">Growth Stage *</label>
+                          <select 
+                            value={newReport.growthStage} 
+                            onChange={(e) => setNewReport({...newReport, growthStage: e.target.value})}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                          >
+                            <option value="">Select stage</option>
+                            <option value="Seedling">Seedling</option>
+                            <option value="Vegetative">Vegetative</option>
+                            <option value="Flowering">Flowering</option>
+                            <option value="Fruiting">Fruiting</option>
+                            <option value="Maturity">Maturity</option>
+                          </select>
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Growth Stage *</label>
-                        <select value={newReport.growthStage} 
-                          onChange={(e) => setNewReport({...newReport, growthStage: e.target.value})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                          <option value="">Select stage</option>
-                          <option value="Seedling">Seedling</option>
-                          <option value="Vegetative">Vegetative</option>
-                          <option value="Flowering">Flowering</option>
-                          <option value="Fruiting">Fruiting</option>
-                          <option value="Maturity">Maturity</option>
-                        </select>
-                      </div>
-                    </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Plant Height (cm) *</label>
-                        <input type="number" value={newReport.plantHeight} 
-                          onChange={(e) => setNewReport({...newReport, plantHeight: e.target.value})}
-                          placeholder="e.g., 45"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">Plant Height (cm) *</label>
+                          <input 
+                            type="number" 
+                            value={newReport.plantHeight} 
+                            onChange={(e) => setNewReport({...newReport, plantHeight: e.target.value})}
+                            placeholder="e.g., 45"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">Health Status</label>
+                          <select 
+                            value={newReport.healthStatus} 
+                            onChange={(e) => setNewReport({...newReport, healthStatus: e.target.value})}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                          >
+                            <option value="Healthy">Healthy</option>
+                            <option value="Warning">Warning</option>
+                            <option value="Poor">Poor</option>
+                          </select>
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Health Status</label>
-                        <select value={newReport.healthStatus} 
-                          onChange={(e) => setNewReport({...newReport, healthStatus: e.target.value})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                          <option value="Healthy">Healthy</option>
-                          <option value="Warning">Warning</option>
-                          <option value="Poor">Poor</option>
-                        </select>
-                      </div>
-                    </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Estimated Yield (kg)</label>
-                        <input type="number" value={newReport.estimatedYield} 
-                          onChange={(e) => setNewReport({...newReport, estimatedYield: e.target.value})}
-                          placeholder="e.g., 5000"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Soil Condition</label>
-                        <select value={newReport.soilCondition} 
-                          onChange={(e) => setNewReport({...newReport, soilCondition: e.target.value})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                          <option value="">Select condition</option>
-                          <option value="Excellent">Excellent</option>
-                          <option value="Good">Good</option>
-                          <option value="Fair">Fair</option>
-                          <option value="Poor">Poor</option>
-                        </select>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">Estimated Yield (kg)</label>
+                          <input 
+                            type="number" 
+                            value={newReport.estimatedYield} 
+                            onChange={(e) => setNewReport({...newReport, estimatedYield: e.target.value})}
+                            placeholder="e.g., 5000"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">Soil Condition</label>
+                          <select 
+                            value={newReport.soilCondition} 
+                            onChange={(e) => setNewReport({...newReport, soilCondition: e.target.value})}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                          >
+                            <option value="">Select condition</option>
+                            <option value="Excellent">Excellent</option>
+                            <option value="Good">Good</option>
+                            <option value="Fair">Fair</option>
+                            <option value="Poor">Poor</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Management Activities */}
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-800 border-b pb-2">🌿 Management Activities</h4>
+                  <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg">
+                        <span className="text-white text-sm">🌿</span>
+                      </div>
+                      <h4 className="text-lg font-bold text-gray-800">Management Activities</h4>
+                    </div>
                     
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Pests Observed</label>
-                      <input type="text" value={newReport.pestsObserved} 
-                        onChange={(e) => setNewReport({...newReport, pestsObserved: e.target.value})}
-                        placeholder="e.g., Aphids, Spider mites"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
-                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Pests Observed</label>
+                        <input 
+                          type="text" 
+                          value={newReport.pestsObserved} 
+                          onChange={(e) => setNewReport({...newReport, pestsObserved: e.target.value})}
+                          placeholder="e.g., Aphids, Spider mites"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        />
+                      </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Diseases Observed</label>
-                      <input type="text" value={newReport.diseasesObserved} 
-                        onChange={(e) => setNewReport({...newReport, diseasesObserved: e.target.value})}
-                        placeholder="e.g., Leaf spot, Powdery mildew"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
-                    </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Diseases Observed</label>
+                        <input 
+                          type="text" 
+                          value={newReport.diseasesObserved} 
+                          onChange={(e) => setNewReport({...newReport, diseasesObserved: e.target.value})}
+                          placeholder="e.g., Leaf spot, Powdery mildew"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        />
+                      </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Fertilizers Applied</label>
-                      <input type="text" value={newReport.fertilizersApplied} 
-                        onChange={(e) => setNewReport({...newReport, fertilizersApplied: e.target.value})}
-                        placeholder="e.g., NPK 14-14-14, 50kg"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
-                    </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Fertilizers Applied</label>
+                        <input 
+                          type="text" 
+                          value={newReport.fertilizersApplied} 
+                          onChange={(e) => setNewReport({...newReport, fertilizersApplied: e.target.value})}
+                          placeholder="e.g., NPK 14-14-14, 50kg"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        />
+                      </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Pesticide Applications</label>
-                      <input type="text" value={newReport.pesticideApplications} 
-                        onChange={(e) => setNewReport({...newReport, pesticideApplications: e.target.value})}
-                        placeholder="e.g., Insecticide spray for aphids"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
-                    </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Pesticide Applications</label>
+                        <input 
+                          type="text" 
+                          value={newReport.pesticideApplications} 
+                          onChange={(e) => setNewReport({...newReport, pesticideApplications: e.target.value})}
+                          placeholder="e.g., Insecticide spray for aphids"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        />
+                      </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Irrigation Frequency</label>
-                      <select value={newReport.irrigationFrequency} 
-                        onChange={(e) => setNewReport({...newReport, irrigationFrequency: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                        <option value="">Select frequency</option>
-                        <option value="Daily">Daily</option>
-                        <option value="Every 2 days">Every 2 days</option>
-                        <option value="Weekly">Weekly</option>
-                        <option value="As needed">As needed</option>
-                        <option value="Rain-fed">Rain-fed</option>
-                      </select>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Irrigation Frequency</label>
+                        <select 
+                          value={newReport.irrigationFrequency} 
+                          onChange={(e) => setNewReport({...newReport, irrigationFrequency: e.target.value})}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        >
+                          <option value="">Select frequency</option>
+                          <option value="Daily">Daily</option>
+                          <option value="Every 2 days">Every 2 days</option>
+                          <option value="Weekly">Weekly</option>
+                          <option value="As needed">As needed</option>
+                          <option value="Rain-fed">Rain-fed</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Full-width sections */}
-                <div className="mt-6 space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Major Activities This Month</label>
-                    <textarea value={newReport.majorActivities} 
-                      onChange={(e) => setNewReport({...newReport, majorActivities: e.target.value})}
-                      placeholder="e.g., Transplanting, weeding, fertilizer application..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-20" />
+                {/* Additional Information Sections */}
+                <div className="mt-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg">
+                      <span className="text-white text-sm">📝</span>
+                    </div>
+                    <h4 className="text-lg font-bold text-gray-800">Additional Information</h4>
                   </div>
+                  
+                  <div className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Major Activities This Month</label>
+                      <textarea 
+                        value={newReport.majorActivities} 
+                        onChange={(e) => setNewReport({...newReport, majorActivities: e.target.value})}
+                        placeholder="e.g., Transplanting, weeding, fertilizer application..."
+                        rows="3"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Challenges Faced</label>
-                    <textarea value={newReport.challenges} 
-                      onChange={(e) => setNewReport({...newReport, challenges: e.target.value})}
-                      placeholder="e.g., Pest infestation, drought stress, equipment issues..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-20" />
-                  </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Challenges Faced</label>
+                      <textarea 
+                        value={newReport.challenges} 
+                        onChange={(e) => setNewReport({...newReport, challenges: e.target.value})}
+                        placeholder="e.g., Pest infestation, drought stress, equipment issues..."
+                        rows="3"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Planned Actions for Next Month</label>
-                    <textarea value={newReport.plannedActions} 
-                      onChange={(e) => setNewReport({...newReport, plannedActions: e.target.value})}
-                      placeholder="e.g., Apply growth booster, pest monitoring, harvest preparation..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-20" />
-                  </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Planned Actions for Next Month</label>
+                      <textarea 
+                        value={newReport.plannedActions} 
+                        onChange={(e) => setNewReport({...newReport, plannedActions: e.target.value})}
+                        placeholder="e.g., Apply growth booster, pest monitoring, harvest preparation..."
+                        rows="3"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Additional Notes</label>
-                    <textarea value={newReport.notes} 
-                      onChange={(e) => setNewReport({...newReport, notes: e.target.value})}
-                      placeholder="Any other observations, treatments applied, or important notes..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent h-24" />
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Additional Notes</label>
+                      <textarea 
+                        value={newReport.notes} 
+                        onChange={(e) => setNewReport({...newReport, notes: e.target.value})}
+                        placeholder="Any other observations, treatments applied, or important notes..."
+                        rows="4"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                      />
+                    </div>
                   </div>
                 </div>
 
                 {/* Cost Tracking */}
-                <div className="mt-6">
-                  <h4 className="font-semibold text-gray-800 border-b pb-2 mb-4">💰 Monthly Costs (Optional)</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="mt-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg">
+                      <span className="text-white text-sm">💰</span>
+                    </div>
+                    <h4 className="text-lg font-bold text-gray-800">Monthly Costs (Optional)</h4>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Seeds (₱)</label>
-                      <input type="number" value={newReport.costs.seeds} 
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Seeds (₱)</label>
+                      <input 
+                        type="number" 
+                        value={newReport.costs.seeds} 
                         onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, seeds: e.target.value}})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                        placeholder="0.00"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Fertilizer (₱)</label>
-                      <input type="number" value={newReport.costs.fertilizer} 
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Fertilizer (₱)</label>
+                      <input 
+                        type="number" 
+                        value={newReport.costs.fertilizer} 
                         onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, fertilizer: e.target.value}})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                        placeholder="0.00"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Pesticides (₱)</label>
-                      <input type="number" value={newReport.costs.pesticides} 
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Pesticides (₱)</label>
+                      <input 
+                        type="number" 
+                        value={newReport.costs.pesticides} 
                         onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, pesticides: e.target.value}})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                        placeholder="0.00"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Labor (₱)</label>
-                      <input type="number" value={newReport.costs.labor} 
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Labor (₱)</label>
+                      <input 
+                        type="number" 
+                        value={newReport.costs.labor} 
                         onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, labor: e.target.value}})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+                        placeholder="0.00"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                      />
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="px-6 py-4 border-t bg-gray-50 flex justify-between items-center">
-                <div className="text-sm text-gray-600">
-                  * Required fields. Weather data will be automatically included.
-                </div>
-                <div className="flex space-x-3">
-                  <button onClick={() => setShowDetailedReportModal(false)}
-                    className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
-                    Cancel
-                  </button>
-                  <button onClick={handleAddReport}
-                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold">
-                    Submit Monthly Report
-                  </button>
+              {/* Modal Footer */}
+              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div className="text-sm text-gray-600">
+                    <span className="flex items-center gap-1">
+                      <span className="text-red-500">*</span>
+                      Required fields. Weather data will be automatically included.
+                    </span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-3">
+                    <button 
+                      onClick={() => setShowDetailedReportModal(false)}
+                      className="w-full sm:w-auto px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      onClick={handleAddReport}
+                      className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-semibold shadow-sm hover:shadow-md"
+                    >
+                      Submit Monthly Report
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Crop Detail Modal */}
+        {/* Professional Crop Detail Modal */}
         {showCropDetail && selectedCrop && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-gray-800">
-                  {cropGuidelinesData.cropCategories[selectedCrop.category]?.icon} {selectedCrop.name} - Complete Growing Guide
-                </h3>
-                <button onClick={() => setShowCropDetail(false)}
-                  className="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 pt-20">
+            <div className="bg-white rounded-xl shadow-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto">
+              {/* Modal Header */}
+              <div className="px-6 py-4 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-green-600 rounded-lg shadow-sm">
+                      <span className="text-white text-xl">
+                        {cropGuidelinesData.cropCategories[selectedCrop.category]?.icon}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-800">
+                        {selectedCrop.name} - Complete Growing Guide
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Comprehensive farming guide and best practices
+                      </p>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setShowCropDetail(false)}
+                    className="flex items-center justify-center w-10 h-10 text-gray-500 hover:text-gray-700 hover:bg-white/80 rounded-lg transition-all duration-200 hover:shadow-sm"
+                  >
+                    <span className="text-2xl font-light">&times;</span>
+                  </button>
+                </div>
               </div>
               
               <div className="p-6 space-y-6">
