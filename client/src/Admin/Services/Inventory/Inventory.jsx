@@ -35,6 +35,10 @@ function Content() {
     const [editForm, setEditForm] = useState({});
     const [uiSize, setUiSize] = useState('md'); // 'sm', 'md', 'lg'
 
+    // Pagination states
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+
     // Stack Edit Modal states - REMOVED - using inline editing instead
     // const [showStackEditModal, setShowStackEditModal] = useState(false);
     // const [stackEditData, setStackEditData] = useState(null);
@@ -217,6 +221,18 @@ function Content() {
                 return (b.name || '').localeCompare(a.name || '', undefined, { sensitivity: 'base' });
             }
         });
+
+    // Pagination logic
+    const totalItems = filteredItems.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedItems = filteredItems.slice(startIndex, endIndex);
+
+    // Reset to first page when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, categoryFilter, statusFilter]);
 
     const truncate = (str, n = 24) =>
         str && str.length > n ? str.slice(0, n) + '...' : str;
@@ -728,7 +744,7 @@ function Content() {
     const handleSelectAll = (e) => {
         setSelectAll(e.target.checked);
         if (e.target.checked) {
-            setSelectedItems(filteredItems.map((item) => item.id));
+            setSelectedItems(paginatedItems.map((item) => item.id));
         } else {
             setSelectedItems([]);
         }
@@ -736,15 +752,13 @@ function Content() {
 
     const handleViewStacks = (item) => {
         if (expandedStacks.has(item.id)) {
-            setExpandedStacks(
-                new Set([...expandedStacks].filter((id) => id !== item.id))
-            );
-            if (selectedItemStacks?.id === item.id) {
-                setSelectedItemStacks(null);
-            }
+            // Collapse the current item
+            setExpandedStacks(new Set());
+            setSelectedItemStacks(null);
         } else {
+            // Expand the new item and collapse any previously expanded items
+            setExpandedStacks(new Set([item.id]));
             setSelectedItemStacks(item);
-            setExpandedStacks(new Set([...expandedStacks, item.id]));
         }
     };
 
@@ -799,168 +813,730 @@ function Content() {
 
     // UI size classes
     const sizeClasses = {
-        sm: 'max-w-full p-2 text-xs',
-        md: 'max-w-full p-4 text-sm',
-        lg: 'max-w-full p-6 text-base',
+        sm: {
+            container: 'max-w-full p-2',
+            text: 'text-xs',
+            table: 'text-xs',
+            padding: 'px-2 py-1'
+        },
+        md: {
+            container: 'max-w-full p-4',
+            text: 'text-sm',
+            table: 'text-sm',
+            padding: 'px-4 py-2'
+        },
+        lg: {
+            container: 'max-w-full p-6',
+            text: 'text-base',
+            table: 'text-base',
+            padding: 'px-6 py-3'
+        }
     };
 
     return (
-        <>
-            {/* Modern Centered Alert */}
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 overflow-x-hidden">
+            {/* Modern Alert */}
             {alert.show && (
                 <div
-                    className={`fixed top-6 left-1/2 z-50 transform -translate-x-1/2 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3
-                    ${
+                    className={`fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2 ${
                         alert.type === 'success'
-                            ? 'bg-green-500/90 text-white'
-                            : 'bg-red-500/90 text-white'
+                            ? 'bg-green-500 text-white'
+                            : alert.type === 'error'
+                            ? 'bg-red-500 text-white'
+                            : 'bg-gray-500 text-white'
                     }`}
                 >
-                    <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                    >
-                        {alert.type === 'success' ? (
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M5 13l4 4L19 7"
-                            />
-                        ) : (
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        )}
-                    </svg>
+                    {alert.type === 'success' && (
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                    )}
+                    {alert.type === 'error' && (
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                    )}
                     <span className="font-medium">{alert.message}</span>
                 </div>
             )}
 
-            {/* EIC-style Title Section with reduced top margin */}
-            <div className="relative mb-6 mt-5 sm:mt-20 p-6 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
-                <span className="inline-flex items-center justify-center gap-3 w-full">
-                    <span className="rounded-full bg-green-100 p-2">
-                        <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            {/* Professional Header Section */}
+            <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ${sizeClasses[uiSize].container}`}>
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4 mt-15">
+                        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                    </span>
-                    <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
-                        Inventory Management
-                    </span>
-                </span>
-                <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
-                    Manage and monitor all inventory items and their stacks.
-                </span>
-            </div>
+                    </div>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2 ">Inventory Management</h1>
+                    <p className="text-gray-600 max-w-2xl mx-auto">
+                        Manage and monitor all inventory items and their stacks with complete control over stock levels and distribution.
+                    </p>
+                </div>
 
-            <div
-                className={`flex flex-col items-center justify-center min-h-[91vh] w-full bg-white rounded-xl shadow mt-2 transition-all
-                    ${sizeClasses[uiSize]}
-                `}
-                style={{
-                    boxSizing: 'border-box',
-                    width: '100%',
-                }}
-            >
-            <div className="w-full mb-4">
-                    {/* Sorting Button above the table */}
-                    {/* Sorting Button above the table, not in the search/filter controls */}
+                {/* Professional Controls Section */}
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 items-end">
+                        {/* Search Input */}
+                        <div className="xl:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Search Items</label>
+                            <input
+                                type="text"
+                                placeholder="Search by name, description..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                            />
+                        </div>
 
+                        {/* Category Filter */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select
+                                value={categoryFilter}
+                                onChange={(e) => setCategoryFilter(e.target.value)}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                            >
+                                <option value="All">All Categories</option>
+                                {categories.map((cat) => (
+                                    <option key={cat} value={cat}>
+                                        {cat}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Status Filter */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                            >
+                                <option value="All">All Statuses</option>
+                                {statuses.map((status) => (
+                                    <option key={status} value={status}>
+                                        {status}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => setShowModal(true)}
+                                className="flex-1 bg-green-600 text-white font-medium px-2 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                            >
+                               
+                                Add Item
+                            </button>
+                            {!showDelete ? (
+                                <button
+                                    onClick={() => setShowDelete(true)}
+                                    className="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                                >
+                                    Manage
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => setShowDelete(false)}
+                                    className="px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Delete Mode Actions */}
+                    {showDelete && (
+                        <div className="mt-6 pt-6 border-t border-gray-200">
+                            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                                <div className="text-sm text-gray-600">
+                                    {selectedItems.length > 0 ? (
+                                        <span className="font-medium text-gray-900">
+                                            {selectedItems.length} item{selectedItems.length !== 1 ? 's' : ''} selected
+                                        </span>
+                                    ) : (
+                                        <span>Select items to delete or manage</span>
+                                    )}
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => {
+                                            setSelectAll(true);
+                                            setSelectedItems(filteredItems.map((item) => item.id));
+                                        }}
+                                        className="px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                    >
+                                        Select All
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setSelectAll(false);
+                                            setSelectedItems([]);
+                                        }}
+                                        className="px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                    >
+                                        Clear All
+                                    </button>
+                                    <button
+                                        onClick={handleRemoveSelected}
+                                        disabled={selectedItems.length === 0}
+                                        className="px-4 py-2 text-sm bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        Delete Selected
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Helper Text */}
                     {!showDelete && (
-                        <div className="text-center mb-3">
-                            <p className="text-sm text-green-600 font-medium flex items-center justify-center gap-2">
-                                Click arrows to view stacks
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                            <p className="text-sm text-gray-500 flex items-center gap-2">
+                                <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                                Click the arrow icons to view and manage item stacks
                             </p>
                         </div>
                     )}
-                <div className="flex flex-wrap gap-2 w-full mx-auto justify-center mb-2 px-0 py-0">
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="flex-1 min-w-[120px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-1 focus:ring-green-300 bg-white text-gray-900 placeholder:text-gray-400 w-full sm:w-auto"
-                        />
-                        <select
-                            value={categoryFilter}
-                            onChange={(e) => setCategoryFilter(e.target.value)}
-                            className="min-w-[100px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none ocus:ring-1 focus:ring-green-300 bg-white text-green-900 placeholder:text-green-400 w-full sm:w-auto"
-                        >
-                            <option key="All">All</option>
-                            {categories.map((cat) => (
-                                <option key={cat} value={cat}>
-                                    {cat}
-                                </option>
-                            ))}
-                        </select>
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                            className="min-w-[100px] border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-1  focus:ring-green-300 bg-white text-green-900 placeholder:text-green-400 w-full sm:w-auto"
-                        >
-                            <option key="All">All</option>
-                            {statuses.map((status) => (
-                                <option key={status} value={status}>
-                                    {status}
-                                </option>
-                            ))}
-                        </select>
-                        <button
-                            onClick={() => setShowModal(true)}
-                            className="bg-green-500 text-white font-bold px-4 py-2 rounded hover:bg-green-600 transition w-full sm:w-auto"
-                        >
-                            + Add
-                        </button>
-                        {!showDelete ? (
-                            <button
-                                onClick={() => setShowDelete(true)}
-                                className="bg-red-500 text-white font-bold px-4 py-2 rounded hover:bg-red-600 transition w-full sm:w-auto"
-                            >
-                                Delete
-                            </button>
-                        ) : (
-                            <button
-                                onClick={() => setShowDelete(false)}
-                                className="bg-gray-300 text-green-900 font-bold px-4 py-2 rounded hover:bg-gray-400 transition w-full sm:w-auto"
-                            >
-                                Cancel
-                            </button>
-                        )}
+                </div>
+
+                {/* Professional Table Container */}
+                <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-lg font-semibold text-gray-900">Inventory Items</h3>
+                            <div className="flex items-center gap-4">
+                                <span className="text-sm text-gray-600">
+                                    Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} item{totalItems !== 1 ? 's' : ''}
+                                </span>
+                                <button
+                                    onClick={handleSortToggle}
+                                    className="flex items-center gap-2 px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                >
+                                    <span>Sort {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}</span>
+                                    <svg className={`w-4 h-4 transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    {showDelete && (
-                        <div className="flex gap-2 flex-wrap w-full justify-end mt-2">
-                            <button
-                                onClick={handleRemoveSelected}
-                                disabled={selectedItems.length === 0}
-                                className={`px-4 py-2 rounded font-semibold bg-red-500 text-white hover:bg-red-600 disabled:bg-red-200 disabled:cursor-not-allowed w-full sm:w-auto`}
-                            >
-                                Delete
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setSelectAll(true);
-                                    setSelectedItems(
-                                        filteredItems.map((item) => item.id)
-                                    );
-                                }}
-                                className="px-4 py-2 rounded font-semibold bg-green-500 text-white hover:bg-green-600 w-full sm:w-auto"
-                            >
-                                Select All
-                            </button>
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className={`w-full table-auto ${sizeClasses[uiSize].table}`} style={{tableLayout: 'auto', wordWrap: 'break-word'}}>
+                            <thead>
+                                <tr className="border-b border-gray-200">
+                                    {showDelete && (
+                                        <th className={`${sizeClasses[uiSize].padding} text-left`}>
+                                            <input
+                                                type="checkbox"
+                                                checked={paginatedItems.length > 0 && paginatedItems.every(item => selectedItems.includes(item.id))}
+                                                onChange={handleSelectAll}
+                                                className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                                                aria-label="Select all on this page"
+                                            />
+                                        </th>
+                                    )}
+                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-semibold text-gray-500 uppercase tracking-wider`}>
+                                        Item Details
+                                    </th>
+                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell`}>
+                                        Category
+                                    </th>
+                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-semibold text-gray-500 uppercase tracking-wider`}>
+                                        Stock
+                                    </th>
+                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell`}>
+                                        Status Breakdown
+                                    </th>
+                                    <th className={`${sizeClasses[uiSize].padding} text-right ${sizeClasses[uiSize].text} font-semibold text-gray-500 uppercase tracking-wider`}>
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200">
+                                {paginatedItems.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={showDelete ? "6" : "5"} className="px-6 py-12 text-center">
+                                            <div className="flex flex-col items-center justify-center text-gray-400">
+                                                <svg className="w-12 h-12 mb-4" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                                                    <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                                <p className="text-lg font-medium mb-1">No items found</p>
+                                                <p className="text-sm">Try adjusting your search or filters</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    paginatedItems.map((item) => (
+                                        <React.Fragment key={item.id}>
+                                            {editItemId === item.id ? (
+                                                // Edit Form Row
+                                                <tr className="bg-blue-50 border-l-4 border-blue-400">
+                                                    {showDelete && <td className={sizeClasses[uiSize].padding}></td>}
+                                                    <td className={sizeClasses[uiSize].padding} colSpan={showDelete ? "5" : "4"}>
+                                                        <div className="space-y-3">
+                                                            <div className="flex items-center gap-2 mb-3">
+                                                                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                    <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
+                                                                </svg>
+                                                                <h4 className={`font-semibold text-gray-800 ${sizeClasses[uiSize].text}`}>Edit Item</h4>
+                                                            </div>
+                                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                                <div>
+                                                                    <label className={`block font-medium text-gray-700 mb-1 ${sizeClasses[uiSize].text}`}>Name</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        name="name"
+                                                                        value={editForm.name || ''}
+                                                                        onChange={handleEditFormChange}
+                                                                        onKeyDown={handleKeyPress}
+                                                                        className={`w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${sizeClasses[uiSize].text}`}
+                                                                        autoFocus
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <label className={`block font-medium text-gray-700 mb-1 ${sizeClasses[uiSize].text}`}>Category</label>
+                                                                    <select
+                                                                        name="category"
+                                                                        value={editForm.category || ''}
+                                                                        onChange={handleEditFormChange}
+                                                                        className={`w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${sizeClasses[uiSize].text}`}
+                                                                    >
+                                                                        <option value="">Select Category</option>
+                                                                        {categories.map((category) => (
+                                                                            <option key={category.id} value={category.id}>
+                                                                                {category.name}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
+                                                                </div>
+                                                                <div>
+                                                                    <label className={`block font-medium text-gray-700 mb-1 ${sizeClasses[uiSize].text}`}>Description</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        name="description"
+                                                                        value={editForm.description || ''}
+                                                                        onChange={handleEditFormChange}
+                                                                        onKeyDown={handleKeyPress}
+                                                                        className={`w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${sizeClasses[uiSize].text}`}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex justify-end gap-2 pt-2">
+                                                                <button
+                                                                    onClick={handleCancelEdit}
+                                                                    className={`px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 ${sizeClasses[uiSize].text}`}
+                                                                >
+                                                                    Cancel
+                                                                </button>
+                                                                <button
+                                                                    onClick={handleSaveEdit}
+                                                                    className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${sizeClasses[uiSize].text}`}
+                                                                >
+                                                                    Save Changes
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                // Normal Item Row
+                                                <tr className="hover:bg-gray-50 transition-colors">
+                                                    {showDelete && (
+                                                        <td className={sizeClasses[uiSize].padding}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selectedItems.includes(item.id)}
+                                                                onChange={() => handleSelectItem(item.id)}
+                                                                className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                                                            />
+                                                        </td>
+                                                    )}
+                                                    <td className={sizeClasses[uiSize].padding}>
+                                                        <div className="flex flex-col">
+                                                            <div className={`font-medium text-gray-900 ${sizeClasses[uiSize].text}`}>{item.name}</div>
+                                                            <div className={`text-gray-500 sm:hidden ${sizeClasses[uiSize].text}`}>{item.category?.name || 'Uncategorized'}</div>
+                                                            {item.description && (
+                                                                <div className={`text-gray-400 mt-1 ${sizeClasses[uiSize].text === 'text-xs' ? 'text-xs' : sizeClasses[uiSize].text === 'text-sm' ? 'text-xs' : 'text-sm'}`}>{truncate(item.description, 40)}</div>
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                    <td className={`${sizeClasses[uiSize].padding} hidden sm:table-cell`}>
+                                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-gray-100 text-gray-800 ${sizeClasses[uiSize].text}`}>
+                                                            {item.category?.name || 'Uncategorized'}
+                                                        </span>
+                                                    </td>
+                                                    <td className={sizeClasses[uiSize].padding}>
+                                                        <div className={`font-medium text-gray-900 ${sizeClasses[uiSize].text}`}>
+                                                            {item.totalQuantity || 0}
+                                                        </div>
+                                                    </td>
+                                                    <td className={`${sizeClasses[uiSize].padding} hidden lg:table-cell`}>
+                                                        <div className="flex flex-wrap gap-1">
+                                                            {statuses.map((status) => {
+                                                                const quantity = item.stacks?.filter(stack => stack.status === status)
+                                                                    .reduce((sum, stack) => sum + (stack.quantity || 0), 0) || 0;
+                                                                if (quantity === 0) return null;
+                                                                return (
+                                                                    <span
+                                                                        key={status}
+                                                                        className={`inline-flex items-center px-2 py-1 rounded-full font-medium ${sizeClasses[uiSize].text} ${
+                                                                            status === 'Available' ? 'bg-green-100 text-green-800' :
+                                                                            status === 'EIC' ? 'bg-blue-100 text-blue-800' :
+                                                                            status === 'Distributed' ? 'bg-purple-100 text-purple-800' :
+                                                                            status === 'Damaged' ? 'bg-red-100 text-red-800' :
+                                                                            'bg-gray-100 text-gray-800'
+                                                                        }`}
+                                                                    >
+                                                                        {status}: {quantity}
+                                                                </span>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </td>
+                                                <td className={`${sizeClasses[uiSize].padding} text-right`}>
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        <button
+                                                            onClick={() => handleViewStacks(item)}
+                                                            className={`inline-flex items-center px-3 py-1 border border-blue-300 shadow-sm font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${sizeClasses[uiSize].text}`}
+                                                            title={expandedStacks.has(item.id) ? 'Collapse Stacks' : 'Expand Stacks'}
+                                                        >
+                                                            {expandedStacks.has(item.id) ? (
+                                                                <>
+                                                                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                        <path d="M5 15l7-7 7 7" strokeLinecap="round" strokeLinejoin="round" />
+                                                                    </svg>
+                                                                    Collapse
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                        <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+                                                                    </svg>
+                                                                    Expand
+                                                                </>
+                                                            )}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleEdit(item)}
+                                                            className={`inline-flex items-center px-3 py-1 border border-transparent font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${sizeClasses[uiSize].text}`}
+                                                        >
+                                                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
+                                                            </svg>
+                                                            Edit
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            )}
+                                            {/* Expanded Stack Details Row */}
+                                            {expandedStacks.has(item.id) && selectedItemStacks && selectedItemStacks.id === item.id && (
+                                                <tr>
+                                                    <td colSpan={showDelete ? "6" : "5"} className="px-6 py-4 bg-gradient-to-r from-blue-50 to-green-50 border-l-4 border-blue-200">
+                                                        <div className="space-y-4">
+                                                            <div className="flex items-center gap-2 mb-4">
+                                                                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                    <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
+                                                                </svg>
+                                                                <h4 className="text-lg font-semibold text-gray-800">Inventory Stacks for {item.name}</h4>
+                                                            </div>
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                                                                {(() => {
+                                                                    // Group existing stacks by status
+                                                                    const groupedStacks = selectedItemStacks.stacks.reduce((acc, stack) => {
+                                                                        if (!acc[stack.status]) {
+                                                                            acc[stack.status] = {
+                                                                                stacks: [],
+                                                                                totalQuantity: 0,
+                                                                            };
+                                                                        }
+                                                                        acc[stack.status].stacks.push(stack);
+                                                                        acc[stack.status].totalQuantity += stack.quantity;
+                                                                        return acc;
+                                                                    }, {});
+
+                                                                    // Create entries for all statuses, including those without stacks
+                                                                    return statuses.map((status) => {
+                                                                        const statusData = groupedStacks[status] || {
+                                                                            stacks: [],
+                                                                            totalQuantity: 0,
+                                                                        };
+
+                                                                        const getStatusStyles = (status) => {
+                                                                            switch (status) {
+                                                                                case 'Available':
+                                                                                    return {
+                                                                                        bg: 'bg-gradient-to-br from-green-50 to-emerald-100',
+                                                                                        border: 'border-green-200',
+                                                                                        badge: 'bg-green-500 text-white',
+                                                                                        icon: 'text-green-600',
+                                                                                    };
+                                                                                case 'Unavailable':
+                                                                                    return {
+                                                                                        bg: 'bg-gradient-to-br from-red-50 to-rose-100',
+                                                                                        border: 'border-red-200',
+                                                                                        badge: 'bg-red-500 text-white',
+                                                                                        icon: 'text-red-600',
+                                                                                    };
+                                                                                case 'Damaged':
+                                                                                    return {
+                                                                                        bg: 'bg-gradient-to-br from-orange-50 to-red-100',
+                                                                                        border: 'border-orange-200',
+                                                                                        badge: 'bg-orange-500 text-white',
+                                                                                        icon: 'text-orange-600',
+                                                                                    };
+                                                                                case 'EIC':
+                                                                                    return {
+                                                                                        bg: 'bg-gradient-to-br from-purple-50 to-violet-100',
+                                                                                        border: 'border-purple-200',
+                                                                                        badge: 'bg-purple-500 text-white',
+                                                                                        icon: 'text-purple-600',
+                                                                                    };
+                                                                                case 'Distributed':
+                                                                                    return {
+                                                                                        bg: 'bg-gradient-to-br from-green-50 to-cyan-100',
+                                                                                        border: 'border-green-200',
+                                                                                        badge: 'bg-green-500 text-white',
+                                                                                        icon: 'text-green-600',
+                                                                                    };
+                                                                                default:
+                                                                                    return {
+                                                                                        bg: 'bg-gradient-to-br from-gray-50 to-slate-100',
+                                                                                        border: 'border-gray-200',
+                                                                                        badge: 'bg-gray-500 text-white',
+                                                                                        icon: 'text-gray-600',
+                                                                                    };
+                                                                            }
+                                                                        };
+
+                                                                        const styles = getStatusStyles(status);
+                                                                        const statusKey = `${selectedItemStacks.id}-${status}`;
+                                                                        const isEditing = editingStatusRows.has(statusKey);
+
+                                                                        return (
+                                                                            <div
+                                                                                key={status}
+                                                                                className={`${styles.bg} ${styles.border} border-2 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 transform hover:-translate-y-1`}
+                                                                            >
+                                                                                <div className="flex items-center justify-between mb-3">
+                                                                                    <span className={`${styles.badge} px-2 py-1 rounded-full text-xs font-semibold tracking-wide`}>
+                                                                                        {status}
+                                                                                    </span>
+                                                                                    <div className={`${styles.icon} p-1`}>
+                                                                                        {status === 'Available' && (
+                                                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                                                            </svg>
+                                                                                        )}
+                                                                                        {status === 'Unavailable' && (
+                                                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                                                                            </svg>
+                                                                                        )}
+                                                                                        {status === 'Damaged' && (
+                                                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                                                            </svg>
+                                                                                        )}
+                                                                                        {status === 'EIC' && (
+                                                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                                            </svg>
+                                                                                        )}
+                                                                                        {status === 'Distributed' && (
+                                                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                                                                                            </svg>
+                                                                                        )}
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div className="text-center mb-3">
+                                                                                    <div className="text-2xl font-bold text-gray-800 mb-1">
+                                                                                        {statusData.totalQuantity}
+                                                                                    </div>
+                                                                                    <div className="text-xs text-gray-600 font-medium">
+                                                                                        {statusData.totalQuantity === 1 ? 'unit' : 'units'}
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div className="flex justify-center">
+                                                                                    {isEditing ? (
+                                                                                        <div className="flex flex-col gap-2 w-full">
+                                                                                            <div className="bg-white rounded-lg p-2 shadow-sm">
+                                                                                                <input
+                                                                                                    type="number"
+                                                                                                    value={statusEditValues[statusKey] || statusData.totalQuantity}
+                                                                                                    onChange={(e) => handleStatusRowValueChange(status, e.target.value)}
+                                                                                                    className="w-full px-2 py-1 border border-gray-200 rounded text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-green-300"
+                                                                                                    min="0"
+                                                                                                    placeholder="Enter quantity"
+                                                                                                />
+                                                                                            </div>
+                                                                                            <div className="flex gap-1">
+                                                                                                <button
+                                                                                                    onClick={() => handleSaveStatusRowEdit(status, statusData.stacks, statusData.totalQuantity)}
+                                                                                                    className="flex-1 p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-1"
+                                                                                                    title="Save changes"
+                                                                                                >
+                                                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                                                                    </svg>
+                                                                                                    <span className="text-xs font-medium">Save</span>
+                                                                                                </button>
+                                                                                                <button
+                                                                                                    onClick={() => handleCancelStatusRowEdit(status)}
+                                                                                                    className="flex-1 p-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors flex items-center justify-center gap-1"
+                                                                                                    title="Cancel edit"
+                                                                                                >
+                                                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                                                                    </svg>
+                                                                                                    <span className="text-xs font-medium">Cancel</span>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <button
+                                                                                            onClick={() => handleToggleStatusRowEdit(status, statusData.totalQuantity)}
+                                                                                            className="px-4 py-2 bg-white/80 hover:bg-white text-gray-700 rounded-lg hover:shadow-md transition-all duration-200 flex items-center gap-2 font-medium text-sm border border-gray-200"
+                                                                                            title="Edit Stack"
+                                                                                            aria-label={`Edit ${status} stack`}
+                                                                                        >
+                                                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                                                            </svg>
+                                                                                            Edit
+                                                                                        </button>
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+                                                                        );
+                                                                    });
+                                                                })()}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </React.Fragment>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+
+                    {/* Pagination Controls */}
+                    {totalPages > 1 && (
+                        <div className={`border-t border-gray-200 bg-gray-50 ${sizeClasses[uiSize].padding}`}>
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <span className={`text-gray-700 ${sizeClasses[uiSize].text}`}>
+                                        Page {currentPage} of {totalPages}
+                                    </span>
+                                    <div className="flex items-center gap-2">
+                                        <span className={`text-gray-600 ${sizeClasses[uiSize].text}`}>Items per page:</span>
+                                        <select
+                                            value={itemsPerPage}
+                                            onChange={(e) => {
+                                                setItemsPerPage(Number(e.target.value));
+                                                setCurrentPage(1);
+                                            }}
+                                            className={`border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${sizeClasses[uiSize].text}`}
+                                        >
+                                            <option value={5}>5</option>
+                                            <option value={10}>10</option>
+                                            <option value={25}>25</option>
+                                            <option value={50}>50</option>
+                                            <option value={100}>100</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setCurrentPage(1)}
+                                        disabled={currentPage === 1}
+                                        className={`px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 ${sizeClasses[uiSize].text}`}
+                                    >
+                                        First
+                                    </button>
+                                    <button
+                                        onClick={() => setCurrentPage(currentPage - 1)}
+                                        disabled={currentPage === 1}
+                                        className={`px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 ${sizeClasses[uiSize].text}`}
+                                    >
+                                        Previous
+                                    </button>
+                                    
+                                    {/* Page numbers */}
+                                    <div className="flex items-center gap-1">
+                                        {(() => {
+                                            const pages = [];
+                                            const showPages = 5; // Show 5 page numbers at most
+                                            let start = Math.max(1, currentPage - Math.floor(showPages / 2));
+                                            let end = Math.min(totalPages, start + showPages - 1);
+                                            
+                                            // Adjust start if we're near the end
+                                            if (end - start + 1 < showPages) {
+                                                start = Math.max(1, end - showPages + 1);
+                                            }
+
+                                            for (let i = start; i <= end; i++) {
+                                                pages.push(
+                                                    <button
+                                                        key={i}
+                                                        onClick={() => setCurrentPage(i)}
+                                                        className={`px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${sizeClasses[uiSize].text} ${
+                                                            i === currentPage
+                                                                ? 'bg-green-600 text-white border-green-600'
+                                                                : 'border-gray-300 hover:bg-gray-50'
+                                                        }`}
+                                                    >
+                                                        {i}
+                                                    </button>
+                                                );
+                                            }
+                                            return pages;
+                                        })()}
+                                    </div>
+
+                                    <button
+                                        onClick={() => setCurrentPage(currentPage + 1)}
+                                        disabled={currentPage === totalPages}
+                                        className={`px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 ${sizeClasses[uiSize].text}`}
+                                    >
+                                        Next
+                                    </button>
+                                    <button
+                                        onClick={() => setCurrentPage(totalPages)}
+                                        disabled={currentPage === totalPages}
+                                        className={`px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 ${sizeClasses[uiSize].text}`}
+                                    >
+                                        Last
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
-                <AddItemModal
-                    isOpen={showModal}
-                    onClose={() => setShowModal(false)}
-                    onSubmit={handleSubmit}
-                    existingItems={items}
-                />
+            </div>
+
+            <AddItemModal
+                isOpen={showModal}
+                onClose={() => setShowModal(false)}
+                onSubmit={handleSubmit}
+                existingItems={items}
+            />
                 {/* Delete Confirmation Modal */}
                 {showDeleteModal && (
                     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -1321,668 +1897,23 @@ function Content() {
                         </div>
                     )} */}
 
-                <div className="w-full mt-2">
-                    {/* Sorting Button above the table */}
-                    <div className="flex justify-end mb-2">
-                        <button
-                            onClick={handleSortToggle}
-                            className="px-3 py-1 rounded bg-green-100 text-green-700 font-semibold text-xs border border-green-200 hover:bg-green-200 transition"
-                        >
-                            Sort: {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}
-                        </button>
-                    </div>
-                    <div className="overflow-x-auto rounded-xl shadow bg-white border border-green-50 p-2 sm:p-4 w-full">
-                        <table className="min-w-full bg-transparent rounded-xl">
-                            <thead>
-                                <tr>
-                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold w-[60px]">
-                                        {/* Show select all checkbox only if delete mode is active, else empty for expand icon */}
-                                        {showDelete ? (
-                                            <input
-                                                type="checkbox"
-                                                checked={
-                                                    selectAll &&
-                                                    filteredItems.length > 0
-                                                }
-                                                onChange={handleSelectAll}
-                                                aria-label="Select all"
-                                            />
-                                        ) : (
-                                            <span className="text-xs text-green-500 font-medium">
-                                                Actions
-                                            </span>
-                                        )}
-                                    </th>
-                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold">
-                                        Name
-                                    </th>
-                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold">
-                                        Quantity
-                                    </th>
-                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold">
-                                        Description
-                                    </th>
-                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold">
-                                        Category
-                                    </th>
-                                    <th className="py-2 px-2 border-b text-left text-green-700 font-semibold">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredItems.length === 0 ? (
-                                    <tr>
-                                        <td
-                                            colSpan={7}
-                                            className="py-6 text-center text-green-400 font-semibold"
-                                            key="no-items"
-                                        >
-                                            No items found.
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    filteredItems.map((item, index) => (
-                                        <React.Fragment key={item.id + index}>
-                                            <tr className="hover:bg-green-50 transition">
-                                                <td className="py-2 px-2 border-b w-[60px]">
-                                                    {/* Show checkbox if delete mode, else expand button */}
-                                                    {showDelete ? (
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedItems.includes(
-                                                                item.id
-                                                            )}
-                                                            onChange={() =>
-                                                                handleSelectItem(
-                                                                    item.id
-                                                                )
-                                                            }
-                                                            aria-label={`Select ${item.name}`}
-                                                        />
-                                                    ) : (
-                                                        <button
-                                                            onClick={() =>
-                                                                handleViewStacks(
-                                                                    item
-                                                                )
-                                                            }
-                                                            className="p-1 rounded transition hover:bg-green-100 focus:outline-none"
-                                                            aria-label={
-                                                                expandedStacks.has(
-                                                                    item.id
-                                                                )
-                                                                    ? 'Collapse Stacks'
-                                                                    : 'Expand Stacks'
-                                                            }
-                                                            style={{
-                                                                display: 'flex',
-                                                                alignItems: 'center',
-                                                                justifyContent: 'center',
-                                                                background: 'none',
-                                                                border: 'none',
-                                                            }}
-                                                        >
-                                                            {expandedStacks.has(
-                                                                item.id
-                                                            ) ? (
-                                                                <svg
-                                                                    width="18"
-                                                                    height="18"
-                                                                    viewBox="0 0 20 20"
-                                                                    fill="none"
-                                                                >
-                                                                    <path
-                                                                        d="M6 8l4 4 4-4"
-                                                                        stroke="#2563eb"
-                                                                        strokeWidth="2"
-                                                                        strokeLinecap="round"
-                                                                        strokeLinejoin="round"
-                                                                    />
-                                                                </svg>
-                                                            ) : (
-                                                                <svg
-                                                                    width="18"
-                                                                    height="18"
-                                                                    viewBox="0 0 20 20"
-                                                                    fill="none"
-                                                                >
-                                                                    <path
-                                                                        d="M6 12l4-4 4 4"
-                                                                        stroke="#2563eb"
-                                                                        strokeWidth="2"
-                                                                        strokeLinecap="round"
-                                                                        strokeLinejoin="round"
-                                                                    />
-                                                                </svg>
-                                                            )}
-                                                        </button>
-                                                    )}
-                                                </td>
-                                                <td className="py-2 px-2 border-b font-semibold text-green-900 max-w-[120px]">
-                                                    {editItemId === item.id ? (
-                                                        <input
-                                                            type="text"
-                                                            name="name"
-                                                            value={
-                                                                editForm.name ||
-                                                                ''
-                                                            }
-                                                            onChange={
-                                                                handleEditFormChange
-                                                            }
-                                                            onKeyDown={
-                                                                handleKeyPress
-                                                            }
-                                                            className="w-full border border-green-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white text-sm"
-                                                            required
-                                                            autoFocus
-                                                        />
-                                                    ) : (
-                                                        <span className="block truncate">
-                                                            {item.name}
-                                                        </span>
-                                                    )}
-                                                </td>
-                                                <td className="py-2 px-2 border-b text-green-700">
-                                                    <span>
-                                                        {item.totalQuantity}
-                                                    </span>
-                                                </td>
-                                                <td className="py-2 px-2 border-b text-green-700 max-w-[120px]">
-                                                    {editItemId === item.id ? (
-                                                        <input
-                                                            type="text"
-                                                            name="description"
-                                                            value={
-                                                                editForm.description ||
-                                                                ''
-                                                            }
-                                                            onChange={
-                                                                handleEditFormChange
-                                                            }
-                                                            onKeyDown={
-                                                                handleKeyPress
-                                                            }
-                                                            className="w-full border border-green-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white text-sm"
-                                                            placeholder="Description"
-                                                        />
-                                                    ) : (
-                                                        <span
-                                                            title={
-                                                                item.description
-                                                            }
-                                                            className="block truncate"
-                                                        >
-                                                            {truncate(
-                                                                item.description,
-                                                                24
-                                                            )}
-                                                        </span>
-                                                    )}
-                                                </td>
-                                                <td className="py-2 px-2 border-b text-green-700 max-w-[120px]">
-                                                    {editItemId === item.id ? (
-                                                        <select
-                                                            name="category"
-                                                            value={
-                                                                editForm.category ||
-                                                                item.category
-                                                            }
-                                                            onChange={
-                                                                handleEditFormChange
-                                                            }
-                                                            onKeyDown={
-                                                                handleKeyPress
-                                                            }
-                                                            className="w-full border border-green-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white text-sm"
-                                                        >
-                                                            {categories.map(
-                                                                (cat) => (
-                                                                    <option
-                                                                        key={
-                                                                            cat
-                                                                        }
-                                                                        value={
-                                                                            cat
-                                                                        }
-                                                                    >
-                                                                        {cat}
-                                                                    </option>
-                                                                )
-                                                            )}
-                                                        </select>
-                                                    ) : (
-                                                        <span className="block truncate">
-                                                            {item.category}
-                                                        </span>
-                                                    )}
-                                                </td>
-                                                <td className="py-2 px-2 border-b text-green-700">
-                                                    {editItemId === item.id ? (
-                                                        <div className="flex gap-1">
-                                                            <button
-                                                                onClick={
-                                                                    handleSaveEdit
-                                                                }
-                                                                className="bg-green-500 text-white font-bold px-2 py-1 rounded hover:bg-green-600 transition text-xs"
-                                                                title="Save changes"
-                                                            >
-                                                                ✓
-                                                            </button>
-                                                            <button
-                                                                onClick={
-                                                                    handleCancelEdit
-                                                                }
-                                                                className="bg-red-500 text-white font-bold px-2 py-1 rounded hover:bg-red-600 transition text-xs"
-                                                                title="Cancel editing"
-                                                            >
-                                                                ✕
-                                                            </button>
-                                                        </div>
-                                                    ) : (
-                                                        <button
-                                                            onClick={() =>
-                                                                handleEdit(item)
-                                                            }
-                                                            className="bg-green-500 text-white font-bold px-3 py-1 rounded hover:bg-green-600 transition w-full sm:w-auto"
-                                                        >
-                                                            Edit
-                                                        </button>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                            {expandedStacks.has(item.id) &&
-                                                selectedItemStacks &&
-                                                selectedItemStacks.id ===
-                                                    item.id && (
-                                                    <tr>
-                                                        <td
-                                                            colSpan={6}
-                                                            className="p-0 bg-gradient-to-r from-green-50 to-indigo-50"
-                                                        >
-                                                            <div className="p-4">
-                                                                <div className="mb-3">
-                                                                    <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                                                        <svg
-                                                                            className="w-4 h-4 text-green-500"
-                                                                            fill="none"
-                                                                            stroke="currentColor"
-                                                                            strokeWidth="2"
-                                                                            viewBox="0 0 24 24"
-                                                                        >
-                                                                            <path
-                                                                                strokeLinecap="round"
-                                                                                strokeLinejoin="round"
-                                                                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                                                                            />
-                                                                        </svg>
-                                                                        Inventory
-                                                                        Stacks
-                                                                        for{' '}
-                                                                        {
-                                                                            item.name
-                                                                        }
-                                                                    </h4>
-                                                                </div>
-                                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
-                                                                    {(() => {
-                                                                        // Group existing stacks by status
-                                                                        const groupedStacks =
-                                                                            selectedItemStacks.stacks.reduce(
-                                                                                (
-                                                                                    acc,
-                                                                                    stack
-                                                                                ) => {
-                                                                                    if (
-                                                                                        !acc[
-                                                                                            stack
-                                                                                                .status
-                                                                                        ]
-                                                                                    ) {
-                                                                                        acc[
-                                                                                            stack.status
-                                                                                        ] =
-                                                                                            {
-                                                                                                stacks: [],
-                                                                                                totalQuantity: 0,
-                                                                                            };
-                                                                                    }
-                                                                                    acc[
-                                                                                        stack
-                                                                                            .status
-                                                                                    ].stacks.push(
-                                                                                        stack
-                                                                                    );
-                                                                                    acc[
-                                                                                        stack.status
-                                                                                    ].totalQuantity +=
-                                                                                        stack.quantity;
-                                                                                    return acc;
-                                                                                },
-                                                                                {}
-                                                                            );
-
-                                                                        // Create entries for all statuses, including those without stacks
-                                                                        return statuses.map(
-                                                                            (
-                                                                                status
-                                                                            ) => {
-                                                                                const statusData =
-                                                                                    groupedStacks[
-                                                                                        status
-                                                                                    ] || {
-                                                                                        stacks: [],
-                                                                                        totalQuantity: 0,
-                                                                                    };
-
-                                                                                const getStatusStyles =
-                                                                                    (
-                                                                                        status
-                                                                                    ) => {
-                                                                                        switch (
-                                                                                            status
-                                                                                        ) {
-                                                                                            case 'Available':
-                                                                                                return {
-                                                                                                    bg: 'bg-gradient-to-br from-green-50 to-emerald-100',
-                                                                                                    border: 'border-green-200',
-                                                                                                    badge: 'bg-green-500 text-white',
-                                                                                                    icon: 'text-green-600',
-                                                                                                };
-                                                                                            case 'Unavailable':
-                                                                                                return {
-                                                                                                    bg: 'bg-gradient-to-br from-red-50 to-rose-100',
-                                                                                                    border: 'border-red-200',
-                                                                                                    badge: 'bg-red-500 text-white',
-                                                                                                    icon: 'text-red-600',
-                                                                                                };
-                                                                                            case 'Damaged':
-                                                                                                return {
-                                                                                                    bg: 'bg-gradient-to-br from-orange-50 to-red-100',
-                                                                                                    border: 'border-orange-200',
-                                                                                                    badge: 'bg-orange-500 text-white',
-                                                                                                    icon: 'text-orange-600',
-                                                                                                };
-                                                                                            case 'EIC':
-                                                                                                return {
-                                                                                                    bg: 'bg-gradient-to-br from-purple-50 to-violet-100',
-                                                                                                    border: 'border-purple-200',
-                                                                                                    badge: 'bg-purple-500 text-white',
-                                                                                                    icon: 'text-purple-600',
-                                                                                                };
-                                                                                            case 'Distributed':
-                                                                                                return {
-                                                                                                    bg: 'bg-gradient-to-br from-green-50 to-cyan-100',
-                                                                                                    border: 'border-green-200',
-                                                                                                    badge: 'bg-green-500 text-white',
-                                                                                                    icon: 'text-green-600',
-                                                                                                };
-                                                                                            default:
-                                                                                                return {
-                                                                                                    bg: 'bg-gradient-to-br from-gray-50 to-slate-100',
-                                                                                                    border: 'border-gray-200',
-                                                                                                    badge: 'bg-gray-500 text-white',
-                                                                                                    icon: 'text-gray-600',
-                                                                                                };
-                                                                                        }
-                                                                                    };
-
-                                                                                const styles =
-                                                                                    getStatusStyles(
-                                                                                        status
-                                                                                    );
-                                                                                const statusKey = `${selectedItemStacks.id}-${status}`;
-                                                                                const isEditing =
-                                                                                    editingStatusRows.has(
-                                                                                        statusKey
-                                                                                    );
-
-                                                                                return (
-                                                                                    <div
-                                                                                        key={
-                                                                                            status
-                                                                                        }
-                                                                                        className={`${styles.bg} ${styles.border} border-2 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 transform hover:-translate-y-1`}
-                                                                                    >
-                                                                                        <div className="flex items-center justify-between mb-3">
-                                                                                            <span
-                                                                                                className={`${styles.badge} px-2 py-1 rounded-full text-xs font-semibold tracking-wide`}
-                                                                                            >
-                                                                                                {
-                                                                                                    status
-                                                                                                }
-                                                                                            </span>
-                                                                                            <div
-                                                                                                className={`${styles.icon} p-1`}
-                                                                                            >
-                                                                                                {status ===
-                                                                                                    'Available' && (
-                                                                                                    <svg
-                                                                                                        className="w-5 h-5"
-                                                                                                        fill="currentColor"
-                                                                                                        viewBox="0 0 20 20"
-                                                                                                    >
-                                                                                                        <path
-                                                                                                            fillRule="evenodd"
-                                                                                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                                                                            clipRule="evenodd"
-                                                                                                        />
-                                                                                                    </svg>
-                                                                                                )}
-                                                                                                {status ===
-                                                                                                    'Unavailable' && (
-                                                                                                    <svg
-                                                                                                        className="w-5 h-5"
-                                                                                                        fill="currentColor"
-                                                                                                        viewBox="0 0 20 20"
-                                                                                                    >
-                                                                                                        <path
-                                                                                                            fillRule="evenodd"
-                                                                                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                                                                                            clipRule="evenodd"
-                                                                                                        />
-                                                                                                    </svg>
-                                                                                                )}
-                                                                                                {status ===
-                                                                                                    'Damaged' && (
-                                                                                                    <svg
-                                                                                                        className="w-5 h-5"
-                                                                                                        fill="currentColor"
-                                                                                                        viewBox="0 0 20 20"
-                                                                                                    >
-                                                                                                        <path
-                                                                                                            fillRule="evenodd"
-                                                                                                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                                                                                                            clipRule="evenodd"
-                                                                                                        />
-                                                                                                    </svg>
-                                                                                                )}
-                                                                                                {status ===
-                                                                                                    'EIC' && (
-                                                                                                    <svg
-                                                                                                        className="w-5 h-5"
-                                                                                                        fill="currentColor"
-                                                                                                        viewBox="0 0 20 20"
-                                                                                                    >
-                                                                                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                                                                    </svg>
-                                                                                                )}
-                                                                                                {status ===
-                                                                                                    'Distributed' && (
-                                                                                                    <svg
-                                                                                                        className="w-5 h-5"
-                                                                                                        fill="currentColor"
-                                                                                                        viewBox="0 0 20 20"
-                                                                                                    >
-                                                                                                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                                                                                                    </svg>
-                                                                                                )}
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div className="text-center mb-3">
-                                                                                            <div className="text-2xl font-bold text-gray-800 mb-1">
-                                                                                                {
-                                                                                                    statusData.totalQuantity
-                                                                                                }
-                                                                                            </div>
-                                                                                            <div className="text-xs text-gray-600 font-medium">
-                                                                                                {statusData.totalQuantity ===
-                                                                                                1
-                                                                                                    ? 'unit'
-                                                                                                    : 'units'}
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div className="flex justify-center">
-                                                                                            {isEditing ? (
-                                                                                                <div className="flex flex-col gap-2 w-full">
-                                                                                                    <div className="bg-white rounded-lg p-2 shadow-sm">
-                                                                                                        <input
-                                                                                                            type="number"
-                                                                                                            value={
-                                                                                                                statusEditValues[
-                                                                                                                    statusKey
-                                                                                                                ] ||
-                                                                                                                statusData.totalQuantity
-                                                                                                            }
-                                                                                                            onChange={(
-                                                                                                                e
-                                                                                                            ) =>
-                                                                                                                handleStatusRowValueChange(
-                                                                                                                    status,
-                                                                                                                    e
-                                                                                                                        .target
-                                                                                                                        .value
-                                                                                                                )
-                                                                                                            }
-                                                                                                            className="w-full px-2 py-1 border border-gray-200 rounded text-center text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-green-300"
-                                                                                                            min="0"
-                                                                                                            placeholder="Enter quantity"
-                                                                                                        />
-                                                                                                    </div>
-                                                                                                    <div className="flex gap-1">
-                                                                                                        <button
-                                                                                                            onClick={() =>
-                                                                                                                handleSaveStatusRowEdit(
-                                                                                                                    status,
-                                                                                                                    statusData.stacks,
-                                                                                                                    statusData.totalQuantity
-                                                                                                                )
-                                                                                                            }
-                                                                                                            className="flex-1 p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-1"
-                                                                                                            title="Save changes"
-                                                                                                        >
-                                                                                                            <svg
-                                                                                                                className="w-4 h-4"
-                                                                                                                fill="none"
-                                                                                                                stroke="currentColor"
-                                                                                                                strokeWidth="2"
-                                                                                                                viewBox="0 0 24 24"
-                                                                                                            >
-                                                                                                                <path
-                                                                                                                    strokeLinecap="round"
-                                                                                                                    strokeLinejoin="round"
-                                                                                                                    d="M5 13l4 4L19 7"
-                                                                                                                />
-                                                                                                            </svg>
-                                                                                                            <span className="text-xs font-medium">
-                                                                                                                Save
-                                                                                                            </span>
-                                                                                                        </button>
-                                                                                                        <button
-                                                                                                            onClick={() =>
-                                                                                                                handleCancelStatusRowEdit(
-                                                                                                                    status
-                                                                                                                )
-                                                                                                            }
-                                                                                                            className="flex-1 p-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors flex items-center justify-center gap-1"
-                                                                                                            title="Cancel edit"
-                                                                                                        >
-                                                                                                            <svg
-                                                                                                                className="w-4 h-4"
-                                                                                                                fill="none"
-                                                                                                                stroke="currentColor"
-                                                                                                                strokeWidth="2"
-                                                                                                                viewBox="0 0 24 24"
-                                                                                                            >
-                                                                                                                <path
-                                                                                                                    strokeLinecap="round"
-                                                                                                                    strokeLinejoin="round"
-                                                                                                                    d="M6 18L18 6M6 6l12 12"
-                                                                                                                />
-                                                                                                            </svg>
-                                                                                                            <span className="text-xs font-medium">
-                                                                                                                Cancel
-                                                                                                            </span>
-                                                                                                        </button>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            ) : (
-                                                                                                <button
-                                                                                                    onClick={() =>
-                                                                                                        handleToggleStatusRowEdit(
-                                                                                                            status,
-                                                                                                            statusData.totalQuantity
-                                                                                                        )
-                                                                                                    }
-                                                                                                    className="px-4 py-2 bg-white/80 hover:bg-white text-gray-700 rounded-lg hover:shadow-md transition-all duration-200 flex items-center gap-2 font-medium text-sm border border-gray-200"
-                                                                                                    title="Edit Stack"
-                                                                                                    aria-label={`Edit ${status} stack`}
-                                                                                                >
-                                                                                                    <svg
-                                                                                                        className="w-4 h-4"
-                                                                                                        fill="none"
-                                                                                                        stroke="currentColor"
-                                                                                                        strokeWidth="2"
-                                                                                                        viewBox="0 0 24 24"
-                                                                                                    >
-                                                                                                        <path
-                                                                                                            strokeLinecap="round"
-                                                                                                            strokeLinejoin="round"
-                                                                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                                                                        />
-                                                                                                    </svg>
-                                                                                                    Edit
-                                                                                                </button>
-                                                                                            )}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                );
-                                                                            }
-                                                                        );
-                                                                    })()}
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                )}
-                                        </React.Fragment>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                {/* UI Size Control */}
-                <div className="w-full flex flex-col sm:flex-row justify-end items-center mt-8 mr-8 mb-2 gap-2">
-                    <label className="font-semibold text-green-700">
-                        UI Size:
-                    </label>
-                    <select
-                        value={uiSize}
-                        onChange={(e) => setUiSize(e.target.value)}
-                        className="border border-green-200 rounded px-3 py-2 bg-green-50 text-green-900 w-full sm:w-auto"
-                    >
-                        <option value="sm">Small</option>
-                        <option value="md">Medium</option>
-                        <option value="lg">Large</option>
-                    </select>
-                </div>
+            {/* UI Size Control */}
+            <div className="w-full flex flex-col sm:flex-row justify-end items-center mt-8 mr-8 mb-2 gap-2">
+                <label className="font-semibold text-gray-700">
+                    UI Size:
+                </label>
+                <select
+                    value={uiSize}
+                    onChange={(e) => setUiSize(e.target.value)}
+                    className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 w-full sm:w-auto focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                >
+                    <option value="sm">Small</option>
+                    <option value="md">Medium</option>
+                    <option value="lg">Large</option>
+                </select>
             </div>
 
-        </>
+        </div>
     );
 }
 export default Content;

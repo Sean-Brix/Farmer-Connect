@@ -24,6 +24,10 @@ export default function EIC() {
         Date.now()
     );
 
+    // Items pagination states
+    const [itemsCurrentPage, setItemsCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(12);
+
     // Request section states
     const [requestSearch, setRequestSearch] = useState('');
     const [requestStatusFilter, setRequestStatusFilter] = useState('all');
@@ -111,6 +115,17 @@ export default function EIC() {
                     return 0; // Keep original server order
             }
         });
+
+    // Pagination calculations for items
+    const totalItemsPages = Math.ceil(filteredStacks.length / itemsPerPage);
+    const itemsStartIndex = (itemsCurrentPage - 1) * itemsPerPage;
+    const itemsEndIndex = itemsStartIndex + itemsPerPage;
+    const paginatedStacks = filteredStacks.slice(itemsStartIndex, itemsEndIndex);
+
+    // Reset to first page when filters change
+    useEffect(() => {
+        setItemsCurrentPage(1);
+    }, [search, sortBy, searchFilter]);
 
     const handleAddEICItem = async (formData) => {
         try {
@@ -813,7 +828,7 @@ export default function EIC() {
 
                     {/* Items Grid */}
                     <div className="w-full max-w-5xl mx-auto px-2 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                        {filteredStacks.map((stack) => (
+                        {paginatedStacks.map((stack) => (
                             <EICItemCard
                                 key={stack.id}
                                 stack={stack}
@@ -829,6 +844,102 @@ export default function EIC() {
                             </div>
                         )}
                     </div>
+
+                    {/* Items Pagination Controls */}
+                    {filteredStacks.length > 0 && (
+                        <div className="w-full max-w-5xl mx-auto px-2 md:px-8 mt-8">
+                            <div className="bg-white rounded-xl shadow-lg border border-gray-200 px-6 py-4">
+                                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div className="flex items-center space-x-2">
+                                        <span className="text-sm text-gray-600">Show:</span>
+                                        <select
+                                            value={itemsPerPage}
+                                            onChange={(e) => {
+                                                setItemsPerPage(Number(e.target.value));
+                                                setItemsCurrentPage(1);
+                                            }}
+                                            className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                        >
+                                            <option value={6}>6</option>
+                                            <option value={12}>12</option>
+                                            <option value={24}>24</option>
+                                            <option value={48}>48</option>
+                                        </select>
+                                        <span className="text-sm text-gray-600">items per page</span>
+                                    </div>
+                                    
+                                    <div className="flex items-center space-x-2">
+                                        <span className="text-sm text-gray-600">
+                                            Showing <span className="font-medium text-green-700">{itemsStartIndex + 1}</span> to{' '}
+                                            <span className="font-medium text-green-700">{Math.min(itemsEndIndex, filteredStacks.length)}</span> of{' '}
+                                            <span className="font-medium text-green-700">{filteredStacks.length}</span> items
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Seminar-style Pagination Navigation */}
+                    {totalItemsPages > 1 && (
+                        <div className="flex justify-center mt-8 mb-2">
+                            <nav className="flex items-center gap-1 bg-white rounded-lg shadow px-2 py-1.5" aria-label="Items Pagination">
+                                <button
+                                    onClick={() => setItemsCurrentPage((p) => Math.max(1, p - 1))}
+                                    disabled={itemsCurrentPage === 1}
+                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition text-gray-400 hover:bg-gray-100 hover:text-gray-700 ${itemsCurrentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    aria-label="Previous"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path d="M15 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </button>
+                                {totalItemsPages > 6 ? (
+                                    <>
+                                        <button
+                                            onClick={() => setItemsCurrentPage(1)}
+                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === 1 ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                        >1</button>
+                                        {itemsCurrentPage > 3 && <span className="px-1 text-gray-300">...</span>}
+                                        {Array.from({ length: 3 }, (_, i) => {
+                                            const page = Math.max(2, Math.min(itemsCurrentPage - 1 + i, totalItemsPages - 2));
+                                            if (page <= 1 || page >= totalItemsPages) return null;
+                                            return (
+                                                <button
+                                                    key={page}
+                                                    onClick={() => setItemsCurrentPage(page)}
+                                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === page ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                                >{page}</button>
+                                            );
+                                        })}
+                                        {itemsCurrentPage < totalItemsPages - 2 && <span className="px-1 text-gray-300">...</span>}
+                                        <button
+                                            onClick={() => setItemsCurrentPage(totalItemsPages)}
+                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === totalItemsPages ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                        >{totalItemsPages}</button>
+                                    </>
+                                ) : (
+                                    Array.from({ length: totalItemsPages }, (_, i) => (
+                                        <button
+                                            key={i + 1}
+                                            onClick={() => setItemsCurrentPage(i + 1)}
+                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === i + 1 ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                        >{i + 1}</button>
+                                    ))
+                                )}
+                                <button
+                                    onClick={() => setItemsCurrentPage((p) => Math.min(totalItemsPages, p + 1))}
+                                    disabled={itemsCurrentPage === totalItemsPages}
+                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition text-gray-400 hover:bg-gray-100 hover:text-gray-700 ${itemsCurrentPage === totalItemsPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    aria-label="Next"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </button>
+                            </nav>
+                        </div>
+                    )}
                 </>
             )}
 
@@ -875,6 +986,10 @@ function RequestsTable({
     sortBy,
     onStatusChange,
 }) {
+    const [expandedNotes, setExpandedNotes] = React.useState(new Set());
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const [itemsPerPage, setItemsPerPage] = React.useState(10);
+
     const statusOrder = {
         Pending: 1,
         Approved: 2,
@@ -922,6 +1037,94 @@ function RequestsTable({
                     return new Date(b.createdAt) - new Date(a.createdAt);
             }
         });
+
+    // Pagination calculations
+    const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedRequests = filteredRequests.slice(startIndex, endIndex);
+
+    // Reset to first page when filters change
+    React.useEffect(() => {
+        setCurrentPage(1);
+    }, [search, statusFilter, sortBy]);
+
+    // Close expanded notes when clicking outside
+    React.useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('.note-tooltip-container')) {
+                setExpandedNotes(new Set());
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const toggleNoteExpansion = (requestId) => {
+        setExpandedNotes(prev => {
+            const newSet = new Set();
+            if (!prev.has(requestId)) {
+                newSet.add(requestId);
+            }
+            return newSet;
+        });
+    };
+
+    const renderNote = (request) => {
+        if (!request.requestNote) return null;
+        
+        const isExpanded = expandedNotes.has(request.id);
+        const isLong = request.requestNote.length > 50;
+        
+        return (
+            <div className="text-xs text-gray-500 bg-gray-50 rounded px-2 py-1 max-w-xs relative note-tooltip-container">
+                <div className={isExpanded ? '' : 'truncate'}>
+                    {isLong && !isExpanded ? request.requestNote.substring(0, 50) + '...' : request.requestNote}
+                </div>
+                {isLong && (
+                    <div className="relative inline-block">
+                        <button
+                            onClick={() => toggleNoteExpansion(request.id)}
+                            className="text-green-600 hover:text-green-800 font-medium mt-1 text-xs underline"
+                        >
+                            {isExpanded ? 'Show less' : 'Show more'}
+                        </button>
+                        
+                        {/* Tooltip popup for full note */}
+                        {isExpanded && (
+                            <div className="absolute z-50 bottom-full left-0 mb-2 w-80 max-w-sm">
+                                <div className="bg-gray-900 text-white text-xs rounded-lg px-4 py-3 shadow-2xl border border-gray-700 backdrop-blur-sm">
+                                    {/* Arrow pointing down */}
+                                    <div className="absolute top-full left-4 w-0 h-0 border-l-[6px] border-r-[6px] border-l-transparent border-r-transparent border-t-[6px] border-t-gray-900"></div>
+                                    
+                                    {/* Header */}
+                                    <div className="flex items-center gap-2 pb-2 border-b border-gray-700 mb-2">
+                                        <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                        <span className="font-semibold text-gray-200">Request Note</span>
+                                    </div>
+                                    
+                                    {/* Content */}
+                                    <div className="text-gray-300 leading-relaxed max-h-32 overflow-y-auto">
+                                        {request.requestNote}
+                                    </div>
+                                    
+                                    {/* Footer */}
+                                    <div className="mt-2 pt-2 border-t border-gray-700 text-right">
+                                        <span className="text-gray-400 text-xs">Click "Show less" to close</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        );
+    };
 
     const getStatusBadge = (status) => {
         const statusStyles = {
@@ -991,341 +1194,191 @@ function RequestsTable({
     }
 
     return (
-        <div className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100">
-            <div className="overflow-x-auto">
-                <table className="w-full text-sm md:text-base font-inter">
-                    <thead className="bg-gradient-to-r from-green-50 to-gray-50 border-b border-gray-200">
+        <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
+            {/* Mobile-friendly card layout for small screens */}
+            <div className="block lg:hidden">
+                <div className="p-6 space-y-4">
+                    {paginatedRequests.map((request, index) => (
+                        <div
+                            key={request.id}
+                            className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow duration-200"
+                        >
+                            {/* Header */}
+                            <div className="flex justify-between items-start mb-3">
+                                <div>
+                                    <h4 className="font-semibold text-gray-900 text-sm">
+                                        {request.itemName}
+                                    </h4>
+                                    <p className="text-xs text-gray-600 mt-1">
+                                        {request.itemCategory}
+                                    </p>
+                                </div>
+                                {getStatusBadge(request.status)}
+                            </div>
+                            
+                            {/* Details */}
+                            <div className="grid grid-cols-2 gap-3 text-xs">
+                                <div>
+                                    <span className="font-medium text-gray-700">Requestor:</span>
+                                    <p className="text-gray-600">{request.requestorName}</p>
+                                </div>
+                                <div>
+                                    <span className="font-medium text-gray-700">Quantity:</span>
+                                    <p className="text-gray-600">{request.requestQuantity}</p>
+                                </div>
+                                <div>
+                                    <span className="font-medium text-gray-700">Requested:</span>
+                                    <p className="text-gray-600">
+                                        {new Date(request.createdAt).toLocaleDateString()}
+                                    </p>
+                                </div>
+                                <div>
+                                    <span className="font-medium text-gray-700">Stock:</span>
+                                    <p className="text-gray-600">{request.currentStock || 'N/A'}</p>
+                                </div>
+                            </div>
+                            
+                            {/* Notes */}
+                            {request.requestNote && (
+                                <div className="mt-3 pt-3 border-t border-gray-200">
+                                    {renderNote(request)}
+                                </div>
+                            )}
+                            
+                            {/* Actions */}
+                            {getStatusOptions(request.status).length > 0 && (
+                                <div className="mt-3 pt-3 border-t border-gray-200">
+                                    <select
+                                        value=""
+                                        onChange={(e) => {
+                                            if (e.target.value) {
+                                                onStatusChange(
+                                                    request.id,
+                                                    e.target.value,
+                                                    request.itemName,
+                                                    request.requestorName,
+                                                    request.requestQuantity,
+                                                    request.currentStock
+                                                );
+                                                e.target.value = '';
+                                            }
+                                        }}
+                                        className="w-full text-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+                                    >
+                                        <option value="">Change Status</option>
+                                        {getStatusOptions(request.status).map((status) => (
+                                            <option key={status} value={status}>
+                                                {status.replace('_', ' ')}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </div>
+            
+            {/* Desktop table layout */}
+            <div className="hidden lg:block overflow-x-auto">
+                <table className="w-full">
+                    <thead className="bg-gray-50 border-b border-gray-200">
                         <tr>
-                            <th className="py-5 px-5 text-left text-xs font-bold text-gray-700 uppercase tracking-widest w-1/4 whitespace-nowrap">
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Item Details
                             </th>
-                            <th className="py-5 px-5 text-left text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Requestor
                             </th>
-                            <th className="py-5 px-5 text-center text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
-                                Quantity
+                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Qty
                             </th>
-                            <th className="py-5 px-5 text-center text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
+                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Stock
                             </th>
-                            <th className="py-5 px-5 text-left text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Dates
                             </th>
-                            <th className="py-5 px-5 text-center text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
+                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Status
                             </th>
-                            <th className="py-5 px-5 text-center text-xs font-bold text-gray-700 uppercase tracking-widest whitespace-nowrap">
+                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
-                        {filteredRequests.map((request, index) => (
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {paginatedRequests.map((request, index) => (
                             <tr
                                 key={request.id}
-                                className={`group transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-green-100/40`}
+                                className="hover:bg-gray-50 transition-colors duration-200"
                             >
-                                <td className="py-6 px-5 align-top">
-                                    <div className="space-y-2">
-                                        <div className="font-semibold text-gray-900 text-base truncate">
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="space-y-1">
+                                        <div className="font-medium text-gray-900 text-sm">
                                             {request.itemName}
                                         </div>
-                                        <div className="text-sm text-gray-600 flex items-center">
-                                            <svg
-                                                className="w-4 h-4 mr-1"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
+                                        <div className="text-xs text-gray-600 flex items-center">
+                                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                                             </svg>
                                             {request.itemCategory}
                                         </div>
-                                        {request.itemDateLimit && (
-                                            <div className="text-xs text-green-600 bg-green-50 inline-block px-2 py-1 rounded-full">
-                                                <svg
-                                                    className="w-3 h-3 inline mr-1"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                                Max: {request.itemDateLimit}{' '}
-                                                days
-                                            </div>
-                                        )}
-                                        {request.requestNote && (
-                                            <div className="text-xs text-gray-600 mt-2 p-2 bg-gray-50 rounded-lg border-l-2 border-green-300">
-                                                <svg
-                                                    className="w-3 h-3 inline mr-1"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                                <span className="font-medium">
-                                                    Note:
-                                                </span>{' '}
-                                                {request.requestNote}
-                                            </div>
-                                        )}
+                                        {renderNote(request)}
                                     </div>
                                 </td>
-                                <td className="py-6 px-5 align-top">
+                                <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="space-y-1">
-                                        <div className="font-medium text-gray-900">
+                                        <div className="font-medium text-gray-900 text-sm">
                                             {request.requestorName}
                                         </div>
-                                        <div className="text-sm text-gray-600">
+                                        <div className="text-xs text-gray-600">
                                             {request.requestorEmail}
                                         </div>
                                         <div className="text-xs text-gray-500">
                                             @{request.requestorUsername}
                                         </div>
-                                        <div
-                                            className={`text-xs px-2 py-1 rounded-full inline-block ${
-                                                request.requestorAccess ===
-                                                'User'
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : request.requestorAccess ===
-                                                      'Admin'
-                                                    ? 'bg-purple-100 text-purple-800'
-                                                    : 'bg-red-100 text-red-800'
-                                            }`}
-                                        >
-                                            {request.requestorAccess}
-                                        </div>
                                     </div>
                                 </td>
-                                <td className="py-6 px-5 text-center align-top">
-                                    <span className="bg-green-100 text-green-800 px-3 py-2 rounded-full text-sm font-bold">
-                                        {request.quantity}
+                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        {request.requestQuantity}
                                     </span>
                                 </td>
-                                <td className="py-6 px-5 text-center align-top">
-                                    <div className="space-y-1">
-                                        <div
-                                            className={`px-3 py-2 rounded-full text-sm font-bold ${
-                                                request.currentStock === 0
-                                                    ? 'bg-red-100 text-red-800'
-                                                    : request.currentStock < 5
-                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                    : 'bg-green-100 text-green-800'
-                                            }`}
-                                        >
-                                            {request.currentStock || 0}
+                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                    <span className="text-sm text-gray-900">
+                                        {request.currentStock || 'N/A'}
+                                    </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="space-y-1 text-xs">
+                                        <div className="text-gray-900">
+                                            <span className="font-medium">Requested:</span>
+                                            <br />
+                                            {new Date(request.createdAt).toLocaleDateString()}
                                         </div>
-                                        <div className="text-xs text-gray-500">
-                                            available
-                                        </div>
-                                        {request.quantity >
-                                            request.currentStock && (
-                                            <div className="text-xs text-red-600 font-medium">
-                                                ⚠️ Insufficient
+                                        {request.pickupDate && (
+                                            <div className="text-green-600">
+                                                <span className="font-medium">Pickup:</span>
+                                                <br />
+                                                {new Date(request.pickupDate).toLocaleDateString()}
                                             </div>
                                         )}
-                                    </div>
-                                </td>
-                                <td className="py-6 px-5 align-top">
-                                    <div className="space-y-2">
-                                        <div className="text-sm">
-                                            <div className="flex items-center text-green-600">
-                                                <svg
-                                                    className="w-4 h-4 mr-1"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                                Pickup:{' '}
-                                                {new Date(
-                                                    request.pickupDate
-                                                ).toLocaleDateString()}
-                                            </div>
-                                        </div>
                                         {request.returnDate && (
-                                            <div className="text-sm">
-                                                <div className="flex items-center text-red-600">
-                                                    <svg
-                                                        className="w-4 h-4 mr-1"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                    </svg>
-                                                    Return:{' '}
-                                                    {new Date(
-                                                        request.returnDate
-                                                    ).toLocaleDateString()}
-                                                </div>
+                                            <div className="text-gray-600">
+                                                <span className="font-medium">Return:</span>
+                                                <br />
+                                                {new Date(request.returnDate).toLocaleDateString()}
                                             </div>
                                         )}
-                                        <div className="text-xs text-gray-500">
-                                            <svg
-                                                className="w-3 h-3 inline mr-1"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                            Requested:{' '}
-                                            {new Date(
-                                                request.createdAt
-                                            ).toLocaleDateString()}
-                                        </div>
                                     </div>
                                 </td>
-                                <td className="py-6 px-5 text-center align-top">
-                                    <div className="space-y-2">
-                                        <div className="relative inline-block group">
-                                            {getStatusBadge(request.status)}
-                                            {request.adminName &&
-                                                request.status !==
-                                                    'Pending' && (
-                                                    <>
-                                                        {/* Hover indicator */}
-                                                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full flex items-center justify-center opacity-75 group-hover:opacity-100 transition-opacity">
-                                                            <svg
-                                                                className="w-2 h-2 text-white"
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                strokeWidth="3"
-                                                                viewBox="0 0 24 24"
-                                                            >
-                                                                <path
-                                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                                                    strokeLinecap="round"
-                                                                    strokeLinejoin="round"
-                                                                />
-                                                            </svg>
-                                                        </div>
-
-                                                        {/* Modern Tooltip - Smart positioning */}
-                                                        <div
-                                                            className={`absolute left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-300 ease-out group-hover:translate-y-0 z-50 ${
-                                                                index < 2
-                                                                    ? 'top-full mt-2 translate-y-2' // Show below for first 2 rows
-                                                                    : 'bottom-full mb-2 translate-y-2' // Show above for other rows
-                                                            }`}
-                                                        >
-                                                            <div className="bg-gray-900 text-white text-xs rounded-xl px-4 py-3 shadow-2xl border border-gray-700 backdrop-blur-sm min-w-[200px]">
-                                                                {/* Arrow - Dynamic positioning */}
-                                                                <div
-                                                                    className={`absolute left-1/2 transform -translate-x-1/2 ${
-                                                                        index <
-                                                                        2
-                                                                            ? 'bottom-full translate-y-1' // Arrow on top when tooltip is below
-                                                                            : 'top-full -translate-y-1' // Arrow on bottom when tooltip is above
-                                                                    }`}
-                                                                >
-                                                                    <div
-                                                                        className={`w-0 h-0 border-l-[6px] border-r-[6px] border-l-transparent border-r-transparent ${
-                                                                            index <
-                                                                            2
-                                                                                ? 'border-b-[6px] border-b-gray-900' // Point up when tooltip is below
-                                                                                : 'border-t-[6px] border-t-gray-900' // Point down when tooltip is above
-                                                                        }`}
-                                                                    ></div>
-                                                                </div>
-
-                                                                {/* Content */}
-                                                                <div className="space-y-2">
-                                                                    <div className="flex items-center gap-2 pb-2 border-b border-gray-700">
-                                                                        <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                                                                            <svg
-                                                                                className="w-3 h-3 text-white"
-                                                                                fill="none"
-                                                                                stroke="currentColor"
-                                                                                strokeWidth="2"
-                                                                                viewBox="0 0 24 24"
-                                                                            >
-                                                                                <path
-                                                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                                                                    strokeLinecap="round"
-                                                                                    strokeLinejoin="round"
-                                                                                />
-                                                                            </svg>
-                                                                        </div>
-                                                                        <span className="font-semibold text-gray-200">
-                                                                            Admin
-                                                                            Response
-                                                                        </span>
-                                                                    </div>
-                                                                    <div>
-                                                                        <div className="text-gray-300 text-xs mb-1">
-                                                                            Responded
-                                                                            by:
-                                                                        </div>
-                                                                        <div className="font-bold text-white">
-                                                                            {
-                                                                                request.adminName
-                                                                            }
-                                                                        </div>
-                                                                        <div className="text-gray-400 text-xs mt-1">
-                                                                            {
-                                                                                request.adminEmail
-                                                                            }
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="pt-2 border-t border-gray-700">
-                                                                        <div className="text-gray-400 text-xs">
-                                                                            Status:{' '}
-                                                                            <span className="text-white font-medium">
-                                                                                {request.status.replace(
-                                                                                    '_',
-                                                                                    ' '
-                                                                                )}
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </>
-                                                )}
-                                        </div>
-                                    </div>
+                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                    {getStatusBadge(request.status)}
                                 </td>
-                                <td className="py-6 px-5 text-center align-top">
-                                    {getStatusOptions(request.status).length >
-                                    0 ? (
+                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                    {getStatusOptions(request.status).length > 0 ? (
                                         <select
-                                            className="bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg focus:ring-2 focus:ring-green-300 focus:border-green-400 px-4 py-2 font-semibold cursor-pointer shadow-sm transition-all"
                                             value=""
                                             onChange={(e) => {
                                                 if (e.target.value) {
@@ -1334,29 +1387,23 @@ function RequestsTable({
                                                         e.target.value,
                                                         request.itemName,
                                                         request.requestorName,
-                                                        request.quantity,
+                                                        request.requestQuantity,
                                                         request.currentStock
                                                     );
                                                     e.target.value = '';
                                                 }
                                             }}
+                                            className="text-xs px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
                                         >
-                                            <option value="">Respond</option>
-                                            {getStatusOptions(
-                                                request.status
-                                            ).map((status) => (
-                                                <option
-                                                    key={status}
-                                                    value={status}
-                                                >
+                                            <option value="">Change Status</option>
+                                            {getStatusOptions(request.status).map((status) => (
+                                                <option key={status} value={status}>
                                                     {status.replace('_', ' ')}
                                                 </option>
                                             ))}
                                         </select>
                                     ) : (
-                                        <span className="text-gray-400 text-sm italic">
-                                            No actions available
-                                        </span>
+                                        <span className="text-xs text-gray-400">No actions</span>
                                     )}
                                 </td>
                             </tr>
@@ -1364,9 +1411,101 @@ function RequestsTable({
                     </tbody>
                 </table>
             </div>
+            
+            {/* Pagination Controls */}
+            {filteredRequests.length > 0 && (
+                <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                            <span className="text-sm text-gray-600">Show:</span>
+                            <select
+                                value={itemsPerPage}
+                                onChange={(e) => {
+                                    setItemsPerPage(Number(e.target.value));
+                                    setCurrentPage(1);
+                                }}
+                                className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            >
+                                <option value={5}>5</option>
+                                <option value={10}>10</option>
+                                <option value={20}>20</option>
+                                <option value={50}>50</option>
+                            </select>
+                            <span className="text-sm text-gray-600">per page</span>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                            <span className="text-sm text-gray-600">
+                                Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
+                                <span className="font-medium">{Math.min(endIndex, filteredRequests.length)}</span> of{' '}
+                                <span className="font-medium">{filteredRequests.length}</span> results
+                            </span>
+                        </div>
+                        
+                        {totalPages > 1 && (
+                            <div className="flex items-center space-x-1">
+                                <button
+                                    onClick={() => setCurrentPage(1)}
+                                    disabled={currentPage === 1}
+                                    className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                >
+                                    First
+                                </button>
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                    disabled={currentPage === 1}
+                                    className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                >
+                                    Previous
+                                </button>
+                                
+                                {/* Page Numbers */}
+                                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                                    const pageNumber = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
+                                    if (pageNumber > totalPages) return null;
+                                    
+                                    return (
+                                        <button
+                                            key={pageNumber}
+                                            onClick={() => setCurrentPage(pageNumber)}
+                                            className={`px-3 py-1 text-sm border rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                                currentPage === pageNumber
+                                                    ? 'bg-green-600 text-white border-green-600'
+                                                    : 'border-gray-300 hover:bg-gray-50'
+                                            }`}
+                                        >
+                                            {pageNumber}
+                                        </button>
+                                    );
+                                })}
+                                
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                    disabled={currentPage === totalPages}
+                                    className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                >
+                                    Next
+                                </button>
+                                <button
+                                    onClick={() => setCurrentPage(totalPages)}
+                                    disabled={currentPage === totalPages}
+                                    className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                >
+                                    Last
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+            
+            {/* Summary Footer */}
             <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
                 <div className="text-sm text-gray-600 font-medium text-right">
-                    Showing <span className="font-bold text-green-700">{filteredRequests.length}</span> of <span className="font-bold text-green-700">{requests.length}</span> total requests
+                    Showing <span className="font-bold text-green-700">{paginatedRequests.length}</span> of <span className="font-bold text-green-700">{filteredRequests.length}</span> filtered requests
+                    {filteredRequests.length !== requests.length && (
+                        <span className="text-gray-500"> (from {requests.length} total)</span>
+                    )}
                 </div>
             </div>
         </div>
@@ -1492,22 +1631,32 @@ function EICDetailModal({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col mx-4">
-                {/* HEADER */}
-                <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-orange-50 to-orange-100">
-                    <div className="flex items-center gap-2">
-                        <span className="text-xs text-orange-600 font-medium">
-                            EIC Item Details
-                        </span>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full border border-gray-200 overflow-hidden max-h-[95vh] overflow-y-auto">
+                {/* Header */}
+                <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-600 rounded-lg">
+                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-800">EIC Item Details</h3>
+                                <p className="text-sm text-gray-600">View item information and statistics</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            aria-label="Close"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
-                    <button
-                        className="text-2xl text-gray-400 hover:text-gray-700 transition-colors"
-                        onClick={onClose}
-                        aria-label="Close"
-                    >
-                        &times;
-                    </button>
                 </div>
 
                 {/* IMAGE */}
@@ -1699,8 +1848,8 @@ function EICDetailModal({
                     </div>
                 </div>
 
-                {/* DATES */}
-                <div className="flex justify-between items-center px-6 py-4 bg-gray-50 border-t">
+                {/* Footer */}
+                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-between items-center">
                     {/* CREATED AT */}
                     <div>
                         <span className="block text-xs text-gray-400 font-medium">
@@ -1845,22 +1994,32 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black/60">
-            <div className="relative bg-white rounded-2xl shadow-2xl w-full mt-30 max-w-2xl  overflow-hidden flex flex-col mx-2 md:mx-8 lg:mx-16">
-                {/* HEADER */}
-                <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-green-50 to-green-100">
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-green-600 font-medium">
-                            Edit EIC Item
-                        </span>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-200 max-h-[95vh] overflow-y-auto">
+                {/* Header */}
+                <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-600 rounded-lg">
+                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-800">Edit EIC Item</h3>
+                                <p className="text-sm text-gray-600">Modify item details and inventory</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            aria-label="Close"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
-                    <button
-                        className="text-2xl text-gray-400 hover:text-gray-700 transition-colors"
-                        onClick={onClose}
-                        aria-label="Close"
-                    >
-                        &times;
-                    </button>
                 </div>
 
                 {/* FORM */}
@@ -2047,18 +2206,18 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                         </p>
                     </div>
 
-                    {/* Buttons */}
-                    <div className="flex flex-col md:flex-row justify-end gap-3 pt-4">
+                    {/* Footer */}
+                    <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end gap-3 -mx-6 -mb-6 rounded-b-xl">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                            className="px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-50 border border-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 text-white bg-green-500 hover:bg-green-600 rounded-md transition-colors"
+                            className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 shadow-sm"
                         >
                             Save Changes
                         </button>

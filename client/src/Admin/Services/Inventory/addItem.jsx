@@ -130,117 +130,157 @@ const AddItemModal = ({ isOpen, onClose, onSubmit, existingItems }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow p-6 w-full max-w-md relative border border-blue-100 mx-2">
-                <button
-                    className="absolute top-2 right-2 text-blue-400 hover:text-blue-700 text-xl transition"
-                    onClick={handleClose}
-                    aria-label="Close"
-                >
-                    ×
-                </button>
-                <h2 className="text-base font-bold mb-4 text-blue-800 text-center">
-                    Add Item
-                </h2>
-                <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-                    {/* Name Input with Dropdown */}
-                    <div className="relative">
-                        <input
-                            type="text"
-                            value={nameInput}
-                            onChange={handleNameInputChange}
-                            onFocus={() => setShowDropdown(true)}
-                            onBlur={() =>
-                                setTimeout(() => setShowDropdown(false), 150)
-                            }
-                            placeholder="Item Name"
-                            className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
-                            required
-                        />
-                        {showDropdown && filteredItems.length > 0 && (
-                            <div className="absolute top-full left-0 right-0 bg-white border border-blue-200 rounded-b-md max-h-40 overflow-y-auto z-10 shadow-lg">
-                                {filteredItems.map((item, index) => (
-                                    <div
-                                        key={item.id || index}
-                                        className="px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm"
-                                        onClick={() =>
-                                            handleNameSelect(item.name)
-                                        }
-                                    >
-                                        {item.name}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                        {isNewItem && nameInput.trim() !== '' && (
-                            <div className="mt-1 text-xs text-green-600 font-medium">
-                                ✓ Creating a new item
-                            </div>
-                        )}
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl border border-gray-200 w-full max-w-md mx-4 transform transition-all">
+                {/* Header */}
+                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-xl">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-lg font-semibold text-gray-900">Add Inventory Item</h2>
+                        <button
+                            className="text-gray-400 hover:text-gray-600 transition-colors"
+                            onClick={handleClose}
+                            aria-label="Close"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
                     </div>
+                </div>
 
-                    {/* Quantity Input */}
-                    <input
-                        type="number"
-                        name="quantity"
-                        value={form.quantity}
-                        onChange={handleChange}
-                        placeholder="Quantity"
-                        className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
-                        min="1"
-                        required
-                    />
-
-                    {/* Status Dropdown */}
-                    <select
-                        name="status"
-                        value={form.status}
-                        onChange={handleChange}
-                        className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
-                    >
-                        {statuses.map((status) => (
-                            <option key={status} value={status}>
-                                {status}
-                            </option>
-                        ))}
-                    </select>
-
-                    {/* Conditional Fields - Only show if it's a new item */}
-                    {isNewItem && (
-                        <>
-                            {/* Description Input */}
+                {/* Content */}
+                <div className="px-6 py-6">
+                    <form className="space-y-4" onSubmit={handleSubmit}>
+                        {/* Name Input with Dropdown */}
+                        <div className="relative">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Item Name</label>
                             <input
                                 type="text"
-                                name="description"
-                                value={form.description}
-                                onChange={handleChange}
-                                placeholder="Description"
-                                className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
+                                value={nameInput}
+                                onChange={handleNameInputChange}
+                                onFocus={() => setShowDropdown(true)}
+                                onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+                                placeholder="Enter item name"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                                required
                             />
+                            {showDropdown && filteredItems.length > 0 && (
+                                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-b-lg max-h-40 overflow-y-auto z-10 shadow-lg">
+                                    {filteredItems.map((item, index) => (
+                                        <div
+                                            key={item.id || index}
+                                            className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm border-b border-gray-100 last:border-b-0"
+                                            onClick={() => handleNameSelect(item.name)}
+                                        >
+                                            <div className="font-medium text-gray-900">{item.name}</div>
+                                            {item.category?.name && (
+                                                <div className="text-xs text-gray-500">{item.category.name}</div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            {isNewItem && nameInput.trim() !== '' && (
+                                <div className="mt-2 flex items-center gap-1 text-sm text-green-600">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path d="M12 4v16m8-8H4" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                    Creating a new item
+                                </div>
+                            )}
+                        </div>
 
-                            {/* Category Dropdown */}
-                            <select
-                                name="category"
-                                value={form.category}
+                        {/* Quantity Input */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                            <input
+                                type="number"
+                                name="quantity"
+                                value={form.quantity}
                                 onChange={handleChange}
-                                className="border border-blue-100 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-300 bg-blue-50 w-full"
+                                placeholder="Enter quantity"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                                min="1"
+                                required
+                            />
+                        </div>
+
+                        {/* Status Dropdown */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                            <select
+                                name="status"
+                                value={form.status}
+                                onChange={handleChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
                             >
-                                {categories.map((cat) => (
-                                    <option key={cat} value={cat}>
-                                        {cat}
+                                {statuses.map((status) => (
+                                    <option key={status} value={status}>
+                                        {status}
                                     </option>
                                 ))}
                             </select>
-                        </>
-                    )}
+                        </div>
 
-                    <button
-                        type="submit"
-                        className="bg-blue-500 text-white font-bold py-2 rounded hover:bg-blue-600 transition mt-2 w-full"
-                    >
-                        Add
-                    </button>
-                </form>
+                        {/* Conditional Fields - Only show if it's a new item */}
+                        {isNewItem && (
+                            <>
+                                {/* Description Input */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                    <textarea
+                                        name="description"
+                                        value={form.description}
+                                        onChange={handleChange}
+                                        placeholder="Enter item description"
+                                        rows="3"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors resize-none"
+                                    />
+                                </div>
+
+                                {/* Category Dropdown */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                                    <select
+                                        name="category"
+                                        value={form.category}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                                    >
+                                        {categories.map((cat) => (
+                                            <option key={cat} value={cat}>
+                                                {cat}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </>
+                        )}
+                    </form>
+                </div>
+
+                {/* Footer */}
+                <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-xl">
+                    <div className="flex gap-3">
+                        <button
+                            type="button"
+                            onClick={handleClose}
+                            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            onClick={handleSubmit}
+                            className="flex-1 px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors flex items-center justify-center gap-2"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M12 4v16m8-8H4" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Add Item
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
