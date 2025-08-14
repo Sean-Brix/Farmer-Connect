@@ -2127,7 +2127,7 @@ export default function Farmer_Report() {
         {/* Professional Modals */}
         {showCropRegistrationModal && (
           <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8 overflow-y-auto">
-            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full min-h-fit my-auto">
+            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto">
               {/* Modal Header */}
               <div className="px-4 sm:px-6 py-4 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
                 <div className="flex items-center gap-3">
@@ -2254,8 +2254,8 @@ export default function Farmer_Report() {
         )}
 
         {showMonthlyReportModal && selectedCropForReport && (
-          <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8">
-            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full min-h-fit my-auto">
+          <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8 overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto">
               {/* Modal Header */}
               <div className="px-4 sm:px-6 py-3 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
                 <div className="flex items-center gap-3">
@@ -2359,8 +2359,8 @@ export default function Farmer_Report() {
 
         {/* Professional Detailed Monthly Report Modal */}
         {showDetailedReportModal && selectedCropForReport && (
-          <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8">
-            <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full min-h-fit my-auto max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8 overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto">
               {/* Modal Header */}
               <div className="px-4 sm:px-6 py-3 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
                 <div className="flex items-center justify-between">
@@ -2723,42 +2723,42 @@ export default function Farmer_Report() {
 
         {/* Professional Crop Detail Modal */}
         {showCropDetail && selectedCrop && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 pt-20">
-            <div className="bg-white rounded-xl shadow-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8 overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto">
               {/* Modal Header */}
-              <div className="px-6 py-4 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
+              <div className="px-4 sm:px-6 py-3 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-green-600 rounded-lg shadow-sm">
-                      <span className="text-white text-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg shadow-sm">
+                      <span className="text-white text-sm">
                         {cropGuidelinesData.cropCategories[selectedCrop.category]?.icon}
                       </span>
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-800">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
                         {selectedCrop.name} - Complete Growing Guide
                       </h3>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1">
                         Comprehensive farming guide and best practices
                       </p>
                     </div>
                   </div>
                   <button 
                     onClick={() => setShowCropDetail(false)}
-                    className="flex items-center justify-center w-10 h-10 text-gray-500 hover:text-gray-700 hover:bg-white/80 rounded-lg transition-all duration-200 hover:shadow-sm"
+                    className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-white/80 rounded-lg transition-all duration-200 hover:shadow-sm"
                   >
-                    <span className="text-2xl font-light">&times;</span>
+                    <span className="text-xl font-light">&times;</span>
                   </button>
                 </div>
               </div>
               
-              <div className="p-6 space-y-6">
+              <div className="p-4 sm:p-6 space-y-4">
                 {/* Basic Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-3">
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-2">📋 Basic Information</h4>
-                      <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm">
+                      <h4 className="font-semibold text-gray-800 mb-2 text-sm">📋 Basic Information</h4>
+                      <div className="bg-gray-50 p-3 rounded-lg space-y-2 text-xs sm:text-sm">
                         <div className="grid grid-cols-2 gap-2">
                           <span className="text-gray-600">Category:</span>
                           <span className="font-semibold">{cropGuidelinesData.cropCategories[selectedCrop.category]?.name}</span>
@@ -2922,6 +2922,17 @@ export default function Farmer_Report() {
           </div>
         )}
       </div>
+      <style>{
+                 `
+                 html, body, #root {
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                }
+                html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar {
+                    display: none;
+              } 
+               `}
+      </style>
     </>
   );
 }

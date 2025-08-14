@@ -970,7 +970,18 @@ export default function Chat() {
                         </div>
                     </div>
                 </div>
+                
             )}
+            <style>{`
+                html, body, #root {
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                }
+                html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar {
+                    display: none;
+                }
+            `}</style>
         </>
+
     );
 }
