@@ -137,30 +137,63 @@ export default function Account() {
     const validateForm = () => {
         const errors = {};
         
-        if (!tempProfile.username?.trim()) errors.username = 'Username is required';
-        if (!tempProfile.email?.trim()) errors.email = 'Email is required';
-        if (!tempProfile.firstName?.trim()) errors.firstName = 'First name is required';
-        if (!tempProfile.surname?.trim()) errors.surname = 'Surname is required';
-        if (!tempProfile.mobileNumber?.trim()) errors.mobileNumber = 'Mobile number is required';
+        // Required field validation with user-friendly messages
+        if (!tempProfile.username?.trim()) {
+            errors.username = '👤 Username is required and cannot be empty.';
+        }
+        if (!tempProfile.email?.trim()) {
+            errors.email = '📧 Email address is required.';
+        }
+        if (!tempProfile.firstName?.trim()) {
+            errors.firstName = '✏️ First name is required.';
+        }
+        if (!tempProfile.surname?.trim()) {
+            errors.surname = '✏️ Last name is required.';
+        }
+        if (!tempProfile.mobileNumber?.trim()) {
+            errors.mobileNumber = '📱 Mobile number is required.';
+        }
         
-        // Email validation
+        // Email validation with specific guidance
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (tempProfile.email && !emailRegex.test(tempProfile.email)) {
-            errors.email = 'Invalid email format';
+            errors.email = '📧 Please enter a valid email address (e.g., yourname@example.com).';
         }
         
-        // Mobile phone validation (Philippine format)
+        // Mobile phone validation (Philippine format) with clear instructions
         const mobileRegex = /^09\d{9}$/;
         if (tempProfile.mobileNumber && !mobileRegex.test(tempProfile.mobileNumber)) {
-            errors.mobileNumber = 'Invalid mobile format. Must start with 09 and be 11 digits';
+            errors.mobileNumber = '📱 Mobile number must start with 09 and be exactly 11 digits (e.g., 09123456789).';
         }
         
-        // Landline validation (if provided)
+        // Landline validation (if provided) with format example
         if (tempProfile.landlineNumber && tempProfile.landlineNumber.trim()) {
             const landlineRegex = /^\d{3}-\d{3}-\d{4}$/;
             if (!landlineRegex.test(tempProfile.landlineNumber)) {
-                errors.landlineNumber = 'Invalid landline format. Use XXX-XXX-XXXX';
+                errors.landlineNumber = '☎️ Landline must be in XXX-XXX-XXXX format (e.g., 123-456-7890).';
             }
+        }
+        
+        // Username validation (basic requirements)
+        if (tempProfile.username && tempProfile.username.length < 3) {
+            errors.username = '👤 Username must be at least 3 characters long.';
+        }
+        
+        // Name validation (no numbers or special characters)
+        const nameRegex = /^[a-zA-Z\s\-\.]+$/;
+        if (tempProfile.firstName && !nameRegex.test(tempProfile.firstName)) {
+            errors.firstName = '✏️ First name can only contain letters, spaces, hyphens, and periods.';
+        }
+        if (tempProfile.surname && !nameRegex.test(tempProfile.surname)) {
+            errors.surname = '✏️ Last name can only contain letters, spaces, hyphens, and periods.';
+        }
+        if (tempProfile.middleName && tempProfile.middleName.trim() && !nameRegex.test(tempProfile.middleName)) {
+            errors.middleName = '✏️ Middle name can only contain letters, spaces, hyphens, and periods.';
+        }
+        
+        // Set a general message if there are any field issues
+        if (Object.keys(errors).length > 0) {
+            errors.general = '⚠️ Please correct the highlighted fields before submitting.';
         }
         
         setFormErrors(errors);
@@ -184,7 +217,12 @@ export default function Account() {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(`Failed to Update: ${errorData.message}`);
+                
+                // Create a detailed error object with status code
+                const error = new Error(errorData.message || 'An error occurred');
+                error.status = response.status;
+                error.data = errorData;
+                throw error;
             }
             return response.json();
         },
@@ -197,17 +235,109 @@ export default function Account() {
         },
         onError: (error) => {
             console.error('Profile update error:', error);
-            // Handle validation errors from backend
-            if (error.message.includes('Required fields')) {
-                setFormErrors({ general: 'Please fill in all required fields' });
-            } else if (error.message.includes('Invalid email')) {
-                setFormErrors({ email: 'Invalid email format' });
-            } else if (error.message.includes('Invalid mobile')) {
-                setFormErrors({ mobileNumber: 'Invalid mobile number format' });
-            } else if (error.message.includes('Invalid landline')) {
-                setFormErrors({ landlineNumber: 'Invalid landline format' });
-            } else {
-                setFormErrors({ general: error.message });
+            
+            // Handle different types of errors with user-friendly messages
+            const errorMessage = error.message;
+            
+            // Clear previous errors
+            setFormErrors({});
+            
+            // Handle validation errors from backend (400 status)
+            if (error.status === 400) {
+                if (errorMessage.includes('Required fields: username, email, firstName, surname, sex, client_profile, and mobileNumber')) {
+                    setFormErrors({ 
+                        general: '⚠️ Missing Required Information: Please fill in Username, Email, First Name, Surname, Sex, Profile Type, and Mobile Number.' 
+                    });
+                } else if (errorMessage.includes('Invalid email format')) {
+                    setFormErrors({ 
+                        email: '📧 Invalid email format. Please enter a valid email address (e.g., example@domain.com).',
+                        general: 'Please check your email address format.'
+                    });
+                } else if (errorMessage.includes('Invalid mobile number format')) {
+                    setFormErrors({ 
+                        mobileNumber: '📱 Invalid mobile number. Must start with 09 and be exactly 11 digits (e.g., 09123456789).',
+                        general: 'Please check your mobile number format.'
+                    });
+                } else if (errorMessage.includes('Invalid landline number format')) {
+                    setFormErrors({ 
+                        landlineNumber: '☎️ Invalid landline format. Please use XXX-XXX-XXXX format (e.g., 123-456-7890).',
+                        general: 'Please check your landline number format.'
+                    });
+                } else if (errorMessage.includes('Invalid sex value')) {
+                    setFormErrors({ 
+                        sex: 'Please select a valid gender option.',
+                        general: 'Invalid gender selection. Please choose Male, Female, or Other.'
+                    });
+                } else if (errorMessage.includes('Invalid client profile')) {
+                    setFormErrors({ 
+                        client_profile: 'Please select a valid profile type.',
+                        general: 'Invalid profile type selection. Please choose from the available options.'
+                    });
+                } else if (errorMessage.includes('Relationship to household head is required')) {
+                    setFormErrors({ 
+                        relationshipToHead: '👨‍👩‍👧‍👦 Please specify your relationship to the household head (e.g., spouse, child, parent).',
+                        general: 'Household relationship information is required when household head name is provided.'
+                    });
+                } else if (errorMessage.includes('already taken')) {
+                    setFormErrors({ 
+                        general: `📧 ${errorMessage}. Please try a different value.`
+                    });
+                } else if (errorMessage.includes('too long')) {
+                    setFormErrors({ 
+                        general: '📝 One of your text fields is too long. Please shorten your input and try again.'
+                    });
+                } else if (errorMessage.includes('Data validation error')) {
+                    setFormErrors({ 
+                        general: `⚠️ ${errorMessage}. Please check your input and try again.`
+                    });
+                } else {
+                    // Generic 400 error
+                    setFormErrors({ 
+                        general: `❌ Invalid Information: ${errorMessage}. Please check your input and try again.`
+                    });
+                }
+            }
+            // Handle authentication errors (401 status)
+            else if (error.status === 401) {
+                setFormErrors({ 
+                    general: '🔒 Session Expired: Your login session has expired. Please refresh the page and log in again.'
+                });
+            }
+            // Handle forbidden errors (403 status)
+            else if (error.status === 403) {
+                setFormErrors({ 
+                    general: '🚫 Access Denied: You do not have permission to update this profile.'
+                });
+            }
+            // Handle not found errors (404 status)
+            else if (error.status === 404) {
+                setFormErrors({ 
+                    general: '👤 Profile Not Found: Your profile could not be found. Please contact support.'
+                });
+            }
+            // Handle server errors (500 status)
+            else if (error.status === 500) {
+                setFormErrors({ 
+                    general: '🔧 Server Error: Our servers are experiencing issues. Please try again in a few moments. If the problem persists, contact support.'
+                });
+            }
+            // Handle network errors
+            else if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError')) {
+                setFormErrors({ 
+                    general: '🌐 Connection Error: Unable to connect to the server. Please check your internet connection and try again.'
+                });
+            }
+            // Handle timeout errors
+            else if (errorMessage.includes('timeout')) {
+                setFormErrors({ 
+                    general: '⏱️ Request Timeout: The request took too long to complete. Please try again.'
+                });
+            }
+            // Handle other errors
+            else {
+                setFormErrors({ 
+                    general: `❌ Update Failed: ${errorMessage || 'An unexpected error occurred. Please try again or contact support if the problem persists.'}`
+                });
             }
         },
     });
@@ -220,7 +350,10 @@ export default function Account() {
             });
 
             if (!changePicture.ok) {
-                throw new Error('Failed to update profile picture.');
+                const errorData = await changePicture.json().catch(() => ({}));
+                const error = new Error(errorData.message || 'Failed to update profile picture');
+                error.status = changePicture.status;
+                throw error;
             }
             return changePicture;
         },
@@ -228,7 +361,40 @@ export default function Account() {
             queryClient.invalidateQueries(['profile']);
         },
         onError: (error) => {
-            alert(error.message);
+            console.error('Picture update error:', error);
+            
+            // Handle different picture upload errors
+            if (error.status === 400) {
+                if (error.message.includes('file size') || error.message.includes('too large')) {
+                    setFormErrors({ 
+                        general: '📷 Image Too Large: Please select an image smaller than 5MB.' 
+                    });
+                } else if (error.message.includes('file type') || error.message.includes('invalid format')) {
+                    setFormErrors({ 
+                        general: '📷 Invalid Image Format: Please select a valid image file (JPG, PNG, GIF).' 
+                    });
+                } else {
+                    setFormErrors({ 
+                        general: `📷 Image Upload Error: ${error.message}` 
+                    });
+                }
+            } else if (error.status === 401) {
+                setFormErrors({ 
+                    general: '🔒 Session Expired: Please refresh the page and log in again.' 
+                });
+            } else if (error.status === 413) {
+                setFormErrors({ 
+                    general: '📷 Image Too Large: The selected image file is too large. Please choose a smaller image.' 
+                });
+            } else if (error.status === 500) {
+                setFormErrors({ 
+                    general: '🔧 Server Error: Unable to upload image due to server issues. Please try again later.' 
+                });
+            } else {
+                setFormErrors({ 
+                    general: `📷 Picture Update Failed: ${error.message || 'Unable to update profile picture. Please try again.'}` 
+                });
+            }
         },
     });
 
@@ -436,17 +602,32 @@ export default function Account() {
                 <div className="max-w-6xl mx-auto px-6 py-8">
                     {/* Success Message */}
                     {showSuccessMessage && (
-                        <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-xl flex items-center gap-3 shadow-sm">
-                            <i className="fa-solid fa-check-circle text-xl"></i>
-                            <span className="font-semibold">Profile updated successfully!</span>
+                        <div className="mb-6 p-5 bg-green-100 border-l-4 border-green-500 text-green-800 rounded-xl flex items-center gap-3 shadow-md">
+                            <div className="flex-shrink-0">
+                                <i className="fa-solid fa-check-circle text-2xl text-green-600"></i>
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-lg">Success!</h4>
+                                <p className="text-sm">Your profile has been updated successfully.</p>
+                            </div>
                         </div>
                     )}
 
-                    {/* General Error Message */}
+                    {/* General Message */}
                     {formErrors.general && (
-                        <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl flex items-center gap-3 shadow-sm">
-                            <i className="fa-solid fa-exclamation-triangle text-xl"></i>
-                            <span className="font-semibold">{formErrors.general}</span>
+                        <div className="mb-6 p-5 bg-red-50 border-l-4 border-red-500 text-red-800 rounded-xl shadow-md">
+                            <div className="flex items-start gap-3">
+                                <div className="flex-shrink-0">
+                                    <i className="fa-solid fa-exclamation-triangle text-2xl text-red-600"></i>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-lg mb-1">Validation Notice</h4>
+                                    <p className="text-sm leading-relaxed">{formErrors.general}</p>
+                                    <div className="mt-3 text-xs text-red-600">
+                                        <p>💡 <strong>Need help?</strong> Contact support if this issue persists.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
 
@@ -507,7 +688,7 @@ export default function Account() {
                                                 placeholder="Enter username"
                                             />
                                             {formErrors.username && (
-                                                <p className="text-red-500 text-sm flex items-center gap-1">
+                                                <p className="text-red-600 text-sm flex items-center gap-2 bg-red-50 p-2 rounded-lg">
                                                     <i className="fa-solid fa-exclamation-circle"></i>
                                                     {formErrors.username}
                                                 </p>
@@ -534,7 +715,7 @@ export default function Account() {
                                                 placeholder="Enter first name"
                                             />
                                             {formErrors.firstName && (
-                                                <p className="text-red-500 text-sm flex items-center gap-1">
+                                                <p className="text-red-600 text-sm flex items-center gap-2 bg-red-50 p-2 rounded-lg">
                                                     <i className="fa-solid fa-exclamation-circle"></i>
                                                     {formErrors.firstName}
                                                 </p>
@@ -557,9 +738,15 @@ export default function Account() {
                                                     editMode 
                                                         ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
                                                         : 'bg-gray-50 border-gray-200 text-gray-600'
-                                                }`}
+                                                } ${formErrors.middleName ? 'border-red-500' : ''}`}
                                                 placeholder="Enter middle name (optional)"
                                             />
+                                            {formErrors.middleName && (
+                                                <p className="text-red-600 text-sm flex items-center gap-2 bg-red-50 p-2 rounded-lg">
+                                                    <i className="fa-solid fa-exclamation-circle"></i>
+                                                    {formErrors.middleName}
+                                                </p>
+                                            )}
                                         </div>
 
                                         {/* Surname */}
@@ -582,7 +769,7 @@ export default function Account() {
                                                 placeholder="Enter surname"
                                             />
                                             {formErrors.surname && (
-                                                <p className="text-red-500 text-sm flex items-center gap-1">
+                                                <p className="text-red-600 text-sm flex items-center gap-2 bg-red-50 p-2 rounded-lg">
                                                     <i className="fa-solid fa-exclamation-circle"></i>
                                                     {formErrors.surname}
                                                 </p>
@@ -679,7 +866,7 @@ export default function Account() {
                                                 placeholder="Enter email address"
                                             />
                                             {formErrors.email && (
-                                                <p className="text-red-500 text-sm flex items-center gap-1">
+                                                <p className="text-red-600 text-sm flex items-center gap-2 bg-red-50 p-2 rounded-lg">
                                                     <i className="fa-solid fa-exclamation-circle"></i>
                                                     {formErrors.email}
                                                 </p>
@@ -725,7 +912,7 @@ export default function Account() {
                                                         placeholder="09xxxxxxxxx"
                                                     />
                                                     {formErrors.mobileNumber && (
-                                                        <p className="text-red-500 text-sm flex items-center gap-1">
+                                                        <p className="text-red-600 text-sm flex items-center gap-2 bg-red-50 p-2 rounded-lg">
                                                             <i className="fa-solid fa-exclamation-circle"></i>
                                                             {formErrors.mobileNumber}
                                                         </p>
@@ -752,7 +939,7 @@ export default function Account() {
                                                         placeholder="XXX-XXX-XXXX (optional)"
                                                     />
                                                     {formErrors.landlineNumber && (
-                                                        <p className="text-red-500 text-sm flex items-center gap-1">
+                                                        <p className="text-red-600 text-sm flex items-center gap-2 bg-red-50 p-2 rounded-lg">
                                                             <i className="fa-solid fa-exclamation-circle"></i>
                                                             {formErrors.landlineNumber}
                                                         </p>
@@ -1207,9 +1394,15 @@ export default function Account() {
                                                                 editMode 
                                                                     ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
                                                                     : 'bg-gray-50 border-gray-200 text-gray-600'
-                                                            }`}
+                                                            } ${formErrors.relationshipToHead ? 'border-red-500' : ''}`}
                                                             placeholder="e.g., spouse, child, parent"
                                                         />
+                                                        {formErrors.relationshipToHead && (
+                                                            <p className="text-red-600 text-sm flex items-center gap-2 bg-red-50 p-2 rounded-lg">
+                                                                <i className="fa-solid fa-exclamation-circle"></i>
+                                                                {formErrors.relationshipToHead}
+                                                            </p>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>
