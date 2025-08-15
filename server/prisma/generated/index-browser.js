@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.12.0
- * Query Engine version: 8047c96bbd92db98a2abc7c9323ce77c02c89dbc
+ * Prisma Client JS version: 6.13.0
+ * Query Engine version: 361e86d0ea4987e9f53a565309b3eed797a6bcbd
  */
 Prisma.prismaVersion = {
-  client: "6.12.0",
-  engine: "8047c96bbd92db98a2abc7c9323ce77c02c89dbc"
+  client: "6.13.0",
+  engine: "361e86d0ea4987e9f53a565309b3eed797a6bcbd"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -125,37 +125,55 @@ exports.Prisma.AccountScalarFieldEnum = {
   access: 'access',
   username: 'username',
   email: 'email',
+  password: 'password',
   firstName: 'firstName',
-  lastName: 'lastName',
   middleName: 'middleName',
-  gender: 'gender',
-  client_profile: 'client_profile',
-  cellphone_no: 'cellphone_no',
-  telephone_no: 'telephone_no',
-  occupation: 'occupation',
-  position: 'position',
-  institution: 'institution',
-  address: 'address',
+  surname: 'surname',
+  extensionName: 'extensionName',
+  sex: 'sex',
+  street: 'street',
+  barangay: 'barangay',
+  municipality: 'municipality',
+  province: 'province',
+  region: 'region',
+  houseNumber: 'houseNumber',
+  mobileNumber: 'mobileNumber',
+  landlineNumber: 'landlineNumber',
+  birthMunicipality: 'birthMunicipality',
+  birthProvince: 'birthProvince',
+  birthCountry: 'birthCountry',
+  dateOfBirth: 'dateOfBirth',
+  religion: 'religion',
+  otherReligionSpecify: 'otherReligionSpecify',
+  civilStatus: 'civilStatus',
+  spouseName: 'spouseName',
+  femaleHouseholdMembers: 'femaleHouseholdMembers',
+  maleHouseholdMembers: 'maleHouseholdMembers',
+  isHouseholdHead: 'isHouseholdHead',
+  householdHeadName: 'householdHeadName',
+  relationshipToHead: 'relationshipToHead',
+  hasGovId: 'hasGovId',
+  govIdType: 'govIdType',
+  govIdNumber: 'govIdNumber',
+  education: 'education',
+  isPWD: 'isPWD',
+  disabilityType: 'disabilityType',
+  livelihoodProfile: 'livelihoodProfile',
+  farmingActivities: 'farmingActivities',
+  fishingActivities: 'fishingActivities',
+  farmworkActivities: 'farmworkActivities',
+  youthActivities: 'youthActivities',
+  otherCropsSpecify: 'otherCropsSpecify',
+  livestockSpecify: 'livestockSpecify',
+  fishingOthersSpecify: 'fishingOthersSpecify',
+  farmworkOthersSpecify: 'farmworkOthersSpecify',
+  youthOthersSpecify: 'youthOthersSpecify',
+  grossAnnualIncome: 'grossAnnualIncome',
+  incomeSource: 'incomeSource',
   picture: 'picture',
   mimeType: 'mimeType',
-  password: 'password',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CommodityScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  icon: 'icon',
-  description: 'description',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AccountCommodityScalarFieldEnum = {
-  id: 'id',
-  account_id: 'account_id',
-  commodity_id: 'commodity_id',
+  client_profile: 'client_profile',
+  address: 'address',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -247,41 +265,6 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
-exports.Prisma.AccountOrderByRelevanceFieldEnum = {
-  id: 'id',
-  username: 'username',
-  email: 'email',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  middleName: 'middleName',
-  cellphone_no: 'cellphone_no',
-  telephone_no: 'telephone_no',
-  occupation: 'occupation',
-  position: 'position',
-  institution: 'institution',
-  address: 'address',
-  mimeType: 'mimeType',
-  password: 'password'
-};
-
-exports.Prisma.CommodityOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  icon: 'icon',
-  description: 'description'
-};
-
-exports.Prisma.AccountCommodityOrderByRelevanceFieldEnum = {
-  id: 'id',
-  account_id: 'account_id',
-  commodity_id: 'commodity_id'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
@@ -291,6 +274,50 @@ exports.Prisma.JsonNullValueFilter = {
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
+exports.Prisma.AccountOrderByRelevanceFieldEnum = {
+  id: 'id',
+  username: 'username',
+  email: 'email',
+  password: 'password',
+  firstName: 'firstName',
+  middleName: 'middleName',
+  surname: 'surname',
+  extensionName: 'extensionName',
+  street: 'street',
+  barangay: 'barangay',
+  municipality: 'municipality',
+  province: 'province',
+  region: 'region',
+  houseNumber: 'houseNumber',
+  mobileNumber: 'mobileNumber',
+  landlineNumber: 'landlineNumber',
+  birthMunicipality: 'birthMunicipality',
+  birthProvince: 'birthProvince',
+  birthCountry: 'birthCountry',
+  religion: 'religion',
+  otherReligionSpecify: 'otherReligionSpecify',
+  civilStatus: 'civilStatus',
+  spouseName: 'spouseName',
+  femaleHouseholdMembers: 'femaleHouseholdMembers',
+  maleHouseholdMembers: 'maleHouseholdMembers',
+  householdHeadName: 'householdHeadName',
+  govIdNumber: 'govIdNumber',
+  disabilityType: 'disabilityType',
+  otherCropsSpecify: 'otherCropsSpecify',
+  livestockSpecify: 'livestockSpecify',
+  fishingOthersSpecify: 'fishingOthersSpecify',
+  farmworkOthersSpecify: 'farmworkOthersSpecify',
+  youthOthersSpecify: 'youthOthersSpecify',
+  grossAnnualIncome: 'grossAnnualIncome',
+  mimeType: 'mimeType',
+  address: 'address'
 };
 
 exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
@@ -350,6 +377,55 @@ exports.gender = exports.$Enums.gender = {
   Male: 'Male',
   Female: 'Female',
   Other: 'Other'
+};
+
+exports.RelationshipToHead = exports.$Enums.RelationshipToHead = {
+  Son: 'Son',
+  Daughter: 'Daughter',
+  Spouse: 'Spouse',
+  Father: 'Father',
+  Mother: 'Mother',
+  Brother: 'Brother',
+  Sister: 'Sister',
+  Grandchild: 'Grandchild',
+  Son_in_law: 'Son_in_law',
+  Daughter_in_law: 'Daughter_in_law',
+  Other_relative: 'Other_relative'
+};
+
+exports.GovIdType = exports.$Enums.GovIdType = {
+  National_ID: 'National_ID',
+  Drivers_License: 'Drivers_License',
+  Passport: 'Passport',
+  Voters_ID: 'Voters_ID',
+  School_ID: 'School_ID',
+  SSS_ID: 'SSS_ID',
+  PhilHealth_ID: 'PhilHealth_ID',
+  TIN_ID: 'TIN_ID',
+  PRC_ID: 'PRC_ID',
+  Senior_Citizen_ID: 'Senior_Citizen_ID',
+  PWD_ID: 'PWD_ID',
+  Other: 'Other'
+};
+
+exports.EducationLevel = exports.$Enums.EducationLevel = {
+  No_formal_education: 'No_formal_education',
+  Kinder: 'Kinder',
+  Elementary_level: 'Elementary_level',
+  Elementary_graduate: 'Elementary_graduate',
+  High_school_level: 'High_school_level',
+  High_school_graduate: 'High_school_graduate',
+  Senior_high_school_level: 'Senior_high_school_level',
+  Senior_high_school_graduate: 'Senior_high_school_graduate',
+  College_level: 'College_level',
+  College_graduate: 'College_graduate',
+  Post_graduate_studies: 'Post_graduate_studies',
+  Vocational_Technical: 'Vocational_Technical'
+};
+
+exports.IncomeSource = exports.$Enums.IncomeSource = {
+  farming: 'farming',
+  non_farming: 'non_farming'
 };
 
 exports.client_profile = exports.$Enums.client_profile = {
@@ -457,8 +533,6 @@ exports.participant_status = exports.$Enums.participant_status = {
 
 exports.Prisma.ModelName = {
   Account: 'Account',
-  Commodity: 'Commodity',
-  AccountCommodity: 'AccountCommodity',
   AuditLog: 'AuditLog',
   InventoryItem: 'InventoryItem',
   ItemStack: 'ItemStack',

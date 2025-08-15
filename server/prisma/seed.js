@@ -108,12 +108,12 @@ async function createAccount() {
           // Household Information
           femaleHouseholdMembers: user.femaleHouseholdMembers,
           maleHouseholdMembers: user.maleHouseholdMembers,
-          isHouseholdHead: user.isHouseholdHead,
+          isHouseholdHead: user.isHouseholdHead === "Yes",
           householdHeadName: user.householdHeadName,
           relationshipToHead: user.relationshipToHead,
           
           // Government ID Information
-          hasGovId: user.hasGovId,
+          hasGovId: user.hasGovId === "Yes",
           govIdType: user.govIdType,
           govIdNumber: user.govIdNumber,
           
@@ -121,7 +121,7 @@ async function createAccount() {
           education: user.education,
           
           // PWD Information
-          isPWD: user.isPWD,
+          isPWD: user.isPWD === "Yes",
           disabilityType: user.disabilityType,
           
           // Livelihood Profile (as JSON)
@@ -142,18 +142,12 @@ async function createAccount() {
           grossAnnualIncome: user.grossAnnualIncome,
           incomeSource: user.incomeSource,
           
-          // RSBSA Reference Number
-          referenceNumber: user.referenceNumber,
-          
           // Profile Photo
           picture: picture,
           mimeType: mimeType,
           
           // Legacy fields (for compatibility)
           client_profile: user.client_profile,
-          occupation: user.occupation,
-          position: user.position,
-          institution: user.institution,
           address: user.address,
         }
       })

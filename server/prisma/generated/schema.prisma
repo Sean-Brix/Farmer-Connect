@@ -1,27 +1,89 @@
 //? ===================================== ACCOUNTS SCHEMA ===================================== ?//
 
 model Account {
-  id             String             @id @default(cuid())
-  access         access             @default(User)
-  username       String             @unique
-  email          String             @unique
-  firstName      String
-  lastName       String
-  middleName     String?
-  gender         gender
-  client_profile client_profile     @default(Other)
-  cellphone_no   String?
-  telephone_no   String?
-  occupation     String?
-  position       String?
-  institution    String?
-  address        String?
-  picture        Bytes?
-  mimeType       String?
-  commodity      AccountCommodity[]
-  password       String
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  id       String @id @default(cuid())
+  access   access @default(User)
+  username String @unique
+  email    String @unique
+  password String
+
+  // Personal Information
+  firstName     String
+  middleName    String?
+  surname       String
+  extensionName String? // Jr., Sr., III, etc.
+  sex           gender  @default(Other)
+
+  // Address Information
+  street       String?
+  barangay     String?
+  municipality String?
+  province     String?
+  region       String?
+  houseNumber  String?
+
+  // Contact Information
+  mobileNumber   String? // Renamed from cellphone_no
+  landlineNumber String? // Renamed from telephone_no
+
+  // Birth Information
+  birthMunicipality String? // New field for place of birth
+  birthProvince     String? // New field for birth province
+  birthCountry      String? // New field for birth country
+  dateOfBirth       DateTime? // New field
+
+  // Personal Details
+  religion             String?
+  otherReligionSpecify String? // For when religion is "Others"
+  civilStatus          String?
+  spouseName           String?
+
+  // Household Information
+  femaleHouseholdMembers String?
+  maleHouseholdMembers   String?
+  isHouseholdHead        Boolean? // Changed from String to Boolean
+  householdHeadName      String? // If not household head
+  relationshipToHead     RelationshipToHead? // Enum for relationship types
+
+  // Government ID Information
+  hasGovId    Boolean? // Changed from String to Boolean
+  govIdType   GovIdType? // Enum for government ID types
+  govIdNumber String? // Government ID number
+
+  // Education
+  education EducationLevel? // Enum for education levels
+
+  // PWD Information
+  isPWD          Boolean? // Changed from String to Boolean
+  disabilityType String? // Type of disability if PWD
+
+  // Livelihood Profile (stored as JSON arrays)
+  livelihoodProfile  Json? // Array of livelihood types
+  farmingActivities  Json? // Array of farming activities
+  fishingActivities  Json? // Array of fishing activities
+  farmworkActivities Json? // Array of farmwork activities
+  youthActivities    Json? // Array of youth activities
+
+  // Livelihood Specifications
+  otherCropsSpecify     String?
+  livestockSpecify      String?
+  fishingOthersSpecify  String?
+  farmworkOthersSpecify String?
+  youthOthersSpecify    String?
+
+  // Income Information
+  grossAnnualIncome String?
+  incomeSource      IncomeSource? // Enum for farming/non-farming
+
+  // Profile Photo
+  picture  Bytes?
+  mimeType String?
+
+  // Legacy fields (kept for compatibility)
+  client_profile client_profile @default(Other)
+  address        String? // Legacy address field
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
   // Relations
   seminars          SeminarParticipant[]
@@ -33,37 +95,56 @@ model Account {
   @@map("accounts")
 }
 
-model Commodity {
-  id          String             @id @default(cuid())
-  name        String             @unique
-  icon        String?
-  description String?
-  accounts    AccountCommodity[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("commodities")
-}
-
-//? ====================================== RELATIONSHIPS ====================================== ?//
-
-model AccountCommodity {
-  id           String   @id @default(cuid())
-  account_id   String
-  commodity_id String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  // Relations
-  commodity Commodity @relation(fields: [commodity_id], references: [id])
-  account   Account   @relation(fields: [account_id], references: [id])
-
-  @@unique([account_id, commodity_id])
-  @@map("accounts_commodities")
-}
-
 //? ========================================== ENUMS ========================================== ?//
+
+enum RelationshipToHead {
+  Son
+  Daughter
+  Spouse
+  Father
+  Mother
+  Brother
+  Sister
+  Grandchild
+  Son_in_law      @map("Son-in-law")
+  Daughter_in_law @map("Daughter-in-law")
+  Other_relative  @map("Other relative")
+}
+
+enum GovIdType {
+  National_ID       @map("National ID")
+  Drivers_License   @map("Drivers License")
+  Passport
+  Voters_ID         @map("Voters ID")
+  School_ID         @map("School ID")
+  SSS_ID            @map("SSS ID")
+  PhilHealth_ID     @map("PhilHealth ID")
+  TIN_ID            @map("TIN ID")
+  PRC_ID            @map("PRC ID")
+  Senior_Citizen_ID @map("Senior Citizen ID")
+  PWD_ID            @map("PWD ID")
+  Other
+}
+
+enum EducationLevel {
+  No_formal_education         @map("No formal education")
+  Kinder
+  Elementary_level            @map("Elementary level")
+  Elementary_graduate         @map("Elementary graduate")
+  High_school_level           @map("High school level")
+  High_school_graduate        @map("High school graduate")
+  Senior_high_school_level    @map("Senior high school level")
+  Senior_high_school_graduate @map("Senior high school graduate")
+  College_level               @map("College level")
+  College_graduate            @map("College graduate")
+  Post_graduate_studies       @map("Post-graduate studies")
+  Vocational_Technical        @map("Vocational/Technical")
+}
+
+enum IncomeSource {
+  farming
+  non_farming @map("non-farming")
+}
 
 enum client_profile {
   Fishfolk                          @map("Fishfolk")

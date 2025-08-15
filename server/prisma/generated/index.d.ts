@@ -19,16 +19,6 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type Account = $Result.DefaultSelection<Prisma.$AccountPayload>
 /**
- * Model Commodity
- * 
- */
-export type Commodity = $Result.DefaultSelection<Prisma.$CommodityPayload>
-/**
- * Model AccountCommodity
- * 
- */
-export type AccountCommodity = $Result.DefaultSelection<Prisma.$AccountCommodityPayload>
-/**
  * Model AuditLog
  * 
  */
@@ -63,7 +53,68 @@ export type SeminarParticipant = $Result.DefaultSelection<Prisma.$SeminarPartici
  * Enums
  */
 export namespace $Enums {
-  export const client_profile: {
+  export const RelationshipToHead: {
+  Son: 'Son',
+  Daughter: 'Daughter',
+  Spouse: 'Spouse',
+  Father: 'Father',
+  Mother: 'Mother',
+  Brother: 'Brother',
+  Sister: 'Sister',
+  Grandchild: 'Grandchild',
+  Son_in_law: 'Son_in_law',
+  Daughter_in_law: 'Daughter_in_law',
+  Other_relative: 'Other_relative'
+};
+
+export type RelationshipToHead = (typeof RelationshipToHead)[keyof typeof RelationshipToHead]
+
+
+export const GovIdType: {
+  National_ID: 'National_ID',
+  Drivers_License: 'Drivers_License',
+  Passport: 'Passport',
+  Voters_ID: 'Voters_ID',
+  School_ID: 'School_ID',
+  SSS_ID: 'SSS_ID',
+  PhilHealth_ID: 'PhilHealth_ID',
+  TIN_ID: 'TIN_ID',
+  PRC_ID: 'PRC_ID',
+  Senior_Citizen_ID: 'Senior_Citizen_ID',
+  PWD_ID: 'PWD_ID',
+  Other: 'Other'
+};
+
+export type GovIdType = (typeof GovIdType)[keyof typeof GovIdType]
+
+
+export const EducationLevel: {
+  No_formal_education: 'No_formal_education',
+  Kinder: 'Kinder',
+  Elementary_level: 'Elementary_level',
+  Elementary_graduate: 'Elementary_graduate',
+  High_school_level: 'High_school_level',
+  High_school_graduate: 'High_school_graduate',
+  Senior_high_school_level: 'Senior_high_school_level',
+  Senior_high_school_graduate: 'Senior_high_school_graduate',
+  College_level: 'College_level',
+  College_graduate: 'College_graduate',
+  Post_graduate_studies: 'Post_graduate_studies',
+  Vocational_Technical: 'Vocational_Technical'
+};
+
+export type EducationLevel = (typeof EducationLevel)[keyof typeof EducationLevel]
+
+
+export const IncomeSource: {
+  farming: 'farming',
+  non_farming: 'non_farming'
+};
+
+export type IncomeSource = (typeof IncomeSource)[keyof typeof IncomeSource]
+
+
+export const client_profile: {
   Fishfolk: 'Fishfolk',
   Rural_Based_Org: 'Rural_Based_Org',
   Student: 'Student',
@@ -206,6 +257,22 @@ export type participant_status = (typeof participant_status)[keyof typeof partic
 
 }
 
+export type RelationshipToHead = $Enums.RelationshipToHead
+
+export const RelationshipToHead: typeof $Enums.RelationshipToHead
+
+export type GovIdType = $Enums.GovIdType
+
+export const GovIdType: typeof $Enums.GovIdType
+
+export type EducationLevel = $Enums.EducationLevel
+
+export const EducationLevel: typeof $Enums.EducationLevel
+
+export type IncomeSource = $Enums.IncomeSource
+
+export const IncomeSource: typeof $Enums.IncomeSource
+
 export type client_profile = $Enums.client_profile
 
 export const client_profile: typeof $Enums.client_profile
@@ -258,7 +325,7 @@ export const participant_status: typeof $Enums.participant_status
  */
 export class PrismaClient<
   ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  const U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -378,26 +445,6 @@ export class PrismaClient<
   get account(): Prisma.AccountDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.commodity`: Exposes CRUD operations for the **Commodity** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Commodities
-    * const commodities = await prisma.commodity.findMany()
-    * ```
-    */
-  get commodity(): Prisma.CommodityDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.accountCommodity`: Exposes CRUD operations for the **AccountCommodity** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more AccountCommodities
-    * const accountCommodities = await prisma.accountCommodity.findMany()
-    * ```
-    */
-  get accountCommodity(): Prisma.AccountCommodityDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.auditLog`: Exposes CRUD operations for the **AuditLog** model.
     * Example usage:
     * ```ts
@@ -514,8 +561,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.12.0
-   * Query Engine version: 8047c96bbd92db98a2abc7c9323ce77c02c89dbc
+   * Prisma Client JS version: 6.13.0
+   * Query Engine version: 361e86d0ea4987e9f53a565309b3eed797a6bcbd
    */
   export type PrismaVersion = {
     client: string
@@ -897,8 +944,6 @@ export namespace Prisma {
 
   export const ModelName: {
     Account: 'Account',
-    Commodity: 'Commodity',
-    AccountCommodity: 'AccountCommodity',
     AuditLog: 'AuditLog',
     InventoryItem: 'InventoryItem',
     ItemStack: 'ItemStack',
@@ -923,7 +968,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "commodity" | "accountCommodity" | "auditLog" | "inventoryItem" | "itemStack" | "itemTransaction" | "seminar" | "seminarParticipant"
+      modelProps: "account" | "auditLog" | "inventoryItem" | "itemStack" | "itemTransaction" | "seminar" | "seminarParticipant"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -990,138 +1035,6 @@ export namespace Prisma {
           count: {
             args: Prisma.AccountCountArgs<ExtArgs>
             result: $Utils.Optional<AccountCountAggregateOutputType> | number
-          }
-        }
-      }
-      Commodity: {
-        payload: Prisma.$CommodityPayload<ExtArgs>
-        fields: Prisma.CommodityFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.CommodityFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommodityPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.CommodityFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommodityPayload>
-          }
-          findFirst: {
-            args: Prisma.CommodityFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommodityPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.CommodityFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommodityPayload>
-          }
-          findMany: {
-            args: Prisma.CommodityFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommodityPayload>[]
-          }
-          create: {
-            args: Prisma.CommodityCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommodityPayload>
-          }
-          createMany: {
-            args: Prisma.CommodityCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.CommodityDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommodityPayload>
-          }
-          update: {
-            args: Prisma.CommodityUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommodityPayload>
-          }
-          deleteMany: {
-            args: Prisma.CommodityDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.CommodityUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.CommodityUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CommodityPayload>
-          }
-          aggregate: {
-            args: Prisma.CommodityAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateCommodity>
-          }
-          groupBy: {
-            args: Prisma.CommodityGroupByArgs<ExtArgs>
-            result: $Utils.Optional<CommodityGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.CommodityCountArgs<ExtArgs>
-            result: $Utils.Optional<CommodityCountAggregateOutputType> | number
-          }
-        }
-      }
-      AccountCommodity: {
-        payload: Prisma.$AccountCommodityPayload<ExtArgs>
-        fields: Prisma.AccountCommodityFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.AccountCommodityFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountCommodityPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.AccountCommodityFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountCommodityPayload>
-          }
-          findFirst: {
-            args: Prisma.AccountCommodityFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountCommodityPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.AccountCommodityFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountCommodityPayload>
-          }
-          findMany: {
-            args: Prisma.AccountCommodityFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountCommodityPayload>[]
-          }
-          create: {
-            args: Prisma.AccountCommodityCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountCommodityPayload>
-          }
-          createMany: {
-            args: Prisma.AccountCommodityCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.AccountCommodityDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountCommodityPayload>
-          }
-          update: {
-            args: Prisma.AccountCommodityUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountCommodityPayload>
-          }
-          deleteMany: {
-            args: Prisma.AccountCommodityDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.AccountCommodityUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.AccountCommodityUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AccountCommodityPayload>
-          }
-          aggregate: {
-            args: Prisma.AccountCommodityAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateAccountCommodity>
-          }
-          groupBy: {
-            args: Prisma.AccountCommodityGroupByArgs<ExtArgs>
-            result: $Utils.Optional<AccountCommodityGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.AccountCommodityCountArgs<ExtArgs>
-            result: $Utils.Optional<AccountCommodityCountAggregateOutputType> | number
           }
         }
       }
@@ -1564,16 +1477,24 @@ export namespace Prisma {
     /**
      * @example
      * ```
-     * // Defaults to stdout
+     * // Shorthand for `emit: 'stdout'`
      * log: ['query', 'info', 'warn', 'error']
      * 
-     * // Emit as events
+     * // Emit as events only
      * log: [
-     *   { emit: 'stdout', level: 'query' },
-     *   { emit: 'stdout', level: 'info' },
-     *   { emit: 'stdout', level: 'warn' }
-     *   { emit: 'stdout', level: 'error' }
+     *   { emit: 'event', level: 'query' },
+     *   { emit: 'event', level: 'info' },
+     *   { emit: 'event', level: 'warn' }
+     *   { emit: 'event', level: 'error' }
      * ]
+     * 
+     * / Emit as events and log to stdout
+     * og: [
+     *  { emit: 'stdout', level: 'query' },
+     *  { emit: 'stdout', level: 'info' },
+     *  { emit: 'stdout', level: 'warn' }
+     *  { emit: 'stdout', level: 'error' }
+     * 
      * ```
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
@@ -1606,8 +1527,6 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     account?: AccountOmit
-    commodity?: CommodityOmit
-    accountCommodity?: AccountCommodityOmit
     auditLog?: AuditLogOmit
     inventoryItem?: InventoryItemOmit
     itemStack?: ItemStackOmit
@@ -1623,10 +1542,15 @@ export namespace Prisma {
     emit: 'stdout' | 'event'
   }
 
-  export type GetLogType<T extends LogLevel | LogDefinition> = T extends LogDefinition ? T['emit'] extends 'event' ? T['level'] : never : never
-  export type GetEvents<T extends any> = T extends Array<LogLevel | LogDefinition> ?
-    GetLogType<T[0]> | GetLogType<T[1]> | GetLogType<T[2]> | GetLogType<T[3]>
-    : never
+  export type CheckIsLogLevel<T> = T extends LogLevel ? T : never;
+
+  export type GetLogType<T> = CheckIsLogLevel<
+    T extends LogDefinition ? T['level'] : T
+  >;
+
+  export type GetEvents<T extends any[]> = T extends Array<LogLevel | LogDefinition>
+    ? GetLogType<T[number]>
+    : never;
 
   export type QueryEvent = {
     timestamp: Date
@@ -1708,7 +1632,6 @@ export namespace Prisma {
    */
 
   export type AccountCountOutputType = {
-    commodity: number
     seminars: number
     itemTransactions: number
     adminTransactions: number
@@ -1717,7 +1640,6 @@ export namespace Prisma {
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    commodity?: boolean | AccountCountOutputTypeCountCommodityArgs
     seminars?: boolean | AccountCountOutputTypeCountSeminarsArgs
     itemTransactions?: boolean | AccountCountOutputTypeCountItemTransactionsArgs
     adminTransactions?: boolean | AccountCountOutputTypeCountAdminTransactionsArgs
@@ -1734,13 +1656,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the AccountCountOutputType
      */
     select?: AccountCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * AccountCountOutputType without action
-   */
-  export type AccountCountOutputTypeCountCommodityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AccountCommodityWhereInput
   }
 
   /**
@@ -1776,37 +1691,6 @@ export namespace Prisma {
    */
   export type AccountCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AuditLogWhereInput
-  }
-
-
-  /**
-   * Count Type CommodityCountOutputType
-   */
-
-  export type CommodityCountOutputType = {
-    accounts: number
-  }
-
-  export type CommodityCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    accounts?: boolean | CommodityCountOutputTypeCountAccountsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * CommodityCountOutputType without action
-   */
-  export type CommodityCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommodityCountOutputType
-     */
-    select?: CommodityCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * CommodityCountOutputType without action
-   */
-  export type CommodityCountOutputTypeCountAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AccountCommodityWhereInput
   }
 
 
@@ -1922,20 +1806,50 @@ export namespace Prisma {
     access: $Enums.access | null
     username: string | null
     email: string | null
+    password: string | null
     firstName: string | null
-    lastName: string | null
     middleName: string | null
-    gender: $Enums.gender | null
-    client_profile: $Enums.client_profile | null
-    cellphone_no: string | null
-    telephone_no: string | null
-    occupation: string | null
-    position: string | null
-    institution: string | null
-    address: string | null
+    surname: string | null
+    extensionName: string | null
+    sex: $Enums.gender | null
+    street: string | null
+    barangay: string | null
+    municipality: string | null
+    province: string | null
+    region: string | null
+    houseNumber: string | null
+    mobileNumber: string | null
+    landlineNumber: string | null
+    birthMunicipality: string | null
+    birthProvince: string | null
+    birthCountry: string | null
+    dateOfBirth: Date | null
+    religion: string | null
+    otherReligionSpecify: string | null
+    civilStatus: string | null
+    spouseName: string | null
+    femaleHouseholdMembers: string | null
+    maleHouseholdMembers: string | null
+    isHouseholdHead: boolean | null
+    householdHeadName: string | null
+    relationshipToHead: $Enums.RelationshipToHead | null
+    hasGovId: boolean | null
+    govIdType: $Enums.GovIdType | null
+    govIdNumber: string | null
+    education: $Enums.EducationLevel | null
+    isPWD: boolean | null
+    disabilityType: string | null
+    otherCropsSpecify: string | null
+    livestockSpecify: string | null
+    fishingOthersSpecify: string | null
+    farmworkOthersSpecify: string | null
+    youthOthersSpecify: string | null
+    grossAnnualIncome: string | null
+    incomeSource: $Enums.IncomeSource | null
     picture: Uint8Array | null
     mimeType: string | null
-    password: string | null
+    client_profile: $Enums.client_profile | null
+    address: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1945,20 +1859,50 @@ export namespace Prisma {
     access: $Enums.access | null
     username: string | null
     email: string | null
+    password: string | null
     firstName: string | null
-    lastName: string | null
     middleName: string | null
-    gender: $Enums.gender | null
-    client_profile: $Enums.client_profile | null
-    cellphone_no: string | null
-    telephone_no: string | null
-    occupation: string | null
-    position: string | null
-    institution: string | null
-    address: string | null
+    surname: string | null
+    extensionName: string | null
+    sex: $Enums.gender | null
+    street: string | null
+    barangay: string | null
+    municipality: string | null
+    province: string | null
+    region: string | null
+    houseNumber: string | null
+    mobileNumber: string | null
+    landlineNumber: string | null
+    birthMunicipality: string | null
+    birthProvince: string | null
+    birthCountry: string | null
+    dateOfBirth: Date | null
+    religion: string | null
+    otherReligionSpecify: string | null
+    civilStatus: string | null
+    spouseName: string | null
+    femaleHouseholdMembers: string | null
+    maleHouseholdMembers: string | null
+    isHouseholdHead: boolean | null
+    householdHeadName: string | null
+    relationshipToHead: $Enums.RelationshipToHead | null
+    hasGovId: boolean | null
+    govIdType: $Enums.GovIdType | null
+    govIdNumber: string | null
+    education: $Enums.EducationLevel | null
+    isPWD: boolean | null
+    disabilityType: string | null
+    otherCropsSpecify: string | null
+    livestockSpecify: string | null
+    fishingOthersSpecify: string | null
+    farmworkOthersSpecify: string | null
+    youthOthersSpecify: string | null
+    grossAnnualIncome: string | null
+    incomeSource: $Enums.IncomeSource | null
     picture: Uint8Array | null
     mimeType: string | null
-    password: string | null
+    client_profile: $Enums.client_profile | null
+    address: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1968,20 +1912,55 @@ export namespace Prisma {
     access: number
     username: number
     email: number
+    password: number
     firstName: number
-    lastName: number
     middleName: number
-    gender: number
-    client_profile: number
-    cellphone_no: number
-    telephone_no: number
-    occupation: number
-    position: number
-    institution: number
-    address: number
+    surname: number
+    extensionName: number
+    sex: number
+    street: number
+    barangay: number
+    municipality: number
+    province: number
+    region: number
+    houseNumber: number
+    mobileNumber: number
+    landlineNumber: number
+    birthMunicipality: number
+    birthProvince: number
+    birthCountry: number
+    dateOfBirth: number
+    religion: number
+    otherReligionSpecify: number
+    civilStatus: number
+    spouseName: number
+    femaleHouseholdMembers: number
+    maleHouseholdMembers: number
+    isHouseholdHead: number
+    householdHeadName: number
+    relationshipToHead: number
+    hasGovId: number
+    govIdType: number
+    govIdNumber: number
+    education: number
+    isPWD: number
+    disabilityType: number
+    livelihoodProfile: number
+    farmingActivities: number
+    fishingActivities: number
+    farmworkActivities: number
+    youthActivities: number
+    otherCropsSpecify: number
+    livestockSpecify: number
+    fishingOthersSpecify: number
+    farmworkOthersSpecify: number
+    youthOthersSpecify: number
+    grossAnnualIncome: number
+    incomeSource: number
     picture: number
     mimeType: number
-    password: number
+    client_profile: number
+    address: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -1993,20 +1972,50 @@ export namespace Prisma {
     access?: true
     username?: true
     email?: true
+    password?: true
     firstName?: true
-    lastName?: true
     middleName?: true
-    gender?: true
-    client_profile?: true
-    cellphone_no?: true
-    telephone_no?: true
-    occupation?: true
-    position?: true
-    institution?: true
-    address?: true
+    surname?: true
+    extensionName?: true
+    sex?: true
+    street?: true
+    barangay?: true
+    municipality?: true
+    province?: true
+    region?: true
+    houseNumber?: true
+    mobileNumber?: true
+    landlineNumber?: true
+    birthMunicipality?: true
+    birthProvince?: true
+    birthCountry?: true
+    dateOfBirth?: true
+    religion?: true
+    otherReligionSpecify?: true
+    civilStatus?: true
+    spouseName?: true
+    femaleHouseholdMembers?: true
+    maleHouseholdMembers?: true
+    isHouseholdHead?: true
+    householdHeadName?: true
+    relationshipToHead?: true
+    hasGovId?: true
+    govIdType?: true
+    govIdNumber?: true
+    education?: true
+    isPWD?: true
+    disabilityType?: true
+    otherCropsSpecify?: true
+    livestockSpecify?: true
+    fishingOthersSpecify?: true
+    farmworkOthersSpecify?: true
+    youthOthersSpecify?: true
+    grossAnnualIncome?: true
+    incomeSource?: true
     picture?: true
     mimeType?: true
-    password?: true
+    client_profile?: true
+    address?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2016,20 +2025,50 @@ export namespace Prisma {
     access?: true
     username?: true
     email?: true
+    password?: true
     firstName?: true
-    lastName?: true
     middleName?: true
-    gender?: true
-    client_profile?: true
-    cellphone_no?: true
-    telephone_no?: true
-    occupation?: true
-    position?: true
-    institution?: true
-    address?: true
+    surname?: true
+    extensionName?: true
+    sex?: true
+    street?: true
+    barangay?: true
+    municipality?: true
+    province?: true
+    region?: true
+    houseNumber?: true
+    mobileNumber?: true
+    landlineNumber?: true
+    birthMunicipality?: true
+    birthProvince?: true
+    birthCountry?: true
+    dateOfBirth?: true
+    religion?: true
+    otherReligionSpecify?: true
+    civilStatus?: true
+    spouseName?: true
+    femaleHouseholdMembers?: true
+    maleHouseholdMembers?: true
+    isHouseholdHead?: true
+    householdHeadName?: true
+    relationshipToHead?: true
+    hasGovId?: true
+    govIdType?: true
+    govIdNumber?: true
+    education?: true
+    isPWD?: true
+    disabilityType?: true
+    otherCropsSpecify?: true
+    livestockSpecify?: true
+    fishingOthersSpecify?: true
+    farmworkOthersSpecify?: true
+    youthOthersSpecify?: true
+    grossAnnualIncome?: true
+    incomeSource?: true
     picture?: true
     mimeType?: true
-    password?: true
+    client_profile?: true
+    address?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2039,20 +2078,55 @@ export namespace Prisma {
     access?: true
     username?: true
     email?: true
+    password?: true
     firstName?: true
-    lastName?: true
     middleName?: true
-    gender?: true
-    client_profile?: true
-    cellphone_no?: true
-    telephone_no?: true
-    occupation?: true
-    position?: true
-    institution?: true
-    address?: true
+    surname?: true
+    extensionName?: true
+    sex?: true
+    street?: true
+    barangay?: true
+    municipality?: true
+    province?: true
+    region?: true
+    houseNumber?: true
+    mobileNumber?: true
+    landlineNumber?: true
+    birthMunicipality?: true
+    birthProvince?: true
+    birthCountry?: true
+    dateOfBirth?: true
+    religion?: true
+    otherReligionSpecify?: true
+    civilStatus?: true
+    spouseName?: true
+    femaleHouseholdMembers?: true
+    maleHouseholdMembers?: true
+    isHouseholdHead?: true
+    householdHeadName?: true
+    relationshipToHead?: true
+    hasGovId?: true
+    govIdType?: true
+    govIdNumber?: true
+    education?: true
+    isPWD?: true
+    disabilityType?: true
+    livelihoodProfile?: true
+    farmingActivities?: true
+    fishingActivities?: true
+    farmworkActivities?: true
+    youthActivities?: true
+    otherCropsSpecify?: true
+    livestockSpecify?: true
+    fishingOthersSpecify?: true
+    farmworkOthersSpecify?: true
+    youthOthersSpecify?: true
+    grossAnnualIncome?: true
+    incomeSource?: true
     picture?: true
     mimeType?: true
-    password?: true
+    client_profile?: true
+    address?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2135,20 +2209,55 @@ export namespace Prisma {
     access: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName: string | null
-    gender: $Enums.gender
-    client_profile: $Enums.client_profile
-    cellphone_no: string | null
-    telephone_no: string | null
-    occupation: string | null
-    position: string | null
-    institution: string | null
-    address: string | null
+    surname: string
+    extensionName: string | null
+    sex: $Enums.gender
+    street: string | null
+    barangay: string | null
+    municipality: string | null
+    province: string | null
+    region: string | null
+    houseNumber: string | null
+    mobileNumber: string | null
+    landlineNumber: string | null
+    birthMunicipality: string | null
+    birthProvince: string | null
+    birthCountry: string | null
+    dateOfBirth: Date | null
+    religion: string | null
+    otherReligionSpecify: string | null
+    civilStatus: string | null
+    spouseName: string | null
+    femaleHouseholdMembers: string | null
+    maleHouseholdMembers: string | null
+    isHouseholdHead: boolean | null
+    householdHeadName: string | null
+    relationshipToHead: $Enums.RelationshipToHead | null
+    hasGovId: boolean | null
+    govIdType: $Enums.GovIdType | null
+    govIdNumber: string | null
+    education: $Enums.EducationLevel | null
+    isPWD: boolean | null
+    disabilityType: string | null
+    livelihoodProfile: JsonValue | null
+    farmingActivities: JsonValue | null
+    fishingActivities: JsonValue | null
+    farmworkActivities: JsonValue | null
+    youthActivities: JsonValue | null
+    otherCropsSpecify: string | null
+    livestockSpecify: string | null
+    fishingOthersSpecify: string | null
+    farmworkOthersSpecify: string | null
+    youthOthersSpecify: string | null
+    grossAnnualIncome: string | null
+    incomeSource: $Enums.IncomeSource | null
     picture: Uint8Array | null
     mimeType: string | null
-    password: string
+    client_profile: $Enums.client_profile
+    address: string | null
     createdAt: Date
     updatedAt: Date
     _count: AccountCountAggregateOutputType | null
@@ -2175,23 +2284,57 @@ export namespace Prisma {
     access?: boolean
     username?: boolean
     email?: boolean
+    password?: boolean
     firstName?: boolean
-    lastName?: boolean
     middleName?: boolean
-    gender?: boolean
-    client_profile?: boolean
-    cellphone_no?: boolean
-    telephone_no?: boolean
-    occupation?: boolean
-    position?: boolean
-    institution?: boolean
-    address?: boolean
+    surname?: boolean
+    extensionName?: boolean
+    sex?: boolean
+    street?: boolean
+    barangay?: boolean
+    municipality?: boolean
+    province?: boolean
+    region?: boolean
+    houseNumber?: boolean
+    mobileNumber?: boolean
+    landlineNumber?: boolean
+    birthMunicipality?: boolean
+    birthProvince?: boolean
+    birthCountry?: boolean
+    dateOfBirth?: boolean
+    religion?: boolean
+    otherReligionSpecify?: boolean
+    civilStatus?: boolean
+    spouseName?: boolean
+    femaleHouseholdMembers?: boolean
+    maleHouseholdMembers?: boolean
+    isHouseholdHead?: boolean
+    householdHeadName?: boolean
+    relationshipToHead?: boolean
+    hasGovId?: boolean
+    govIdType?: boolean
+    govIdNumber?: boolean
+    education?: boolean
+    isPWD?: boolean
+    disabilityType?: boolean
+    livelihoodProfile?: boolean
+    farmingActivities?: boolean
+    fishingActivities?: boolean
+    farmworkActivities?: boolean
+    youthActivities?: boolean
+    otherCropsSpecify?: boolean
+    livestockSpecify?: boolean
+    fishingOthersSpecify?: boolean
+    farmworkOthersSpecify?: boolean
+    youthOthersSpecify?: boolean
+    grossAnnualIncome?: boolean
+    incomeSource?: boolean
     picture?: boolean
     mimeType?: boolean
-    password?: boolean
+    client_profile?: boolean
+    address?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    commodity?: boolean | Account$commodityArgs<ExtArgs>
     seminars?: boolean | Account$seminarsArgs<ExtArgs>
     itemTransactions?: boolean | Account$itemTransactionsArgs<ExtArgs>
     adminTransactions?: boolean | Account$adminTransactionsArgs<ExtArgs>
@@ -2207,27 +2350,61 @@ export namespace Prisma {
     access?: boolean
     username?: boolean
     email?: boolean
+    password?: boolean
     firstName?: boolean
-    lastName?: boolean
     middleName?: boolean
-    gender?: boolean
-    client_profile?: boolean
-    cellphone_no?: boolean
-    telephone_no?: boolean
-    occupation?: boolean
-    position?: boolean
-    institution?: boolean
-    address?: boolean
+    surname?: boolean
+    extensionName?: boolean
+    sex?: boolean
+    street?: boolean
+    barangay?: boolean
+    municipality?: boolean
+    province?: boolean
+    region?: boolean
+    houseNumber?: boolean
+    mobileNumber?: boolean
+    landlineNumber?: boolean
+    birthMunicipality?: boolean
+    birthProvince?: boolean
+    birthCountry?: boolean
+    dateOfBirth?: boolean
+    religion?: boolean
+    otherReligionSpecify?: boolean
+    civilStatus?: boolean
+    spouseName?: boolean
+    femaleHouseholdMembers?: boolean
+    maleHouseholdMembers?: boolean
+    isHouseholdHead?: boolean
+    householdHeadName?: boolean
+    relationshipToHead?: boolean
+    hasGovId?: boolean
+    govIdType?: boolean
+    govIdNumber?: boolean
+    education?: boolean
+    isPWD?: boolean
+    disabilityType?: boolean
+    livelihoodProfile?: boolean
+    farmingActivities?: boolean
+    fishingActivities?: boolean
+    farmworkActivities?: boolean
+    youthActivities?: boolean
+    otherCropsSpecify?: boolean
+    livestockSpecify?: boolean
+    fishingOthersSpecify?: boolean
+    farmworkOthersSpecify?: boolean
+    youthOthersSpecify?: boolean
+    grossAnnualIncome?: boolean
+    incomeSource?: boolean
     picture?: boolean
     mimeType?: boolean
-    password?: boolean
+    client_profile?: boolean
+    address?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "access" | "username" | "email" | "firstName" | "lastName" | "middleName" | "gender" | "client_profile" | "cellphone_no" | "telephone_no" | "occupation" | "position" | "institution" | "address" | "picture" | "mimeType" | "password" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
+  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "access" | "username" | "email" | "password" | "firstName" | "middleName" | "surname" | "extensionName" | "sex" | "street" | "barangay" | "municipality" | "province" | "region" | "houseNumber" | "mobileNumber" | "landlineNumber" | "birthMunicipality" | "birthProvince" | "birthCountry" | "dateOfBirth" | "religion" | "otherReligionSpecify" | "civilStatus" | "spouseName" | "femaleHouseholdMembers" | "maleHouseholdMembers" | "isHouseholdHead" | "householdHeadName" | "relationshipToHead" | "hasGovId" | "govIdType" | "govIdNumber" | "education" | "isPWD" | "disabilityType" | "livelihoodProfile" | "farmingActivities" | "fishingActivities" | "farmworkActivities" | "youthActivities" | "otherCropsSpecify" | "livestockSpecify" | "fishingOthersSpecify" | "farmworkOthersSpecify" | "youthOthersSpecify" | "grossAnnualIncome" | "incomeSource" | "picture" | "mimeType" | "client_profile" | "address" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    commodity?: boolean | Account$commodityArgs<ExtArgs>
     seminars?: boolean | Account$seminarsArgs<ExtArgs>
     itemTransactions?: boolean | Account$itemTransactionsArgs<ExtArgs>
     adminTransactions?: boolean | Account$adminTransactionsArgs<ExtArgs>
@@ -2239,7 +2416,6 @@ export namespace Prisma {
   export type $AccountPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Account"
     objects: {
-      commodity: Prisma.$AccountCommodityPayload<ExtArgs>[]
       seminars: Prisma.$SeminarParticipantPayload<ExtArgs>[]
       itemTransactions: Prisma.$ItemTransactionPayload<ExtArgs>[]
       adminTransactions: Prisma.$ItemTransactionPayload<ExtArgs>[]
@@ -2251,20 +2427,55 @@ export namespace Prisma {
       access: $Enums.access
       username: string
       email: string
+      password: string
       firstName: string
-      lastName: string
       middleName: string | null
-      gender: $Enums.gender
-      client_profile: $Enums.client_profile
-      cellphone_no: string | null
-      telephone_no: string | null
-      occupation: string | null
-      position: string | null
-      institution: string | null
-      address: string | null
+      surname: string
+      extensionName: string | null
+      sex: $Enums.gender
+      street: string | null
+      barangay: string | null
+      municipality: string | null
+      province: string | null
+      region: string | null
+      houseNumber: string | null
+      mobileNumber: string | null
+      landlineNumber: string | null
+      birthMunicipality: string | null
+      birthProvince: string | null
+      birthCountry: string | null
+      dateOfBirth: Date | null
+      religion: string | null
+      otherReligionSpecify: string | null
+      civilStatus: string | null
+      spouseName: string | null
+      femaleHouseholdMembers: string | null
+      maleHouseholdMembers: string | null
+      isHouseholdHead: boolean | null
+      householdHeadName: string | null
+      relationshipToHead: $Enums.RelationshipToHead | null
+      hasGovId: boolean | null
+      govIdType: $Enums.GovIdType | null
+      govIdNumber: string | null
+      education: $Enums.EducationLevel | null
+      isPWD: boolean | null
+      disabilityType: string | null
+      livelihoodProfile: Prisma.JsonValue | null
+      farmingActivities: Prisma.JsonValue | null
+      fishingActivities: Prisma.JsonValue | null
+      farmworkActivities: Prisma.JsonValue | null
+      youthActivities: Prisma.JsonValue | null
+      otherCropsSpecify: string | null
+      livestockSpecify: string | null
+      fishingOthersSpecify: string | null
+      farmworkOthersSpecify: string | null
+      youthOthersSpecify: string | null
+      grossAnnualIncome: string | null
+      incomeSource: $Enums.IncomeSource | null
       picture: Uint8Array | null
       mimeType: string | null
-      password: string
+      client_profile: $Enums.client_profile
+      address: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["account"]>
@@ -2607,7 +2818,6 @@ export namespace Prisma {
    */
   export interface Prisma__AccountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    commodity<T extends Account$commodityArgs<ExtArgs> = {}>(args?: Subset<T, Account$commodityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     seminars<T extends Account$seminarsArgs<ExtArgs> = {}>(args?: Subset<T, Account$seminarsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeminarParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     itemTransactions<T extends Account$itemTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Account$itemTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     adminTransactions<T extends Account$adminTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Account$adminTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2646,20 +2856,55 @@ export namespace Prisma {
     readonly access: FieldRef<"Account", 'access'>
     readonly username: FieldRef<"Account", 'String'>
     readonly email: FieldRef<"Account", 'String'>
+    readonly password: FieldRef<"Account", 'String'>
     readonly firstName: FieldRef<"Account", 'String'>
-    readonly lastName: FieldRef<"Account", 'String'>
     readonly middleName: FieldRef<"Account", 'String'>
-    readonly gender: FieldRef<"Account", 'gender'>
-    readonly client_profile: FieldRef<"Account", 'client_profile'>
-    readonly cellphone_no: FieldRef<"Account", 'String'>
-    readonly telephone_no: FieldRef<"Account", 'String'>
-    readonly occupation: FieldRef<"Account", 'String'>
-    readonly position: FieldRef<"Account", 'String'>
-    readonly institution: FieldRef<"Account", 'String'>
-    readonly address: FieldRef<"Account", 'String'>
+    readonly surname: FieldRef<"Account", 'String'>
+    readonly extensionName: FieldRef<"Account", 'String'>
+    readonly sex: FieldRef<"Account", 'gender'>
+    readonly street: FieldRef<"Account", 'String'>
+    readonly barangay: FieldRef<"Account", 'String'>
+    readonly municipality: FieldRef<"Account", 'String'>
+    readonly province: FieldRef<"Account", 'String'>
+    readonly region: FieldRef<"Account", 'String'>
+    readonly houseNumber: FieldRef<"Account", 'String'>
+    readonly mobileNumber: FieldRef<"Account", 'String'>
+    readonly landlineNumber: FieldRef<"Account", 'String'>
+    readonly birthMunicipality: FieldRef<"Account", 'String'>
+    readonly birthProvince: FieldRef<"Account", 'String'>
+    readonly birthCountry: FieldRef<"Account", 'String'>
+    readonly dateOfBirth: FieldRef<"Account", 'DateTime'>
+    readonly religion: FieldRef<"Account", 'String'>
+    readonly otherReligionSpecify: FieldRef<"Account", 'String'>
+    readonly civilStatus: FieldRef<"Account", 'String'>
+    readonly spouseName: FieldRef<"Account", 'String'>
+    readonly femaleHouseholdMembers: FieldRef<"Account", 'String'>
+    readonly maleHouseholdMembers: FieldRef<"Account", 'String'>
+    readonly isHouseholdHead: FieldRef<"Account", 'Boolean'>
+    readonly householdHeadName: FieldRef<"Account", 'String'>
+    readonly relationshipToHead: FieldRef<"Account", 'RelationshipToHead'>
+    readonly hasGovId: FieldRef<"Account", 'Boolean'>
+    readonly govIdType: FieldRef<"Account", 'GovIdType'>
+    readonly govIdNumber: FieldRef<"Account", 'String'>
+    readonly education: FieldRef<"Account", 'EducationLevel'>
+    readonly isPWD: FieldRef<"Account", 'Boolean'>
+    readonly disabilityType: FieldRef<"Account", 'String'>
+    readonly livelihoodProfile: FieldRef<"Account", 'Json'>
+    readonly farmingActivities: FieldRef<"Account", 'Json'>
+    readonly fishingActivities: FieldRef<"Account", 'Json'>
+    readonly farmworkActivities: FieldRef<"Account", 'Json'>
+    readonly youthActivities: FieldRef<"Account", 'Json'>
+    readonly otherCropsSpecify: FieldRef<"Account", 'String'>
+    readonly livestockSpecify: FieldRef<"Account", 'String'>
+    readonly fishingOthersSpecify: FieldRef<"Account", 'String'>
+    readonly farmworkOthersSpecify: FieldRef<"Account", 'String'>
+    readonly youthOthersSpecify: FieldRef<"Account", 'String'>
+    readonly grossAnnualIncome: FieldRef<"Account", 'String'>
+    readonly incomeSource: FieldRef<"Account", 'IncomeSource'>
     readonly picture: FieldRef<"Account", 'Bytes'>
     readonly mimeType: FieldRef<"Account", 'String'>
-    readonly password: FieldRef<"Account", 'String'>
+    readonly client_profile: FieldRef<"Account", 'client_profile'>
+    readonly address: FieldRef<"Account", 'String'>
     readonly createdAt: FieldRef<"Account", 'DateTime'>
     readonly updatedAt: FieldRef<"Account", 'DateTime'>
   }
@@ -3005,30 +3250,6 @@ export namespace Prisma {
   }
 
   /**
-   * Account.commodity
-   */
-  export type Account$commodityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
-    where?: AccountCommodityWhereInput
-    orderBy?: AccountCommodityOrderByWithRelationInput | AccountCommodityOrderByWithRelationInput[]
-    cursor?: AccountCommodityWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: AccountCommodityScalarFieldEnum | AccountCommodityScalarFieldEnum[]
-  }
-
-  /**
    * Account.seminars
    */
   export type Account$seminarsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3164,1905 +3385,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: AccountInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Commodity
-   */
-
-  export type AggregateCommodity = {
-    _count: CommodityCountAggregateOutputType | null
-    _min: CommodityMinAggregateOutputType | null
-    _max: CommodityMaxAggregateOutputType | null
-  }
-
-  export type CommodityMinAggregateOutputType = {
-    id: string | null
-    name: string | null
-    icon: string | null
-    description: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type CommodityMaxAggregateOutputType = {
-    id: string | null
-    name: string | null
-    icon: string | null
-    description: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type CommodityCountAggregateOutputType = {
-    id: number
-    name: number
-    icon: number
-    description: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type CommodityMinAggregateInputType = {
-    id?: true
-    name?: true
-    icon?: true
-    description?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type CommodityMaxAggregateInputType = {
-    id?: true
-    name?: true
-    icon?: true
-    description?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type CommodityCountAggregateInputType = {
-    id?: true
-    name?: true
-    icon?: true
-    description?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type CommodityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Commodity to aggregate.
-     */
-    where?: CommodityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Commodities to fetch.
-     */
-    orderBy?: CommodityOrderByWithRelationInput | CommodityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: CommodityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Commodities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Commodities.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Commodities
-    **/
-    _count?: true | CommodityCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: CommodityMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: CommodityMaxAggregateInputType
-  }
-
-  export type GetCommodityAggregateType<T extends CommodityAggregateArgs> = {
-        [P in keyof T & keyof AggregateCommodity]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateCommodity[P]>
-      : GetScalarType<T[P], AggregateCommodity[P]>
-  }
-
-
-
-
-  export type CommodityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CommodityWhereInput
-    orderBy?: CommodityOrderByWithAggregationInput | CommodityOrderByWithAggregationInput[]
-    by: CommodityScalarFieldEnum[] | CommodityScalarFieldEnum
-    having?: CommodityScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: CommodityCountAggregateInputType | true
-    _min?: CommodityMinAggregateInputType
-    _max?: CommodityMaxAggregateInputType
-  }
-
-  export type CommodityGroupByOutputType = {
-    id: string
-    name: string
-    icon: string | null
-    description: string | null
-    createdAt: Date
-    updatedAt: Date
-    _count: CommodityCountAggregateOutputType | null
-    _min: CommodityMinAggregateOutputType | null
-    _max: CommodityMaxAggregateOutputType | null
-  }
-
-  type GetCommodityGroupByPayload<T extends CommodityGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<CommodityGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof CommodityGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], CommodityGroupByOutputType[P]>
-            : GetScalarType<T[P], CommodityGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type CommoditySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    icon?: boolean
-    description?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    accounts?: boolean | Commodity$accountsArgs<ExtArgs>
-    _count?: boolean | CommodityCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["commodity"]>
-
-
-
-  export type CommoditySelectScalar = {
-    id?: boolean
-    name?: boolean
-    icon?: boolean
-    description?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type CommodityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "icon" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["commodity"]>
-  export type CommodityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    accounts?: boolean | Commodity$accountsArgs<ExtArgs>
-    _count?: boolean | CommodityCountOutputTypeDefaultArgs<ExtArgs>
-  }
-
-  export type $CommodityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Commodity"
-    objects: {
-      accounts: Prisma.$AccountCommodityPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      name: string
-      icon: string | null
-      description: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["commodity"]>
-    composites: {}
-  }
-
-  type CommodityGetPayload<S extends boolean | null | undefined | CommodityDefaultArgs> = $Result.GetResult<Prisma.$CommodityPayload, S>
-
-  type CommodityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CommodityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: CommodityCountAggregateInputType | true
-    }
-
-  export interface CommodityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Commodity'], meta: { name: 'Commodity' } }
-    /**
-     * Find zero or one Commodity that matches the filter.
-     * @param {CommodityFindUniqueArgs} args - Arguments to find a Commodity
-     * @example
-     * // Get one Commodity
-     * const commodity = await prisma.commodity.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends CommodityFindUniqueArgs>(args: SelectSubset<T, CommodityFindUniqueArgs<ExtArgs>>): Prisma__CommodityClient<$Result.GetResult<Prisma.$CommodityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Commodity that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {CommodityFindUniqueOrThrowArgs} args - Arguments to find a Commodity
-     * @example
-     * // Get one Commodity
-     * const commodity = await prisma.commodity.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends CommodityFindUniqueOrThrowArgs>(args: SelectSubset<T, CommodityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CommodityClient<$Result.GetResult<Prisma.$CommodityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Commodity that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommodityFindFirstArgs} args - Arguments to find a Commodity
-     * @example
-     * // Get one Commodity
-     * const commodity = await prisma.commodity.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends CommodityFindFirstArgs>(args?: SelectSubset<T, CommodityFindFirstArgs<ExtArgs>>): Prisma__CommodityClient<$Result.GetResult<Prisma.$CommodityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Commodity that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommodityFindFirstOrThrowArgs} args - Arguments to find a Commodity
-     * @example
-     * // Get one Commodity
-     * const commodity = await prisma.commodity.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends CommodityFindFirstOrThrowArgs>(args?: SelectSubset<T, CommodityFindFirstOrThrowArgs<ExtArgs>>): Prisma__CommodityClient<$Result.GetResult<Prisma.$CommodityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Commodities that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommodityFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Commodities
-     * const commodities = await prisma.commodity.findMany()
-     * 
-     * // Get first 10 Commodities
-     * const commodities = await prisma.commodity.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const commodityWithIdOnly = await prisma.commodity.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends CommodityFindManyArgs>(args?: SelectSubset<T, CommodityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommodityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Commodity.
-     * @param {CommodityCreateArgs} args - Arguments to create a Commodity.
-     * @example
-     * // Create one Commodity
-     * const Commodity = await prisma.commodity.create({
-     *   data: {
-     *     // ... data to create a Commodity
-     *   }
-     * })
-     * 
-     */
-    create<T extends CommodityCreateArgs>(args: SelectSubset<T, CommodityCreateArgs<ExtArgs>>): Prisma__CommodityClient<$Result.GetResult<Prisma.$CommodityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Commodities.
-     * @param {CommodityCreateManyArgs} args - Arguments to create many Commodities.
-     * @example
-     * // Create many Commodities
-     * const commodity = await prisma.commodity.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends CommodityCreateManyArgs>(args?: SelectSubset<T, CommodityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Commodity.
-     * @param {CommodityDeleteArgs} args - Arguments to delete one Commodity.
-     * @example
-     * // Delete one Commodity
-     * const Commodity = await prisma.commodity.delete({
-     *   where: {
-     *     // ... filter to delete one Commodity
-     *   }
-     * })
-     * 
-     */
-    delete<T extends CommodityDeleteArgs>(args: SelectSubset<T, CommodityDeleteArgs<ExtArgs>>): Prisma__CommodityClient<$Result.GetResult<Prisma.$CommodityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Commodity.
-     * @param {CommodityUpdateArgs} args - Arguments to update one Commodity.
-     * @example
-     * // Update one Commodity
-     * const commodity = await prisma.commodity.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends CommodityUpdateArgs>(args: SelectSubset<T, CommodityUpdateArgs<ExtArgs>>): Prisma__CommodityClient<$Result.GetResult<Prisma.$CommodityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Commodities.
-     * @param {CommodityDeleteManyArgs} args - Arguments to filter Commodities to delete.
-     * @example
-     * // Delete a few Commodities
-     * const { count } = await prisma.commodity.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends CommodityDeleteManyArgs>(args?: SelectSubset<T, CommodityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Commodities.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommodityUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Commodities
-     * const commodity = await prisma.commodity.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends CommodityUpdateManyArgs>(args: SelectSubset<T, CommodityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Commodity.
-     * @param {CommodityUpsertArgs} args - Arguments to update or create a Commodity.
-     * @example
-     * // Update or create a Commodity
-     * const commodity = await prisma.commodity.upsert({
-     *   create: {
-     *     // ... data to create a Commodity
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Commodity we want to update
-     *   }
-     * })
-     */
-    upsert<T extends CommodityUpsertArgs>(args: SelectSubset<T, CommodityUpsertArgs<ExtArgs>>): Prisma__CommodityClient<$Result.GetResult<Prisma.$CommodityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Commodities.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommodityCountArgs} args - Arguments to filter Commodities to count.
-     * @example
-     * // Count the number of Commodities
-     * const count = await prisma.commodity.count({
-     *   where: {
-     *     // ... the filter for the Commodities we want to count
-     *   }
-     * })
-    **/
-    count<T extends CommodityCountArgs>(
-      args?: Subset<T, CommodityCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], CommodityCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Commodity.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommodityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends CommodityAggregateArgs>(args: Subset<T, CommodityAggregateArgs>): Prisma.PrismaPromise<GetCommodityAggregateType<T>>
-
-    /**
-     * Group by Commodity.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CommodityGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends CommodityGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: CommodityGroupByArgs['orderBy'] }
-        : { orderBy?: CommodityGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, CommodityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommodityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Commodity model
-   */
-  readonly fields: CommodityFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Commodity.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__CommodityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    accounts<T extends Commodity$accountsArgs<ExtArgs> = {}>(args?: Subset<T, Commodity$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Commodity model
-   */
-  interface CommodityFieldRefs {
-    readonly id: FieldRef<"Commodity", 'String'>
-    readonly name: FieldRef<"Commodity", 'String'>
-    readonly icon: FieldRef<"Commodity", 'String'>
-    readonly description: FieldRef<"Commodity", 'String'>
-    readonly createdAt: FieldRef<"Commodity", 'DateTime'>
-    readonly updatedAt: FieldRef<"Commodity", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Commodity findUnique
-   */
-  export type CommodityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Commodity
-     */
-    select?: CommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Commodity
-     */
-    omit?: CommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommodityInclude<ExtArgs> | null
-    /**
-     * Filter, which Commodity to fetch.
-     */
-    where: CommodityWhereUniqueInput
-  }
-
-  /**
-   * Commodity findUniqueOrThrow
-   */
-  export type CommodityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Commodity
-     */
-    select?: CommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Commodity
-     */
-    omit?: CommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommodityInclude<ExtArgs> | null
-    /**
-     * Filter, which Commodity to fetch.
-     */
-    where: CommodityWhereUniqueInput
-  }
-
-  /**
-   * Commodity findFirst
-   */
-  export type CommodityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Commodity
-     */
-    select?: CommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Commodity
-     */
-    omit?: CommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommodityInclude<ExtArgs> | null
-    /**
-     * Filter, which Commodity to fetch.
-     */
-    where?: CommodityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Commodities to fetch.
-     */
-    orderBy?: CommodityOrderByWithRelationInput | CommodityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Commodities.
-     */
-    cursor?: CommodityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Commodities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Commodities.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Commodities.
-     */
-    distinct?: CommodityScalarFieldEnum | CommodityScalarFieldEnum[]
-  }
-
-  /**
-   * Commodity findFirstOrThrow
-   */
-  export type CommodityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Commodity
-     */
-    select?: CommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Commodity
-     */
-    omit?: CommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommodityInclude<ExtArgs> | null
-    /**
-     * Filter, which Commodity to fetch.
-     */
-    where?: CommodityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Commodities to fetch.
-     */
-    orderBy?: CommodityOrderByWithRelationInput | CommodityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Commodities.
-     */
-    cursor?: CommodityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Commodities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Commodities.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Commodities.
-     */
-    distinct?: CommodityScalarFieldEnum | CommodityScalarFieldEnum[]
-  }
-
-  /**
-   * Commodity findMany
-   */
-  export type CommodityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Commodity
-     */
-    select?: CommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Commodity
-     */
-    omit?: CommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommodityInclude<ExtArgs> | null
-    /**
-     * Filter, which Commodities to fetch.
-     */
-    where?: CommodityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Commodities to fetch.
-     */
-    orderBy?: CommodityOrderByWithRelationInput | CommodityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Commodities.
-     */
-    cursor?: CommodityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Commodities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Commodities.
-     */
-    skip?: number
-    distinct?: CommodityScalarFieldEnum | CommodityScalarFieldEnum[]
-  }
-
-  /**
-   * Commodity create
-   */
-  export type CommodityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Commodity
-     */
-    select?: CommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Commodity
-     */
-    omit?: CommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommodityInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Commodity.
-     */
-    data: XOR<CommodityCreateInput, CommodityUncheckedCreateInput>
-  }
-
-  /**
-   * Commodity createMany
-   */
-  export type CommodityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Commodities.
-     */
-    data: CommodityCreateManyInput | CommodityCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Commodity update
-   */
-  export type CommodityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Commodity
-     */
-    select?: CommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Commodity
-     */
-    omit?: CommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommodityInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Commodity.
-     */
-    data: XOR<CommodityUpdateInput, CommodityUncheckedUpdateInput>
-    /**
-     * Choose, which Commodity to update.
-     */
-    where: CommodityWhereUniqueInput
-  }
-
-  /**
-   * Commodity updateMany
-   */
-  export type CommodityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Commodities.
-     */
-    data: XOR<CommodityUpdateManyMutationInput, CommodityUncheckedUpdateManyInput>
-    /**
-     * Filter which Commodities to update
-     */
-    where?: CommodityWhereInput
-    /**
-     * Limit how many Commodities to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Commodity upsert
-   */
-  export type CommodityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Commodity
-     */
-    select?: CommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Commodity
-     */
-    omit?: CommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommodityInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Commodity to update in case it exists.
-     */
-    where: CommodityWhereUniqueInput
-    /**
-     * In case the Commodity found by the `where` argument doesn't exist, create a new Commodity with this data.
-     */
-    create: XOR<CommodityCreateInput, CommodityUncheckedCreateInput>
-    /**
-     * In case the Commodity was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<CommodityUpdateInput, CommodityUncheckedUpdateInput>
-  }
-
-  /**
-   * Commodity delete
-   */
-  export type CommodityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Commodity
-     */
-    select?: CommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Commodity
-     */
-    omit?: CommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommodityInclude<ExtArgs> | null
-    /**
-     * Filter which Commodity to delete.
-     */
-    where: CommodityWhereUniqueInput
-  }
-
-  /**
-   * Commodity deleteMany
-   */
-  export type CommodityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Commodities to delete
-     */
-    where?: CommodityWhereInput
-    /**
-     * Limit how many Commodities to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Commodity.accounts
-   */
-  export type Commodity$accountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
-    where?: AccountCommodityWhereInput
-    orderBy?: AccountCommodityOrderByWithRelationInput | AccountCommodityOrderByWithRelationInput[]
-    cursor?: AccountCommodityWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: AccountCommodityScalarFieldEnum | AccountCommodityScalarFieldEnum[]
-  }
-
-  /**
-   * Commodity without action
-   */
-  export type CommodityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Commodity
-     */
-    select?: CommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Commodity
-     */
-    omit?: CommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommodityInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model AccountCommodity
-   */
-
-  export type AggregateAccountCommodity = {
-    _count: AccountCommodityCountAggregateOutputType | null
-    _min: AccountCommodityMinAggregateOutputType | null
-    _max: AccountCommodityMaxAggregateOutputType | null
-  }
-
-  export type AccountCommodityMinAggregateOutputType = {
-    id: string | null
-    account_id: string | null
-    commodity_id: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type AccountCommodityMaxAggregateOutputType = {
-    id: string | null
-    account_id: string | null
-    commodity_id: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type AccountCommodityCountAggregateOutputType = {
-    id: number
-    account_id: number
-    commodity_id: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type AccountCommodityMinAggregateInputType = {
-    id?: true
-    account_id?: true
-    commodity_id?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type AccountCommodityMaxAggregateInputType = {
-    id?: true
-    account_id?: true
-    commodity_id?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type AccountCommodityCountAggregateInputType = {
-    id?: true
-    account_id?: true
-    commodity_id?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type AccountCommodityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which AccountCommodity to aggregate.
-     */
-    where?: AccountCommodityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AccountCommodities to fetch.
-     */
-    orderBy?: AccountCommodityOrderByWithRelationInput | AccountCommodityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: AccountCommodityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AccountCommodities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AccountCommodities.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned AccountCommodities
-    **/
-    _count?: true | AccountCommodityCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: AccountCommodityMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: AccountCommodityMaxAggregateInputType
-  }
-
-  export type GetAccountCommodityAggregateType<T extends AccountCommodityAggregateArgs> = {
-        [P in keyof T & keyof AggregateAccountCommodity]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateAccountCommodity[P]>
-      : GetScalarType<T[P], AggregateAccountCommodity[P]>
-  }
-
-
-
-
-  export type AccountCommodityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AccountCommodityWhereInput
-    orderBy?: AccountCommodityOrderByWithAggregationInput | AccountCommodityOrderByWithAggregationInput[]
-    by: AccountCommodityScalarFieldEnum[] | AccountCommodityScalarFieldEnum
-    having?: AccountCommodityScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: AccountCommodityCountAggregateInputType | true
-    _min?: AccountCommodityMinAggregateInputType
-    _max?: AccountCommodityMaxAggregateInputType
-  }
-
-  export type AccountCommodityGroupByOutputType = {
-    id: string
-    account_id: string
-    commodity_id: string
-    createdAt: Date
-    updatedAt: Date
-    _count: AccountCommodityCountAggregateOutputType | null
-    _min: AccountCommodityMinAggregateOutputType | null
-    _max: AccountCommodityMaxAggregateOutputType | null
-  }
-
-  type GetAccountCommodityGroupByPayload<T extends AccountCommodityGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<AccountCommodityGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof AccountCommodityGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], AccountCommodityGroupByOutputType[P]>
-            : GetScalarType<T[P], AccountCommodityGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type AccountCommoditySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    account_id?: boolean
-    commodity_id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    commodity?: boolean | CommodityDefaultArgs<ExtArgs>
-    account?: boolean | AccountDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["accountCommodity"]>
-
-
-
-  export type AccountCommoditySelectScalar = {
-    id?: boolean
-    account_id?: boolean
-    commodity_id?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type AccountCommodityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "account_id" | "commodity_id" | "createdAt" | "updatedAt", ExtArgs["result"]["accountCommodity"]>
-  export type AccountCommodityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    commodity?: boolean | CommodityDefaultArgs<ExtArgs>
-    account?: boolean | AccountDefaultArgs<ExtArgs>
-  }
-
-  export type $AccountCommodityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "AccountCommodity"
-    objects: {
-      commodity: Prisma.$CommodityPayload<ExtArgs>
-      account: Prisma.$AccountPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      account_id: string
-      commodity_id: string
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["accountCommodity"]>
-    composites: {}
-  }
-
-  type AccountCommodityGetPayload<S extends boolean | null | undefined | AccountCommodityDefaultArgs> = $Result.GetResult<Prisma.$AccountCommodityPayload, S>
-
-  type AccountCommodityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<AccountCommodityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: AccountCommodityCountAggregateInputType | true
-    }
-
-  export interface AccountCommodityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AccountCommodity'], meta: { name: 'AccountCommodity' } }
-    /**
-     * Find zero or one AccountCommodity that matches the filter.
-     * @param {AccountCommodityFindUniqueArgs} args - Arguments to find a AccountCommodity
-     * @example
-     * // Get one AccountCommodity
-     * const accountCommodity = await prisma.accountCommodity.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends AccountCommodityFindUniqueArgs>(args: SelectSubset<T, AccountCommodityFindUniqueArgs<ExtArgs>>): Prisma__AccountCommodityClient<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one AccountCommodity that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {AccountCommodityFindUniqueOrThrowArgs} args - Arguments to find a AccountCommodity
-     * @example
-     * // Get one AccountCommodity
-     * const accountCommodity = await prisma.accountCommodity.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends AccountCommodityFindUniqueOrThrowArgs>(args: SelectSubset<T, AccountCommodityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AccountCommodityClient<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first AccountCommodity that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AccountCommodityFindFirstArgs} args - Arguments to find a AccountCommodity
-     * @example
-     * // Get one AccountCommodity
-     * const accountCommodity = await prisma.accountCommodity.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends AccountCommodityFindFirstArgs>(args?: SelectSubset<T, AccountCommodityFindFirstArgs<ExtArgs>>): Prisma__AccountCommodityClient<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first AccountCommodity that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AccountCommodityFindFirstOrThrowArgs} args - Arguments to find a AccountCommodity
-     * @example
-     * // Get one AccountCommodity
-     * const accountCommodity = await prisma.accountCommodity.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends AccountCommodityFindFirstOrThrowArgs>(args?: SelectSubset<T, AccountCommodityFindFirstOrThrowArgs<ExtArgs>>): Prisma__AccountCommodityClient<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more AccountCommodities that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AccountCommodityFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all AccountCommodities
-     * const accountCommodities = await prisma.accountCommodity.findMany()
-     * 
-     * // Get first 10 AccountCommodities
-     * const accountCommodities = await prisma.accountCommodity.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const accountCommodityWithIdOnly = await prisma.accountCommodity.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends AccountCommodityFindManyArgs>(args?: SelectSubset<T, AccountCommodityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a AccountCommodity.
-     * @param {AccountCommodityCreateArgs} args - Arguments to create a AccountCommodity.
-     * @example
-     * // Create one AccountCommodity
-     * const AccountCommodity = await prisma.accountCommodity.create({
-     *   data: {
-     *     // ... data to create a AccountCommodity
-     *   }
-     * })
-     * 
-     */
-    create<T extends AccountCommodityCreateArgs>(args: SelectSubset<T, AccountCommodityCreateArgs<ExtArgs>>): Prisma__AccountCommodityClient<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many AccountCommodities.
-     * @param {AccountCommodityCreateManyArgs} args - Arguments to create many AccountCommodities.
-     * @example
-     * // Create many AccountCommodities
-     * const accountCommodity = await prisma.accountCommodity.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends AccountCommodityCreateManyArgs>(args?: SelectSubset<T, AccountCommodityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a AccountCommodity.
-     * @param {AccountCommodityDeleteArgs} args - Arguments to delete one AccountCommodity.
-     * @example
-     * // Delete one AccountCommodity
-     * const AccountCommodity = await prisma.accountCommodity.delete({
-     *   where: {
-     *     // ... filter to delete one AccountCommodity
-     *   }
-     * })
-     * 
-     */
-    delete<T extends AccountCommodityDeleteArgs>(args: SelectSubset<T, AccountCommodityDeleteArgs<ExtArgs>>): Prisma__AccountCommodityClient<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one AccountCommodity.
-     * @param {AccountCommodityUpdateArgs} args - Arguments to update one AccountCommodity.
-     * @example
-     * // Update one AccountCommodity
-     * const accountCommodity = await prisma.accountCommodity.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends AccountCommodityUpdateArgs>(args: SelectSubset<T, AccountCommodityUpdateArgs<ExtArgs>>): Prisma__AccountCommodityClient<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more AccountCommodities.
-     * @param {AccountCommodityDeleteManyArgs} args - Arguments to filter AccountCommodities to delete.
-     * @example
-     * // Delete a few AccountCommodities
-     * const { count } = await prisma.accountCommodity.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends AccountCommodityDeleteManyArgs>(args?: SelectSubset<T, AccountCommodityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more AccountCommodities.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AccountCommodityUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many AccountCommodities
-     * const accountCommodity = await prisma.accountCommodity.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends AccountCommodityUpdateManyArgs>(args: SelectSubset<T, AccountCommodityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one AccountCommodity.
-     * @param {AccountCommodityUpsertArgs} args - Arguments to update or create a AccountCommodity.
-     * @example
-     * // Update or create a AccountCommodity
-     * const accountCommodity = await prisma.accountCommodity.upsert({
-     *   create: {
-     *     // ... data to create a AccountCommodity
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the AccountCommodity we want to update
-     *   }
-     * })
-     */
-    upsert<T extends AccountCommodityUpsertArgs>(args: SelectSubset<T, AccountCommodityUpsertArgs<ExtArgs>>): Prisma__AccountCommodityClient<$Result.GetResult<Prisma.$AccountCommodityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of AccountCommodities.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AccountCommodityCountArgs} args - Arguments to filter AccountCommodities to count.
-     * @example
-     * // Count the number of AccountCommodities
-     * const count = await prisma.accountCommodity.count({
-     *   where: {
-     *     // ... the filter for the AccountCommodities we want to count
-     *   }
-     * })
-    **/
-    count<T extends AccountCommodityCountArgs>(
-      args?: Subset<T, AccountCommodityCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], AccountCommodityCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a AccountCommodity.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AccountCommodityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends AccountCommodityAggregateArgs>(args: Subset<T, AccountCommodityAggregateArgs>): Prisma.PrismaPromise<GetAccountCommodityAggregateType<T>>
-
-    /**
-     * Group by AccountCommodity.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AccountCommodityGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends AccountCommodityGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: AccountCommodityGroupByArgs['orderBy'] }
-        : { orderBy?: AccountCommodityGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, AccountCommodityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAccountCommodityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the AccountCommodity model
-   */
-  readonly fields: AccountCommodityFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for AccountCommodity.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__AccountCommodityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    commodity<T extends CommodityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CommodityDefaultArgs<ExtArgs>>): Prisma__CommodityClient<$Result.GetResult<Prisma.$CommodityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    account<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the AccountCommodity model
-   */
-  interface AccountCommodityFieldRefs {
-    readonly id: FieldRef<"AccountCommodity", 'String'>
-    readonly account_id: FieldRef<"AccountCommodity", 'String'>
-    readonly commodity_id: FieldRef<"AccountCommodity", 'String'>
-    readonly createdAt: FieldRef<"AccountCommodity", 'DateTime'>
-    readonly updatedAt: FieldRef<"AccountCommodity", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * AccountCommodity findUnique
-   */
-  export type AccountCommodityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
-    /**
-     * Filter, which AccountCommodity to fetch.
-     */
-    where: AccountCommodityWhereUniqueInput
-  }
-
-  /**
-   * AccountCommodity findUniqueOrThrow
-   */
-  export type AccountCommodityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
-    /**
-     * Filter, which AccountCommodity to fetch.
-     */
-    where: AccountCommodityWhereUniqueInput
-  }
-
-  /**
-   * AccountCommodity findFirst
-   */
-  export type AccountCommodityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
-    /**
-     * Filter, which AccountCommodity to fetch.
-     */
-    where?: AccountCommodityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AccountCommodities to fetch.
-     */
-    orderBy?: AccountCommodityOrderByWithRelationInput | AccountCommodityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for AccountCommodities.
-     */
-    cursor?: AccountCommodityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AccountCommodities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AccountCommodities.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of AccountCommodities.
-     */
-    distinct?: AccountCommodityScalarFieldEnum | AccountCommodityScalarFieldEnum[]
-  }
-
-  /**
-   * AccountCommodity findFirstOrThrow
-   */
-  export type AccountCommodityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
-    /**
-     * Filter, which AccountCommodity to fetch.
-     */
-    where?: AccountCommodityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AccountCommodities to fetch.
-     */
-    orderBy?: AccountCommodityOrderByWithRelationInput | AccountCommodityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for AccountCommodities.
-     */
-    cursor?: AccountCommodityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AccountCommodities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AccountCommodities.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of AccountCommodities.
-     */
-    distinct?: AccountCommodityScalarFieldEnum | AccountCommodityScalarFieldEnum[]
-  }
-
-  /**
-   * AccountCommodity findMany
-   */
-  export type AccountCommodityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
-    /**
-     * Filter, which AccountCommodities to fetch.
-     */
-    where?: AccountCommodityWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AccountCommodities to fetch.
-     */
-    orderBy?: AccountCommodityOrderByWithRelationInput | AccountCommodityOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing AccountCommodities.
-     */
-    cursor?: AccountCommodityWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AccountCommodities from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AccountCommodities.
-     */
-    skip?: number
-    distinct?: AccountCommodityScalarFieldEnum | AccountCommodityScalarFieldEnum[]
-  }
-
-  /**
-   * AccountCommodity create
-   */
-  export type AccountCommodityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
-    /**
-     * The data needed to create a AccountCommodity.
-     */
-    data: XOR<AccountCommodityCreateInput, AccountCommodityUncheckedCreateInput>
-  }
-
-  /**
-   * AccountCommodity createMany
-   */
-  export type AccountCommodityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many AccountCommodities.
-     */
-    data: AccountCommodityCreateManyInput | AccountCommodityCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * AccountCommodity update
-   */
-  export type AccountCommodityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
-    /**
-     * The data needed to update a AccountCommodity.
-     */
-    data: XOR<AccountCommodityUpdateInput, AccountCommodityUncheckedUpdateInput>
-    /**
-     * Choose, which AccountCommodity to update.
-     */
-    where: AccountCommodityWhereUniqueInput
-  }
-
-  /**
-   * AccountCommodity updateMany
-   */
-  export type AccountCommodityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update AccountCommodities.
-     */
-    data: XOR<AccountCommodityUpdateManyMutationInput, AccountCommodityUncheckedUpdateManyInput>
-    /**
-     * Filter which AccountCommodities to update
-     */
-    where?: AccountCommodityWhereInput
-    /**
-     * Limit how many AccountCommodities to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * AccountCommodity upsert
-   */
-  export type AccountCommodityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
-    /**
-     * The filter to search for the AccountCommodity to update in case it exists.
-     */
-    where: AccountCommodityWhereUniqueInput
-    /**
-     * In case the AccountCommodity found by the `where` argument doesn't exist, create a new AccountCommodity with this data.
-     */
-    create: XOR<AccountCommodityCreateInput, AccountCommodityUncheckedCreateInput>
-    /**
-     * In case the AccountCommodity was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<AccountCommodityUpdateInput, AccountCommodityUncheckedUpdateInput>
-  }
-
-  /**
-   * AccountCommodity delete
-   */
-  export type AccountCommodityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
-    /**
-     * Filter which AccountCommodity to delete.
-     */
-    where: AccountCommodityWhereUniqueInput
-  }
-
-  /**
-   * AccountCommodity deleteMany
-   */
-  export type AccountCommodityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which AccountCommodities to delete
-     */
-    where?: AccountCommodityWhereInput
-    /**
-     * Limit how many AccountCommodities to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * AccountCommodity without action
-   */
-  export type AccountCommodityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AccountCommodity
-     */
-    select?: AccountCommoditySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AccountCommodity
-     */
-    omit?: AccountCommodityOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountCommodityInclude<ExtArgs> | null
   }
 
 
@@ -11197,48 +9519,60 @@ export namespace Prisma {
     access: 'access',
     username: 'username',
     email: 'email',
+    password: 'password',
     firstName: 'firstName',
-    lastName: 'lastName',
     middleName: 'middleName',
-    gender: 'gender',
-    client_profile: 'client_profile',
-    cellphone_no: 'cellphone_no',
-    telephone_no: 'telephone_no',
-    occupation: 'occupation',
-    position: 'position',
-    institution: 'institution',
-    address: 'address',
+    surname: 'surname',
+    extensionName: 'extensionName',
+    sex: 'sex',
+    street: 'street',
+    barangay: 'barangay',
+    municipality: 'municipality',
+    province: 'province',
+    region: 'region',
+    houseNumber: 'houseNumber',
+    mobileNumber: 'mobileNumber',
+    landlineNumber: 'landlineNumber',
+    birthMunicipality: 'birthMunicipality',
+    birthProvince: 'birthProvince',
+    birthCountry: 'birthCountry',
+    dateOfBirth: 'dateOfBirth',
+    religion: 'religion',
+    otherReligionSpecify: 'otherReligionSpecify',
+    civilStatus: 'civilStatus',
+    spouseName: 'spouseName',
+    femaleHouseholdMembers: 'femaleHouseholdMembers',
+    maleHouseholdMembers: 'maleHouseholdMembers',
+    isHouseholdHead: 'isHouseholdHead',
+    householdHeadName: 'householdHeadName',
+    relationshipToHead: 'relationshipToHead',
+    hasGovId: 'hasGovId',
+    govIdType: 'govIdType',
+    govIdNumber: 'govIdNumber',
+    education: 'education',
+    isPWD: 'isPWD',
+    disabilityType: 'disabilityType',
+    livelihoodProfile: 'livelihoodProfile',
+    farmingActivities: 'farmingActivities',
+    fishingActivities: 'fishingActivities',
+    farmworkActivities: 'farmworkActivities',
+    youthActivities: 'youthActivities',
+    otherCropsSpecify: 'otherCropsSpecify',
+    livestockSpecify: 'livestockSpecify',
+    fishingOthersSpecify: 'fishingOthersSpecify',
+    farmworkOthersSpecify: 'farmworkOthersSpecify',
+    youthOthersSpecify: 'youthOthersSpecify',
+    grossAnnualIncome: 'grossAnnualIncome',
+    incomeSource: 'incomeSource',
     picture: 'picture',
     mimeType: 'mimeType',
-    password: 'password',
+    client_profile: 'client_profile',
+    address: 'address',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
-
-
-  export const CommodityScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    icon: 'icon',
-    description: 'description',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type CommodityScalarFieldEnum = (typeof CommodityScalarFieldEnum)[keyof typeof CommodityScalarFieldEnum]
-
-
-  export const AccountCommodityScalarFieldEnum: {
-    id: 'id',
-    account_id: 'account_id',
-    commodity_id: 'commodity_id',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type AccountCommodityScalarFieldEnum = (typeof AccountCommodityScalarFieldEnum)[keyof typeof AccountCommodityScalarFieldEnum]
 
 
   export const AuditLogScalarFieldEnum: {
@@ -11352,53 +9686,6 @@ export namespace Prisma {
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
-  };
-
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
-  export const AccountOrderByRelevanceFieldEnum: {
-    id: 'id',
-    username: 'username',
-    email: 'email',
-    firstName: 'firstName',
-    lastName: 'lastName',
-    middleName: 'middleName',
-    cellphone_no: 'cellphone_no',
-    telephone_no: 'telephone_no',
-    occupation: 'occupation',
-    position: 'position',
-    institution: 'institution',
-    address: 'address',
-    mimeType: 'mimeType',
-    password: 'password'
-  };
-
-  export type AccountOrderByRelevanceFieldEnum = (typeof AccountOrderByRelevanceFieldEnum)[keyof typeof AccountOrderByRelevanceFieldEnum]
-
-
-  export const CommodityOrderByRelevanceFieldEnum: {
-    id: 'id',
-    name: 'name',
-    icon: 'icon',
-    description: 'description'
-  };
-
-  export type CommodityOrderByRelevanceFieldEnum = (typeof CommodityOrderByRelevanceFieldEnum)[keyof typeof CommodityOrderByRelevanceFieldEnum]
-
-
-  export const AccountCommodityOrderByRelevanceFieldEnum: {
-    id: 'id',
-    account_id: 'account_id',
-    commodity_id: 'commodity_id'
-  };
-
-  export type AccountCommodityOrderByRelevanceFieldEnum = (typeof AccountCommodityOrderByRelevanceFieldEnum)[keyof typeof AccountCommodityOrderByRelevanceFieldEnum]
-
-
   export const JsonNullValueFilter: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull,
@@ -11414,6 +9701,56 @@ export namespace Prisma {
   };
 
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const AccountOrderByRelevanceFieldEnum: {
+    id: 'id',
+    username: 'username',
+    email: 'email',
+    password: 'password',
+    firstName: 'firstName',
+    middleName: 'middleName',
+    surname: 'surname',
+    extensionName: 'extensionName',
+    street: 'street',
+    barangay: 'barangay',
+    municipality: 'municipality',
+    province: 'province',
+    region: 'region',
+    houseNumber: 'houseNumber',
+    mobileNumber: 'mobileNumber',
+    landlineNumber: 'landlineNumber',
+    birthMunicipality: 'birthMunicipality',
+    birthProvince: 'birthProvince',
+    birthCountry: 'birthCountry',
+    religion: 'religion',
+    otherReligionSpecify: 'otherReligionSpecify',
+    civilStatus: 'civilStatus',
+    spouseName: 'spouseName',
+    femaleHouseholdMembers: 'femaleHouseholdMembers',
+    maleHouseholdMembers: 'maleHouseholdMembers',
+    householdHeadName: 'householdHeadName',
+    govIdNumber: 'govIdNumber',
+    disabilityType: 'disabilityType',
+    otherCropsSpecify: 'otherCropsSpecify',
+    livestockSpecify: 'livestockSpecify',
+    fishingOthersSpecify: 'fishingOthersSpecify',
+    farmworkOthersSpecify: 'farmworkOthersSpecify',
+    youthOthersSpecify: 'youthOthersSpecify',
+    grossAnnualIncome: 'grossAnnualIncome',
+    mimeType: 'mimeType',
+    address: 'address'
+  };
+
+  export type AccountOrderByRelevanceFieldEnum = (typeof AccountOrderByRelevanceFieldEnum)[keyof typeof AccountOrderByRelevanceFieldEnum]
 
 
   export const AuditLogOrderByRelevanceFieldEnum: {
@@ -11509,20 +9846,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'client_profile'
-   */
-  export type Enumclient_profileFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'client_profile'>
-    
-
-
-  /**
-   * Reference to a field of type 'Bytes'
-   */
-  export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
-    
-
-
-  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -11530,9 +9853,30 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'audit_action'
+   * Reference to a field of type 'Boolean'
    */
-  export type Enumaudit_actionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'audit_action'>
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'RelationshipToHead'
+   */
+  export type EnumRelationshipToHeadFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RelationshipToHead'>
+    
+
+
+  /**
+   * Reference to a field of type 'GovIdType'
+   */
+  export type EnumGovIdTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GovIdType'>
+    
+
+
+  /**
+   * Reference to a field of type 'EducationLevel'
+   */
+  export type EnumEducationLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EducationLevel'>
     
 
 
@@ -11547,6 +9891,34 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'IncomeSource'
+   */
+  export type EnumIncomeSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IncomeSource'>
+    
+
+
+  /**
+   * Reference to a field of type 'Bytes'
+   */
+  export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+    
+
+
+  /**
+   * Reference to a field of type 'client_profile'
+   */
+  export type Enumclient_profileFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'client_profile'>
+    
+
+
+  /**
+   * Reference to a field of type 'audit_action'
+   */
+  export type Enumaudit_actionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'audit_action'>
     
 
 
@@ -11610,23 +9982,57 @@ export namespace Prisma {
     access?: EnumaccessFilter<"Account"> | $Enums.access
     username?: StringFilter<"Account"> | string
     email?: StringFilter<"Account"> | string
+    password?: StringFilter<"Account"> | string
     firstName?: StringFilter<"Account"> | string
-    lastName?: StringFilter<"Account"> | string
     middleName?: StringNullableFilter<"Account"> | string | null
-    gender?: EnumgenderFilter<"Account"> | $Enums.gender
-    client_profile?: Enumclient_profileFilter<"Account"> | $Enums.client_profile
-    cellphone_no?: StringNullableFilter<"Account"> | string | null
-    telephone_no?: StringNullableFilter<"Account"> | string | null
-    occupation?: StringNullableFilter<"Account"> | string | null
-    position?: StringNullableFilter<"Account"> | string | null
-    institution?: StringNullableFilter<"Account"> | string | null
-    address?: StringNullableFilter<"Account"> | string | null
+    surname?: StringFilter<"Account"> | string
+    extensionName?: StringNullableFilter<"Account"> | string | null
+    sex?: EnumgenderFilter<"Account"> | $Enums.gender
+    street?: StringNullableFilter<"Account"> | string | null
+    barangay?: StringNullableFilter<"Account"> | string | null
+    municipality?: StringNullableFilter<"Account"> | string | null
+    province?: StringNullableFilter<"Account"> | string | null
+    region?: StringNullableFilter<"Account"> | string | null
+    houseNumber?: StringNullableFilter<"Account"> | string | null
+    mobileNumber?: StringNullableFilter<"Account"> | string | null
+    landlineNumber?: StringNullableFilter<"Account"> | string | null
+    birthMunicipality?: StringNullableFilter<"Account"> | string | null
+    birthProvince?: StringNullableFilter<"Account"> | string | null
+    birthCountry?: StringNullableFilter<"Account"> | string | null
+    dateOfBirth?: DateTimeNullableFilter<"Account"> | Date | string | null
+    religion?: StringNullableFilter<"Account"> | string | null
+    otherReligionSpecify?: StringNullableFilter<"Account"> | string | null
+    civilStatus?: StringNullableFilter<"Account"> | string | null
+    spouseName?: StringNullableFilter<"Account"> | string | null
+    femaleHouseholdMembers?: StringNullableFilter<"Account"> | string | null
+    maleHouseholdMembers?: StringNullableFilter<"Account"> | string | null
+    isHouseholdHead?: BoolNullableFilter<"Account"> | boolean | null
+    householdHeadName?: StringNullableFilter<"Account"> | string | null
+    relationshipToHead?: EnumRelationshipToHeadNullableFilter<"Account"> | $Enums.RelationshipToHead | null
+    hasGovId?: BoolNullableFilter<"Account"> | boolean | null
+    govIdType?: EnumGovIdTypeNullableFilter<"Account"> | $Enums.GovIdType | null
+    govIdNumber?: StringNullableFilter<"Account"> | string | null
+    education?: EnumEducationLevelNullableFilter<"Account"> | $Enums.EducationLevel | null
+    isPWD?: BoolNullableFilter<"Account"> | boolean | null
+    disabilityType?: StringNullableFilter<"Account"> | string | null
+    livelihoodProfile?: JsonNullableFilter<"Account">
+    farmingActivities?: JsonNullableFilter<"Account">
+    fishingActivities?: JsonNullableFilter<"Account">
+    farmworkActivities?: JsonNullableFilter<"Account">
+    youthActivities?: JsonNullableFilter<"Account">
+    otherCropsSpecify?: StringNullableFilter<"Account"> | string | null
+    livestockSpecify?: StringNullableFilter<"Account"> | string | null
+    fishingOthersSpecify?: StringNullableFilter<"Account"> | string | null
+    farmworkOthersSpecify?: StringNullableFilter<"Account"> | string | null
+    youthOthersSpecify?: StringNullableFilter<"Account"> | string | null
+    grossAnnualIncome?: StringNullableFilter<"Account"> | string | null
+    incomeSource?: EnumIncomeSourceNullableFilter<"Account"> | $Enums.IncomeSource | null
     picture?: BytesNullableFilter<"Account"> | Uint8Array | null
     mimeType?: StringNullableFilter<"Account"> | string | null
-    password?: StringFilter<"Account"> | string
+    client_profile?: Enumclient_profileFilter<"Account"> | $Enums.client_profile
+    address?: StringNullableFilter<"Account"> | string | null
     createdAt?: DateTimeFilter<"Account"> | Date | string
     updatedAt?: DateTimeFilter<"Account"> | Date | string
-    commodity?: AccountCommodityListRelationFilter
     seminars?: SeminarParticipantListRelationFilter
     itemTransactions?: ItemTransactionListRelationFilter
     adminTransactions?: ItemTransactionListRelationFilter
@@ -11639,23 +10045,57 @@ export namespace Prisma {
     access?: SortOrder
     username?: SortOrder
     email?: SortOrder
+    password?: SortOrder
     firstName?: SortOrder
-    lastName?: SortOrder
     middleName?: SortOrderInput | SortOrder
-    gender?: SortOrder
-    client_profile?: SortOrder
-    cellphone_no?: SortOrderInput | SortOrder
-    telephone_no?: SortOrderInput | SortOrder
-    occupation?: SortOrderInput | SortOrder
-    position?: SortOrderInput | SortOrder
-    institution?: SortOrderInput | SortOrder
-    address?: SortOrderInput | SortOrder
+    surname?: SortOrder
+    extensionName?: SortOrderInput | SortOrder
+    sex?: SortOrder
+    street?: SortOrderInput | SortOrder
+    barangay?: SortOrderInput | SortOrder
+    municipality?: SortOrderInput | SortOrder
+    province?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
+    houseNumber?: SortOrderInput | SortOrder
+    mobileNumber?: SortOrderInput | SortOrder
+    landlineNumber?: SortOrderInput | SortOrder
+    birthMunicipality?: SortOrderInput | SortOrder
+    birthProvince?: SortOrderInput | SortOrder
+    birthCountry?: SortOrderInput | SortOrder
+    dateOfBirth?: SortOrderInput | SortOrder
+    religion?: SortOrderInput | SortOrder
+    otherReligionSpecify?: SortOrderInput | SortOrder
+    civilStatus?: SortOrderInput | SortOrder
+    spouseName?: SortOrderInput | SortOrder
+    femaleHouseholdMembers?: SortOrderInput | SortOrder
+    maleHouseholdMembers?: SortOrderInput | SortOrder
+    isHouseholdHead?: SortOrderInput | SortOrder
+    householdHeadName?: SortOrderInput | SortOrder
+    relationshipToHead?: SortOrderInput | SortOrder
+    hasGovId?: SortOrderInput | SortOrder
+    govIdType?: SortOrderInput | SortOrder
+    govIdNumber?: SortOrderInput | SortOrder
+    education?: SortOrderInput | SortOrder
+    isPWD?: SortOrderInput | SortOrder
+    disabilityType?: SortOrderInput | SortOrder
+    livelihoodProfile?: SortOrderInput | SortOrder
+    farmingActivities?: SortOrderInput | SortOrder
+    fishingActivities?: SortOrderInput | SortOrder
+    farmworkActivities?: SortOrderInput | SortOrder
+    youthActivities?: SortOrderInput | SortOrder
+    otherCropsSpecify?: SortOrderInput | SortOrder
+    livestockSpecify?: SortOrderInput | SortOrder
+    fishingOthersSpecify?: SortOrderInput | SortOrder
+    farmworkOthersSpecify?: SortOrderInput | SortOrder
+    youthOthersSpecify?: SortOrderInput | SortOrder
+    grossAnnualIncome?: SortOrderInput | SortOrder
+    incomeSource?: SortOrderInput | SortOrder
     picture?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
-    password?: SortOrder
+    client_profile?: SortOrder
+    address?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    commodity?: AccountCommodityOrderByRelationAggregateInput
     seminars?: SeminarParticipantOrderByRelationAggregateInput
     itemTransactions?: ItemTransactionOrderByRelationAggregateInput
     adminTransactions?: ItemTransactionOrderByRelationAggregateInput
@@ -11672,23 +10112,57 @@ export namespace Prisma {
     OR?: AccountWhereInput[]
     NOT?: AccountWhereInput | AccountWhereInput[]
     access?: EnumaccessFilter<"Account"> | $Enums.access
+    password?: StringFilter<"Account"> | string
     firstName?: StringFilter<"Account"> | string
-    lastName?: StringFilter<"Account"> | string
     middleName?: StringNullableFilter<"Account"> | string | null
-    gender?: EnumgenderFilter<"Account"> | $Enums.gender
-    client_profile?: Enumclient_profileFilter<"Account"> | $Enums.client_profile
-    cellphone_no?: StringNullableFilter<"Account"> | string | null
-    telephone_no?: StringNullableFilter<"Account"> | string | null
-    occupation?: StringNullableFilter<"Account"> | string | null
-    position?: StringNullableFilter<"Account"> | string | null
-    institution?: StringNullableFilter<"Account"> | string | null
-    address?: StringNullableFilter<"Account"> | string | null
+    surname?: StringFilter<"Account"> | string
+    extensionName?: StringNullableFilter<"Account"> | string | null
+    sex?: EnumgenderFilter<"Account"> | $Enums.gender
+    street?: StringNullableFilter<"Account"> | string | null
+    barangay?: StringNullableFilter<"Account"> | string | null
+    municipality?: StringNullableFilter<"Account"> | string | null
+    province?: StringNullableFilter<"Account"> | string | null
+    region?: StringNullableFilter<"Account"> | string | null
+    houseNumber?: StringNullableFilter<"Account"> | string | null
+    mobileNumber?: StringNullableFilter<"Account"> | string | null
+    landlineNumber?: StringNullableFilter<"Account"> | string | null
+    birthMunicipality?: StringNullableFilter<"Account"> | string | null
+    birthProvince?: StringNullableFilter<"Account"> | string | null
+    birthCountry?: StringNullableFilter<"Account"> | string | null
+    dateOfBirth?: DateTimeNullableFilter<"Account"> | Date | string | null
+    religion?: StringNullableFilter<"Account"> | string | null
+    otherReligionSpecify?: StringNullableFilter<"Account"> | string | null
+    civilStatus?: StringNullableFilter<"Account"> | string | null
+    spouseName?: StringNullableFilter<"Account"> | string | null
+    femaleHouseholdMembers?: StringNullableFilter<"Account"> | string | null
+    maleHouseholdMembers?: StringNullableFilter<"Account"> | string | null
+    isHouseholdHead?: BoolNullableFilter<"Account"> | boolean | null
+    householdHeadName?: StringNullableFilter<"Account"> | string | null
+    relationshipToHead?: EnumRelationshipToHeadNullableFilter<"Account"> | $Enums.RelationshipToHead | null
+    hasGovId?: BoolNullableFilter<"Account"> | boolean | null
+    govIdType?: EnumGovIdTypeNullableFilter<"Account"> | $Enums.GovIdType | null
+    govIdNumber?: StringNullableFilter<"Account"> | string | null
+    education?: EnumEducationLevelNullableFilter<"Account"> | $Enums.EducationLevel | null
+    isPWD?: BoolNullableFilter<"Account"> | boolean | null
+    disabilityType?: StringNullableFilter<"Account"> | string | null
+    livelihoodProfile?: JsonNullableFilter<"Account">
+    farmingActivities?: JsonNullableFilter<"Account">
+    fishingActivities?: JsonNullableFilter<"Account">
+    farmworkActivities?: JsonNullableFilter<"Account">
+    youthActivities?: JsonNullableFilter<"Account">
+    otherCropsSpecify?: StringNullableFilter<"Account"> | string | null
+    livestockSpecify?: StringNullableFilter<"Account"> | string | null
+    fishingOthersSpecify?: StringNullableFilter<"Account"> | string | null
+    farmworkOthersSpecify?: StringNullableFilter<"Account"> | string | null
+    youthOthersSpecify?: StringNullableFilter<"Account"> | string | null
+    grossAnnualIncome?: StringNullableFilter<"Account"> | string | null
+    incomeSource?: EnumIncomeSourceNullableFilter<"Account"> | $Enums.IncomeSource | null
     picture?: BytesNullableFilter<"Account"> | Uint8Array | null
     mimeType?: StringNullableFilter<"Account"> | string | null
-    password?: StringFilter<"Account"> | string
+    client_profile?: Enumclient_profileFilter<"Account"> | $Enums.client_profile
+    address?: StringNullableFilter<"Account"> | string | null
     createdAt?: DateTimeFilter<"Account"> | Date | string
     updatedAt?: DateTimeFilter<"Account"> | Date | string
-    commodity?: AccountCommodityListRelationFilter
     seminars?: SeminarParticipantListRelationFilter
     itemTransactions?: ItemTransactionListRelationFilter
     adminTransactions?: ItemTransactionListRelationFilter
@@ -11701,20 +10175,55 @@ export namespace Prisma {
     access?: SortOrder
     username?: SortOrder
     email?: SortOrder
+    password?: SortOrder
     firstName?: SortOrder
-    lastName?: SortOrder
     middleName?: SortOrderInput | SortOrder
-    gender?: SortOrder
-    client_profile?: SortOrder
-    cellphone_no?: SortOrderInput | SortOrder
-    telephone_no?: SortOrderInput | SortOrder
-    occupation?: SortOrderInput | SortOrder
-    position?: SortOrderInput | SortOrder
-    institution?: SortOrderInput | SortOrder
-    address?: SortOrderInput | SortOrder
+    surname?: SortOrder
+    extensionName?: SortOrderInput | SortOrder
+    sex?: SortOrder
+    street?: SortOrderInput | SortOrder
+    barangay?: SortOrderInput | SortOrder
+    municipality?: SortOrderInput | SortOrder
+    province?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
+    houseNumber?: SortOrderInput | SortOrder
+    mobileNumber?: SortOrderInput | SortOrder
+    landlineNumber?: SortOrderInput | SortOrder
+    birthMunicipality?: SortOrderInput | SortOrder
+    birthProvince?: SortOrderInput | SortOrder
+    birthCountry?: SortOrderInput | SortOrder
+    dateOfBirth?: SortOrderInput | SortOrder
+    religion?: SortOrderInput | SortOrder
+    otherReligionSpecify?: SortOrderInput | SortOrder
+    civilStatus?: SortOrderInput | SortOrder
+    spouseName?: SortOrderInput | SortOrder
+    femaleHouseholdMembers?: SortOrderInput | SortOrder
+    maleHouseholdMembers?: SortOrderInput | SortOrder
+    isHouseholdHead?: SortOrderInput | SortOrder
+    householdHeadName?: SortOrderInput | SortOrder
+    relationshipToHead?: SortOrderInput | SortOrder
+    hasGovId?: SortOrderInput | SortOrder
+    govIdType?: SortOrderInput | SortOrder
+    govIdNumber?: SortOrderInput | SortOrder
+    education?: SortOrderInput | SortOrder
+    isPWD?: SortOrderInput | SortOrder
+    disabilityType?: SortOrderInput | SortOrder
+    livelihoodProfile?: SortOrderInput | SortOrder
+    farmingActivities?: SortOrderInput | SortOrder
+    fishingActivities?: SortOrderInput | SortOrder
+    farmworkActivities?: SortOrderInput | SortOrder
+    youthActivities?: SortOrderInput | SortOrder
+    otherCropsSpecify?: SortOrderInput | SortOrder
+    livestockSpecify?: SortOrderInput | SortOrder
+    fishingOthersSpecify?: SortOrderInput | SortOrder
+    farmworkOthersSpecify?: SortOrderInput | SortOrder
+    youthOthersSpecify?: SortOrderInput | SortOrder
+    grossAnnualIncome?: SortOrderInput | SortOrder
+    incomeSource?: SortOrderInput | SortOrder
     picture?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
-    password?: SortOrder
+    client_profile?: SortOrder
+    address?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: AccountCountOrderByAggregateInput
@@ -11730,143 +10239,57 @@ export namespace Prisma {
     access?: EnumaccessWithAggregatesFilter<"Account"> | $Enums.access
     username?: StringWithAggregatesFilter<"Account"> | string
     email?: StringWithAggregatesFilter<"Account"> | string
+    password?: StringWithAggregatesFilter<"Account"> | string
     firstName?: StringWithAggregatesFilter<"Account"> | string
-    lastName?: StringWithAggregatesFilter<"Account"> | string
     middleName?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    gender?: EnumgenderWithAggregatesFilter<"Account"> | $Enums.gender
-    client_profile?: Enumclient_profileWithAggregatesFilter<"Account"> | $Enums.client_profile
-    cellphone_no?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    telephone_no?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    occupation?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    position?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    institution?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    address?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    surname?: StringWithAggregatesFilter<"Account"> | string
+    extensionName?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    sex?: EnumgenderWithAggregatesFilter<"Account"> | $Enums.gender
+    street?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    barangay?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    municipality?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    province?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    region?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    houseNumber?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    mobileNumber?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    landlineNumber?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    birthMunicipality?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    birthProvince?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    birthCountry?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    dateOfBirth?: DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
+    religion?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    otherReligionSpecify?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    civilStatus?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    spouseName?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    femaleHouseholdMembers?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    maleHouseholdMembers?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    isHouseholdHead?: BoolNullableWithAggregatesFilter<"Account"> | boolean | null
+    householdHeadName?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    relationshipToHead?: EnumRelationshipToHeadNullableWithAggregatesFilter<"Account"> | $Enums.RelationshipToHead | null
+    hasGovId?: BoolNullableWithAggregatesFilter<"Account"> | boolean | null
+    govIdType?: EnumGovIdTypeNullableWithAggregatesFilter<"Account"> | $Enums.GovIdType | null
+    govIdNumber?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    education?: EnumEducationLevelNullableWithAggregatesFilter<"Account"> | $Enums.EducationLevel | null
+    isPWD?: BoolNullableWithAggregatesFilter<"Account"> | boolean | null
+    disabilityType?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    livelihoodProfile?: JsonNullableWithAggregatesFilter<"Account">
+    farmingActivities?: JsonNullableWithAggregatesFilter<"Account">
+    fishingActivities?: JsonNullableWithAggregatesFilter<"Account">
+    farmworkActivities?: JsonNullableWithAggregatesFilter<"Account">
+    youthActivities?: JsonNullableWithAggregatesFilter<"Account">
+    otherCropsSpecify?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    livestockSpecify?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    fishingOthersSpecify?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    farmworkOthersSpecify?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    youthOthersSpecify?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    grossAnnualIncome?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    incomeSource?: EnumIncomeSourceNullableWithAggregatesFilter<"Account"> | $Enums.IncomeSource | null
     picture?: BytesNullableWithAggregatesFilter<"Account"> | Uint8Array | null
     mimeType?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    password?: StringWithAggregatesFilter<"Account"> | string
+    client_profile?: Enumclient_profileWithAggregatesFilter<"Account"> | $Enums.client_profile
+    address?: StringNullableWithAggregatesFilter<"Account"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Account"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Account"> | Date | string
-  }
-
-  export type CommodityWhereInput = {
-    AND?: CommodityWhereInput | CommodityWhereInput[]
-    OR?: CommodityWhereInput[]
-    NOT?: CommodityWhereInput | CommodityWhereInput[]
-    id?: StringFilter<"Commodity"> | string
-    name?: StringFilter<"Commodity"> | string
-    icon?: StringNullableFilter<"Commodity"> | string | null
-    description?: StringNullableFilter<"Commodity"> | string | null
-    createdAt?: DateTimeFilter<"Commodity"> | Date | string
-    updatedAt?: DateTimeFilter<"Commodity"> | Date | string
-    accounts?: AccountCommodityListRelationFilter
-  }
-
-  export type CommodityOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    icon?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    accounts?: AccountCommodityOrderByRelationAggregateInput
-    _relevance?: CommodityOrderByRelevanceInput
-  }
-
-  export type CommodityWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    name?: string
-    AND?: CommodityWhereInput | CommodityWhereInput[]
-    OR?: CommodityWhereInput[]
-    NOT?: CommodityWhereInput | CommodityWhereInput[]
-    icon?: StringNullableFilter<"Commodity"> | string | null
-    description?: StringNullableFilter<"Commodity"> | string | null
-    createdAt?: DateTimeFilter<"Commodity"> | Date | string
-    updatedAt?: DateTimeFilter<"Commodity"> | Date | string
-    accounts?: AccountCommodityListRelationFilter
-  }, "id" | "name">
-
-  export type CommodityOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    icon?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: CommodityCountOrderByAggregateInput
-    _max?: CommodityMaxOrderByAggregateInput
-    _min?: CommodityMinOrderByAggregateInput
-  }
-
-  export type CommodityScalarWhereWithAggregatesInput = {
-    AND?: CommodityScalarWhereWithAggregatesInput | CommodityScalarWhereWithAggregatesInput[]
-    OR?: CommodityScalarWhereWithAggregatesInput[]
-    NOT?: CommodityScalarWhereWithAggregatesInput | CommodityScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Commodity"> | string
-    name?: StringWithAggregatesFilter<"Commodity"> | string
-    icon?: StringNullableWithAggregatesFilter<"Commodity"> | string | null
-    description?: StringNullableWithAggregatesFilter<"Commodity"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Commodity"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Commodity"> | Date | string
-  }
-
-  export type AccountCommodityWhereInput = {
-    AND?: AccountCommodityWhereInput | AccountCommodityWhereInput[]
-    OR?: AccountCommodityWhereInput[]
-    NOT?: AccountCommodityWhereInput | AccountCommodityWhereInput[]
-    id?: StringFilter<"AccountCommodity"> | string
-    account_id?: StringFilter<"AccountCommodity"> | string
-    commodity_id?: StringFilter<"AccountCommodity"> | string
-    createdAt?: DateTimeFilter<"AccountCommodity"> | Date | string
-    updatedAt?: DateTimeFilter<"AccountCommodity"> | Date | string
-    commodity?: XOR<CommodityScalarRelationFilter, CommodityWhereInput>
-    account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-  }
-
-  export type AccountCommodityOrderByWithRelationInput = {
-    id?: SortOrder
-    account_id?: SortOrder
-    commodity_id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    commodity?: CommodityOrderByWithRelationInput
-    account?: AccountOrderByWithRelationInput
-    _relevance?: AccountCommodityOrderByRelevanceInput
-  }
-
-  export type AccountCommodityWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    account_id_commodity_id?: AccountCommodityAccount_idCommodity_idCompoundUniqueInput
-    AND?: AccountCommodityWhereInput | AccountCommodityWhereInput[]
-    OR?: AccountCommodityWhereInput[]
-    NOT?: AccountCommodityWhereInput | AccountCommodityWhereInput[]
-    account_id?: StringFilter<"AccountCommodity"> | string
-    commodity_id?: StringFilter<"AccountCommodity"> | string
-    createdAt?: DateTimeFilter<"AccountCommodity"> | Date | string
-    updatedAt?: DateTimeFilter<"AccountCommodity"> | Date | string
-    commodity?: XOR<CommodityScalarRelationFilter, CommodityWhereInput>
-    account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-  }, "id" | "account_id_commodity_id">
-
-  export type AccountCommodityOrderByWithAggregationInput = {
-    id?: SortOrder
-    account_id?: SortOrder
-    commodity_id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: AccountCommodityCountOrderByAggregateInput
-    _max?: AccountCommodityMaxOrderByAggregateInput
-    _min?: AccountCommodityMinOrderByAggregateInput
-  }
-
-  export type AccountCommodityScalarWhereWithAggregatesInput = {
-    AND?: AccountCommodityScalarWhereWithAggregatesInput | AccountCommodityScalarWhereWithAggregatesInput[]
-    OR?: AccountCommodityScalarWhereWithAggregatesInput[]
-    NOT?: AccountCommodityScalarWhereWithAggregatesInput | AccountCommodityScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"AccountCommodity"> | string
-    account_id?: StringWithAggregatesFilter<"AccountCommodity"> | string
-    commodity_id?: StringWithAggregatesFilter<"AccountCommodity"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"AccountCommodity"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"AccountCommodity"> | Date | string
   }
 
   export type AuditLogWhereInput = {
@@ -12377,23 +10800,57 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
     itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
@@ -12406,23 +10863,57 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
     itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
@@ -12435,23 +10926,57 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
     itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
@@ -12464,23 +10989,57 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
     itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
@@ -12493,20 +11052,55 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12516,20 +11110,55 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12539,141 +11168,55 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CommodityCreateInput = {
-    id?: string
-    name: string
-    icon?: string | null
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    accounts?: AccountCommodityCreateNestedManyWithoutCommodityInput
-  }
-
-  export type CommodityUncheckedCreateInput = {
-    id?: string
-    name: string
-    icon?: string | null
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    accounts?: AccountCommodityUncheckedCreateNestedManyWithoutCommodityInput
-  }
-
-  export type CommodityUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accounts?: AccountCommodityUpdateManyWithoutCommodityNestedInput
-  }
-
-  export type CommodityUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accounts?: AccountCommodityUncheckedUpdateManyWithoutCommodityNestedInput
-  }
-
-  export type CommodityCreateManyInput = {
-    id?: string
-    name: string
-    icon?: string | null
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CommodityUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CommodityUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AccountCommodityCreateInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    commodity: CommodityCreateNestedOneWithoutAccountsInput
-    account: AccountCreateNestedOneWithoutCommodityInput
-  }
-
-  export type AccountCommodityUncheckedCreateInput = {
-    id?: string
-    account_id: string
-    commodity_id: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AccountCommodityUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: CommodityUpdateOneRequiredWithoutAccountsNestedInput
-    account?: AccountUpdateOneRequiredWithoutCommodityNestedInput
-  }
-
-  export type AccountCommodityUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    account_id?: StringFieldUpdateOperationsInput | string
-    commodity_id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AccountCommodityCreateManyInput = {
-    id?: string
-    account_id: string
-    commodity_id: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AccountCommodityUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AccountCommodityUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    account_id?: StringFieldUpdateOperationsInput | string
-    commodity_id?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13265,11 +11808,71 @@ export namespace Prisma {
     not?: NestedEnumgenderFilter<$PrismaModel> | $Enums.gender
   }
 
-  export type Enumclient_profileFilter<$PrismaModel = never> = {
-    equals?: $Enums.client_profile | Enumclient_profileFieldRefInput<$PrismaModel>
-    in?: $Enums.client_profile[]
-    notIn?: $Enums.client_profile[]
-    not?: NestedEnumclient_profileFilter<$PrismaModel> | $Enums.client_profile
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type EnumRelationshipToHeadNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.RelationshipToHead | EnumRelationshipToHeadFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RelationshipToHead[] | null
+    notIn?: $Enums.RelationshipToHead[] | null
+    not?: NestedEnumRelationshipToHeadNullableFilter<$PrismaModel> | $Enums.RelationshipToHead | null
+  }
+
+  export type EnumGovIdTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.GovIdType | EnumGovIdTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.GovIdType[] | null
+    notIn?: $Enums.GovIdType[] | null
+    not?: NestedEnumGovIdTypeNullableFilter<$PrismaModel> | $Enums.GovIdType | null
+  }
+
+  export type EnumEducationLevelNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.EducationLevel | EnumEducationLevelFieldRefInput<$PrismaModel> | null
+    in?: $Enums.EducationLevel[] | null
+    notIn?: $Enums.EducationLevel[] | null
+    not?: NestedEnumEducationLevelNullableFilter<$PrismaModel> | $Enums.EducationLevel | null
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type EnumIncomeSourceNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.IncomeSource | EnumIncomeSourceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.IncomeSource[] | null
+    notIn?: $Enums.IncomeSource[] | null
+    not?: NestedEnumIncomeSourceNullableFilter<$PrismaModel> | $Enums.IncomeSource | null
   }
 
   export type BytesNullableFilter<$PrismaModel = never> = {
@@ -13277,6 +11880,13 @@ export namespace Prisma {
     in?: Uint8Array[] | null
     notIn?: Uint8Array[] | null
     not?: NestedBytesNullableFilter<$PrismaModel> | Uint8Array | null
+  }
+
+  export type Enumclient_profileFilter<$PrismaModel = never> = {
+    equals?: $Enums.client_profile | Enumclient_profileFieldRefInput<$PrismaModel>
+    in?: $Enums.client_profile[]
+    notIn?: $Enums.client_profile[]
+    not?: NestedEnumclient_profileFilter<$PrismaModel> | $Enums.client_profile
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -13288,12 +11898,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type AccountCommodityListRelationFilter = {
-    every?: AccountCommodityWhereInput
-    some?: AccountCommodityWhereInput
-    none?: AccountCommodityWhereInput
   }
 
   export type SeminarParticipantListRelationFilter = {
@@ -13325,10 +11929,6 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type AccountCommodityOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type SeminarParticipantOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -13356,20 +11956,55 @@ export namespace Prisma {
     access?: SortOrder
     username?: SortOrder
     email?: SortOrder
+    password?: SortOrder
     firstName?: SortOrder
-    lastName?: SortOrder
     middleName?: SortOrder
-    gender?: SortOrder
-    client_profile?: SortOrder
-    cellphone_no?: SortOrder
-    telephone_no?: SortOrder
-    occupation?: SortOrder
-    position?: SortOrder
-    institution?: SortOrder
-    address?: SortOrder
+    surname?: SortOrder
+    extensionName?: SortOrder
+    sex?: SortOrder
+    street?: SortOrder
+    barangay?: SortOrder
+    municipality?: SortOrder
+    province?: SortOrder
+    region?: SortOrder
+    houseNumber?: SortOrder
+    mobileNumber?: SortOrder
+    landlineNumber?: SortOrder
+    birthMunicipality?: SortOrder
+    birthProvince?: SortOrder
+    birthCountry?: SortOrder
+    dateOfBirth?: SortOrder
+    religion?: SortOrder
+    otherReligionSpecify?: SortOrder
+    civilStatus?: SortOrder
+    spouseName?: SortOrder
+    femaleHouseholdMembers?: SortOrder
+    maleHouseholdMembers?: SortOrder
+    isHouseholdHead?: SortOrder
+    householdHeadName?: SortOrder
+    relationshipToHead?: SortOrder
+    hasGovId?: SortOrder
+    govIdType?: SortOrder
+    govIdNumber?: SortOrder
+    education?: SortOrder
+    isPWD?: SortOrder
+    disabilityType?: SortOrder
+    livelihoodProfile?: SortOrder
+    farmingActivities?: SortOrder
+    fishingActivities?: SortOrder
+    farmworkActivities?: SortOrder
+    youthActivities?: SortOrder
+    otherCropsSpecify?: SortOrder
+    livestockSpecify?: SortOrder
+    fishingOthersSpecify?: SortOrder
+    farmworkOthersSpecify?: SortOrder
+    youthOthersSpecify?: SortOrder
+    grossAnnualIncome?: SortOrder
+    incomeSource?: SortOrder
     picture?: SortOrder
     mimeType?: SortOrder
-    password?: SortOrder
+    client_profile?: SortOrder
+    address?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13379,20 +12014,50 @@ export namespace Prisma {
     access?: SortOrder
     username?: SortOrder
     email?: SortOrder
+    password?: SortOrder
     firstName?: SortOrder
-    lastName?: SortOrder
     middleName?: SortOrder
-    gender?: SortOrder
-    client_profile?: SortOrder
-    cellphone_no?: SortOrder
-    telephone_no?: SortOrder
-    occupation?: SortOrder
-    position?: SortOrder
-    institution?: SortOrder
-    address?: SortOrder
+    surname?: SortOrder
+    extensionName?: SortOrder
+    sex?: SortOrder
+    street?: SortOrder
+    barangay?: SortOrder
+    municipality?: SortOrder
+    province?: SortOrder
+    region?: SortOrder
+    houseNumber?: SortOrder
+    mobileNumber?: SortOrder
+    landlineNumber?: SortOrder
+    birthMunicipality?: SortOrder
+    birthProvince?: SortOrder
+    birthCountry?: SortOrder
+    dateOfBirth?: SortOrder
+    religion?: SortOrder
+    otherReligionSpecify?: SortOrder
+    civilStatus?: SortOrder
+    spouseName?: SortOrder
+    femaleHouseholdMembers?: SortOrder
+    maleHouseholdMembers?: SortOrder
+    isHouseholdHead?: SortOrder
+    householdHeadName?: SortOrder
+    relationshipToHead?: SortOrder
+    hasGovId?: SortOrder
+    govIdType?: SortOrder
+    govIdNumber?: SortOrder
+    education?: SortOrder
+    isPWD?: SortOrder
+    disabilityType?: SortOrder
+    otherCropsSpecify?: SortOrder
+    livestockSpecify?: SortOrder
+    fishingOthersSpecify?: SortOrder
+    farmworkOthersSpecify?: SortOrder
+    youthOthersSpecify?: SortOrder
+    grossAnnualIncome?: SortOrder
+    incomeSource?: SortOrder
     picture?: SortOrder
     mimeType?: SortOrder
-    password?: SortOrder
+    client_profile?: SortOrder
+    address?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13402,20 +12067,50 @@ export namespace Prisma {
     access?: SortOrder
     username?: SortOrder
     email?: SortOrder
+    password?: SortOrder
     firstName?: SortOrder
-    lastName?: SortOrder
     middleName?: SortOrder
-    gender?: SortOrder
-    client_profile?: SortOrder
-    cellphone_no?: SortOrder
-    telephone_no?: SortOrder
-    occupation?: SortOrder
-    position?: SortOrder
-    institution?: SortOrder
-    address?: SortOrder
+    surname?: SortOrder
+    extensionName?: SortOrder
+    sex?: SortOrder
+    street?: SortOrder
+    barangay?: SortOrder
+    municipality?: SortOrder
+    province?: SortOrder
+    region?: SortOrder
+    houseNumber?: SortOrder
+    mobileNumber?: SortOrder
+    landlineNumber?: SortOrder
+    birthMunicipality?: SortOrder
+    birthProvince?: SortOrder
+    birthCountry?: SortOrder
+    dateOfBirth?: SortOrder
+    religion?: SortOrder
+    otherReligionSpecify?: SortOrder
+    civilStatus?: SortOrder
+    spouseName?: SortOrder
+    femaleHouseholdMembers?: SortOrder
+    maleHouseholdMembers?: SortOrder
+    isHouseholdHead?: SortOrder
+    householdHeadName?: SortOrder
+    relationshipToHead?: SortOrder
+    hasGovId?: SortOrder
+    govIdType?: SortOrder
+    govIdNumber?: SortOrder
+    education?: SortOrder
+    isPWD?: SortOrder
+    disabilityType?: SortOrder
+    otherCropsSpecify?: SortOrder
+    livestockSpecify?: SortOrder
+    fishingOthersSpecify?: SortOrder
+    farmworkOthersSpecify?: SortOrder
+    youthOthersSpecify?: SortOrder
+    grossAnnualIncome?: SortOrder
+    incomeSource?: SortOrder
     picture?: SortOrder
     mimeType?: SortOrder
-    password?: SortOrder
+    client_profile?: SortOrder
+    address?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13476,14 +12171,92 @@ export namespace Prisma {
     _max?: NestedEnumgenderFilter<$PrismaModel>
   }
 
-  export type Enumclient_profileWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.client_profile | Enumclient_profileFieldRefInput<$PrismaModel>
-    in?: $Enums.client_profile[]
-    notIn?: $Enums.client_profile[]
-    not?: NestedEnumclient_profileWithAggregatesFilter<$PrismaModel> | $Enums.client_profile
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumclient_profileFilter<$PrismaModel>
-    _max?: NestedEnumclient_profileFilter<$PrismaModel>
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type EnumRelationshipToHeadNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RelationshipToHead | EnumRelationshipToHeadFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RelationshipToHead[] | null
+    notIn?: $Enums.RelationshipToHead[] | null
+    not?: NestedEnumRelationshipToHeadNullableWithAggregatesFilter<$PrismaModel> | $Enums.RelationshipToHead | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumRelationshipToHeadNullableFilter<$PrismaModel>
+    _max?: NestedEnumRelationshipToHeadNullableFilter<$PrismaModel>
+  }
+
+  export type EnumGovIdTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GovIdType | EnumGovIdTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.GovIdType[] | null
+    notIn?: $Enums.GovIdType[] | null
+    not?: NestedEnumGovIdTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.GovIdType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumGovIdTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumGovIdTypeNullableFilter<$PrismaModel>
+  }
+
+  export type EnumEducationLevelNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EducationLevel | EnumEducationLevelFieldRefInput<$PrismaModel> | null
+    in?: $Enums.EducationLevel[] | null
+    notIn?: $Enums.EducationLevel[] | null
+    not?: NestedEnumEducationLevelNullableWithAggregatesFilter<$PrismaModel> | $Enums.EducationLevel | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumEducationLevelNullableFilter<$PrismaModel>
+    _max?: NestedEnumEducationLevelNullableFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type EnumIncomeSourceNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.IncomeSource | EnumIncomeSourceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.IncomeSource[] | null
+    notIn?: $Enums.IncomeSource[] | null
+    not?: NestedEnumIncomeSourceNullableWithAggregatesFilter<$PrismaModel> | $Enums.IncomeSource | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumIncomeSourceNullableFilter<$PrismaModel>
+    _max?: NestedEnumIncomeSourceNullableFilter<$PrismaModel>
   }
 
   export type BytesNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -13494,6 +12267,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBytesNullableFilter<$PrismaModel>
     _max?: NestedBytesNullableFilter<$PrismaModel>
+  }
+
+  export type Enumclient_profileWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.client_profile | Enumclient_profileFieldRefInput<$PrismaModel>
+    in?: $Enums.client_profile[]
+    notIn?: $Enums.client_profile[]
+    not?: NestedEnumclient_profileWithAggregatesFilter<$PrismaModel> | $Enums.client_profile
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumclient_profileFilter<$PrismaModel>
+    _max?: NestedEnumclient_profileFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -13510,112 +12293,16 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type CommodityOrderByRelevanceInput = {
-    fields: CommodityOrderByRelevanceFieldEnum | CommodityOrderByRelevanceFieldEnum[]
-    sort: SortOrder
-    search: string
-  }
-
-  export type CommodityCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    icon?: SortOrder
-    description?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CommodityMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    icon?: SortOrder
-    description?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CommodityMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    icon?: SortOrder
-    description?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CommodityScalarRelationFilter = {
-    is?: CommodityWhereInput
-    isNot?: CommodityWhereInput
-  }
-
-  export type AccountScalarRelationFilter = {
-    is?: AccountWhereInput
-    isNot?: AccountWhereInput
-  }
-
-  export type AccountCommodityOrderByRelevanceInput = {
-    fields: AccountCommodityOrderByRelevanceFieldEnum | AccountCommodityOrderByRelevanceFieldEnum[]
-    sort: SortOrder
-    search: string
-  }
-
-  export type AccountCommodityAccount_idCommodity_idCompoundUniqueInput = {
-    account_id: string
-    commodity_id: string
-  }
-
-  export type AccountCommodityCountOrderByAggregateInput = {
-    id?: SortOrder
-    account_id?: SortOrder
-    commodity_id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type AccountCommodityMaxOrderByAggregateInput = {
-    id?: SortOrder
-    account_id?: SortOrder
-    commodity_id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type AccountCommodityMinOrderByAggregateInput = {
-    id?: SortOrder
-    account_id?: SortOrder
-    commodity_id?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
   export type Enumaudit_actionFilter<$PrismaModel = never> = {
     equals?: $Enums.audit_action | Enumaudit_actionFieldRefInput<$PrismaModel>
     in?: $Enums.audit_action[]
     notIn?: $Enums.audit_action[]
     not?: NestedEnumaudit_actionFilter<$PrismaModel> | $Enums.audit_action
   }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
 
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue
-    lte?: InputJsonValue
-    gt?: InputJsonValue
-    gte?: InputJsonValue
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  export type AccountScalarRelationFilter = {
+    is?: AccountWhereInput
+    isNot?: AccountWhereInput
   }
 
   export type AuditLogOrderByRelevanceInput = {
@@ -13672,32 +12359,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumaudit_actionFilter<$PrismaModel>
     _max?: NestedEnumaudit_actionFilter<$PrismaModel>
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue
-    lte?: InputJsonValue
-    gt?: InputJsonValue
-    gte?: InputJsonValue
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type Enumitem_categoryFilter<$PrismaModel = never> = {
@@ -13892,17 +12553,6 @@ export namespace Prisma {
     not?: NestedEnumtransaction_statusFilter<$PrismaModel> | $Enums.transaction_status
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type ItemStackScalarRelationFilter = {
     is?: ItemStackWhereInput
     isNot?: ItemStackWhereInput
@@ -13977,20 +12627,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumtransaction_statusFilter<$PrismaModel>
     _max?: NestedEnumtransaction_statusFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type Enumseminar_statusFilter<$PrismaModel = never> = {
@@ -14144,13 +12780,6 @@ export namespace Prisma {
     _max?: NestedEnumparticipant_statusFilter<$PrismaModel>
   }
 
-  export type AccountCommodityCreateNestedManyWithoutAccountInput = {
-    create?: XOR<AccountCommodityCreateWithoutAccountInput, AccountCommodityUncheckedCreateWithoutAccountInput> | AccountCommodityCreateWithoutAccountInput[] | AccountCommodityUncheckedCreateWithoutAccountInput[]
-    connectOrCreate?: AccountCommodityCreateOrConnectWithoutAccountInput | AccountCommodityCreateOrConnectWithoutAccountInput[]
-    createMany?: AccountCommodityCreateManyAccountInputEnvelope
-    connect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-  }
-
   export type SeminarParticipantCreateNestedManyWithoutAccountInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -14184,13 +12813,6 @@ export namespace Prisma {
     connectOrCreate?: AuditLogCreateOrConnectWithoutAdminInput | AuditLogCreateOrConnectWithoutAdminInput[]
     createMany?: AuditLogCreateManyAdminInputEnvelope
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
-  }
-
-  export type AccountCommodityUncheckedCreateNestedManyWithoutAccountInput = {
-    create?: XOR<AccountCommodityCreateWithoutAccountInput, AccountCommodityUncheckedCreateWithoutAccountInput> | AccountCommodityCreateWithoutAccountInput[] | AccountCommodityUncheckedCreateWithoutAccountInput[]
-    connectOrCreate?: AccountCommodityCreateOrConnectWithoutAccountInput | AccountCommodityCreateOrConnectWithoutAccountInput[]
-    createMany?: AccountCommodityCreateManyAccountInputEnvelope
-    connect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
   }
 
   export type SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput = {
@@ -14244,30 +12866,40 @@ export namespace Prisma {
     set?: $Enums.gender
   }
 
-  export type Enumclient_profileFieldUpdateOperationsInput = {
-    set?: $Enums.client_profile
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
+  export type NullableEnumRelationshipToHeadFieldUpdateOperationsInput = {
+    set?: $Enums.RelationshipToHead | null
+  }
+
+  export type NullableEnumGovIdTypeFieldUpdateOperationsInput = {
+    set?: $Enums.GovIdType | null
+  }
+
+  export type NullableEnumEducationLevelFieldUpdateOperationsInput = {
+    set?: $Enums.EducationLevel | null
+  }
+
+  export type NullableEnumIncomeSourceFieldUpdateOperationsInput = {
+    set?: $Enums.IncomeSource | null
   }
 
   export type NullableBytesFieldUpdateOperationsInput = {
     set?: Uint8Array | null
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
+  export type Enumclient_profileFieldUpdateOperationsInput = {
+    set?: $Enums.client_profile
   }
 
-  export type AccountCommodityUpdateManyWithoutAccountNestedInput = {
-    create?: XOR<AccountCommodityCreateWithoutAccountInput, AccountCommodityUncheckedCreateWithoutAccountInput> | AccountCommodityCreateWithoutAccountInput[] | AccountCommodityUncheckedCreateWithoutAccountInput[]
-    connectOrCreate?: AccountCommodityCreateOrConnectWithoutAccountInput | AccountCommodityCreateOrConnectWithoutAccountInput[]
-    upsert?: AccountCommodityUpsertWithWhereUniqueWithoutAccountInput | AccountCommodityUpsertWithWhereUniqueWithoutAccountInput[]
-    createMany?: AccountCommodityCreateManyAccountInputEnvelope
-    set?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    disconnect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    delete?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    connect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    update?: AccountCommodityUpdateWithWhereUniqueWithoutAccountInput | AccountCommodityUpdateWithWhereUniqueWithoutAccountInput[]
-    updateMany?: AccountCommodityUpdateManyWithWhereWithoutAccountInput | AccountCommodityUpdateManyWithWhereWithoutAccountInput[]
-    deleteMany?: AccountCommodityScalarWhereInput | AccountCommodityScalarWhereInput[]
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type SeminarParticipantUpdateManyWithoutAccountNestedInput = {
@@ -14340,20 +12972,6 @@ export namespace Prisma {
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
-  export type AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput = {
-    create?: XOR<AccountCommodityCreateWithoutAccountInput, AccountCommodityUncheckedCreateWithoutAccountInput> | AccountCommodityCreateWithoutAccountInput[] | AccountCommodityUncheckedCreateWithoutAccountInput[]
-    connectOrCreate?: AccountCommodityCreateOrConnectWithoutAccountInput | AccountCommodityCreateOrConnectWithoutAccountInput[]
-    upsert?: AccountCommodityUpsertWithWhereUniqueWithoutAccountInput | AccountCommodityUpsertWithWhereUniqueWithoutAccountInput[]
-    createMany?: AccountCommodityCreateManyAccountInputEnvelope
-    set?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    disconnect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    delete?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    connect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    update?: AccountCommodityUpdateWithWhereUniqueWithoutAccountInput | AccountCommodityUpdateWithWhereUniqueWithoutAccountInput[]
-    updateMany?: AccountCommodityUpdateManyWithWhereWithoutAccountInput | AccountCommodityUpdateManyWithWhereWithoutAccountInput[]
-    deleteMany?: AccountCommodityScalarWhereInput | AccountCommodityScalarWhereInput[]
-  }
-
   export type SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -14422,76 +13040,6 @@ export namespace Prisma {
     update?: AuditLogUpdateWithWhereUniqueWithoutAdminInput | AuditLogUpdateWithWhereUniqueWithoutAdminInput[]
     updateMany?: AuditLogUpdateManyWithWhereWithoutAdminInput | AuditLogUpdateManyWithWhereWithoutAdminInput[]
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
-  }
-
-  export type AccountCommodityCreateNestedManyWithoutCommodityInput = {
-    create?: XOR<AccountCommodityCreateWithoutCommodityInput, AccountCommodityUncheckedCreateWithoutCommodityInput> | AccountCommodityCreateWithoutCommodityInput[] | AccountCommodityUncheckedCreateWithoutCommodityInput[]
-    connectOrCreate?: AccountCommodityCreateOrConnectWithoutCommodityInput | AccountCommodityCreateOrConnectWithoutCommodityInput[]
-    createMany?: AccountCommodityCreateManyCommodityInputEnvelope
-    connect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-  }
-
-  export type AccountCommodityUncheckedCreateNestedManyWithoutCommodityInput = {
-    create?: XOR<AccountCommodityCreateWithoutCommodityInput, AccountCommodityUncheckedCreateWithoutCommodityInput> | AccountCommodityCreateWithoutCommodityInput[] | AccountCommodityUncheckedCreateWithoutCommodityInput[]
-    connectOrCreate?: AccountCommodityCreateOrConnectWithoutCommodityInput | AccountCommodityCreateOrConnectWithoutCommodityInput[]
-    createMany?: AccountCommodityCreateManyCommodityInputEnvelope
-    connect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-  }
-
-  export type AccountCommodityUpdateManyWithoutCommodityNestedInput = {
-    create?: XOR<AccountCommodityCreateWithoutCommodityInput, AccountCommodityUncheckedCreateWithoutCommodityInput> | AccountCommodityCreateWithoutCommodityInput[] | AccountCommodityUncheckedCreateWithoutCommodityInput[]
-    connectOrCreate?: AccountCommodityCreateOrConnectWithoutCommodityInput | AccountCommodityCreateOrConnectWithoutCommodityInput[]
-    upsert?: AccountCommodityUpsertWithWhereUniqueWithoutCommodityInput | AccountCommodityUpsertWithWhereUniqueWithoutCommodityInput[]
-    createMany?: AccountCommodityCreateManyCommodityInputEnvelope
-    set?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    disconnect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    delete?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    connect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    update?: AccountCommodityUpdateWithWhereUniqueWithoutCommodityInput | AccountCommodityUpdateWithWhereUniqueWithoutCommodityInput[]
-    updateMany?: AccountCommodityUpdateManyWithWhereWithoutCommodityInput | AccountCommodityUpdateManyWithWhereWithoutCommodityInput[]
-    deleteMany?: AccountCommodityScalarWhereInput | AccountCommodityScalarWhereInput[]
-  }
-
-  export type AccountCommodityUncheckedUpdateManyWithoutCommodityNestedInput = {
-    create?: XOR<AccountCommodityCreateWithoutCommodityInput, AccountCommodityUncheckedCreateWithoutCommodityInput> | AccountCommodityCreateWithoutCommodityInput[] | AccountCommodityUncheckedCreateWithoutCommodityInput[]
-    connectOrCreate?: AccountCommodityCreateOrConnectWithoutCommodityInput | AccountCommodityCreateOrConnectWithoutCommodityInput[]
-    upsert?: AccountCommodityUpsertWithWhereUniqueWithoutCommodityInput | AccountCommodityUpsertWithWhereUniqueWithoutCommodityInput[]
-    createMany?: AccountCommodityCreateManyCommodityInputEnvelope
-    set?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    disconnect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    delete?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    connect?: AccountCommodityWhereUniqueInput | AccountCommodityWhereUniqueInput[]
-    update?: AccountCommodityUpdateWithWhereUniqueWithoutCommodityInput | AccountCommodityUpdateWithWhereUniqueWithoutCommodityInput[]
-    updateMany?: AccountCommodityUpdateManyWithWhereWithoutCommodityInput | AccountCommodityUpdateManyWithWhereWithoutCommodityInput[]
-    deleteMany?: AccountCommodityScalarWhereInput | AccountCommodityScalarWhereInput[]
-  }
-
-  export type CommodityCreateNestedOneWithoutAccountsInput = {
-    create?: XOR<CommodityCreateWithoutAccountsInput, CommodityUncheckedCreateWithoutAccountsInput>
-    connectOrCreate?: CommodityCreateOrConnectWithoutAccountsInput
-    connect?: CommodityWhereUniqueInput
-  }
-
-  export type AccountCreateNestedOneWithoutCommodityInput = {
-    create?: XOR<AccountCreateWithoutCommodityInput, AccountUncheckedCreateWithoutCommodityInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutCommodityInput
-    connect?: AccountWhereUniqueInput
-  }
-
-  export type CommodityUpdateOneRequiredWithoutAccountsNestedInput = {
-    create?: XOR<CommodityCreateWithoutAccountsInput, CommodityUncheckedCreateWithoutAccountsInput>
-    connectOrCreate?: CommodityCreateOrConnectWithoutAccountsInput
-    upsert?: CommodityUpsertWithoutAccountsInput
-    connect?: CommodityWhereUniqueInput
-    update?: XOR<XOR<CommodityUpdateToOneWithWhereWithoutAccountsInput, CommodityUpdateWithoutAccountsInput>, CommodityUncheckedUpdateWithoutAccountsInput>
-  }
-
-  export type AccountUpdateOneRequiredWithoutCommodityNestedInput = {
-    create?: XOR<AccountCreateWithoutCommodityInput, AccountUncheckedCreateWithoutCommodityInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutCommodityInput
-    upsert?: AccountUpsertWithoutCommodityInput
-    connect?: AccountWhereUniqueInput
-    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutCommodityInput, AccountUpdateWithoutCommodityInput>, AccountUncheckedUpdateWithoutCommodityInput>
   }
 
   export type AccountCreateNestedOneWithoutAuditLogsInput = {
@@ -14656,10 +13204,6 @@ export namespace Prisma {
     set?: $Enums.transaction_status
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type ItemStackUpdateOneRequiredWithoutItemTransactionsNestedInput = {
     create?: XOR<ItemStackCreateWithoutItemTransactionsInput, ItemStackUncheckedCreateWithoutItemTransactionsInput>
     connectOrCreate?: ItemStackCreateOrConnectWithoutItemTransactionsInput
@@ -14822,11 +13366,48 @@ export namespace Prisma {
     not?: NestedEnumgenderFilter<$PrismaModel> | $Enums.gender
   }
 
-  export type NestedEnumclient_profileFilter<$PrismaModel = never> = {
-    equals?: $Enums.client_profile | Enumclient_profileFieldRefInput<$PrismaModel>
-    in?: $Enums.client_profile[]
-    notIn?: $Enums.client_profile[]
-    not?: NestedEnumclient_profileFilter<$PrismaModel> | $Enums.client_profile
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type NestedEnumRelationshipToHeadNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.RelationshipToHead | EnumRelationshipToHeadFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RelationshipToHead[] | null
+    notIn?: $Enums.RelationshipToHead[] | null
+    not?: NestedEnumRelationshipToHeadNullableFilter<$PrismaModel> | $Enums.RelationshipToHead | null
+  }
+
+  export type NestedEnumGovIdTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.GovIdType | EnumGovIdTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.GovIdType[] | null
+    notIn?: $Enums.GovIdType[] | null
+    not?: NestedEnumGovIdTypeNullableFilter<$PrismaModel> | $Enums.GovIdType | null
+  }
+
+  export type NestedEnumEducationLevelNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.EducationLevel | EnumEducationLevelFieldRefInput<$PrismaModel> | null
+    in?: $Enums.EducationLevel[] | null
+    notIn?: $Enums.EducationLevel[] | null
+    not?: NestedEnumEducationLevelNullableFilter<$PrismaModel> | $Enums.EducationLevel | null
+  }
+
+  export type NestedEnumIncomeSourceNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.IncomeSource | EnumIncomeSourceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.IncomeSource[] | null
+    notIn?: $Enums.IncomeSource[] | null
+    not?: NestedEnumIncomeSourceNullableFilter<$PrismaModel> | $Enums.IncomeSource | null
   }
 
   export type NestedBytesNullableFilter<$PrismaModel = never> = {
@@ -14834,6 +13415,13 @@ export namespace Prisma {
     in?: Uint8Array[] | null
     notIn?: Uint8Array[] | null
     not?: NestedBytesNullableFilter<$PrismaModel> | Uint8Array | null
+  }
+
+  export type NestedEnumclient_profileFilter<$PrismaModel = never> = {
+    equals?: $Enums.client_profile | Enumclient_profileFieldRefInput<$PrismaModel>
+    in?: $Enums.client_profile[]
+    notIn?: $Enums.client_profile[]
+    not?: NestedEnumclient_profileFilter<$PrismaModel> | $Enums.client_profile
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -14925,14 +13513,89 @@ export namespace Prisma {
     _max?: NestedEnumgenderFilter<$PrismaModel>
   }
 
-  export type NestedEnumclient_profileWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.client_profile | Enumclient_profileFieldRefInput<$PrismaModel>
-    in?: $Enums.client_profile[]
-    notIn?: $Enums.client_profile[]
-    not?: NestedEnumclient_profileWithAggregatesFilter<$PrismaModel> | $Enums.client_profile
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumclient_profileFilter<$PrismaModel>
-    _max?: NestedEnumclient_profileFilter<$PrismaModel>
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRelationshipToHeadNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RelationshipToHead | EnumRelationshipToHeadFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RelationshipToHead[] | null
+    notIn?: $Enums.RelationshipToHead[] | null
+    not?: NestedEnumRelationshipToHeadNullableWithAggregatesFilter<$PrismaModel> | $Enums.RelationshipToHead | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumRelationshipToHeadNullableFilter<$PrismaModel>
+    _max?: NestedEnumRelationshipToHeadNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumGovIdTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GovIdType | EnumGovIdTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.GovIdType[] | null
+    notIn?: $Enums.GovIdType[] | null
+    not?: NestedEnumGovIdTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.GovIdType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumGovIdTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumGovIdTypeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumEducationLevelNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EducationLevel | EnumEducationLevelFieldRefInput<$PrismaModel> | null
+    in?: $Enums.EducationLevel[] | null
+    notIn?: $Enums.EducationLevel[] | null
+    not?: NestedEnumEducationLevelNullableWithAggregatesFilter<$PrismaModel> | $Enums.EducationLevel | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumEducationLevelNullableFilter<$PrismaModel>
+    _max?: NestedEnumEducationLevelNullableFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumIncomeSourceNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.IncomeSource | EnumIncomeSourceFieldRefInput<$PrismaModel> | null
+    in?: $Enums.IncomeSource[] | null
+    notIn?: $Enums.IncomeSource[] | null
+    not?: NestedEnumIncomeSourceNullableWithAggregatesFilter<$PrismaModel> | $Enums.IncomeSource | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumIncomeSourceNullableFilter<$PrismaModel>
+    _max?: NestedEnumIncomeSourceNullableFilter<$PrismaModel>
   }
 
   export type NestedBytesNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -14943,6 +13606,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBytesNullableFilter<$PrismaModel>
     _max?: NestedBytesNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumclient_profileWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.client_profile | Enumclient_profileFieldRefInput<$PrismaModel>
+    in?: $Enums.client_profile[]
+    notIn?: $Enums.client_profile[]
+    not?: NestedEnumclient_profileWithAggregatesFilter<$PrismaModel> | $Enums.client_profile
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumclient_profileFilter<$PrismaModel>
+    _max?: NestedEnumclient_profileFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -14974,29 +13647,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumaudit_actionFilter<$PrismaModel>
     _max?: NestedEnumaudit_actionFilter<$PrismaModel>
-  }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue
-    lte?: InputJsonValue
-    gt?: InputJsonValue
-    gte?: InputJsonValue
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type NestedEnumitem_categoryFilter<$PrismaModel = never> = {
@@ -15094,17 +13744,6 @@ export namespace Prisma {
     not?: NestedEnumtransaction_statusFilter<$PrismaModel> | $Enums.transaction_status
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedEnumtransaction_statusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.transaction_status | Enumtransaction_statusFieldRefInput<$PrismaModel>
     in?: $Enums.transaction_status[]
@@ -15113,20 +13752,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumtransaction_statusFilter<$PrismaModel>
     _max?: NestedEnumtransaction_statusFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumseminar_statusFilter<$PrismaModel = never> = {
@@ -15161,30 +13786,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumparticipant_statusFilter<$PrismaModel>
     _max?: NestedEnumparticipant_statusFilter<$PrismaModel>
-  }
-
-  export type AccountCommodityCreateWithoutAccountInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    commodity: CommodityCreateNestedOneWithoutAccountsInput
-  }
-
-  export type AccountCommodityUncheckedCreateWithoutAccountInput = {
-    id?: string
-    commodity_id: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AccountCommodityCreateOrConnectWithoutAccountInput = {
-    where: AccountCommodityWhereUniqueInput
-    create: XOR<AccountCommodityCreateWithoutAccountInput, AccountCommodityUncheckedCreateWithoutAccountInput>
-  }
-
-  export type AccountCommodityCreateManyAccountInputEnvelope = {
-    data: AccountCommodityCreateManyAccountInput | AccountCommodityCreateManyAccountInput[]
-    skipDuplicates?: boolean
   }
 
   export type SeminarParticipantCreateWithoutAccountInput = {
@@ -15371,33 +13972,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type AccountCommodityUpsertWithWhereUniqueWithoutAccountInput = {
-    where: AccountCommodityWhereUniqueInput
-    update: XOR<AccountCommodityUpdateWithoutAccountInput, AccountCommodityUncheckedUpdateWithoutAccountInput>
-    create: XOR<AccountCommodityCreateWithoutAccountInput, AccountCommodityUncheckedCreateWithoutAccountInput>
-  }
-
-  export type AccountCommodityUpdateWithWhereUniqueWithoutAccountInput = {
-    where: AccountCommodityWhereUniqueInput
-    data: XOR<AccountCommodityUpdateWithoutAccountInput, AccountCommodityUncheckedUpdateWithoutAccountInput>
-  }
-
-  export type AccountCommodityUpdateManyWithWhereWithoutAccountInput = {
-    where: AccountCommodityScalarWhereInput
-    data: XOR<AccountCommodityUpdateManyMutationInput, AccountCommodityUncheckedUpdateManyWithoutAccountInput>
-  }
-
-  export type AccountCommodityScalarWhereInput = {
-    AND?: AccountCommodityScalarWhereInput | AccountCommodityScalarWhereInput[]
-    OR?: AccountCommodityScalarWhereInput[]
-    NOT?: AccountCommodityScalarWhereInput | AccountCommodityScalarWhereInput[]
-    id?: StringFilter<"AccountCommodity"> | string
-    account_id?: StringFilter<"AccountCommodity"> | string
-    commodity_id?: StringFilter<"AccountCommodity"> | string
-    createdAt?: DateTimeFilter<"AccountCommodity"> | Date | string
-    updatedAt?: DateTimeFilter<"AccountCommodity"> | Date | string
-  }
-
   export type SeminarParticipantUpsertWithWhereUniqueWithoutAccountInput = {
     where: SeminarParticipantWhereUniqueInput
     update: XOR<SeminarParticipantUpdateWithoutAccountInput, SeminarParticipantUncheckedUpdateWithoutAccountInput>
@@ -15547,248 +14121,62 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AuditLog"> | Date | string
   }
 
-  export type AccountCommodityCreateWithoutCommodityInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    account: AccountCreateNestedOneWithoutCommodityInput
-  }
-
-  export type AccountCommodityUncheckedCreateWithoutCommodityInput = {
-    id?: string
-    account_id: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AccountCommodityCreateOrConnectWithoutCommodityInput = {
-    where: AccountCommodityWhereUniqueInput
-    create: XOR<AccountCommodityCreateWithoutCommodityInput, AccountCommodityUncheckedCreateWithoutCommodityInput>
-  }
-
-  export type AccountCommodityCreateManyCommodityInputEnvelope = {
-    data: AccountCommodityCreateManyCommodityInput | AccountCommodityCreateManyCommodityInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type AccountCommodityUpsertWithWhereUniqueWithoutCommodityInput = {
-    where: AccountCommodityWhereUniqueInput
-    update: XOR<AccountCommodityUpdateWithoutCommodityInput, AccountCommodityUncheckedUpdateWithoutCommodityInput>
-    create: XOR<AccountCommodityCreateWithoutCommodityInput, AccountCommodityUncheckedCreateWithoutCommodityInput>
-  }
-
-  export type AccountCommodityUpdateWithWhereUniqueWithoutCommodityInput = {
-    where: AccountCommodityWhereUniqueInput
-    data: XOR<AccountCommodityUpdateWithoutCommodityInput, AccountCommodityUncheckedUpdateWithoutCommodityInput>
-  }
-
-  export type AccountCommodityUpdateManyWithWhereWithoutCommodityInput = {
-    where: AccountCommodityScalarWhereInput
-    data: XOR<AccountCommodityUpdateManyMutationInput, AccountCommodityUncheckedUpdateManyWithoutCommodityInput>
-  }
-
-  export type CommodityCreateWithoutAccountsInput = {
-    id?: string
-    name: string
-    icon?: string | null
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CommodityUncheckedCreateWithoutAccountsInput = {
-    id?: string
-    name: string
-    icon?: string | null
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CommodityCreateOrConnectWithoutAccountsInput = {
-    where: CommodityWhereUniqueInput
-    create: XOR<CommodityCreateWithoutAccountsInput, CommodityUncheckedCreateWithoutAccountsInput>
-  }
-
-  export type AccountCreateWithoutCommodityInput = {
-    id?: string
-    access?: $Enums.access
-    username: string
-    email: string
-    firstName: string
-    lastName: string
-    middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
-    picture?: Uint8Array | null
-    mimeType?: string | null
-    password: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
-    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
-    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
-    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
-    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
-  }
-
-  export type AccountUncheckedCreateWithoutCommodityInput = {
-    id?: string
-    access?: $Enums.access
-    username: string
-    email: string
-    firstName: string
-    lastName: string
-    middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
-    picture?: Uint8Array | null
-    mimeType?: string | null
-    password: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
-    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
-    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
-    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
-  }
-
-  export type AccountCreateOrConnectWithoutCommodityInput = {
-    where: AccountWhereUniqueInput
-    create: XOR<AccountCreateWithoutCommodityInput, AccountUncheckedCreateWithoutCommodityInput>
-  }
-
-  export type CommodityUpsertWithoutAccountsInput = {
-    update: XOR<CommodityUpdateWithoutAccountsInput, CommodityUncheckedUpdateWithoutAccountsInput>
-    create: XOR<CommodityCreateWithoutAccountsInput, CommodityUncheckedCreateWithoutAccountsInput>
-    where?: CommodityWhereInput
-  }
-
-  export type CommodityUpdateToOneWithWhereWithoutAccountsInput = {
-    where?: CommodityWhereInput
-    data: XOR<CommodityUpdateWithoutAccountsInput, CommodityUncheckedUpdateWithoutAccountsInput>
-  }
-
-  export type CommodityUpdateWithoutAccountsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CommodityUncheckedUpdateWithoutAccountsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    icon?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AccountUpsertWithoutCommodityInput = {
-    update: XOR<AccountUpdateWithoutCommodityInput, AccountUncheckedUpdateWithoutCommodityInput>
-    create: XOR<AccountCreateWithoutCommodityInput, AccountUncheckedCreateWithoutCommodityInput>
-    where?: AccountWhereInput
-  }
-
-  export type AccountUpdateToOneWithWhereWithoutCommodityInput = {
-    where?: AccountWhereInput
-    data: XOR<AccountUpdateWithoutCommodityInput, AccountUncheckedUpdateWithoutCommodityInput>
-  }
-
-  export type AccountUpdateWithoutCommodityInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
-    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
-    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
-    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
-  }
-
-  export type AccountUncheckedUpdateWithoutCommodityInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
-    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
-    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
-    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
-  }
-
   export type AccountCreateWithoutAuditLogsInput = {
     id?: string
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
     itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
@@ -15800,23 +14188,57 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
     itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
@@ -15844,23 +14266,57 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
     itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
@@ -15872,23 +14328,57 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
     itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
@@ -16092,23 +14582,57 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
@@ -16120,23 +14644,57 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
@@ -16153,23 +14711,57 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
     itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
@@ -16181,23 +14773,57 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
     itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
@@ -16256,23 +14882,57 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
@@ -16284,23 +14944,57 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
@@ -16323,23 +15017,57 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
     itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
@@ -16351,23 +15079,57 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
     itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
@@ -16405,23 +15167,57 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
     itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
@@ -16433,23 +15229,57 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
     seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
     itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
@@ -16493,23 +15323,57 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
     itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
@@ -16521,23 +15385,57 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
     itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
@@ -16594,23 +15492,57 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityCreateNestedManyWithoutAccountInput
     itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
@@ -16622,23 +15554,57 @@ export namespace Prisma {
     access?: $Enums.access
     username: string
     email: string
+    password: string
     firstName: string
-    lastName: string
     middleName?: string | null
-    gender: $Enums.gender
-    client_profile?: $Enums.client_profile
-    cellphone_no?: string | null
-    telephone_no?: string | null
-    occupation?: string | null
-    position?: string | null
-    institution?: string | null
-    address?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
-    password: string
+    client_profile?: $Enums.client_profile
+    address?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    commodity?: AccountCommodityUncheckedCreateNestedManyWithoutAccountInput
     itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
@@ -16717,23 +15683,57 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUpdateManyWithoutAccountNestedInput
     itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
@@ -16745,34 +15745,61 @@ export namespace Prisma {
     access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
-    lastName?: StringFieldUpdateOperationsInput | string
     middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    gender?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    cellphone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    telephone_no?: NullableStringFieldUpdateOperationsInput | string | null
-    occupation?: NullableStringFieldUpdateOperationsInput | string | null
-    position?: NullableStringFieldUpdateOperationsInput | string | null
-    institution?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: AccountCommodityUncheckedUpdateManyWithoutAccountNestedInput
     itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
-  }
-
-  export type AccountCommodityCreateManyAccountInput = {
-    id?: string
-    commodity_id: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type SeminarParticipantCreateManyAccountInput = {
@@ -16839,27 +15866,6 @@ export namespace Prisma {
     ipAddress?: string | null
     userAgent?: string | null
     createdAt?: Date | string
-  }
-
-  export type AccountCommodityUpdateWithoutAccountInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    commodity?: CommodityUpdateOneRequiredWithoutAccountsNestedInput
-  }
-
-  export type AccountCommodityUncheckedUpdateWithoutAccountInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    commodity_id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AccountCommodityUncheckedUpdateManyWithoutAccountInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    commodity_id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SeminarParticipantUpdateWithoutAccountInput = {
@@ -17060,34 +16066,6 @@ export namespace Prisma {
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AccountCommodityCreateManyCommodityInput = {
-    id?: string
-    account_id: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AccountCommodityUpdateWithoutCommodityInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    account?: AccountUpdateOneRequiredWithoutCommodityNestedInput
-  }
-
-  export type AccountCommodityUncheckedUpdateWithoutCommodityInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    account_id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AccountCommodityUncheckedUpdateManyWithoutCommodityInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    account_id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ItemStackCreateManyItemInput = {

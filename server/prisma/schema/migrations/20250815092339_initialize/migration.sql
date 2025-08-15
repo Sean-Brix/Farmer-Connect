@@ -4,50 +4,60 @@ CREATE TABLE `accounts` (
     `access` ENUM('Admin', 'User', 'Super Admin') NOT NULL DEFAULT 'User',
     `username` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
+    `password` VARCHAR(191) NOT NULL,
     `firstName` VARCHAR(191) NOT NULL,
-    `lastName` VARCHAR(191) NOT NULL,
     `middleName` VARCHAR(191) NULL,
-    `gender` ENUM('Male', 'Female', 'Other') NOT NULL,
-    `client_profile` ENUM('Fishfolk', 'Rural Based Org', 'Student', 'Agricultural/Fisheries Technician', 'Youth', 'Women', 'Govt Employee', 'PWD', 'Indigenous People', 'Other') NOT NULL DEFAULT 'Other',
-    `cellphone_no` VARCHAR(191) NULL,
-    `telephone_no` VARCHAR(191) NULL,
-    `occupation` VARCHAR(191) NULL,
-    `position` VARCHAR(191) NULL,
-    `institution` VARCHAR(191) NULL,
-    `address` VARCHAR(191) NULL,
+    `surname` VARCHAR(191) NOT NULL,
+    `extensionName` VARCHAR(191) NULL,
+    `sex` ENUM('Male', 'Female', 'Other') NOT NULL DEFAULT 'Other',
+    `street` VARCHAR(191) NULL,
+    `barangay` VARCHAR(191) NULL,
+    `municipality` VARCHAR(191) NULL,
+    `province` VARCHAR(191) NULL,
+    `region` VARCHAR(191) NULL,
+    `houseNumber` VARCHAR(191) NULL,
+    `mobileNumber` VARCHAR(191) NULL,
+    `landlineNumber` VARCHAR(191) NULL,
+    `birthMunicipality` VARCHAR(191) NULL,
+    `birthProvince` VARCHAR(191) NULL,
+    `birthCountry` VARCHAR(191) NULL,
+    `dateOfBirth` DATETIME(3) NULL,
+    `religion` VARCHAR(191) NULL,
+    `otherReligionSpecify` VARCHAR(191) NULL,
+    `civilStatus` VARCHAR(191) NULL,
+    `spouseName` VARCHAR(191) NULL,
+    `femaleHouseholdMembers` VARCHAR(191) NULL,
+    `maleHouseholdMembers` VARCHAR(191) NULL,
+    `isHouseholdHead` BOOLEAN NULL,
+    `householdHeadName` VARCHAR(191) NULL,
+    `relationshipToHead` ENUM('Son', 'Daughter', 'Spouse', 'Father', 'Mother', 'Brother', 'Sister', 'Grandchild', 'Son-in-law', 'Daughter-in-law', 'Other relative') NULL,
+    `hasGovId` BOOLEAN NULL,
+    `govIdType` ENUM('National ID', 'Drivers License', 'Passport', 'Voters ID', 'School ID', 'SSS ID', 'PhilHealth ID', 'TIN ID', 'PRC ID', 'Senior Citizen ID', 'PWD ID', 'Other') NULL,
+    `govIdNumber` VARCHAR(191) NULL,
+    `education` ENUM('No formal education', 'Kinder', 'Elementary level', 'Elementary graduate', 'High school level', 'High school graduate', 'Senior high school level', 'Senior high school graduate', 'College level', 'College graduate', 'Post-graduate studies', 'Vocational/Technical') NULL,
+    `isPWD` BOOLEAN NULL,
+    `disabilityType` VARCHAR(191) NULL,
+    `livelihoodProfile` JSON NULL,
+    `farmingActivities` JSON NULL,
+    `fishingActivities` JSON NULL,
+    `farmworkActivities` JSON NULL,
+    `youthActivities` JSON NULL,
+    `otherCropsSpecify` VARCHAR(191) NULL,
+    `livestockSpecify` VARCHAR(191) NULL,
+    `fishingOthersSpecify` VARCHAR(191) NULL,
+    `farmworkOthersSpecify` VARCHAR(191) NULL,
+    `youthOthersSpecify` VARCHAR(191) NULL,
+    `grossAnnualIncome` VARCHAR(191) NULL,
+    `incomeSource` ENUM('farming', 'non-farming') NULL,
     `picture` LONGBLOB NULL,
     `mimeType` VARCHAR(191) NULL,
-    `password` VARCHAR(191) NOT NULL,
+    `client_profile` ENUM('Fishfolk', 'Rural Based Org', 'Student', 'Agricultural/Fisheries Technician', 'Youth', 'Women', 'Govt Employee', 'PWD', 'Indigenous People', 'Other') NOT NULL DEFAULT 'Other',
+    `address` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `accounts_username_key`(`username`),
     UNIQUE INDEX `accounts_email_key`(`email`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `commodities` (
-    `id` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191) NOT NULL,
-    `icon` VARCHAR(191) NULL,
-    `description` VARCHAR(191) NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    UNIQUE INDEX `commodities_name_key`(`name`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `accounts_commodities` (
-    `id` VARCHAR(191) NOT NULL,
-    `account_id` VARCHAR(191) NOT NULL,
-    `commodity_id` VARCHAR(191) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    UNIQUE INDEX `accounts_commodities_account_id_commodity_id_key`(`account_id`, `commodity_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -147,12 +157,6 @@ CREATE TABLE `seminar_participants` (
     UNIQUE INDEX `seminar_participants_seminar_id_account_id_key`(`seminar_id`, `account_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- AddForeignKey
-ALTER TABLE `accounts_commodities` ADD CONSTRAINT `accounts_commodities_commodity_id_fkey` FOREIGN KEY (`commodity_id`) REFERENCES `commodities`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `accounts_commodities` ADD CONSTRAINT `accounts_commodities_account_id_fkey` FOREIGN KEY (`account_id`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `audit_logs` ADD CONSTRAINT `audit_logs_adminId_fkey` FOREIGN KEY (`adminId`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
