@@ -5,21 +5,83 @@ model Account {
   access         access             @default(User)
   username       String             @unique
   email          String             @unique
+  password       String
+  
+  // Personal Information
   firstName      String
-  lastName       String
   middleName     String?
-  gender         gender
-  client_profile client_profile     @default(Other)
-  cellphone_no   String?
-  telephone_no   String?
-  occupation     String?
-  position       String?
-  institution    String?
-  address        String?
+  surname        String             // Changed from lastName to surname to match form
+  extensionName  String?            // Jr., Sr., III, etc.
+  sex            gender             // Renamed from gender to sex to match form
+  
+  // Address Information
+  street         String?
+  barangay       String?
+  municipality   String?
+  province       String?
+  region         String?
+  houseNumber    String?
+  
+  // Contact Information
+  mobileNumber   String?            // Renamed from cellphone_no
+  landlineNumber String?            // Renamed from telephone_no
+  
+  // Birth Information
+  birthMunicipality String?         // New field for place of birth
+  birthProvince     String?         // New field for birth province
+  birthCountry      String?         // New field for birth country
+  dateOfBirth       DateTime?       // New field
+  
+  // Personal Details
+  religion               String?
+  otherReligionSpecify   String?    // For when religion is "Others"
+  civilStatus            String?
+  spouseName             String?
+  
+  // Household Information
+  femaleHouseholdMembers String?
+  maleHouseholdMembers   String?
+  isHouseholdHead        String?    // Yes/No
+  householdHeadName      String?    // If not household head
+  relationshipToHead     String?    // Relationship to household head
+  
+  // Government ID Information
+  hasGovId       String?            // Yes/No
+  govIdType      String?            // Type of government ID
+  govIdNumber    String?            // Government ID number
+  
+  // Education
+  education      String?            // Single education level
+  
+  // PWD Information
+  isPWD          String?            // Yes/No
+  disabilityType String?            // Type of disability if PWD
+  
+  // Livelihood Profile (stored as JSON arrays)
+  livelihoodProfile      Json?      // Array of livelihood types
+  farmingActivities      Json?      // Array of farming activities
+  fishingActivities      Json?      // Array of fishing activities
+  farmworkActivities     Json?      // Array of farmwork activities
+  youthActivities        Json?      // Array of youth activities
+  
+  // Livelihood Specifications
+  otherCropsSpecify      String?
+  livestockSpecify       String?
+  fishingOthersSpecify   String?
+  farmworkOthersSpecify  String?
+  youthOthersSpecify     String?
+  
+  // Income Information
+  grossAnnualIncome      String?
+  incomeSource           String?    // farming or non-farming
+  
+  // Profile Photo
   picture        Bytes?
   mimeType       String?
-  commodity      AccountCommodity[]
-  password       String
+
+  // Legacy fields (kept for compatibility)
+  client_profile client_profile     @default(Other)
+  address        String?            // Legacy address field
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
 
@@ -31,36 +93,6 @@ model Account {
   auditLogs         AuditLog[]           @relation("AdminAuditLogs")
 
   @@map("accounts")
-}
-
-model Commodity {
-  id          String             @id @default(cuid())
-  name        String             @unique
-  icon        String?
-  description String?
-  accounts    AccountCommodity[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("commodities")
-}
-
-//? ====================================== RELATIONSHIPS ====================================== ?//
-
-model AccountCommodity {
-  id           String   @id @default(cuid())
-  account_id   String
-  commodity_id String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  // Relations
-  commodity Commodity @relation(fields: [commodity_id], references: [id])
-  account   Account   @relation(fields: [account_id], references: [id])
-
-  @@unique([account_id, commodity_id])
-  @@map("accounts_commodities")
 }
 
 //? ========================================== ENUMS ========================================== ?//

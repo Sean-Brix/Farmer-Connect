@@ -68,23 +68,93 @@ async function createAccount() {
 
       await prisma.account.create({
         data: {
+          // Core authentication fields
           username: user.username,
           email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
           password: hashedPassword,
           access: user.access,
-          client_profile: user.client_profile,
+          
+          // Personal Information
+          firstName: user.firstName,
           middleName: user.middleName,
-          gender: user.gender,
-          cellphone_no: user.cellphone_no,
-          telephone_no: user.telephone_no,
-          occupation: user.occupation,
-          institution: user.institution,
-          position: user.position,
-          address: user.address,
+          surname: user.surname,
+          extensionName: user.extensionName,
+          sex: user.sex,
+          
+          // Address Information
+          street: user.street,
+          barangay: user.barangay,
+          municipality: user.municipality,
+          province: user.province,
+          region: user.region,
+          houseNumber: user.houseNumber,
+          
+          // Contact Information
+          mobileNumber: user.mobileNumber,
+          landlineNumber: user.landlineNumber,
+          
+          // Birth Information
+          birthMunicipality: user.birthMunicipality,
+          birthProvince: user.birthProvince,
+          birthCountry: user.birthCountry,
+          dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : null,
+          
+          // Personal Details
+          religion: user.religion,
+          otherReligionSpecify: user.otherReligionSpecify,
+          civilStatus: user.civilStatus,
+          spouseName: user.spouseName,
+          
+          // Household Information
+          femaleHouseholdMembers: user.femaleHouseholdMembers,
+          maleHouseholdMembers: user.maleHouseholdMembers,
+          isHouseholdHead: user.isHouseholdHead,
+          householdHeadName: user.householdHeadName,
+          relationshipToHead: user.relationshipToHead,
+          
+          // Government ID Information
+          hasGovId: user.hasGovId,
+          govIdType: user.govIdType,
+          govIdNumber: user.govIdNumber,
+          
+          // Education
+          education: user.education,
+          
+          // PWD Information
+          isPWD: user.isPWD,
+          disabilityType: user.disabilityType,
+          
+          // Livelihood Profile (as JSON)
+          livelihoodProfile: user.livelihoodProfile,
+          farmingActivities: user.farmingActivities,
+          fishingActivities: user.fishingActivities,
+          farmworkActivities: user.farmworkActivities,
+          youthActivities: user.youthActivities,
+          
+          // Livelihood Specifications
+          otherCropsSpecify: user.otherCropsSpecify,
+          livestockSpecify: user.livestockSpecify,
+          fishingOthersSpecify: user.fishingOthersSpecify,
+          farmworkOthersSpecify: user.farmworkOthersSpecify,
+          youthOthersSpecify: user.youthOthersSpecify,
+          
+          // Income Information
+          grossAnnualIncome: user.grossAnnualIncome,
+          incomeSource: user.incomeSource,
+          
+          // RSBSA Reference Number
+          referenceNumber: user.referenceNumber,
+          
+          // Profile Photo
           picture: picture,
           mimeType: mimeType,
+          
+          // Legacy fields (for compatibility)
+          client_profile: user.client_profile,
+          occupation: user.occupation,
+          position: user.position,
+          institution: user.institution,
+          address: user.address,
         }
       })
 
@@ -97,72 +167,6 @@ async function createAccount() {
   }
 }
 
-
-//? ======================================== COMMODITY ======================================== ?//
-
-import commodities from './Data/commodities.json' with { type: 'json' }
-
-async function createCommodities() {
-  for (const commodity of commodities) {
-    // Check if commodity with the same name already exists
-    const existingCommodity = await prisma.commodity.findUnique({
-      where: { name: commodity.name }
-    });
-    if (existingCommodity) {
-      continue;
-    }
-    await prisma.commodity.create({
-      data: {
-        name: commodity.name,
-        description: commodity.description,
-      },
-    });
-  }
-}
-
-//? ==================================== ACCOUNT COMMODITIES =================================== ?//
-
-async function createAccountCommodities() {
-  const accountsData = await prisma.account.findMany();
-  const commoditiesData = await prisma.commodity.findMany();
-
-  for (const account of accountsData) {
-    // Randomly determine how many commodities this account will have
-    const numberOfCommodities = Math.floor(Math.random() * commoditiesData.length);
-
-    // Shuffle the commodities array to pick commodities randomly
-    const shuffledCommodities = [...commoditiesData.sort(() => Math.random() - 0.5)];
-
-    // Track which commodity IDs have already been assigned to this account
-    const assignedCommodityIds = new Set();
-
-    // Assign the randomly selected commodities to the account
-    for (let i = 0; i < numberOfCommodities; i++) {
-      const commodity = shuffledCommodities[i];
-      // Check if this (account_id, commodity_id) pair already exists
-      if (assignedCommodityIds.has(commodity.id)) {
-        continue;
-      }
-      const existing = await prisma.accountCommodity.findUnique({
-        where: {
-          account_id_commodity_id: {
-            account_id: account.id,
-            commodity_id: commodity.id
-          }
-        }
-      });
-      if (!existing) {
-        await prisma.accountCommodity.create({
-          data: {
-            account_id: account.id,
-            commodity_id: commodity.id,
-          },
-        });
-        assignedCommodityIds.add(commodity.id);
-      }
-    }
-  }
-}
 
 //? ======================================== SEMINARS ======================================== ?//
 
@@ -795,12 +799,6 @@ async function main() {
   try {
     await createAccount();
     console.log('Accounts created successfully.');
-
-    await createCommodities();
-    console.log('Commodities created successfully.');
-
-    await createAccountCommodities();
-    console.log('Account Commodities created successfully.');
 
     await createSeminars();
     console.log('Seminars created successfully.');
