@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 export default function User_Details({ user, isEdit, refetchRow}) {
     const queryClient = useQueryClient();
     const [isEditing, setIsEditing] = useState(isEdit);
+    const [activeTab, setActiveTab] = useState('personal');
+    const [editedUser, setEditedUser] = useState({});
     const [errorModal, setErrorModal] = useState({ open: false, message: '' });
     const [confirmModal, setConfirmModal] = useState({ open: false, onConfirm: null });
 
@@ -17,11 +19,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                 throw new Error('Failed to fetch user details');
             }
 
-            if (!data.middleName) {
-                data.middleName = 'none';
-                data.initial = '';
-            } else {
-                data.initial = ' ' + data.middleName[0] + '.';
+            // Format date fields
+            if (data.dateOfBirth) {
+                data.dateOfBirth = new Date(data.dateOfBirth).toISOString().split('T')[0];
             }
 
             return data;
@@ -29,16 +29,40 @@ export default function User_Details({ user, isEdit, refetchRow}) {
         initialData: { ...user },
         enabled: !!user?.id,
     });
+    
     useEffect(() => {
         refetchDetails();
     }, [user.id, refetchDetails]);
 
+    useEffect(() => {
+        if (userDetail) {
+            setEditedUser(userDetail);
+        }
+    }, [userDetail]);
+
     const updateUserDetails = useMutation({
         mutationFn: async (updatedUser) => {
-            if (updatedUser.middleName === 'none') {
-                updatedUser.middleName = null;
-                updatedUser.initial = '';
+            // Clean up data before sending
+            const cleanedUser = { ...updatedUser };
+            
+            // Convert empty strings to null for optional fields
+            Object.keys(cleanedUser).forEach(key => {
+                if (cleanedUser[key] === '') {
+                    cleanedUser[key] = null;
+                }
+            });
+
+            // Handle boolean fields
+            if (typeof cleanedUser.isHouseholdHead === 'string') {
+                cleanedUser.isHouseholdHead = cleanedUser.isHouseholdHead === 'true';
             }
+            if (typeof cleanedUser.hasGovId === 'string') {
+                cleanedUser.hasGovId = cleanedUser.hasGovId === 'true';
+            }
+            if (typeof cleanedUser.isPWD === 'string') {
+                cleanedUser.isPWD = cleanedUser.isPWD === 'true';
+            }
+
             const response = await fetch(
                 `/api/account/all/details/${user.id}`,
                 {
@@ -46,14 +70,14 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(updatedUser),
+                    body: JSON.stringify(cleanedUser),
                 }
             );
 
             if (!response.ok) {
                 const data = await response.json();
                 if (response.status === 403) {
-                    throw new Error('Unauthorize: Super Admin only');
+                    throw new Error('Unauthorized: Super Admin only');
                 }
                 throw new Error(data.message || 'Something Went Wrong');
             }
@@ -66,7 +90,6 @@ export default function User_Details({ user, isEdit, refetchRow}) {
         },
 
         onSuccess: (_, __, ___) => {
-
             queryClient.invalidateQueries(['userDetails', user.id]);
             queryClient.invalidateQueries({
                 queryKey: ['accounts'],
@@ -85,9 +108,10 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             setIsEditing(false);
         },
     });
+
     const handleChange = (key, value) => {
-        queryClient.setQueryData(['userDetails', user.id], (oldData) => ({
-            ...oldData,
+        setEditedUser(prev => ({
+            ...prev,
             [key]: value,
         }));
     };
@@ -97,449 +121,756 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             open: true,
             onConfirm: async () => {
                 setConfirmModal({ open: false, onConfirm: null });
-                await updateUserDetails.mutateAsync(
-                    queryClient.getQueryData(['userDetails', user.id])
-                );
+                await updateUserDetails.mutateAsync(editedUser);
             }
         });
     };
+
     const handleCancel = () => {
-        queryClient.setQueryData(['userDetails', user.id], { ...userDetail });
+        setEditedUser(userDetail);
         setIsEditing(false);
     };
 
+    const renderField = (label, value, fieldName, type = 'text', options = null) => {
+        if (isEditing) {
+            const editValue = editedUser?.[fieldName];
+            
+            if (type === 'select' && options) {
+                return (
+                    <div className="space-y-2">
+                        <label className="block text-xs font-medium text-gray-600">{label}</label>
+                        <select
+                            value={editValue || ''}
+                            onChange={(e) => handleChange(fieldName, e.target.value)}
+                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                        >
+                            {options.map(option => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                );
+            } else if (type === 'boolean') {
+                return (
+                    <div className="space-y-2">
+                        <label className="block text-xs font-medium text-gray-600">{label}</label>
+                        <select
+                            value={editValue === true ? 'true' : editValue === false ? 'false' : ''}
+                            onChange={(e) => handleChange(fieldName, e.target.value === 'true')}
+                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                        >
+                            <option value="">Select</option>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                );
+            } else {
+                return (
+                    <div className="space-y-2">
+                        <label className="block text-xs font-medium text-gray-600">{label}</label>
+                        <input
+                            type={type}
+                            value={editValue || ''}
+                            onChange={(e) => handleChange(fieldName, e.target.value)}
+                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                            autoComplete="off"
+                        />
+                    </div>
+                );
+            }
+        } else {
+            // Display mode
+            let displayValue = value;
+            
+            if (type === 'boolean') {
+                displayValue = value === true ? 'Yes' : value === false ? 'No' : '-';
+            } else if (type === 'date' && value) {
+                displayValue = new Date(value).toLocaleDateString('en-US', { 
+                    year: 'numeric', month: 'long', day: 'numeric' 
+                });
+            } else if (!value) {
+                displayValue = '-';
+            }
+
+            return (
+                <div className="space-y-2">
+                    <label className="block text-xs font-medium text-gray-600">{label}</label>
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
+                        {displayValue}
+                    </div>
+                </div>
+            );
+        }
+    };
+
     const renderDisplayMode = () => (
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
             {/* User Profile Header */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-4">
-                        <img
-                            src={userDetail?.picture || `/api/account/all/picture/${userDetail?.id}?refresh=${new Date().getTime()}`}
-                            alt={`${userDetail?.username}'s profile`}
-                            className="w-16 h-16 rounded-full object-cover border-2 border-gray-300 shadow-sm"
-                        />
+            <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white py-8 rounded-2xl shadow-lg mb-6">
+                <div className="flex items-center justify-between px-8">
+                    <div className="flex items-center gap-6">
+                        <div className="w-24 h-24 rounded-full bg-white p-1 shadow-xl">
+                            <img
+                                src={userDetail?.picture || `/api/account/all/picture/${userDetail?.id}?refresh=${new Date().getTime()}`}
+                                alt={`${userDetail?.username}'s profile`}
+                                className="w-full h-full rounded-full object-cover"
+                            />
+                        </div>
                         <div>
-                            <h3 className="text-xl font-bold text-gray-900">{userDetail?.firstName} {userDetail?.lastName}</h3>
-                            <p className="text-gray-600">@{userDetail?.username}</p>
+                            <h1 className="text-3xl font-bold mb-2">
+                                {userDetail?.firstName} {userDetail?.middleName ? userDetail.middleName + ' ' : ''}{userDetail?.surname}
+                                {userDetail?.extensionName ? ' ' + userDetail.extensionName : ''}
+                            </h1>
+                            <div className="flex flex-col gap-1">
+                                <span className="text-blue-100">@{userDetail?.username}</span>
+                                <span className="text-blue-100">{userDetail?.email}</span>
+                            </div>
                         </div>
                     </div>
                     <div className="text-right">
-                        <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
-                            userDetail?.access === 'Super Admin'
-                                ? 'bg-red-100 text-red-800 border border-red-200'
+                        <span className={`inline-flex px-4 py-2 rounded-full text-sm font-bold ${
+                            userDetail?.access === 'Super_Admin'
+                                ? 'bg-red-500 text-white'
                                 : userDetail?.access === 'Admin'
-                                ? 'bg-blue-100 text-blue-800 border border-blue-200'
-                                : 'bg-green-100 text-green-800 border border-green-200'
+                                ? 'bg-yellow-500 text-black'
+                                : 'bg-green-500 text-white'
                         }`}>
-                            {userDetail?.access || 'User'}
+                            {userDetail?.access?.replace('_', ' ') || 'User'}
                         </span>
-                        <p className="text-xs text-gray-500 mt-1">ID: {userDetail?.id}</p>
+                        <p className="text-xs text-blue-200 mt-2">ID: {userDetail?.id}</p>
                     </div>
                 </div>
             </div>
 
-            {/* User Information Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Personal Information */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="p-2 bg-gray-600 rounded-lg">
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                        </div>
-                        <h4 className="text-lg font-semibold text-gray-900">Personal Information</h4>
-                    </div>
-                    <div className="space-y-4">
-                        <div className="grid grid-cols-3 gap-3">
-                            <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">First Name</label>
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.firstName || '-'}</div>
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">Middle Name</label>
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.middleName || '-'}</div>
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">Last Name</label>
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.lastName || '-'}</div>
-                            </div>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Gender</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.gender || '-'}</div>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Address</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.address || '-'}</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Contact Information */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="p-2 bg-gray-600 rounded-lg">
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                            </svg>
-                        </div>
-                        <h4 className="text-lg font-semibold text-gray-900">Contact Information</h4>
-                    </div>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Email Address</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.email || '-'}</div>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Telephone No</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.telephone_no || '-'}</div>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Cellphone No</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.cellphone_no || '-'}</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Professional Information */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="p-2 bg-gray-600 rounded-lg">
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                            </svg>
-                        </div>
-                        <h4 className="text-lg font-semibold text-gray-900">Professional Information</h4>
-                    </div>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Client Profile</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.client_profile || '-'}</div>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Occupation</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.occupation || '-'}</div>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Position</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.position || '-'}</div>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Institution</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">{userDetail?.institution || '-'}</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* System Information */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="p-2 bg-gray-600 rounded-lg">
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <h4 className="text-lg font-semibold text-gray-900">System Information</h4>
-                    </div>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Created At</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
-                                {userDetail?.createdAt ? new Date(userDetail?.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '-'}
-                            </div>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Updated At</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
-                                {userDetail?.updatedAt ? new Date(userDetail?.updatedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '-'}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-
-    const renderEditMode = () => (
-        <div className="max-w-5xl mx-auto">
-            {/* User Profile Header */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-4">
-                        <img
-                            src={userDetail?.picture || `/api/account/all/picture/${userDetail?.id}?refresh=${new Date().getTime()}`}
-                            alt={`${userDetail?.username}'s profile`}
-                            className="w-16 h-16 rounded-full object-cover border-2 border-gray-300 shadow-sm"
-                        />
-                        <div>
-                            <h3 className="text-xl font-bold text-gray-900">{userDetail?.firstName} {userDetail?.lastName}</h3>
-                            <p className="text-gray-600">@{userDetail?.username}</p>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
-                            userDetail?.access === 'Super Admin'
-                                ? 'bg-red-100 text-red-800 border border-red-200'
-                                : userDetail?.access === 'Admin'
-                                ? 'bg-blue-100 text-blue-800 border border-blue-200'
-                                : 'bg-green-100 text-green-800 border border-green-200'
-                        }`}>
-                            {userDetail?.access || 'User'}
-                        </span>
-                        <p className="text-xs text-gray-500 mt-1">ID: {userDetail?.id}</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Edit Form Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Personal Information */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="p-2 bg-gray-600 rounded-lg">
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                        </div>
-                        <h4 className="text-lg font-semibold text-gray-900">Personal Information</h4>
-                    </div>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Username</label>
-                            <input
-                                type="text"
-                                value={userDetail?.username || ''}
-                                onChange={(e) => handleChange('username', e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                                autoComplete="off"
-                            />
-                        </div>
-                        <div className="grid grid-cols-3 gap-3">
-                            <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">First Name</label>
-                                <input
-                                    type="text"
-                                    value={userDetail?.firstName || ''}
-                                    onChange={(e) => handleChange('firstName', e.target.value)}
-                                    className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                                    autoComplete="off"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">Middle Name</label>
-                                <input
-                                    type="text"
-                                    value={userDetail?.middleName || ''}
-                                    onChange={(e) => handleChange('middleName', e.target.value)}
-                                    className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                                    autoComplete="off"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">Last Name</label>
-                                <input
-                                    type="text"
-                                    value={userDetail?.lastName || ''}
-                                    onChange={(e) => handleChange('lastName', e.target.value)}
-                                    className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                                    autoComplete="off"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Gender</label>
-                            <select
-                                value={userDetail?.gender || ''}
-                                onChange={(e) => handleChange('gender', e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
+            {/* Tab Navigation */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mb-6">
+                <div className="border-b border-gray-200">
+                    <nav className="flex space-x-8 px-6" aria-label="Tabs">
+                        {[
+                            { id: 'personal', name: 'Personal Info', icon: 'fa-user' },
+                            { id: 'contact', name: 'Contact & Address', icon: 'fa-map-marker-alt' },
+                            { id: 'family', name: 'Family & Background', icon: 'fa-users' },
+                            { id: 'professional', name: 'Professional Info', icon: 'fa-briefcase' },
+                            { id: 'government', name: 'Government & IDs', icon: 'fa-id-card' },
+                            { id: 'system', name: 'System Info', icon: 'fa-cog' }
+                        ].map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`${
+                                    activeTab === tab.id
+                                        ? 'border-blue-500 text-blue-600 bg-blue-50'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 rounded-t-lg`}
                             >
-                                <option value="">Select</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Address</label>
-                            <input
-                                type="text"
-                                value={userDetail?.address || ''}
-                                onChange={(e) => handleChange('address', e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                                autoComplete="off"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Access Level</label>
-                            <select
-                                value={userDetail?.access || ''}
-                                onChange={(e) => handleChange('access', e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                            >
-                                <option value="User">User</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Super Admin">Super Admin</option>
-                            </select>
-                        </div>
-                    </div>
+                                <i className={`fa-solid ${tab.icon}`}></i>
+                                {tab.name}
+                            </button>
+                        ))}
+                    </nav>
                 </div>
 
-                {/* Contact Information */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="p-2 bg-gray-600 rounded-lg">
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                            </svg>
-                        </div>
-                        <h4 className="text-lg font-semibold text-gray-900">Contact Information</h4>
-                    </div>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Email Address</label>
-                            <input
-                                type="email"
-                                value={userDetail?.email || ''}
-                                onChange={(e) => handleChange('email', e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                                autoComplete="off"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Telephone No</label>
-                            <input
-                                type="text"
-                                value={userDetail?.telephone_no || ''}
-                                onChange={(e) => handleChange('telephone_no', e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                                autoComplete="off"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Cellphone No</label>
-                            <input
-                                type="text"
-                                value={userDetail?.cellphone_no || ''}
-                                onChange={(e) => handleChange('cellphone_no', e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                                autoComplete="off"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Professional Information */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="p-2 bg-gray-600 rounded-lg">
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                            </svg>
-                        </div>
-                        <h4 className="text-lg font-semibold text-gray-900">Professional Information</h4>
-                    </div>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Client Profile</label>
-                            <select
-                                value={userDetail?.client_profile || ''}
-                                onChange={(e) => handleChange('client_profile', e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                            >
-                                <option value="">Select</option>
-                                <option value="Fishfolk">Fishfolk</option>
-                                <option value="Rural Based Org">Rural Based Org</option>
-                                <option value="Farmer">Farmer</option>
-                                <option value="Government Employee">Government Employee</option>
-                                <option value="Private Sector">Private Sector</option>
-                                <option value="Student">Student</option>
-                                <option value="Agricultural/Fisheries Technician">Agricultural/Fisheries Technician</option>
-                                <option value="Youth">Youth</option>
-                                <option value="Women">Women</option>
-                                <option value="Gov't Employee">Gov't Employee</option>
-                                <option value="PWD">PWD</option>
-                                <option value="Indigenous People">Indigenous People</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Occupation</label>
-                            <input
-                                type="text"
-                                value={userDetail?.occupation || ''}
-                                onChange={(e) => handleChange('occupation', e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                                autoComplete="off"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Position</label>
-                            <input
-                                type="text"
-                                value={userDetail?.position || ''}
-                                onChange={(e) => handleChange('position', e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                                autoComplete="off"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Institution</label>
-                            <input
-                                type="text"
-                                value={userDetail?.institution || ''}
-                                onChange={(e) => handleChange('institution', e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition"
-                                autoComplete="off"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* System Information */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="p-2 bg-gray-600 rounded-lg">
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <h4 className="text-lg font-semibold text-gray-900">System Information</h4>
-                    </div>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Created At</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
-                                {userDetail?.createdAt ? new Date(userDetail?.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '-'}
+                <div className="p-8">
+                    {/* Personal Information Tab */}
+                    {activeTab === 'personal' && (
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-3 mb-6">
+                                <i className="fa-solid fa-user text-blue-600 text-xl"></i>
+                                <h2 className="text-2xl font-bold text-gray-900">Personal Information</h2>
+                            </div>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                {renderField('Username', userDetail?.username, 'username')}
+                                {renderField('First Name', userDetail?.firstName, 'firstName')}
+                                {renderField('Middle Name', userDetail?.middleName, 'middleName')}
+                                {renderField('Surname', userDetail?.surname, 'surname')}
+                                {renderField('Extension Name', userDetail?.extensionName, 'extensionName', 'select', [
+                                    { value: 'Jr.', label: 'Jr.' },
+                                    { value: 'Sr.', label: 'Sr.' },
+                                    { value: 'II', label: 'II' },
+                                    { value: 'III', label: 'III' },
+                                    { value: 'IV', label: 'IV' },
+                                    { value: 'V', label: 'V' }
+                                ])}
+                                {renderField('Sex', userDetail?.sex, 'sex', 'select', [
+                                    { value: 'Male', label: 'Male' },
+                                    { value: 'Female', label: 'Female' },
+                                    { value: 'Other', label: 'Other' }
+                                ])}
+                                {renderField('Date of Birth', userDetail?.dateOfBirth, 'dateOfBirth', 'date')}
+                                {renderField('Email Address', userDetail?.email, 'email', 'email')}
                             </div>
                         </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Updated At</label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
-                                {userDetail?.updatedAt ? new Date(userDetail?.updatedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '-'}
+                    )}
+
+                    {/* Contact & Address Tab */}
+                    {activeTab === 'contact' && (
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-3 mb-6">
+                                <i className="fa-solid fa-map-marker-alt text-blue-600 text-xl"></i>
+                                <h2 className="text-2xl font-bold text-gray-900">Contact & Address Information</h2>
+                            </div>
+                            
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Contact Details</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {renderField('Mobile Number', userDetail?.mobileNumber, 'mobileNumber')}
+                                    {renderField('Landline Number', userDetail?.landlineNumber, 'landlineNumber')}
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Address Details</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {renderField('House Number', userDetail?.houseNumber, 'houseNumber')}
+                                    {renderField('Street', userDetail?.street, 'street')}
+                                    {renderField('Barangay', userDetail?.barangay, 'barangay')}
+                                    {renderField('Municipality', userDetail?.municipality, 'municipality')}
+                                    {renderField('Province', userDetail?.province, 'province')}
+                                    {renderField('Region', userDetail?.region, 'region')}
+                                    {renderField('Complete Address', userDetail?.address, 'address')}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
+
+                    {/* Family & Background Tab */}
+                    {activeTab === 'family' && (
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-3 mb-6">
+                                <i className="fa-solid fa-users text-blue-600 text-xl"></i>
+                                <h2 className="text-2xl font-bold text-gray-900">Family & Background Information</h2>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Birth Information</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    {renderField('Birth Municipality', userDetail?.birthMunicipality, 'birthMunicipality')}
+                                    {renderField('Birth Province', userDetail?.birthProvince, 'birthProvince')}
+                                    {renderField('Birth Country', userDetail?.birthCountry, 'birthCountry')}
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Personal & Family Details</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {renderField('Religion', userDetail?.religion, 'religion')}
+                                    {renderField('Other Religion (Specify)', userDetail?.otherReligionSpecify, 'otherReligionSpecify')}
+                                    {renderField('Civil Status', userDetail?.civilStatus, 'civilStatus', 'select', [
+                                        { value: 'Single', label: 'Single' },
+                                        { value: 'Married', label: 'Married' },
+                                        { value: 'Separated', label: 'Separated' },
+                                        { value: 'Divorced', label: 'Divorced' },
+                                        { value: 'Widowed', label: 'Widowed' },
+                                        { value: 'Live-in', label: 'Live-in' }
+                                    ])}
+                                    {renderField('Spouse Name', userDetail?.spouseName, 'spouseName')}
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Household Information</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {renderField('Female Household Members', userDetail?.femaleHouseholdMembers, 'femaleHouseholdMembers', 'number')}
+                                    {renderField('Male Household Members', userDetail?.maleHouseholdMembers, 'maleHouseholdMembers', 'number')}
+                                    {renderField('Is Household Head', userDetail?.isHouseholdHead, 'isHouseholdHead', 'boolean')}
+                                    {renderField('Household Head Name', userDetail?.householdHeadName, 'householdHeadName')}
+                                    {renderField('Relationship to Head', userDetail?.relationshipToHead, 'relationshipToHead', 'select', [
+                                        { value: 'Son', label: 'Son' },
+                                        { value: 'Daughter', label: 'Daughter' },
+                                        { value: 'Spouse', label: 'Spouse' },
+                                        { value: 'Father', label: 'Father' },
+                                        { value: 'Mother', label: 'Mother' },
+                                        { value: 'Brother', label: 'Brother' },
+                                        { value: 'Sister', label: 'Sister' },
+                                        { value: 'Grandchild', label: 'Grandchild' },
+                                        { value: 'Son-in-law', label: 'Son-in-law' },
+                                        { value: 'Daughter-in-law', label: 'Daughter-in-law' },
+                                        { value: 'Other relative', label: 'Other relative' }
+                                    ])}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Professional Information Tab */}
+                    {activeTab === 'professional' && (
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-3 mb-6">
+                                <i className="fa-solid fa-briefcase text-blue-600 text-xl"></i>
+                                <h2 className="text-2xl font-bold text-gray-900">Professional Information</h2>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Education & Profile</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {renderField('Education Level', userDetail?.education, 'education', 'select', [
+                                        { value: 'No_formal_education', label: 'No formal education' },
+                                        { value: 'Kinder', label: 'Kinder' },
+                                        { value: 'Elementary_level', label: 'Elementary level' },
+                                        { value: 'Elementary_graduate', label: 'Elementary graduate' },
+                                        { value: 'High_school_level', label: 'High school level' },
+                                        { value: 'High_school_graduate', label: 'High school graduate' },
+                                        { value: 'Senior_high_school_level', label: 'Senior high school level' },
+                                        { value: 'Senior_high_school_graduate', label: 'Senior high school graduate' },
+                                        { value: 'College_level', label: 'College level' },
+                                        { value: 'College_graduate', label: 'College graduate' },
+                                        { value: 'Post_graduate_studies', label: 'Post-graduate studies' },
+                                        { value: 'Vocational_Technical', label: 'Vocational/Technical' }
+                                    ])}
+                                    {renderField('Client Profile', userDetail?.client_profile, 'client_profile', 'select', [
+                                        { value: 'Fishfolk', label: 'Fishfolk' },
+                                        { value: 'Rural_Based_Org', label: 'Rural Based Org' },
+                                        { value: 'Student', label: 'Student' },
+                                        { value: 'Agricultural_Fisheries_Technician', label: 'Agricultural/Fisheries Technician' },
+                                        { value: 'Youth', label: 'Youth' },
+                                        { value: 'Women', label: 'Women' },
+                                        { value: 'Govt_Employee', label: 'Govt Employee' },
+                                        { value: 'PWD', label: 'PWD' },
+                                        { value: 'Indigenous_People', label: 'Indigenous People' },
+                                        { value: 'Other', label: 'Other' }
+                                    ])}
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Disability Information</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {renderField('Person with Disability (PWD)', userDetail?.isPWD, 'isPWD', 'boolean')}
+                                    {renderField('Disability Type', userDetail?.disabilityType, 'disabilityType')}
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Income Information</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {renderField('Gross Annual Income', userDetail?.grossAnnualIncome, 'grossAnnualIncome')}
+                                    {renderField('Income Source', userDetail?.incomeSource, 'incomeSource', 'select', [
+                                        { value: 'farming', label: 'Farming' },
+                                        { value: 'non_farming', label: 'Non-farming' }
+                                    ])}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Government & IDs Tab */}
+                    {activeTab === 'government' && (
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-3 mb-6">
+                                <i className="fa-solid fa-id-card text-blue-600 text-xl"></i>
+                                <h2 className="text-2xl font-bold text-gray-900">Government & ID Information</h2>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Government Identification</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {renderField('Has Government ID', userDetail?.hasGovId, 'hasGovId', 'boolean')}
+                                    {renderField('Government ID Type', userDetail?.govIdType, 'govIdType', 'select', [
+                                        { value: 'National_ID', label: 'National ID' },
+                                        { value: 'Drivers_License', label: 'Drivers License' },
+                                        { value: 'Passport', label: 'Passport' },
+                                        { value: 'Voters_ID', label: 'Voters ID' },
+                                        { value: 'School_ID', label: 'School ID' },
+                                        { value: 'SSS_ID', label: 'SSS ID' },
+                                        { value: 'PhilHealth_ID', label: 'PhilHealth ID' },
+                                        { value: 'TIN_ID', label: 'TIN ID' },
+                                        { value: 'PRC_ID', label: 'PRC ID' },
+                                        { value: 'Senior_Citizen_ID', label: 'Senior Citizen ID' },
+                                        { value: 'PWD_ID', label: 'PWD ID' },
+                                        { value: 'Other', label: 'Other' }
+                                    ])}
+                                    {renderField('Government ID Number', userDetail?.govIdNumber, 'govIdNumber')}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* System Information Tab */}
+                    {activeTab === 'system' && (
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-3 mb-6">
+                                <i className="fa-solid fa-cog text-blue-600 text-xl"></i>
+                                <h2 className="text-2xl font-bold text-gray-900">System Information</h2>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Details</h3>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {renderField('Access Level', userDetail?.access, 'access', 'select', [
+                                        { value: 'User', label: 'User' },
+                                        { value: 'Admin', label: 'Admin' },
+                                        { value: 'Super_Admin', label: 'Super Admin' }
+                                    ])}
+                                    <div className="space-y-2">
+                                        <label className="block text-xs font-medium text-gray-600">Created At</label>
+                                        <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
+                                            {userDetail?.createdAt ? new Date(userDetail?.createdAt).toLocaleDateString('en-US', { 
+                                                year: 'numeric', month: 'long', day: 'numeric', 
+                                                hour: '2-digit', minute: '2-digit' 
+                                            }) : '-'}
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="block text-xs font-medium text-gray-600">Last Updated</label>
+                                        <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
+                                            {userDetail?.updatedAt ? new Date(userDetail?.updatedAt).toLocaleDateString('en-US', { 
+                                                year: 'numeric', month: 'long', day: 'numeric', 
+                                                hour: '2-digit', minute: '2-digit' 
+                                            }) : '-'}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-end gap-4 mt-6">
-                <button
-                    onClick={handleCancel}
-                    className="px-6 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
-                >
-                    Cancel
-                </button>
-                <button
-                    onClick={handleSave}
-                    className="px-6 py-2.5 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 disabled:opacity-60"
-                    disabled={updateUserDetails.isLoading}
-                >
-                    {updateUserDetails.isLoading ? 'Saving...' : 'Save Changes'}
-                </button>
+            {!isEditing && (
+                <div className="flex justify-end">
+                    <button
+                        onClick={() => setIsEditing(true)}
+                        className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg"
+                    >
+                        <i className="fa-solid fa-edit mr-2"></i>
+                        Edit Profile
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+
+    const renderEditMode = () => (
+        <div className="max-w-6xl mx-auto">
+            {/* Form Header */}
+            <div className="bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white py-6 rounded-2xl shadow-lg mb-6">
+                <div className="flex items-center justify-between px-8">
+                    <div className="flex items-center gap-4">
+                        <i className="fa-solid fa-edit text-2xl"></i>
+                        <div>
+                            <h1 className="text-2xl font-bold">Editing User Profile</h1>
+                            <p className="text-green-100">ID: {userDetail?.id} | @{userDetail?.username}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={handleSave}
+                            disabled={updateUserDetails.isLoading}
+                            className="px-6 py-2 bg-white text-green-700 font-semibold rounded-lg hover:bg-green-50 transition-colors duration-200 disabled:opacity-50 shadow-md"
+                        >
+                            {updateUserDetails.isLoading ? (
+                                <>
+                                    <i className="fa-solid fa-spinner fa-spin mr-2"></i>
+                                    Saving...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fa-solid fa-save mr-2"></i>
+                                    Save Changes
+                                </>
+                            )}
+                        </button>
+                        <button
+                            onClick={handleCancel}
+                            className="px-6 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors duration-200 shadow-md"
+                        >
+                            <i className="fa-solid fa-times mr-2"></i>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
             </div>
+
+            {/* Form Content */}
+            <form onSubmit={handleSave} className="space-y-6">
+                {/* Tab Navigation */}
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                    <div className="border-b border-gray-200">
+                        <nav className="flex space-x-8 px-6" aria-label="Tabs">
+                            {[
+                                { id: 'personal', name: 'Personal Info', icon: 'fa-user' },
+                                { id: 'contact', name: 'Contact & Address', icon: 'fa-map-marker-alt' },
+                                { id: 'family', name: 'Family & Background', icon: 'fa-users' },
+                                { id: 'professional', name: 'Professional Info', icon: 'fa-briefcase' },
+                                { id: 'government', name: 'Government & IDs', icon: 'fa-id-card' },
+                                { id: 'system', name: 'System Info', icon: 'fa-cog' }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    type="button"
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`${
+                                        activeTab === tab.id
+                                            ? 'border-green-500 text-green-600 bg-green-50'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                    } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 rounded-t-lg`}
+                                >
+                                    <i className={`fa-solid ${tab.icon}`}></i>
+                                    {tab.name}
+                                </button>
+                            ))}
+                        </nav>
+                    </div>
+
+                    <div className="p-8">
+                        {/* Personal Information Tab */}
+                        {activeTab === 'personal' && (
+                            <div className="space-y-8">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <i className="fa-solid fa-user text-green-600 text-xl"></i>
+                                    <h2 className="text-2xl font-bold text-gray-900">Personal Information</h2>
+                                </div>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    {renderField('Username', editedUser?.username, 'username')}
+                                    {renderField('First Name', editedUser?.firstName, 'firstName')}
+                                    {renderField('Middle Name', editedUser?.middleName, 'middleName')}
+                                    {renderField('Surname', editedUser?.surname, 'surname')}
+                                    {renderField('Extension Name', editedUser?.extensionName, 'extensionName', 'select', [
+                                        { value: '', label: 'Select Extension' },
+                                        { value: 'Jr.', label: 'Jr.' },
+                                        { value: 'Sr.', label: 'Sr.' },
+                                        { value: 'II', label: 'II' },
+                                        { value: 'III', label: 'III' },
+                                        { value: 'IV', label: 'IV' },
+                                        { value: 'V', label: 'V' }
+                                    ])}
+                                    {renderField('Sex', editedUser?.sex, 'sex', 'select', [
+                                        { value: '', label: 'Select Sex' },
+                                        { value: 'Male', label: 'Male' },
+                                        { value: 'Female', label: 'Female' },
+                                        { value: 'Other', label: 'Other' }
+                                    ])}
+                                    {renderField('Date of Birth', editedUser?.dateOfBirth, 'dateOfBirth', 'date')}
+                                    {renderField('Email Address', editedUser?.email, 'email', 'email')}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Contact & Address Tab */}
+                        {activeTab === 'contact' && (
+                            <div className="space-y-8">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <i className="fa-solid fa-map-marker-alt text-green-600 text-xl"></i>
+                                    <h2 className="text-2xl font-bold text-gray-900">Contact & Address Information</h2>
+                                </div>
+                                
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Contact Details</h3>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        {renderField('Mobile Number', editedUser?.mobileNumber, 'mobileNumber')}
+                                        {renderField('Landline Number', editedUser?.landlineNumber, 'landlineNumber')}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Address Details</h3>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        {renderField('House Number', editedUser?.houseNumber, 'houseNumber')}
+                                        {renderField('Street', editedUser?.street, 'street')}
+                                        {renderField('Barangay', editedUser?.barangay, 'barangay')}
+                                        {renderField('Municipality', editedUser?.municipality, 'municipality')}
+                                        {renderField('Province', editedUser?.province, 'province')}
+                                        {renderField('Region', editedUser?.region, 'region')}
+                                        {renderField('Complete Address', editedUser?.address, 'address')}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Family & Background Tab */}
+                        {activeTab === 'family' && (
+                            <div className="space-y-8">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <i className="fa-solid fa-users text-green-600 text-xl"></i>
+                                    <h2 className="text-2xl font-bold text-gray-900">Family & Background Information</h2>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Birth Information</h3>
+                                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                        {renderField('Birth Municipality', editedUser?.birthMunicipality, 'birthMunicipality')}
+                                        {renderField('Birth Province', editedUser?.birthProvince, 'birthProvince')}
+                                        {renderField('Birth Country', editedUser?.birthCountry, 'birthCountry')}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Personal & Family Details</h3>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        {renderField('Religion', editedUser?.religion, 'religion')}
+                                        {renderField('Other Religion (Specify)', editedUser?.otherReligionSpecify, 'otherReligionSpecify')}
+                                        {renderField('Civil Status', editedUser?.civilStatus, 'civilStatus', 'select', [
+                                            { value: '', label: 'Select Civil Status' },
+                                            { value: 'Single', label: 'Single' },
+                                            { value: 'Married', label: 'Married' },
+                                            { value: 'Separated', label: 'Separated' },
+                                            { value: 'Divorced', label: 'Divorced' },
+                                            { value: 'Widowed', label: 'Widowed' },
+                                            { value: 'Live-in', label: 'Live-in' }
+                                        ])}
+                                        {renderField('Spouse Name', editedUser?.spouseName, 'spouseName')}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Household Information</h3>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        {renderField('Female Household Members', editedUser?.femaleHouseholdMembers, 'femaleHouseholdMembers', 'number')}
+                                        {renderField('Male Household Members', editedUser?.maleHouseholdMembers, 'maleHouseholdMembers', 'number')}
+                                        {renderField('Is Household Head', editedUser?.isHouseholdHead, 'isHouseholdHead', 'boolean')}
+                                        {renderField('Household Head Name', editedUser?.householdHeadName, 'householdHeadName')}
+                                        {renderField('Relationship to Head', editedUser?.relationshipToHead, 'relationshipToHead', 'select', [
+                                            { value: '', label: 'Select Relationship' },
+                                            { value: 'Son', label: 'Son' },
+                                            { value: 'Daughter', label: 'Daughter' },
+                                            { value: 'Spouse', label: 'Spouse' },
+                                            { value: 'Father', label: 'Father' },
+                                            { value: 'Mother', label: 'Mother' },
+                                            { value: 'Brother', label: 'Brother' },
+                                            { value: 'Sister', label: 'Sister' },
+                                            { value: 'Grandchild', label: 'Grandchild' },
+                                            { value: 'Son-in-law', label: 'Son-in-law' },
+                                            { value: 'Daughter-in-law', label: 'Daughter-in-law' },
+                                            { value: 'Other relative', label: 'Other relative' }
+                                        ])}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Professional Information Tab */}
+                        {activeTab === 'professional' && (
+                            <div className="space-y-8">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <i className="fa-solid fa-briefcase text-green-600 text-xl"></i>
+                                    <h2 className="text-2xl font-bold text-gray-900">Professional Information</h2>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Education & Profile</h3>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        {renderField('Education Level', editedUser?.education, 'education', 'select', [
+                                            { value: '', label: 'Select Education Level' },
+                                            { value: 'No_formal_education', label: 'No formal education' },
+                                            { value: 'Kinder', label: 'Kinder' },
+                                            { value: 'Elementary_level', label: 'Elementary level' },
+                                            { value: 'Elementary_graduate', label: 'Elementary graduate' },
+                                            { value: 'High_school_level', label: 'High school level' },
+                                            { value: 'High_school_graduate', label: 'High school graduate' },
+                                            { value: 'Senior_high_school_level', label: 'Senior high school level' },
+                                            { value: 'Senior_high_school_graduate', label: 'Senior high school graduate' },
+                                            { value: 'College_level', label: 'College level' },
+                                            { value: 'College_graduate', label: 'College graduate' },
+                                            { value: 'Post_graduate_studies', label: 'Post-graduate studies' },
+                                            { value: 'Vocational_Technical', label: 'Vocational/Technical' }
+                                        ])}
+                                        {renderField('Client Profile', editedUser?.client_profile, 'client_profile', 'select', [
+                                            { value: '', label: 'Select Client Profile' },
+                                            { value: 'Fishfolk', label: 'Fishfolk' },
+                                            { value: 'Rural_Based_Org', label: 'Rural Based Org' },
+                                            { value: 'Student', label: 'Student' },
+                                            { value: 'Agricultural_Fisheries_Technician', label: 'Agricultural/Fisheries Technician' },
+                                            { value: 'Youth', label: 'Youth' },
+                                            { value: 'Women', label: 'Women' },
+                                            { value: 'Govt_Employee', label: 'Govt Employee' },
+                                            { value: 'PWD', label: 'PWD' },
+                                            { value: 'Indigenous_People', label: 'Indigenous People' },
+                                            { value: 'Other', label: 'Other' }
+                                        ])}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Disability Information</h3>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        {renderField('Person with Disability (PWD)', editedUser?.isPWD, 'isPWD', 'boolean')}
+                                        {renderField('Disability Type', editedUser?.disabilityType, 'disabilityType')}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Income Information</h3>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        {renderField('Gross Annual Income', editedUser?.grossAnnualIncome, 'grossAnnualIncome')}
+                                        {renderField('Income Source', editedUser?.incomeSource, 'incomeSource', 'select', [
+                                            { value: '', label: 'Select Income Source' },
+                                            { value: 'farming', label: 'Farming' },
+                                            { value: 'non_farming', label: 'Non-farming' }
+                                        ])}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Government & IDs Tab */}
+                        {activeTab === 'government' && (
+                            <div className="space-y-8">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <i className="fa-solid fa-id-card text-green-600 text-xl"></i>
+                                    <h2 className="text-2xl font-bold text-gray-900">Government & ID Information</h2>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Government Identification</h3>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        {renderField('Has Government ID', editedUser?.hasGovId, 'hasGovId', 'boolean')}
+                                        {renderField('Government ID Type', editedUser?.govIdType, 'govIdType', 'select', [
+                                            { value: '', label: 'Select ID Type' },
+                                            { value: 'National_ID', label: 'National ID' },
+                                            { value: 'Drivers_License', label: 'Drivers License' },
+                                            { value: 'Passport', label: 'Passport' },
+                                            { value: 'Voters_ID', label: 'Voters ID' },
+                                            { value: 'School_ID', label: 'School ID' },
+                                            { value: 'SSS_ID', label: 'SSS ID' },
+                                            { value: 'PhilHealth_ID', label: 'PhilHealth ID' },
+                                            { value: 'TIN_ID', label: 'TIN ID' },
+                                            { value: 'PRC_ID', label: 'PRC ID' },
+                                            { value: 'Senior_Citizen_ID', label: 'Senior Citizen ID' },
+                                            { value: 'PWD_ID', label: 'PWD ID' },
+                                            { value: 'Other', label: 'Other' }
+                                        ])}
+                                        {renderField('Government ID Number', editedUser?.govIdNumber, 'govIdNumber')}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* System Information Tab */}
+                        {activeTab === 'system' && (
+                            <div className="space-y-8">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <i className="fa-solid fa-cog text-green-600 text-xl"></i>
+                                    <h2 className="text-2xl font-bold text-gray-900">System Information</h2>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Details</h3>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        {renderField('Access Level', editedUser?.access, 'access', 'select', [
+                                            { value: 'User', label: 'User' },
+                                            { value: 'Admin', label: 'Admin' },
+                                            { value: 'Super_Admin', label: 'Super Admin' }
+                                        ])}
+                                        <div className="space-y-2">
+                                            <label className="block text-sm font-medium text-gray-700">Created At</label>
+                                            <div className="bg-gray-100 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-600">
+                                                {editedUser?.createdAt ? new Date(editedUser?.createdAt).toLocaleDateString('en-US', { 
+                                                    year: 'numeric', month: 'long', day: 'numeric', 
+                                                    hour: '2-digit', minute: '2-digit' 
+                                                }) : '-'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </form>
         </div>
     );
 
