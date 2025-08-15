@@ -91,7 +91,7 @@ class AuditLogger {
                             id: true,
                             username: true,
                             firstName: true,
-                            lastName: true,
+                            surname: true,
                             access: true,
                         },
                     },
@@ -157,7 +157,7 @@ class AuditLogger {
             action,
             targetType: 'Account',
             targetId: targetAccount.id,
-            targetName: `${targetAccount.firstName} ${targetAccount.lastName} (@${targetAccount.username})`,
+            targetName: `${targetAccount.firstName} ${targetAccount.surname} (@${targetAccount.username})`,
             details,
             metadata: {
                 targetUsername: targetAccount.username,

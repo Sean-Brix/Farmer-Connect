@@ -9,7 +9,7 @@ async function setUserDetails(req, res) {
         username,
         email,
         firstName,
-        lastName,
+        surname,
         middleName,
         access,
         gender,
@@ -49,7 +49,7 @@ async function setUserDetails(req, res) {
             username,
             email,
             firstName,
-            lastName,
+            surname,
             middleName,
             gender,
             access,
@@ -73,7 +73,7 @@ async function setUserDetails(req, res) {
     if (currentUser.username !== username) updatedFields.push('username');
     if (currentUser.email !== email) updatedFields.push('email');
     if (currentUser.firstName !== firstName) updatedFields.push('firstName');
-    if (currentUser.lastName !== lastName) updatedFields.push('lastName');
+    if (currentUser.surname !== surname) updatedFields.push('surname');
     if (currentUser.middleName !== middleName) updatedFields.push('middleName');
     if (currentUser.access !== access) updatedFields.push('access');
     if (currentUser.gender !== gender) updatedFields.push('gender');
@@ -99,11 +99,11 @@ async function setUserDetails(req, res) {
         action: auditAction,
         targetType: 'Account',
         targetId: updatedUser.id,
-        targetName: `${updatedUser.firstName} ${updatedUser.lastName}`,
+        targetName: `${updatedUser.firstName} ${updatedUser.surname}`,
         details:
             auditAction === 'ACCOUNT_ROLE_CHANGE'
-                ? `Changed role for ${updatedUser.firstName} ${updatedUser.lastName} from ${currentUser.access} to ${access}`
-                : `Updated account information for ${updatedUser.firstName} ${updatedUser.lastName}`,
+                ? `Changed role for ${updatedUser.firstName} ${updatedUser.surname} from ${currentUser.access} to ${access}`
+                : `Updated account information for ${updatedUser.firstName} ${updatedUser.surname}`,
         metadata: {
             action:
                 auditAction === 'ACCOUNT_ROLE_CHANGE'
@@ -148,7 +148,7 @@ function filterUpdateData(data) {
         username,
         email,
         firstName,
-        lastName,
+        surname,
         gender,
         client_profile,
         cellphone_no,
@@ -161,7 +161,7 @@ function filterUpdateData(data) {
             !username ||
             !email ||
             !firstName ||
-            !lastName ||
+            !surname ||
             !gender ||
             !client_profile ||
             !cellphone_no ||

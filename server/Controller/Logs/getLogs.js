@@ -69,7 +69,7 @@ async function getLogs(req, res) {
                                 },
                             },
                             {
-                                lastName: {
+                                surname: {
                                     contains: searchTerm,
                                     mode: 'insensitive',
                                 },
@@ -156,7 +156,7 @@ async function getLogs(req, res) {
                             id: true,
                             username: true,
                             firstName: true,
-                            lastName: true,
+                            surname: true,
                             access: true,
                             picture: true,
                             mimeType: true,
@@ -181,7 +181,7 @@ async function getLogs(req, res) {
             admin: {
                 id: log.admin.id,
                 username: log.admin.username,
-                fullName: `${log.admin.firstName} ${log.admin.lastName}`,
+                fullName: `${log.admin.firstName} ${log.admin.surname}`,
                 access: log.admin.access,
                 hasPicture: !!(
                     log.admin.picture && log.admin.picture.length > 0

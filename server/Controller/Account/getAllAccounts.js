@@ -44,7 +44,7 @@ async function getAllAccounts(req, res) {
                         contains: filters.search,
                     },
                 },
-                { lastName: { contains: filters.search } },
+                { surname: { contains: filters.search } },
                 { email: { contains: filters.search } },
             ];
         }
@@ -54,8 +54,8 @@ async function getAllAccounts(req, res) {
                 orderBy.username = 'asc';
             } else if (filters.order === 'Firstname') {
                 orderBy.firstName = 'asc';
-            } else if (filters.order === 'Lastname') {
-                orderBy.lastName = 'asc';
+            } else if (filters.order === 'surname') {
+                orderBy.surname = 'asc';
             } else if (filters.order === 'Date Created') {
                 orderBy.createdAt = 'asc';
             } else if (filters.order === 'Recently Updated') {
@@ -69,7 +69,7 @@ async function getAllAccounts(req, res) {
                 id: true,
                 username: true,
                 firstName: true,
-                lastName: true,
+                surname: true,
                 email: true,
                 access: true,
                 client_profile: true,

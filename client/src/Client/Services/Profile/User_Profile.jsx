@@ -10,6 +10,7 @@ import UserProfile_UpdateLoading from './Loading/User_Profile_Update';
 export default function Account() {
     const [refreshNav, setRefreshNav] = useState(false);
     const [editMode, setEditMode] = useState(false);
+    const [activeTab, setActiveTab] = useState('personal');
     const [photo, setPhoto] = useState(
         '/api/account/picture/me?refresh=' + new Date().getTime()
     );
@@ -48,16 +49,71 @@ export default function Account() {
                 username: profile.username || '',
                 email: profile.email || '',
                 firstName: profile.firstName || '',
-                lastName: profile.lastName || '',
+                surname: profile.surname || '',
                 middleName: profile.middleName || '',
-                gender: profile.gender || 'Male',
-                client_profile: profile.client_profile || 'Fishfolk',
-                cellphone_no: profile.cellphone_no || '',
-                telephone_no: profile.telephone_no || '',
-                occupation: profile.occupation || '',
-                position: profile.position || '',
-                institution: profile.institution || '',
+                extensionName: profile.extensionName || '',
+                sex: profile.sex || 'Male',
+                client_profile: profile.client_profile || 'Student',
+                
+                // Contact Information
+                mobileNumber: profile.mobileNumber || '',
+                landlineNumber: profile.landlineNumber || '',
+                
+                // Address Information
+                street: profile.street || '',
+                barangay: profile.barangay || '',
+                municipality: profile.municipality || '',
+                province: profile.province || '',
+                region: profile.region || '',
+                houseNumber: profile.houseNumber || '',
                 address: profile.address || '',
+                
+                // Birth Information
+                birthMunicipality: profile.birthMunicipality || '',
+                birthProvince: profile.birthProvince || '',
+                birthCountry: profile.birthCountry || '',
+                dateOfBirth: profile.dateOfBirth ? new Date(profile.dateOfBirth).toISOString().split('T')[0] : '',
+                
+                // Personal Details
+                religion: profile.religion || '',
+                otherReligionSpecify: profile.otherReligionSpecify || '',
+                civilStatus: profile.civilStatus || '',
+                spouseName: profile.spouseName || '',
+                
+                // Household Information
+                femaleHouseholdMembers: profile.femaleHouseholdMembers || '',
+                maleHouseholdMembers: profile.maleHouseholdMembers || '',
+                isHouseholdHead: profile.isHouseholdHead || false,
+                householdHeadName: profile.householdHeadName || '',
+                relationshipToHead: profile.relationshipToHead || '',
+                
+                // Government ID Information
+                hasGovId: profile.hasGovId || false,
+                govIdType: profile.govIdType || '',
+                govIdNumber: profile.govIdNumber || '',
+                
+                // Education
+                education: profile.education || '',
+                
+                // PWD Information
+                isPWD: profile.isPWD || false,
+                disabilityType: profile.disabilityType || '',
+                
+                // Livelihood Information
+                livelihoodProfile: profile.livelihoodProfile || [],
+                farmingActivities: profile.farmingActivities || [],
+                fishingActivities: profile.fishingActivities || [],
+                farmworkActivities: profile.farmworkActivities || [],
+                youthActivities: profile.youthActivities || [],
+                otherCropsSpecify: profile.otherCropsSpecify || '',
+                livestockSpecify: profile.livestockSpecify || '',
+                fishingOthersSpecify: profile.fishingOthersSpecify || '',
+                farmworkOthersSpecify: profile.farmworkOthersSpecify || '',
+                youthOthersSpecify: profile.youthOthersSpecify || '',
+                
+                // Income Information
+                grossAnnualIncome: profile.grossAnnualIncome || '',
+                incomeSource: profile.incomeSource || '',
             });
         }
     }, [profile, editMode]);
@@ -84,9 +140,8 @@ export default function Account() {
         if (!tempProfile.username?.trim()) errors.username = 'Username is required';
         if (!tempProfile.email?.trim()) errors.email = 'Email is required';
         if (!tempProfile.firstName?.trim()) errors.firstName = 'First name is required';
-        if (!tempProfile.lastName?.trim()) errors.lastName = 'Last name is required';
-        if (!tempProfile.cellphone_no?.trim()) errors.cellphone_no = 'Phone number is required';
-        if (!tempProfile.address?.trim()) errors.address = 'Address is required';
+        if (!tempProfile.surname?.trim()) errors.surname = 'Surname is required';
+        if (!tempProfile.mobileNumber?.trim()) errors.mobileNumber = 'Mobile number is required';
         
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -94,17 +149,17 @@ export default function Account() {
             errors.email = 'Invalid email format';
         }
         
-        // Phone validation (Philippine format)
-        const cellphoneRegex = /^09\d{9}$/;
-        if (tempProfile.cellphone_no && !cellphoneRegex.test(tempProfile.cellphone_no)) {
-            errors.cellphone_no = 'Invalid phone format. Must start with 09 and be 11 digits';
+        // Mobile phone validation (Philippine format)
+        const mobileRegex = /^09\d{9}$/;
+        if (tempProfile.mobileNumber && !mobileRegex.test(tempProfile.mobileNumber)) {
+            errors.mobileNumber = 'Invalid mobile format. Must start with 09 and be 11 digits';
         }
         
-        // Telephone validation (if provided)
-        if (tempProfile.telephone_no) {
-            const telephoneRegex = /^\d{3}-\d{3}-\d{4}$/;
-            if (!telephoneRegex.test(tempProfile.telephone_no)) {
-                errors.telephone_no = 'Invalid telephone format. Use XXX-XXX-XXXX';
+        // Landline validation (if provided)
+        if (tempProfile.landlineNumber && tempProfile.landlineNumber.trim()) {
+            const landlineRegex = /^\d{3}-\d{3}-\d{4}$/;
+            if (!landlineRegex.test(tempProfile.landlineNumber)) {
+                errors.landlineNumber = 'Invalid landline format. Use XXX-XXX-XXXX';
             }
         }
         
@@ -143,14 +198,14 @@ export default function Account() {
         onError: (error) => {
             console.error('Profile update error:', error);
             // Handle validation errors from backend
-            if (error.message.includes('All fields are required')) {
+            if (error.message.includes('Required fields')) {
                 setFormErrors({ general: 'Please fill in all required fields' });
             } else if (error.message.includes('Invalid email')) {
                 setFormErrors({ email: 'Invalid email format' });
-            } else if (error.message.includes('Invalid cellphone')) {
-                setFormErrors({ cellphone_no: 'Invalid phone number format' });
-            } else if (error.message.includes('Invalid telephone')) {
-                setFormErrors({ telephone_no: 'Invalid telephone format' });
+            } else if (error.message.includes('Invalid mobile')) {
+                setFormErrors({ mobileNumber: 'Invalid mobile number format' });
+            } else if (error.message.includes('Invalid landline')) {
+                setFormErrors({ landlineNumber: 'Invalid landline format' });
             } else {
                 setFormErrors({ general: error.message });
             }
@@ -210,16 +265,71 @@ export default function Account() {
             username: profile.username || '',
             email: profile.email || '',
             firstName: profile.firstName || '',
-            lastName: profile.lastName || '',
+            surname: profile.surname || '',
             middleName: profile.middleName || '',
-            gender: profile.gender || 'Male',
-            client_profile: profile.client_profile || 'Fishfolk',
-            cellphone_no: profile.cellphone_no || '',
-            telephone_no: profile.telephone_no || '',
-            occupation: profile.occupation || '',
-            position: profile.position || '',
-            institution: profile.institution || '',
+            extensionName: profile.extensionName || '',
+            sex: profile.sex || 'Male',
+            client_profile: profile.client_profile || 'Student',
+            
+            // Contact Information
+            mobileNumber: profile.mobileNumber || '',
+            landlineNumber: profile.landlineNumber || '',
+            
+            // Address Information
+            street: profile.street || '',
+            barangay: profile.barangay || '',
+            municipality: profile.municipality || '',
+            province: profile.province || '',
+            region: profile.region || '',
+            houseNumber: profile.houseNumber || '',
             address: profile.address || '',
+            
+            // Birth Information
+            birthMunicipality: profile.birthMunicipality || '',
+            birthProvince: profile.birthProvince || '',
+            birthCountry: profile.birthCountry || '',
+            dateOfBirth: profile.dateOfBirth ? new Date(profile.dateOfBirth).toISOString().split('T')[0] : '',
+            
+            // Personal Details
+            religion: profile.religion || '',
+            otherReligionSpecify: profile.otherReligionSpecify || '',
+            civilStatus: profile.civilStatus || '',
+            spouseName: profile.spouseName || '',
+            
+            // Household Information
+            femaleHouseholdMembers: profile.femaleHouseholdMembers || '',
+            maleHouseholdMembers: profile.maleHouseholdMembers || '',
+            isHouseholdHead: profile.isHouseholdHead || false,
+            householdHeadName: profile.householdHeadName || '',
+            relationshipToHead: profile.relationshipToHead || '',
+            
+            // Government ID Information
+            hasGovId: profile.hasGovId || false,
+            govIdType: profile.govIdType || '',
+            govIdNumber: profile.govIdNumber || '',
+            
+            // Education
+            education: profile.education || '',
+            
+            // PWD Information
+            isPWD: profile.isPWD || false,
+            disabilityType: profile.disabilityType || '',
+            
+            // Livelihood Information
+            livelihoodProfile: profile.livelihoodProfile || [],
+            farmingActivities: profile.farmingActivities || [],
+            fishingActivities: profile.fishingActivities || [],
+            farmworkActivities: profile.farmworkActivities || [],
+            youthActivities: profile.youthActivities || [],
+            otherCropsSpecify: profile.otherCropsSpecify || '',
+            livestockSpecify: profile.livestockSpecify || '',
+            fishingOthersSpecify: profile.fishingOthersSpecify || '',
+            farmworkOthersSpecify: profile.farmworkOthersSpecify || '',
+            youthOthersSpecify: profile.youthOthersSpecify || '',
+            
+            // Income Information
+            grossAnnualIncome: profile.grossAnnualIncome || '',
+            incomeSource: profile.incomeSource || '',
         });
         setFormErrors({});
         setEditMode(true);
@@ -243,20 +353,23 @@ export default function Account() {
     return (
         <>
             <Navbar refresh={refreshNav} />
-            <div className="relative min-h-screen bg-gray-50 mt-20">
-                {/* Blue background banner */}
-                <div className="w-full h-56 bg-gradient-to-t from-gray-200 to-gray-100"></div>
-                {/* Floating profile card */}
-                <div className="w-full flex justify-center">
-                    <div className="-mt-24 w-full max-w-2xl">
-                        <div className="bg-white rounded-2xl shadow-xl px-8 pt-8 pb-10 flex flex-col items-center border border-gray-200">
-                            <div className="relative -mt-20 mb-2">
-                                <div className="w-32 h-32 rounded-xl bg-gray-200 border-4 border-white shadow-lg overflow-hidden flex items-center justify-center">
-                                    <img src={photo} alt="Profile" className="w-full h-full object-cover" />
+            <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 pt-20">
+                {/* Header Section */}
+                <div className="bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white py-12 shadow-lg">
+                    <div className="max-w-6xl mx-auto px-6">
+                        <div className="flex flex-col md:flex-row items-center gap-8">
+                            {/* Profile Picture Section */}
+                            <div className="relative">
+                                <div className="w-32 h-32 rounded-full bg-white p-1 shadow-xl">
+                                    <img 
+                                        src={photo} 
+                                        alt="Profile" 
+                                        className="w-full h-full rounded-full object-cover"
+                                    />
                                 </div>
                                 {editMode && (
-                                    <label className="absolute bottom-2 right-2 bg-green-600 text-white rounded-full p-2 cursor-pointer hover:bg-green-800 transition shadow text-lg border-2 border-white">
-                                        <i className="fa-solid fa-camera"></i>
+                                    <label className="absolute bottom-2 right-2 bg-white text-green-600 rounded-full p-3 cursor-pointer hover:bg-green-50 transition shadow-lg border-2 border-green-200">
+                                        <i className="fa-solid fa-camera text-lg"></i>
                                         <input
                                             type="file"
                                             accept="image/*"
@@ -266,253 +379,258 @@ export default function Account() {
                                     </label>
                                 )}
                             </div>
-                            <div className="flex flex-col items-center mb-4">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <span className="inline-block bg-green-50 text-green-700 text-xs font-semibold px-2 py-1 rounded-full border border-green-100">🇵🇭 Philippines</span>
+
+                            {/* Profile Info */}
+                            <div className="text-center md:text-left">
+                                <h1 className="text-4xl font-bold mb-2">
+                                    {editMode 
+                                        ? `${tempProfile.firstName || ''} ${tempProfile.middleName ? tempProfile.middleName + ' ' : ''}${tempProfile.surname || ''}${tempProfile.extensionName ? ' ' + tempProfile.extensionName : ''}` 
+                                        : `${profile.firstName} ${profile.middleName ? profile.middleName + ' ' : ''}${profile.surname}${profile.extensionName ? ' ' + profile.extensionName : ''}`
+                                    }
+                                </h1>
+                                <div className="flex flex-col md:flex-row gap-2 mb-4">
+                                    <span className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium">
+                                        <i className="fa-solid fa-user"></i>
+                                        {editMode ? (tempProfile.client_profile || 'Profile Type') : (profile.client_profile || 'Profile Type')}
+                                    </span>
+                                    <span className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium">
+                                        <i className="fa-solid fa-envelope"></i>
+                                        {editMode ? (tempProfile.email || 'Email') : profile.email}
+                                    </span>
                                 </div>
-                                <div className="font-extrabold text-2xl text-gray-900">
-                                    {editMode ? `${tempProfile.firstName || ''} ${tempProfile.lastName || ''}` : `${profile.firstName} ${profile.lastName}`}
-                                </div>
-                                <div className="text-gray-500 text-sm font-medium">
-                                    {editMode ? (tempProfile.position || 'Position') : (profile.position || 'Software Engineering')} 
-                                    <span className="mx-1">|</span> 
-                                    {editMode ? (tempProfile.email || 'Email') : profile.email}
+                                <div className="flex items-center justify-center md:justify-start gap-2">
+                                    <i className="fa-solid fa-flag text-green-200"></i>
+                                    <span className="text-green-100">Philippines</span>
                                 </div>
                             </div>
 
-                            {/* Success Message */}
-                            {showSuccessMessage && (
-                                <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-center gap-2">
-                                    <i className="fa-solid fa-check-circle"></i>
-                                    <span className="font-semibold">Profile updated successfully!</span>
-                                </div>
-                            )}
+                            {/* Action Buttons */}
+                            <div className="ml-auto">
+                                {editMode ? (
+                                    <div className="flex gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={handleCancelEdit}
+                                            className="px-6 py-3 bg-gray-500 hover:bg-gray-600 transition text-white rounded-lg font-semibold shadow-lg flex items-center gap-2"
+                                        >
+                                            <i className="fa-solid fa-xmark"></i>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        className="px-8 py-3 bg-white text-green-700 hover:bg-green-50 transition rounded-lg font-semibold shadow-lg flex items-center gap-2"
+                                        onClick={handleEditMode}
+                                    >
+                                        <i className="fa-solid fa-edit"></i>
+                                        Edit Profile
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                            {/* General Error Message */}
-                            {formErrors.general && (
-                                <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-2">
-                                    <i className="fa-solid fa-exclamation-triangle"></i>
-                                    <span className="font-semibold">{formErrors.general}</span>
-                                </div>
-                            )}
+                {/* Main Content */}
+                <div className="max-w-6xl mx-auto px-6 py-8">
+                    {/* Success Message */}
+                    {showSuccessMessage && (
+                        <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-xl flex items-center gap-3 shadow-sm">
+                            <i className="fa-solid fa-check-circle text-xl"></i>
+                            <span className="font-semibold">Profile updated successfully!</span>
+                        </div>
+                    )}
 
-                            <form className="w-full mt-2" onSubmit={handleSubmit}>
-                                <div className="font-bold text-lg text-gray-900 mb-4">Contact Information</div>
-                                <div className="grid grid-cols-1 gap-6">
-                                    {/* Username Field */}
-                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-                                        <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Username *</label>
-                                        <div className="flex-1">
+                    {/* General Error Message */}
+                    {formErrors.general && (
+                        <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl flex items-center gap-3 shadow-sm">
+                            <i className="fa-solid fa-exclamation-triangle text-xl"></i>
+                            <span className="font-semibold">{formErrors.general}</span>
+                        </div>
+                    )}
+
+                    {/* Tab Navigation */}
+                    <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                        <div className="border-b border-gray-200">
+                            <nav className="flex space-x-8 px-6" aria-label="Tabs">
+                                {[
+                                    { id: 'personal', name: 'Personal Info', icon: 'fa-user' },
+                                    { id: 'contact', name: 'Contact & Address', icon: 'fa-map-marker-alt' },
+                                    { id: 'family', name: 'Family & Background', icon: 'fa-users' },
+                                    { id: 'professional', name: 'Professional Info', icon: 'fa-briefcase' },
+                                    { id: 'government', name: 'Government & IDs', icon: 'fa-id-card' }
+                                ].map((tab) => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`${
+                                            activeTab === tab.id
+                                                ? 'border-green-500 text-green-600 bg-green-50'
+                                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                        } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 rounded-t-lg`}
+                                    >
+                                        <i className={`fa-solid ${tab.icon}`}></i>
+                                        {tab.name}
+                                    </button>
+                                ))}
+                            </nav>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="p-8">
+                            {/* Personal Information Tab */}
+                            {activeTab === 'personal' && (
+                                <div className="space-y-8">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <i className="fa-solid fa-user text-green-600 text-xl"></i>
+                                        <h2 className="text-2xl font-bold text-gray-900">Personal Information</h2>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                        {/* Username */}
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                <i className="fa-solid fa-at text-green-500"></i>
+                                                Username *
+                                            </label>
                                             <input
                                                 type="text"
                                                 name="username"
                                                 value={tempProfile.username || ''}
                                                 onChange={handleChange}
                                                 disabled={!editMode}
-                                                className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
+                                                className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
                                                     editMode 
-                                                        ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                        : 'bg-gray-50 border-gray-200'
+                                                        ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                        : 'bg-gray-50 border-gray-200 text-gray-600'
                                                 } ${formErrors.username ? 'border-red-500' : ''}`}
                                                 placeholder="Enter username"
                                             />
                                             {formErrors.username && (
-                                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                                <p className="text-red-500 text-sm flex items-center gap-1">
                                                     <i className="fa-solid fa-exclamation-circle"></i>
                                                     {formErrors.username}
                                                 </p>
                                             )}
                                         </div>
-                                    </div>
 
-                                    {/* First Name Field */}
-                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-                                        <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">First Name *</label>
-                                        <div className="flex-1">
+                                        {/* First Name */}
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                <i className="fa-solid fa-signature text-green-500"></i>
+                                                First Name *
+                                            </label>
                                             <input
                                                 type="text"
                                                 name="firstName"
                                                 value={tempProfile.firstName || ''}
                                                 onChange={handleChange}
                                                 disabled={!editMode}
-                                                className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
+                                                className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
                                                     editMode 
-                                                        ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                        : 'bg-gray-50 border-gray-200'
+                                                        ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                        : 'bg-gray-50 border-gray-200 text-gray-600'
                                                 } ${formErrors.firstName ? 'border-red-500' : ''}`}
                                                 placeholder="Enter first name"
                                             />
                                             {formErrors.firstName && (
-                                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                                <p className="text-red-500 text-sm flex items-center gap-1">
                                                     <i className="fa-solid fa-exclamation-circle"></i>
                                                     {formErrors.firstName}
                                                 </p>
                                             )}
                                         </div>
-                                    </div>
 
-                                    {/* Last Name Field */}
-                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-                                        <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Last Name *</label>
-                                        <div className="flex-1">
-                                            <input
-                                                type="text"
-                                                name="lastName"
-                                                value={tempProfile.lastName || ''}
-                                                onChange={handleChange}
-                                                disabled={!editMode}
-                                                className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
-                                                    editMode 
-                                                        ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                        : 'bg-gray-50 border-gray-200'
-                                                } ${formErrors.lastName ? 'border-red-500' : ''}`}
-                                                placeholder="Enter last name"
-                                            />
-                                            {formErrors.lastName && (
-                                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                                                    <i className="fa-solid fa-exclamation-circle"></i>
-                                                    {formErrors.lastName}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Middle Name Field */}
-                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-                                        <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Middle Name</label>
-                                        <div className="flex-1">
+                                        {/* Middle Name */}
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                <i className="fa-solid fa-signature text-green-500"></i>
+                                                Middle Name
+                                            </label>
                                             <input
                                                 type="text"
                                                 name="middleName"
                                                 value={tempProfile.middleName || ''}
                                                 onChange={handleChange}
                                                 disabled={!editMode}
-                                                className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
+                                                className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
                                                     editMode 
-                                                        ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                        : 'bg-gray-50 border-gray-200'
+                                                        ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                        : 'bg-gray-50 border-gray-200 text-gray-600'
                                                 }`}
                                                 placeholder="Enter middle name (optional)"
                                             />
                                         </div>
-                                    </div>
 
-                                    {/* Email Field */}
-                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-                                        <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Email *</label>
-                                        <div className="flex-1">
-                                            <input
-                                                type="email"
-                                                name="email"
-                                                value={tempProfile.email || ''}
-                                                onChange={handleChange}
-                                                disabled={!editMode}
-                                                className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
-                                                    editMode 
-                                                        ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                        : 'bg-gray-50 border-gray-200'
-                                                } ${formErrors.email ? 'border-red-500' : ''}`}
-                                                placeholder="Enter email address"
-                                            />
-                                            {formErrors.email && (
-                                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                                                    <i className="fa-solid fa-exclamation-circle"></i>
-                                                    {formErrors.email}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                    {/* Phone Number Field */}
-                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-                                        <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Phone Number *</label>
-                                        <div className="flex-1">
+                                        {/* Surname */}
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                <i className="fa-solid fa-signature text-green-500"></i>
+                                                Surname *
+                                            </label>
                                             <input
                                                 type="text"
-                                                name="cellphone_no"
-                                                value={tempProfile.cellphone_no || ''}
+                                                name="surname"
+                                                value={tempProfile.surname || ''}
                                                 onChange={handleChange}
                                                 disabled={!editMode}
-                                                className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
+                                                className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
                                                     editMode 
-                                                        ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                        : 'bg-gray-50 border-gray-200'
-                                                } ${formErrors.cellphone_no ? 'border-red-500' : ''}`}
-                                                placeholder="09xxxxxxxxx"
+                                                        ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                        : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                } ${formErrors.surname ? 'border-red-500' : ''}`}
+                                                placeholder="Enter surname"
                                             />
-                                            {formErrors.cellphone_no && (
-                                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                                            {formErrors.surname && (
+                                                <p className="text-red-500 text-sm flex items-center gap-1">
                                                     <i className="fa-solid fa-exclamation-circle"></i>
-                                                    {formErrors.cellphone_no}
+                                                    {formErrors.surname}
                                                 </p>
                                             )}
                                         </div>
-                                    </div>
 
-                                    {/* Telephone Number Field */}
-                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-                                        <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Telephone</label>
-                                        <div className="flex-1">
-                                            <input
-                                                type="text"
-                                                name="telephone_no"
-                                                value={tempProfile.telephone_no || ''}
-                                                onChange={handleChange}
-                                                disabled={!editMode}
-                                                className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
-                                                    editMode 
-                                                        ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                        : 'bg-gray-50 border-gray-200'
-                                                } ${formErrors.telephone_no ? 'border-red-500' : ''}`}
-                                                placeholder="XXX-XXX-XXXX (optional)"
-                                            />
-                                            {formErrors.telephone_no && (
-                                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                                                    <i className="fa-solid fa-exclamation-circle"></i>
-                                                    {formErrors.telephone_no}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Address Field */}
-                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-                                        <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Address *</label>
-                                        <div className="flex-1">
-                                            <input
-                                                type="text"
-                                                name="address"
-                                                value={tempProfile.address || ''}
-                                                onChange={handleChange}
-                                                disabled={!editMode}
-                                                className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
-                                                    editMode 
-                                                        ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                        : 'bg-gray-50 border-gray-200'
-                                                } ${formErrors.address ? 'border-red-500' : ''}`}
-                                                placeholder="City, Province, Country"
-                                            />
-                                            {formErrors.address && (
-                                                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                                                    <i className="fa-solid fa-exclamation-circle"></i>
-                                                    {formErrors.address}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Gender Field */}
-                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-                                        <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Gender *</label>
-                                        <div className="flex-1">
+                                        {/* Extension Name */}
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                <i className="fa-solid fa-plus text-green-500"></i>
+                                                Extension Name
+                                            </label>
                                             <select
-                                                name="gender"
-                                                value={tempProfile.gender || 'Male'}
+                                                name="extensionName"
+                                                value={tempProfile.extensionName || ''}
                                                 onChange={handleChange}
                                                 disabled={!editMode}
-                                                className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
+                                                className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
                                                     editMode 
-                                                        ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                        : 'bg-gray-50 border-gray-200'
+                                                        ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                        : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                }`}
+                                            >
+                                                <option value="">None</option>
+                                                <option value="Jr.">Jr.</option>
+                                                <option value="Sr.">Sr.</option>
+                                                <option value="II">II</option>
+                                                <option value="III">III</option>
+                                                <option value="IV">IV</option>
+                                                <option value="V">V</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Sex */}
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                <i className="fa-solid fa-venus-mars text-green-500"></i>
+                                                Sex *
+                                            </label>
+                                            <select
+                                                name="sex"
+                                                value={tempProfile.sex || 'Male'}
+                                                onChange={handleChange}
+                                                disabled={!editMode}
+                                                className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                    editMode 
+                                                        ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                        : 'bg-gray-50 border-gray-200 text-gray-600'
                                                 }`}
                                             >
                                                 <option value="Male">Male</option>
@@ -520,165 +638,911 @@ export default function Account() {
                                                 <option value="Other">Other</option>
                                             </select>
                                         </div>
-                                    </div>
 
-                                    {/* Client Profile Field */}
-                                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-                                        <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Profile Type *</label>
-                                        <div className="flex-1">
-                                            <select
-                                                name="client_profile"
-                                                value={tempProfile.client_profile || 'Fishfolk'}
+                                        {/* Date of Birth */}
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                <i className="fa-solid fa-calendar text-green-500"></i>
+                                                Date of Birth
+                                            </label>
+                                            <input
+                                                type="date"
+                                                name="dateOfBirth"
+                                                value={tempProfile.dateOfBirth || ''}
                                                 onChange={handleChange}
                                                 disabled={!editMode}
-                                                className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
+                                                className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
                                                     editMode 
-                                                        ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                        : 'bg-gray-50 border-gray-200'
+                                                        ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                        : 'bg-gray-50 border-gray-200 text-gray-600'
                                                 }`}
-                                            >
-                                                <option value="Fishfolk">Fishfolk</option>
-                                                <option value="Rural Based Org">Rural Based Org</option>
-                                                <option value="Student">Student</option>
-                                                <option value="Agricultural/Fisheries Technician">Agricultural/Fisheries Technician</option>
-                                                <option value="Youth">Youth</option>
-                                                <option value="Women">Women</option>
-                                                <option value="Govt Employee">Govt Employee</option>
-                                                <option value="PWD">PWD</option>
-                                                <option value="Indigenous People">Indigenous People</option>
-                                                <option value="Other">Other</option>
-                                            </select>
+                                            />
+                                        </div>
+
+                                        {/* Email */}
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                <i className="fa-solid fa-envelope text-green-500"></i>
+                                                Email Address *
+                                            </label>
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                value={tempProfile.email || ''}
+                                                onChange={handleChange}
+                                                disabled={!editMode}
+                                                className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                    editMode 
+                                                        ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                        : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                } ${formErrors.email ? 'border-red-500' : ''}`}
+                                                placeholder="Enter email address"
+                                            />
+                                            {formErrors.email && (
+                                                <p className="text-red-500 text-sm flex items-center gap-1">
+                                                    <i className="fa-solid fa-exclamation-circle"></i>
+                                                    {formErrors.email}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
+                                </div>
+                            )}
 
-                                    {/* Professional Information Section */}
-                                    <div className="border-t border-gray-200 pt-6 mt-6">
-                                        <div className="font-bold text-lg text-gray-900 mb-4">Professional Information</div>
-                                        
-                                        {/* Occupation Field */}
-                                        <div className="flex flex-col md:flex-row md:items-center md:gap-4 mb-4">
-                                            <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Occupation</label>
-                                            <div className="flex-1">
-                                                <input
-                                                    type="text"
-                                                    name="occupation"
-                                                    value={tempProfile.occupation || ''}
-                                                    onChange={handleChange}
-                                                    disabled={!editMode}
-                                                    className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
-                                                        editMode 
-                                                            ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                            : 'bg-gray-50 border-gray-200'
-                                                    }`}
-                                                    placeholder="Your occupation"
-                                                />
+                            {/* Contact & Address Tab */}
+                            {activeTab === 'contact' && (
+                                <div className="space-y-8">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <i className="fa-solid fa-map-marker-alt text-green-600 text-xl"></i>
+                                        <h2 className="text-2xl font-bold text-gray-900">Contact & Address Information</h2>
+                                    </div>
+
+                                    <div className="space-y-8">
+                                        {/* Contact Information */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                                <i className="fa-solid fa-phone text-green-500"></i>
+                                                Contact Details
+                                            </h3>
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                                {/* Mobile Number */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-mobile-alt text-green-500"></i>
+                                                        Mobile Number *
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="mobileNumber"
+                                                        value={tempProfile.mobileNumber || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        } ${formErrors.mobileNumber ? 'border-red-500' : ''}`}
+                                                        placeholder="09xxxxxxxxx"
+                                                    />
+                                                    {formErrors.mobileNumber && (
+                                                        <p className="text-red-500 text-sm flex items-center gap-1">
+                                                            <i className="fa-solid fa-exclamation-circle"></i>
+                                                            {formErrors.mobileNumber}
+                                                        </p>
+                                                    )}
+                                                </div>
+
+                                                {/* Landline Number */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-phone text-green-500"></i>
+                                                        Landline Number
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="landlineNumber"
+                                                        value={tempProfile.landlineNumber || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        } ${formErrors.landlineNumber ? 'border-red-500' : ''}`}
+                                                        placeholder="XXX-XXX-XXXX (optional)"
+                                                    />
+                                                    {formErrors.landlineNumber && (
+                                                        <p className="text-red-500 text-sm flex items-center gap-1">
+                                                            <i className="fa-solid fa-exclamation-circle"></i>
+                                                            {formErrors.landlineNumber}
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
 
-                                        {/* Position Field */}
-                                        <div className="flex flex-col md:flex-row md:items-center md:gap-4 mb-4">
-                                            <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Position</label>
-                                            <div className="flex-1">
-                                                <input
-                                                    type="text"
-                                                    name="position"
-                                                    value={tempProfile.position || ''}
-                                                    onChange={handleChange}
-                                                    disabled={!editMode}
-                                                    className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
-                                                        editMode 
-                                                            ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                            : 'bg-gray-50 border-gray-200'
-                                                    }`}
-                                                    placeholder="Your position/title"
-                                                />
-                                            </div>
-                                        </div>
+                                        {/* Address Information */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                                <i className="fa-solid fa-map-pin text-green-500"></i>
+                                                Address Details
+                                            </h3>
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                                {/* House Number */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-home text-green-500"></i>
+                                                        House Number
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="houseNumber"
+                                                        value={tempProfile.houseNumber || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="House number"
+                                                    />
+                                                </div>
 
-                                        {/* Institution Field */}
-                                        <div className="flex flex-col md:flex-row md:items-center md:gap-4">
-                                            <label className="w-32 text-gray-600 font-semibold mb-1 md:mb-0">Institution</label>
-                                            <div className="flex-1">
-                                                <input
-                                                    type="text"
-                                                    name="institution"
-                                                    value={tempProfile.institution || ''}
-                                                    onChange={handleChange}
-                                                    disabled={!editMode}
-                                                    className={`w-full border rounded-lg px-4 py-2 text-gray-900 focus:outline-none text-base font-semibold transition-colors ${
-                                                        editMode 
-                                                            ? 'bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200' 
-                                                            : 'bg-gray-50 border-gray-200'
-                                                    }`}
-                                                    placeholder="Company/Organization"
-                                                />
+                                                {/* Street */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-road text-green-500"></i>
+                                                        Street
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="street"
+                                                        value={tempProfile.street || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Street name"
+                                                    />
+                                                </div>
+
+                                                {/* Barangay */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-map-pin text-green-500"></i>
+                                                        Barangay
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="barangay"
+                                                        value={tempProfile.barangay || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Barangay"
+                                                    />
+                                                </div>
+
+                                                {/* Municipality */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-city text-green-500"></i>
+                                                        Municipality
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="municipality"
+                                                        value={tempProfile.municipality || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Municipality"
+                                                    />
+                                                </div>
+
+                                                {/* Province */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-globe text-green-500"></i>
+                                                        Province
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="province"
+                                                        value={tempProfile.province || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Province"
+                                                    />
+                                                </div>
+
+                                                {/* Region */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-map text-green-500"></i>
+                                                        Region
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="region"
+                                                        value={tempProfile.region || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Region"
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-col sm:flex-row justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
-                                    {editMode ? (
-                                        <>
-                                            <button
-                                                type="button"
-                                                onClick={handleCancelEdit}
-                                                className="px-8 py-3 bg-gray-500 hover:bg-gray-600 transition text-white rounded-lg font-bold text-base shadow focus:outline-none focus:ring-2 focus:ring-gray-400 flex items-center justify-center gap-2"
-                                            >
-                                                <i className="fa-solid fa-xmark"></i>
-                                                Cancel
-                                            </button>
-                                            <button
-                                                type="submit"
-                                                disabled={profileMutation.isPending || pictureMutation.isPending}
-                                                className="px-8 py-3 bg-green-600 hover:bg-green-700 transition text-white rounded-lg font-bold text-base shadow focus:outline-none focus:ring-2 focus:ring-green-400 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                                            >
-                                                {profileMutation.isPending || pictureMutation.isPending ? (
+                            )}
+
+                            {/* Family & Background Tab */}
+                            {activeTab === 'family' && (
+                                <div className="space-y-8">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <i className="fa-solid fa-users text-green-600 text-xl"></i>
+                                        <h2 className="text-2xl font-bold text-gray-900">Family & Background Information</h2>
+                                    </div>
+
+                                    <div className="space-y-8">
+                                        {/* Birth Information */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                                <i className="fa-solid fa-baby text-green-500"></i>
+                                                Birth Details
+                                            </h3>
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                                {/* Birth Municipality */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-map-marker-alt text-green-500"></i>
+                                                        Birth Municipality
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="birthMunicipality"
+                                                        value={tempProfile.birthMunicipality || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Municipality of birth"
+                                                    />
+                                                </div>
+
+                                                {/* Birth Province */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-map-marker-alt text-green-500"></i>
+                                                        Birth Province
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="birthProvince"
+                                                        value={tempProfile.birthProvince || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Province of birth"
+                                                    />
+                                                </div>
+
+                                                {/* Birth Country */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-flag text-green-500"></i>
+                                                        Birth Country
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="birthCountry"
+                                                        value={tempProfile.birthCountry || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Country of birth"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Personal & Family Details */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                                <i className="fa-solid fa-heart text-green-500"></i>
+                                                Personal & Family
+                                            </h3>
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                                {/* Religion */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-praying-hands text-green-500"></i>
+                                                        Religion
+                                                    </label>
+                                                    <select
+                                                        name="religion"
+                                                        value={tempProfile.religion || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                    >
+                                                        <option value="">Select Religion</option>
+                                                        <option value="Roman Catholic">Roman Catholic</option>
+                                                        <option value="Protestant">Protestant</option>
+                                                        <option value="Islam">Islam</option>
+                                                        <option value="Buddhism">Buddhism</option>
+                                                        <option value="Judaism">Judaism</option>
+                                                        <option value="Hinduism">Hinduism</option>
+                                                        <option value="Iglesia ni Cristo">Iglesia ni Cristo</option>
+                                                        <option value="Born Again">Born Again</option>
+                                                        <option value="Jehovah's Witness">Jehovah's Witness</option>
+                                                        <option value="Others">Others</option>
+                                                        <option value="No Religion">No Religion</option>
+                                                    </select>
+                                                </div>
+
+                                                {/* Other Religion Specify */}
+                                                {tempProfile.religion === 'Others' && (
+                                                    <div className="space-y-2">
+                                                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                            <i className="fa-solid fa-edit text-green-500"></i>
+                                                            Specify Religion
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            name="otherReligionSpecify"
+                                                            value={tempProfile.otherReligionSpecify || ''}
+                                                            onChange={handleChange}
+                                                            disabled={!editMode}
+                                                            className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                                editMode 
+                                                                    ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                    : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                            }`}
+                                                            placeholder="Please specify"
+                                                        />
+                                                    </div>
+                                                )}
+
+                                                {/* Civil Status */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-ring text-green-500"></i>
+                                                        Civil Status
+                                                    </label>
+                                                    <select
+                                                        name="civilStatus"
+                                                        value={tempProfile.civilStatus || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                    >
+                                                        <option value="">Select Civil Status</option>
+                                                        <option value="Single">Single</option>
+                                                        <option value="Married">Married</option>
+                                                        <option value="Separated">Separated</option>
+                                                        <option value="Divorced">Divorced</option>
+                                                        <option value="Widowed">Widowed</option>
+                                                        <option value="Live-in">Live-in</option>
+                                                    </select>
+                                                </div>
+
+                                                {/* Spouse Name */}
+                                                {(tempProfile.civilStatus === 'Married' || tempProfile.civilStatus === 'Live-in') && (
+                                                    <div className="space-y-2">
+                                                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                            <i className="fa-solid fa-heart text-green-500"></i>
+                                                            Spouse Name
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            name="spouseName"
+                                                            value={tempProfile.spouseName || ''}
+                                                            onChange={handleChange}
+                                                            disabled={!editMode}
+                                                            className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                                editMode 
+                                                                    ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                    : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                            }`}
+                                                            placeholder="Enter spouse name"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Household Information */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                                <i className="fa-solid fa-home-user text-green-500"></i>
+                                                Household Information
+                                            </h3>
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                                {/* Female Household Members */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-female text-green-500"></i>
+                                                        Female Household Members
+                                                    </label>
+                                                    <input
+                                                        type="number"
+                                                        name="femaleHouseholdMembers"
+                                                        value={tempProfile.femaleHouseholdMembers || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Number of female members"
+                                                        min="0"
+                                                    />
+                                                </div>
+
+                                                {/* Male Household Members */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-male text-green-500"></i>
+                                                        Male Household Members
+                                                    </label>
+                                                    <input
+                                                        type="number"
+                                                        name="maleHouseholdMembers"
+                                                        value={tempProfile.maleHouseholdMembers || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Number of male members"
+                                                        min="0"
+                                                    />
+                                                </div>
+
+                                                {/* Household Head Status */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-crown text-green-500"></i>
+                                                        Are you the Household Head?
+                                                    </label>
+                                                    <select
+                                                        name="isHouseholdHead"
+                                                        value={tempProfile.isHouseholdHead ? 'true' : 'false'}
+                                                        onChange={(e) => handleChange({...e, target: {...e.target, name: 'isHouseholdHead', value: e.target.value === 'true'}})}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                    >
+                                                        <option value="false">No</option>
+                                                        <option value="true">Yes</option>
+                                                    </select>
+                                                </div>
+
+                                                {/* Household Head Name */}
+                                                {!tempProfile.isHouseholdHead && (
+                                                    <div className="space-y-2">
+                                                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                            <i className="fa-solid fa-user-crown text-green-500"></i>
+                                                            Household Head Name
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            name="householdHeadName"
+                                                            value={tempProfile.householdHeadName || ''}
+                                                            onChange={handleChange}
+                                                            disabled={!editMode}
+                                                            className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                                editMode 
+                                                                    ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                    : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                            }`}
+                                                            placeholder="Name of household head"
+                                                        />
+                                                    </div>
+                                                )}
+
+                                                {/* Relationship to Head */}
+                                                {!tempProfile.isHouseholdHead && (
+                                                    <div className="space-y-2">
+                                                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                            <i className="fa-solid fa-sitemap text-green-500"></i>
+                                                            Relationship to Head
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            name="relationshipToHead"
+                                                            value={tempProfile.relationshipToHead || ''}
+                                                            onChange={handleChange}
+                                                            disabled={!editMode}
+                                                            className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                                editMode 
+                                                                    ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                    : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                            }`}
+                                                            placeholder="e.g., spouse, child, parent"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Professional Information Tab */}
+                            {activeTab === 'professional' && (
+                                <div className="space-y-8">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <i className="fa-solid fa-briefcase text-green-600 text-xl"></i>
+                                        <h2 className="text-2xl font-bold text-gray-900">Professional Information</h2>
+                                    </div>
+
+                                    <div className="space-y-8">
+                                        {/* Education & Profile */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                                <i className="fa-solid fa-graduation-cap text-green-500"></i>
+                                                Education & Profile
+                                            </h3>
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                                {/* Education */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-book text-green-500"></i>
+                                                        Education Level
+                                                    </label>
+                                                    <select
+                                                        name="education"
+                                                        value={tempProfile.education || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                    >
+                                                        <option value="">Select Education Level</option>
+                                                        <option value="No_formal_education">No formal education</option>
+                                                        <option value="Kinder">Kinder</option>
+                                                        <option value="Elementary_level">Elementary level</option>
+                                                        <option value="Elementary_graduate">Elementary graduate</option>
+                                                        <option value="High_school_level">High school level</option>
+                                                        <option value="High_school_graduate">High school graduate</option>
+                                                        <option value="Senior_high_school_level">Senior high school level</option>
+                                                        <option value="Senior_high_school_graduate">Senior high school graduate</option>
+                                                        <option value="College_level">College level</option>
+                                                        <option value="College_graduate">College graduate</option>
+                                                        <option value="Post_graduate_studies">Post-graduate studies</option>
+                                                        <option value="Vocational_Technical">Vocational/Technical</option>
+                                                    </select>
+                                                </div>
+
+                                                {/* Client Profile Type */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-user-tag text-green-500"></i>
+                                                        Profile Type *
+                                                    </label>
+                                                    <select
+                                                        name="client_profile"
+                                                        value={tempProfile.client_profile || 'Student'}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                    >
+                                                        <option value="Fishfolk">Fishfolk</option>
+                                                        <option value="Rural_Based_Org">Rural Based Org</option>
+                                                        <option value="Student">Student</option>
+                                                        <option value="Agricultural_Fisheries_Technician">Agricultural/Fisheries Technician</option>
+                                                        <option value="Youth">Youth</option>
+                                                        <option value="Women">Women</option>
+                                                        <option value="Govt_Employee">Govt Employee</option>
+                                                        <option value="PWD">PWD</option>
+                                                        <option value="Indigenous_People">Indigenous People</option>
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Disability Information */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                                <i className="fa-solid fa-wheelchair text-green-500"></i>
+                                                Disability Information
+                                            </h3>
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                                {/* PWD Status */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-universal-access text-green-500"></i>
+                                                        Person with Disability (PWD)
+                                                    </label>
+                                                    <select
+                                                        name="isPWD"
+                                                        value={tempProfile.isPWD ? 'true' : 'false'}
+                                                        onChange={(e) => handleChange({...e, target: {...e.target, name: 'isPWD', value: e.target.value === 'true'}})}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                    >
+                                                        <option value="false">No</option>
+                                                        <option value="true">Yes</option>
+                                                    </select>
+                                                </div>
+
+                                                {/* Disability Type */}
+                                                {tempProfile.isPWD && (
+                                                    <div className="space-y-2">
+                                                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                            <i className="fa-solid fa-notes-medical text-green-500"></i>
+                                                            Disability Type
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            name="disabilityType"
+                                                            value={tempProfile.disabilityType || ''}
+                                                            onChange={handleChange}
+                                                            disabled={!editMode}
+                                                            className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                                editMode 
+                                                                    ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                    : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                            }`}
+                                                            placeholder="Specify disability type"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Income Information */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                                <i className="fa-solid fa-money-bill text-green-500"></i>
+                                                Income Information
+                                            </h3>
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                                {/* Gross Annual Income */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-peso-sign text-green-500"></i>
+                                                        Gross Annual Income
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="grossAnnualIncome"
+                                                        value={tempProfile.grossAnnualIncome || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Annual income amount"
+                                                    />
+                                                </div>
+
+                                                {/* Income Source */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-chart-line text-green-500"></i>
+                                                        Income Source
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="incomeSource"
+                                                        value={tempProfile.incomeSource || ''}
+                                                        onChange={handleChange}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                        placeholder="Primary source of income"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Government & IDs Tab */}
+                            {activeTab === 'government' && (
+                                <div className="space-y-8">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <i className="fa-solid fa-id-card text-green-600 text-xl"></i>
+                                        <h2 className="text-2xl font-bold text-gray-900">Government & ID Information</h2>
+                                    </div>
+
+                                    <div className="space-y-8">
+                                        {/* Government ID Information */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                                <i className="fa-solid fa-id-badge text-green-500"></i>
+                                                Government Identification
+                                            </h3>
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                                {/* Has Government ID */}
+                                                <div className="space-y-2">
+                                                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                        <i className="fa-solid fa-check-circle text-green-500"></i>
+                                                        Has Government ID
+                                                    </label>
+                                                    <select
+                                                        name="hasGovId"
+                                                        value={tempProfile.hasGovId ? 'true' : 'false'}
+                                                        onChange={(e) => handleChange({...e, target: {...e.target, name: 'hasGovId', value: e.target.value === 'true'}})}
+                                                        disabled={!editMode}
+                                                        className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                            editMode 
+                                                                ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                        }`}
+                                                    >
+                                                        <option value="false">No</option>
+                                                        <option value="true">Yes</option>
+                                                    </select>
+                                                </div>
+
+                                                {/* Government ID Type */}
+                                                {tempProfile.hasGovId && (
                                                     <>
-                                                        <i className="fa-solid fa-spinner fa-spin"></i>
-                                                        Saving...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <i className="fa-solid fa-save"></i>
-                                                        Save Profile
+                                                        <div className="space-y-2">
+                                                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                                <i className="fa-solid fa-id-card-alt text-green-500"></i>
+                                                                Government ID Type
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                name="govIdType"
+                                                                value={tempProfile.govIdType || ''}
+                                                                onChange={handleChange}
+                                                                disabled={!editMode}
+                                                                className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                                    editMode 
+                                                                        ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                        : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                                }`}
+                                                                placeholder="e.g., National ID, Driver's License"
+                                                            />
+                                                        </div>
+
+                                                        <div className="space-y-2">
+                                                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                                                <i className="fa-solid fa-hashtag text-green-500"></i>
+                                                                Government ID Number
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                name="govIdNumber"
+                                                                value={tempProfile.govIdNumber || ''}
+                                                                onChange={handleChange}
+                                                                disabled={!editMode}
+                                                                className={`w-full border rounded-xl px-4 py-3 text-gray-900 focus:outline-none transition-all duration-200 ${
+                                                                    editMode 
+                                                                        ? 'bg-white border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 shadow-sm' 
+                                                                        : 'bg-gray-50 border-gray-200 text-gray-600'
+                                                                }`}
+                                                                placeholder="ID number"
+                                                            />
+                                                        </div>
                                                     </>
                                                 )}
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <button
-                                            type="button"
-                                            className="px-8 py-3 bg-blue-600 hover:bg-blue-700 transition text-white rounded-lg font-bold text-base shadow focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center gap-2"
-                                            onClick={handleEditMode}
-                                        >
-                                            <i className="fa-solid fa-edit"></i>
-                                            Edit Profile
-                                        </button>
-                                    )}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </form>
-                        </div>
+                            )}
+
+                            {/* Save Button - Show only in edit mode */}
+                            {editMode && (
+                                <div className="flex justify-end pt-8 border-t border-gray-200">
+                                    <button
+                                        type="submit"
+                                        disabled={profileMutation.isPending || pictureMutation.isPending}
+                                        className="px-12 py-4 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-xl font-semibold text-lg shadow-lg transition-all duration-200 flex items-center gap-3 disabled:cursor-not-allowed"
+                                    >
+                                        {profileMutation.isPending || pictureMutation.isPending ? (
+                                            <>
+                                                <i className="fa-solid fa-spinner fa-spin"></i>
+                                                Saving Changes...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="fa-solid fa-save"></i>
+                                                Save Profile
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            )}
+                        </form>
                     </div>
                 </div>
+
                 {/* Delete Modal */}
                 {showDeleteModal && (
-                    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-3xl p-10 max-w-md w-full border border-blue-200 shadow-2xl">
-                            <div className="font-extrabold text-2xl mb-4 text-red-600 flex items-center gap-2"><i className="fa-solid fa-triangle-exclamation"></i> Delete Account</div>
-                            <div className="mb-8 text-blue-900 text-lg">Are you sure you want to delete your account? This action cannot be undone.</div>
-                            <div className="flex gap-4">
-                                <button
-                                    className="flex-1 px-5 py-3 rounded-2xl bg-gray-100 hover:bg-gray-200 text-blue-700 text-lg font-bold shadow"
-                                    onClick={() => setShowDeleteModal(false)}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    className="flex-1 px-5 py-3 rounded-2xl bg-red-500 hover:bg-red-600 text-white text-lg font-bold shadow"
-                                    onClick={handleDelete}
-                                >
-                                    Delete
-                                </button>
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                        <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+                            <div className="text-center">
+                                <i className="fa-solid fa-triangle-exclamation text-red-500 text-4xl mb-4"></i>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Account</h3>
+                                <p className="text-gray-600 mb-6">Are you sure you want to delete your account? This action cannot be undone.</p>
+                                <div className="flex gap-3">
+                                    <button
+                                        className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition"
+                                        onClick={() => setShowDeleteModal(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className="flex-1 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition"
+                                        onClick={handleDelete}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -686,7 +1550,7 @@ export default function Account() {
             </div>
             <style>{`
                 html, body, #root {
-                    background: #f8fafc;
+                    background: linear-gradient(135deg, #f0fdf4, #ecfdf5, #f0fdfa);
                 }
                 html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar {
                     display: none;

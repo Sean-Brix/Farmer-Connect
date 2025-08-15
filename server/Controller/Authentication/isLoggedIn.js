@@ -21,7 +21,7 @@ async function isLoggedIn(req, res) {
         select: {
             username: true,
             firstName: true,
-            lastName: true,
+            surname: true,
             email: true,
             access: true,
         },
