@@ -42,7 +42,7 @@ async function addRequest(req, res) {
             select: {
                 id: true,
                 firstName: true,
-                lastName: true,
+                surname: true,
                 email: true,
                 access: true,
             },
@@ -125,7 +125,7 @@ async function addRequest(req, res) {
                     select: {
                         id: true,
                         firstName: true,
-                        lastName: true,
+                        surname: true,
                         email: true,
                     },
                 },

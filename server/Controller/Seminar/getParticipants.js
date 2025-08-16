@@ -23,10 +23,10 @@ async function getParticipants(req, res) {
                 participant.status = 'Not Attended'
             }
 
-            const { firstName, middleName, lastName } = participant.account;
+            const { firstName, middleName, surname } = participant.account;
             const fullname = middleName
-                ? `${firstName} ${middleName.charAt(0)}. ${lastName}`
-                : `${firstName} ${lastName}`;
+                ? `${firstName} ${middleName.charAt(0)}. ${surname}`
+                : `${firstName} ${surname}`;
 
 
             return {

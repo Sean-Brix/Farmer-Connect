@@ -23,7 +23,7 @@ async function setStatus(req, res) {
             select: {
                 id: true,
                 firstName: true,
-                lastName: true,
+                surname: true,
                 access: true,
             },
         });
@@ -50,7 +50,7 @@ async function setStatus(req, res) {
                     select: {
                         id: true,
                         firstName: true,
-                        lastName: true,
+                        surname: true,
                         email: true,
                     },
                 },
@@ -202,7 +202,7 @@ async function setStatus(req, res) {
                         select: {
                             id: true,
                             firstName: true,
-                            lastName: true,
+                            surname: true,
                             email: true,
                         },
                     },
@@ -210,7 +210,7 @@ async function setStatus(req, res) {
                         select: {
                             id: true,
                             firstName: true,
-                            lastName: true,
+                            surname: true,
                         },
                     },
                 },
@@ -260,13 +260,13 @@ async function setStatus(req, res) {
             action: auditAction,
             targetType: 'EIC_Request',
             targetId: result.id,
-            targetName: `${result.itemStack.item.name} (${result.account.firstName} ${result.account.lastName})`,
-            details: `Changed EIC request status to ${status} for ${result.itemStack.item.name} requested by ${result.account.firstName} ${result.account.lastName}`,
+            targetName: `${result.itemStack.item.name} (${result.account.firstName} ${result.account.surname})`,
+            details: `Changed EIC request status to ${status} for ${result.itemStack.item.name} requested by ${result.account.firstName} ${result.account.surname}`,
             metadata: {
                 action: 'eic_request_status_changed',
                 requestId: result.id,
                 itemName: result.itemStack.item.name,
-                requestorName: `${result.account.firstName} ${result.account.lastName}`,
+                requestorName: `${result.account.firstName} ${result.account.surname}`,
                 requestorId: result.account.id,
                 quantity: result.quantity,
                 previousStatus: transaction.status,
@@ -283,14 +283,14 @@ async function setStatus(req, res) {
             transaction: {
                 id: result.id,
                 itemName: result.itemStack.item.name,
-                requestor: `${result.account.firstName} ${result.account.lastName}`,
+                requestor: `${result.account.firstName} ${result.account.surname}`,
                 quantity: result.quantity,
                 status: result.status,
                 pickupDate: result.pickupDate,
                 returnDate: result.returnDate,
                 requestNote: result.requestNote,
                 updatedBy: result.admin
-                    ? `${result.admin.firstName} ${result.admin.lastName}`
+                    ? `${result.admin.firstName} ${result.admin.surname}`
                     : 'User',
                 updatedAt: result.updatedAt,
                 stackQuantityChange: stackQuantityChange, // Include the quantity change for debugging

@@ -541,7 +541,7 @@ export default function EIC() {
     if (error)
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <div className="text-lg text-red-600">Error: {error}</div>
+                <div className="text-lg text-red-600">Error: {error?.message || String(error)}</div>
             </div>
         );
 

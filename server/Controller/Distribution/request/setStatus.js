@@ -23,7 +23,7 @@ async function setStatus(req, res) {
             select: {
                 id: true,
                 firstName: true,
-                lastName: true,
+                surname: true,
                 access: true,
             },
         });
@@ -50,7 +50,7 @@ async function setStatus(req, res) {
                     select: {
                         id: true,
                         firstName: true,
-                        lastName: true,
+                        surname: true,
                         email: true,
                     },
                 },
@@ -192,7 +192,7 @@ async function setStatus(req, res) {
                         select: {
                             id: true,
                             firstName: true,
-                            lastName: true,
+                            surname: true,
                             email: true,
                         },
                     },
@@ -200,7 +200,7 @@ async function setStatus(req, res) {
                         select: {
                             id: true,
                             firstName: true,
-                            lastName: true,
+                            surname: true,
                         },
                     },
                 },
@@ -232,7 +232,7 @@ async function setStatus(req, res) {
                         itemName: updatedTransaction.itemStack.item.name,
                         requestedQuantity: updatedTransaction.quantity,
                         availableStock: transaction.itemStack.quantity,
-                        requestorInfo: `${updatedTransaction.account.firstName} ${updatedTransaction.account.lastName}`,
+                        requestorInfo: `${updatedTransaction.account.firstName} ${updatedTransaction.account.surname}`,
                         previousStatus: currentStatus,
                         newStatus: newStatus,
                         rejectionReason: !isApproval
@@ -278,14 +278,14 @@ async function setStatus(req, res) {
             transaction: {
                 id: result.id,
                 itemName: result.itemStack.item.name,
-                requestor: `${result.account.firstName} ${result.account.lastName}`,
+                requestor: `${result.account.firstName} ${result.account.surname}`,
                 quantity: result.quantity,
                 status: result.status,
                 pickupDate: result.pickupDate,
                 returnDate: null, // Always null for distribution items
                 requestNote: result.requestNote,
                 updatedBy: result.admin
-                    ? `${result.admin.firstName} ${result.admin.lastName}`
+                    ? `${result.admin.firstName} ${result.admin.surname}`
                     : 'User',
                 updatedAt: result.updatedAt,
                 stackQuantityChange: stackQuantityChange, // Include the quantity change for debugging

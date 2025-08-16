@@ -24,7 +24,7 @@ async function updateParticipant(req, res) {
                     select: {
                         id: true,
                         firstName: true,
-                        lastName: true,
+                        surname: true,
                         username: true,
                         email: true,
                     },
@@ -65,7 +65,7 @@ async function updateParticipant(req, res) {
                     select: {
                         id: true,
                         firstName: true,
-                        lastName: true,
+                        surname: true,
                         username: true,
                         email: true,
                     },
@@ -85,12 +85,12 @@ async function updateParticipant(req, res) {
             action: 'SEMINAR_PARTICIPANT_UPDATE',
             targetType: 'SeminarParticipant',
             targetId: updatedParticipant.id,
-            targetName: `${updatedParticipant.account.firstName} ${updatedParticipant.account.lastName}`,
-            details: `Updated participant status from "${existingParticipant.status}" to "${newStatus}" for ${updatedParticipant.account.firstName} ${updatedParticipant.account.lastName} in seminar "${updatedParticipant.seminar.title}"`,
+            targetName: `${updatedParticipant.account.firstName} ${updatedParticipant.account.surname}`,
+            details: `Updated participant status from "${existingParticipant.status}" to "${newStatus}" for ${updatedParticipant.account.firstName} ${updatedParticipant.account.surname} in seminar "${updatedParticipant.seminar.title}"`,
             metadata: {
                 action: 'participant_status_updated',
                 participantId: updatedParticipant.id,
-                participantName: `${updatedParticipant.account.firstName} ${updatedParticipant.account.lastName}`,
+                participantName: `${updatedParticipant.account.firstName} ${updatedParticipant.account.surname}`,
                 participantEmail: updatedParticipant.account.email,
                 participantUsername: updatedParticipant.account.username,
                 seminarId: updatedParticipant.seminar.id,

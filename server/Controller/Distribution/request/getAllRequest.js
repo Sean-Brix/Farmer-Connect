@@ -28,19 +28,17 @@ async function getAllRequest(req, res) {
                     select: {
                         id: true,
                         firstName: true,
-                        lastName: true,
+                        surname: true,
                         email: true,
                         username: true,
-                        cellphone_no: true,
                         access: true,
-                        client_profile: true,
                     },
                 },
                 admin: {
                     select: {
                         id: true,
                         firstName: true,
-                        lastName: true,
+                        surname: true,
                         email: true,
                     },
                 },
@@ -77,7 +75,7 @@ async function getAllRequest(req, res) {
             // Stack inventory information
             currentStock: request.itemStack.quantity,
             // User information
-            requestorName: `${request.account.firstName} ${request.account.lastName}`,
+            requestorName: `${request.account.firstName} ${request.account.surname}`,
             requestorEmail: request.account.email,
             requestorUsername: request.account.username,
             requestorPhone: request.account.cellphone_no,
@@ -85,7 +83,7 @@ async function getAllRequest(req, res) {
             requestorProfile: request.account.client_profile,
             // Admin information (if any)
             adminName: request.admin
-                ? `${request.admin.firstName} ${request.admin.lastName}`
+                ? `${request.admin.firstName} ${request.admin.surname}`
                 : null,
             adminEmail: request.admin ? request.admin.email : null,
         }));

@@ -29,7 +29,7 @@ async function logout(req, res) {
                             id: true,
                             username: true,
                             firstName: true,
-                            lastName: true,
+                            surname: true,
                             access: true,
                         },
                     });

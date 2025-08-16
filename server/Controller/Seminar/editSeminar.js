@@ -81,7 +81,7 @@ async function editSeminar(req, res) {
                 creator: {
                     select: {
                         firstName: true,
-                        lastName: true,
+                        surname: true,
                         username: true,
                     },
                 },

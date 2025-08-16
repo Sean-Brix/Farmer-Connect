@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 async function register(req, res) {
 
     // Validate input
-    if (!req.body.firstName || !req.body.lastName || !req.body.username || !req.body.password || !req.body.confirmPass) {
+    if (!req.body.firstName || !req.body.surname || !req.body.username || !req.body.password || !req.body.confirmPass) {
         return res.status(400).json({ message: 'All fields are required', error: 'required' });
     }
     if (req.body.password !== req.body.confirmPass) {
@@ -57,7 +57,7 @@ async function register(req, res) {
         const newUser = await prisma.account.create({
             data: {
                 firstName: req.body.firstName,
-                lastName: req.body.lastName,
+                surname: req.body.surname,
                 gender: req.body.gender,
                 client_profile: req.body.clientProfile,
                 address: req.body.address,
