@@ -158,7 +158,7 @@ export default function Navbar({refresh}) {
     
 
     // Helper: is any of the Info links active?
-    const infoActive = ['/about', '/contact'].some((path) => location.pathname.startsWith(path));
+    const infoActive = ['/about', '/contact', '/citizens-charter'].some((path) => location.pathname.startsWith(path));
     // Helper: is any of the Services links active?
     const servicesActive = ['/seminar', '/eic', '/distribution', '/chat-support', '/report'].some((path) => location.pathname.startsWith(path));
 
@@ -504,6 +504,29 @@ export default function Navbar({refresh}) {
                                                 />
                                             </svg>
                                             Contact
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink
+                                            to="/citizens-charter"
+                                            className={({ isActive }) =>
+                                                `flex items-center gap-3 px-5 py-3 text-slate-700 hover:bg-green-50 hover:text-green-800 rounded-xl transition-all duration-200 font-medium mx-2 ${isActive ? 'bg-green-100 text-green-900' : ''}`
+                                            }
+                                        >
+                                            <svg
+                                                className="w-5 h-5 text-green-600"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                            Citizen's Charter
                                         </NavLink>
                                     </li>
                                 </ul>
@@ -1044,6 +1067,32 @@ export default function Navbar({refresh}) {
                                                         />
                                                     </svg>
                                                     <span>Contact</span>
+                                                </NavLink>
+                                                <NavLink 
+                                                    to="/citizens-charter"
+                                                    className={({ isActive }) => 
+                                                        `flex items-center space-x-3 py-3 px-4 rounded-lg transition-all duration-200 font-medium ${
+                                                            isActive 
+                                                                ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
+                                                                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1'
+                                                        }`
+                                                    }
+                                                    onClick={() => setOpen(false)}
+                                                >
+                                                    <svg
+                                                        className="w-5 h-5 text-emerald-500"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                    <span>Citizen's Charter</span>
                                                 </NavLink>
                                             </div>
                                         </details>

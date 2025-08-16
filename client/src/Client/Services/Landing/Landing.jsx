@@ -1189,6 +1189,7 @@ export default function Landing() {
                                     { href: '/about', label: 'About Us' },
                                     { href: '/seminar', label: 'Programs' },
                                     { href: '/contact', label: 'Contact' },
+                                    { href: '/citizens-charter', label: 'Citizen\'s Charter' },
                                     { href: '/faq', label: 'FAQ' },
                                     { href: '/resources', label: 'Resources' }
                                 ].map((link, index) => (

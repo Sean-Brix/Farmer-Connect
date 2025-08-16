@@ -20,6 +20,7 @@ import User from './Client/Services/Profile/User_Profile.jsx';
 import Seminar from './Client/Services/Enrollment/Seminar.jsx';
 import Contact from './Client/Services/Info/contact.jsx';
 import About from './Client/Services/Info/About.jsx';
+import CitizensCharter from './Client/Components/CitizensCharter.jsx';
 import Distribution from './Client/Services/Distributions/Distribution.jsx';
 import Survey from './Components/Survey/Survey.jsx';
 import My_Profile from './Admin/Components/Profile/My_Profile.jsx';
@@ -43,6 +44,7 @@ function App() {
                 <Route path="/settings/profile" element={<User />} />
                  
                 <Route path="/about" element={<About />} />
+                <Route path="/citizens-charter" element={<CitizensCharter />} />
                 <Route path="/distribution" element={<Distribution />} />
                 <Route path="/survey" element={<Survey />} />
                 <Route path="/chat" element={<Chat />} />
