@@ -93,7 +93,7 @@ async function getLogStats(req, res) {
                 id: true,
                 username: true,
                 firstName: true,
-                lastName: true,
+                surname: true,
                 access: true,
             },
         });
@@ -105,7 +105,7 @@ async function getLogStats(req, res) {
                 admin: {
                     id: admin.id,
                     username: admin.username,
-                    fullName: `${admin.firstName} ${admin.lastName}`,
+                    fullName: `${admin.firstName} ${admin.surname}`,
                     access: admin.access,
                 },
                 count: stat._count.adminId,

@@ -18,7 +18,7 @@ async function getLogFilters(req, res) {
                         id: true,
                         username: true,
                         firstName: true,
-                        lastName: true,
+                        surname: true,
                         access: true,
                     },
                 },
@@ -61,7 +61,7 @@ async function getLogFilters(req, res) {
             admins: uniqueAdmins.map((log) => ({
                 id: log.admin.id,
                 username: log.admin.username,
-                fullName: `${log.admin.firstName} ${log.admin.lastName}`,
+                fullName: `${log.admin.firstName} ${log.admin.surname}`,
                 access: log.admin.access,
             })),
             actions: uniqueActions.map((log) => log.action),
