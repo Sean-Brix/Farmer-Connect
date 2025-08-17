@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Bar, Line, Doughnut, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -93,6 +94,43 @@ export default function Farmer_Report() {
     }
   });
 
+  // TanStack Query for user account details and access control
+  const { data: accountData, isLoading: accessLoading, error: accessError } = useQuery({
+    queryKey: ['account-details'],
+    queryFn: async () => {
+      const response = await fetch('/api/account/details/me');
+      if (!response.ok) {
+        throw new Error('Failed to verify user access');
+      }
+      const data = await response.json();
+      return data;
+    },
+    retry: (failureCount, error) => {
+      // Don't retry on 401/403 errors
+      if (error.message.includes('401') || error.message.includes('403')) {
+        return false;
+      }
+      return failureCount < 2;
+    },
+    staleTime: 5 * 60 * 1000, // Consider data stale after 5 minutes
+    refetchInterval: 10 * 60 * 1000, // Refetch every 10 minutes
+  });
+
+  // Determine user access level with fallback to localStorage demo role
+  const userAccess = useMemo(() => {
+    if (accountData?.access) {
+      return accountData.access;
+    }
+    
+    // Fallback to demo role from localStorage
+    const demoRole = localStorage.getItem('demoRole');
+    if (demoRole) {
+      return demoRole === 'User'? 'User' : 'Admin';
+    }
+    
+    return 'User'; // Default to User access
+  }, [accountData]);
+
   // Weather state for Tanza, Cavite (14.4, 120.9)
   const [weatherData, setWeatherData] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
@@ -104,6 +142,40 @@ export default function Farmer_Report() {
     longitude: 120.9,
     timezone: 'Asia/Manila',
     name: 'Tanza, Cavite'
+  };
+
+  // Backup sample weather data for demonstration (when no internet)
+  const sampleWeatherData = {
+    current: {
+      temperature_2m: 28.5,
+      relative_humidity_2m: 75,
+      precipitation: 0.2,
+      weather_code: 2,
+      wind_speed_10m: 12.3
+    },
+    daily: {
+      time: [
+        '2024-08-18',
+        '2024-08-19',
+        '2024-08-20',
+        '2024-08-21',
+        '2024-08-22',
+        '2024-08-23',
+        '2024-08-24'
+      ],
+      temperature_2m_max: [32.1, 30.5, 31.8, 29.7, 33.2, 31.4, 30.9],
+      temperature_2m_min: [24.8, 23.9, 25.1, 24.2, 25.8, 24.6, 23.7],
+      precipitation_sum: [2.1, 0.0, 5.7, 12.3, 0.8, 3.2, 1.4],
+      weather_code: [2, 1, 3, 61, 2, 3, 1]
+    },
+    hourly: {
+      soil_temperature_0cm: [26.8, 27.2, 26.5, 27.8, 26.1, 27.4, 26.9],
+      soil_temperature_6cm: [25.3, 25.7, 25.1, 26.2, 24.8, 25.9, 25.4],
+      soil_temperature_18cm: [24.1, 24.3, 23.9, 24.7, 23.6, 24.5, 24.0],
+      soil_moisture_0_to_1cm: [0.32, 0.28, 0.41, 0.55, 0.26, 0.38, 0.33],
+      soil_moisture_1_to_3cm: [0.28, 0.25, 0.36, 0.48, 0.23, 0.34, 0.29],
+      soil_moisture_3_to_9cm: [0.24, 0.22, 0.31, 0.42, 0.21, 0.29, 0.25]
+    }
   };
 
   // Weather API Functions
@@ -118,11 +190,14 @@ export default function Farmer_Report() {
       if (!response.ok) throw new Error(`Weather API error: ${response.status}`);
       
       const data = await response.json();
-      console.log('Weather data fetched:', data);
       setWeatherData(data);
     } catch (error) {
       console.error('Weather fetch error:', error);
-      setWeatherError(`Failed to load weather data: ${error.message}`);
+      console.log('Using sample weather data for demonstration...');
+      
+      // Use sample data as fallback for demonstration
+      setWeatherData(sampleWeatherData);
+      setWeatherError(`Using sample data (Demo mode): ${error.message}`);
     } finally {
       setWeatherLoading(false);
     }
@@ -161,7 +236,7 @@ export default function Farmer_Report() {
     id: 1,
     name: 'Juan Dela Cruz',
     location: 'Tanza, Cavite',
-    farmSize: 2.5,
+    farmSize: 3.1,
     joinDate: '2024-01-15'
   });
 
@@ -200,6 +275,30 @@ export default function Farmer_Report() {
       status: 'Active',
       currentStage: 'Flowering',
       expectedYield: 12500,
+      reports: []
+    },
+    {
+      id: 3,
+      cropType: 'Corn',
+      variety: 'Sweet Corn',
+      plantingDate: '2024-02-15',
+      expectedHarvest: '2024-06-15',
+      area: 0.8,
+      status: 'Active',
+      currentStage: 'Vegetative',
+      expectedYield: 4200,
+      reports: []
+    },
+    {
+      id: 4,
+      cropType: 'Eggplant',
+      variety: 'Black Beauty',
+      plantingDate: '2024-03-01',
+      expectedHarvest: '2024-07-01',
+      area: 0.3,
+      status: 'Active',
+      currentStage: 'Seedling',
+      expectedYield: 2800,
       reports: []
     }
   ]);
@@ -354,6 +453,85 @@ export default function Farmer_Report() {
   return (
     <>
       <Navbar />
+      
+      {/* Loading State */}
+      {accessLoading && (
+        <div className="pt-[14vh] min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
+            <p className="text-gray-600 font-medium">Verifying access permissions...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Access Error State */}
+      {accessError && !accessLoading && (
+        <div className="pt-[14vh] min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50 flex items-center justify-center">
+          <div className="text-center max-w-md mx-auto px-6">
+            <div className="rounded-full bg-red-100 p-4 w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+              <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Error</h2>
+            <p className="text-gray-600 mb-6">{accessError.message || 'Unable to verify user access'}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Non-User Access Restriction (Admin, etc.) */}
+      {userAccess && userAccess !== 'User' && !accessLoading && !accessError && (
+        <div className="pt-[14vh] min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 flex items-center justify-center">
+          <div className="text-center max-w-lg mx-auto px-6">
+            <div className="rounded-full bg-blue-100 p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+              <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Access Restricted</h2>
+            <p className="text-gray-600 mb-2 text-lg">This Farmer Report module is exclusively designed for farmers.</p>
+
+            <div className="space-y-4">
+              <a 
+                href="/admin" 
+                className="inline-flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Go to Admin Dashboard
+              </a>
+              
+              <div className="flex justify-center gap-4">
+                <a 
+                  href="/" 
+                  className="text-gray-600 hover:text-gray-800 font-medium underline transition-colors duration-200"
+                >
+                  Return to Home
+                </a>
+                <span className="text-gray-400">•</span>
+                {userAccess !== 'User' && 
+                  <a 
+                  href="/admin" 
+                  className="text-blue-600 hover:text-blue-800 font-medium underline transition-colors duration-200"
+                  >
+                    Admin Panel
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Farmer Dashboard Content - Only show for User access */}
+      {userAccess === 'User' && !accessLoading && !accessError && (
       <div className="pt-[14vh] min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           {/* Professional Header - EIC Style */}
@@ -1776,11 +1954,24 @@ export default function Farmer_Report() {
                 </div>
                 <div className="p-4">
                   {weatherError && (
-                    <div className="text-red-600 text-sm mb-4 p-3 bg-red-50 rounded-lg">
-                      {weatherError}
+                    <div className={`text-sm mb-4 p-3 rounded-lg ${
+                      weatherError.includes('Demo mode') 
+                        ? 'text-blue-600 bg-blue-50 border border-blue-200' 
+                        : 'text-red-600 bg-red-50 border border-red-200'
+                    }`}>
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">
+                          {weatherError.includes('Demo mode') ? '🌐' : '⚠️'}
+                        </span>
+                        <span>{weatherError}</span>
+                      </div>
                       <button onClick={fetchWeatherData} 
-                        className="ml-2 px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700">
-                        Retry
+                        className={`ml-2 px-2 py-1 rounded text-xs mt-2 ${
+                          weatherError.includes('Demo mode')
+                            ? 'bg-blue-600 text-white hover:bg-blue-700'
+                            : 'bg-red-600 text-white hover:bg-red-700'
+                        }`}>
+                        {weatherError.includes('Demo mode') ? 'Try Live Data' : 'Retry'}
                       </button>
                     </div>
                   )}
@@ -2922,6 +3113,8 @@ export default function Farmer_Report() {
           </div>
         )}
       </div>
+      )}
+
       <style>{
                  `
                  html, body, #root {

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import logo from '../../Assets/Logo.png';
 import Chat from '../../Components/Chats/Chat.jsx';
 import logo2 from '../Assets/farmerconnect.png'; // Updated logo import
@@ -15,71 +16,140 @@ export default function Navbar({refresh}) {
         document.head.appendChild(link);
     }
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [open, setOpen] = useState(false);
     const [servicesOpen, setServicesOpen] = useState(false);
 
     const [user, setUser] = useState({
         avatar: '/api/account/picture/me',
         name: 'Guest User',
+        access: 'User', // Default access level
     });
 
     const [infoOpen, setInfoOpen] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
 
+    // TanStack Query for authentication check
+    const { data: authData, isLoading: authLoading, error: authError } = useQuery({
+        queryKey: ['auth-check'],
+        queryFn: async () => {
+            const response = await fetch('/auth/is-authenticated');
+            const data = await response.json();
+            return data;
+        },
+        refetchInterval: 30 * 1000, // Refetch every 30 seconds for better responsiveness
+        staleTime: 10 * 1000, // Consider data stale after 10 seconds
+        refetchOnWindowFocus: true, // Refetch when window gains focus
+    });
+
+    // TanStack Query for user account details (only when authenticated)
+    const { data: accountData, isLoading: accountLoading } = useQuery({
+        queryKey: ['account-details'],
+        queryFn: async () => {
+            const response = await fetch('/api/account/details/me');
+            const data = await response.json();
+            return data;
+        },
+        enabled: authData?.check === true, // Only run when authenticated
+        refetchInterval: 30 * 1000, // Refetch every 30 seconds
+        staleTime: 10 * 1000, // Consider data stale after 10 seconds
+        refetchOnWindowFocus: true, // Refetch when window gains focus
+    });
+
     // Helper to determine if we are in the "mid" screen size (750px - 1050px)
     const [isMidScreen, setIsMidScreen] = useState(false);
 
+    // Utility function to refresh auth data (can be called after login)
+    const refreshAuthData = () => {
+        queryClient.invalidateQueries({ queryKey: ['auth-check'] });
+        queryClient.invalidateQueries({ queryKey: ['account-details'] });
+    };
+
+    // Expose refresh function globally for other components to use
     useEffect(() => {
+        window.refreshAuthData = refreshAuthData;
+        
+        // Add window focus listener for additional cache invalidation
+        const handleWindowFocus = () => {
+            refreshAuthData();
+        };
+        
+        window.addEventListener('focus', handleWindowFocus);
+        
+        return () => {
+            delete window.refreshAuthData;
+            window.removeEventListener('focus', handleWindowFocus);
+        };
+    }, []);
 
-        async function isAuthenticated() {
-
-            try {
-                const response = await fetch('/auth/is-authenticated');
-    
-                const data = await response.json();
-
-                if(!data.check) {
-                    setLoggedIn(false);
-                        setUser({
-                        avatar: '/api/account/picture/me?refresh=' + new Date().getTime(),
-                        name: 'Guest User',
-                    });
-                    return;
-                }
-
-                setLoggedIn(true);
-                setUser({
-                    avatar: '/api/account/picture/me?refresh=' + new Date().getTime(),
-                    name: data.payload.username,
-                });
-            }
-
-            catch (error) {
-                console.error('Error checking authentication:', error);
-                setLoggedIn(false);
-            }
-    
-        }
-
+    useEffect(() => {
         function handleResize() {
             const width = window.innerWidth;
             setIsMidScreen(width >= 750 && width <= 1050);
         }
 
-        isAuthenticated();
         handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-
     }, []);
 
-    useEffect(()=>{
+    // Invalidate cache when navigating to home or when authentication state might have changed
+    useEffect(() => {
+        const invalidateAuthQueries = () => {
+            queryClient.invalidateQueries({ queryKey: ['auth-check'] });
+            queryClient.invalidateQueries({ queryKey: ['account-details'] });
+        };
 
-        setUser((prev)=>({
+        // Invalidate cache when navigating to home
+        if (location.pathname === '/') {
+            invalidateAuthQueries();
+        }
+    }, [location.pathname, queryClient]);
+
+    // Also invalidate cache when refresh prop changes (indicating potential login/logout)
+    useEffect(() => {
+        if (refresh) {
+            queryClient.invalidateQueries({ queryKey: ['auth-check'] });
+            queryClient.invalidateQueries({ queryKey: ['account-details'] });
+        }
+    }, [refresh, queryClient]);
+
+    // Update user state based on TanStack Query data
+    useEffect(() => {
+        if (authData?.check) {
+            setLoggedIn(true);
+            
+            // Check for demo role from localStorage first, then use account data
+            const demoRole = localStorage.getItem('demoRole');
+            let userAccess = 'User'; // default
+            
+            if (demoRole) {
+                // Convert demo roles to access levels
+                userAccess = demoRole === 'farmer' ? 'User' : 'Admin';
+            } else if (accountData?.access) {
+                userAccess = accountData.access;
+            }
+
+            setUser({
+                avatar: '/api/account/picture/me?refresh=' + new Date().getTime(),
+                name: authData.payload?.username || 'User',
+                access: userAccess,
+            });
+        } else {
+            setLoggedIn(false);
+            setUser({
+                avatar: '/api/account/picture/me?refresh=' + new Date().getTime(),
+                name: 'Guest User',
+                access: 'User',
+            });
+        }
+    }, [authData, accountData]);
+
+    useEffect(() => {
+        setUser((prev) => ({
             ...prev,
             avatar: '/api/account/picture/me?refresh=' + new Date().getTime(),
-        }))
-
+        }));
     }, [refresh]);
 
     // Add a state to simulate logout
@@ -99,6 +169,10 @@ export default function Navbar({refresh}) {
                 throw new Error('Logout failed');
             }
         
+            // Clear TanStack Query cache for auth-related queries
+            queryClient.removeQueries({ queryKey: ['auth-check'] });
+            queryClient.removeQueries({ queryKey: ['account-details'] });
+            
             setLoggedIn(false);
             setOpen(false);
             setShowAlert(true);
@@ -729,6 +803,7 @@ export default function Navbar({refresh}) {
                         </ul>
                     </div>
                     <div className="flex items-center gap-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+     
                         {loggedIn ? (
                             <div
                                 className="relative hidden md:block"
@@ -745,6 +820,7 @@ export default function Navbar({refresh}) {
                                     aria-haspopup="true"
                                     aria-expanded={open}
                                     tabIndex={0}
+                                    title={`User Access: ${user.access}`} // Debug tooltip
                                 >
                                     <img
                                         src={user.avatar}
@@ -776,28 +852,33 @@ export default function Navbar({refresh}) {
                                                 Profile Settings
                                             </Link>
                                         </li>
-                                        <li>
-                                            <Link
-                                                to="/admin"
-                                                className="flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium"
-                                                onClick={() => setOpen(false)}
-                                            >
-                                                <svg
-                                                    className="w-5 h-5 text-emerald-500"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    viewBox="0 0 24 24"
+                                        {/* Only show Admin Panel to admin/superadmin users */}
+                                        {(user.access === 'Admin' || user.access === 'Super_Admin' || user.access === 'admin' || user.access === 'superadmin') && (
+                                            <li>
+                                                <Link
+                                                    to="/admin"
+                                                    className="flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium"
+                                                    onClick={() => {
+                                                        setOpen(false);
+                                                    }}
                                                 >
-                                                    <path
-                                                        d="M12 11V7m0 0V3m0 4h4m-4 0H8m8 8v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4a2 2 0 012-2h8a2 2 0 012 2z"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                                Admin Panel
-                                            </Link>
-                                        </li>
+                                                    <svg
+                                                        className="w-5 h-5 text-emerald-500"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            d="M12 11V7m0 0V3m0 4h4m-4 0H8m8 8v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4a2 2 0 012-2h8a2 2 0 012 2z"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                    Admin Panel
+                                                </Link>
+                                            </li>
+                                        )}
                                         <li>
                                             <button
                                                 className="w-full text-left flex items-center gap-3 px-6 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-medium"
@@ -853,7 +934,6 @@ export default function Navbar({refresh}) {
                         )}
                         <button
                             onClick={() => {
-                                console.log('Mobile menu button clicked, current open state:', open);
                                 setOpen(!open);
                             }}
                             className="md:hidden text-white focus:outline-none transition-all duration-300 hover:scale-110 z-[10000] ml-2 rounded-xl p-2 bg-white/10 backdrop-blur-sm shadow-lg border border-white/20 hover:bg-white/20 relative"
@@ -1326,33 +1406,37 @@ export default function Navbar({refresh}) {
                                                         <span>Profile Settings</span>
                                                     </NavLink>
                                                     
-                                                    {/* Admin Panel Link */}
-                                                    <NavLink 
-                                                        to="/admin"
-                                                        className={({ isActive }) =>
-                                                            `mobile-menu-item flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
-                                                                isActive 
-                                                                    ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
-                                                                    : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
-                                                            }`
-                                                        }
-                                                        onClick={() => setOpen(false)}
-                                                    >
-                                                        <svg
-                                                            className="w-5 h-5 text-emerald-500"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            viewBox="0 0 24 24"
+                                                    {/* Admin Panel Link - Only show to admin/superadmin users */}
+                                                    {(user.access === 'Admin' || user.access === 'Super_Admin') && (
+                                                        <NavLink 
+                                                            to="/admin"
+                                                            className={({ isActive }) =>
+                                                                `mobile-menu-item flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
+                                                                    isActive 
+                                                                        ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
+                                                                        : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
+                                                                }`
+                                                            }
+                                                            onClick={() => {
+                                                                setOpen(false);
+                                                            }}
                                                         >
-                                                            <path
-                                                                d="M12 11V7m0 0V3m0 4h4m-4 0H8m8 8v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4a2 2 0 012-2h8a2 2 0 012 2z"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                            />
-                                                        </svg>
-                                                        <span>Admin Panel</span>
-                                                    </NavLink>
+                                                            <svg
+                                                                className="w-5 h-5 text-emerald-500"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                strokeWidth="2"
+                                                                viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                    d="M12 11V7m0 0V3m0 4h4m-4 0H8m8 8v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4a2 2 0 012-2h8a2 2 0 012 2z"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                />
+                                                            </svg>
+                                                            <span>Admin Panel</span>
+                                                        </NavLink>
+                                                    )}
                                                     
                                                     {/* Professional Logout Button */}
                                                     <button 
