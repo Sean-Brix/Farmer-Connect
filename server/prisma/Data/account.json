@@ -165,8 +165,8 @@
     },
     {
         "access": "User",
-        "username": "maria.santos",
-        "email": "maria.santos@example.com",
+        "username": "rhen-user",
+        "email": "Ashley@example.com",
         "firstName": "Maria",
         "middleName": "Cruz",
         "surname": "Santos",

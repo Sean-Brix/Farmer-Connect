@@ -57,6 +57,404 @@ function Seed_Track() {
     type: 'success'
   });
 
+  // Crop Guidelines state
+  const [cropGuidelines, setCropGuidelines] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showGuidelineModal, setShowGuidelineModal] = useState(false);
+  const [selectedGuideline, setSelectedGuideline] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [guidelineToDelete, setGuidelineToDelete] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingGuideline, setEditingGuideline] = useState(null);
+  const [newGuideline, setNewGuideline] = useState({
+    name: '',
+    category: 'cereals',
+    varieties: [''],
+    plantingSeasons: [''],
+    growingPeriod: '',
+    waterRequirements: '',
+    expectedYield: '',
+    soilType: '',
+    climate: '',
+    spacing: '',
+    fertilizer: '',
+    plantingTips: [''],
+    careInstructions: [''],
+    harvestingTips: [''],
+    keyTips: [''],
+    commonPests: [''],
+    diseases: [''],
+    fertilizers: [''],
+    stages: [{ stage: '', duration: '', description: '', activities: [''] }],
+    marketPrice: '',
+    profitability: 'Moderate',
+    difficulty: 'Easy'
+  });
+
+  // Load crop guidelines data on component mount
+  useEffect(() => {
+    // Sample crop guidelines data
+    setCropGuidelines([
+      {
+        id: 1,
+        name: 'Rice (Palay)',
+        category: 'cereals',
+        varieties: ['IR64', 'PSB Rc82', 'NSIC Rc222'],
+        plantingSeasons: ['Wet Season (Jun-Oct)', 'Dry Season (Nov-May)'],
+        growingPeriod: '120-150 days',
+        waterRequirements: 'High (flooded fields)',
+        expectedYield: '4-6 tons/hectare',
+        soilType: 'Clay loam, well-drained',
+        climate: 'Tropical, warm and humid',
+        spacing: '20cm x 20cm',
+        fertilizer: 'NPK 14-14-14 at planting, Urea for topdressing',
+        keyTips: [
+          'Maintain 2-5cm water level during vegetative stage',
+          'Transplant seedlings at 21-25 days old',
+          'Apply fertilizer in split applications'
+        ],
+        commonPests: ['Rice bug', 'Stem borer', 'Brown planthopper'],
+        diseases: ['Rice blast', 'Bacterial leaf blight', 'Sheath blight'],
+        stages: [
+          { stage: 'Land Preparation', duration: '2-3 weeks', description: 'Plow and harrow fields', activities: ['Plowing', 'Harrowing'] },
+          { stage: 'Seedling', duration: '21-25 days', description: 'Prepare seedbed', activities: ['Seed selection', 'Nursery care'] }
+        ],
+        marketPrice: '₱20-25 per kg',
+        profitability: 'High',
+        difficulty: 'Moderate',
+        createdAt: '2024-01-15',
+        updatedAt: '2024-02-01'
+      },
+      {
+        id: 2,
+        name: 'Corn',
+        category: 'cereals',
+        varieties: ['Pioneer 30G95', 'Dekalb 9108', 'NK 6410'],
+        plantingSeasons: ['Dry Season (Nov-Feb)', 'Wet Season (May-Aug)'],
+        growingPeriod: '90-120 days',
+        waterRequirements: 'Medium (600-800mm total)',
+        expectedYield: '3-5 tons/hectare',
+        soilType: 'Well-drained loam, pH 6.0-7.0',
+        climate: 'Warm, adequate rainfall or irrigation',
+        spacing: '75cm x 25cm',
+        fertilizer: 'Complete fertilizer 14-14-14, side-dress with Urea',
+        keyTips: [
+          'Plant 2-3 seeds per hill, thin to strongest seedling',
+          'Hill up soil around plants at 30-45 days',
+          'Side-dress with nitrogen at knee-high stage'
+        ],
+        commonPests: ['Corn borer', 'Fall armyworm', 'Corn rootworm'],
+        diseases: ['Corn rust', 'Leaf blight', 'Ear rot'],
+        stages: [
+          { stage: 'Land Preparation', duration: '1-2 weeks', description: 'Prepare well-drained fields', activities: ['Deep plowing', 'Harrowing'] },
+          { stage: 'Planting', duration: '1 week', description: 'Direct seeding', activities: ['Seed treatment', 'Planting'] }
+        ],
+        marketPrice: '₱15-20 per kg',
+        profitability: 'High',
+        difficulty: 'Easy',
+        createdAt: '2024-01-20',
+        updatedAt: '2024-02-05'
+      },
+      {
+        id: 3,
+        name: 'Tomato',
+        category: 'vegetables',
+        varieties: ['Cherokee Purple', 'Determinate hybrids', 'Cherry tomatoes'],
+        plantingSeasons: ['Cool Season (Oct-Mar)', 'Highland areas year-round'],
+        growingPeriod: '90-120 days',
+        waterRequirements: 'Medium-High (consistent moisture)',
+        expectedYield: '15-25 tons/hectare',
+        soilType: 'Well-drained, fertile loam, pH 6.0-6.8',
+        climate: 'Cool to warm, avoid extreme heat',
+        spacing: '60cm x 40cm',
+        fertilizer: 'High phosphorus at planting, regular NPK applications',
+        keyTips: [
+          'Start from healthy seedlings in nursery',
+          'Provide sturdy support systems',
+          'Prune suckers regularly for better fruit quality'
+        ],
+        commonPests: ['Fruit borer', 'Whitefly', 'Aphids'],
+        diseases: ['Early blight', 'Late blight', 'Bacterial wilt'],
+        stages: [
+          { stage: 'Nursery', duration: '25-30 days', description: 'Seedling production', activities: ['Seed sowing', 'Seedling care'] },
+          { stage: 'Transplanting', duration: '1 week', description: 'Moving to field', activities: ['Land preparation', 'Transplanting'] }
+        ],
+        marketPrice: '₱40-80 per kg',
+        profitability: 'Very High',
+        difficulty: 'Moderate-High',
+        createdAt: '2024-02-01',
+        updatedAt: '2024-02-10'
+      }
+    ]);
+  }, []);
+
+  // Export overview data function
+  const exportOverviewData = () => {
+    try {
+      const stats = getOverviewStatistics();
+      const exportData = {
+        exportInfo: {
+          title: 'Seed Track Overview Export',
+          exportDate: new Date().toISOString(),
+          exportedBy: 'Admin'
+        },
+        overviewStatistics: {
+          totalFarmers: stats.totalFarmers,
+          totalReports: stats.totalReports,
+          recentReports: stats.recentReports,
+          activeCrops: stats.activeCrops,
+          cropDistribution: stats.cropDistribution,
+          healthDistribution: stats.healthDistribution
+        },
+        farmersData: farmers.map(farmer => ({
+          id: farmer.id,
+          name: farmer.name,
+          email: farmer.email,
+          location: farmer.location,
+          farmSize: parseFloat(farmer.area || 0),
+          joinDate: farmer.joinDate,
+          cropTypes: farmer.cropTypes,
+          totalReports: farmer.totalReports,
+          status: farmer.status
+        })),
+        reportsData: sampleSeedTrackingData.map(report => ({
+          farmerId: report.farmerId,
+          crop: report.crop,
+          variety: report.variety,
+          plantingDate: report.plantingDate,
+          reportDate: report.reportDate,
+          growthStage: report.growthStage,
+          plantHeight: report.plantHeight,
+          healthStatus: report.healthStatus,
+          estimatedYield: report.estimatedYield,
+          area: report.area
+        })),
+        summary: {
+          generatedAt: new Date().toISOString(),
+          totalRecords: farmers.length + sampleSeedTrackingData.length,
+          dataIntegrity: 'Complete'
+        }
+      };
+
+      // Convert to JSON and download
+      const jsonString = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `seed_track_overview_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      showAlert('Overview data exported successfully!', 'success');
+    } catch (error) {
+      console.error('Export error:', error);
+      showAlert('Error exporting data. Please try again.', 'error');
+    }
+  };
+
+  // Crop Guidelines functions
+  const categoryOptions = [
+    { value: 'cereals', label: 'Cereals & Grains', icon: '🌾' },
+    { value: 'vegetables', label: 'Vegetables', icon: '🥬' },
+    { value: 'fruits', label: 'Fruits', icon: '🍎' },
+    { value: 'legumes', label: 'Legumes', icon: '🫘' },
+    { value: 'root_crops', label: 'Root Crops', icon: '🥔' },
+    { value: 'herbs_spices', label: 'Herbs & Spices', icon: '🌿' }
+  ];
+
+  const filteredGuidelines = cropGuidelines.filter(guideline => {
+    const matchesCategory = selectedCategory === 'all' || guideline.category === selectedCategory;
+    const matchesSearch = guideline.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         guideline.varieties.some(v => v.toLowerCase().includes(searchTerm.toLowerCase()));
+    return matchesCategory && matchesSearch;
+  });
+
+  const handleAddGuideline = () => {
+    if (!newGuideline.name || !newGuideline.expectedYield) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    const guideline = {
+      id: Date.now(),
+      ...newGuideline,
+      createdAt: new Date().toISOString().split('T')[0],
+      updatedAt: new Date().toISOString().split('T')[0]
+    };
+
+    setCropGuidelines(prev => [guideline, ...prev]);
+    resetGuidelineForm();
+    setShowCreateModal(false);
+    showAlert('Crop guideline added successfully!', 'success');
+  };
+
+  const handleEditGuideline = (guideline) => {
+    setNewGuideline({
+      name: guideline.name,
+      category: guideline.category,
+      varieties: [...guideline.varieties],
+      plantingSeasons: [...guideline.plantingSeasons],
+      growingPeriod: guideline.growingPeriod,
+      waterRequirements: guideline.waterRequirements,
+      expectedYield: guideline.expectedYield,
+      soilType: guideline.soilType,
+      climate: guideline.climate,
+      spacing: guideline.spacing,
+      fertilizer: guideline.fertilizer,
+      plantingTips: guideline.plantingTips ? [...guideline.plantingTips] : [''],
+      careInstructions: guideline.careInstructions ? [...guideline.careInstructions] : [''],
+      harvestingTips: guideline.harvestingTips ? [...guideline.harvestingTips] : [''],
+      keyTips: guideline.keyTips ? [...guideline.keyTips] : [''],
+      commonPests: guideline.commonPests ? [...guideline.commonPests] : [''],
+      diseases: guideline.diseases ? [...guideline.diseases] : [''],
+      fertilizers: guideline.fertilizers ? [...guideline.fertilizers] : [''],
+      stages: (guideline.stages || []).map(stage => ({
+        ...stage,
+        activities: [...(stage.activities || [])]
+      })),
+      marketPrice: guideline.marketPrice,
+      profitability: guideline.profitability,
+      difficulty: guideline.difficulty
+    });
+    setEditingGuideline(guideline);
+    setShowCreateModal(true);
+  };
+
+  const handleUpdateGuideline = () => {
+    if (!newGuideline.name || !newGuideline.expectedYield) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    setCropGuidelines(prev => prev.map(g => 
+      g.id === editingGuideline.id 
+        ? { ...g, ...newGuideline, updatedAt: new Date().toISOString().split('T')[0] }
+        : g
+    ));
+
+    resetGuidelineForm();
+    setShowCreateModal(false);
+    setEditingGuideline(null);
+    showAlert('Crop guideline updated successfully!', 'success');
+  };
+
+  const handleDeleteGuideline = (id) => {
+    setCropGuidelines(prev => prev.filter(g => g.id !== id));
+    setShowDeleteModal(false);
+    setGuidelineToDelete(null);
+    showAlert('Crop guideline deleted successfully!', 'success');
+  };
+
+  const resetGuidelineForm = () => {
+    setNewGuideline({
+      name: '',
+      category: 'cereals',
+      varieties: [''],
+      plantingSeasons: [''],
+      growingPeriod: '',
+      waterRequirements: '',
+      expectedYield: '',
+      soilType: '',
+      climate: '',
+      spacing: '',
+      fertilizer: '',
+      plantingTips: [''],
+      careInstructions: [''],
+      harvestingTips: [''],
+      keyTips: [''],
+      commonPests: [''],
+      diseases: [''],
+      fertilizers: [''],
+      stages: [{ stage: '', duration: '', description: '', activities: [''] }],
+      marketPrice: '',
+      profitability: 'Moderate',
+      difficulty: 'Easy'
+    });
+  };
+
+  const addArrayField = (field, value = '') => {
+    setNewGuideline(prev => ({
+      ...prev,
+      [field]: [...prev[field], value]
+    }));
+  };
+
+  const updateArrayField = (field, index, value) => {
+    setNewGuideline(prev => ({
+      ...prev,
+      [field]: prev[field].map((item, i) => i === index ? value : item)
+    }));
+  };
+
+  const removeArrayField = (field, index) => {
+    setNewGuideline(prev => ({
+      ...prev,
+      [field]: prev[field].filter((_, i) => i !== index)
+    }));
+  };
+
+  const addStage = () => {
+    setNewGuideline(prev => ({
+      ...prev,
+      stages: [...prev.stages, { stage: '', duration: '', description: '', activities: [''] }]
+    }));
+  };
+
+  const updateStage = (index, field, value) => {
+    setNewGuideline(prev => ({
+      ...prev,
+      stages: prev.stages.map((stage, i) => 
+        i === index ? { ...stage, [field]: value } : stage
+      )
+    }));
+  };
+
+  const removeStage = (index) => {
+    setNewGuideline(prev => ({
+      ...prev,
+      stages: prev.stages.filter((_, i) => i !== index)
+    }));
+  };
+
+  const addStageActivity = (stageIndex) => {
+    setNewGuideline(prev => ({
+      ...prev,
+      stages: prev.stages.map((stage, i) => 
+        i === stageIndex ? { ...stage, activities: [...stage.activities, ''] } : stage
+      )
+    }));
+  };
+
+  const updateStageActivity = (stageIndex, activityIndex, value) => {
+    setNewGuideline(prev => ({
+      ...prev,
+      stages: prev.stages.map((stage, i) => 
+        i === stageIndex ? {
+          ...stage,
+          activities: stage.activities.map((activity, j) => 
+            j === activityIndex ? value : activity
+          )
+        } : stage
+      )
+    }));
+  };
+
+  const removeStageActivity = (stageIndex, activityIndex) => {
+    setNewGuideline(prev => ({
+      ...prev,
+      stages: prev.stages.map((stage, i) => 
+        i === stageIndex ? {
+          ...stage,
+          activities: stage.activities.filter((_, j) => j !== activityIndex)
+        } : stage
+      )
+    }));
+  };
+
   // Helper to show alert
   const showAlert = (message, type = 'success') => {
     setAlert({ show: true, message, type });
@@ -850,6 +1248,21 @@ function Seed_Track() {
                   </svg>
                   Overview
                 </button>
+
+                <button
+                  onClick={() => setActiveTab('guidelines')}
+                  className={`py-3 px-1 text-sm font-semibold border-b-2 whitespace-nowrap flex items-center gap-2 transition-colors duration-200 ${
+                    activeTab === 'guidelines'
+                      ? 'border-green-600 text-green-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span className="hidden sm:inline">Crop Guidelines</span>
+                  <span className="sm:hidden">Guidelines</span>
+                </button>
                 
                 {/* Dynamic Farmer Tabs */}
                 {openFarmerTabs.map((farmer) => (
@@ -1343,8 +1756,17 @@ function Seed_Track() {
                     </svg>
                     Farmers Directory
                   </h3>
-                  <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-                    {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, getFilteredFarmers().length)} of {getFilteredFarmers().length} farmers
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={exportOverviewData}
+                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+                    >
+                      <span>📤</span>
+                      Export Overview
+                    </button>
+                    <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                      {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, getFilteredFarmers().length)} of {getFilteredFarmers().length} farmers
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1467,6 +1889,229 @@ function Seed_Track() {
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Crop Guidelines Tab */}
+        {activeTab === 'guidelines' && (
+          <div>
+            {/* Guidelines Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Crop Guidelines Management
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">Manage crop growing guidelines for farmers</p>
+              </div>
+              <button
+                onClick={() => {
+                  resetGuidelineForm();
+                  setEditingGuideline(null);
+                  setShowCreateModal(true);
+                }}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+              >
+                <span>+</span>
+                Add New Guideline
+              </button>
+            </div>
+
+            {/* Search and Filter Bar */}
+            <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+              <div className="flex flex-col lg:flex-row gap-4">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Search Guidelines</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search by crop name or variety..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                    />
+                  </div>
+                </div>
+                <div className="min-w-[200px]">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                  >
+                    <option value="all">All Categories</option>
+                    {categoryOptions.map(cat => (
+                      <option key={cat.value} value={cat.value}>
+                        {cat.icon} {cat.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Guidelines Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredGuidelines.map((guideline) => (
+                <div key={guideline.id} className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col h-full min-h-[500px]">
+                  {/* Card Header */}
+                  <div className="p-6 border-b border-gray-100">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-green-100 rounded-lg">
+                          <span className="text-lg">
+                            {categoryOptions.find(cat => cat.value === guideline.category)?.icon || '🌱'}
+                          </span>
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-800">{guideline.name}</h3>
+                          <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">
+                            {categoryOptions.find(cat => cat.value === guideline.category)?.label}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleEditGuideline(guideline)}
+                          className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                          title="Edit guideline"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setGuidelineToDelete(guideline);
+                            setShowDeleteModal(true);
+                          }}
+                          className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                          title="Delete guideline"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {/* Key Info */}
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <span className="text-gray-600">Growing Period:</span>
+                        <div className="font-medium text-gray-800">{guideline.growingPeriod}</div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Expected Yield:</span>
+                        <div className="font-medium text-gray-800">{guideline.expectedYield}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Content */}
+                  <div className="p-6 flex-1">
+                    {/* Varieties */}
+                    <div className="mb-4">
+                      <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Varieties</label>
+                      <div className="flex flex-wrap gap-1 mt-1 min-h-[32px] content-start">
+                        {guideline.varieties.slice(0, 3).map((variety, idx) => (
+                          <span key={idx} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                            {variety}
+                          </span>
+                        ))}
+                        {guideline.varieties.length > 3 && (
+                          <span className="text-xs text-gray-500">+{guideline.varieties.length - 3} more</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Quick Stats */}
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-600">Market Price:</span>
+                        <div className="font-medium text-green-700">{guideline.marketPrice}</div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Difficulty:</span>
+                        <div className={`font-medium ${
+                          guideline.difficulty === 'Easy' ? 'text-green-600' :
+                          guideline.difficulty === 'Moderate' ? 'text-yellow-600' :
+                          'text-red-600'
+                        }`}>
+                          {guideline.difficulty}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Key Tips Preview */}
+                    <div className="mt-4">
+                      <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">Key Tips</label>
+                      <div className="mt-1 text-sm text-gray-700 min-h-[60px]">
+                        {guideline.keyTips.slice(0, 2).map((tip, idx) => (
+                          <div key={idx} className="flex items-start gap-2 mb-1">
+                            <span className="text-green-500 mt-0.5">•</span>
+                            <span className="text-xs">{tip}</span>
+                          </div>
+                        ))}
+                        {guideline.keyTips.length > 2 && (
+                          <div className="text-xs text-gray-500">+{guideline.keyTips.length - 2} more tips</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Footer */}
+                  <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 rounded-b-xl">
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <span>Updated: {guideline.updatedAt}</span>
+                      <span className={`px-2 py-1 rounded-full font-medium ${
+                        guideline.profitability === 'Very High' ? 'bg-green-100 text-green-700' :
+                        guideline.profitability === 'High' ? 'bg-green-100 text-green-600' :
+                        guideline.profitability === 'Moderate' ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-gray-100 text-gray-700'
+                      }`}>
+                        {guideline.profitability} Profitability
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Empty State */}
+            {filteredGuidelines.length === 0 && (
+              <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+                <div className="text-6xl mb-4 opacity-30">📚</div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No guidelines found</h3>
+                <p className="text-gray-600 mb-6">
+                  {searchTerm || selectedCategory !== 'all' 
+                    ? 'No guidelines match your current search and filters' 
+                    : 'Start by adding your first crop guideline'}
+                </p>
+                <button
+                  onClick={() => {
+                    if (searchTerm || selectedCategory !== 'all') {
+                      setSearchTerm('');
+                      setSelectedCategory('all');
+                    } else {
+                      resetGuidelineForm();
+                      setEditingGuideline(null);
+                      setShowCreateModal(true);
+                    }
+                  }}
+                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-md hover:shadow-lg"
+                >
+                  {searchTerm || selectedCategory !== 'all' ? 'Clear Filters' : 'Add First Guideline'}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -2087,8 +2732,378 @@ function Seed_Track() {
             </div>
           </div>
         )}
-
+        </div>
+        
+        {/* Crop Guidelines Modal */}
+    {showCreateModal && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xl font-bold text-gray-800">
+              {editingGuideline ? 'Edit Crop Guideline' : 'Add New Crop Guideline'}
+            </h3>
+            <button
+              onClick={() => {
+                setShowCreateModal(false);
+                setEditingGuideline(null);
+                setNewGuideline({
+                  id: '',
+                  cropName: '',
+                  category: '',
+                  description: '',
+                  plantingTips: [''],
+                  careInstructions: [''],
+                  harvestingTips: [''],
+                  commonPests: [''],
+                  diseases: [''],
+                  seasonality: '',
+                  soilRequirements: '',
+                  waterRequirements: '',
+                  fertilizers: ['']
+                });
+              }}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
+          
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            editingGuideline ? handleUpdateGuideline() : handleAddGuideline();
+          }} className="space-y-4">
+            {/* Basic Information */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Crop Name *</label>
+              <input
+                type="text"
+                required
+                value={newGuideline.cropName}
+                onChange={(e) => setNewGuideline({...newGuideline, cropName: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Enter crop name"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+              <select
+                required
+                value={newGuideline.category}
+                onChange={(e) => setNewGuideline({...newGuideline, category: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
+                <option value="">Select Category</option>
+                <option value="Vegetables">Vegetables</option>
+                <option value="Fruits">Fruits</option>
+                <option value="Grains">Grains</option>
+                <option value="Legumes">Legumes</option>
+                <option value="Herbs">Herbs</option>
+                <option value="Root Crops">Root Crops</option>
+                <option value="Leafy Greens">Leafy Greens</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <textarea
+                value={newGuideline.description}
+                onChange={(e) => setNewGuideline({...newGuideline, description: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                rows="3"
+                placeholder="Brief description of the crop"
+              />
+            </div>
+
+            {/* Planting Tips */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Planting Tips</label>
+              {(newGuideline.plantingTips || []).map((tip, index) => (
+                <div key={index} className="flex mb-2">
+                  <input
+                    type="text"
+                    value={tip}
+                    onChange={(e) => updateArrayField('plantingTips', index, e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter planting tip"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeArrayField('plantingTips', index)}
+                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => addArrayField('plantingTips')}
+                className="text-green-600 hover:text-green-800 text-sm"
+              >
+                + Add Planting Tip
+              </button>
+            </div>
+
+            {/* Care Instructions */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Care Instructions</label>
+              {(newGuideline.careInstructions || []).map((instruction, index) => (
+                <div key={index} className="flex mb-2">
+                  <input
+                    type="text"
+                    value={instruction}
+                    onChange={(e) => updateArrayField('careInstructions', index, e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter care instruction"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeArrayField('careInstructions', index)}
+                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => addArrayField('careInstructions')}
+                className="text-green-600 hover:text-green-800 text-sm"
+              >
+                + Add Care Instruction
+              </button>
+            </div>
+
+            {/* Harvesting Tips */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Harvesting Tips</label>
+              {(newGuideline.harvestingTips || []).map((tip, index) => (
+                <div key={index} className="flex mb-2">
+                  <input
+                    type="text"
+                    value={tip}
+                    onChange={(e) => updateArrayField('harvestingTips', index, e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter harvesting tip"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeArrayField('harvestingTips', index)}
+                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => addArrayField('harvestingTips')}
+                className="text-green-600 hover:text-green-800 text-sm"
+              >
+                + Add Harvesting Tip
+              </button>
+            </div>
+
+            {/* Common Pests */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Common Pests</label>
+              {(newGuideline.commonPests || []).map((pest, index) => (
+                <div key={index} className="flex mb-2">
+                  <input
+                    type="text"
+                    value={pest}
+                    onChange={(e) => updateArrayField('commonPests', index, e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter common pest"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeArrayField('commonPests', index)}
+                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => addArrayField('commonPests')}
+                className="text-green-600 hover:text-green-800 text-sm"
+              >
+                + Add Common Pest
+              </button>
+            </div>
+
+            {/* Diseases */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Common Diseases</label>
+              {(newGuideline.diseases || []).map((disease, index) => (
+                <div key={index} className="flex mb-2">
+                  <input
+                    type="text"
+                    value={disease}
+                    onChange={(e) => updateArrayField('diseases', index, e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter common disease"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeArrayField('diseases', index)}
+                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => addArrayField('diseases')}
+                className="text-green-600 hover:text-green-800 text-sm"
+              >
+                + Add Common Disease
+              </button>
+            </div>
+
+            {/* Environmental Requirements */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Seasonality</label>
+              <input
+                type="text"
+                value={newGuideline.seasonality}
+                onChange={(e) => setNewGuideline({...newGuideline, seasonality: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Best planting season (e.g., Spring, Summer)"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Soil Requirements</label>
+              <input
+                type="text"
+                value={newGuideline.soilRequirements}
+                onChange={(e) => setNewGuideline({...newGuideline, soilRequirements: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Soil type and pH requirements"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Water Requirements</label>
+              <input
+                type="text"
+                value={newGuideline.waterRequirements}
+                onChange={(e) => setNewGuideline({...newGuideline, waterRequirements: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Watering frequency and amount"
+              />
+            </div>
+
+            {/* Fertilizers */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Recommended Fertilizers</label>
+              {(newGuideline.fertilizers || []).map((fertilizer, index) => (
+                <div key={index} className="flex mb-2">
+                  <input
+                    type="text"
+                    value={fertilizer}
+                    onChange={(e) => updateArrayField('fertilizers', index, e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Enter fertilizer recommendation"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeArrayField('fertilizers', index)}
+                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => addArrayField('fertilizers')}
+                className="text-green-600 hover:text-green-800 text-sm"
+              >
+                + Add Fertilizer
+              </button>
+            </div>
+
+            <div className="flex justify-end space-x-3 pt-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowCreateModal(false);
+                  setEditingGuideline(null);
+                  setNewGuideline({
+                    id: '',
+                    cropName: '',
+                    category: '',
+                    description: '',
+                    plantingTips: [''],
+                    careInstructions: [''],
+                    harvestingTips: [''],
+                    commonPests: [''],
+                    diseases: [''],
+                    seasonality: '',
+                    soilRequirements: '',
+                    waterRequirements: '',
+                    fertilizers: ['']
+                  });
+                }}
+                className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                {editingGuideline ? 'Update Guideline' : 'Add Guideline'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    )}
+
+    {/* Delete Confirmation Modal */}
+    {showDeleteModal && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="flex items-center mb-4">
+            <svg className="w-8 h-8 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <h3 className="text-lg font-medium text-gray-900">Delete Crop Guideline</h3>
+          </div>
+          
+          <p className="text-gray-600 mb-6">
+            Are you sure you want to delete the guideline for "{guidelineToDelete?.cropName}"? This action cannot be undone.
+          </p>
+          
+          <div className="flex justify-end space-x-3">
+            <button
+              onClick={() => {
+                setShowDeleteModal(false);
+                setGuidelineToDelete(null);
+              }}
+              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={confirmDeleteGuideline}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+          </div>
+        )}
         </div>
       </div>
     </div>

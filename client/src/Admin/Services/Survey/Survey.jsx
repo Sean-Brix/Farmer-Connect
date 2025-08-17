@@ -329,6 +329,48 @@ function Survey() {
   const uniqueCategories = [...new Set(surveys.map(survey => survey.category))];
   const uniqueStatuses = [...new Set(surveys.map(survey => survey.status))];
 
+  // Download survey form function
+  const downloadSurveyForm = (survey) => {
+    try {
+      // Create a comprehensive form structure for download
+      const formData = {
+        title: survey.title,
+        description: survey.description,
+        category: survey.category,
+        status: survey.status,
+        createdAt: survey.createdAt,
+        updatedAt: survey.updatedAt,
+        fields: survey.fields,
+        metadata: {
+          totalFields: survey.fields.length,
+          requiredFields: survey.fields.filter(f => f.required).length,
+          downloadDate: new Date().toISOString(),
+          downloadedBy: 'Admin'
+        }
+      };
+
+      // Convert to JSON string with formatting
+      const jsonString = JSON.stringify(formData, null, 2);
+      
+      // Create blob and download
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${survey.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_form.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      // Show success message
+      alert(`✅ Survey form "${survey.title}" downloaded successfully!`);
+    } catch (error) {
+      console.error('Download error:', error);
+      alert('❌ Error downloading survey form. Please try again.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white py-8 px-2 md:px-6 relative">
       <div className="max-w-7xl mx-auto">
@@ -548,6 +590,13 @@ function Survey() {
                         >
                           <span>👁️</span>
                           Preview
+                        </button>
+                        <button
+                          onClick={() => downloadSurveyForm(survey)}
+                          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-all duration-200 font-medium flex items-center gap-2 hover:shadow-md"
+                        >
+                          <span>📥</span>
+                          Download
                         </button>
                         <button
                           onClick={() => editSurvey(survey)}
