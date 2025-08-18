@@ -26,55 +26,54 @@ export default function CitizensCharter() {
     return (
         <>
             <Navbar />
-            <div className="min-h-screen overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#22c55e #f0f0f0' }}>
-                <main className="bg-gradient-to-br from-green-50 via-white to-emerald-50">
+            <div className="min-h-screen bg-white">
+                <main className="w-full">
                     {/* Hero Section */}
-                    <section className="relative bg-gradient-to-r from-green-700 via-green-800 to-emerald-800 pt-20 pb-10 overflow-hidden">
-                        <div className="absolute inset-0 bg-black/20"></div>
-                        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
-                        
-                        <div className="relative max-w-7xl mx-auto px-4 text-center">
-                            <div className="flex justify-center mb-4">
-                                <div className="bg-white/10 backdrop-blur-sm rounded-full p-3 border border-white/20">
-                                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <section className="bg-green-800 py-12">
+                        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+                            <div className="text-center">
+                                <div className="inline-flex items-center justify-center w-14 h-14 bg-white rounded-xl mb-6 mt-15">
+                                    <svg className="w-7 h-7 text-green-800" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
                                 </div>
+                                
+                                <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                                    Citizen's Charter
+                                </h1>
+                                <p className="text-lg text-white/90 mb-2">
+                                    Department of Agriculture
+                                </p>
+                                <p className="text-base text-white/70">
+                                    Office of the Secretary
+                                </p>
                             </div>
-                            
-                            <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">
-                                Citizen's Charter
-                            </h1>
-                            <p className="text-lg md:text-xl text-white/90 mb-4 max-w-3xl mx-auto leading-relaxed">
-                                Department of Agriculture - Office of the Secretary
-                            </p>
-                            <div className="w-20 h-1 bg-white/80 mx-auto rounded-full"></div>
                         </div>
                     </section>
 
                     {/* Functions Section */}
-                    <section className="py-10 bg-white">
-                        <div className="max-w-7xl mx-auto px-4">
-                            <div className="text-center mb-6">
-                                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">FUNCTIONS</h2>
-                                <div className="w-16 h-1 bg-green-600 mx-auto rounded-full"></div>
+                    <section className="py-12 bg-white">
+                        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+                            <div className="text-center mb-10">
+                                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">FUNCTIONS</h2>
+                                <div className="w-16 h-0.5 bg-green-700 mx-auto"></div>
                             </div>
 
-                            <div className="grid gap-4 lg:gap-6">
-                                <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-5 border border-green-100 shadow-md">
-                                    <p className="text-sm md:text-base text-gray-700 leading-relaxed">
-                                        The Department of Agriculture is responsible for the promotion of agricultural development by providing the policy framework, public investments, and support services needed for domestic and export-oriented business enterprises. It is the primary concern of the Department to improve farm income and generate work opportunities for farmers, fishermen and other rural workers. It shall encourage people's participation in agricultural development through sectoral representation in agricultural policy-making bodies so that the policies, plans and programs of the Department are formulated and executed to satisfy their needs.
+                            <div className="space-y-6">
+                                <div className="bg-gray-50 rounded-lg p-6 border-l-4 border-green-700">
+                                    <p className="text-gray-700 leading-relaxed">
+                                        The Department of Agriculture is responsible for the promotion of agricultural development by providing the policy framework, public investments, and support services needed for domestic and export-oriented business enterprises. It is the primary concern of the Department to improve farm income and generate work opportunities for farmers, fishermen and other rural workers.
                                     </p>
                                 </div>
 
-                                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-5 border border-blue-100 shadow-md">
-                                    <p className="text-sm md:text-base text-gray-700 leading-relaxed">
+                                <div className="bg-white rounded-lg p-6 border border-gray-200">
+                                    <p className="text-gray-700 leading-relaxed">
                                         The DA Central Office is primarily responsible for the planning formulation, execution, regulation and monitoring of programs and activities relating to agriculture, food production and supply. It promulgates and enforces all laws, rules and regulations governing the conservation and proper utilization of agricultural and fishery resources.
                                     </p>
                                 </div>
 
-                                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-5 border border-yellow-100 shadow-md">
-                                    <p className="text-sm md:text-base text-gray-700 leading-relaxed font-semibold">
+                                <div className="bg-green-50 rounded-lg p-6 border-l-4 border-green-700">
+                                    <p className="text-gray-800 leading-relaxed font-medium">
                                         FRONTLINE SERVICES AND/OR REGULATORY FUNCTIONS SUCH AS ISSUANCE OF PERMITS, LICENSES, CERTIFICATIONS AND OTHER RELATED ACTIVITIES ARE BEING PROVIDED AND IMPLEMENTED BY CONCERNED BUREAUS AND REGIONAL FIELD UNITS UNDER THE DEPARTMENT OF AGRICULTURE.
                                     </p>
                                 </div>
@@ -83,19 +82,21 @@ export default function CitizensCharter() {
                     </section>
 
                     {/* Service Pledge Section */}
-                    <section className="py-10 bg-green-50">
-                        <div className="max-w-7xl mx-auto px-4">
-                            <div className="text-center mb-6">
-                                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">PERFORMANCE / SERVICE PLEDGE</h2>
-                                <div className="w-16 h-1 bg-green-600 mx-auto rounded-full"></div>
+                    <section className="py-12 bg-gray-50">
+                        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+                            <div className="text-center mb-10">
+                                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">SERVICE PLEDGE</h2>
+                                <div className="w-16 h-0.5 bg-green-700 mx-auto"></div>
                             </div>
 
-                            <div className="bg-white rounded-xl p-5 md:p-6 shadow-lg border border-green-100">
-                                <p className="text-base md:text-lg text-gray-700 leading-relaxed mb-5 text-center">
-                                    We, the officials and employees of the Department of Agriculture – Office of the Secretary with the guidance of God Almighty do hereby pledge to:
-                                </p>
+                            <div className="bg-white rounded-lg p-8 border border-gray-200">
+                                <div className="text-center mb-8">
+                                    <p className="text-gray-700 leading-relaxed">
+                                        We, the officials and employees of the Department of Agriculture – Office of the Secretary with the guidance of God Almighty do hereby pledge to:
+                                    </p>
+                                </div>
 
-                                <div className="grid gap-3 md:gap-4">
+                                <div className="space-y-4">
                                     {[
                                         {
                                             letter: 'S',
@@ -133,20 +134,22 @@ export default function CitizensCharter() {
                                             color: 'bg-purple-500'
                                         }
                                     ].map((item, index) => (
-                                        <div key={index} className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-300">
-                                            <div className={`w-8 h-8 ${item.color} rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md flex-shrink-0`}>
+                                        <div key={index} className="flex items-start gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                                            <div className={`w-10 h-10 ${item.color} rounded-lg flex items-center justify-center text-white font-bold shadow-sm`}>
                                                 {item.letter}
                                             </div>
-                                            <p className="text-sm md:text-base text-gray-700 leading-relaxed flex-1">
-                                                <span className="font-bold text-gray-800">{item.letter}</span>
-                                                {item.text}
-                                            </p>
+                                            <div className="flex-1 pt-2">
+                                                <p className="text-gray-700 leading-relaxed">
+                                                    <span className="font-bold text-gray-900">{item.letter}</span>
+                                                    {item.text}
+                                                </p>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="text-center mt-5 p-4 bg-green-100 rounded-lg border border-green-200">
-                                    <p className="text-base md:text-lg font-bold text-green-800">
+                                <div className="text-center mt-8 p-4 bg-green-100 rounded-lg border border-green-200">
+                                    <p className="text-green-800 font-bold">
                                         ALL THESE WE PLEDGE BECAUSE YOU ARE OUR PRIORITY.
                                     </p>
                                 </div>
@@ -155,68 +158,67 @@ export default function CitizensCharter() {
                     </section>
 
                     {/* Feedback Mechanism Section */}
-                    <section className="py-10 bg-gray-100">
-                        <div className="max-w-7xl mx-auto px-4">
-                            <div className="text-center mb-6">
-                                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">FEEDBACK MECHANISM</h2>
-                                <div className="w-16 h-1 bg-green-600 mx-auto rounded-full"></div>
+                    <section className="py-12 bg-white">
+                        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+                            <div className="text-center mb-10">
+                                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">FEEDBACK MECHANISM</h2>
+                                <div className="w-16 h-0.5 bg-green-700 mx-auto mb-4"></div>
+                                <p className="text-gray-600 max-w-3xl mx-auto">
+                                    The Department of Agriculture would want to be of better service to YOU. Please let us know how we have served you.
+                                </p>
                             </div>
 
-                            <div className="bg-white rounded-xl p-5 md:p-6 shadow-lg border border-gray-200">
-                                <p className="text-base md:text-lg text-gray-700 leading-relaxed mb-5 text-center">
-                                    The Department of Agriculture would want to be of better service to YOU. PLEASE LET US KNOW HOW WE HAVE SERVED YOU BY PROVIDING US FEEDBACK THROUGH THE FOLLOWING:
-                                </p>
-
-                                <div className="grid gap-4 md:gap-5 lg:grid-cols-3">
-                                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                </svg>
-                                            </div>
-                                            <h3 className="text-base font-bold text-gray-800">Feedback Form</h3>
+                            <div className="grid gap-6 md:grid-cols-3 mb-8">
+                                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
                                         </div>
-                                        <p className="text-sm text-gray-700 leading-relaxed">
-                                            Accomplish our Feedback Form available at the DA Lobby and place it in the Drop Box located at the DA Lobby.
-                                        </p>
+                                        <h3 className="font-bold text-gray-900">Feedback Form</h3>
                                     </div>
-
-                                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-2-2v-2.5" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12V8a2 2 0 012-2h7l-3 3h3a2 2 0 012 2v3a2 2 0 01-2 2H9z" />
-                                                </svg>
-                                            </div>
-                                            <h3 className="text-base font-bold text-gray-800">BILIS AKSYON</h3>
-                                        </div>
-                                        <p className="text-sm text-gray-700 leading-relaxed">
-                                            Talk to our designated BILIS AKSYON officers.
-                                        </p>
-                                    </div>
-
-                                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-100">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                </svg>
-                                            </div>
-                                            <h3 className="text-base font-bold text-gray-800">Contact Person</h3>
-                                        </div>
-                                        <div className="space-y-1">
-                                            <p className="text-sm font-semibold text-gray-800">JESSAMIN B. ARANAS</p>
-                                            <p className="text-xs text-gray-600">Chief Administrative Officer</p>
-                                            <p className="text-xs text-gray-600">Chief, Personnel Division</p>
-                                            <p className="text-xs text-gray-600">Ground Floor, Rm. 103, DA-OSEC Bldg.</p>
-                                        </div>
-                                    </div>
+                                    <p className="text-sm text-gray-600 leading-relaxed">
+                                        Accomplish our Feedback Form available at the DA Lobby and place it in the Drop Box located at the DA Lobby.
+                                    </p>
                                 </div>
 
-                                <div className="text-center mt-5 p-4 bg-green-100 rounded-lg border border-green-200">
-                                    <p className="text-base md:text-lg font-bold text-green-800">
+                                <div className="bg-green-50 rounded-lg p-6 border-2 border-green-200">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-2-2v-2.5" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12V8a2 2 0 012-2h7l-3 3h3a2 2 0 012 2v3a2 2 0 01-2 2H9z" />
+                                            </svg>
+                                        </div>
+                                        <h3 className="font-bold text-green-800">BILIS AKSYON</h3>
+                                    </div>
+                                    <p className="text-sm text-green-700 leading-relaxed">
+                                        Talk to our designated BILIS AKSYON officers.
+                                    </p>
+                                </div>
+
+                                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center">
+                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                        </div>
+                                        <h3 className="font-bold text-gray-900">Contact Person</h3>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-sm font-semibold text-gray-800">JESSAMIN B. ARANAS</p>
+                                        <p className="text-xs text-gray-600">Chief Administrative Officer</p>
+                                        <p className="text-xs text-gray-600">Chief, Personnel Division</p>
+                                        <p className="text-xs text-gray-600">Ground Floor, Rm. 103, DA-OSEC Bldg.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="text-center">
+                                <div className="inline-flex items-center justify-center px-6 py-3 bg-green-600 rounded-lg">
+                                    <p className="text-white font-bold">
                                         THANK YOU for your cooperation!
                                     </p>
                                 </div>
@@ -225,30 +227,30 @@ export default function CitizensCharter() {
                     </section>
 
                     {/* PDF Download Section */}
-                    <section className="py-10 bg-white">
-                        <div className="max-w-7xl mx-auto px-4 text-center">
-                            <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl p-6 md:p-8 text-white shadow-lg">
-                                <div className="flex justify-center mb-4">
-                                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                    <section className="py-12 bg-gray-50">
+                        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+                            <div className="bg-green-600 rounded-lg p-8 text-white">
+                                <div className="mb-6">
+                                    <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 rounded-lg mb-4">
                                         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
                                     </div>
+                                    <h2 className="text-2xl font-bold mb-3">Download Complete Charter</h2>
+                                    <p className="text-white/90 mb-6">
+                                        Access the full Citizen's Charter document with detailed information about our services, standards, and commitments.
+                                    </p>
                                 </div>
-                                <h2 className="text-xl md:text-2xl font-bold mb-3">Download Complete Charter</h2>
-                                <p className="text-base mb-5 max-w-2xl mx-auto">
-                                    Access the full Citizen's Charter document with detailed information about our services, standards, and commitments.
-                                </p>
                                 <a
                                     href="https://www.da.gov.ph/wp-content/uploads/2022/03/DA-Citizens-Charter-2021-2nd-Edition.pdf"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 bg-white text-green-600 px-5 py-3 rounded-lg font-bold text-sm hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+                                    className="inline-flex items-center gap-2 bg-white text-green-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-50 transition-colors duration-200"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
-                                    Citizen's Charter PDF File
+                                    Download PDF Charter
                                 </a>
                             </div>
                         </div>
@@ -412,7 +414,7 @@ export default function CitizensCharter() {
                 {showBackToTop && (
                     <button
                         onClick={scrollToTop}
-                        className="fixed bottom-6 left-6 z-50 bg-green-600 hover:bg-green-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110"
+                        className="fixed bottom-6 right-6 z-50 bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl"
                         aria-label="Back to top"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
