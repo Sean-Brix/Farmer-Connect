@@ -5,11 +5,23 @@ import Navbar from '../../Components/Navbar';
 // ASSETS
 import default_image from './Assets/default_image.jpg';
 
+// TANSTACK QUERY HOOKS
+import { useEICEquipment, useUserRequests, useSubmitRequest, useCancelRequest } from './hooks/useEICQueries';
+
+// COMPONENTS
+import EICLoadingState from './components/EICLoadingState';
+import EICErrorState from './components/EICErrorState';
+import EICSearchAndFilters from './components/EICSearchAndFilters';
+import EICEquipmentCard from './components/EICEquipmentCard';
+import EICPagination from './components/EICPagination';
+
+// UTILITIES
+import { showSuccessAlert, showErrorAlert, showLoginPrompt } from './utils/alertUtils';
+
 const ITEMS_PER_PAGE = 8;
 
 export default function Eic() {
     const navigate = useNavigate();
-    const [equipmentList, setEquipmentList] = useState([]);
     const [filter, setFilter] = useState('All');
     const [search, setSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -25,6 +37,24 @@ export default function Eic() {
     const [myRequests, setMyRequests] = useState([]);
     const [showMyRequestsModal, setShowMyRequestsModal] = useState(false);
     const [formErrors, setFormErrors] = useState({});
+
+    // TANSTACK QUERY HOOKS
+    const { 
+        data: equipmentList = [], 
+        isLoading, 
+        error, 
+        refetch 
+    } = useEICEquipment();
+
+    const {
+        data: userRequests = [],
+        refetch: refetchRequests,
+        error: requestsError
+    } = useUserRequests();
+
+    // MUTATIONS
+    const submitRequestMutation = useSubmitRequest();
+    const cancelRequestMutation = useCancelRequest();
 
     const categories = [
         'All',
@@ -43,83 +73,18 @@ export default function Eic() {
                     i.description.toLowerCase().includes(search.toLowerCase())))
     );
 
-    useEffect(() => {
-        const fetchEquipment = async () => {
-            try {
-                const response = await fetch('/api/eic/all');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const eicItems = await response.json();
-
-                if (Array.isArray(eicItems)) {
-                    // Transform the data to match the expected structure
-                    const transformedItems = eicItems.map((stack) => ({
-                        id: stack.itemId,
-                        stackId: stack.id,
-                        Name: stack.item.name, // Fixed: use lowercase 'name' from Prisma schema
-                        category: stack.item.category,
-                        description: stack.item.description,
-                        quantity: stack.quantity,
-                        status: stack.status,
-                        img: stack.item.picture || default_image, // Use the picture URL from controller
-                        // Include all original item properties
-                        ...stack.item,
-                        // Override with stack-specific data
-                        availableQuantity: stack.quantity,
-                    }));
-
-                    setEquipmentList(transformedItems);
-                } else {
-                    console.warn(
-                        'Response is not an array or is empty:',
-                        eicItems
-                    );
-                    setEquipmentList([]);
-                }
-            } catch (error) {
-                console.error('Failed to fetch EIC equipment:', error);
-                setEquipmentList([]);
-            }
-        };
-
-        fetchEquipment();
-    }, [search]);
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [filter, search]);
-
     const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
     const paginatedItems = filteredItems.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
     );
 
-    const filterBy = filter;
-    const filterOptions = categories.map((c) => ({
-        value: c,
-        label: c,
-    }));
-
+    // Reset to first page when filters change
     useEffect(() => {
-        if (!showFilter) return;
-        const handler = (e) => {
-            const dropdown = document.getElementById('modernFilterDropdown');
-            const button = document.getElementById('modernFilterButton');
-            if (
-                dropdown &&
-                !dropdown.contains(e.target) &&
-                button &&
-                !button.contains(e.target)
-            ) {
-                setShowFilter(false);
-            }
-        };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
-    }, [showFilter]);
+        setCurrentPage(1);
+    }, [filter, search]);
 
+    // Type icon helper function
     const typeIcon = (type) => {
         if (type === 'Farming Equipment')
             return <i className="fa-solid fa-seedling text-green-600"></i>;
@@ -146,40 +111,9 @@ export default function Eic() {
         return <i className="fa-solid fa-toolbox text-gray-500"></i>;
     };
 
-    useEffect(() => {
-        const style = document.createElement('style');
-        style.innerHTML = `
-          ::-webkit-scrollbar {
-            display: none;
-          }
-          html, body {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-          }
-        `;
-        document.head.appendChild(style);
-        return () => {
-            document.head.removeChild(style);
-        };
-    }, []);
-
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [currentPage]);
-
     // SEND REQUEST
     const handleRequestClick = async (item) => {
         try {
-            //Check if user is logged in
-            // const response = await fetch('/api/authentication/gotToken');
-            // if (!response.ok) {
-            //     if (confirm('Login first?')) {
-            //         navigate('/login');
-            //         return;
-            //     }
-            //     return;
-            // }
-
             setSelectedItem(item);
             setModalOpen(true);
         } catch (e) {
@@ -249,504 +183,59 @@ export default function Eic() {
         }
 
         try {
-            const response = await fetch('/api/eic/request', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    item_id: selectedItem.id,
-                    pickupDate: requestData.pickupDate,
-                    returnDate: requestData.returnDate || null,
-                    request_note: requestData.request_note,
-                    quantity: parseInt(requestData.quantity),
-                }),
+            await submitRequestMutation.mutateAsync({
+                selectedItem,
+                requestData
             });
 
-            if (response.ok) {
-                // Show custom animated alert centered on screen
-                const alertDiv = document.createElement('div');
-                alertDiv.innerHTML = `
-                    <div id="custom-eic-alert" style="
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%) scale(0.95);
-                        z-index: 9999;
-                        background: rgba(34,197,94,0.98);
-                        background: linear-gradient(100deg, #22c55e 0%, #16a34a 100%);
-                        color: #fff;
-                        padding: 1.5rem 2.8rem;
-                        border-radius: 2rem;
-                        box-shadow: 0 12px 40px 0 rgba(34,197,94,0.22);
-                        font-size: 1.18rem;
-                        font-weight: 700;
-                        display: flex;
-                        align-items: center;
-                        gap: 1.1rem;
-                        min-width: 320px;
-                        max-width: 90vw;
-                        animation: eicAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
-                        overflow: hidden;
-                    ">
-                        <span style="
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: rgba(255,255,255,0.13);
-                            border-radius: 50%;
-                            width: 2.8rem;
-                            height: 2.8rem;
-                            box-shadow: 0 2px 8px 0 rgba(34,197,94,0.10);
-                        ">
-                            <i class="fa-solid fa-circle-check" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #22c55e88);"></i>
-                        </span>
-                        <span style="letter-spacing:0.01em;">Request submitted successfully!</span>
-                        <span class="eic-alert-bar" style="
-                            position: absolute;
-                            bottom: 0; left: 0;
-                            height: 4px;
-                            width: 100%;
-                            background: linear-gradient(90deg, #dcfce7 0%, #16a34a 100%);
-                            animation: eicAlertBar 2.1s linear;
-                        "></span>
-                    </div>
-                    <style>
-                        @keyframes eicAlertPopIn {
-                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
-                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
-                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-                        }
-                        @keyframes eicAlertBar {
-                            from { width: 0%; }
-                            to { width: 100%; }
-                        }
-                    </style>
-                `;
-                document.body.appendChild(alertDiv);
-
-                setTimeout(() => {
-                    const el = document.getElementById('custom-eic-alert');
-                    if (el) {
-                        el.style.transition = 'opacity 0.35s, transform 0.35s';
-                        el.style.opacity = '0';
-                        el.style.transform =
-                            'translate(-50%, -50%) scale(0.95)';
-                        setTimeout(() => {
-                            if (alertDiv.parentNode)
-                                alertDiv.parentNode.removeChild(alertDiv);
-                        }, 350);
-                    }
-                }, 2100);
-
-                setModalOpen(false);
-                setRequestData({
-                    pickupDate: '',
-                    returnDate: '',
-                    request_note: '',
-                    quantity: 1,
-                });
-                setFormErrors({});
-            } else {
-                await response.json();
-                // Custom alert for admin cannot borrow
-                const alertDiv = document.createElement('div');
-                alertDiv.innerHTML = `
-                    <div id="custom-eic-alert" style="
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%) scale(0.95);
-                        z-index: 9999;
-                        background: #dc2626;
-                        background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
-                        color: #fff;
-                        padding: 1.5rem 2.8rem;
-                        border-radius: 2rem;
-                        box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
-                        font-size: 1.18rem;
-                        font-weight: 700;
-                        display: flex;
-                        align-items: center;
-                        gap: 1.1rem;
-                        min-width: 320px;
-                        max-width: 90vw;
-                        animation: eicAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
-                        overflow: hidden;
-                    ">
-                        <span style="
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: rgba(255,255,255,0.13);
-                            border-radius: 50%;
-                            width: 2.8rem;
-                            height: 2.8rem;
-                            box-shadow: 0 2px 8px 0 rgba(239,68,68,0.10);
-                        ">
-                            <i class="fa-solid fa-circle-xmark" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
-                        </span>
-                        <span style="letter-spacing:0.01em;">Admin cannot borrow an EIC item</span>
-                        <span class="eic-alert-bar" style="
-                            position: absolute;
-                            bottom: 0; left: 0;
-                            height: 4px;
-                            width: 100%;
-                            background: linear-gradient(90deg, #fecaca 0%, #dc2626 100%);
-                            animation: eicAlertBar 2.1s linear;
-                        "></span>
-                    </div>
-                    <style>
-                        @keyframes eicAlertPopIn {
-                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
-                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
-                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-                        }
-                        @keyframes eicAlertBar {
-                            from { width: 0%; }
-                            to { width: 100%; }
-                        }
-                    </style>
-                `;
-                document.body.appendChild(alertDiv);
-
-                setTimeout(() => {
-                    const el = document.getElementById('custom-eic-alert');
-                    if (el) {
-                        el.style.transition = 'opacity 0.35s, transform 0.35s';
-                        el.style.opacity = '0';
-                        el.style.transform =
-                            'translate(-50%, -50%) scale(0.95)';
-                        setTimeout(() => {
-                            if (alertDiv.parentNode)
-                                alertDiv.parentNode.removeChild(alertDiv);
-                        }, 350);
-                    }
-                }, 2100);
-
-                setModalOpen(false);
-                setRequestData({
-                    pickupDate: '',
-                    returnDate: '',
-                    request_note: '',
-                    quantity: 1,
-                });
-                setFormErrors({});
-                return;
-            }
+            showSuccessAlert('Request submitted successfully!');
+            setModalOpen(false);
+            setRequestData({
+                pickupDate: '',
+                returnDate: '',
+                request_note: '',
+                quantity: 1,
+            });
+            setFormErrors({});
         } catch (error) {
-            // Custom alert for error submitting request
-            const alertDiv = document.createElement('div');
-            alertDiv.innerHTML = `
-                <div id="custom-eic-alert" style="
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%) scale(0.95);
-                    z-index: 9999;
-                    background: #dc2626;
-                    background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
-                    color: #fff;
-                    padding: 1.5rem 2.8rem;
-                    border-radius: 2rem;
-                    box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
-                    font-size: 1.18rem;
-                    font-weight: 700;
-                    display: flex;
-                    align-items: center;
-                    gap: 1.1rem;
-                    min-width: 320px;
-                    max-width: 90vw;
-                    animation: eicAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
-                    overflow: hidden;
-                ">
-                    <span style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: rgba(255,255,255,0.13);
-                        border-radius: 50%;
-                        width: 2.8rem;
-                        height: 2.8rem;
-                        box-shadow: 0 2px 8px 0 rgba(239,68,68,0.10);
-                    ">
-                        <i class="fa-solid fa-triangle-exclamation" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
-                    </span>
-                    <span style="letter-spacing:0.01em;">Error submitting request</span>
-                    <span class="eic-alert-bar" style="
-                        position: absolute;
-                        bottom: 0; left: 0;
-                        height: 4px;
-                        width: 100%;
-                        background: linear-gradient(90deg, #fecaca 0%, #dc2626 100%);
-                        animation: eicAlertBar 2.1s linear;
-                    "></span>
-                </div>
-                <style>
-                    @keyframes eicAlertPopIn {
-                        0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
-                        60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
-                        100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-                    }
-                    @keyframes eicAlertBar {
-                        from { width: 0%; }
-                        to { width: 100%; }
-                    }
-                </style>
-            `;
-            document.body.appendChild(alertDiv);
-
-            setTimeout(() => {
-                const el = document.getElementById('custom-eic-alert');
-                if (el) {
-                    el.style.transition = 'opacity 0.35s, transform 0.35s';
-                    el.style.opacity = '0';
-                    el.style.transform = 'translate(-50%, -50%) scale(0.95)';
-                    setTimeout(() => {
-                        if (alertDiv.parentNode)
-                            alertDiv.parentNode.removeChild(alertDiv);
-                    }, 350);
-                }
-            }, 2100);
-
             console.error('Error submitting request:', error);
+            
+            if (error.message === 'ADMIN_CANNOT_BORROW') {
+                showErrorAlert('Admin cannot borrow an EIC item');
+            } else {
+                showErrorAlert('Error submitting request');
+            }
+            
+            setModalOpen(false);
+            setRequestData({
+                pickupDate: '',
+                returnDate: '',
+                request_note: '',
+                quantity: 1,
+            });
+            setFormErrors({});
         }
     };
 
     const handleMyRequestsClick = async () => {
         try {
-            // Fetch user requests using the correct endpoint
-            const requestsResponse = await fetch('/api/eic/request/me');
-
-            if (requestsResponse.status === 401) {
-                // Show custom login prompt when unauthorized
-                const alertDiv = document.createElement('div');
-                alertDiv.innerHTML = `
-                    <div id="custom-login-alert" style="
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%) scale(0.95);
-                        z-index: 9999;
-                        background: rgba(37,99,235,0.98);
-                        background: linear-gradient(100deg, #2563eb 0%, #3b82f6 100%);
-                        color: #fff;
-                        padding: 2rem 3rem;
-                        border-radius: 2rem;
-                        box-shadow: 0 12px 40px 0 rgba(59,130,246,0.22);
-                        font-size: 1.18rem;
-                        font-weight: 700;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        gap: 1.5rem;
-                        min-width: 350px;
-                        max-width: 90vw;
-                        animation: loginAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
-                        overflow: hidden;
-                        text-align: center;
-                    ">
-                        <div style="
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: rgba(255,255,255,0.13);
-                            border-radius: 50%;
-                            width: 3rem;
-                            height: 3rem;
-                            box-shadow: 0 2px 8px 0 rgba(59,130,246,0.10);
-                        ">
-                            <i class="fa-solid fa-user-lock" style="font-size:1.5rem; color: #fff; filter: drop-shadow(0 2px 8px #3b82f688);"></i>
-                        </div>
-                        <div>
-                            <div style="font-size: 1.3rem; margin-bottom: 0.5rem;">Login Required</div>
-                            <div style="font-size: 1rem; font-weight: 400; opacity: 0.9; line-height: 1.4;">
-                                You need to login first to view your requests
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
-                            <button id="login-btn" style="
-                                background: rgba(255,255,255,0.2);
-                                border: 2px solid rgba(255,255,255,0.3);
-                                color: #fff;
-                                padding: 0.75rem 1.5rem;
-                                border-radius: 1rem;
-                                font-weight: 600;
-                                cursor: pointer;
-                                transition: all 0.2s;
-                                font-size: 1rem;
-                            ">Go to Login</button>
-                            <button id="cancel-btn" style="
-                                background: transparent;
-                                border: 2px solid rgba(255,255,255,0.3);
-                                color: #fff;
-                                padding: 0.75rem 1.5rem;
-                                border-radius: 1rem;
-                                font-weight: 600;
-                                cursor: pointer;
-                                transition: all 0.2s;
-                                font-size: 1rem;
-                            ">Cancel</button>
-                        </div>
-                        <span class="login-alert-bar" style="
-                            position: absolute;
-                            bottom: 0; left: 0;
-                            height: 4px;
-                            width: 100%;
-                            background: linear-gradient(90deg, #dbeafe 0%, #3b82f6 100%);
-                        "></span>
-                    </div>
-                    <style>
-                        @keyframes loginAlertPopIn {
-                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
-                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
-                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-                        }
-                        #login-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
-                        #cancel-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
-                    </style>
-                `;
-                document.body.appendChild(alertDiv);
-
-                // Handle button clicks
-                document.getElementById('login-btn').onclick = () => {
-                    document.body.removeChild(alertDiv);
-                    navigate('/login');
-                };
-
-                document.getElementById('cancel-btn').onclick = () => {
-                    document.body.removeChild(alertDiv);
-                };
-
+            const requestsData = await refetchRequests();
+            
+            if (requestsData.error?.message === 'UNAUTHORIZED') {
+                showLoginPrompt(navigate);
                 return;
             }
-
-            if (requestsResponse.ok) {
-                const requestsData = await requestsResponse.json();
-                setMyRequests(
-                    Array.isArray(requestsData.requests)
-                        ? requestsData.requests
-                        : []
-                );
-                setShowMyRequestsModal(true);
-            } else {
-                // Show error alert for other errors
-                const alertDiv = document.createElement('div');
-                alertDiv.innerHTML = `
-                    <div id="custom-error-alert" style="
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%) scale(0.95);
-                        z-index: 9999;
-                        background: #dc2626;
-                        background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
-                        color: #fff;
-                        padding: 1.5rem 2.8rem;
-                        border-radius: 2rem;
-                        box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
-                        font-size: 1.18rem;
-                        font-weight: 700;
-                        display: flex;
-                        align-items: center;
-                        gap: 1.1rem;
-                        min-width: 320px;
-                        max-width: 90vw;
-                        animation: errorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
-                        overflow: hidden;
-                    ">
-                        <span style="
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: rgba(255,255,255,0.13);
-                            border-radius: 50%;
-                            width: 2.8rem;
-                            height: 2.8rem;
-                            box-shadow: 0 2px 8px 0 rgba(239,68,68,0.10);
-                        ">
-                            <i class="fa-solid fa-circle-exclamation" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
-                        </span>
-                        <span style="letter-spacing:0.01em;">Failed to fetch your requests</span>
-                    </div>
-                    <style>
-                        @keyframes errorAlertPopIn {
-                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
-                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
-                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-                        }
-                    </style>
-                `;
-                document.body.appendChild(alertDiv);
-
-                setTimeout(() => {
-                    if (document.getElementById('custom-error-alert')) {
-                        document.body.removeChild(alertDiv);
-                    }
-                }, 3000);
-
-                console.error(
-                    'Failed to fetch user requests:',
-                    requestsResponse.statusText
-                );
-            }
+            
+            setMyRequests(requestsData.data || []);
+            setShowMyRequestsModal(true);
         } catch (error) {
-            // Show error alert for network issues
-            const alertDiv = document.createElement('div');
-            alertDiv.innerHTML = `
-                <div id="custom-network-error-alert" style="
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%) scale(0.95);
-                    z-index: 9999;
-                    background: #dc2626;
-                    background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
-                    color: #fff;
-                    padding: 1.5rem 2.8rem;
-                    border-radius: 2rem;
-                    box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
-                    font-size: 1.18rem;
-                    font-weight: 700;
-                    display: flex;
-                    align-items: center;
-                    gap: 1.1rem;
-                    min-width: 320px;
-                    max-width: 90vw;
-                    animation: networkErrorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
-                    overflow: hidden;
-                ">
-                    <span style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: rgba(255,255,255,0.13);
-                        border-radius: 50%;
-                        width: 2.8rem;
-                        height: 2.8rem;
-                        box-shadow: 0 2px 8px 0 rgba(239,68,68,0.10);
-                    ">
-                        <i class="fa-solid fa-wifi" style="font-size:2rem; color: #fff; filter: drop-shadow(0 2px 8px #f8717188);"></i>
-                    </span>
-                    <span style="letter-spacing:0.01em;">Network error. Please try again.</span>
-                </div>
-                <style>
-                    @keyframes networkErrorAlertPopIn {
-                        0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
-                        60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
-                        100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-                    }
-                </style>
-            `;
-            document.body.appendChild(alertDiv);
-
-            setTimeout(() => {
-                if (document.getElementById('custom-network-error-alert')) {
-                    document.body.removeChild(alertDiv);
-                }
-            }, 3000);
-
             console.error('Error fetching user requests:', error);
+            
+            if (error.message === 'UNAUTHORIZED') {
+                showLoginPrompt(navigate);
+            } else {
+                showErrorAlert('Failed to fetch your requests');
+            }
         }
     };
 
@@ -757,6 +246,25 @@ export default function Eic() {
     const handleCancelRequest = async (requestId, itemName) => {
         try {
             // Show confirmation dialog
+            const confirmed = await showConfirmationDialog(itemName);
+            if (!confirmed) return;
+
+            await cancelRequestMutation.mutateAsync({ requestId });
+            
+            showSuccessAlert('Request cancelled successfully!');
+            
+            // Refresh the requests list
+            const requestsData = await refetchRequests();
+            setMyRequests(requestsData.data || []);
+        } catch (error) {
+            console.error('Error cancelling request:', error);
+            showErrorAlert(error.message || 'Network error. Please try again later.');
+        }
+    };
+
+    // Confirmation dialog helper
+    const showConfirmationDialog = (itemName) => {
+        return new Promise((resolve) => {
             const alertDiv = document.createElement('div');
             alertDiv.innerHTML = `
                 <div id="custom-confirm-alert" style="
@@ -827,13 +335,6 @@ export default function Eic() {
                             font-size: 1rem;
                         ">Keep Request</button>
                     </div>
-                    <span class="confirm-alert-bar" style="
-                        position: absolute;
-                        bottom: 0; left: 0;
-                        height: 4px;
-                        width: 100%;
-                        background: linear-gradient(90deg, #f3f4f6 0%, #6b7280 100%);
-                    "></span>
                 </div>
                 <style>
                     @keyframes confirmAlertPopIn {
@@ -847,243 +348,37 @@ export default function Eic() {
             `;
             document.body.appendChild(alertDiv);
 
-            // Create a promise to handle the user's choice
-            const userChoice = await new Promise((resolve) => {
-                document.getElementById('confirm-cancel-btn').onclick = () => {
-                    document.body.removeChild(alertDiv);
-                    resolve(true);
-                };
+            document.getElementById('confirm-cancel-btn').onclick = () => {
+                document.body.removeChild(alertDiv);
+                resolve(true);
+            };
 
-                document.getElementById('keep-request-btn').onclick = () => {
-                    document.body.removeChild(alertDiv);
-                    resolve(false);
-                };
-            });
-
-            if (!userChoice) {
-                return; // User chose to keep the request
-            }
-
-            // Make the cancel request
-            const response = await fetch('/api/eic/request/cancel', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    transactionId: requestId,
-                    status: 'Cancelled',
-                }),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-
-                // Show success message
-                const successDiv = document.createElement('div');
-                successDiv.innerHTML = `
-                    <div id="custom-success-alert" style="
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%) scale(0.95);
-                        z-index: 9999;
-                        background: #059669;
-                        background: linear-gradient(100deg, #059669 0%, #10b981 100%);
-                        color: #fff;
-                        padding: 1.5rem 2.8rem;
-                        border-radius: 2rem;
-                        box-shadow: 0 12px 40px 0 rgba(16,185,129,0.22);
-                        font-size: 1.18rem;
-                        font-weight: 700;
-                        display: flex;
-                        align-items: center;
-                        gap: 1.1rem;
-                        min-width: 320px;
-                        max-width: 90vw;
-                        animation: successAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
-                        overflow: hidden;
-                    ">
-                        <span style="
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: rgba(255,255,255,0.2);
-                            border-radius: 50%;
-                            width: 2.2rem;
-                            height: 2.2rem;
-                        ">
-                            <i class="fa-solid fa-check" style="font-size:1.2rem; color: #fff;"></i>
-                        </span>
-                        <span>Request cancelled successfully!</span>
-                        <span class="success-alert-bar" style="
-                            position: absolute;
-                            bottom: 0; left: 0;
-                            height: 4px;
-                            width: 100%;
-                            background: linear-gradient(90deg, #d1fae5 0%, #10b981 100%);
-                        "></span>
-                    </div>
-                    <style>
-                        @keyframes successAlertPopIn {
-                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
-                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
-                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-                        }
-                    </style>
-                `;
-                document.body.appendChild(successDiv);
-
-                // Auto-remove success alert after 3 seconds
-                setTimeout(() => {
-                    if (document.body.contains(successDiv)) {
-                        document.body.removeChild(successDiv);
-                    }
-                }, 3000);
-
-                // Refresh the requests list
-                const requestsResponse = await fetch('/api/eic/request/me');
-                if (requestsResponse.ok) {
-                    const requestsData = await requestsResponse.json();
-                    setMyRequests(
-                        Array.isArray(requestsData.requests)
-                            ? requestsData.requests
-                            : []
-                    );
-                }
-            } else {
-                const errorData = await response.json();
-
-                // Show error message
-                const errorDiv = document.createElement('div');
-                errorDiv.innerHTML = `
-                    <div id="custom-error-alert" style="
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%) scale(0.95);
-                        z-index: 9999;
-                        background: #dc2626;
-                        background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
-                        color: #fff;
-                        padding: 1.5rem 2.8rem;
-                        border-radius: 2rem;
-                        box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
-                        font-size: 1.18rem;
-                        font-weight: 700;
-                        display: flex;
-                        align-items: center;
-                        gap: 1.1rem;
-                        min-width: 320px;
-                        max-width: 90vw;
-                        animation: errorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
-                        overflow: hidden;
-                    ">
-                        <span style="
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: rgba(255,255,255,0.2);
-                            border-radius: 50%;
-                            width: 2.2rem;
-                            height: 2.2rem;
-                        ">
-                            <i class="fa-solid fa-times" style="font-size:1.2rem; color: #fff;"></i>
-                        </span>
-                        <span>Failed to cancel request: ${
-                            errorData.message || 'Unknown error'
-                        }</span>
-                        <span class="error-alert-bar" style="
-                            position: absolute;
-                            bottom: 0; left: 0;
-                            height: 4px;
-                            width: 100%;
-                            background: linear-gradient(90deg, #fee2e2 0%, #f87171 100%);
-                        "></span>
-                    </div>
-                    <style>
-                        @keyframes errorAlertPopIn {
-                            0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
-                            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
-                            100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-                        }
-                    </style>
-                `;
-                document.body.appendChild(errorDiv);
-
-                // Auto-remove error alert after 5 seconds
-                setTimeout(() => {
-                    if (document.body.contains(errorDiv)) {
-                        document.body.removeChild(errorDiv);
-                    }
-                }, 5000);
-            }
-        } catch (error) {
-            console.error('Error cancelling request:', error);
-
-            // Show error message
-            const errorDiv = document.createElement('div');
-            errorDiv.innerHTML = `
-                <div id="custom-error-alert" style="
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%) scale(0.95);
-                    z-index: 9999;
-                    background: #dc2626;
-                    background: linear-gradient(100deg, #dc2626 0%, #f87171 100%);
-                    color: #fff;
-                    padding: 1.5rem 2.8rem;
-                    border-radius: 2rem;
-                    box-shadow: 0 12px 40px 0 rgba(239,68,68,0.22);
-                    font-size: 1.18rem;
-                    font-weight: 700;
-                    display: flex;
-                    align-items: center;
-                    gap: 1.1rem;
-                    min-width: 320px;
-                    max-width: 90vw;
-                    animation: errorAlertPopIn 0.45s cubic-bezier(.68,-0.55,.27,1.55);
-                    overflow: hidden;
-                ">
-                    <span style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: rgba(255,255,255,0.2);
-                        border-radius: 50%;
-                        width: 2.2rem;
-                        height: 2.2rem;
-                    ">
-                        <i class="fa-solid fa-times" style="font-size:1.2rem; color: #fff;"></i>
-                    </span>
-                    <span>Network error. Please try again later.</span>
-                    <span class="error-alert-bar" style="
-                        position: absolute;
-                        bottom: 0; left: 0;
-                        height: 4px;
-                        width: 100%;
-                        background: linear-gradient(90deg, #fee2e2 0%, #f87171 100%);
-                    "></span>
-                </div>
-                <style>
-                    @keyframes errorAlertPopIn {
-                        0% { opacity: 0; transform: translate(-50%, -60%) scale(0.85);}
-                        60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05);}
-                        100% { opacity: 1; transform: translate(-50%, -50%) scale(1);}
-                    }
-                </style>
-            `;
-            document.body.appendChild(errorDiv);
-
-            // Auto-remove error alert after 5 seconds
-            setTimeout(() => {
-                if (document.body.contains(errorDiv)) {
-                    document.body.removeChild(errorDiv);
-                }
-            }, 5000);
-        }
+            document.getElementById('keep-request-btn').onclick = () => {
+                document.body.removeChild(alertDiv);
+                resolve(false);
+            };
+        });
     };
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <>
+                <Navbar />
+                <EICLoadingState />
+            </>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <>
+                <Navbar />
+                <EICErrorState error={error} onRetry={refetch} />
+            </>
+        );
+    }
 
     return (
         <>
@@ -1098,329 +393,46 @@ export default function Eic() {
                             <span className="uppercase tracking-widest text-gray-600 text-xs font-semibold mb-1 letter-spacing-wide">
                                 Welcome to
                             </span>
-                            <h1
-                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title text-gray-800"
-                               
-                            >
+                            <h1 className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title text-gray-800">
                                 Equipment, Inputs & Commodities
                             </h1>
                             <div className="mt-4 w-24 h-2 rounded-full bg-green-500 shadow-lg"></div>
                         </header>
 
-                        <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
-                            <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
-                                <button
-                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold shadow-md hover:shadow-lg transition border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
-                                    onClick={handleMyRequestsClick}
-                                >
-                                    <i className="fa-solid fa-list-check text-lg"></i>
-                                    My Requests
-                                </button>
-                            </div>
-                            <div className="flex gap-3 flex-wrap items-center justify-center w-full sm:w-auto order-1 sm:order-2">
-                                <div className="relative w-full sm:w-auto flex justify-center">
-                                    <input
-                                        type="text"
-                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border-2 border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 text-gray-800 bg-white shadow-sm transition placeholder:text-gray-500 font-medium"
-                                        placeholder="Search by name, category, description..."
-                                        value={search}
-                                        onChange={(e) =>
-                                            setSearch(e.target.value)
-                                        }
-                                    />
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
-                                        <i className="fa-solid fa-magnifying-glass"></i>
-                                    </span>
-                                </div>
-                                <div className="relative flex justify-center w-full sm:w-auto">
-                                    <button
-                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-gray-50 text-gray-700 font-semibold border-2 border-gray-300 shadow-sm hover:shadow-md transition focus:outline-none"
-                                        onClick={() => setShowFilter((f) => !f)}
-                                        type="button"
-                                        aria-label="Show filter options"
-                                    >
-                                        <i className="fa-solid fa-filter"></i>
-                                        <span>Filter by: {filter}</span>
-                                        <i
-                                            className={`fa-solid fa-chevron-${
-                                                showFilter ? 'up' : 'down'
-                                            } ml-1`}
-                                        ></i>
-                                    </button>
-                                    {showFilter && (
-                                        <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border-2 border-gray-200 z-20 animate-fade-in py-2">
-                                            {filterOptions.map((opt) => (
-                                                <button
-                                                    key={opt.value}
-                                                    className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
-                                                        filter === opt.value
-                                                            ? 'bg-green-600 text-white shadow'
-                                                            : 'text-gray-800 hover:bg-gray-100'
-                                                    }`}
-                                                    onClick={() => {
-                                                        setFilter(opt.value);
-                                                        setShowFilter(false);
-                                                    }}
-                                                >
-                                                    {typeIcon(opt.value)}
-                                                    {opt.label}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
+                        <EICSearchAndFilters
+                            search={search}
+                            setSearch={setSearch}
+                            filter={filter}
+                            setFilter={setFilter}
+                            showFilter={showFilter}
+                            setShowFilter={setShowFilter}
+                            categories={categories}
+                            typeIcon={typeIcon}
+                            onMyRequestsClick={handleMyRequestsClick}
+                        />
+
                         <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
                             {filteredItems.length === 0 ? (
                                 <div className="col-span-full text-center text-gray-500 py-16 text-lg font-semibold tracking-wide">
                                     No equipment found.
                                 </div>
                             ) : (
-                                paginatedItems.map((item) => {
-                                    return (
-                                        <div
-                                            key={item.id}
-                                            className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-xl border-2 border-gray-200 hover:border-green-300 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]"
-                                        >
-                                            <div className="relative">
-                                                <img
-                                                    className="w-full h-48 object-cover"
-                                                    src={item.img}
-                                                    alt={item.Name}
-                                                    style={{
-                                                        background: '#eff6ff',
-                                                    }}
-                                                />
-                                                <span
-                                                    className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg
-                                                    ${
-                                                        item.category ===
-                                                        'Farming Equipment'
-                                                            ? 'bg-green-600'
-                                                            : item.category ===
-                                                              'Harvesting Tools'
-                                                            ? 'bg-green-700'
-                                                            : item.category ===
-                                                              'Machinery'
-                                                            ? 'bg-gray-700'
-                                                            : item.category ===
-                                                              'Irrigation Systems'
-                                                            ? 'bg-green-500'
-                                                            : item.category ===
-                                                              'Storage Equipment'
-                                                            ? 'bg-gray-600'
-                                                            : item.category ===
-                                                              'Processing Equipment'
-                                                            ? 'bg-gray-800'
-                                                            : item.category ===
-                                                              'Safety Gear'
-                                                            ? 'bg-green-800'
-                                                            : item.category ===
-                                                              'Pest Control'
-                                                            ? 'bg-gray-700'
-                                                            : item.category ===
-                                                              'Livestock Equipment'
-                                                            ? 'bg-green-700'
-                                                            : item.category ===
-                                                              'Measuring Tools'
-                                                            ? 'bg-gray-600'
-                                                            : item.category ===
-                                                              'Fisheries'
-                                                            ? 'bg-green-600'
-                                                            : 'bg-gray-500'
-                                                    }`}
-                                                >
-                                                    {item.category}
-                                                </span>
-                                            </div>
-                                            <div className="p-5 flex flex-col flex-1">
-                                                <h3 className="text-xl font-bold mb-2 text-gray-800 line-clamp-1 min-h-[28px]">
-                                                    {item.Name}
-                                                </h3>
-                                                <p
-                                                    className="text-gray-600 text-sm mb-3 line-clamp-2 min-h-[40px] flex-grow"
-                                                    title={item.description}
-                                                >
-                                                    {item.description}
-                                                </p>
-                                                <div className="flex items-center justify-between mb-4">
-                                                    <span className="text-sm text-gray-700 font-semibold">
-                                                        Qty: {item.quantity}
-                                                    </span>
-                                                    <div className="flex items-center gap-1">
-                                                        {typeIcon(
-                                                            item.category
-                                                        )}
-                                                    </div>
-                                                </div>
-                                                <button
-                                                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg border-2 border-green-600 hover:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 mt-auto"
-                                                    onClick={() =>
-                                                        handleRequestClick(item)
-                                                    }
-                                                >
-                                                    <i className="fa-solid fa-paper-plane mr-2"></i>
-                                                    Request Equipment
-                                                </button>
-                                            </div>
-                                        </div>
-                                    );
-                                })
+                                paginatedItems.map((item) => (
+                                    <EICEquipmentCard
+                                        key={item.id}
+                                        item={item}
+                                        onRequestClick={handleRequestClick}
+                                        typeIcon={typeIcon}
+                                    />
+                                ))
                             )}
                         </div>
-                        {totalPages > 1 && (
-                            <div className="flex justify-center mt-6 mb-2">
-                                <nav
-                                    className="flex items-center gap-1 bg-white rounded-lg shadow-md border-2 border-gray-200 px-3 py-1.5"
-                                    aria-label="Pagination"
-                                >
-                                    <button
-                                        onClick={() =>
-                                            setCurrentPage((p) =>
-                                                Math.max(1, p - 1)
-                                            )
-                                        }
-                                        disabled={currentPage === 1}
-                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-600 hover:bg-gray-100 hover:text-gray-800 ${
-                                            currentPage === 1
-                                                ? 'opacity-50 cursor-not-allowed'
-                                                : ''
-                                        }`}
-                                        aria-label="Previous"
-                                    >
-                                        <svg
-                                            className="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                d="M15 19l-7-7 7-7"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                    </button>
-                                    {totalPages > 6 ? (
-                                        <>
-                                            <button
-                                                onClick={() =>
-                                                    setCurrentPage(1)
-                                                }
-                                                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
-                                                    currentPage === 1
-                                                        ? 'bg-green-600 text-white shadow-md'
-                                                        : 'text-gray-700 hover:bg-gray-100'
-                                                }`}
-                                            >
-                                                1
-                                            </button>
-                                            {currentPage > 3 && (
-                                                <span className="px-1 text-gray-400">
-                                                    ...
-                                                </span>
-                                            )}
-                                            {Array.from(
-                                                { length: 3 },
-                                                (_, i) => {
-                                                    const page =
-                                                        currentPage - 1 + i;
-                                                    if (
-                                                        page <= 1 ||
-                                                        page >= totalPages
-                                                    )
-                                                        return null;
-                                                    return (
-                                                        <button
-                                                            key={page}
-                                                            onClick={() =>
-                                                                setCurrentPage(
-                                                                    page
-                                                                )
-                                                            }
-                                                            className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
-                                                                currentPage ===
-                                                                page
-                                                                    ? 'bg-green-600 text-white shadow-md'
-                                                                    : 'text-gray-700 hover:bg-gray-100'
-                                                            }`}
-                                                        >
-                                                            {page}
-                                                        </button>
-                                                    );
-                                                }
-                                            )}
-                                            {currentPage < totalPages - 2 && (
-                                                <span className="px-1 text-gray-400">
-                                                    ...
-                                                </span>
-                                            )}
-                                            <button
-                                                onClick={() =>
-                                                    setCurrentPage(totalPages)
-                                                }
-                                                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
-                                                    currentPage === totalPages
-                                                        ? 'bg-green-600 text-white shadow-md'
-                                                        : 'text-gray-700 hover:bg-gray-100'
-                                                }`}
-                                            >
-                                                {totalPages}
-                                            </button>
-                                        </>
-                                    ) : (
-                                        Array.from(
-                                            { length: totalPages },
-                                            (_, i) => (
-                                                <button
-                                                    key={i + 1}
-                                                    onClick={() =>
-                                                        setCurrentPage(i + 1)
-                                                    }
-                                                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
-                                                        currentPage === i + 1
-                                                            ? 'bg-green-600 text-white shadow-md'
-                                                            : 'text-gray-700 hover:bg-gray-100'
-                                                    }`}
-                                                >
-                                                    {i + 1}
-                                                </button>
-                                            )
-                                        )
-                                    )}
-                                    <button
-                                        onClick={() =>
-                                            setCurrentPage((p) =>
-                                                Math.min(totalPages, p + 1)
-                                            )
-                                        }
-                                        disabled={currentPage === totalPages}
-                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-600 hover:bg-gray-100 hover:text-gray-800 ${
-                                            currentPage === totalPages
-                                                ? 'opacity-50 cursor-not-allowed'
-                                                : ''
-                                        }`}
-                                        aria-label="Next"
-                                    >
-                                        <svg
-                                            className="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                d="M9 5l7 7-7 7"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                    </button>
-                                </nav>
-                            </div>
-                        )}
+
+                        <EICPagination
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            totalPages={totalPages}
+                        />
                     </section>
                 </main>
             </div>

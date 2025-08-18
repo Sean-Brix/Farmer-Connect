@@ -3,6 +3,12 @@ import React, { useState, useEffect } from 'react';
 // ASSETS
 import default_image from '../../../Assets/eic_default.png';
 
+// COMPONENTS
+import DistributionLoadingState from './components/DistributionLoadingState';
+import DistributionErrorState from './components/DistributionErrorState';
+import RequestsTable from './components/RequestsTable';
+import DistributionItemCard from './components/DistributionItemCard';
+
 // TANSTACK QUERY HOOKS
 import {
     useDistributionStacks,
@@ -551,18 +557,14 @@ export default function Distribution() {
         }
     };
 
-    if (isLoading)
-        return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="text-lg">Loading...</div>
-            </div>
-        );
-    if (error)
-        return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="text-lg text-red-600">Error: {error}</div>
-            </div>
-        );
+    if (isLoading) {
+        return <DistributionLoadingState />;
+    }
+    
+    if (error) {
+        const refetchFunction = activeSection === 'items' ? refetchStacks : refetchRequests;
+        return <DistributionErrorState error={{ message: error }} retry={refetchFunction} />;
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 py-8 sm:mt-20 px-2 md:px-6 relative">
@@ -1015,10 +1017,10 @@ export default function Distribution() {
 }
 
 /* ================================================================================== */
-/* REQUESTS TABLE COMPONENT */
+/* INTERNAL REQUESTS TABLE COMPONENT (TO BE REMOVED) */
 /* ================================================================================== */
 
-function RequestsTable({
+function InternalRequestsTable({
     requests,
     search,
     statusFilter,
@@ -1552,10 +1554,10 @@ function RequestsTable({
 }
 
 /* ================================================================================== */
-/* DISTRIBUTION ITEM CARD COMPONENT */
+/* INTERNAL DISTRIBUTION ITEM CARD COMPONENT (TO BE REMOVED) */
 /* ================================================================================== */
 
-function DistributionItemCard({
+function InternalDistributionItemCard({
     stack,
     onViewDetails,
     onEdit,
