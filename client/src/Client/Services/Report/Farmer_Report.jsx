@@ -17,7 +17,6 @@ import Navbar from '../../Components/Navbar.jsx';
 
 // Import data files
 import cropGuidelinesData from '../../../data/cropGuidelinesData.json';
-import reportData from '../../../data/reportData.json';
 
 ChartJS.register(
   CategoryScale,

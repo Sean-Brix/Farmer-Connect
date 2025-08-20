@@ -4,6 +4,8 @@ import colors from 'colors'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import app from './config/app.js'
+import { Server } from 'socket.io';
+import { setup_socket } from './config/socket.js';
 
 // Configuration
 dotenv.config();
@@ -20,6 +22,17 @@ server.listen(PORT, ()=>{
         '\n\n\n\nLINK: '.cyan + ('http://127.0.0.1:' + PORT + '/\n').yellow.italic.underline
     );
 })
+
+// Socket.io setup
+const io = new Server(server, {
+    // CORS for Development
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
+    },
+});
+
+setup_socket(io);
 
 export default server;
 

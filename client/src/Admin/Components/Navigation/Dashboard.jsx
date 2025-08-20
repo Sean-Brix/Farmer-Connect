@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import logo from '../../../Assets/Logo.png';
 import { useNavigate } from 'react-router-dom';
 import default_picture from '../../../Assets/default_picture.png';
+import { connectSocket } from '../../../utils/socket.js';
 
 // SERVICES
 import Analytics from '../../Services/Analytics/Analytics';
@@ -70,6 +71,9 @@ export default function Dashboard() {
                 if (data.access === 'User') {
                     throw new Error(data.error);
                 }
+
+                // Connect Socket
+                connectSocket(data.access || 'guest');
 
                 // Render State
                 setDetails({

@@ -4,7 +4,9 @@ import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import logo from '../../Assets/Logo.png';
 import Chat from '../../Components/Chats/Chat.jsx';
-import logo2 from '../Assets/farmerconnect.png'; // Updated logo import
+import logo2 from '../Assets/farmerconnect.png'; 
+import { connectSocket } from '../../utils/socket.js';
+
 export default function Navbar({refresh}) {
     const location = useLocation();
     // Inject Google Fonts Poppins if not already present
@@ -35,6 +37,15 @@ export default function Navbar({refresh}) {
         queryFn: async () => {
             const response = await fetch('/auth/is-authenticated');
             const data = await response.json();
+
+            // Handle non-200 responses
+            if (!response.ok) {
+                throw new Error(data.message || 'Authentication check failed');
+            }
+
+            // Connect Socket
+            connectSocket(data.payload.access || 'guest');
+
             return data;
         },
         refetchInterval: 30 * 1000, // Refetch every 30 seconds for better responsiveness
