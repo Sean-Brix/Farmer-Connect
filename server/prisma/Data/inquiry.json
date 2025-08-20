@@ -1,0 +1,446 @@
+{
+  "faqs": [
+    {
+      "category": "SEMINAR",
+      "question": "How do I register for a seminar?",
+      "answer": "You can register for seminars through our online platform. Navigate to the Seminars section, select your desired seminar, and click the Register button. Make sure you meet the eligibility requirements.",
+      "isActive": true
+    },
+    {
+      "category": "SEMINAR",
+      "question": "Can I cancel my seminar registration?",
+      "answer": "Yes, you can cancel your registration up to 24 hours before the seminar start time. Go to your profile, find the registered seminar, and click Cancel Registration.",
+      "isActive": true
+    },
+    {
+      "category": "SEMINAR",
+      "question": "What should I bring to the seminar?",
+      "answer": "Please bring a valid ID, notebook, and pen. Some seminars may require specific materials which will be mentioned in the seminar details.",
+      "isActive": true
+    },
+    {
+      "category": "EQUIPMENT",
+      "question": "What are the requirements for borrowing equipment?",
+      "answer": "To borrow equipment, you need: (1) Valid farmer registration, (2) Completed equipment training seminar, (3) Valid ID, (4) Equipment agreement form. All borrowed equipment must be returned within the specified period.",
+      "isActive": true
+    },
+    {
+      "category": "EQUIPMENT",
+      "question": "How long can I borrow equipment?",
+      "answer": "Standard borrowing period is 7 days for small tools and 14 days for large machinery. Extensions may be granted based on availability and request justification.",
+      "isActive": true
+    },
+    {
+      "category": "EQUIPMENT",
+      "question": "What if the equipment gets damaged while I am using it?",
+      "answer": "Report any damage immediately to our office. Minor damages due to normal use are acceptable, but intentional damage or misuse may result in repair charges.",
+      "isActive": true
+    },
+    {
+      "category": "ACCOUNT",
+      "question": "How do I reset my password?",
+      "answer": "Click on 'Forgot Password' on the login page, enter your registered email address, and follow the instructions sent to your email. If you don't receive the email, check your spam folder.",
+      "isActive": true
+    },
+    {
+      "category": "ACCOUNT",
+      "question": "How do I update my profile information?",
+      "answer": "Log in to your account, go to Profile Settings, update the necessary information, and click Save Changes. Some changes may require verification.",
+      "isActive": true
+    },
+    {
+      "category": "GENERAL",
+      "question": "What services does FITS-Tanza provide?",
+      "answer": "FITS-Tanza provides: Agricultural training seminars, Equipment lending services, Technical assistance, Crop guidance, Weather updates, Market information, and Agricultural consulting.",
+      "isActive": true
+    },
+    {
+      "category": "GENERAL",
+      "question": "What are your office hours?",
+      "answer": "Our office is open Monday to Friday, 8:00 AM to 5:00 PM, and Saturday 8:00 AM to 12:00 PM. We are closed on Sundays and national holidays.",
+      "isActive": true
+    },
+    {
+      "category": "GENERAL",
+      "question": "How can I contact FITS-Tanza?",
+      "answer": "You can contact us through: (1) This inquiry system, (2) Phone: (046) 123-4567, (3) Email: info@fits-tanza.gov.ph, (4) Visit our office in Tanza, Cavite.",
+      "isActive": true
+    },
+    {
+      "category": "TECHNICAL",
+      "question": "The website is not loading properly. What should I do?",
+      "answer": "Try these steps: (1) Clear your browser cache and cookies, (2) Try a different browser, (3) Check your internet connection, (4) Disable browser extensions temporarily. If the problem persists, contact technical support.",
+      "isActive": true
+    },
+    {
+      "category": "TECHNICAL",
+      "question": "What browsers are supported?",
+      "answer": "Our platform supports: Chrome (version 90+), Firefox (version 88+), Safari (version 14+), and Edge (version 90+). For the best experience, please keep your browser updated.",
+      "isActive": true
+    },
+    {
+      "category": "FEEDBACK",
+      "question": "How can I provide feedback about your services?",
+      "answer": "We welcome your feedback! You can submit feedback through: (1) The feedback form on our website, (2) Email us directly, (3) Visit our office, (4) Call our hotline. Your input helps us improve our services.",
+      "isActive": true
+    },
+    {
+      "category": "COMPLAINT",
+      "question": "How do I file a formal complaint?",
+      "answer": "To file a formal complaint: (1) Fill out the complaint form on our website, (2) Provide detailed information and supporting documents, (3) Submit the form. You will receive a reference number for tracking.",
+      "isActive": true
+    },
+    {
+      "category": "COMPLAINT",
+      "question": "How long does it take to resolve complaints?",
+      "answer": "Simple complaints are resolved within 3-5 business days. Complex issues may take up to 14 days. You will be notified of progress and any delays in the resolution process.",
+      "isActive": true
+    }
+  ],
+  "templates": [
+    {
+      "title": "Seminar Registration Issue",
+      "category": "SEMINAR",
+      "content": "Thank you for your inquiry about seminar registration. We have received your request and our team will review the registration issue. We will contact you within 24 hours with a resolution. Please have your registration details ready when we contact you.",
+      "isActive": true
+    },
+    {
+      "title": "Equipment Availability Response",
+      "category": "EQUIPMENT",
+      "content": "Thank you for your equipment inquiry. We have checked the availability of the requested equipment. Our team will contact you with the current status and reservation options. Please ensure you have completed the required training before equipment pickup.",
+      "isActive": true
+    },
+    {
+      "title": "Account Access Support",
+      "category": "ACCOUNT",
+      "content": "We have received your account access request. Our technical team will help you resolve the login issue. Please check your email for password reset instructions or contact us directly if you need immediate assistance.",
+      "isActive": true
+    },
+    {
+      "title": "General Information Response",
+      "category": "GENERAL",
+      "content": "Thank you for your interest in FITS-Tanza services. We have compiled the information you requested and will send detailed materials to your email address. Feel free to visit our office if you need additional clarification.",
+      "isActive": true
+    },
+    {
+      "title": "Technical Issue Resolution",
+      "category": "TECHNICAL",
+      "content": "We have received your technical support request. Our IT team is investigating the issue and will provide a solution. In the meantime, please try accessing the system using a different browser or device.",
+      "isActive": true
+    },
+    {
+      "title": "Feedback Acknowledgment",
+      "category": "FEEDBACK",
+      "content": "Thank you for taking the time to provide feedback about our services. Your input is valuable to us and helps improve our programs. We will review your suggestions and implement feasible improvements.",
+      "isActive": true
+    },
+    {
+      "title": "Complaint Investigation",
+      "category": "COMPLAINT",
+      "content": "We have received your complaint and take this matter seriously. Our management team will investigate the issue thoroughly and respond within 3-5 business days. We appreciate your patience as we work to resolve this matter.",
+      "isActive": true
+    }
+  ],
+  "inquiries": [
+    {
+      "subject": "Registration Issue for Organic Farming Seminar",
+      "message": "I am trying to register for the organic farming seminar scheduled for next month, but the registration form keeps showing an error message. Can you please help me complete the registration?",
+      "category": "SEMINAR",
+      "priority": "MEDIUM",
+      "status": "RESOLVED",
+      "createdAt": "2025-08-10T09:30:00.000Z",
+      "updatedAt": "2025-08-12T14:45:00.000Z",
+      "replies": [
+        {
+          "message": "Thank you for contacting us about the seminar registration issue. We have identified a technical problem with our registration system and our IT team is working on a fix. We will notify you once the issue is resolved.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-10T11:15:00.000Z"
+        },
+        {
+          "message": "Thank you for the quick response. I understand and will wait for the update.",
+          "senderType": "USER",
+          "createdAt": "2025-08-10T12:30:00.000Z"
+        },
+        {
+          "message": "Good news! The registration system has been fixed. You can now complete your registration for the organic farming seminar. Please try again and let us know if you encounter any issues.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-12T14:45:00.000Z"
+        }
+      ]
+    },
+    {
+      "subject": "Tractor Borrowing Request",
+      "message": "I need to borrow a tractor for land preparation in my 2-hectare farm. What are the requirements and how long is the borrowing period?",
+      "category": "EQUIPMENT",
+      "priority": "HIGH",
+      "status": "IN_PROGRESS",
+      "createdAt": "2025-08-15T08:00:00.000Z",
+      "updatedAt": "2025-08-16T10:30:00.000Z",
+      "replies": [
+        {
+          "message": "Thank you for your equipment request. To borrow a tractor, you need: (1) Valid farmer registration, (2) Completed tractor operation training, (3) Valid ID, (4) Equipment agreement form. The borrowing period is 14 days for tractors. Currently, we have tractors available. Please visit our office to complete the paperwork.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-15T14:20:00.000Z"
+        },
+        {
+          "message": "Thank you for the information. I have completed the tractor training last month. When can I visit the office to process my request?",
+          "senderType": "USER",
+          "createdAt": "2025-08-16T09:15:00.000Z"
+        },
+        {
+          "message": "Perfect! Since you've already completed the training, you can visit our office any weekday from 8:00 AM to 5:00 PM. Please bring your training certificate, valid ID, and farming registration documents. We'll process your request immediately.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-16T10:30:00.000Z"
+        }
+      ]
+    },
+    {
+      "subject": "Password Reset Request",
+      "message": "I forgot my password and the reset email is not arriving. I've checked my spam folder too. Please help me reset my password.",
+      "category": "ACCOUNT",
+      "priority": "MEDIUM",
+      "status": "RESOLVED",
+      "createdAt": "2025-08-18T16:45:00.000Z",
+      "updatedAt": "2025-08-18T17:30:00.000Z",
+      "replies": [
+        {
+          "message": "We apologize for the inconvenience with the password reset email. Our technical team will manually reset your password and send the new temporary password to your registered email address within the next hour. Please change this temporary password after logging in.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-18T17:00:00.000Z"
+        },
+        {
+          "message": "Perfect! I received the temporary password and was able to log in successfully. I've already changed it to my preferred password. Thank you for the quick assistance!",
+          "senderType": "USER",
+          "createdAt": "2025-08-18T17:30:00.000Z"
+        }
+      ]
+    },
+    {
+      "subject": "Information about FITS-Tanza Services",
+      "message": "I'm new to farming and would like to know what services and programs FITS-Tanza offers for beginners.",
+      "category": "GENERAL",
+      "priority": "LOW",
+      "status": "RESOLVED",
+      "createdAt": "2025-08-05T10:15:00.000Z",
+      "updatedAt": "2025-08-06T09:45:00.000Z",
+      "replies": [
+        {
+          "message": "Welcome to farming! FITS-Tanza offers several programs for beginners: (1) Basic Farming Orientation seminars, (2) Crop production training, (3) Equipment lending services, (4) Technical assistance and consultation, (5) Soil testing services, (6) Market linkage programs. We recommend starting with our Basic Farming Orientation seminar. Would you like us to register you for the next session?",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-05T14:30:00.000Z"
+        },
+        {
+          "message": "This is very helpful! Yes, please register me for the Basic Farming Orientation seminar. When is the next session scheduled?",
+          "senderType": "USER",
+          "createdAt": "2025-08-06T08:20:00.000Z"
+        },
+        {
+          "message": "Great! I've registered you for the Basic Farming Orientation seminar scheduled for August 20, 2025, from 8:00 AM to 5:00 PM at our training center. You'll receive a confirmation email with all the details and materials list. Welcome to the FITS-Tanza community!",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-06T09:45:00.000Z"
+        }
+      ]
+    },
+    {
+      "subject": "Website Loading Issues",
+      "message": "The website is loading very slowly on my computer. Sometimes pages don't load at all. Is there a problem with the server?",
+      "category": "TECHNICAL",
+      "priority": "MEDIUM",
+      "status": "RESOLVED",
+      "createdAt": "2025-08-12T13:20:00.000Z",
+      "updatedAt": "2025-08-13T11:15:00.000Z",
+      "replies": [
+        {
+          "message": "Thank you for reporting this technical issue. We have identified intermittent server performance issues that are affecting some users. Our IT team is working on optimizing the server performance. In the meantime, please try clearing your browser cache and using a different browser. We expect the issue to be fully resolved within 24 hours.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-12T15:45:00.000Z"
+        },
+        {
+          "message": "I tried clearing the cache and using Chrome instead of Internet Explorer. It's working much better now. Thank you for the suggestion!",
+          "senderType": "USER",
+          "createdAt": "2025-08-13T10:30:00.000Z"
+        },
+        {
+          "message": "Excellent! Our server optimization is now complete, so you should experience even better performance. For future reference, we recommend using updated browsers like Chrome, Firefox, or Edge for the best experience with our platform.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-13T11:15:00.000Z"
+        }
+      ]
+    },
+    {
+      "subject": "Excellent Service Experience",
+      "message": "I wanted to share my positive experience with your equipment borrowing service. The staff was very helpful and the process was smooth.",
+      "category": "FEEDBACK",
+      "priority": "LOW",
+      "status": "CLOSED",
+      "createdAt": "2025-08-08T14:30:00.000Z",
+      "updatedAt": "2025-08-08T16:00:00.000Z",
+      "replies": [
+        {
+          "message": "Thank you so much for taking the time to share your positive feedback! We're thrilled to hear that you had a smooth experience with our equipment borrowing service. Your feedback is valuable to us and motivates our team to continue providing excellent service. We look forward to assisting you with your future farming needs.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-08T16:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "subject": "Delayed Equipment Approval",
+      "message": "My equipment request has been pending for two weeks without any update. This is affecting my planting schedule and causing delays.",
+      "category": "COMPLAINT",
+      "priority": "HIGH",
+      "status": "IN_PROGRESS",
+      "createdAt": "2025-08-14T07:30:00.000Z",
+      "updatedAt": "2025-08-16T13:45:00.000Z",
+      "replies": [
+        {
+          "message": "We sincerely apologize for the delay in processing your equipment request. This is not the level of service we strive to provide. I have escalated your request to our supervisor and we are expediting the approval process. You should receive an update within 24 hours. We understand the urgency due to your planting schedule.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-14T11:20:00.000Z"
+        },
+        {
+          "message": "Thank you for the quick response and for escalating my request. I appreciate that you understand the time-sensitive nature of farming operations.",
+          "senderType": "USER",
+          "createdAt": "2025-08-15T09:10:00.000Z"
+        },
+        {
+          "message": "Good news! Your equipment request has been approved. The rotary tiller is ready for pickup. Please visit our office tomorrow (August 17) between 8:00 AM and 10:00 AM to complete the paperwork and collect the equipment. Again, we apologize for the delay and have implemented measures to prevent such delays in the future.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-16T13:45:00.000Z"
+        }
+      ]
+    },
+    {
+      "subject": "Questions about Rice Production Workshop",
+      "message": "I would like to know more details about the rice production workshop. What topics will be covered and what materials should I bring?",
+      "category": "SEMINAR",
+      "priority": "MEDIUM",
+      "status": "RESOLVED",
+      "createdAt": "2025-08-07T11:00:00.000Z",
+      "updatedAt": "2025-08-07T15:30:00.000Z",
+      "replies": [
+        {
+          "message": "Thank you for your interest in our Rice Production Workshop! The topics covered include: (1) Soil preparation and testing, (2) Seed selection and preparation, (3) Planting techniques and timing, (4) Water management and irrigation, (5) Fertilizer application, (6) Pest and disease management, (7) Harvesting and post-harvest handling. Please bring: notebook, pen, valid ID, and farming clothes if we have field activities. All training materials will be provided.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-07T13:15:00.000Z"
+        },
+        {
+          "message": "This sounds very comprehensive! When is the next workshop scheduled and how can I register?",
+          "senderType": "USER",
+          "createdAt": "2025-08-07T14:45:00.000Z"
+        },
+        {
+          "message": "The next Rice Production Workshop is scheduled for August 25, 2025, from 8:00 AM to 5:00 PM. You can register through our website, visit our office, or I can register you now if you provide your basic information. The workshop is free for registered farmers in Tanza.",
+          "senderType": "ADMIN",
+          "createdAt": "2025-08-07T15:30:00.000Z"
+        }
+      ]
+    },
+    {
+      "subject": "Unable to Login to Account",
+      "message": "I can't log in to my account. It says my credentials are incorrect, but I'm sure I'm using the right username and password.",
+      "category": "ACCOUNT",
+      "priority": "MEDIUM",
+      "status": "PENDING",
+      "createdAt": "2025-08-19T09:15:00.000Z",
+      "updatedAt": "2025-08-19T09:15:00.000Z",
+      "replies": []
+    },
+    {
+      "subject": "Equipment Return Process Question",
+      "message": "I borrowed a cultivator last week and need to return it. What is the process and where should I return it?",
+      "category": "EQUIPMENT",
+      "priority": "MEDIUM",
+      "status": "PENDING",
+      "createdAt": "2025-08-19T14:20:00.000Z",
+      "updatedAt": "2025-08-19T14:20:00.000Z",
+      "replies": []
+    }
+  ],
+  "analytics": [
+    {
+      "date": "2025-08-19",
+      "totalInquiries": 12,
+      "pendingInquiries": 3,
+      "resolvedInquiries": 7,
+      "avgFirstResponseTime": 185.5,
+      "avgResolutionTime": 1440.2,
+      "seminarInquiries": 4,
+      "equipmentInquiries": 3,
+      "accountInquiries": 2,
+      "generalInquiries": 1,
+      "lowPriorityCount": 2,
+      "mediumPriorityCount": 7,
+      "highPriorityCount": 3,
+      "urgentPriorityCount": 0,
+      "adminId": null
+    },
+    {
+      "date": "2025-08-18",
+      "totalInquiries": 8,
+      "pendingInquiries": 1,
+      "resolvedInquiries": 6,
+      "avgFirstResponseTime": 120.3,
+      "avgResolutionTime": 960.5,
+      "seminarInquiries": 2,
+      "equipmentInquiries": 2,
+      "accountInquiries": 2,
+      "generalInquiries": 1,
+      "lowPriorityCount": 3,
+      "mediumPriorityCount": 4,
+      "highPriorityCount": 1,
+      "urgentPriorityCount": 0,
+      "adminId": null
+    },
+    {
+      "date": "2025-08-17",
+      "totalInquiries": 15,
+      "pendingInquiries": 2,
+      "resolvedInquiries": 11,
+      "avgFirstResponseTime": 95.7,
+      "avgResolutionTime": 720.8,
+      "seminarInquiries": 5,
+      "equipmentInquiries": 4,
+      "accountInquiries": 3,
+      "generalInquiries": 2,
+      "lowPriorityCount": 4,
+      "mediumPriorityCount": 8,
+      "highPriorityCount": 2,
+      "urgentPriorityCount": 1,
+      "adminId": null
+    },
+    {
+      "date": "2025-08-16",
+      "totalInquiries": 6,
+      "pendingInquiries": 1,
+      "resolvedInquiries": 4,
+      "avgFirstResponseTime": 240.1,
+      "avgResolutionTime": 1800.0,
+      "seminarInquiries": 1,
+      "equipmentInquiries": 2,
+      "accountInquiries": 1,
+      "generalInquiries": 1,
+      "lowPriorityCount": 2,
+      "mediumPriorityCount": 3,
+      "highPriorityCount": 1,
+      "urgentPriorityCount": 0,
+      "adminId": null
+    },
+    {
+      "date": "2025-08-15",
+      "totalInquiries": 10,
+      "pendingInquiries": 2,
+      "resolvedInquiries": 7,
+      "avgFirstResponseTime": 150.8,
+      "avgResolutionTime": 1200.4,
+      "seminarInquiries": 3,
+      "equipmentInquiries": 3,
+      "accountInquiries": 2,
+      "generalInquiries": 1,
+      "lowPriorityCount": 3,
+      "mediumPriorityCount": 5,
+      "highPriorityCount": 2,
+      "urgentPriorityCount": 0,
+      "adminId": null
+    }
+  ]
+}

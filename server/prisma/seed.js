@@ -10,6 +10,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const wait = (ms) => new Promise((res) => setTimeout(res, ms));
 
+// Import data files
+const users = JSON.parse(fs.readFileSync(path.join(__dirname, 'Data/account.json'), 'utf8'));
+const seminarsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'Data/seminars.json'), 'utf8'));
+const inventoryItemsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'Data/inventory_items.json'), 'utf8'));
+const inquiryData = JSON.parse(fs.readFileSync(path.join(__dirname, 'Data/inquiry.json'), 'utf8'));
+
 
 //? ========================================= ACCOUNT ========================================= ?//
 import users from './Data/account.json' with { type: 'json' }
@@ -787,6 +793,168 @@ async function createAuditLogs() {
   console.log(`Created ${numberOfLogs} audit log entries.`);
 }
 
+//? ===================================== INQUIRY SYSTEM ===================================== ?//
+
+async function createFAQs() {
+  const adminAccounts = await prisma.account.findMany({
+    where: {
+      access: {
+        in: ['Admin', 'Super_Admin']
+      }
+    }
+  });
+
+  let orderIndex = 1;
+  for (const faq of inquiryData.faqs) {
+    const randomAdmin = adminAccounts[Math.floor(Math.random() * adminAccounts.length)];
+    
+    await prisma.fAQ.create({
+      data: {
+        question: faq.question,
+        answer: faq.answer,
+        category: faq.category,
+        isActive: faq.isActive,
+        orderIndex: orderIndex++,
+        viewCount: faq.viewCount,
+        helpfulCount: faq.helpfulCount,
+        createdById: randomAdmin.id,
+        createdAt: new Date(faq.createdAt)
+      }
+    });
+  }
+
+  console.log(`Created ${inquiryData.faqs.length} FAQ entries.`);
+}
+
+async function createInquiryTemplates() {
+  const adminAccounts = await prisma.account.findMany({
+    where: {
+      access: {
+        in: ['Admin', 'Super_Admin']
+      }
+    }
+  });
+
+  for (const template of inquiryData.templates) {
+    const randomAdmin = adminAccounts[Math.floor(Math.random() * adminAccounts.length)];
+    
+    await prisma.inquiryTemplate.create({
+      data: {
+        title: template.title,
+        content: template.content,
+        category: template.category,
+        isActive: template.isActive,
+        usageCount: template.usageCount,
+        createdById: randomAdmin.id,
+        createdAt: new Date(template.createdAt)
+      }
+    });
+  }
+
+  console.log(`Created ${inquiryData.templates.length} inquiry template entries.`);
+}
+
+async function createInquiries() {
+  const userAccounts = await prisma.account.findMany({
+    where: {
+      access: {
+        in: ['Farmer', 'EIC']
+      }
+    }
+  });
+
+  const adminAccounts = await prisma.account.findMany({
+    where: {
+      access: {
+        in: ['Admin', 'Super_Admin']
+      }
+    }
+  });
+
+  if (userAccounts.length === 0 || adminAccounts.length === 0) {
+    console.log('No user or admin accounts found for creating inquiries.');
+    return;
+  }
+
+  for (const inquiryItem of inquiryData.inquiries) {
+    const randomUser = userAccounts[Math.floor(Math.random() * userAccounts.length)];
+    const randomAdmin = adminAccounts[Math.floor(Math.random() * adminAccounts.length)];
+
+    // Create the inquiry
+    const createdInquiry = await prisma.inquiry.create({
+      data: {
+        title: inquiryItem.title,
+        description: inquiryItem.description,
+        category: inquiryItem.category,
+        status: inquiryItem.status,
+        priority: inquiryItem.priority,
+        userId: randomUser.id,
+        assignedToId: inquiryItem.status !== 'PENDING' ? randomAdmin.id : null,
+        createdAt: new Date(inquiryItem.createdAt),
+      }
+    });
+
+    // Create replies for this inquiry
+    for (let j = 0; j < inquiryItem.replies.length; j++) {
+      const reply = inquiryItem.replies[j];
+      
+      await prisma.inquiryReply.create({
+        data: {
+          message: reply.message,
+          isFromUser: reply.isFromUser,
+          inquiryId: createdInquiry.id,
+          userId: reply.isFromUser ? randomUser.id : randomAdmin.id,
+          createdAt: new Date(reply.createdAt)
+        }
+      });
+    }
+
+    // Update inquiry timestamps
+    await prisma.inquiry.update({
+      where: { id: createdInquiry.id },
+      data: {
+        updatedAt: new Date(inquiryItem.updatedAt),
+        resolvedAt: inquiryItem.resolvedAt ? new Date(inquiryItem.resolvedAt) : null
+      }
+    });
+  }
+
+  console.log(`Created ${inquiryData.inquiries.length} inquiries with their replies.`);
+}
+
+async function createInquiryAnalytics() {
+  const adminAccounts = await prisma.account.findMany({
+    where: {
+      access: {
+        in: ['Admin', 'Super_Admin']
+      }
+    }
+  });
+
+  if (adminAccounts.length === 0) {
+    console.log('No admin accounts found for creating inquiry analytics.');
+    return;
+  }
+
+  for (const analytics of inquiryData.analytics) {
+    const randomAdmin = adminAccounts[Math.floor(Math.random() * adminAccounts.length)];
+    
+    await prisma.inquiryAnalytics.create({
+      data: {
+        date: new Date(analytics.date),
+        totalInquiries: analytics.totalInquiries,
+        resolvedInquiries: analytics.resolvedInquiries,
+        pendingInquiries: analytics.pendingInquiries,
+        avgResponseTime: analytics.avgResponseTime,
+        adminResponseRate: analytics.adminResponseRate,
+        categoryBreakdown: analytics.categoryBreakdown,
+        adminId: randomAdmin.id
+      }
+    });
+  }
+
+  console.log(`Created ${inquiryData.analytics.length} inquiry analytics entries.`);
+}
 //? ====================================== EXECUTE SEEDS ====================================== ?//
 
 async function main() {
@@ -811,6 +979,73 @@ async function main() {
     
     await createAuditLogs();
     console.log('Audit Logs created successfully.');
+    
+    // Create inquiry system data
+    console.log('\\n🎯 Starting inquiry system data creation...');
+    await createFAQs();
+    console.log('FAQs created successfully.');
+    
+    await createInquiryTemplates();
+    console.log('Inquiry Templates created successfully.');
+    
+    await createInquiries();
+    console.log('Inquiries created successfully.');
+    
+    await createInquiryAnalytics();
+    console.log('Inquiry Analytics created successfully.');
+    
+    console.log('\\n✅ All inquiry system data created successfully!');
+  } 
+
+  catch (error) {
+    console.error('Error seeding data:', error);
+  } 
+  
+  finally {
+    await prisma.$disconnect();
+  }
+}
+
+main();
+
+async function main() {
+  try {
+    await createAccount();
+    console.log('Accounts created successfully.');
+
+    await createSeminars();
+    console.log('Seminars created successfully.');
+
+    await createSeminarParticipants();
+    console.log('Seminar Participants created successfully.');
+    
+    await createInventoryItems();
+    console.log('Inventory Items created successfully.');
+    
+    await createItemStacks();
+    console.log('Inventory Item Stacks created successfully.');
+    
+    await createItemTransactions();
+    console.log('Item Transactions created successfully.');
+    
+    await createAuditLogs();
+    console.log('Audit Logs created successfully.');
+    
+    // Create inquiry system data
+    console.log('\n🎯 Starting inquiry system data creation...');
+    await createFAQs();
+    console.log('FAQs created successfully.');
+    
+    await createInquiryTemplates();
+    console.log('Inquiry Templates created successfully.');
+    
+    await createInquiries();
+    console.log('Inquiries created successfully.');
+    
+    await createInquiryAnalytics();
+    console.log('Inquiry Analytics created successfully.');
+    
+    console.log('\n✅ All inquiry system data created successfully!');
   } 
 
   catch (error) {

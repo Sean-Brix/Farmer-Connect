@@ -24,6 +24,41 @@ export type Account = $Result.DefaultSelection<Prisma.$AccountPayload>
  */
 export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
 /**
+ * Model Inquiry
+ * 
+ */
+export type Inquiry = $Result.DefaultSelection<Prisma.$InquiryPayload>
+/**
+ * Model InquiryReply
+ * 
+ */
+export type InquiryReply = $Result.DefaultSelection<Prisma.$InquiryReplyPayload>
+/**
+ * Model InquiryAttachment
+ * 
+ */
+export type InquiryAttachment = $Result.DefaultSelection<Prisma.$InquiryAttachmentPayload>
+/**
+ * Model FAQ
+ * 
+ */
+export type FAQ = $Result.DefaultSelection<Prisma.$FAQPayload>
+/**
+ * Model InquiryTemplate
+ * 
+ */
+export type InquiryTemplate = $Result.DefaultSelection<Prisma.$InquiryTemplatePayload>
+/**
+ * Model InquiryNotification
+ * 
+ */
+export type InquiryNotification = $Result.DefaultSelection<Prisma.$InquiryNotificationPayload>
+/**
+ * Model InquiryAnalytics
+ * 
+ */
+export type InquiryAnalytics = $Result.DefaultSelection<Prisma.$InquiryAnalyticsPayload>
+/**
  * Model InventoryItem
  * 
  */
@@ -193,6 +228,65 @@ export const audit_action: {
 export type audit_action = (typeof audit_action)[keyof typeof audit_action]
 
 
+export const InquiryCategory: {
+  GENERAL: 'GENERAL',
+  SEMINAR: 'SEMINAR',
+  EQUIPMENT: 'EQUIPMENT',
+  ACCOUNT: 'ACCOUNT',
+  TECHNICAL: 'TECHNICAL',
+  FEEDBACK: 'FEEDBACK',
+  COMPLAINT: 'COMPLAINT'
+};
+
+export type InquiryCategory = (typeof InquiryCategory)[keyof typeof InquiryCategory]
+
+
+export const InquiryPriority: {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+};
+
+export type InquiryPriority = (typeof InquiryPriority)[keyof typeof InquiryPriority]
+
+
+export const InquiryStatus: {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  WAITING_USER: 'WAITING_USER',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type InquiryStatus = (typeof InquiryStatus)[keyof typeof InquiryStatus]
+
+
+export const SenderType: {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+  SYSTEM: 'SYSTEM',
+  BOT: 'BOT'
+};
+
+export type SenderType = (typeof SenderType)[keyof typeof SenderType]
+
+
+export const NotificationType: {
+  NEW_INQUIRY: 'NEW_INQUIRY',
+  NEW_REPLY: 'NEW_REPLY',
+  STATUS_CHANGE: 'STATUS_CHANGE',
+  ASSIGNMENT_CHANGE: 'ASSIGNMENT_CHANGE',
+  INQUIRY_RESOLVED: 'INQUIRY_RESOLVED',
+  INQUIRY_CLOSED: 'INQUIRY_CLOSED',
+  MENTION: 'MENTION',
+  REMINDER: 'REMINDER'
+};
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
 export const transaction_status: {
   Pending: 'Pending',
   Approved: 'Approved',
@@ -288,6 +382,26 @@ export const gender: typeof $Enums.gender
 export type audit_action = $Enums.audit_action
 
 export const audit_action: typeof $Enums.audit_action
+
+export type InquiryCategory = $Enums.InquiryCategory
+
+export const InquiryCategory: typeof $Enums.InquiryCategory
+
+export type InquiryPriority = $Enums.InquiryPriority
+
+export const InquiryPriority: typeof $Enums.InquiryPriority
+
+export type InquiryStatus = $Enums.InquiryStatus
+
+export const InquiryStatus: typeof $Enums.InquiryStatus
+
+export type SenderType = $Enums.SenderType
+
+export const SenderType: typeof $Enums.SenderType
+
+export type NotificationType = $Enums.NotificationType
+
+export const NotificationType: typeof $Enums.NotificationType
 
 export type transaction_status = $Enums.transaction_status
 
@@ -446,6 +560,76 @@ export class PrismaClient<
     * ```
     */
   get auditLog(): Prisma.AuditLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inquiry`: Exposes CRUD operations for the **Inquiry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Inquiries
+    * const inquiries = await prisma.inquiry.findMany()
+    * ```
+    */
+  get inquiry(): Prisma.InquiryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inquiryReply`: Exposes CRUD operations for the **InquiryReply** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InquiryReplies
+    * const inquiryReplies = await prisma.inquiryReply.findMany()
+    * ```
+    */
+  get inquiryReply(): Prisma.InquiryReplyDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inquiryAttachment`: Exposes CRUD operations for the **InquiryAttachment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InquiryAttachments
+    * const inquiryAttachments = await prisma.inquiryAttachment.findMany()
+    * ```
+    */
+  get inquiryAttachment(): Prisma.InquiryAttachmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.fAQ`: Exposes CRUD operations for the **FAQ** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FAQS
+    * const fAQS = await prisma.fAQ.findMany()
+    * ```
+    */
+  get fAQ(): Prisma.FAQDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inquiryTemplate`: Exposes CRUD operations for the **InquiryTemplate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InquiryTemplates
+    * const inquiryTemplates = await prisma.inquiryTemplate.findMany()
+    * ```
+    */
+  get inquiryTemplate(): Prisma.InquiryTemplateDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inquiryNotification`: Exposes CRUD operations for the **InquiryNotification** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InquiryNotifications
+    * const inquiryNotifications = await prisma.inquiryNotification.findMany()
+    * ```
+    */
+  get inquiryNotification(): Prisma.InquiryNotificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inquiryAnalytics`: Exposes CRUD operations for the **InquiryAnalytics** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InquiryAnalytics
+    * const inquiryAnalytics = await prisma.inquiryAnalytics.findMany()
+    * ```
+    */
+  get inquiryAnalytics(): Prisma.InquiryAnalyticsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.inventoryItem`: Exposes CRUD operations for the **InventoryItem** model.
@@ -938,6 +1122,13 @@ export namespace Prisma {
   export const ModelName: {
     Account: 'Account',
     AuditLog: 'AuditLog',
+    Inquiry: 'Inquiry',
+    InquiryReply: 'InquiryReply',
+    InquiryAttachment: 'InquiryAttachment',
+    FAQ: 'FAQ',
+    InquiryTemplate: 'InquiryTemplate',
+    InquiryNotification: 'InquiryNotification',
+    InquiryAnalytics: 'InquiryAnalytics',
     InventoryItem: 'InventoryItem',
     ItemStack: 'ItemStack',
     ItemTransaction: 'ItemTransaction',
@@ -961,7 +1152,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "auditLog" | "inventoryItem" | "itemStack" | "itemTransaction" | "seminar" | "seminarParticipant"
+      modelProps: "account" | "auditLog" | "inquiry" | "inquiryReply" | "inquiryAttachment" | "fAQ" | "inquiryTemplate" | "inquiryNotification" | "inquiryAnalytics" | "inventoryItem" | "itemStack" | "itemTransaction" | "seminar" | "seminarParticipant"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1094,6 +1285,468 @@ export namespace Prisma {
           count: {
             args: Prisma.AuditLogCountArgs<ExtArgs>
             result: $Utils.Optional<AuditLogCountAggregateOutputType> | number
+          }
+        }
+      }
+      Inquiry: {
+        payload: Prisma.$InquiryPayload<ExtArgs>
+        fields: Prisma.InquiryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InquiryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InquiryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          findFirst: {
+            args: Prisma.InquiryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InquiryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          findMany: {
+            args: Prisma.InquiryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>[]
+          }
+          create: {
+            args: Prisma.InquiryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          createMany: {
+            args: Prisma.InquiryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.InquiryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          update: {
+            args: Prisma.InquiryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          deleteMany: {
+            args: Prisma.InquiryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InquiryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.InquiryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          aggregate: {
+            args: Prisma.InquiryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInquiry>
+          }
+          groupBy: {
+            args: Prisma.InquiryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InquiryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InquiryCountArgs<ExtArgs>
+            result: $Utils.Optional<InquiryCountAggregateOutputType> | number
+          }
+        }
+      }
+      InquiryReply: {
+        payload: Prisma.$InquiryReplyPayload<ExtArgs>
+        fields: Prisma.InquiryReplyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InquiryReplyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryReplyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InquiryReplyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryReplyPayload>
+          }
+          findFirst: {
+            args: Prisma.InquiryReplyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryReplyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InquiryReplyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryReplyPayload>
+          }
+          findMany: {
+            args: Prisma.InquiryReplyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryReplyPayload>[]
+          }
+          create: {
+            args: Prisma.InquiryReplyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryReplyPayload>
+          }
+          createMany: {
+            args: Prisma.InquiryReplyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.InquiryReplyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryReplyPayload>
+          }
+          update: {
+            args: Prisma.InquiryReplyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryReplyPayload>
+          }
+          deleteMany: {
+            args: Prisma.InquiryReplyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InquiryReplyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.InquiryReplyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryReplyPayload>
+          }
+          aggregate: {
+            args: Prisma.InquiryReplyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInquiryReply>
+          }
+          groupBy: {
+            args: Prisma.InquiryReplyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InquiryReplyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InquiryReplyCountArgs<ExtArgs>
+            result: $Utils.Optional<InquiryReplyCountAggregateOutputType> | number
+          }
+        }
+      }
+      InquiryAttachment: {
+        payload: Prisma.$InquiryAttachmentPayload<ExtArgs>
+        fields: Prisma.InquiryAttachmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InquiryAttachmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAttachmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InquiryAttachmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAttachmentPayload>
+          }
+          findFirst: {
+            args: Prisma.InquiryAttachmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAttachmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InquiryAttachmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAttachmentPayload>
+          }
+          findMany: {
+            args: Prisma.InquiryAttachmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAttachmentPayload>[]
+          }
+          create: {
+            args: Prisma.InquiryAttachmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAttachmentPayload>
+          }
+          createMany: {
+            args: Prisma.InquiryAttachmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.InquiryAttachmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAttachmentPayload>
+          }
+          update: {
+            args: Prisma.InquiryAttachmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAttachmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.InquiryAttachmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InquiryAttachmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.InquiryAttachmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAttachmentPayload>
+          }
+          aggregate: {
+            args: Prisma.InquiryAttachmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInquiryAttachment>
+          }
+          groupBy: {
+            args: Prisma.InquiryAttachmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InquiryAttachmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InquiryAttachmentCountArgs<ExtArgs>
+            result: $Utils.Optional<InquiryAttachmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      FAQ: {
+        payload: Prisma.$FAQPayload<ExtArgs>
+        fields: Prisma.FAQFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FAQFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FAQPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FAQFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FAQPayload>
+          }
+          findFirst: {
+            args: Prisma.FAQFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FAQPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FAQFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FAQPayload>
+          }
+          findMany: {
+            args: Prisma.FAQFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FAQPayload>[]
+          }
+          create: {
+            args: Prisma.FAQCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FAQPayload>
+          }
+          createMany: {
+            args: Prisma.FAQCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.FAQDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FAQPayload>
+          }
+          update: {
+            args: Prisma.FAQUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FAQPayload>
+          }
+          deleteMany: {
+            args: Prisma.FAQDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FAQUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.FAQUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FAQPayload>
+          }
+          aggregate: {
+            args: Prisma.FAQAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFAQ>
+          }
+          groupBy: {
+            args: Prisma.FAQGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FAQGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FAQCountArgs<ExtArgs>
+            result: $Utils.Optional<FAQCountAggregateOutputType> | number
+          }
+        }
+      }
+      InquiryTemplate: {
+        payload: Prisma.$InquiryTemplatePayload<ExtArgs>
+        fields: Prisma.InquiryTemplateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InquiryTemplateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InquiryTemplateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
+          }
+          findFirst: {
+            args: Prisma.InquiryTemplateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InquiryTemplateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
+          }
+          findMany: {
+            args: Prisma.InquiryTemplateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>[]
+          }
+          create: {
+            args: Prisma.InquiryTemplateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
+          }
+          createMany: {
+            args: Prisma.InquiryTemplateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.InquiryTemplateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
+          }
+          update: {
+            args: Prisma.InquiryTemplateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
+          }
+          deleteMany: {
+            args: Prisma.InquiryTemplateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InquiryTemplateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.InquiryTemplateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
+          }
+          aggregate: {
+            args: Prisma.InquiryTemplateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInquiryTemplate>
+          }
+          groupBy: {
+            args: Prisma.InquiryTemplateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InquiryTemplateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InquiryTemplateCountArgs<ExtArgs>
+            result: $Utils.Optional<InquiryTemplateCountAggregateOutputType> | number
+          }
+        }
+      }
+      InquiryNotification: {
+        payload: Prisma.$InquiryNotificationPayload<ExtArgs>
+        fields: Prisma.InquiryNotificationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InquiryNotificationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InquiryNotificationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
+          }
+          findFirst: {
+            args: Prisma.InquiryNotificationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InquiryNotificationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
+          }
+          findMany: {
+            args: Prisma.InquiryNotificationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>[]
+          }
+          create: {
+            args: Prisma.InquiryNotificationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
+          }
+          createMany: {
+            args: Prisma.InquiryNotificationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.InquiryNotificationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
+          }
+          update: {
+            args: Prisma.InquiryNotificationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
+          }
+          deleteMany: {
+            args: Prisma.InquiryNotificationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InquiryNotificationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.InquiryNotificationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
+          }
+          aggregate: {
+            args: Prisma.InquiryNotificationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInquiryNotification>
+          }
+          groupBy: {
+            args: Prisma.InquiryNotificationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InquiryNotificationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InquiryNotificationCountArgs<ExtArgs>
+            result: $Utils.Optional<InquiryNotificationCountAggregateOutputType> | number
+          }
+        }
+      }
+      InquiryAnalytics: {
+        payload: Prisma.$InquiryAnalyticsPayload<ExtArgs>
+        fields: Prisma.InquiryAnalyticsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InquiryAnalyticsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InquiryAnalyticsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
+          }
+          findFirst: {
+            args: Prisma.InquiryAnalyticsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InquiryAnalyticsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
+          }
+          findMany: {
+            args: Prisma.InquiryAnalyticsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>[]
+          }
+          create: {
+            args: Prisma.InquiryAnalyticsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
+          }
+          createMany: {
+            args: Prisma.InquiryAnalyticsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.InquiryAnalyticsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
+          }
+          update: {
+            args: Prisma.InquiryAnalyticsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
+          }
+          deleteMany: {
+            args: Prisma.InquiryAnalyticsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InquiryAnalyticsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.InquiryAnalyticsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
+          }
+          aggregate: {
+            args: Prisma.InquiryAnalyticsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInquiryAnalytics>
+          }
+          groupBy: {
+            args: Prisma.InquiryAnalyticsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InquiryAnalyticsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InquiryAnalyticsCountArgs<ExtArgs>
+            result: $Utils.Optional<InquiryAnalyticsCountAggregateOutputType> | number
           }
         }
       }
@@ -1521,6 +2174,13 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     account?: AccountOmit
     auditLog?: AuditLogOmit
+    inquiry?: InquiryOmit
+    inquiryReply?: InquiryReplyOmit
+    inquiryAttachment?: InquiryAttachmentOmit
+    fAQ?: FAQOmit
+    inquiryTemplate?: InquiryTemplateOmit
+    inquiryNotification?: InquiryNotificationOmit
+    inquiryAnalytics?: InquiryAnalyticsOmit
     inventoryItem?: InventoryItemOmit
     itemStack?: ItemStackOmit
     itemTransaction?: ItemTransactionOmit
@@ -1611,6 +2271,15 @@ export namespace Prisma {
     adminTransactions: number
     seminarsCreated: number
     auditLogs: number
+    inquiries: number
+    assignedInquiries: number
+    resolvedInquiries: number
+    inquiryReplies: number
+    inquiryAttachments: number
+    createdFAQs: number
+    createdTemplates: number
+    notifications: number
+    analyticsRecords: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1619,6 +2288,15 @@ export namespace Prisma {
     adminTransactions?: boolean | AccountCountOutputTypeCountAdminTransactionsArgs
     seminarsCreated?: boolean | AccountCountOutputTypeCountSeminarsCreatedArgs
     auditLogs?: boolean | AccountCountOutputTypeCountAuditLogsArgs
+    inquiries?: boolean | AccountCountOutputTypeCountInquiriesArgs
+    assignedInquiries?: boolean | AccountCountOutputTypeCountAssignedInquiriesArgs
+    resolvedInquiries?: boolean | AccountCountOutputTypeCountResolvedInquiriesArgs
+    inquiryReplies?: boolean | AccountCountOutputTypeCountInquiryRepliesArgs
+    inquiryAttachments?: boolean | AccountCountOutputTypeCountInquiryAttachmentsArgs
+    createdFAQs?: boolean | AccountCountOutputTypeCountCreatedFAQsArgs
+    createdTemplates?: boolean | AccountCountOutputTypeCountCreatedTemplatesArgs
+    notifications?: boolean | AccountCountOutputTypeCountNotificationsArgs
+    analyticsRecords?: boolean | AccountCountOutputTypeCountAnalyticsRecordsArgs
   }
 
   // Custom InputTypes
@@ -1665,6 +2343,149 @@ export namespace Prisma {
    */
   export type AccountCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AuditLogWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountInquiriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountAssignedInquiriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountResolvedInquiriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountInquiryRepliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryReplyWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountInquiryAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryAttachmentWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountCreatedFAQsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FAQWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountCreatedTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryTemplateWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryNotificationWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountAnalyticsRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryAnalyticsWhereInput
+  }
+
+
+  /**
+   * Count Type InquiryCountOutputType
+   */
+
+  export type InquiryCountOutputType = {
+    replies: number
+    attachments: number
+    notifications: number
+  }
+
+  export type InquiryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    replies?: boolean | InquiryCountOutputTypeCountRepliesArgs
+    attachments?: boolean | InquiryCountOutputTypeCountAttachmentsArgs
+    notifications?: boolean | InquiryCountOutputTypeCountNotificationsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * InquiryCountOutputType without action
+   */
+  export type InquiryCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryCountOutputType
+     */
+    select?: InquiryCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * InquiryCountOutputType without action
+   */
+  export type InquiryCountOutputTypeCountRepliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryReplyWhereInput
+  }
+
+  /**
+   * InquiryCountOutputType without action
+   */
+  export type InquiryCountOutputTypeCountAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryAttachmentWhereInput
+  }
+
+  /**
+   * InquiryCountOutputType without action
+   */
+  export type InquiryCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryNotificationWhereInput
+  }
+
+
+  /**
+   * Count Type InquiryReplyCountOutputType
+   */
+
+  export type InquiryReplyCountOutputType = {
+    childReplies: number
+  }
+
+  export type InquiryReplyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    childReplies?: boolean | InquiryReplyCountOutputTypeCountChildRepliesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * InquiryReplyCountOutputType without action
+   */
+  export type InquiryReplyCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReplyCountOutputType
+     */
+    select?: InquiryReplyCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * InquiryReplyCountOutputType without action
+   */
+  export type InquiryReplyCountOutputTypeCountChildRepliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryReplyWhereInput
   }
 
 
@@ -2314,6 +3135,15 @@ export namespace Prisma {
     adminTransactions?: boolean | Account$adminTransactionsArgs<ExtArgs>
     seminarsCreated?: boolean | Account$seminarsCreatedArgs<ExtArgs>
     auditLogs?: boolean | Account$auditLogsArgs<ExtArgs>
+    inquiries?: boolean | Account$inquiriesArgs<ExtArgs>
+    assignedInquiries?: boolean | Account$assignedInquiriesArgs<ExtArgs>
+    resolvedInquiries?: boolean | Account$resolvedInquiriesArgs<ExtArgs>
+    inquiryReplies?: boolean | Account$inquiryRepliesArgs<ExtArgs>
+    inquiryAttachments?: boolean | Account$inquiryAttachmentsArgs<ExtArgs>
+    createdFAQs?: boolean | Account$createdFAQsArgs<ExtArgs>
+    createdTemplates?: boolean | Account$createdTemplatesArgs<ExtArgs>
+    notifications?: boolean | Account$notificationsArgs<ExtArgs>
+    analyticsRecords?: boolean | Account$analyticsRecordsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -2384,6 +3214,15 @@ export namespace Prisma {
     adminTransactions?: boolean | Account$adminTransactionsArgs<ExtArgs>
     seminarsCreated?: boolean | Account$seminarsCreatedArgs<ExtArgs>
     auditLogs?: boolean | Account$auditLogsArgs<ExtArgs>
+    inquiries?: boolean | Account$inquiriesArgs<ExtArgs>
+    assignedInquiries?: boolean | Account$assignedInquiriesArgs<ExtArgs>
+    resolvedInquiries?: boolean | Account$resolvedInquiriesArgs<ExtArgs>
+    inquiryReplies?: boolean | Account$inquiryRepliesArgs<ExtArgs>
+    inquiryAttachments?: boolean | Account$inquiryAttachmentsArgs<ExtArgs>
+    createdFAQs?: boolean | Account$createdFAQsArgs<ExtArgs>
+    createdTemplates?: boolean | Account$createdTemplatesArgs<ExtArgs>
+    notifications?: boolean | Account$notificationsArgs<ExtArgs>
+    analyticsRecords?: boolean | Account$analyticsRecordsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -2395,6 +3234,15 @@ export namespace Prisma {
       adminTransactions: Prisma.$ItemTransactionPayload<ExtArgs>[]
       seminarsCreated: Prisma.$SeminarPayload<ExtArgs>[]
       auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+      inquiries: Prisma.$InquiryPayload<ExtArgs>[]
+      assignedInquiries: Prisma.$InquiryPayload<ExtArgs>[]
+      resolvedInquiries: Prisma.$InquiryPayload<ExtArgs>[]
+      inquiryReplies: Prisma.$InquiryReplyPayload<ExtArgs>[]
+      inquiryAttachments: Prisma.$InquiryAttachmentPayload<ExtArgs>[]
+      createdFAQs: Prisma.$FAQPayload<ExtArgs>[]
+      createdTemplates: Prisma.$InquiryTemplatePayload<ExtArgs>[]
+      notifications: Prisma.$InquiryNotificationPayload<ExtArgs>[]
+      analyticsRecords: Prisma.$InquiryAnalyticsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2797,6 +3645,15 @@ export namespace Prisma {
     adminTransactions<T extends Account$adminTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Account$adminTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     seminarsCreated<T extends Account$seminarsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, Account$seminarsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SeminarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends Account$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Account$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    inquiries<T extends Account$inquiriesArgs<ExtArgs> = {}>(args?: Subset<T, Account$inquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assignedInquiries<T extends Account$assignedInquiriesArgs<ExtArgs> = {}>(args?: Subset<T, Account$assignedInquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    resolvedInquiries<T extends Account$resolvedInquiriesArgs<ExtArgs> = {}>(args?: Subset<T, Account$resolvedInquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    inquiryReplies<T extends Account$inquiryRepliesArgs<ExtArgs> = {}>(args?: Subset<T, Account$inquiryRepliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    inquiryAttachments<T extends Account$inquiryAttachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Account$inquiryAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    createdFAQs<T extends Account$createdFAQsArgs<ExtArgs> = {}>(args?: Subset<T, Account$createdFAQsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    createdTemplates<T extends Account$createdTemplatesArgs<ExtArgs> = {}>(args?: Subset<T, Account$createdTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notifications<T extends Account$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Account$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    analyticsRecords<T extends Account$analyticsRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Account$analyticsRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3341,6 +4198,222 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * Account.inquiries
+   */
+  export type Account$inquiriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    where?: InquiryWhereInput
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    cursor?: InquiryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
+  }
+
+  /**
+   * Account.assignedInquiries
+   */
+  export type Account$assignedInquiriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    where?: InquiryWhereInput
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    cursor?: InquiryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
+  }
+
+  /**
+   * Account.resolvedInquiries
+   */
+  export type Account$resolvedInquiriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    where?: InquiryWhereInput
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    cursor?: InquiryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
+  }
+
+  /**
+   * Account.inquiryReplies
+   */
+  export type Account$inquiryRepliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    where?: InquiryReplyWhereInput
+    orderBy?: InquiryReplyOrderByWithRelationInput | InquiryReplyOrderByWithRelationInput[]
+    cursor?: InquiryReplyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryReplyScalarFieldEnum | InquiryReplyScalarFieldEnum[]
+  }
+
+  /**
+   * Account.inquiryAttachments
+   */
+  export type Account$inquiryAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+    where?: InquiryAttachmentWhereInput
+    orderBy?: InquiryAttachmentOrderByWithRelationInput | InquiryAttachmentOrderByWithRelationInput[]
+    cursor?: InquiryAttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryAttachmentScalarFieldEnum | InquiryAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * Account.createdFAQs
+   */
+  export type Account$createdFAQsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FAQ
+     */
+    select?: FAQSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FAQ
+     */
+    omit?: FAQOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FAQInclude<ExtArgs> | null
+    where?: FAQWhereInput
+    orderBy?: FAQOrderByWithRelationInput | FAQOrderByWithRelationInput[]
+    cursor?: FAQWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FAQScalarFieldEnum | FAQScalarFieldEnum[]
+  }
+
+  /**
+   * Account.createdTemplates
+   */
+  export type Account$createdTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryTemplate
+     */
+    select?: InquiryTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryTemplate
+     */
+    omit?: InquiryTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryTemplateInclude<ExtArgs> | null
+    where?: InquiryTemplateWhereInput
+    orderBy?: InquiryTemplateOrderByWithRelationInput | InquiryTemplateOrderByWithRelationInput[]
+    cursor?: InquiryTemplateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryTemplateScalarFieldEnum | InquiryTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * Account.notifications
+   */
+  export type Account$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+    where?: InquiryNotificationWhereInput
+    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
+    cursor?: InquiryNotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryNotificationScalarFieldEnum | InquiryNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Account.analyticsRecords
+   */
+  export type Account$analyticsRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAnalytics
+     */
+    select?: InquiryAnalyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAnalytics
+     */
+    omit?: InquiryAnalyticsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAnalyticsInclude<ExtArgs> | null
+    where?: InquiryAnalyticsWhereInput
+    orderBy?: InquiryAnalyticsOrderByWithRelationInput | InquiryAnalyticsOrderByWithRelationInput[]
+    cursor?: InquiryAnalyticsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryAnalyticsScalarFieldEnum | InquiryAnalyticsScalarFieldEnum[]
   }
 
   /**
@@ -4350,6 +5423,7566 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: AuditLogInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Inquiry
+   */
+
+  export type AggregateInquiry = {
+    _count: InquiryCountAggregateOutputType | null
+    _min: InquiryMinAggregateOutputType | null
+    _max: InquiryMaxAggregateOutputType | null
+  }
+
+  export type InquiryMinAggregateOutputType = {
+    id: string | null
+    subject: string | null
+    message: string | null
+    category: $Enums.InquiryCategory | null
+    priority: $Enums.InquiryPriority | null
+    status: $Enums.InquiryStatus | null
+    userId: string | null
+    guestName: string | null
+    guestEmail: string | null
+    assignedToId: string | null
+    resolvedById: string | null
+    resolvedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InquiryMaxAggregateOutputType = {
+    id: string | null
+    subject: string | null
+    message: string | null
+    category: $Enums.InquiryCategory | null
+    priority: $Enums.InquiryPriority | null
+    status: $Enums.InquiryStatus | null
+    userId: string | null
+    guestName: string | null
+    guestEmail: string | null
+    assignedToId: string | null
+    resolvedById: string | null
+    resolvedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InquiryCountAggregateOutputType = {
+    id: number
+    subject: number
+    message: number
+    category: number
+    priority: number
+    status: number
+    userId: number
+    guestName: number
+    guestEmail: number
+    assignedToId: number
+    resolvedById: number
+    resolvedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type InquiryMinAggregateInputType = {
+    id?: true
+    subject?: true
+    message?: true
+    category?: true
+    priority?: true
+    status?: true
+    userId?: true
+    guestName?: true
+    guestEmail?: true
+    assignedToId?: true
+    resolvedById?: true
+    resolvedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InquiryMaxAggregateInputType = {
+    id?: true
+    subject?: true
+    message?: true
+    category?: true
+    priority?: true
+    status?: true
+    userId?: true
+    guestName?: true
+    guestEmail?: true
+    assignedToId?: true
+    resolvedById?: true
+    resolvedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InquiryCountAggregateInputType = {
+    id?: true
+    subject?: true
+    message?: true
+    category?: true
+    priority?: true
+    status?: true
+    userId?: true
+    guestName?: true
+    guestEmail?: true
+    assignedToId?: true
+    resolvedById?: true
+    resolvedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type InquiryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Inquiry to aggregate.
+     */
+    where?: InquiryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inquiries to fetch.
+     */
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InquiryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inquiries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inquiries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Inquiries
+    **/
+    _count?: true | InquiryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InquiryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InquiryMaxAggregateInputType
+  }
+
+  export type GetInquiryAggregateType<T extends InquiryAggregateArgs> = {
+        [P in keyof T & keyof AggregateInquiry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInquiry[P]>
+      : GetScalarType<T[P], AggregateInquiry[P]>
+  }
+
+
+
+
+  export type InquiryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryWhereInput
+    orderBy?: InquiryOrderByWithAggregationInput | InquiryOrderByWithAggregationInput[]
+    by: InquiryScalarFieldEnum[] | InquiryScalarFieldEnum
+    having?: InquiryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InquiryCountAggregateInputType | true
+    _min?: InquiryMinAggregateInputType
+    _max?: InquiryMaxAggregateInputType
+  }
+
+  export type InquiryGroupByOutputType = {
+    id: string
+    subject: string
+    message: string
+    category: $Enums.InquiryCategory
+    priority: $Enums.InquiryPriority
+    status: $Enums.InquiryStatus
+    userId: string | null
+    guestName: string | null
+    guestEmail: string | null
+    assignedToId: string | null
+    resolvedById: string | null
+    resolvedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: InquiryCountAggregateOutputType | null
+    _min: InquiryMinAggregateOutputType | null
+    _max: InquiryMaxAggregateOutputType | null
+  }
+
+  type GetInquiryGroupByPayload<T extends InquiryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InquiryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InquiryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InquiryGroupByOutputType[P]>
+            : GetScalarType<T[P], InquiryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InquirySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    subject?: boolean
+    message?: boolean
+    category?: boolean
+    priority?: boolean
+    status?: boolean
+    userId?: boolean
+    guestName?: boolean
+    guestEmail?: boolean
+    assignedToId?: boolean
+    resolvedById?: boolean
+    resolvedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | Inquiry$userArgs<ExtArgs>
+    assignedTo?: boolean | Inquiry$assignedToArgs<ExtArgs>
+    resolvedBy?: boolean | Inquiry$resolvedByArgs<ExtArgs>
+    replies?: boolean | Inquiry$repliesArgs<ExtArgs>
+    attachments?: boolean | Inquiry$attachmentsArgs<ExtArgs>
+    notifications?: boolean | Inquiry$notificationsArgs<ExtArgs>
+    _count?: boolean | InquiryCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inquiry"]>
+
+
+
+  export type InquirySelectScalar = {
+    id?: boolean
+    subject?: boolean
+    message?: boolean
+    category?: boolean
+    priority?: boolean
+    status?: boolean
+    userId?: boolean
+    guestName?: boolean
+    guestEmail?: boolean
+    assignedToId?: boolean
+    resolvedById?: boolean
+    resolvedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type InquiryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subject" | "message" | "category" | "priority" | "status" | "userId" | "guestName" | "guestEmail" | "assignedToId" | "resolvedById" | "resolvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["inquiry"]>
+  export type InquiryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | Inquiry$userArgs<ExtArgs>
+    assignedTo?: boolean | Inquiry$assignedToArgs<ExtArgs>
+    resolvedBy?: boolean | Inquiry$resolvedByArgs<ExtArgs>
+    replies?: boolean | Inquiry$repliesArgs<ExtArgs>
+    attachments?: boolean | Inquiry$attachmentsArgs<ExtArgs>
+    notifications?: boolean | Inquiry$notificationsArgs<ExtArgs>
+    _count?: boolean | InquiryCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $InquiryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Inquiry"
+    objects: {
+      user: Prisma.$AccountPayload<ExtArgs> | null
+      assignedTo: Prisma.$AccountPayload<ExtArgs> | null
+      resolvedBy: Prisma.$AccountPayload<ExtArgs> | null
+      replies: Prisma.$InquiryReplyPayload<ExtArgs>[]
+      attachments: Prisma.$InquiryAttachmentPayload<ExtArgs>[]
+      notifications: Prisma.$InquiryNotificationPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      subject: string
+      message: string
+      category: $Enums.InquiryCategory
+      priority: $Enums.InquiryPriority
+      status: $Enums.InquiryStatus
+      userId: string | null
+      guestName: string | null
+      guestEmail: string | null
+      assignedToId: string | null
+      resolvedById: string | null
+      resolvedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["inquiry"]>
+    composites: {}
+  }
+
+  type InquiryGetPayload<S extends boolean | null | undefined | InquiryDefaultArgs> = $Result.GetResult<Prisma.$InquiryPayload, S>
+
+  type InquiryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InquiryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InquiryCountAggregateInputType | true
+    }
+
+  export interface InquiryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Inquiry'], meta: { name: 'Inquiry' } }
+    /**
+     * Find zero or one Inquiry that matches the filter.
+     * @param {InquiryFindUniqueArgs} args - Arguments to find a Inquiry
+     * @example
+     * // Get one Inquiry
+     * const inquiry = await prisma.inquiry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InquiryFindUniqueArgs>(args: SelectSubset<T, InquiryFindUniqueArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Inquiry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InquiryFindUniqueOrThrowArgs} args - Arguments to find a Inquiry
+     * @example
+     * // Get one Inquiry
+     * const inquiry = await prisma.inquiry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InquiryFindUniqueOrThrowArgs>(args: SelectSubset<T, InquiryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Inquiry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryFindFirstArgs} args - Arguments to find a Inquiry
+     * @example
+     * // Get one Inquiry
+     * const inquiry = await prisma.inquiry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InquiryFindFirstArgs>(args?: SelectSubset<T, InquiryFindFirstArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Inquiry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryFindFirstOrThrowArgs} args - Arguments to find a Inquiry
+     * @example
+     * // Get one Inquiry
+     * const inquiry = await prisma.inquiry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InquiryFindFirstOrThrowArgs>(args?: SelectSubset<T, InquiryFindFirstOrThrowArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Inquiries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Inquiries
+     * const inquiries = await prisma.inquiry.findMany()
+     * 
+     * // Get first 10 Inquiries
+     * const inquiries = await prisma.inquiry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inquiryWithIdOnly = await prisma.inquiry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InquiryFindManyArgs>(args?: SelectSubset<T, InquiryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Inquiry.
+     * @param {InquiryCreateArgs} args - Arguments to create a Inquiry.
+     * @example
+     * // Create one Inquiry
+     * const Inquiry = await prisma.inquiry.create({
+     *   data: {
+     *     // ... data to create a Inquiry
+     *   }
+     * })
+     * 
+     */
+    create<T extends InquiryCreateArgs>(args: SelectSubset<T, InquiryCreateArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Inquiries.
+     * @param {InquiryCreateManyArgs} args - Arguments to create many Inquiries.
+     * @example
+     * // Create many Inquiries
+     * const inquiry = await prisma.inquiry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InquiryCreateManyArgs>(args?: SelectSubset<T, InquiryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Inquiry.
+     * @param {InquiryDeleteArgs} args - Arguments to delete one Inquiry.
+     * @example
+     * // Delete one Inquiry
+     * const Inquiry = await prisma.inquiry.delete({
+     *   where: {
+     *     // ... filter to delete one Inquiry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InquiryDeleteArgs>(args: SelectSubset<T, InquiryDeleteArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Inquiry.
+     * @param {InquiryUpdateArgs} args - Arguments to update one Inquiry.
+     * @example
+     * // Update one Inquiry
+     * const inquiry = await prisma.inquiry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InquiryUpdateArgs>(args: SelectSubset<T, InquiryUpdateArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Inquiries.
+     * @param {InquiryDeleteManyArgs} args - Arguments to filter Inquiries to delete.
+     * @example
+     * // Delete a few Inquiries
+     * const { count } = await prisma.inquiry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InquiryDeleteManyArgs>(args?: SelectSubset<T, InquiryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Inquiries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Inquiries
+     * const inquiry = await prisma.inquiry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InquiryUpdateManyArgs>(args: SelectSubset<T, InquiryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Inquiry.
+     * @param {InquiryUpsertArgs} args - Arguments to update or create a Inquiry.
+     * @example
+     * // Update or create a Inquiry
+     * const inquiry = await prisma.inquiry.upsert({
+     *   create: {
+     *     // ... data to create a Inquiry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Inquiry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InquiryUpsertArgs>(args: SelectSubset<T, InquiryUpsertArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Inquiries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryCountArgs} args - Arguments to filter Inquiries to count.
+     * @example
+     * // Count the number of Inquiries
+     * const count = await prisma.inquiry.count({
+     *   where: {
+     *     // ... the filter for the Inquiries we want to count
+     *   }
+     * })
+    **/
+    count<T extends InquiryCountArgs>(
+      args?: Subset<T, InquiryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InquiryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Inquiry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InquiryAggregateArgs>(args: Subset<T, InquiryAggregateArgs>): Prisma.PrismaPromise<GetInquiryAggregateType<T>>
+
+    /**
+     * Group by Inquiry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InquiryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InquiryGroupByArgs['orderBy'] }
+        : { orderBy?: InquiryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InquiryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInquiryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Inquiry model
+   */
+  readonly fields: InquiryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Inquiry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InquiryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends Inquiry$userArgs<ExtArgs> = {}>(args?: Subset<T, Inquiry$userArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    assignedTo<T extends Inquiry$assignedToArgs<ExtArgs> = {}>(args?: Subset<T, Inquiry$assignedToArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    resolvedBy<T extends Inquiry$resolvedByArgs<ExtArgs> = {}>(args?: Subset<T, Inquiry$resolvedByArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    replies<T extends Inquiry$repliesArgs<ExtArgs> = {}>(args?: Subset<T, Inquiry$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attachments<T extends Inquiry$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Inquiry$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notifications<T extends Inquiry$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Inquiry$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Inquiry model
+   */
+  interface InquiryFieldRefs {
+    readonly id: FieldRef<"Inquiry", 'String'>
+    readonly subject: FieldRef<"Inquiry", 'String'>
+    readonly message: FieldRef<"Inquiry", 'String'>
+    readonly category: FieldRef<"Inquiry", 'InquiryCategory'>
+    readonly priority: FieldRef<"Inquiry", 'InquiryPriority'>
+    readonly status: FieldRef<"Inquiry", 'InquiryStatus'>
+    readonly userId: FieldRef<"Inquiry", 'String'>
+    readonly guestName: FieldRef<"Inquiry", 'String'>
+    readonly guestEmail: FieldRef<"Inquiry", 'String'>
+    readonly assignedToId: FieldRef<"Inquiry", 'String'>
+    readonly resolvedById: FieldRef<"Inquiry", 'String'>
+    readonly resolvedAt: FieldRef<"Inquiry", 'DateTime'>
+    readonly createdAt: FieldRef<"Inquiry", 'DateTime'>
+    readonly updatedAt: FieldRef<"Inquiry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Inquiry findUnique
+   */
+  export type InquiryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter, which Inquiry to fetch.
+     */
+    where: InquiryWhereUniqueInput
+  }
+
+  /**
+   * Inquiry findUniqueOrThrow
+   */
+  export type InquiryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter, which Inquiry to fetch.
+     */
+    where: InquiryWhereUniqueInput
+  }
+
+  /**
+   * Inquiry findFirst
+   */
+  export type InquiryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter, which Inquiry to fetch.
+     */
+    where?: InquiryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inquiries to fetch.
+     */
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Inquiries.
+     */
+    cursor?: InquiryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inquiries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inquiries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Inquiries.
+     */
+    distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
+  }
+
+  /**
+   * Inquiry findFirstOrThrow
+   */
+  export type InquiryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter, which Inquiry to fetch.
+     */
+    where?: InquiryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inquiries to fetch.
+     */
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Inquiries.
+     */
+    cursor?: InquiryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inquiries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inquiries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Inquiries.
+     */
+    distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
+  }
+
+  /**
+   * Inquiry findMany
+   */
+  export type InquiryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter, which Inquiries to fetch.
+     */
+    where?: InquiryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inquiries to fetch.
+     */
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Inquiries.
+     */
+    cursor?: InquiryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inquiries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inquiries.
+     */
+    skip?: number
+    distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
+  }
+
+  /**
+   * Inquiry create
+   */
+  export type InquiryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Inquiry.
+     */
+    data: XOR<InquiryCreateInput, InquiryUncheckedCreateInput>
+  }
+
+  /**
+   * Inquiry createMany
+   */
+  export type InquiryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Inquiries.
+     */
+    data: InquiryCreateManyInput | InquiryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Inquiry update
+   */
+  export type InquiryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Inquiry.
+     */
+    data: XOR<InquiryUpdateInput, InquiryUncheckedUpdateInput>
+    /**
+     * Choose, which Inquiry to update.
+     */
+    where: InquiryWhereUniqueInput
+  }
+
+  /**
+   * Inquiry updateMany
+   */
+  export type InquiryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Inquiries.
+     */
+    data: XOR<InquiryUpdateManyMutationInput, InquiryUncheckedUpdateManyInput>
+    /**
+     * Filter which Inquiries to update
+     */
+    where?: InquiryWhereInput
+    /**
+     * Limit how many Inquiries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Inquiry upsert
+   */
+  export type InquiryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Inquiry to update in case it exists.
+     */
+    where: InquiryWhereUniqueInput
+    /**
+     * In case the Inquiry found by the `where` argument doesn't exist, create a new Inquiry with this data.
+     */
+    create: XOR<InquiryCreateInput, InquiryUncheckedCreateInput>
+    /**
+     * In case the Inquiry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InquiryUpdateInput, InquiryUncheckedUpdateInput>
+  }
+
+  /**
+   * Inquiry delete
+   */
+  export type InquiryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter which Inquiry to delete.
+     */
+    where: InquiryWhereUniqueInput
+  }
+
+  /**
+   * Inquiry deleteMany
+   */
+  export type InquiryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Inquiries to delete
+     */
+    where?: InquiryWhereInput
+    /**
+     * Limit how many Inquiries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Inquiry.user
+   */
+  export type Inquiry$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * Inquiry.assignedTo
+   */
+  export type Inquiry$assignedToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * Inquiry.resolvedBy
+   */
+  export type Inquiry$resolvedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * Inquiry.replies
+   */
+  export type Inquiry$repliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    where?: InquiryReplyWhereInput
+    orderBy?: InquiryReplyOrderByWithRelationInput | InquiryReplyOrderByWithRelationInput[]
+    cursor?: InquiryReplyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryReplyScalarFieldEnum | InquiryReplyScalarFieldEnum[]
+  }
+
+  /**
+   * Inquiry.attachments
+   */
+  export type Inquiry$attachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+    where?: InquiryAttachmentWhereInput
+    orderBy?: InquiryAttachmentOrderByWithRelationInput | InquiryAttachmentOrderByWithRelationInput[]
+    cursor?: InquiryAttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryAttachmentScalarFieldEnum | InquiryAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * Inquiry.notifications
+   */
+  export type Inquiry$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+    where?: InquiryNotificationWhereInput
+    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
+    cursor?: InquiryNotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryNotificationScalarFieldEnum | InquiryNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Inquiry without action
+   */
+  export type InquiryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InquiryReply
+   */
+
+  export type AggregateInquiryReply = {
+    _count: InquiryReplyCountAggregateOutputType | null
+    _min: InquiryReplyMinAggregateOutputType | null
+    _max: InquiryReplyMaxAggregateOutputType | null
+  }
+
+  export type InquiryReplyMinAggregateOutputType = {
+    id: string | null
+    message: string | null
+    isInternal: boolean | null
+    senderId: string | null
+    senderType: $Enums.SenderType | null
+    senderName: string | null
+    inquiryId: string | null
+    parentReplyId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    readByUser: boolean | null
+    readByAdmin: boolean | null
+    readAt: Date | null
+  }
+
+  export type InquiryReplyMaxAggregateOutputType = {
+    id: string | null
+    message: string | null
+    isInternal: boolean | null
+    senderId: string | null
+    senderType: $Enums.SenderType | null
+    senderName: string | null
+    inquiryId: string | null
+    parentReplyId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    readByUser: boolean | null
+    readByAdmin: boolean | null
+    readAt: Date | null
+  }
+
+  export type InquiryReplyCountAggregateOutputType = {
+    id: number
+    message: number
+    isInternal: number
+    senderId: number
+    senderType: number
+    senderName: number
+    inquiryId: number
+    parentReplyId: number
+    createdAt: number
+    updatedAt: number
+    readByUser: number
+    readByAdmin: number
+    readAt: number
+    _all: number
+  }
+
+
+  export type InquiryReplyMinAggregateInputType = {
+    id?: true
+    message?: true
+    isInternal?: true
+    senderId?: true
+    senderType?: true
+    senderName?: true
+    inquiryId?: true
+    parentReplyId?: true
+    createdAt?: true
+    updatedAt?: true
+    readByUser?: true
+    readByAdmin?: true
+    readAt?: true
+  }
+
+  export type InquiryReplyMaxAggregateInputType = {
+    id?: true
+    message?: true
+    isInternal?: true
+    senderId?: true
+    senderType?: true
+    senderName?: true
+    inquiryId?: true
+    parentReplyId?: true
+    createdAt?: true
+    updatedAt?: true
+    readByUser?: true
+    readByAdmin?: true
+    readAt?: true
+  }
+
+  export type InquiryReplyCountAggregateInputType = {
+    id?: true
+    message?: true
+    isInternal?: true
+    senderId?: true
+    senderType?: true
+    senderName?: true
+    inquiryId?: true
+    parentReplyId?: true
+    createdAt?: true
+    updatedAt?: true
+    readByUser?: true
+    readByAdmin?: true
+    readAt?: true
+    _all?: true
+  }
+
+  export type InquiryReplyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InquiryReply to aggregate.
+     */
+    where?: InquiryReplyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryReplies to fetch.
+     */
+    orderBy?: InquiryReplyOrderByWithRelationInput | InquiryReplyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InquiryReplyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryReplies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryReplies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InquiryReplies
+    **/
+    _count?: true | InquiryReplyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InquiryReplyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InquiryReplyMaxAggregateInputType
+  }
+
+  export type GetInquiryReplyAggregateType<T extends InquiryReplyAggregateArgs> = {
+        [P in keyof T & keyof AggregateInquiryReply]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInquiryReply[P]>
+      : GetScalarType<T[P], AggregateInquiryReply[P]>
+  }
+
+
+
+
+  export type InquiryReplyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryReplyWhereInput
+    orderBy?: InquiryReplyOrderByWithAggregationInput | InquiryReplyOrderByWithAggregationInput[]
+    by: InquiryReplyScalarFieldEnum[] | InquiryReplyScalarFieldEnum
+    having?: InquiryReplyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InquiryReplyCountAggregateInputType | true
+    _min?: InquiryReplyMinAggregateInputType
+    _max?: InquiryReplyMaxAggregateInputType
+  }
+
+  export type InquiryReplyGroupByOutputType = {
+    id: string
+    message: string
+    isInternal: boolean
+    senderId: string | null
+    senderType: $Enums.SenderType
+    senderName: string | null
+    inquiryId: string
+    parentReplyId: string | null
+    createdAt: Date
+    updatedAt: Date
+    readByUser: boolean
+    readByAdmin: boolean
+    readAt: Date | null
+    _count: InquiryReplyCountAggregateOutputType | null
+    _min: InquiryReplyMinAggregateOutputType | null
+    _max: InquiryReplyMaxAggregateOutputType | null
+  }
+
+  type GetInquiryReplyGroupByPayload<T extends InquiryReplyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InquiryReplyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InquiryReplyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InquiryReplyGroupByOutputType[P]>
+            : GetScalarType<T[P], InquiryReplyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InquiryReplySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    message?: boolean
+    isInternal?: boolean
+    senderId?: boolean
+    senderType?: boolean
+    senderName?: boolean
+    inquiryId?: boolean
+    parentReplyId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: boolean
+    sender?: boolean | InquiryReply$senderArgs<ExtArgs>
+    inquiry?: boolean | InquiryDefaultArgs<ExtArgs>
+    parentReply?: boolean | InquiryReply$parentReplyArgs<ExtArgs>
+    childReplies?: boolean | InquiryReply$childRepliesArgs<ExtArgs>
+    _count?: boolean | InquiryReplyCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inquiryReply"]>
+
+
+
+  export type InquiryReplySelectScalar = {
+    id?: boolean
+    message?: boolean
+    isInternal?: boolean
+    senderId?: boolean
+    senderType?: boolean
+    senderName?: boolean
+    inquiryId?: boolean
+    parentReplyId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: boolean
+  }
+
+  export type InquiryReplyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "message" | "isInternal" | "senderId" | "senderType" | "senderName" | "inquiryId" | "parentReplyId" | "createdAt" | "updatedAt" | "readByUser" | "readByAdmin" | "readAt", ExtArgs["result"]["inquiryReply"]>
+  export type InquiryReplyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sender?: boolean | InquiryReply$senderArgs<ExtArgs>
+    inquiry?: boolean | InquiryDefaultArgs<ExtArgs>
+    parentReply?: boolean | InquiryReply$parentReplyArgs<ExtArgs>
+    childReplies?: boolean | InquiryReply$childRepliesArgs<ExtArgs>
+    _count?: boolean | InquiryReplyCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $InquiryReplyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InquiryReply"
+    objects: {
+      sender: Prisma.$AccountPayload<ExtArgs> | null
+      inquiry: Prisma.$InquiryPayload<ExtArgs>
+      parentReply: Prisma.$InquiryReplyPayload<ExtArgs> | null
+      childReplies: Prisma.$InquiryReplyPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      message: string
+      isInternal: boolean
+      senderId: string | null
+      senderType: $Enums.SenderType
+      senderName: string | null
+      inquiryId: string
+      parentReplyId: string | null
+      createdAt: Date
+      updatedAt: Date
+      readByUser: boolean
+      readByAdmin: boolean
+      readAt: Date | null
+    }, ExtArgs["result"]["inquiryReply"]>
+    composites: {}
+  }
+
+  type InquiryReplyGetPayload<S extends boolean | null | undefined | InquiryReplyDefaultArgs> = $Result.GetResult<Prisma.$InquiryReplyPayload, S>
+
+  type InquiryReplyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InquiryReplyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InquiryReplyCountAggregateInputType | true
+    }
+
+  export interface InquiryReplyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InquiryReply'], meta: { name: 'InquiryReply' } }
+    /**
+     * Find zero or one InquiryReply that matches the filter.
+     * @param {InquiryReplyFindUniqueArgs} args - Arguments to find a InquiryReply
+     * @example
+     * // Get one InquiryReply
+     * const inquiryReply = await prisma.inquiryReply.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InquiryReplyFindUniqueArgs>(args: SelectSubset<T, InquiryReplyFindUniqueArgs<ExtArgs>>): Prisma__InquiryReplyClient<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InquiryReply that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InquiryReplyFindUniqueOrThrowArgs} args - Arguments to find a InquiryReply
+     * @example
+     * // Get one InquiryReply
+     * const inquiryReply = await prisma.inquiryReply.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InquiryReplyFindUniqueOrThrowArgs>(args: SelectSubset<T, InquiryReplyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InquiryReplyClient<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InquiryReply that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryReplyFindFirstArgs} args - Arguments to find a InquiryReply
+     * @example
+     * // Get one InquiryReply
+     * const inquiryReply = await prisma.inquiryReply.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InquiryReplyFindFirstArgs>(args?: SelectSubset<T, InquiryReplyFindFirstArgs<ExtArgs>>): Prisma__InquiryReplyClient<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InquiryReply that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryReplyFindFirstOrThrowArgs} args - Arguments to find a InquiryReply
+     * @example
+     * // Get one InquiryReply
+     * const inquiryReply = await prisma.inquiryReply.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InquiryReplyFindFirstOrThrowArgs>(args?: SelectSubset<T, InquiryReplyFindFirstOrThrowArgs<ExtArgs>>): Prisma__InquiryReplyClient<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InquiryReplies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryReplyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InquiryReplies
+     * const inquiryReplies = await prisma.inquiryReply.findMany()
+     * 
+     * // Get first 10 InquiryReplies
+     * const inquiryReplies = await prisma.inquiryReply.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inquiryReplyWithIdOnly = await prisma.inquiryReply.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InquiryReplyFindManyArgs>(args?: SelectSubset<T, InquiryReplyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InquiryReply.
+     * @param {InquiryReplyCreateArgs} args - Arguments to create a InquiryReply.
+     * @example
+     * // Create one InquiryReply
+     * const InquiryReply = await prisma.inquiryReply.create({
+     *   data: {
+     *     // ... data to create a InquiryReply
+     *   }
+     * })
+     * 
+     */
+    create<T extends InquiryReplyCreateArgs>(args: SelectSubset<T, InquiryReplyCreateArgs<ExtArgs>>): Prisma__InquiryReplyClient<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InquiryReplies.
+     * @param {InquiryReplyCreateManyArgs} args - Arguments to create many InquiryReplies.
+     * @example
+     * // Create many InquiryReplies
+     * const inquiryReply = await prisma.inquiryReply.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InquiryReplyCreateManyArgs>(args?: SelectSubset<T, InquiryReplyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a InquiryReply.
+     * @param {InquiryReplyDeleteArgs} args - Arguments to delete one InquiryReply.
+     * @example
+     * // Delete one InquiryReply
+     * const InquiryReply = await prisma.inquiryReply.delete({
+     *   where: {
+     *     // ... filter to delete one InquiryReply
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InquiryReplyDeleteArgs>(args: SelectSubset<T, InquiryReplyDeleteArgs<ExtArgs>>): Prisma__InquiryReplyClient<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InquiryReply.
+     * @param {InquiryReplyUpdateArgs} args - Arguments to update one InquiryReply.
+     * @example
+     * // Update one InquiryReply
+     * const inquiryReply = await prisma.inquiryReply.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InquiryReplyUpdateArgs>(args: SelectSubset<T, InquiryReplyUpdateArgs<ExtArgs>>): Prisma__InquiryReplyClient<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InquiryReplies.
+     * @param {InquiryReplyDeleteManyArgs} args - Arguments to filter InquiryReplies to delete.
+     * @example
+     * // Delete a few InquiryReplies
+     * const { count } = await prisma.inquiryReply.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InquiryReplyDeleteManyArgs>(args?: SelectSubset<T, InquiryReplyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InquiryReplies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryReplyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InquiryReplies
+     * const inquiryReply = await prisma.inquiryReply.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InquiryReplyUpdateManyArgs>(args: SelectSubset<T, InquiryReplyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one InquiryReply.
+     * @param {InquiryReplyUpsertArgs} args - Arguments to update or create a InquiryReply.
+     * @example
+     * // Update or create a InquiryReply
+     * const inquiryReply = await prisma.inquiryReply.upsert({
+     *   create: {
+     *     // ... data to create a InquiryReply
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InquiryReply we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InquiryReplyUpsertArgs>(args: SelectSubset<T, InquiryReplyUpsertArgs<ExtArgs>>): Prisma__InquiryReplyClient<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InquiryReplies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryReplyCountArgs} args - Arguments to filter InquiryReplies to count.
+     * @example
+     * // Count the number of InquiryReplies
+     * const count = await prisma.inquiryReply.count({
+     *   where: {
+     *     // ... the filter for the InquiryReplies we want to count
+     *   }
+     * })
+    **/
+    count<T extends InquiryReplyCountArgs>(
+      args?: Subset<T, InquiryReplyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InquiryReplyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InquiryReply.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryReplyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InquiryReplyAggregateArgs>(args: Subset<T, InquiryReplyAggregateArgs>): Prisma.PrismaPromise<GetInquiryReplyAggregateType<T>>
+
+    /**
+     * Group by InquiryReply.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryReplyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InquiryReplyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InquiryReplyGroupByArgs['orderBy'] }
+        : { orderBy?: InquiryReplyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InquiryReplyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInquiryReplyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InquiryReply model
+   */
+  readonly fields: InquiryReplyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InquiryReply.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InquiryReplyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    sender<T extends InquiryReply$senderArgs<ExtArgs> = {}>(args?: Subset<T, InquiryReply$senderArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    inquiry<T extends InquiryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InquiryDefaultArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    parentReply<T extends InquiryReply$parentReplyArgs<ExtArgs> = {}>(args?: Subset<T, InquiryReply$parentReplyArgs<ExtArgs>>): Prisma__InquiryReplyClient<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    childReplies<T extends InquiryReply$childRepliesArgs<ExtArgs> = {}>(args?: Subset<T, InquiryReply$childRepliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InquiryReply model
+   */
+  interface InquiryReplyFieldRefs {
+    readonly id: FieldRef<"InquiryReply", 'String'>
+    readonly message: FieldRef<"InquiryReply", 'String'>
+    readonly isInternal: FieldRef<"InquiryReply", 'Boolean'>
+    readonly senderId: FieldRef<"InquiryReply", 'String'>
+    readonly senderType: FieldRef<"InquiryReply", 'SenderType'>
+    readonly senderName: FieldRef<"InquiryReply", 'String'>
+    readonly inquiryId: FieldRef<"InquiryReply", 'String'>
+    readonly parentReplyId: FieldRef<"InquiryReply", 'String'>
+    readonly createdAt: FieldRef<"InquiryReply", 'DateTime'>
+    readonly updatedAt: FieldRef<"InquiryReply", 'DateTime'>
+    readonly readByUser: FieldRef<"InquiryReply", 'Boolean'>
+    readonly readByAdmin: FieldRef<"InquiryReply", 'Boolean'>
+    readonly readAt: FieldRef<"InquiryReply", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InquiryReply findUnique
+   */
+  export type InquiryReplyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryReply to fetch.
+     */
+    where: InquiryReplyWhereUniqueInput
+  }
+
+  /**
+   * InquiryReply findUniqueOrThrow
+   */
+  export type InquiryReplyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryReply to fetch.
+     */
+    where: InquiryReplyWhereUniqueInput
+  }
+
+  /**
+   * InquiryReply findFirst
+   */
+  export type InquiryReplyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryReply to fetch.
+     */
+    where?: InquiryReplyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryReplies to fetch.
+     */
+    orderBy?: InquiryReplyOrderByWithRelationInput | InquiryReplyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InquiryReplies.
+     */
+    cursor?: InquiryReplyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryReplies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryReplies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InquiryReplies.
+     */
+    distinct?: InquiryReplyScalarFieldEnum | InquiryReplyScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryReply findFirstOrThrow
+   */
+  export type InquiryReplyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryReply to fetch.
+     */
+    where?: InquiryReplyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryReplies to fetch.
+     */
+    orderBy?: InquiryReplyOrderByWithRelationInput | InquiryReplyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InquiryReplies.
+     */
+    cursor?: InquiryReplyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryReplies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryReplies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InquiryReplies.
+     */
+    distinct?: InquiryReplyScalarFieldEnum | InquiryReplyScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryReply findMany
+   */
+  export type InquiryReplyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryReplies to fetch.
+     */
+    where?: InquiryReplyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryReplies to fetch.
+     */
+    orderBy?: InquiryReplyOrderByWithRelationInput | InquiryReplyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InquiryReplies.
+     */
+    cursor?: InquiryReplyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryReplies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryReplies.
+     */
+    skip?: number
+    distinct?: InquiryReplyScalarFieldEnum | InquiryReplyScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryReply create
+   */
+  export type InquiryReplyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InquiryReply.
+     */
+    data: XOR<InquiryReplyCreateInput, InquiryReplyUncheckedCreateInput>
+  }
+
+  /**
+   * InquiryReply createMany
+   */
+  export type InquiryReplyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InquiryReplies.
+     */
+    data: InquiryReplyCreateManyInput | InquiryReplyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InquiryReply update
+   */
+  export type InquiryReplyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InquiryReply.
+     */
+    data: XOR<InquiryReplyUpdateInput, InquiryReplyUncheckedUpdateInput>
+    /**
+     * Choose, which InquiryReply to update.
+     */
+    where: InquiryReplyWhereUniqueInput
+  }
+
+  /**
+   * InquiryReply updateMany
+   */
+  export type InquiryReplyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InquiryReplies.
+     */
+    data: XOR<InquiryReplyUpdateManyMutationInput, InquiryReplyUncheckedUpdateManyInput>
+    /**
+     * Filter which InquiryReplies to update
+     */
+    where?: InquiryReplyWhereInput
+    /**
+     * Limit how many InquiryReplies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InquiryReply upsert
+   */
+  export type InquiryReplyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InquiryReply to update in case it exists.
+     */
+    where: InquiryReplyWhereUniqueInput
+    /**
+     * In case the InquiryReply found by the `where` argument doesn't exist, create a new InquiryReply with this data.
+     */
+    create: XOR<InquiryReplyCreateInput, InquiryReplyUncheckedCreateInput>
+    /**
+     * In case the InquiryReply was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InquiryReplyUpdateInput, InquiryReplyUncheckedUpdateInput>
+  }
+
+  /**
+   * InquiryReply delete
+   */
+  export type InquiryReplyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    /**
+     * Filter which InquiryReply to delete.
+     */
+    where: InquiryReplyWhereUniqueInput
+  }
+
+  /**
+   * InquiryReply deleteMany
+   */
+  export type InquiryReplyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InquiryReplies to delete
+     */
+    where?: InquiryReplyWhereInput
+    /**
+     * Limit how many InquiryReplies to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InquiryReply.sender
+   */
+  export type InquiryReply$senderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * InquiryReply.parentReply
+   */
+  export type InquiryReply$parentReplyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    where?: InquiryReplyWhereInput
+  }
+
+  /**
+   * InquiryReply.childReplies
+   */
+  export type InquiryReply$childRepliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+    where?: InquiryReplyWhereInput
+    orderBy?: InquiryReplyOrderByWithRelationInput | InquiryReplyOrderByWithRelationInput[]
+    cursor?: InquiryReplyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryReplyScalarFieldEnum | InquiryReplyScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryReply without action
+   */
+  export type InquiryReplyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryReply
+     */
+    select?: InquiryReplySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryReply
+     */
+    omit?: InquiryReplyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryReplyInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InquiryAttachment
+   */
+
+  export type AggregateInquiryAttachment = {
+    _count: InquiryAttachmentCountAggregateOutputType | null
+    _avg: InquiryAttachmentAvgAggregateOutputType | null
+    _sum: InquiryAttachmentSumAggregateOutputType | null
+    _min: InquiryAttachmentMinAggregateOutputType | null
+    _max: InquiryAttachmentMaxAggregateOutputType | null
+  }
+
+  export type InquiryAttachmentAvgAggregateOutputType = {
+    filesize: number | null
+  }
+
+  export type InquiryAttachmentSumAggregateOutputType = {
+    filesize: number | null
+  }
+
+  export type InquiryAttachmentMinAggregateOutputType = {
+    id: string | null
+    filename: string | null
+    filepath: string | null
+    filesize: number | null
+    mimetype: string | null
+    inquiryId: string | null
+    uploadedById: string | null
+    createdAt: Date | null
+  }
+
+  export type InquiryAttachmentMaxAggregateOutputType = {
+    id: string | null
+    filename: string | null
+    filepath: string | null
+    filesize: number | null
+    mimetype: string | null
+    inquiryId: string | null
+    uploadedById: string | null
+    createdAt: Date | null
+  }
+
+  export type InquiryAttachmentCountAggregateOutputType = {
+    id: number
+    filename: number
+    filepath: number
+    filesize: number
+    mimetype: number
+    inquiryId: number
+    uploadedById: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type InquiryAttachmentAvgAggregateInputType = {
+    filesize?: true
+  }
+
+  export type InquiryAttachmentSumAggregateInputType = {
+    filesize?: true
+  }
+
+  export type InquiryAttachmentMinAggregateInputType = {
+    id?: true
+    filename?: true
+    filepath?: true
+    filesize?: true
+    mimetype?: true
+    inquiryId?: true
+    uploadedById?: true
+    createdAt?: true
+  }
+
+  export type InquiryAttachmentMaxAggregateInputType = {
+    id?: true
+    filename?: true
+    filepath?: true
+    filesize?: true
+    mimetype?: true
+    inquiryId?: true
+    uploadedById?: true
+    createdAt?: true
+  }
+
+  export type InquiryAttachmentCountAggregateInputType = {
+    id?: true
+    filename?: true
+    filepath?: true
+    filesize?: true
+    mimetype?: true
+    inquiryId?: true
+    uploadedById?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type InquiryAttachmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InquiryAttachment to aggregate.
+     */
+    where?: InquiryAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryAttachments to fetch.
+     */
+    orderBy?: InquiryAttachmentOrderByWithRelationInput | InquiryAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InquiryAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InquiryAttachments
+    **/
+    _count?: true | InquiryAttachmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InquiryAttachmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InquiryAttachmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InquiryAttachmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InquiryAttachmentMaxAggregateInputType
+  }
+
+  export type GetInquiryAttachmentAggregateType<T extends InquiryAttachmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateInquiryAttachment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInquiryAttachment[P]>
+      : GetScalarType<T[P], AggregateInquiryAttachment[P]>
+  }
+
+
+
+
+  export type InquiryAttachmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryAttachmentWhereInput
+    orderBy?: InquiryAttachmentOrderByWithAggregationInput | InquiryAttachmentOrderByWithAggregationInput[]
+    by: InquiryAttachmentScalarFieldEnum[] | InquiryAttachmentScalarFieldEnum
+    having?: InquiryAttachmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InquiryAttachmentCountAggregateInputType | true
+    _avg?: InquiryAttachmentAvgAggregateInputType
+    _sum?: InquiryAttachmentSumAggregateInputType
+    _min?: InquiryAttachmentMinAggregateInputType
+    _max?: InquiryAttachmentMaxAggregateInputType
+  }
+
+  export type InquiryAttachmentGroupByOutputType = {
+    id: string
+    filename: string
+    filepath: string
+    filesize: number
+    mimetype: string
+    inquiryId: string
+    uploadedById: string | null
+    createdAt: Date
+    _count: InquiryAttachmentCountAggregateOutputType | null
+    _avg: InquiryAttachmentAvgAggregateOutputType | null
+    _sum: InquiryAttachmentSumAggregateOutputType | null
+    _min: InquiryAttachmentMinAggregateOutputType | null
+    _max: InquiryAttachmentMaxAggregateOutputType | null
+  }
+
+  type GetInquiryAttachmentGroupByPayload<T extends InquiryAttachmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InquiryAttachmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InquiryAttachmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InquiryAttachmentGroupByOutputType[P]>
+            : GetScalarType<T[P], InquiryAttachmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InquiryAttachmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    filename?: boolean
+    filepath?: boolean
+    filesize?: boolean
+    mimetype?: boolean
+    inquiryId?: boolean
+    uploadedById?: boolean
+    createdAt?: boolean
+    inquiry?: boolean | InquiryDefaultArgs<ExtArgs>
+    uploadedBy?: boolean | InquiryAttachment$uploadedByArgs<ExtArgs>
+  }, ExtArgs["result"]["inquiryAttachment"]>
+
+
+
+  export type InquiryAttachmentSelectScalar = {
+    id?: boolean
+    filename?: boolean
+    filepath?: boolean
+    filesize?: boolean
+    mimetype?: boolean
+    inquiryId?: boolean
+    uploadedById?: boolean
+    createdAt?: boolean
+  }
+
+  export type InquiryAttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "filename" | "filepath" | "filesize" | "mimetype" | "inquiryId" | "uploadedById" | "createdAt", ExtArgs["result"]["inquiryAttachment"]>
+  export type InquiryAttachmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    inquiry?: boolean | InquiryDefaultArgs<ExtArgs>
+    uploadedBy?: boolean | InquiryAttachment$uploadedByArgs<ExtArgs>
+  }
+
+  export type $InquiryAttachmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InquiryAttachment"
+    objects: {
+      inquiry: Prisma.$InquiryPayload<ExtArgs>
+      uploadedBy: Prisma.$AccountPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      filename: string
+      filepath: string
+      filesize: number
+      mimetype: string
+      inquiryId: string
+      uploadedById: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["inquiryAttachment"]>
+    composites: {}
+  }
+
+  type InquiryAttachmentGetPayload<S extends boolean | null | undefined | InquiryAttachmentDefaultArgs> = $Result.GetResult<Prisma.$InquiryAttachmentPayload, S>
+
+  type InquiryAttachmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InquiryAttachmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InquiryAttachmentCountAggregateInputType | true
+    }
+
+  export interface InquiryAttachmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InquiryAttachment'], meta: { name: 'InquiryAttachment' } }
+    /**
+     * Find zero or one InquiryAttachment that matches the filter.
+     * @param {InquiryAttachmentFindUniqueArgs} args - Arguments to find a InquiryAttachment
+     * @example
+     * // Get one InquiryAttachment
+     * const inquiryAttachment = await prisma.inquiryAttachment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InquiryAttachmentFindUniqueArgs>(args: SelectSubset<T, InquiryAttachmentFindUniqueArgs<ExtArgs>>): Prisma__InquiryAttachmentClient<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InquiryAttachment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InquiryAttachmentFindUniqueOrThrowArgs} args - Arguments to find a InquiryAttachment
+     * @example
+     * // Get one InquiryAttachment
+     * const inquiryAttachment = await prisma.inquiryAttachment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InquiryAttachmentFindUniqueOrThrowArgs>(args: SelectSubset<T, InquiryAttachmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InquiryAttachmentClient<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InquiryAttachment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAttachmentFindFirstArgs} args - Arguments to find a InquiryAttachment
+     * @example
+     * // Get one InquiryAttachment
+     * const inquiryAttachment = await prisma.inquiryAttachment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InquiryAttachmentFindFirstArgs>(args?: SelectSubset<T, InquiryAttachmentFindFirstArgs<ExtArgs>>): Prisma__InquiryAttachmentClient<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InquiryAttachment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAttachmentFindFirstOrThrowArgs} args - Arguments to find a InquiryAttachment
+     * @example
+     * // Get one InquiryAttachment
+     * const inquiryAttachment = await prisma.inquiryAttachment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InquiryAttachmentFindFirstOrThrowArgs>(args?: SelectSubset<T, InquiryAttachmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__InquiryAttachmentClient<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InquiryAttachments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAttachmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InquiryAttachments
+     * const inquiryAttachments = await prisma.inquiryAttachment.findMany()
+     * 
+     * // Get first 10 InquiryAttachments
+     * const inquiryAttachments = await prisma.inquiryAttachment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inquiryAttachmentWithIdOnly = await prisma.inquiryAttachment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InquiryAttachmentFindManyArgs>(args?: SelectSubset<T, InquiryAttachmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InquiryAttachment.
+     * @param {InquiryAttachmentCreateArgs} args - Arguments to create a InquiryAttachment.
+     * @example
+     * // Create one InquiryAttachment
+     * const InquiryAttachment = await prisma.inquiryAttachment.create({
+     *   data: {
+     *     // ... data to create a InquiryAttachment
+     *   }
+     * })
+     * 
+     */
+    create<T extends InquiryAttachmentCreateArgs>(args: SelectSubset<T, InquiryAttachmentCreateArgs<ExtArgs>>): Prisma__InquiryAttachmentClient<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InquiryAttachments.
+     * @param {InquiryAttachmentCreateManyArgs} args - Arguments to create many InquiryAttachments.
+     * @example
+     * // Create many InquiryAttachments
+     * const inquiryAttachment = await prisma.inquiryAttachment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InquiryAttachmentCreateManyArgs>(args?: SelectSubset<T, InquiryAttachmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a InquiryAttachment.
+     * @param {InquiryAttachmentDeleteArgs} args - Arguments to delete one InquiryAttachment.
+     * @example
+     * // Delete one InquiryAttachment
+     * const InquiryAttachment = await prisma.inquiryAttachment.delete({
+     *   where: {
+     *     // ... filter to delete one InquiryAttachment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InquiryAttachmentDeleteArgs>(args: SelectSubset<T, InquiryAttachmentDeleteArgs<ExtArgs>>): Prisma__InquiryAttachmentClient<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InquiryAttachment.
+     * @param {InquiryAttachmentUpdateArgs} args - Arguments to update one InquiryAttachment.
+     * @example
+     * // Update one InquiryAttachment
+     * const inquiryAttachment = await prisma.inquiryAttachment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InquiryAttachmentUpdateArgs>(args: SelectSubset<T, InquiryAttachmentUpdateArgs<ExtArgs>>): Prisma__InquiryAttachmentClient<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InquiryAttachments.
+     * @param {InquiryAttachmentDeleteManyArgs} args - Arguments to filter InquiryAttachments to delete.
+     * @example
+     * // Delete a few InquiryAttachments
+     * const { count } = await prisma.inquiryAttachment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InquiryAttachmentDeleteManyArgs>(args?: SelectSubset<T, InquiryAttachmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InquiryAttachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAttachmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InquiryAttachments
+     * const inquiryAttachment = await prisma.inquiryAttachment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InquiryAttachmentUpdateManyArgs>(args: SelectSubset<T, InquiryAttachmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one InquiryAttachment.
+     * @param {InquiryAttachmentUpsertArgs} args - Arguments to update or create a InquiryAttachment.
+     * @example
+     * // Update or create a InquiryAttachment
+     * const inquiryAttachment = await prisma.inquiryAttachment.upsert({
+     *   create: {
+     *     // ... data to create a InquiryAttachment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InquiryAttachment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InquiryAttachmentUpsertArgs>(args: SelectSubset<T, InquiryAttachmentUpsertArgs<ExtArgs>>): Prisma__InquiryAttachmentClient<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InquiryAttachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAttachmentCountArgs} args - Arguments to filter InquiryAttachments to count.
+     * @example
+     * // Count the number of InquiryAttachments
+     * const count = await prisma.inquiryAttachment.count({
+     *   where: {
+     *     // ... the filter for the InquiryAttachments we want to count
+     *   }
+     * })
+    **/
+    count<T extends InquiryAttachmentCountArgs>(
+      args?: Subset<T, InquiryAttachmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InquiryAttachmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InquiryAttachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAttachmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InquiryAttachmentAggregateArgs>(args: Subset<T, InquiryAttachmentAggregateArgs>): Prisma.PrismaPromise<GetInquiryAttachmentAggregateType<T>>
+
+    /**
+     * Group by InquiryAttachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAttachmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InquiryAttachmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InquiryAttachmentGroupByArgs['orderBy'] }
+        : { orderBy?: InquiryAttachmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InquiryAttachmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInquiryAttachmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InquiryAttachment model
+   */
+  readonly fields: InquiryAttachmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InquiryAttachment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InquiryAttachmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    inquiry<T extends InquiryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InquiryDefaultArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    uploadedBy<T extends InquiryAttachment$uploadedByArgs<ExtArgs> = {}>(args?: Subset<T, InquiryAttachment$uploadedByArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InquiryAttachment model
+   */
+  interface InquiryAttachmentFieldRefs {
+    readonly id: FieldRef<"InquiryAttachment", 'String'>
+    readonly filename: FieldRef<"InquiryAttachment", 'String'>
+    readonly filepath: FieldRef<"InquiryAttachment", 'String'>
+    readonly filesize: FieldRef<"InquiryAttachment", 'Int'>
+    readonly mimetype: FieldRef<"InquiryAttachment", 'String'>
+    readonly inquiryId: FieldRef<"InquiryAttachment", 'String'>
+    readonly uploadedById: FieldRef<"InquiryAttachment", 'String'>
+    readonly createdAt: FieldRef<"InquiryAttachment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InquiryAttachment findUnique
+   */
+  export type InquiryAttachmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryAttachment to fetch.
+     */
+    where: InquiryAttachmentWhereUniqueInput
+  }
+
+  /**
+   * InquiryAttachment findUniqueOrThrow
+   */
+  export type InquiryAttachmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryAttachment to fetch.
+     */
+    where: InquiryAttachmentWhereUniqueInput
+  }
+
+  /**
+   * InquiryAttachment findFirst
+   */
+  export type InquiryAttachmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryAttachment to fetch.
+     */
+    where?: InquiryAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryAttachments to fetch.
+     */
+    orderBy?: InquiryAttachmentOrderByWithRelationInput | InquiryAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InquiryAttachments.
+     */
+    cursor?: InquiryAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InquiryAttachments.
+     */
+    distinct?: InquiryAttachmentScalarFieldEnum | InquiryAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryAttachment findFirstOrThrow
+   */
+  export type InquiryAttachmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryAttachment to fetch.
+     */
+    where?: InquiryAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryAttachments to fetch.
+     */
+    orderBy?: InquiryAttachmentOrderByWithRelationInput | InquiryAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InquiryAttachments.
+     */
+    cursor?: InquiryAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InquiryAttachments.
+     */
+    distinct?: InquiryAttachmentScalarFieldEnum | InquiryAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryAttachment findMany
+   */
+  export type InquiryAttachmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryAttachments to fetch.
+     */
+    where?: InquiryAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryAttachments to fetch.
+     */
+    orderBy?: InquiryAttachmentOrderByWithRelationInput | InquiryAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InquiryAttachments.
+     */
+    cursor?: InquiryAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryAttachments.
+     */
+    skip?: number
+    distinct?: InquiryAttachmentScalarFieldEnum | InquiryAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryAttachment create
+   */
+  export type InquiryAttachmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InquiryAttachment.
+     */
+    data: XOR<InquiryAttachmentCreateInput, InquiryAttachmentUncheckedCreateInput>
+  }
+
+  /**
+   * InquiryAttachment createMany
+   */
+  export type InquiryAttachmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InquiryAttachments.
+     */
+    data: InquiryAttachmentCreateManyInput | InquiryAttachmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InquiryAttachment update
+   */
+  export type InquiryAttachmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InquiryAttachment.
+     */
+    data: XOR<InquiryAttachmentUpdateInput, InquiryAttachmentUncheckedUpdateInput>
+    /**
+     * Choose, which InquiryAttachment to update.
+     */
+    where: InquiryAttachmentWhereUniqueInput
+  }
+
+  /**
+   * InquiryAttachment updateMany
+   */
+  export type InquiryAttachmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InquiryAttachments.
+     */
+    data: XOR<InquiryAttachmentUpdateManyMutationInput, InquiryAttachmentUncheckedUpdateManyInput>
+    /**
+     * Filter which InquiryAttachments to update
+     */
+    where?: InquiryAttachmentWhereInput
+    /**
+     * Limit how many InquiryAttachments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InquiryAttachment upsert
+   */
+  export type InquiryAttachmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InquiryAttachment to update in case it exists.
+     */
+    where: InquiryAttachmentWhereUniqueInput
+    /**
+     * In case the InquiryAttachment found by the `where` argument doesn't exist, create a new InquiryAttachment with this data.
+     */
+    create: XOR<InquiryAttachmentCreateInput, InquiryAttachmentUncheckedCreateInput>
+    /**
+     * In case the InquiryAttachment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InquiryAttachmentUpdateInput, InquiryAttachmentUncheckedUpdateInput>
+  }
+
+  /**
+   * InquiryAttachment delete
+   */
+  export type InquiryAttachmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter which InquiryAttachment to delete.
+     */
+    where: InquiryAttachmentWhereUniqueInput
+  }
+
+  /**
+   * InquiryAttachment deleteMany
+   */
+  export type InquiryAttachmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InquiryAttachments to delete
+     */
+    where?: InquiryAttachmentWhereInput
+    /**
+     * Limit how many InquiryAttachments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InquiryAttachment.uploadedBy
+   */
+  export type InquiryAttachment$uploadedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * InquiryAttachment without action
+   */
+  export type InquiryAttachmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAttachment
+     */
+    select?: InquiryAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAttachment
+     */
+    omit?: InquiryAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAttachmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FAQ
+   */
+
+  export type AggregateFAQ = {
+    _count: FAQCountAggregateOutputType | null
+    _avg: FAQAvgAggregateOutputType | null
+    _sum: FAQSumAggregateOutputType | null
+    _min: FAQMinAggregateOutputType | null
+    _max: FAQMaxAggregateOutputType | null
+  }
+
+  export type FAQAvgAggregateOutputType = {
+    orderIndex: number | null
+    viewCount: number | null
+    helpfulCount: number | null
+  }
+
+  export type FAQSumAggregateOutputType = {
+    orderIndex: number | null
+    viewCount: number | null
+    helpfulCount: number | null
+  }
+
+  export type FAQMinAggregateOutputType = {
+    id: string | null
+    question: string | null
+    answer: string | null
+    category: $Enums.InquiryCategory | null
+    isActive: boolean | null
+    orderIndex: number | null
+    createdById: string | null
+    viewCount: number | null
+    helpfulCount: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FAQMaxAggregateOutputType = {
+    id: string | null
+    question: string | null
+    answer: string | null
+    category: $Enums.InquiryCategory | null
+    isActive: boolean | null
+    orderIndex: number | null
+    createdById: string | null
+    viewCount: number | null
+    helpfulCount: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FAQCountAggregateOutputType = {
+    id: number
+    question: number
+    answer: number
+    category: number
+    isActive: number
+    orderIndex: number
+    createdById: number
+    viewCount: number
+    helpfulCount: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FAQAvgAggregateInputType = {
+    orderIndex?: true
+    viewCount?: true
+    helpfulCount?: true
+  }
+
+  export type FAQSumAggregateInputType = {
+    orderIndex?: true
+    viewCount?: true
+    helpfulCount?: true
+  }
+
+  export type FAQMinAggregateInputType = {
+    id?: true
+    question?: true
+    answer?: true
+    category?: true
+    isActive?: true
+    orderIndex?: true
+    createdById?: true
+    viewCount?: true
+    helpfulCount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FAQMaxAggregateInputType = {
+    id?: true
+    question?: true
+    answer?: true
+    category?: true
+    isActive?: true
+    orderIndex?: true
+    createdById?: true
+    viewCount?: true
+    helpfulCount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FAQCountAggregateInputType = {
+    id?: true
+    question?: true
+    answer?: true
+    category?: true
+    isActive?: true
+    orderIndex?: true
+    createdById?: true
+    viewCount?: true
+    helpfulCount?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FAQAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FAQ to aggregate.
+     */
+    where?: FAQWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FAQS to fetch.
+     */
+    orderBy?: FAQOrderByWithRelationInput | FAQOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FAQWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FAQS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FAQS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FAQS
+    **/
+    _count?: true | FAQCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FAQAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FAQSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FAQMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FAQMaxAggregateInputType
+  }
+
+  export type GetFAQAggregateType<T extends FAQAggregateArgs> = {
+        [P in keyof T & keyof AggregateFAQ]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFAQ[P]>
+      : GetScalarType<T[P], AggregateFAQ[P]>
+  }
+
+
+
+
+  export type FAQGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FAQWhereInput
+    orderBy?: FAQOrderByWithAggregationInput | FAQOrderByWithAggregationInput[]
+    by: FAQScalarFieldEnum[] | FAQScalarFieldEnum
+    having?: FAQScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FAQCountAggregateInputType | true
+    _avg?: FAQAvgAggregateInputType
+    _sum?: FAQSumAggregateInputType
+    _min?: FAQMinAggregateInputType
+    _max?: FAQMaxAggregateInputType
+  }
+
+  export type FAQGroupByOutputType = {
+    id: string
+    question: string
+    answer: string
+    category: $Enums.InquiryCategory
+    isActive: boolean
+    orderIndex: number
+    createdById: string | null
+    viewCount: number
+    helpfulCount: number
+    createdAt: Date
+    updatedAt: Date
+    _count: FAQCountAggregateOutputType | null
+    _avg: FAQAvgAggregateOutputType | null
+    _sum: FAQSumAggregateOutputType | null
+    _min: FAQMinAggregateOutputType | null
+    _max: FAQMaxAggregateOutputType | null
+  }
+
+  type GetFAQGroupByPayload<T extends FAQGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FAQGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FAQGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FAQGroupByOutputType[P]>
+            : GetScalarType<T[P], FAQGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FAQSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    question?: boolean
+    answer?: boolean
+    category?: boolean
+    isActive?: boolean
+    orderIndex?: boolean
+    createdById?: boolean
+    viewCount?: boolean
+    helpfulCount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean | FAQ$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["fAQ"]>
+
+
+
+  export type FAQSelectScalar = {
+    id?: boolean
+    question?: boolean
+    answer?: boolean
+    category?: boolean
+    isActive?: boolean
+    orderIndex?: boolean
+    createdById?: boolean
+    viewCount?: boolean
+    helpfulCount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FAQOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "question" | "answer" | "category" | "isActive" | "orderIndex" | "createdById" | "viewCount" | "helpfulCount" | "createdAt" | "updatedAt", ExtArgs["result"]["fAQ"]>
+  export type FAQInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | FAQ$createdByArgs<ExtArgs>
+  }
+
+  export type $FAQPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FAQ"
+    objects: {
+      createdBy: Prisma.$AccountPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      question: string
+      answer: string
+      category: $Enums.InquiryCategory
+      isActive: boolean
+      orderIndex: number
+      createdById: string | null
+      viewCount: number
+      helpfulCount: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["fAQ"]>
+    composites: {}
+  }
+
+  type FAQGetPayload<S extends boolean | null | undefined | FAQDefaultArgs> = $Result.GetResult<Prisma.$FAQPayload, S>
+
+  type FAQCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FAQFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FAQCountAggregateInputType | true
+    }
+
+  export interface FAQDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FAQ'], meta: { name: 'FAQ' } }
+    /**
+     * Find zero or one FAQ that matches the filter.
+     * @param {FAQFindUniqueArgs} args - Arguments to find a FAQ
+     * @example
+     * // Get one FAQ
+     * const fAQ = await prisma.fAQ.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FAQFindUniqueArgs>(args: SelectSubset<T, FAQFindUniqueArgs<ExtArgs>>): Prisma__FAQClient<$Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FAQ that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FAQFindUniqueOrThrowArgs} args - Arguments to find a FAQ
+     * @example
+     * // Get one FAQ
+     * const fAQ = await prisma.fAQ.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FAQFindUniqueOrThrowArgs>(args: SelectSubset<T, FAQFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FAQClient<$Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FAQ that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FAQFindFirstArgs} args - Arguments to find a FAQ
+     * @example
+     * // Get one FAQ
+     * const fAQ = await prisma.fAQ.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FAQFindFirstArgs>(args?: SelectSubset<T, FAQFindFirstArgs<ExtArgs>>): Prisma__FAQClient<$Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FAQ that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FAQFindFirstOrThrowArgs} args - Arguments to find a FAQ
+     * @example
+     * // Get one FAQ
+     * const fAQ = await prisma.fAQ.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FAQFindFirstOrThrowArgs>(args?: SelectSubset<T, FAQFindFirstOrThrowArgs<ExtArgs>>): Prisma__FAQClient<$Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FAQS that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FAQFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FAQS
+     * const fAQS = await prisma.fAQ.findMany()
+     * 
+     * // Get first 10 FAQS
+     * const fAQS = await prisma.fAQ.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const fAQWithIdOnly = await prisma.fAQ.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FAQFindManyArgs>(args?: SelectSubset<T, FAQFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FAQ.
+     * @param {FAQCreateArgs} args - Arguments to create a FAQ.
+     * @example
+     * // Create one FAQ
+     * const FAQ = await prisma.fAQ.create({
+     *   data: {
+     *     // ... data to create a FAQ
+     *   }
+     * })
+     * 
+     */
+    create<T extends FAQCreateArgs>(args: SelectSubset<T, FAQCreateArgs<ExtArgs>>): Prisma__FAQClient<$Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FAQS.
+     * @param {FAQCreateManyArgs} args - Arguments to create many FAQS.
+     * @example
+     * // Create many FAQS
+     * const fAQ = await prisma.fAQ.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FAQCreateManyArgs>(args?: SelectSubset<T, FAQCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a FAQ.
+     * @param {FAQDeleteArgs} args - Arguments to delete one FAQ.
+     * @example
+     * // Delete one FAQ
+     * const FAQ = await prisma.fAQ.delete({
+     *   where: {
+     *     // ... filter to delete one FAQ
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FAQDeleteArgs>(args: SelectSubset<T, FAQDeleteArgs<ExtArgs>>): Prisma__FAQClient<$Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FAQ.
+     * @param {FAQUpdateArgs} args - Arguments to update one FAQ.
+     * @example
+     * // Update one FAQ
+     * const fAQ = await prisma.fAQ.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FAQUpdateArgs>(args: SelectSubset<T, FAQUpdateArgs<ExtArgs>>): Prisma__FAQClient<$Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FAQS.
+     * @param {FAQDeleteManyArgs} args - Arguments to filter FAQS to delete.
+     * @example
+     * // Delete a few FAQS
+     * const { count } = await prisma.fAQ.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FAQDeleteManyArgs>(args?: SelectSubset<T, FAQDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FAQS.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FAQUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FAQS
+     * const fAQ = await prisma.fAQ.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FAQUpdateManyArgs>(args: SelectSubset<T, FAQUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one FAQ.
+     * @param {FAQUpsertArgs} args - Arguments to update or create a FAQ.
+     * @example
+     * // Update or create a FAQ
+     * const fAQ = await prisma.fAQ.upsert({
+     *   create: {
+     *     // ... data to create a FAQ
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FAQ we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FAQUpsertArgs>(args: SelectSubset<T, FAQUpsertArgs<ExtArgs>>): Prisma__FAQClient<$Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FAQS.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FAQCountArgs} args - Arguments to filter FAQS to count.
+     * @example
+     * // Count the number of FAQS
+     * const count = await prisma.fAQ.count({
+     *   where: {
+     *     // ... the filter for the FAQS we want to count
+     *   }
+     * })
+    **/
+    count<T extends FAQCountArgs>(
+      args?: Subset<T, FAQCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FAQCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FAQ.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FAQAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FAQAggregateArgs>(args: Subset<T, FAQAggregateArgs>): Prisma.PrismaPromise<GetFAQAggregateType<T>>
+
+    /**
+     * Group by FAQ.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FAQGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FAQGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FAQGroupByArgs['orderBy'] }
+        : { orderBy?: FAQGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FAQGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFAQGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FAQ model
+   */
+  readonly fields: FAQFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FAQ.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FAQClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    createdBy<T extends FAQ$createdByArgs<ExtArgs> = {}>(args?: Subset<T, FAQ$createdByArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FAQ model
+   */
+  interface FAQFieldRefs {
+    readonly id: FieldRef<"FAQ", 'String'>
+    readonly question: FieldRef<"FAQ", 'String'>
+    readonly answer: FieldRef<"FAQ", 'String'>
+    readonly category: FieldRef<"FAQ", 'InquiryCategory'>
+    readonly isActive: FieldRef<"FAQ", 'Boolean'>
+    readonly orderIndex: FieldRef<"FAQ", 'Int'>
+    readonly createdById: FieldRef<"FAQ", 'String'>
+    readonly viewCount: FieldRef<"FAQ", 'Int'>
+    readonly helpfulCount: FieldRef<"FAQ", 'Int'>
+    readonly createdAt: FieldRef<"FAQ", 'DateTime'>
+    readonly updatedAt: FieldRef<"FAQ", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FAQ findUnique
+   */
+  export type FAQFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FAQ
+     */
+    select?: FAQSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FAQ
+     */
+    omit?: FAQOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FAQInclude<ExtArgs> | null
+    /**
+     * Filter, which FAQ to fetch.
+     */
+    where: FAQWhereUniqueInput
+  }
+
+  /**
+   * FAQ findUniqueOrThrow
+   */
+  export type FAQFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FAQ
+     */
+    select?: FAQSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FAQ
+     */
+    omit?: FAQOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FAQInclude<ExtArgs> | null
+    /**
+     * Filter, which FAQ to fetch.
+     */
+    where: FAQWhereUniqueInput
+  }
+
+  /**
+   * FAQ findFirst
+   */
+  export type FAQFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FAQ
+     */
+    select?: FAQSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FAQ
+     */
+    omit?: FAQOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FAQInclude<ExtArgs> | null
+    /**
+     * Filter, which FAQ to fetch.
+     */
+    where?: FAQWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FAQS to fetch.
+     */
+    orderBy?: FAQOrderByWithRelationInput | FAQOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FAQS.
+     */
+    cursor?: FAQWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FAQS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FAQS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FAQS.
+     */
+    distinct?: FAQScalarFieldEnum | FAQScalarFieldEnum[]
+  }
+
+  /**
+   * FAQ findFirstOrThrow
+   */
+  export type FAQFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FAQ
+     */
+    select?: FAQSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FAQ
+     */
+    omit?: FAQOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FAQInclude<ExtArgs> | null
+    /**
+     * Filter, which FAQ to fetch.
+     */
+    where?: FAQWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FAQS to fetch.
+     */
+    orderBy?: FAQOrderByWithRelationInput | FAQOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FAQS.
+     */
+    cursor?: FAQWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FAQS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FAQS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FAQS.
+     */
+    distinct?: FAQScalarFieldEnum | FAQScalarFieldEnum[]
+  }
+
+  /**
+   * FAQ findMany
+   */
+  export type FAQFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FAQ
+     */
+    select?: FAQSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FAQ
+     */
+    omit?: FAQOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FAQInclude<ExtArgs> | null
+    /**
+     * Filter, which FAQS to fetch.
+     */
+    where?: FAQWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FAQS to fetch.
+     */
+    orderBy?: FAQOrderByWithRelationInput | FAQOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FAQS.
+     */
+    cursor?: FAQWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FAQS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FAQS.
+     */
+    skip?: number
+    distinct?: FAQScalarFieldEnum | FAQScalarFieldEnum[]
+  }
+
+  /**
+   * FAQ create
+   */
+  export type FAQCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FAQ
+     */
+    select?: FAQSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FAQ
+     */
+    omit?: FAQOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FAQInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FAQ.
+     */
+    data: XOR<FAQCreateInput, FAQUncheckedCreateInput>
+  }
+
+  /**
+   * FAQ createMany
+   */
+  export type FAQCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FAQS.
+     */
+    data: FAQCreateManyInput | FAQCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FAQ update
+   */
+  export type FAQUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FAQ
+     */
+    select?: FAQSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FAQ
+     */
+    omit?: FAQOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FAQInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FAQ.
+     */
+    data: XOR<FAQUpdateInput, FAQUncheckedUpdateInput>
+    /**
+     * Choose, which FAQ to update.
+     */
+    where: FAQWhereUniqueInput
+  }
+
+  /**
+   * FAQ updateMany
+   */
+  export type FAQUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FAQS.
+     */
+    data: XOR<FAQUpdateManyMutationInput, FAQUncheckedUpdateManyInput>
+    /**
+     * Filter which FAQS to update
+     */
+    where?: FAQWhereInput
+    /**
+     * Limit how many FAQS to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FAQ upsert
+   */
+  export type FAQUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FAQ
+     */
+    select?: FAQSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FAQ
+     */
+    omit?: FAQOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FAQInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FAQ to update in case it exists.
+     */
+    where: FAQWhereUniqueInput
+    /**
+     * In case the FAQ found by the `where` argument doesn't exist, create a new FAQ with this data.
+     */
+    create: XOR<FAQCreateInput, FAQUncheckedCreateInput>
+    /**
+     * In case the FAQ was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FAQUpdateInput, FAQUncheckedUpdateInput>
+  }
+
+  /**
+   * FAQ delete
+   */
+  export type FAQDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FAQ
+     */
+    select?: FAQSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FAQ
+     */
+    omit?: FAQOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FAQInclude<ExtArgs> | null
+    /**
+     * Filter which FAQ to delete.
+     */
+    where: FAQWhereUniqueInput
+  }
+
+  /**
+   * FAQ deleteMany
+   */
+  export type FAQDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FAQS to delete
+     */
+    where?: FAQWhereInput
+    /**
+     * Limit how many FAQS to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FAQ.createdBy
+   */
+  export type FAQ$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * FAQ without action
+   */
+  export type FAQDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FAQ
+     */
+    select?: FAQSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FAQ
+     */
+    omit?: FAQOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FAQInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InquiryTemplate
+   */
+
+  export type AggregateInquiryTemplate = {
+    _count: InquiryTemplateCountAggregateOutputType | null
+    _avg: InquiryTemplateAvgAggregateOutputType | null
+    _sum: InquiryTemplateSumAggregateOutputType | null
+    _min: InquiryTemplateMinAggregateOutputType | null
+    _max: InquiryTemplateMaxAggregateOutputType | null
+  }
+
+  export type InquiryTemplateAvgAggregateOutputType = {
+    usageCount: number | null
+  }
+
+  export type InquiryTemplateSumAggregateOutputType = {
+    usageCount: number | null
+  }
+
+  export type InquiryTemplateMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    content: string | null
+    category: $Enums.InquiryCategory | null
+    isActive: boolean | null
+    isDefault: boolean | null
+    usageCount: number | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InquiryTemplateMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    content: string | null
+    category: $Enums.InquiryCategory | null
+    isActive: boolean | null
+    isDefault: boolean | null
+    usageCount: number | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InquiryTemplateCountAggregateOutputType = {
+    id: number
+    title: number
+    content: number
+    category: number
+    isActive: number
+    isDefault: number
+    usageCount: number
+    createdById: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type InquiryTemplateAvgAggregateInputType = {
+    usageCount?: true
+  }
+
+  export type InquiryTemplateSumAggregateInputType = {
+    usageCount?: true
+  }
+
+  export type InquiryTemplateMinAggregateInputType = {
+    id?: true
+    title?: true
+    content?: true
+    category?: true
+    isActive?: true
+    isDefault?: true
+    usageCount?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InquiryTemplateMaxAggregateInputType = {
+    id?: true
+    title?: true
+    content?: true
+    category?: true
+    isActive?: true
+    isDefault?: true
+    usageCount?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InquiryTemplateCountAggregateInputType = {
+    id?: true
+    title?: true
+    content?: true
+    category?: true
+    isActive?: true
+    isDefault?: true
+    usageCount?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type InquiryTemplateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InquiryTemplate to aggregate.
+     */
+    where?: InquiryTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryTemplates to fetch.
+     */
+    orderBy?: InquiryTemplateOrderByWithRelationInput | InquiryTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InquiryTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InquiryTemplates
+    **/
+    _count?: true | InquiryTemplateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InquiryTemplateAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InquiryTemplateSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InquiryTemplateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InquiryTemplateMaxAggregateInputType
+  }
+
+  export type GetInquiryTemplateAggregateType<T extends InquiryTemplateAggregateArgs> = {
+        [P in keyof T & keyof AggregateInquiryTemplate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInquiryTemplate[P]>
+      : GetScalarType<T[P], AggregateInquiryTemplate[P]>
+  }
+
+
+
+
+  export type InquiryTemplateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryTemplateWhereInput
+    orderBy?: InquiryTemplateOrderByWithAggregationInput | InquiryTemplateOrderByWithAggregationInput[]
+    by: InquiryTemplateScalarFieldEnum[] | InquiryTemplateScalarFieldEnum
+    having?: InquiryTemplateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InquiryTemplateCountAggregateInputType | true
+    _avg?: InquiryTemplateAvgAggregateInputType
+    _sum?: InquiryTemplateSumAggregateInputType
+    _min?: InquiryTemplateMinAggregateInputType
+    _max?: InquiryTemplateMaxAggregateInputType
+  }
+
+  export type InquiryTemplateGroupByOutputType = {
+    id: string
+    title: string
+    content: string
+    category: $Enums.InquiryCategory
+    isActive: boolean
+    isDefault: boolean
+    usageCount: number
+    createdById: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: InquiryTemplateCountAggregateOutputType | null
+    _avg: InquiryTemplateAvgAggregateOutputType | null
+    _sum: InquiryTemplateSumAggregateOutputType | null
+    _min: InquiryTemplateMinAggregateOutputType | null
+    _max: InquiryTemplateMaxAggregateOutputType | null
+  }
+
+  type GetInquiryTemplateGroupByPayload<T extends InquiryTemplateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InquiryTemplateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InquiryTemplateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InquiryTemplateGroupByOutputType[P]>
+            : GetScalarType<T[P], InquiryTemplateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InquiryTemplateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    content?: boolean
+    category?: boolean
+    isActive?: boolean
+    isDefault?: boolean
+    usageCount?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean | InquiryTemplate$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["inquiryTemplate"]>
+
+
+
+  export type InquiryTemplateSelectScalar = {
+    id?: boolean
+    title?: boolean
+    content?: boolean
+    category?: boolean
+    isActive?: boolean
+    isDefault?: boolean
+    usageCount?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type InquiryTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "content" | "category" | "isActive" | "isDefault" | "usageCount" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["inquiryTemplate"]>
+  export type InquiryTemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | InquiryTemplate$createdByArgs<ExtArgs>
+  }
+
+  export type $InquiryTemplatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InquiryTemplate"
+    objects: {
+      createdBy: Prisma.$AccountPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string
+      content: string
+      category: $Enums.InquiryCategory
+      isActive: boolean
+      isDefault: boolean
+      usageCount: number
+      createdById: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["inquiryTemplate"]>
+    composites: {}
+  }
+
+  type InquiryTemplateGetPayload<S extends boolean | null | undefined | InquiryTemplateDefaultArgs> = $Result.GetResult<Prisma.$InquiryTemplatePayload, S>
+
+  type InquiryTemplateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InquiryTemplateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InquiryTemplateCountAggregateInputType | true
+    }
+
+  export interface InquiryTemplateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InquiryTemplate'], meta: { name: 'InquiryTemplate' } }
+    /**
+     * Find zero or one InquiryTemplate that matches the filter.
+     * @param {InquiryTemplateFindUniqueArgs} args - Arguments to find a InquiryTemplate
+     * @example
+     * // Get one InquiryTemplate
+     * const inquiryTemplate = await prisma.inquiryTemplate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InquiryTemplateFindUniqueArgs>(args: SelectSubset<T, InquiryTemplateFindUniqueArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InquiryTemplate that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InquiryTemplateFindUniqueOrThrowArgs} args - Arguments to find a InquiryTemplate
+     * @example
+     * // Get one InquiryTemplate
+     * const inquiryTemplate = await prisma.inquiryTemplate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InquiryTemplateFindUniqueOrThrowArgs>(args: SelectSubset<T, InquiryTemplateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InquiryTemplate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryTemplateFindFirstArgs} args - Arguments to find a InquiryTemplate
+     * @example
+     * // Get one InquiryTemplate
+     * const inquiryTemplate = await prisma.inquiryTemplate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InquiryTemplateFindFirstArgs>(args?: SelectSubset<T, InquiryTemplateFindFirstArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InquiryTemplate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryTemplateFindFirstOrThrowArgs} args - Arguments to find a InquiryTemplate
+     * @example
+     * // Get one InquiryTemplate
+     * const inquiryTemplate = await prisma.inquiryTemplate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InquiryTemplateFindFirstOrThrowArgs>(args?: SelectSubset<T, InquiryTemplateFindFirstOrThrowArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InquiryTemplates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryTemplateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InquiryTemplates
+     * const inquiryTemplates = await prisma.inquiryTemplate.findMany()
+     * 
+     * // Get first 10 InquiryTemplates
+     * const inquiryTemplates = await prisma.inquiryTemplate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inquiryTemplateWithIdOnly = await prisma.inquiryTemplate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InquiryTemplateFindManyArgs>(args?: SelectSubset<T, InquiryTemplateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InquiryTemplate.
+     * @param {InquiryTemplateCreateArgs} args - Arguments to create a InquiryTemplate.
+     * @example
+     * // Create one InquiryTemplate
+     * const InquiryTemplate = await prisma.inquiryTemplate.create({
+     *   data: {
+     *     // ... data to create a InquiryTemplate
+     *   }
+     * })
+     * 
+     */
+    create<T extends InquiryTemplateCreateArgs>(args: SelectSubset<T, InquiryTemplateCreateArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InquiryTemplates.
+     * @param {InquiryTemplateCreateManyArgs} args - Arguments to create many InquiryTemplates.
+     * @example
+     * // Create many InquiryTemplates
+     * const inquiryTemplate = await prisma.inquiryTemplate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InquiryTemplateCreateManyArgs>(args?: SelectSubset<T, InquiryTemplateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a InquiryTemplate.
+     * @param {InquiryTemplateDeleteArgs} args - Arguments to delete one InquiryTemplate.
+     * @example
+     * // Delete one InquiryTemplate
+     * const InquiryTemplate = await prisma.inquiryTemplate.delete({
+     *   where: {
+     *     // ... filter to delete one InquiryTemplate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InquiryTemplateDeleteArgs>(args: SelectSubset<T, InquiryTemplateDeleteArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InquiryTemplate.
+     * @param {InquiryTemplateUpdateArgs} args - Arguments to update one InquiryTemplate.
+     * @example
+     * // Update one InquiryTemplate
+     * const inquiryTemplate = await prisma.inquiryTemplate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InquiryTemplateUpdateArgs>(args: SelectSubset<T, InquiryTemplateUpdateArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InquiryTemplates.
+     * @param {InquiryTemplateDeleteManyArgs} args - Arguments to filter InquiryTemplates to delete.
+     * @example
+     * // Delete a few InquiryTemplates
+     * const { count } = await prisma.inquiryTemplate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InquiryTemplateDeleteManyArgs>(args?: SelectSubset<T, InquiryTemplateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InquiryTemplates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryTemplateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InquiryTemplates
+     * const inquiryTemplate = await prisma.inquiryTemplate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InquiryTemplateUpdateManyArgs>(args: SelectSubset<T, InquiryTemplateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one InquiryTemplate.
+     * @param {InquiryTemplateUpsertArgs} args - Arguments to update or create a InquiryTemplate.
+     * @example
+     * // Update or create a InquiryTemplate
+     * const inquiryTemplate = await prisma.inquiryTemplate.upsert({
+     *   create: {
+     *     // ... data to create a InquiryTemplate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InquiryTemplate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InquiryTemplateUpsertArgs>(args: SelectSubset<T, InquiryTemplateUpsertArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InquiryTemplates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryTemplateCountArgs} args - Arguments to filter InquiryTemplates to count.
+     * @example
+     * // Count the number of InquiryTemplates
+     * const count = await prisma.inquiryTemplate.count({
+     *   where: {
+     *     // ... the filter for the InquiryTemplates we want to count
+     *   }
+     * })
+    **/
+    count<T extends InquiryTemplateCountArgs>(
+      args?: Subset<T, InquiryTemplateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InquiryTemplateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InquiryTemplate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryTemplateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InquiryTemplateAggregateArgs>(args: Subset<T, InquiryTemplateAggregateArgs>): Prisma.PrismaPromise<GetInquiryTemplateAggregateType<T>>
+
+    /**
+     * Group by InquiryTemplate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryTemplateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InquiryTemplateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InquiryTemplateGroupByArgs['orderBy'] }
+        : { orderBy?: InquiryTemplateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InquiryTemplateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInquiryTemplateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InquiryTemplate model
+   */
+  readonly fields: InquiryTemplateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InquiryTemplate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InquiryTemplateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    createdBy<T extends InquiryTemplate$createdByArgs<ExtArgs> = {}>(args?: Subset<T, InquiryTemplate$createdByArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InquiryTemplate model
+   */
+  interface InquiryTemplateFieldRefs {
+    readonly id: FieldRef<"InquiryTemplate", 'String'>
+    readonly title: FieldRef<"InquiryTemplate", 'String'>
+    readonly content: FieldRef<"InquiryTemplate", 'String'>
+    readonly category: FieldRef<"InquiryTemplate", 'InquiryCategory'>
+    readonly isActive: FieldRef<"InquiryTemplate", 'Boolean'>
+    readonly isDefault: FieldRef<"InquiryTemplate", 'Boolean'>
+    readonly usageCount: FieldRef<"InquiryTemplate", 'Int'>
+    readonly createdById: FieldRef<"InquiryTemplate", 'String'>
+    readonly createdAt: FieldRef<"InquiryTemplate", 'DateTime'>
+    readonly updatedAt: FieldRef<"InquiryTemplate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InquiryTemplate findUnique
+   */
+  export type InquiryTemplateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryTemplate
+     */
+    select?: InquiryTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryTemplate
+     */
+    omit?: InquiryTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryTemplate to fetch.
+     */
+    where: InquiryTemplateWhereUniqueInput
+  }
+
+  /**
+   * InquiryTemplate findUniqueOrThrow
+   */
+  export type InquiryTemplateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryTemplate
+     */
+    select?: InquiryTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryTemplate
+     */
+    omit?: InquiryTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryTemplate to fetch.
+     */
+    where: InquiryTemplateWhereUniqueInput
+  }
+
+  /**
+   * InquiryTemplate findFirst
+   */
+  export type InquiryTemplateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryTemplate
+     */
+    select?: InquiryTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryTemplate
+     */
+    omit?: InquiryTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryTemplate to fetch.
+     */
+    where?: InquiryTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryTemplates to fetch.
+     */
+    orderBy?: InquiryTemplateOrderByWithRelationInput | InquiryTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InquiryTemplates.
+     */
+    cursor?: InquiryTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InquiryTemplates.
+     */
+    distinct?: InquiryTemplateScalarFieldEnum | InquiryTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryTemplate findFirstOrThrow
+   */
+  export type InquiryTemplateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryTemplate
+     */
+    select?: InquiryTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryTemplate
+     */
+    omit?: InquiryTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryTemplate to fetch.
+     */
+    where?: InquiryTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryTemplates to fetch.
+     */
+    orderBy?: InquiryTemplateOrderByWithRelationInput | InquiryTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InquiryTemplates.
+     */
+    cursor?: InquiryTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InquiryTemplates.
+     */
+    distinct?: InquiryTemplateScalarFieldEnum | InquiryTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryTemplate findMany
+   */
+  export type InquiryTemplateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryTemplate
+     */
+    select?: InquiryTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryTemplate
+     */
+    omit?: InquiryTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryTemplates to fetch.
+     */
+    where?: InquiryTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryTemplates to fetch.
+     */
+    orderBy?: InquiryTemplateOrderByWithRelationInput | InquiryTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InquiryTemplates.
+     */
+    cursor?: InquiryTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryTemplates.
+     */
+    skip?: number
+    distinct?: InquiryTemplateScalarFieldEnum | InquiryTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryTemplate create
+   */
+  export type InquiryTemplateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryTemplate
+     */
+    select?: InquiryTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryTemplate
+     */
+    omit?: InquiryTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryTemplateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InquiryTemplate.
+     */
+    data: XOR<InquiryTemplateCreateInput, InquiryTemplateUncheckedCreateInput>
+  }
+
+  /**
+   * InquiryTemplate createMany
+   */
+  export type InquiryTemplateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InquiryTemplates.
+     */
+    data: InquiryTemplateCreateManyInput | InquiryTemplateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InquiryTemplate update
+   */
+  export type InquiryTemplateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryTemplate
+     */
+    select?: InquiryTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryTemplate
+     */
+    omit?: InquiryTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryTemplateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InquiryTemplate.
+     */
+    data: XOR<InquiryTemplateUpdateInput, InquiryTemplateUncheckedUpdateInput>
+    /**
+     * Choose, which InquiryTemplate to update.
+     */
+    where: InquiryTemplateWhereUniqueInput
+  }
+
+  /**
+   * InquiryTemplate updateMany
+   */
+  export type InquiryTemplateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InquiryTemplates.
+     */
+    data: XOR<InquiryTemplateUpdateManyMutationInput, InquiryTemplateUncheckedUpdateManyInput>
+    /**
+     * Filter which InquiryTemplates to update
+     */
+    where?: InquiryTemplateWhereInput
+    /**
+     * Limit how many InquiryTemplates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InquiryTemplate upsert
+   */
+  export type InquiryTemplateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryTemplate
+     */
+    select?: InquiryTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryTemplate
+     */
+    omit?: InquiryTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryTemplateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InquiryTemplate to update in case it exists.
+     */
+    where: InquiryTemplateWhereUniqueInput
+    /**
+     * In case the InquiryTemplate found by the `where` argument doesn't exist, create a new InquiryTemplate with this data.
+     */
+    create: XOR<InquiryTemplateCreateInput, InquiryTemplateUncheckedCreateInput>
+    /**
+     * In case the InquiryTemplate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InquiryTemplateUpdateInput, InquiryTemplateUncheckedUpdateInput>
+  }
+
+  /**
+   * InquiryTemplate delete
+   */
+  export type InquiryTemplateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryTemplate
+     */
+    select?: InquiryTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryTemplate
+     */
+    omit?: InquiryTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryTemplateInclude<ExtArgs> | null
+    /**
+     * Filter which InquiryTemplate to delete.
+     */
+    where: InquiryTemplateWhereUniqueInput
+  }
+
+  /**
+   * InquiryTemplate deleteMany
+   */
+  export type InquiryTemplateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InquiryTemplates to delete
+     */
+    where?: InquiryTemplateWhereInput
+    /**
+     * Limit how many InquiryTemplates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InquiryTemplate.createdBy
+   */
+  export type InquiryTemplate$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * InquiryTemplate without action
+   */
+  export type InquiryTemplateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryTemplate
+     */
+    select?: InquiryTemplateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryTemplate
+     */
+    omit?: InquiryTemplateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryTemplateInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InquiryNotification
+   */
+
+  export type AggregateInquiryNotification = {
+    _count: InquiryNotificationCountAggregateOutputType | null
+    _min: InquiryNotificationMinAggregateOutputType | null
+    _max: InquiryNotificationMaxAggregateOutputType | null
+  }
+
+  export type InquiryNotificationMinAggregateOutputType = {
+    id: string | null
+    type: $Enums.NotificationType | null
+    title: string | null
+    message: string | null
+    userId: string | null
+    inquiryId: string | null
+    isRead: boolean | null
+    readAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type InquiryNotificationMaxAggregateOutputType = {
+    id: string | null
+    type: $Enums.NotificationType | null
+    title: string | null
+    message: string | null
+    userId: string | null
+    inquiryId: string | null
+    isRead: boolean | null
+    readAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type InquiryNotificationCountAggregateOutputType = {
+    id: number
+    type: number
+    title: number
+    message: number
+    userId: number
+    inquiryId: number
+    isRead: number
+    readAt: number
+    metadata: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type InquiryNotificationMinAggregateInputType = {
+    id?: true
+    type?: true
+    title?: true
+    message?: true
+    userId?: true
+    inquiryId?: true
+    isRead?: true
+    readAt?: true
+    createdAt?: true
+  }
+
+  export type InquiryNotificationMaxAggregateInputType = {
+    id?: true
+    type?: true
+    title?: true
+    message?: true
+    userId?: true
+    inquiryId?: true
+    isRead?: true
+    readAt?: true
+    createdAt?: true
+  }
+
+  export type InquiryNotificationCountAggregateInputType = {
+    id?: true
+    type?: true
+    title?: true
+    message?: true
+    userId?: true
+    inquiryId?: true
+    isRead?: true
+    readAt?: true
+    metadata?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type InquiryNotificationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InquiryNotification to aggregate.
+     */
+    where?: InquiryNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryNotifications to fetch.
+     */
+    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InquiryNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryNotifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InquiryNotifications
+    **/
+    _count?: true | InquiryNotificationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InquiryNotificationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InquiryNotificationMaxAggregateInputType
+  }
+
+  export type GetInquiryNotificationAggregateType<T extends InquiryNotificationAggregateArgs> = {
+        [P in keyof T & keyof AggregateInquiryNotification]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInquiryNotification[P]>
+      : GetScalarType<T[P], AggregateInquiryNotification[P]>
+  }
+
+
+
+
+  export type InquiryNotificationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryNotificationWhereInput
+    orderBy?: InquiryNotificationOrderByWithAggregationInput | InquiryNotificationOrderByWithAggregationInput[]
+    by: InquiryNotificationScalarFieldEnum[] | InquiryNotificationScalarFieldEnum
+    having?: InquiryNotificationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InquiryNotificationCountAggregateInputType | true
+    _min?: InquiryNotificationMinAggregateInputType
+    _max?: InquiryNotificationMaxAggregateInputType
+  }
+
+  export type InquiryNotificationGroupByOutputType = {
+    id: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    userId: string
+    inquiryId: string | null
+    isRead: boolean
+    readAt: Date | null
+    metadata: JsonValue | null
+    createdAt: Date
+    _count: InquiryNotificationCountAggregateOutputType | null
+    _min: InquiryNotificationMinAggregateOutputType | null
+    _max: InquiryNotificationMaxAggregateOutputType | null
+  }
+
+  type GetInquiryNotificationGroupByPayload<T extends InquiryNotificationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InquiryNotificationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InquiryNotificationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InquiryNotificationGroupByOutputType[P]>
+            : GetScalarType<T[P], InquiryNotificationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InquiryNotificationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    title?: boolean
+    message?: boolean
+    userId?: boolean
+    inquiryId?: boolean
+    isRead?: boolean
+    readAt?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    user?: boolean | AccountDefaultArgs<ExtArgs>
+    inquiry?: boolean | InquiryNotification$inquiryArgs<ExtArgs>
+  }, ExtArgs["result"]["inquiryNotification"]>
+
+
+
+  export type InquiryNotificationSelectScalar = {
+    id?: boolean
+    type?: boolean
+    title?: boolean
+    message?: boolean
+    userId?: boolean
+    inquiryId?: boolean
+    isRead?: boolean
+    readAt?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+  }
+
+  export type InquiryNotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "title" | "message" | "userId" | "inquiryId" | "isRead" | "readAt" | "metadata" | "createdAt", ExtArgs["result"]["inquiryNotification"]>
+  export type InquiryNotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | AccountDefaultArgs<ExtArgs>
+    inquiry?: boolean | InquiryNotification$inquiryArgs<ExtArgs>
+  }
+
+  export type $InquiryNotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InquiryNotification"
+    objects: {
+      user: Prisma.$AccountPayload<ExtArgs>
+      inquiry: Prisma.$InquiryPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      type: $Enums.NotificationType
+      title: string
+      message: string
+      userId: string
+      inquiryId: string | null
+      isRead: boolean
+      readAt: Date | null
+      metadata: Prisma.JsonValue | null
+      createdAt: Date
+    }, ExtArgs["result"]["inquiryNotification"]>
+    composites: {}
+  }
+
+  type InquiryNotificationGetPayload<S extends boolean | null | undefined | InquiryNotificationDefaultArgs> = $Result.GetResult<Prisma.$InquiryNotificationPayload, S>
+
+  type InquiryNotificationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InquiryNotificationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InquiryNotificationCountAggregateInputType | true
+    }
+
+  export interface InquiryNotificationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InquiryNotification'], meta: { name: 'InquiryNotification' } }
+    /**
+     * Find zero or one InquiryNotification that matches the filter.
+     * @param {InquiryNotificationFindUniqueArgs} args - Arguments to find a InquiryNotification
+     * @example
+     * // Get one InquiryNotification
+     * const inquiryNotification = await prisma.inquiryNotification.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InquiryNotificationFindUniqueArgs>(args: SelectSubset<T, InquiryNotificationFindUniqueArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InquiryNotification that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InquiryNotificationFindUniqueOrThrowArgs} args - Arguments to find a InquiryNotification
+     * @example
+     * // Get one InquiryNotification
+     * const inquiryNotification = await prisma.inquiryNotification.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InquiryNotificationFindUniqueOrThrowArgs>(args: SelectSubset<T, InquiryNotificationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InquiryNotification that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryNotificationFindFirstArgs} args - Arguments to find a InquiryNotification
+     * @example
+     * // Get one InquiryNotification
+     * const inquiryNotification = await prisma.inquiryNotification.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InquiryNotificationFindFirstArgs>(args?: SelectSubset<T, InquiryNotificationFindFirstArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InquiryNotification that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryNotificationFindFirstOrThrowArgs} args - Arguments to find a InquiryNotification
+     * @example
+     * // Get one InquiryNotification
+     * const inquiryNotification = await prisma.inquiryNotification.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InquiryNotificationFindFirstOrThrowArgs>(args?: SelectSubset<T, InquiryNotificationFindFirstOrThrowArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InquiryNotifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryNotificationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InquiryNotifications
+     * const inquiryNotifications = await prisma.inquiryNotification.findMany()
+     * 
+     * // Get first 10 InquiryNotifications
+     * const inquiryNotifications = await prisma.inquiryNotification.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inquiryNotificationWithIdOnly = await prisma.inquiryNotification.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InquiryNotificationFindManyArgs>(args?: SelectSubset<T, InquiryNotificationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InquiryNotification.
+     * @param {InquiryNotificationCreateArgs} args - Arguments to create a InquiryNotification.
+     * @example
+     * // Create one InquiryNotification
+     * const InquiryNotification = await prisma.inquiryNotification.create({
+     *   data: {
+     *     // ... data to create a InquiryNotification
+     *   }
+     * })
+     * 
+     */
+    create<T extends InquiryNotificationCreateArgs>(args: SelectSubset<T, InquiryNotificationCreateArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InquiryNotifications.
+     * @param {InquiryNotificationCreateManyArgs} args - Arguments to create many InquiryNotifications.
+     * @example
+     * // Create many InquiryNotifications
+     * const inquiryNotification = await prisma.inquiryNotification.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InquiryNotificationCreateManyArgs>(args?: SelectSubset<T, InquiryNotificationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a InquiryNotification.
+     * @param {InquiryNotificationDeleteArgs} args - Arguments to delete one InquiryNotification.
+     * @example
+     * // Delete one InquiryNotification
+     * const InquiryNotification = await prisma.inquiryNotification.delete({
+     *   where: {
+     *     // ... filter to delete one InquiryNotification
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InquiryNotificationDeleteArgs>(args: SelectSubset<T, InquiryNotificationDeleteArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InquiryNotification.
+     * @param {InquiryNotificationUpdateArgs} args - Arguments to update one InquiryNotification.
+     * @example
+     * // Update one InquiryNotification
+     * const inquiryNotification = await prisma.inquiryNotification.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InquiryNotificationUpdateArgs>(args: SelectSubset<T, InquiryNotificationUpdateArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InquiryNotifications.
+     * @param {InquiryNotificationDeleteManyArgs} args - Arguments to filter InquiryNotifications to delete.
+     * @example
+     * // Delete a few InquiryNotifications
+     * const { count } = await prisma.inquiryNotification.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InquiryNotificationDeleteManyArgs>(args?: SelectSubset<T, InquiryNotificationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InquiryNotifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryNotificationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InquiryNotifications
+     * const inquiryNotification = await prisma.inquiryNotification.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InquiryNotificationUpdateManyArgs>(args: SelectSubset<T, InquiryNotificationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one InquiryNotification.
+     * @param {InquiryNotificationUpsertArgs} args - Arguments to update or create a InquiryNotification.
+     * @example
+     * // Update or create a InquiryNotification
+     * const inquiryNotification = await prisma.inquiryNotification.upsert({
+     *   create: {
+     *     // ... data to create a InquiryNotification
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InquiryNotification we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InquiryNotificationUpsertArgs>(args: SelectSubset<T, InquiryNotificationUpsertArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InquiryNotifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryNotificationCountArgs} args - Arguments to filter InquiryNotifications to count.
+     * @example
+     * // Count the number of InquiryNotifications
+     * const count = await prisma.inquiryNotification.count({
+     *   where: {
+     *     // ... the filter for the InquiryNotifications we want to count
+     *   }
+     * })
+    **/
+    count<T extends InquiryNotificationCountArgs>(
+      args?: Subset<T, InquiryNotificationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InquiryNotificationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InquiryNotification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryNotificationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InquiryNotificationAggregateArgs>(args: Subset<T, InquiryNotificationAggregateArgs>): Prisma.PrismaPromise<GetInquiryNotificationAggregateType<T>>
+
+    /**
+     * Group by InquiryNotification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryNotificationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InquiryNotificationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InquiryNotificationGroupByArgs['orderBy'] }
+        : { orderBy?: InquiryNotificationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InquiryNotificationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInquiryNotificationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InquiryNotification model
+   */
+  readonly fields: InquiryNotificationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InquiryNotification.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InquiryNotificationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    inquiry<T extends InquiryNotification$inquiryArgs<ExtArgs> = {}>(args?: Subset<T, InquiryNotification$inquiryArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InquiryNotification model
+   */
+  interface InquiryNotificationFieldRefs {
+    readonly id: FieldRef<"InquiryNotification", 'String'>
+    readonly type: FieldRef<"InquiryNotification", 'NotificationType'>
+    readonly title: FieldRef<"InquiryNotification", 'String'>
+    readonly message: FieldRef<"InquiryNotification", 'String'>
+    readonly userId: FieldRef<"InquiryNotification", 'String'>
+    readonly inquiryId: FieldRef<"InquiryNotification", 'String'>
+    readonly isRead: FieldRef<"InquiryNotification", 'Boolean'>
+    readonly readAt: FieldRef<"InquiryNotification", 'DateTime'>
+    readonly metadata: FieldRef<"InquiryNotification", 'Json'>
+    readonly createdAt: FieldRef<"InquiryNotification", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InquiryNotification findUnique
+   */
+  export type InquiryNotificationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryNotification to fetch.
+     */
+    where: InquiryNotificationWhereUniqueInput
+  }
+
+  /**
+   * InquiryNotification findUniqueOrThrow
+   */
+  export type InquiryNotificationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryNotification to fetch.
+     */
+    where: InquiryNotificationWhereUniqueInput
+  }
+
+  /**
+   * InquiryNotification findFirst
+   */
+  export type InquiryNotificationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryNotification to fetch.
+     */
+    where?: InquiryNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryNotifications to fetch.
+     */
+    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InquiryNotifications.
+     */
+    cursor?: InquiryNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryNotifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InquiryNotifications.
+     */
+    distinct?: InquiryNotificationScalarFieldEnum | InquiryNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryNotification findFirstOrThrow
+   */
+  export type InquiryNotificationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryNotification to fetch.
+     */
+    where?: InquiryNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryNotifications to fetch.
+     */
+    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InquiryNotifications.
+     */
+    cursor?: InquiryNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryNotifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InquiryNotifications.
+     */
+    distinct?: InquiryNotificationScalarFieldEnum | InquiryNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryNotification findMany
+   */
+  export type InquiryNotificationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryNotifications to fetch.
+     */
+    where?: InquiryNotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryNotifications to fetch.
+     */
+    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InquiryNotifications.
+     */
+    cursor?: InquiryNotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryNotifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryNotifications.
+     */
+    skip?: number
+    distinct?: InquiryNotificationScalarFieldEnum | InquiryNotificationScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryNotification create
+   */
+  export type InquiryNotificationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InquiryNotification.
+     */
+    data: XOR<InquiryNotificationCreateInput, InquiryNotificationUncheckedCreateInput>
+  }
+
+  /**
+   * InquiryNotification createMany
+   */
+  export type InquiryNotificationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InquiryNotifications.
+     */
+    data: InquiryNotificationCreateManyInput | InquiryNotificationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InquiryNotification update
+   */
+  export type InquiryNotificationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InquiryNotification.
+     */
+    data: XOR<InquiryNotificationUpdateInput, InquiryNotificationUncheckedUpdateInput>
+    /**
+     * Choose, which InquiryNotification to update.
+     */
+    where: InquiryNotificationWhereUniqueInput
+  }
+
+  /**
+   * InquiryNotification updateMany
+   */
+  export type InquiryNotificationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InquiryNotifications.
+     */
+    data: XOR<InquiryNotificationUpdateManyMutationInput, InquiryNotificationUncheckedUpdateManyInput>
+    /**
+     * Filter which InquiryNotifications to update
+     */
+    where?: InquiryNotificationWhereInput
+    /**
+     * Limit how many InquiryNotifications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InquiryNotification upsert
+   */
+  export type InquiryNotificationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InquiryNotification to update in case it exists.
+     */
+    where: InquiryNotificationWhereUniqueInput
+    /**
+     * In case the InquiryNotification found by the `where` argument doesn't exist, create a new InquiryNotification with this data.
+     */
+    create: XOR<InquiryNotificationCreateInput, InquiryNotificationUncheckedCreateInput>
+    /**
+     * In case the InquiryNotification was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InquiryNotificationUpdateInput, InquiryNotificationUncheckedUpdateInput>
+  }
+
+  /**
+   * InquiryNotification delete
+   */
+  export type InquiryNotificationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+    /**
+     * Filter which InquiryNotification to delete.
+     */
+    where: InquiryNotificationWhereUniqueInput
+  }
+
+  /**
+   * InquiryNotification deleteMany
+   */
+  export type InquiryNotificationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InquiryNotifications to delete
+     */
+    where?: InquiryNotificationWhereInput
+    /**
+     * Limit how many InquiryNotifications to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InquiryNotification.inquiry
+   */
+  export type InquiryNotification$inquiryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    where?: InquiryWhereInput
+  }
+
+  /**
+   * InquiryNotification without action
+   */
+  export type InquiryNotificationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryNotification
+     */
+    select?: InquiryNotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryNotification
+     */
+    omit?: InquiryNotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryNotificationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InquiryAnalytics
+   */
+
+  export type AggregateInquiryAnalytics = {
+    _count: InquiryAnalyticsCountAggregateOutputType | null
+    _avg: InquiryAnalyticsAvgAggregateOutputType | null
+    _sum: InquiryAnalyticsSumAggregateOutputType | null
+    _min: InquiryAnalyticsMinAggregateOutputType | null
+    _max: InquiryAnalyticsMaxAggregateOutputType | null
+  }
+
+  export type InquiryAnalyticsAvgAggregateOutputType = {
+    totalInquiries: number | null
+    pendingInquiries: number | null
+    resolvedInquiries: number | null
+    avgFirstResponseTime: number | null
+    avgResolutionTime: number | null
+    seminarInquiries: number | null
+    equipmentInquiries: number | null
+    accountInquiries: number | null
+    generalInquiries: number | null
+    lowPriorityCount: number | null
+    mediumPriorityCount: number | null
+    highPriorityCount: number | null
+    urgentPriorityCount: number | null
+  }
+
+  export type InquiryAnalyticsSumAggregateOutputType = {
+    totalInquiries: number | null
+    pendingInquiries: number | null
+    resolvedInquiries: number | null
+    avgFirstResponseTime: number | null
+    avgResolutionTime: number | null
+    seminarInquiries: number | null
+    equipmentInquiries: number | null
+    accountInquiries: number | null
+    generalInquiries: number | null
+    lowPriorityCount: number | null
+    mediumPriorityCount: number | null
+    highPriorityCount: number | null
+    urgentPriorityCount: number | null
+  }
+
+  export type InquiryAnalyticsMinAggregateOutputType = {
+    id: string | null
+    date: Date | null
+    totalInquiries: number | null
+    pendingInquiries: number | null
+    resolvedInquiries: number | null
+    avgFirstResponseTime: number | null
+    avgResolutionTime: number | null
+    seminarInquiries: number | null
+    equipmentInquiries: number | null
+    accountInquiries: number | null
+    generalInquiries: number | null
+    lowPriorityCount: number | null
+    mediumPriorityCount: number | null
+    highPriorityCount: number | null
+    urgentPriorityCount: number | null
+    adminId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InquiryAnalyticsMaxAggregateOutputType = {
+    id: string | null
+    date: Date | null
+    totalInquiries: number | null
+    pendingInquiries: number | null
+    resolvedInquiries: number | null
+    avgFirstResponseTime: number | null
+    avgResolutionTime: number | null
+    seminarInquiries: number | null
+    equipmentInquiries: number | null
+    accountInquiries: number | null
+    generalInquiries: number | null
+    lowPriorityCount: number | null
+    mediumPriorityCount: number | null
+    highPriorityCount: number | null
+    urgentPriorityCount: number | null
+    adminId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InquiryAnalyticsCountAggregateOutputType = {
+    id: number
+    date: number
+    totalInquiries: number
+    pendingInquiries: number
+    resolvedInquiries: number
+    avgFirstResponseTime: number
+    avgResolutionTime: number
+    seminarInquiries: number
+    equipmentInquiries: number
+    accountInquiries: number
+    generalInquiries: number
+    lowPriorityCount: number
+    mediumPriorityCount: number
+    highPriorityCount: number
+    urgentPriorityCount: number
+    adminId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type InquiryAnalyticsAvgAggregateInputType = {
+    totalInquiries?: true
+    pendingInquiries?: true
+    resolvedInquiries?: true
+    avgFirstResponseTime?: true
+    avgResolutionTime?: true
+    seminarInquiries?: true
+    equipmentInquiries?: true
+    accountInquiries?: true
+    generalInquiries?: true
+    lowPriorityCount?: true
+    mediumPriorityCount?: true
+    highPriorityCount?: true
+    urgentPriorityCount?: true
+  }
+
+  export type InquiryAnalyticsSumAggregateInputType = {
+    totalInquiries?: true
+    pendingInquiries?: true
+    resolvedInquiries?: true
+    avgFirstResponseTime?: true
+    avgResolutionTime?: true
+    seminarInquiries?: true
+    equipmentInquiries?: true
+    accountInquiries?: true
+    generalInquiries?: true
+    lowPriorityCount?: true
+    mediumPriorityCount?: true
+    highPriorityCount?: true
+    urgentPriorityCount?: true
+  }
+
+  export type InquiryAnalyticsMinAggregateInputType = {
+    id?: true
+    date?: true
+    totalInquiries?: true
+    pendingInquiries?: true
+    resolvedInquiries?: true
+    avgFirstResponseTime?: true
+    avgResolutionTime?: true
+    seminarInquiries?: true
+    equipmentInquiries?: true
+    accountInquiries?: true
+    generalInquiries?: true
+    lowPriorityCount?: true
+    mediumPriorityCount?: true
+    highPriorityCount?: true
+    urgentPriorityCount?: true
+    adminId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InquiryAnalyticsMaxAggregateInputType = {
+    id?: true
+    date?: true
+    totalInquiries?: true
+    pendingInquiries?: true
+    resolvedInquiries?: true
+    avgFirstResponseTime?: true
+    avgResolutionTime?: true
+    seminarInquiries?: true
+    equipmentInquiries?: true
+    accountInquiries?: true
+    generalInquiries?: true
+    lowPriorityCount?: true
+    mediumPriorityCount?: true
+    highPriorityCount?: true
+    urgentPriorityCount?: true
+    adminId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InquiryAnalyticsCountAggregateInputType = {
+    id?: true
+    date?: true
+    totalInquiries?: true
+    pendingInquiries?: true
+    resolvedInquiries?: true
+    avgFirstResponseTime?: true
+    avgResolutionTime?: true
+    seminarInquiries?: true
+    equipmentInquiries?: true
+    accountInquiries?: true
+    generalInquiries?: true
+    lowPriorityCount?: true
+    mediumPriorityCount?: true
+    highPriorityCount?: true
+    urgentPriorityCount?: true
+    adminId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type InquiryAnalyticsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InquiryAnalytics to aggregate.
+     */
+    where?: InquiryAnalyticsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryAnalytics to fetch.
+     */
+    orderBy?: InquiryAnalyticsOrderByWithRelationInput | InquiryAnalyticsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InquiryAnalyticsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryAnalytics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryAnalytics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InquiryAnalytics
+    **/
+    _count?: true | InquiryAnalyticsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InquiryAnalyticsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InquiryAnalyticsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InquiryAnalyticsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InquiryAnalyticsMaxAggregateInputType
+  }
+
+  export type GetInquiryAnalyticsAggregateType<T extends InquiryAnalyticsAggregateArgs> = {
+        [P in keyof T & keyof AggregateInquiryAnalytics]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInquiryAnalytics[P]>
+      : GetScalarType<T[P], AggregateInquiryAnalytics[P]>
+  }
+
+
+
+
+  export type InquiryAnalyticsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryAnalyticsWhereInput
+    orderBy?: InquiryAnalyticsOrderByWithAggregationInput | InquiryAnalyticsOrderByWithAggregationInput[]
+    by: InquiryAnalyticsScalarFieldEnum[] | InquiryAnalyticsScalarFieldEnum
+    having?: InquiryAnalyticsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InquiryAnalyticsCountAggregateInputType | true
+    _avg?: InquiryAnalyticsAvgAggregateInputType
+    _sum?: InquiryAnalyticsSumAggregateInputType
+    _min?: InquiryAnalyticsMinAggregateInputType
+    _max?: InquiryAnalyticsMaxAggregateInputType
+  }
+
+  export type InquiryAnalyticsGroupByOutputType = {
+    id: string
+    date: Date
+    totalInquiries: number
+    pendingInquiries: number
+    resolvedInquiries: number
+    avgFirstResponseTime: number | null
+    avgResolutionTime: number | null
+    seminarInquiries: number
+    equipmentInquiries: number
+    accountInquiries: number
+    generalInquiries: number
+    lowPriorityCount: number
+    mediumPriorityCount: number
+    highPriorityCount: number
+    urgentPriorityCount: number
+    adminId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: InquiryAnalyticsCountAggregateOutputType | null
+    _avg: InquiryAnalyticsAvgAggregateOutputType | null
+    _sum: InquiryAnalyticsSumAggregateOutputType | null
+    _min: InquiryAnalyticsMinAggregateOutputType | null
+    _max: InquiryAnalyticsMaxAggregateOutputType | null
+  }
+
+  type GetInquiryAnalyticsGroupByPayload<T extends InquiryAnalyticsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InquiryAnalyticsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InquiryAnalyticsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InquiryAnalyticsGroupByOutputType[P]>
+            : GetScalarType<T[P], InquiryAnalyticsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InquiryAnalyticsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    totalInquiries?: boolean
+    pendingInquiries?: boolean
+    resolvedInquiries?: boolean
+    avgFirstResponseTime?: boolean
+    avgResolutionTime?: boolean
+    seminarInquiries?: boolean
+    equipmentInquiries?: boolean
+    accountInquiries?: boolean
+    generalInquiries?: boolean
+    lowPriorityCount?: boolean
+    mediumPriorityCount?: boolean
+    highPriorityCount?: boolean
+    urgentPriorityCount?: boolean
+    adminId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    admin?: boolean | InquiryAnalytics$adminArgs<ExtArgs>
+  }, ExtArgs["result"]["inquiryAnalytics"]>
+
+
+
+  export type InquiryAnalyticsSelectScalar = {
+    id?: boolean
+    date?: boolean
+    totalInquiries?: boolean
+    pendingInquiries?: boolean
+    resolvedInquiries?: boolean
+    avgFirstResponseTime?: boolean
+    avgResolutionTime?: boolean
+    seminarInquiries?: boolean
+    equipmentInquiries?: boolean
+    accountInquiries?: boolean
+    generalInquiries?: boolean
+    lowPriorityCount?: boolean
+    mediumPriorityCount?: boolean
+    highPriorityCount?: boolean
+    urgentPriorityCount?: boolean
+    adminId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type InquiryAnalyticsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "totalInquiries" | "pendingInquiries" | "resolvedInquiries" | "avgFirstResponseTime" | "avgResolutionTime" | "seminarInquiries" | "equipmentInquiries" | "accountInquiries" | "generalInquiries" | "lowPriorityCount" | "mediumPriorityCount" | "highPriorityCount" | "urgentPriorityCount" | "adminId" | "createdAt" | "updatedAt", ExtArgs["result"]["inquiryAnalytics"]>
+  export type InquiryAnalyticsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    admin?: boolean | InquiryAnalytics$adminArgs<ExtArgs>
+  }
+
+  export type $InquiryAnalyticsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InquiryAnalytics"
+    objects: {
+      admin: Prisma.$AccountPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      date: Date
+      totalInquiries: number
+      pendingInquiries: number
+      resolvedInquiries: number
+      avgFirstResponseTime: number | null
+      avgResolutionTime: number | null
+      seminarInquiries: number
+      equipmentInquiries: number
+      accountInquiries: number
+      generalInquiries: number
+      lowPriorityCount: number
+      mediumPriorityCount: number
+      highPriorityCount: number
+      urgentPriorityCount: number
+      adminId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["inquiryAnalytics"]>
+    composites: {}
+  }
+
+  type InquiryAnalyticsGetPayload<S extends boolean | null | undefined | InquiryAnalyticsDefaultArgs> = $Result.GetResult<Prisma.$InquiryAnalyticsPayload, S>
+
+  type InquiryAnalyticsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InquiryAnalyticsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InquiryAnalyticsCountAggregateInputType | true
+    }
+
+  export interface InquiryAnalyticsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InquiryAnalytics'], meta: { name: 'InquiryAnalytics' } }
+    /**
+     * Find zero or one InquiryAnalytics that matches the filter.
+     * @param {InquiryAnalyticsFindUniqueArgs} args - Arguments to find a InquiryAnalytics
+     * @example
+     * // Get one InquiryAnalytics
+     * const inquiryAnalytics = await prisma.inquiryAnalytics.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InquiryAnalyticsFindUniqueArgs>(args: SelectSubset<T, InquiryAnalyticsFindUniqueArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InquiryAnalytics that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InquiryAnalyticsFindUniqueOrThrowArgs} args - Arguments to find a InquiryAnalytics
+     * @example
+     * // Get one InquiryAnalytics
+     * const inquiryAnalytics = await prisma.inquiryAnalytics.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InquiryAnalyticsFindUniqueOrThrowArgs>(args: SelectSubset<T, InquiryAnalyticsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InquiryAnalytics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAnalyticsFindFirstArgs} args - Arguments to find a InquiryAnalytics
+     * @example
+     * // Get one InquiryAnalytics
+     * const inquiryAnalytics = await prisma.inquiryAnalytics.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InquiryAnalyticsFindFirstArgs>(args?: SelectSubset<T, InquiryAnalyticsFindFirstArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InquiryAnalytics that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAnalyticsFindFirstOrThrowArgs} args - Arguments to find a InquiryAnalytics
+     * @example
+     * // Get one InquiryAnalytics
+     * const inquiryAnalytics = await prisma.inquiryAnalytics.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InquiryAnalyticsFindFirstOrThrowArgs>(args?: SelectSubset<T, InquiryAnalyticsFindFirstOrThrowArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InquiryAnalytics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAnalyticsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InquiryAnalytics
+     * const inquiryAnalytics = await prisma.inquiryAnalytics.findMany()
+     * 
+     * // Get first 10 InquiryAnalytics
+     * const inquiryAnalytics = await prisma.inquiryAnalytics.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inquiryAnalyticsWithIdOnly = await prisma.inquiryAnalytics.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InquiryAnalyticsFindManyArgs>(args?: SelectSubset<T, InquiryAnalyticsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InquiryAnalytics.
+     * @param {InquiryAnalyticsCreateArgs} args - Arguments to create a InquiryAnalytics.
+     * @example
+     * // Create one InquiryAnalytics
+     * const InquiryAnalytics = await prisma.inquiryAnalytics.create({
+     *   data: {
+     *     // ... data to create a InquiryAnalytics
+     *   }
+     * })
+     * 
+     */
+    create<T extends InquiryAnalyticsCreateArgs>(args: SelectSubset<T, InquiryAnalyticsCreateArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InquiryAnalytics.
+     * @param {InquiryAnalyticsCreateManyArgs} args - Arguments to create many InquiryAnalytics.
+     * @example
+     * // Create many InquiryAnalytics
+     * const inquiryAnalytics = await prisma.inquiryAnalytics.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InquiryAnalyticsCreateManyArgs>(args?: SelectSubset<T, InquiryAnalyticsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a InquiryAnalytics.
+     * @param {InquiryAnalyticsDeleteArgs} args - Arguments to delete one InquiryAnalytics.
+     * @example
+     * // Delete one InquiryAnalytics
+     * const InquiryAnalytics = await prisma.inquiryAnalytics.delete({
+     *   where: {
+     *     // ... filter to delete one InquiryAnalytics
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InquiryAnalyticsDeleteArgs>(args: SelectSubset<T, InquiryAnalyticsDeleteArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InquiryAnalytics.
+     * @param {InquiryAnalyticsUpdateArgs} args - Arguments to update one InquiryAnalytics.
+     * @example
+     * // Update one InquiryAnalytics
+     * const inquiryAnalytics = await prisma.inquiryAnalytics.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InquiryAnalyticsUpdateArgs>(args: SelectSubset<T, InquiryAnalyticsUpdateArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InquiryAnalytics.
+     * @param {InquiryAnalyticsDeleteManyArgs} args - Arguments to filter InquiryAnalytics to delete.
+     * @example
+     * // Delete a few InquiryAnalytics
+     * const { count } = await prisma.inquiryAnalytics.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InquiryAnalyticsDeleteManyArgs>(args?: SelectSubset<T, InquiryAnalyticsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InquiryAnalytics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAnalyticsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InquiryAnalytics
+     * const inquiryAnalytics = await prisma.inquiryAnalytics.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InquiryAnalyticsUpdateManyArgs>(args: SelectSubset<T, InquiryAnalyticsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one InquiryAnalytics.
+     * @param {InquiryAnalyticsUpsertArgs} args - Arguments to update or create a InquiryAnalytics.
+     * @example
+     * // Update or create a InquiryAnalytics
+     * const inquiryAnalytics = await prisma.inquiryAnalytics.upsert({
+     *   create: {
+     *     // ... data to create a InquiryAnalytics
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InquiryAnalytics we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InquiryAnalyticsUpsertArgs>(args: SelectSubset<T, InquiryAnalyticsUpsertArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InquiryAnalytics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAnalyticsCountArgs} args - Arguments to filter InquiryAnalytics to count.
+     * @example
+     * // Count the number of InquiryAnalytics
+     * const count = await prisma.inquiryAnalytics.count({
+     *   where: {
+     *     // ... the filter for the InquiryAnalytics we want to count
+     *   }
+     * })
+    **/
+    count<T extends InquiryAnalyticsCountArgs>(
+      args?: Subset<T, InquiryAnalyticsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InquiryAnalyticsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InquiryAnalytics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAnalyticsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InquiryAnalyticsAggregateArgs>(args: Subset<T, InquiryAnalyticsAggregateArgs>): Prisma.PrismaPromise<GetInquiryAnalyticsAggregateType<T>>
+
+    /**
+     * Group by InquiryAnalytics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAnalyticsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InquiryAnalyticsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InquiryAnalyticsGroupByArgs['orderBy'] }
+        : { orderBy?: InquiryAnalyticsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InquiryAnalyticsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInquiryAnalyticsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InquiryAnalytics model
+   */
+  readonly fields: InquiryAnalyticsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InquiryAnalytics.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InquiryAnalyticsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    admin<T extends InquiryAnalytics$adminArgs<ExtArgs> = {}>(args?: Subset<T, InquiryAnalytics$adminArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InquiryAnalytics model
+   */
+  interface InquiryAnalyticsFieldRefs {
+    readonly id: FieldRef<"InquiryAnalytics", 'String'>
+    readonly date: FieldRef<"InquiryAnalytics", 'DateTime'>
+    readonly totalInquiries: FieldRef<"InquiryAnalytics", 'Int'>
+    readonly pendingInquiries: FieldRef<"InquiryAnalytics", 'Int'>
+    readonly resolvedInquiries: FieldRef<"InquiryAnalytics", 'Int'>
+    readonly avgFirstResponseTime: FieldRef<"InquiryAnalytics", 'Float'>
+    readonly avgResolutionTime: FieldRef<"InquiryAnalytics", 'Float'>
+    readonly seminarInquiries: FieldRef<"InquiryAnalytics", 'Int'>
+    readonly equipmentInquiries: FieldRef<"InquiryAnalytics", 'Int'>
+    readonly accountInquiries: FieldRef<"InquiryAnalytics", 'Int'>
+    readonly generalInquiries: FieldRef<"InquiryAnalytics", 'Int'>
+    readonly lowPriorityCount: FieldRef<"InquiryAnalytics", 'Int'>
+    readonly mediumPriorityCount: FieldRef<"InquiryAnalytics", 'Int'>
+    readonly highPriorityCount: FieldRef<"InquiryAnalytics", 'Int'>
+    readonly urgentPriorityCount: FieldRef<"InquiryAnalytics", 'Int'>
+    readonly adminId: FieldRef<"InquiryAnalytics", 'String'>
+    readonly createdAt: FieldRef<"InquiryAnalytics", 'DateTime'>
+    readonly updatedAt: FieldRef<"InquiryAnalytics", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InquiryAnalytics findUnique
+   */
+  export type InquiryAnalyticsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAnalytics
+     */
+    select?: InquiryAnalyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAnalytics
+     */
+    omit?: InquiryAnalyticsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAnalyticsInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryAnalytics to fetch.
+     */
+    where: InquiryAnalyticsWhereUniqueInput
+  }
+
+  /**
+   * InquiryAnalytics findUniqueOrThrow
+   */
+  export type InquiryAnalyticsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAnalytics
+     */
+    select?: InquiryAnalyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAnalytics
+     */
+    omit?: InquiryAnalyticsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAnalyticsInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryAnalytics to fetch.
+     */
+    where: InquiryAnalyticsWhereUniqueInput
+  }
+
+  /**
+   * InquiryAnalytics findFirst
+   */
+  export type InquiryAnalyticsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAnalytics
+     */
+    select?: InquiryAnalyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAnalytics
+     */
+    omit?: InquiryAnalyticsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAnalyticsInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryAnalytics to fetch.
+     */
+    where?: InquiryAnalyticsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryAnalytics to fetch.
+     */
+    orderBy?: InquiryAnalyticsOrderByWithRelationInput | InquiryAnalyticsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InquiryAnalytics.
+     */
+    cursor?: InquiryAnalyticsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryAnalytics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryAnalytics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InquiryAnalytics.
+     */
+    distinct?: InquiryAnalyticsScalarFieldEnum | InquiryAnalyticsScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryAnalytics findFirstOrThrow
+   */
+  export type InquiryAnalyticsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAnalytics
+     */
+    select?: InquiryAnalyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAnalytics
+     */
+    omit?: InquiryAnalyticsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAnalyticsInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryAnalytics to fetch.
+     */
+    where?: InquiryAnalyticsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryAnalytics to fetch.
+     */
+    orderBy?: InquiryAnalyticsOrderByWithRelationInput | InquiryAnalyticsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InquiryAnalytics.
+     */
+    cursor?: InquiryAnalyticsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryAnalytics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryAnalytics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InquiryAnalytics.
+     */
+    distinct?: InquiryAnalyticsScalarFieldEnum | InquiryAnalyticsScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryAnalytics findMany
+   */
+  export type InquiryAnalyticsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAnalytics
+     */
+    select?: InquiryAnalyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAnalytics
+     */
+    omit?: InquiryAnalyticsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAnalyticsInclude<ExtArgs> | null
+    /**
+     * Filter, which InquiryAnalytics to fetch.
+     */
+    where?: InquiryAnalyticsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InquiryAnalytics to fetch.
+     */
+    orderBy?: InquiryAnalyticsOrderByWithRelationInput | InquiryAnalyticsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InquiryAnalytics.
+     */
+    cursor?: InquiryAnalyticsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InquiryAnalytics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InquiryAnalytics.
+     */
+    skip?: number
+    distinct?: InquiryAnalyticsScalarFieldEnum | InquiryAnalyticsScalarFieldEnum[]
+  }
+
+  /**
+   * InquiryAnalytics create
+   */
+  export type InquiryAnalyticsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAnalytics
+     */
+    select?: InquiryAnalyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAnalytics
+     */
+    omit?: InquiryAnalyticsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAnalyticsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InquiryAnalytics.
+     */
+    data: XOR<InquiryAnalyticsCreateInput, InquiryAnalyticsUncheckedCreateInput>
+  }
+
+  /**
+   * InquiryAnalytics createMany
+   */
+  export type InquiryAnalyticsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InquiryAnalytics.
+     */
+    data: InquiryAnalyticsCreateManyInput | InquiryAnalyticsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InquiryAnalytics update
+   */
+  export type InquiryAnalyticsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAnalytics
+     */
+    select?: InquiryAnalyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAnalytics
+     */
+    omit?: InquiryAnalyticsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAnalyticsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InquiryAnalytics.
+     */
+    data: XOR<InquiryAnalyticsUpdateInput, InquiryAnalyticsUncheckedUpdateInput>
+    /**
+     * Choose, which InquiryAnalytics to update.
+     */
+    where: InquiryAnalyticsWhereUniqueInput
+  }
+
+  /**
+   * InquiryAnalytics updateMany
+   */
+  export type InquiryAnalyticsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InquiryAnalytics.
+     */
+    data: XOR<InquiryAnalyticsUpdateManyMutationInput, InquiryAnalyticsUncheckedUpdateManyInput>
+    /**
+     * Filter which InquiryAnalytics to update
+     */
+    where?: InquiryAnalyticsWhereInput
+    /**
+     * Limit how many InquiryAnalytics to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InquiryAnalytics upsert
+   */
+  export type InquiryAnalyticsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAnalytics
+     */
+    select?: InquiryAnalyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAnalytics
+     */
+    omit?: InquiryAnalyticsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAnalyticsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InquiryAnalytics to update in case it exists.
+     */
+    where: InquiryAnalyticsWhereUniqueInput
+    /**
+     * In case the InquiryAnalytics found by the `where` argument doesn't exist, create a new InquiryAnalytics with this data.
+     */
+    create: XOR<InquiryAnalyticsCreateInput, InquiryAnalyticsUncheckedCreateInput>
+    /**
+     * In case the InquiryAnalytics was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InquiryAnalyticsUpdateInput, InquiryAnalyticsUncheckedUpdateInput>
+  }
+
+  /**
+   * InquiryAnalytics delete
+   */
+  export type InquiryAnalyticsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAnalytics
+     */
+    select?: InquiryAnalyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAnalytics
+     */
+    omit?: InquiryAnalyticsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAnalyticsInclude<ExtArgs> | null
+    /**
+     * Filter which InquiryAnalytics to delete.
+     */
+    where: InquiryAnalyticsWhereUniqueInput
+  }
+
+  /**
+   * InquiryAnalytics deleteMany
+   */
+  export type InquiryAnalyticsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InquiryAnalytics to delete
+     */
+    where?: InquiryAnalyticsWhereInput
+    /**
+     * Limit how many InquiryAnalytics to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InquiryAnalytics.admin
+   */
+  export type InquiryAnalytics$adminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * InquiryAnalytics without action
+   */
+  export type InquiryAnalyticsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InquiryAnalytics
+     */
+    select?: InquiryAnalyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InquiryAnalytics
+     */
+    omit?: InquiryAnalyticsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryAnalyticsInclude<ExtArgs> | null
   }
 
 
@@ -9566,6 +18199,132 @@ export namespace Prisma {
   export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+  export const InquiryScalarFieldEnum: {
+    id: 'id',
+    subject: 'subject',
+    message: 'message',
+    category: 'category',
+    priority: 'priority',
+    status: 'status',
+    userId: 'userId',
+    guestName: 'guestName',
+    guestEmail: 'guestEmail',
+    assignedToId: 'assignedToId',
+    resolvedById: 'resolvedById',
+    resolvedAt: 'resolvedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type InquiryScalarFieldEnum = (typeof InquiryScalarFieldEnum)[keyof typeof InquiryScalarFieldEnum]
+
+
+  export const InquiryReplyScalarFieldEnum: {
+    id: 'id',
+    message: 'message',
+    isInternal: 'isInternal',
+    senderId: 'senderId',
+    senderType: 'senderType',
+    senderName: 'senderName',
+    inquiryId: 'inquiryId',
+    parentReplyId: 'parentReplyId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    readByUser: 'readByUser',
+    readByAdmin: 'readByAdmin',
+    readAt: 'readAt'
+  };
+
+  export type InquiryReplyScalarFieldEnum = (typeof InquiryReplyScalarFieldEnum)[keyof typeof InquiryReplyScalarFieldEnum]
+
+
+  export const InquiryAttachmentScalarFieldEnum: {
+    id: 'id',
+    filename: 'filename',
+    filepath: 'filepath',
+    filesize: 'filesize',
+    mimetype: 'mimetype',
+    inquiryId: 'inquiryId',
+    uploadedById: 'uploadedById',
+    createdAt: 'createdAt'
+  };
+
+  export type InquiryAttachmentScalarFieldEnum = (typeof InquiryAttachmentScalarFieldEnum)[keyof typeof InquiryAttachmentScalarFieldEnum]
+
+
+  export const FAQScalarFieldEnum: {
+    id: 'id',
+    question: 'question',
+    answer: 'answer',
+    category: 'category',
+    isActive: 'isActive',
+    orderIndex: 'orderIndex',
+    createdById: 'createdById',
+    viewCount: 'viewCount',
+    helpfulCount: 'helpfulCount',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FAQScalarFieldEnum = (typeof FAQScalarFieldEnum)[keyof typeof FAQScalarFieldEnum]
+
+
+  export const InquiryTemplateScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    content: 'content',
+    category: 'category',
+    isActive: 'isActive',
+    isDefault: 'isDefault',
+    usageCount: 'usageCount',
+    createdById: 'createdById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type InquiryTemplateScalarFieldEnum = (typeof InquiryTemplateScalarFieldEnum)[keyof typeof InquiryTemplateScalarFieldEnum]
+
+
+  export const InquiryNotificationScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    title: 'title',
+    message: 'message',
+    userId: 'userId',
+    inquiryId: 'inquiryId',
+    isRead: 'isRead',
+    readAt: 'readAt',
+    metadata: 'metadata',
+    createdAt: 'createdAt'
+  };
+
+  export type InquiryNotificationScalarFieldEnum = (typeof InquiryNotificationScalarFieldEnum)[keyof typeof InquiryNotificationScalarFieldEnum]
+
+
+  export const InquiryAnalyticsScalarFieldEnum: {
+    id: 'id',
+    date: 'date',
+    totalInquiries: 'totalInquiries',
+    pendingInquiries: 'pendingInquiries',
+    resolvedInquiries: 'resolvedInquiries',
+    avgFirstResponseTime: 'avgFirstResponseTime',
+    avgResolutionTime: 'avgResolutionTime',
+    seminarInquiries: 'seminarInquiries',
+    equipmentInquiries: 'equipmentInquiries',
+    accountInquiries: 'accountInquiries',
+    generalInquiries: 'generalInquiries',
+    lowPriorityCount: 'lowPriorityCount',
+    mediumPriorityCount: 'mediumPriorityCount',
+    highPriorityCount: 'highPriorityCount',
+    urgentPriorityCount: 'urgentPriorityCount',
+    adminId: 'adminId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type InquiryAnalyticsScalarFieldEnum = (typeof InquiryAnalyticsScalarFieldEnum)[keyof typeof InquiryAnalyticsScalarFieldEnum]
+
+
   export const InventoryItemScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -9741,6 +18500,83 @@ export namespace Prisma {
   export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
 
 
+  export const InquiryOrderByRelevanceFieldEnum: {
+    id: 'id',
+    subject: 'subject',
+    message: 'message',
+    userId: 'userId',
+    guestName: 'guestName',
+    guestEmail: 'guestEmail',
+    assignedToId: 'assignedToId',
+    resolvedById: 'resolvedById'
+  };
+
+  export type InquiryOrderByRelevanceFieldEnum = (typeof InquiryOrderByRelevanceFieldEnum)[keyof typeof InquiryOrderByRelevanceFieldEnum]
+
+
+  export const InquiryReplyOrderByRelevanceFieldEnum: {
+    id: 'id',
+    message: 'message',
+    senderId: 'senderId',
+    senderName: 'senderName',
+    inquiryId: 'inquiryId',
+    parentReplyId: 'parentReplyId'
+  };
+
+  export type InquiryReplyOrderByRelevanceFieldEnum = (typeof InquiryReplyOrderByRelevanceFieldEnum)[keyof typeof InquiryReplyOrderByRelevanceFieldEnum]
+
+
+  export const InquiryAttachmentOrderByRelevanceFieldEnum: {
+    id: 'id',
+    filename: 'filename',
+    filepath: 'filepath',
+    mimetype: 'mimetype',
+    inquiryId: 'inquiryId',
+    uploadedById: 'uploadedById'
+  };
+
+  export type InquiryAttachmentOrderByRelevanceFieldEnum = (typeof InquiryAttachmentOrderByRelevanceFieldEnum)[keyof typeof InquiryAttachmentOrderByRelevanceFieldEnum]
+
+
+  export const FAQOrderByRelevanceFieldEnum: {
+    id: 'id',
+    question: 'question',
+    answer: 'answer',
+    createdById: 'createdById'
+  };
+
+  export type FAQOrderByRelevanceFieldEnum = (typeof FAQOrderByRelevanceFieldEnum)[keyof typeof FAQOrderByRelevanceFieldEnum]
+
+
+  export const InquiryTemplateOrderByRelevanceFieldEnum: {
+    id: 'id',
+    title: 'title',
+    content: 'content',
+    createdById: 'createdById'
+  };
+
+  export type InquiryTemplateOrderByRelevanceFieldEnum = (typeof InquiryTemplateOrderByRelevanceFieldEnum)[keyof typeof InquiryTemplateOrderByRelevanceFieldEnum]
+
+
+  export const InquiryNotificationOrderByRelevanceFieldEnum: {
+    id: 'id',
+    title: 'title',
+    message: 'message',
+    userId: 'userId',
+    inquiryId: 'inquiryId'
+  };
+
+  export type InquiryNotificationOrderByRelevanceFieldEnum = (typeof InquiryNotificationOrderByRelevanceFieldEnum)[keyof typeof InquiryNotificationOrderByRelevanceFieldEnum]
+
+
+  export const InquiryAnalyticsOrderByRelevanceFieldEnum: {
+    id: 'id',
+    adminId: 'adminId'
+  };
+
+  export type InquiryAnalyticsOrderByRelevanceFieldEnum = (typeof InquiryAnalyticsOrderByRelevanceFieldEnum)[keyof typeof InquiryAnalyticsOrderByRelevanceFieldEnum]
+
+
   export const InventoryItemOrderByRelevanceFieldEnum: {
     id: 'id',
     name: 'name',
@@ -9897,9 +18733,30 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'item_category'
+   * Reference to a field of type 'InquiryCategory'
    */
-  export type Enumitem_categoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'item_category'>
+  export type EnumInquiryCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryCategory'>
+    
+
+
+  /**
+   * Reference to a field of type 'InquiryPriority'
+   */
+  export type EnumInquiryPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryPriority'>
+    
+
+
+  /**
+   * Reference to a field of type 'InquiryStatus'
+   */
+  export type EnumInquiryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SenderType'
+   */
+  export type EnumSenderTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SenderType'>
     
 
 
@@ -9907,6 +18764,27 @@ export namespace Prisma {
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'NotificationType'
+   */
+  export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'item_category'
+   */
+  export type Enumitem_categoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'item_category'>
     
 
 
@@ -9935,13 +18813,6 @@ export namespace Prisma {
    * Reference to a field of type 'participant_status'
    */
   export type Enumparticipant_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'participant_status'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
   /**
    * Deep Input Types
@@ -10012,6 +18883,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionListRelationFilter
     seminarsCreated?: SeminarListRelationFilter
     auditLogs?: AuditLogListRelationFilter
+    inquiries?: InquiryListRelationFilter
+    assignedInquiries?: InquiryListRelationFilter
+    resolvedInquiries?: InquiryListRelationFilter
+    inquiryReplies?: InquiryReplyListRelationFilter
+    inquiryAttachments?: InquiryAttachmentListRelationFilter
+    createdFAQs?: FAQListRelationFilter
+    createdTemplates?: InquiryTemplateListRelationFilter
+    notifications?: InquiryNotificationListRelationFilter
+    analyticsRecords?: InquiryAnalyticsListRelationFilter
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -10075,6 +18955,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionOrderByRelationAggregateInput
     seminarsCreated?: SeminarOrderByRelationAggregateInput
     auditLogs?: AuditLogOrderByRelationAggregateInput
+    inquiries?: InquiryOrderByRelationAggregateInput
+    assignedInquiries?: InquiryOrderByRelationAggregateInput
+    resolvedInquiries?: InquiryOrderByRelationAggregateInput
+    inquiryReplies?: InquiryReplyOrderByRelationAggregateInput
+    inquiryAttachments?: InquiryAttachmentOrderByRelationAggregateInput
+    createdFAQs?: FAQOrderByRelationAggregateInput
+    createdTemplates?: InquiryTemplateOrderByRelationAggregateInput
+    notifications?: InquiryNotificationOrderByRelationAggregateInput
+    analyticsRecords?: InquiryAnalyticsOrderByRelationAggregateInput
     _relevance?: AccountOrderByRelevanceInput
   }
 
@@ -10142,6 +19031,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionListRelationFilter
     seminarsCreated?: SeminarListRelationFilter
     auditLogs?: AuditLogListRelationFilter
+    inquiries?: InquiryListRelationFilter
+    assignedInquiries?: InquiryListRelationFilter
+    resolvedInquiries?: InquiryListRelationFilter
+    inquiryReplies?: InquiryReplyListRelationFilter
+    inquiryAttachments?: InquiryAttachmentListRelationFilter
+    createdFAQs?: FAQListRelationFilter
+    createdTemplates?: InquiryTemplateListRelationFilter
+    notifications?: InquiryNotificationListRelationFilter
+    analyticsRecords?: InquiryAnalyticsListRelationFilter
   }, "id" | "username" | "email">
 
   export type AccountOrderByWithAggregationInput = {
@@ -10350,6 +19248,682 @@ export namespace Prisma {
     ipAddress?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
     userAgent?: StringNullableWithAggregatesFilter<"AuditLog"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AuditLog"> | Date | string
+  }
+
+  export type InquiryWhereInput = {
+    AND?: InquiryWhereInput | InquiryWhereInput[]
+    OR?: InquiryWhereInput[]
+    NOT?: InquiryWhereInput | InquiryWhereInput[]
+    id?: StringFilter<"Inquiry"> | string
+    subject?: StringFilter<"Inquiry"> | string
+    message?: StringFilter<"Inquiry"> | string
+    category?: EnumInquiryCategoryFilter<"Inquiry"> | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFilter<"Inquiry"> | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFilter<"Inquiry"> | $Enums.InquiryStatus
+    userId?: StringNullableFilter<"Inquiry"> | string | null
+    guestName?: StringNullableFilter<"Inquiry"> | string | null
+    guestEmail?: StringNullableFilter<"Inquiry"> | string | null
+    assignedToId?: StringNullableFilter<"Inquiry"> | string | null
+    resolvedById?: StringNullableFilter<"Inquiry"> | string | null
+    resolvedAt?: DateTimeNullableFilter<"Inquiry"> | Date | string | null
+    createdAt?: DateTimeFilter<"Inquiry"> | Date | string
+    updatedAt?: DateTimeFilter<"Inquiry"> | Date | string
+    user?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    assignedTo?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    resolvedBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    replies?: InquiryReplyListRelationFilter
+    attachments?: InquiryAttachmentListRelationFilter
+    notifications?: InquiryNotificationListRelationFilter
+  }
+
+  export type InquiryOrderByWithRelationInput = {
+    id?: SortOrder
+    subject?: SortOrder
+    message?: SortOrder
+    category?: SortOrder
+    priority?: SortOrder
+    status?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    guestName?: SortOrderInput | SortOrder
+    guestEmail?: SortOrderInput | SortOrder
+    assignedToId?: SortOrderInput | SortOrder
+    resolvedById?: SortOrderInput | SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: AccountOrderByWithRelationInput
+    assignedTo?: AccountOrderByWithRelationInput
+    resolvedBy?: AccountOrderByWithRelationInput
+    replies?: InquiryReplyOrderByRelationAggregateInput
+    attachments?: InquiryAttachmentOrderByRelationAggregateInput
+    notifications?: InquiryNotificationOrderByRelationAggregateInput
+    _relevance?: InquiryOrderByRelevanceInput
+  }
+
+  export type InquiryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InquiryWhereInput | InquiryWhereInput[]
+    OR?: InquiryWhereInput[]
+    NOT?: InquiryWhereInput | InquiryWhereInput[]
+    subject?: StringFilter<"Inquiry"> | string
+    message?: StringFilter<"Inquiry"> | string
+    category?: EnumInquiryCategoryFilter<"Inquiry"> | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFilter<"Inquiry"> | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFilter<"Inquiry"> | $Enums.InquiryStatus
+    userId?: StringNullableFilter<"Inquiry"> | string | null
+    guestName?: StringNullableFilter<"Inquiry"> | string | null
+    guestEmail?: StringNullableFilter<"Inquiry"> | string | null
+    assignedToId?: StringNullableFilter<"Inquiry"> | string | null
+    resolvedById?: StringNullableFilter<"Inquiry"> | string | null
+    resolvedAt?: DateTimeNullableFilter<"Inquiry"> | Date | string | null
+    createdAt?: DateTimeFilter<"Inquiry"> | Date | string
+    updatedAt?: DateTimeFilter<"Inquiry"> | Date | string
+    user?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    assignedTo?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    resolvedBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    replies?: InquiryReplyListRelationFilter
+    attachments?: InquiryAttachmentListRelationFilter
+    notifications?: InquiryNotificationListRelationFilter
+  }, "id">
+
+  export type InquiryOrderByWithAggregationInput = {
+    id?: SortOrder
+    subject?: SortOrder
+    message?: SortOrder
+    category?: SortOrder
+    priority?: SortOrder
+    status?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    guestName?: SortOrderInput | SortOrder
+    guestEmail?: SortOrderInput | SortOrder
+    assignedToId?: SortOrderInput | SortOrder
+    resolvedById?: SortOrderInput | SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: InquiryCountOrderByAggregateInput
+    _max?: InquiryMaxOrderByAggregateInput
+    _min?: InquiryMinOrderByAggregateInput
+  }
+
+  export type InquiryScalarWhereWithAggregatesInput = {
+    AND?: InquiryScalarWhereWithAggregatesInput | InquiryScalarWhereWithAggregatesInput[]
+    OR?: InquiryScalarWhereWithAggregatesInput[]
+    NOT?: InquiryScalarWhereWithAggregatesInput | InquiryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Inquiry"> | string
+    subject?: StringWithAggregatesFilter<"Inquiry"> | string
+    message?: StringWithAggregatesFilter<"Inquiry"> | string
+    category?: EnumInquiryCategoryWithAggregatesFilter<"Inquiry"> | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityWithAggregatesFilter<"Inquiry"> | $Enums.InquiryPriority
+    status?: EnumInquiryStatusWithAggregatesFilter<"Inquiry"> | $Enums.InquiryStatus
+    userId?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
+    guestName?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
+    guestEmail?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
+    assignedToId?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
+    resolvedById?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
+    resolvedAt?: DateTimeNullableWithAggregatesFilter<"Inquiry"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Inquiry"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Inquiry"> | Date | string
+  }
+
+  export type InquiryReplyWhereInput = {
+    AND?: InquiryReplyWhereInput | InquiryReplyWhereInput[]
+    OR?: InquiryReplyWhereInput[]
+    NOT?: InquiryReplyWhereInput | InquiryReplyWhereInput[]
+    id?: StringFilter<"InquiryReply"> | string
+    message?: StringFilter<"InquiryReply"> | string
+    isInternal?: BoolFilter<"InquiryReply"> | boolean
+    senderId?: StringNullableFilter<"InquiryReply"> | string | null
+    senderType?: EnumSenderTypeFilter<"InquiryReply"> | $Enums.SenderType
+    senderName?: StringNullableFilter<"InquiryReply"> | string | null
+    inquiryId?: StringFilter<"InquiryReply"> | string
+    parentReplyId?: StringNullableFilter<"InquiryReply"> | string | null
+    createdAt?: DateTimeFilter<"InquiryReply"> | Date | string
+    updatedAt?: DateTimeFilter<"InquiryReply"> | Date | string
+    readByUser?: BoolFilter<"InquiryReply"> | boolean
+    readByAdmin?: BoolFilter<"InquiryReply"> | boolean
+    readAt?: DateTimeNullableFilter<"InquiryReply"> | Date | string | null
+    sender?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    inquiry?: XOR<InquiryScalarRelationFilter, InquiryWhereInput>
+    parentReply?: XOR<InquiryReplyNullableScalarRelationFilter, InquiryReplyWhereInput> | null
+    childReplies?: InquiryReplyListRelationFilter
+  }
+
+  export type InquiryReplyOrderByWithRelationInput = {
+    id?: SortOrder
+    message?: SortOrder
+    isInternal?: SortOrder
+    senderId?: SortOrderInput | SortOrder
+    senderType?: SortOrder
+    senderName?: SortOrderInput | SortOrder
+    inquiryId?: SortOrder
+    parentReplyId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    readByUser?: SortOrder
+    readByAdmin?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    sender?: AccountOrderByWithRelationInput
+    inquiry?: InquiryOrderByWithRelationInput
+    parentReply?: InquiryReplyOrderByWithRelationInput
+    childReplies?: InquiryReplyOrderByRelationAggregateInput
+    _relevance?: InquiryReplyOrderByRelevanceInput
+  }
+
+  export type InquiryReplyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InquiryReplyWhereInput | InquiryReplyWhereInput[]
+    OR?: InquiryReplyWhereInput[]
+    NOT?: InquiryReplyWhereInput | InquiryReplyWhereInput[]
+    message?: StringFilter<"InquiryReply"> | string
+    isInternal?: BoolFilter<"InquiryReply"> | boolean
+    senderId?: StringNullableFilter<"InquiryReply"> | string | null
+    senderType?: EnumSenderTypeFilter<"InquiryReply"> | $Enums.SenderType
+    senderName?: StringNullableFilter<"InquiryReply"> | string | null
+    inquiryId?: StringFilter<"InquiryReply"> | string
+    parentReplyId?: StringNullableFilter<"InquiryReply"> | string | null
+    createdAt?: DateTimeFilter<"InquiryReply"> | Date | string
+    updatedAt?: DateTimeFilter<"InquiryReply"> | Date | string
+    readByUser?: BoolFilter<"InquiryReply"> | boolean
+    readByAdmin?: BoolFilter<"InquiryReply"> | boolean
+    readAt?: DateTimeNullableFilter<"InquiryReply"> | Date | string | null
+    sender?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    inquiry?: XOR<InquiryScalarRelationFilter, InquiryWhereInput>
+    parentReply?: XOR<InquiryReplyNullableScalarRelationFilter, InquiryReplyWhereInput> | null
+    childReplies?: InquiryReplyListRelationFilter
+  }, "id">
+
+  export type InquiryReplyOrderByWithAggregationInput = {
+    id?: SortOrder
+    message?: SortOrder
+    isInternal?: SortOrder
+    senderId?: SortOrderInput | SortOrder
+    senderType?: SortOrder
+    senderName?: SortOrderInput | SortOrder
+    inquiryId?: SortOrder
+    parentReplyId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    readByUser?: SortOrder
+    readByAdmin?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    _count?: InquiryReplyCountOrderByAggregateInput
+    _max?: InquiryReplyMaxOrderByAggregateInput
+    _min?: InquiryReplyMinOrderByAggregateInput
+  }
+
+  export type InquiryReplyScalarWhereWithAggregatesInput = {
+    AND?: InquiryReplyScalarWhereWithAggregatesInput | InquiryReplyScalarWhereWithAggregatesInput[]
+    OR?: InquiryReplyScalarWhereWithAggregatesInput[]
+    NOT?: InquiryReplyScalarWhereWithAggregatesInput | InquiryReplyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InquiryReply"> | string
+    message?: StringWithAggregatesFilter<"InquiryReply"> | string
+    isInternal?: BoolWithAggregatesFilter<"InquiryReply"> | boolean
+    senderId?: StringNullableWithAggregatesFilter<"InquiryReply"> | string | null
+    senderType?: EnumSenderTypeWithAggregatesFilter<"InquiryReply"> | $Enums.SenderType
+    senderName?: StringNullableWithAggregatesFilter<"InquiryReply"> | string | null
+    inquiryId?: StringWithAggregatesFilter<"InquiryReply"> | string
+    parentReplyId?: StringNullableWithAggregatesFilter<"InquiryReply"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"InquiryReply"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InquiryReply"> | Date | string
+    readByUser?: BoolWithAggregatesFilter<"InquiryReply"> | boolean
+    readByAdmin?: BoolWithAggregatesFilter<"InquiryReply"> | boolean
+    readAt?: DateTimeNullableWithAggregatesFilter<"InquiryReply"> | Date | string | null
+  }
+
+  export type InquiryAttachmentWhereInput = {
+    AND?: InquiryAttachmentWhereInput | InquiryAttachmentWhereInput[]
+    OR?: InquiryAttachmentWhereInput[]
+    NOT?: InquiryAttachmentWhereInput | InquiryAttachmentWhereInput[]
+    id?: StringFilter<"InquiryAttachment"> | string
+    filename?: StringFilter<"InquiryAttachment"> | string
+    filepath?: StringFilter<"InquiryAttachment"> | string
+    filesize?: IntFilter<"InquiryAttachment"> | number
+    mimetype?: StringFilter<"InquiryAttachment"> | string
+    inquiryId?: StringFilter<"InquiryAttachment"> | string
+    uploadedById?: StringNullableFilter<"InquiryAttachment"> | string | null
+    createdAt?: DateTimeFilter<"InquiryAttachment"> | Date | string
+    inquiry?: XOR<InquiryScalarRelationFilter, InquiryWhereInput>
+    uploadedBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+  }
+
+  export type InquiryAttachmentOrderByWithRelationInput = {
+    id?: SortOrder
+    filename?: SortOrder
+    filepath?: SortOrder
+    filesize?: SortOrder
+    mimetype?: SortOrder
+    inquiryId?: SortOrder
+    uploadedById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    inquiry?: InquiryOrderByWithRelationInput
+    uploadedBy?: AccountOrderByWithRelationInput
+    _relevance?: InquiryAttachmentOrderByRelevanceInput
+  }
+
+  export type InquiryAttachmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InquiryAttachmentWhereInput | InquiryAttachmentWhereInput[]
+    OR?: InquiryAttachmentWhereInput[]
+    NOT?: InquiryAttachmentWhereInput | InquiryAttachmentWhereInput[]
+    filename?: StringFilter<"InquiryAttachment"> | string
+    filepath?: StringFilter<"InquiryAttachment"> | string
+    filesize?: IntFilter<"InquiryAttachment"> | number
+    mimetype?: StringFilter<"InquiryAttachment"> | string
+    inquiryId?: StringFilter<"InquiryAttachment"> | string
+    uploadedById?: StringNullableFilter<"InquiryAttachment"> | string | null
+    createdAt?: DateTimeFilter<"InquiryAttachment"> | Date | string
+    inquiry?: XOR<InquiryScalarRelationFilter, InquiryWhereInput>
+    uploadedBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+  }, "id">
+
+  export type InquiryAttachmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    filename?: SortOrder
+    filepath?: SortOrder
+    filesize?: SortOrder
+    mimetype?: SortOrder
+    inquiryId?: SortOrder
+    uploadedById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: InquiryAttachmentCountOrderByAggregateInput
+    _avg?: InquiryAttachmentAvgOrderByAggregateInput
+    _max?: InquiryAttachmentMaxOrderByAggregateInput
+    _min?: InquiryAttachmentMinOrderByAggregateInput
+    _sum?: InquiryAttachmentSumOrderByAggregateInput
+  }
+
+  export type InquiryAttachmentScalarWhereWithAggregatesInput = {
+    AND?: InquiryAttachmentScalarWhereWithAggregatesInput | InquiryAttachmentScalarWhereWithAggregatesInput[]
+    OR?: InquiryAttachmentScalarWhereWithAggregatesInput[]
+    NOT?: InquiryAttachmentScalarWhereWithAggregatesInput | InquiryAttachmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InquiryAttachment"> | string
+    filename?: StringWithAggregatesFilter<"InquiryAttachment"> | string
+    filepath?: StringWithAggregatesFilter<"InquiryAttachment"> | string
+    filesize?: IntWithAggregatesFilter<"InquiryAttachment"> | number
+    mimetype?: StringWithAggregatesFilter<"InquiryAttachment"> | string
+    inquiryId?: StringWithAggregatesFilter<"InquiryAttachment"> | string
+    uploadedById?: StringNullableWithAggregatesFilter<"InquiryAttachment"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"InquiryAttachment"> | Date | string
+  }
+
+  export type FAQWhereInput = {
+    AND?: FAQWhereInput | FAQWhereInput[]
+    OR?: FAQWhereInput[]
+    NOT?: FAQWhereInput | FAQWhereInput[]
+    id?: StringFilter<"FAQ"> | string
+    question?: StringFilter<"FAQ"> | string
+    answer?: StringFilter<"FAQ"> | string
+    category?: EnumInquiryCategoryFilter<"FAQ"> | $Enums.InquiryCategory
+    isActive?: BoolFilter<"FAQ"> | boolean
+    orderIndex?: IntFilter<"FAQ"> | number
+    createdById?: StringNullableFilter<"FAQ"> | string | null
+    viewCount?: IntFilter<"FAQ"> | number
+    helpfulCount?: IntFilter<"FAQ"> | number
+    createdAt?: DateTimeFilter<"FAQ"> | Date | string
+    updatedAt?: DateTimeFilter<"FAQ"> | Date | string
+    createdBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+  }
+
+  export type FAQOrderByWithRelationInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    orderIndex?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    viewCount?: SortOrder
+    helpfulCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: AccountOrderByWithRelationInput
+    _relevance?: FAQOrderByRelevanceInput
+  }
+
+  export type FAQWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FAQWhereInput | FAQWhereInput[]
+    OR?: FAQWhereInput[]
+    NOT?: FAQWhereInput | FAQWhereInput[]
+    question?: StringFilter<"FAQ"> | string
+    answer?: StringFilter<"FAQ"> | string
+    category?: EnumInquiryCategoryFilter<"FAQ"> | $Enums.InquiryCategory
+    isActive?: BoolFilter<"FAQ"> | boolean
+    orderIndex?: IntFilter<"FAQ"> | number
+    createdById?: StringNullableFilter<"FAQ"> | string | null
+    viewCount?: IntFilter<"FAQ"> | number
+    helpfulCount?: IntFilter<"FAQ"> | number
+    createdAt?: DateTimeFilter<"FAQ"> | Date | string
+    updatedAt?: DateTimeFilter<"FAQ"> | Date | string
+    createdBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+  }, "id">
+
+  export type FAQOrderByWithAggregationInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    orderIndex?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    viewCount?: SortOrder
+    helpfulCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FAQCountOrderByAggregateInput
+    _avg?: FAQAvgOrderByAggregateInput
+    _max?: FAQMaxOrderByAggregateInput
+    _min?: FAQMinOrderByAggregateInput
+    _sum?: FAQSumOrderByAggregateInput
+  }
+
+  export type FAQScalarWhereWithAggregatesInput = {
+    AND?: FAQScalarWhereWithAggregatesInput | FAQScalarWhereWithAggregatesInput[]
+    OR?: FAQScalarWhereWithAggregatesInput[]
+    NOT?: FAQScalarWhereWithAggregatesInput | FAQScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FAQ"> | string
+    question?: StringWithAggregatesFilter<"FAQ"> | string
+    answer?: StringWithAggregatesFilter<"FAQ"> | string
+    category?: EnumInquiryCategoryWithAggregatesFilter<"FAQ"> | $Enums.InquiryCategory
+    isActive?: BoolWithAggregatesFilter<"FAQ"> | boolean
+    orderIndex?: IntWithAggregatesFilter<"FAQ"> | number
+    createdById?: StringNullableWithAggregatesFilter<"FAQ"> | string | null
+    viewCount?: IntWithAggregatesFilter<"FAQ"> | number
+    helpfulCount?: IntWithAggregatesFilter<"FAQ"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"FAQ"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FAQ"> | Date | string
+  }
+
+  export type InquiryTemplateWhereInput = {
+    AND?: InquiryTemplateWhereInput | InquiryTemplateWhereInput[]
+    OR?: InquiryTemplateWhereInput[]
+    NOT?: InquiryTemplateWhereInput | InquiryTemplateWhereInput[]
+    id?: StringFilter<"InquiryTemplate"> | string
+    title?: StringFilter<"InquiryTemplate"> | string
+    content?: StringFilter<"InquiryTemplate"> | string
+    category?: EnumInquiryCategoryFilter<"InquiryTemplate"> | $Enums.InquiryCategory
+    isActive?: BoolFilter<"InquiryTemplate"> | boolean
+    isDefault?: BoolFilter<"InquiryTemplate"> | boolean
+    usageCount?: IntFilter<"InquiryTemplate"> | number
+    createdById?: StringNullableFilter<"InquiryTemplate"> | string | null
+    createdAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
+    updatedAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
+    createdBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+  }
+
+  export type InquiryTemplateOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    isDefault?: SortOrder
+    usageCount?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: AccountOrderByWithRelationInput
+    _relevance?: InquiryTemplateOrderByRelevanceInput
+  }
+
+  export type InquiryTemplateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InquiryTemplateWhereInput | InquiryTemplateWhereInput[]
+    OR?: InquiryTemplateWhereInput[]
+    NOT?: InquiryTemplateWhereInput | InquiryTemplateWhereInput[]
+    title?: StringFilter<"InquiryTemplate"> | string
+    content?: StringFilter<"InquiryTemplate"> | string
+    category?: EnumInquiryCategoryFilter<"InquiryTemplate"> | $Enums.InquiryCategory
+    isActive?: BoolFilter<"InquiryTemplate"> | boolean
+    isDefault?: BoolFilter<"InquiryTemplate"> | boolean
+    usageCount?: IntFilter<"InquiryTemplate"> | number
+    createdById?: StringNullableFilter<"InquiryTemplate"> | string | null
+    createdAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
+    updatedAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
+    createdBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+  }, "id">
+
+  export type InquiryTemplateOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    isDefault?: SortOrder
+    usageCount?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: InquiryTemplateCountOrderByAggregateInput
+    _avg?: InquiryTemplateAvgOrderByAggregateInput
+    _max?: InquiryTemplateMaxOrderByAggregateInput
+    _min?: InquiryTemplateMinOrderByAggregateInput
+    _sum?: InquiryTemplateSumOrderByAggregateInput
+  }
+
+  export type InquiryTemplateScalarWhereWithAggregatesInput = {
+    AND?: InquiryTemplateScalarWhereWithAggregatesInput | InquiryTemplateScalarWhereWithAggregatesInput[]
+    OR?: InquiryTemplateScalarWhereWithAggregatesInput[]
+    NOT?: InquiryTemplateScalarWhereWithAggregatesInput | InquiryTemplateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InquiryTemplate"> | string
+    title?: StringWithAggregatesFilter<"InquiryTemplate"> | string
+    content?: StringWithAggregatesFilter<"InquiryTemplate"> | string
+    category?: EnumInquiryCategoryWithAggregatesFilter<"InquiryTemplate"> | $Enums.InquiryCategory
+    isActive?: BoolWithAggregatesFilter<"InquiryTemplate"> | boolean
+    isDefault?: BoolWithAggregatesFilter<"InquiryTemplate"> | boolean
+    usageCount?: IntWithAggregatesFilter<"InquiryTemplate"> | number
+    createdById?: StringNullableWithAggregatesFilter<"InquiryTemplate"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"InquiryTemplate"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InquiryTemplate"> | Date | string
+  }
+
+  export type InquiryNotificationWhereInput = {
+    AND?: InquiryNotificationWhereInput | InquiryNotificationWhereInput[]
+    OR?: InquiryNotificationWhereInput[]
+    NOT?: InquiryNotificationWhereInput | InquiryNotificationWhereInput[]
+    id?: StringFilter<"InquiryNotification"> | string
+    type?: EnumNotificationTypeFilter<"InquiryNotification"> | $Enums.NotificationType
+    title?: StringFilter<"InquiryNotification"> | string
+    message?: StringFilter<"InquiryNotification"> | string
+    userId?: StringFilter<"InquiryNotification"> | string
+    inquiryId?: StringNullableFilter<"InquiryNotification"> | string | null
+    isRead?: BoolFilter<"InquiryNotification"> | boolean
+    readAt?: DateTimeNullableFilter<"InquiryNotification"> | Date | string | null
+    metadata?: JsonNullableFilter<"InquiryNotification">
+    createdAt?: DateTimeFilter<"InquiryNotification"> | Date | string
+    user?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+    inquiry?: XOR<InquiryNullableScalarRelationFilter, InquiryWhereInput> | null
+  }
+
+  export type InquiryNotificationOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    userId?: SortOrder
+    inquiryId?: SortOrderInput | SortOrder
+    isRead?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    user?: AccountOrderByWithRelationInput
+    inquiry?: InquiryOrderByWithRelationInput
+    _relevance?: InquiryNotificationOrderByRelevanceInput
+  }
+
+  export type InquiryNotificationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InquiryNotificationWhereInput | InquiryNotificationWhereInput[]
+    OR?: InquiryNotificationWhereInput[]
+    NOT?: InquiryNotificationWhereInput | InquiryNotificationWhereInput[]
+    type?: EnumNotificationTypeFilter<"InquiryNotification"> | $Enums.NotificationType
+    title?: StringFilter<"InquiryNotification"> | string
+    message?: StringFilter<"InquiryNotification"> | string
+    userId?: StringFilter<"InquiryNotification"> | string
+    inquiryId?: StringNullableFilter<"InquiryNotification"> | string | null
+    isRead?: BoolFilter<"InquiryNotification"> | boolean
+    readAt?: DateTimeNullableFilter<"InquiryNotification"> | Date | string | null
+    metadata?: JsonNullableFilter<"InquiryNotification">
+    createdAt?: DateTimeFilter<"InquiryNotification"> | Date | string
+    user?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+    inquiry?: XOR<InquiryNullableScalarRelationFilter, InquiryWhereInput> | null
+  }, "id">
+
+  export type InquiryNotificationOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    userId?: SortOrder
+    inquiryId?: SortOrderInput | SortOrder
+    isRead?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: InquiryNotificationCountOrderByAggregateInput
+    _max?: InquiryNotificationMaxOrderByAggregateInput
+    _min?: InquiryNotificationMinOrderByAggregateInput
+  }
+
+  export type InquiryNotificationScalarWhereWithAggregatesInput = {
+    AND?: InquiryNotificationScalarWhereWithAggregatesInput | InquiryNotificationScalarWhereWithAggregatesInput[]
+    OR?: InquiryNotificationScalarWhereWithAggregatesInput[]
+    NOT?: InquiryNotificationScalarWhereWithAggregatesInput | InquiryNotificationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InquiryNotification"> | string
+    type?: EnumNotificationTypeWithAggregatesFilter<"InquiryNotification"> | $Enums.NotificationType
+    title?: StringWithAggregatesFilter<"InquiryNotification"> | string
+    message?: StringWithAggregatesFilter<"InquiryNotification"> | string
+    userId?: StringWithAggregatesFilter<"InquiryNotification"> | string
+    inquiryId?: StringNullableWithAggregatesFilter<"InquiryNotification"> | string | null
+    isRead?: BoolWithAggregatesFilter<"InquiryNotification"> | boolean
+    readAt?: DateTimeNullableWithAggregatesFilter<"InquiryNotification"> | Date | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"InquiryNotification">
+    createdAt?: DateTimeWithAggregatesFilter<"InquiryNotification"> | Date | string
+  }
+
+  export type InquiryAnalyticsWhereInput = {
+    AND?: InquiryAnalyticsWhereInput | InquiryAnalyticsWhereInput[]
+    OR?: InquiryAnalyticsWhereInput[]
+    NOT?: InquiryAnalyticsWhereInput | InquiryAnalyticsWhereInput[]
+    id?: StringFilter<"InquiryAnalytics"> | string
+    date?: DateTimeFilter<"InquiryAnalytics"> | Date | string
+    totalInquiries?: IntFilter<"InquiryAnalytics"> | number
+    pendingInquiries?: IntFilter<"InquiryAnalytics"> | number
+    resolvedInquiries?: IntFilter<"InquiryAnalytics"> | number
+    avgFirstResponseTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
+    avgResolutionTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
+    seminarInquiries?: IntFilter<"InquiryAnalytics"> | number
+    equipmentInquiries?: IntFilter<"InquiryAnalytics"> | number
+    accountInquiries?: IntFilter<"InquiryAnalytics"> | number
+    generalInquiries?: IntFilter<"InquiryAnalytics"> | number
+    lowPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    mediumPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    highPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    urgentPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    adminId?: StringNullableFilter<"InquiryAnalytics"> | string | null
+    createdAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
+    updatedAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
+    admin?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+  }
+
+  export type InquiryAnalyticsOrderByWithRelationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    totalInquiries?: SortOrder
+    pendingInquiries?: SortOrder
+    resolvedInquiries?: SortOrder
+    avgFirstResponseTime?: SortOrderInput | SortOrder
+    avgResolutionTime?: SortOrderInput | SortOrder
+    seminarInquiries?: SortOrder
+    equipmentInquiries?: SortOrder
+    accountInquiries?: SortOrder
+    generalInquiries?: SortOrder
+    lowPriorityCount?: SortOrder
+    mediumPriorityCount?: SortOrder
+    highPriorityCount?: SortOrder
+    urgentPriorityCount?: SortOrder
+    adminId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    admin?: AccountOrderByWithRelationInput
+    _relevance?: InquiryAnalyticsOrderByRelevanceInput
+  }
+
+  export type InquiryAnalyticsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    date_adminId?: InquiryAnalyticsDateAdminIdCompoundUniqueInput
+    AND?: InquiryAnalyticsWhereInput | InquiryAnalyticsWhereInput[]
+    OR?: InquiryAnalyticsWhereInput[]
+    NOT?: InquiryAnalyticsWhereInput | InquiryAnalyticsWhereInput[]
+    date?: DateTimeFilter<"InquiryAnalytics"> | Date | string
+    totalInquiries?: IntFilter<"InquiryAnalytics"> | number
+    pendingInquiries?: IntFilter<"InquiryAnalytics"> | number
+    resolvedInquiries?: IntFilter<"InquiryAnalytics"> | number
+    avgFirstResponseTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
+    avgResolutionTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
+    seminarInquiries?: IntFilter<"InquiryAnalytics"> | number
+    equipmentInquiries?: IntFilter<"InquiryAnalytics"> | number
+    accountInquiries?: IntFilter<"InquiryAnalytics"> | number
+    generalInquiries?: IntFilter<"InquiryAnalytics"> | number
+    lowPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    mediumPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    highPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    urgentPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    adminId?: StringNullableFilter<"InquiryAnalytics"> | string | null
+    createdAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
+    updatedAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
+    admin?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+  }, "id" | "date_adminId">
+
+  export type InquiryAnalyticsOrderByWithAggregationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    totalInquiries?: SortOrder
+    pendingInquiries?: SortOrder
+    resolvedInquiries?: SortOrder
+    avgFirstResponseTime?: SortOrderInput | SortOrder
+    avgResolutionTime?: SortOrderInput | SortOrder
+    seminarInquiries?: SortOrder
+    equipmentInquiries?: SortOrder
+    accountInquiries?: SortOrder
+    generalInquiries?: SortOrder
+    lowPriorityCount?: SortOrder
+    mediumPriorityCount?: SortOrder
+    highPriorityCount?: SortOrder
+    urgentPriorityCount?: SortOrder
+    adminId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: InquiryAnalyticsCountOrderByAggregateInput
+    _avg?: InquiryAnalyticsAvgOrderByAggregateInput
+    _max?: InquiryAnalyticsMaxOrderByAggregateInput
+    _min?: InquiryAnalyticsMinOrderByAggregateInput
+    _sum?: InquiryAnalyticsSumOrderByAggregateInput
+  }
+
+  export type InquiryAnalyticsScalarWhereWithAggregatesInput = {
+    AND?: InquiryAnalyticsScalarWhereWithAggregatesInput | InquiryAnalyticsScalarWhereWithAggregatesInput[]
+    OR?: InquiryAnalyticsScalarWhereWithAggregatesInput[]
+    NOT?: InquiryAnalyticsScalarWhereWithAggregatesInput | InquiryAnalyticsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InquiryAnalytics"> | string
+    date?: DateTimeWithAggregatesFilter<"InquiryAnalytics"> | Date | string
+    totalInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
+    pendingInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
+    resolvedInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
+    avgFirstResponseTime?: FloatNullableWithAggregatesFilter<"InquiryAnalytics"> | number | null
+    avgResolutionTime?: FloatNullableWithAggregatesFilter<"InquiryAnalytics"> | number | null
+    seminarInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
+    equipmentInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
+    accountInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
+    generalInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
+    lowPriorityCount?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
+    mediumPriorityCount?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
+    highPriorityCount?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
+    urgentPriorityCount?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
+    adminId?: StringNullableWithAggregatesFilter<"InquiryAnalytics"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"InquiryAnalytics"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InquiryAnalytics"> | Date | string
   }
 
   export type InventoryItemWhereInput = {
@@ -10830,6 +20404,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
     auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateInput = {
@@ -10893,6 +20476,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUpdateInput = {
@@ -10956,6 +20548,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
     auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateInput = {
@@ -11019,6 +20620,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountCreateManyInput = {
@@ -11290,6 +20900,744 @@ export namespace Prisma {
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryCreateInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    guestName?: string | null
+    guestEmail?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: AccountCreateNestedOneWithoutInquiriesInput
+    assignedTo?: AccountCreateNestedOneWithoutAssignedInquiriesInput
+    resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
+    replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
+    attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryUncheckedCreateInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    userId?: string | null
+    guestName?: string | null
+    guestEmail?: string | null
+    assignedToId?: string | null
+    resolvedById?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
+    attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: AccountUpdateOneWithoutInquiriesNestedInput
+    assignedTo?: AccountUpdateOneWithoutAssignedInquiriesNestedInput
+    resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
+    replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
+    attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
+    attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryCreateManyInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    userId?: string | null
+    guestName?: string | null
+    guestEmail?: string | null
+    assignedToId?: string | null
+    resolvedById?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryReplyCreateInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+    sender?: AccountCreateNestedOneWithoutInquiryRepliesInput
+    inquiry: InquiryCreateNestedOneWithoutRepliesInput
+    parentReply?: InquiryReplyCreateNestedOneWithoutChildRepliesInput
+    childReplies?: InquiryReplyCreateNestedManyWithoutParentReplyInput
+  }
+
+  export type InquiryReplyUncheckedCreateInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderId?: string | null
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    inquiryId: string
+    parentReplyId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+    childReplies?: InquiryReplyUncheckedCreateNestedManyWithoutParentReplyInput
+  }
+
+  export type InquiryReplyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sender?: AccountUpdateOneWithoutInquiryRepliesNestedInput
+    inquiry?: InquiryUpdateOneRequiredWithoutRepliesNestedInput
+    parentReply?: InquiryReplyUpdateOneWithoutChildRepliesNestedInput
+    childReplies?: InquiryReplyUpdateManyWithoutParentReplyNestedInput
+  }
+
+  export type InquiryReplyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderId?: NullableStringFieldUpdateOperationsInput | string | null
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    inquiryId?: StringFieldUpdateOperationsInput | string
+    parentReplyId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    childReplies?: InquiryReplyUncheckedUpdateManyWithoutParentReplyNestedInput
+  }
+
+  export type InquiryReplyCreateManyInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderId?: string | null
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    inquiryId: string
+    parentReplyId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+  }
+
+  export type InquiryReplyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type InquiryReplyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderId?: NullableStringFieldUpdateOperationsInput | string | null
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    inquiryId?: StringFieldUpdateOperationsInput | string
+    parentReplyId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type InquiryAttachmentCreateInput = {
+    id?: string
+    filename: string
+    filepath: string
+    filesize: number
+    mimetype: string
+    createdAt?: Date | string
+    inquiry: InquiryCreateNestedOneWithoutAttachmentsInput
+    uploadedBy?: AccountCreateNestedOneWithoutInquiryAttachmentsInput
+  }
+
+  export type InquiryAttachmentUncheckedCreateInput = {
+    id?: string
+    filename: string
+    filepath: string
+    filesize: number
+    mimetype: string
+    inquiryId: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type InquiryAttachmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    filepath?: StringFieldUpdateOperationsInput | string
+    filesize?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    inquiry?: InquiryUpdateOneRequiredWithoutAttachmentsNestedInput
+    uploadedBy?: AccountUpdateOneWithoutInquiryAttachmentsNestedInput
+  }
+
+  export type InquiryAttachmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    filepath?: StringFieldUpdateOperationsInput | string
+    filesize?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    inquiryId?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryAttachmentCreateManyInput = {
+    id?: string
+    filename: string
+    filepath: string
+    filesize: number
+    mimetype: string
+    inquiryId: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type InquiryAttachmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    filepath?: StringFieldUpdateOperationsInput | string
+    filesize?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryAttachmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    filepath?: StringFieldUpdateOperationsInput | string
+    filesize?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    inquiryId?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FAQCreateInput = {
+    id?: string
+    question: string
+    answer: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    orderIndex?: number
+    viewCount?: number
+    helpfulCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: AccountCreateNestedOneWithoutCreatedFAQsInput
+  }
+
+  export type FAQUncheckedCreateInput = {
+    id?: string
+    question: string
+    answer: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    orderIndex?: number
+    createdById?: string | null
+    viewCount?: number
+    helpfulCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FAQUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    orderIndex?: IntFieldUpdateOperationsInput | number
+    viewCount?: IntFieldUpdateOperationsInput | number
+    helpfulCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: AccountUpdateOneWithoutCreatedFAQsNestedInput
+  }
+
+  export type FAQUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    orderIndex?: IntFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    viewCount?: IntFieldUpdateOperationsInput | number
+    helpfulCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FAQCreateManyInput = {
+    id?: string
+    question: string
+    answer: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    orderIndex?: number
+    createdById?: string | null
+    viewCount?: number
+    helpfulCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FAQUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    orderIndex?: IntFieldUpdateOperationsInput | number
+    viewCount?: IntFieldUpdateOperationsInput | number
+    helpfulCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FAQUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    orderIndex?: IntFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    viewCount?: IntFieldUpdateOperationsInput | number
+    helpfulCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryTemplateCreateInput = {
+    id?: string
+    title: string
+    content: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    isDefault?: boolean
+    usageCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: AccountCreateNestedOneWithoutCreatedTemplatesInput
+  }
+
+  export type InquiryTemplateUncheckedCreateInput = {
+    id?: string
+    title: string
+    content: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    isDefault?: boolean
+    usageCount?: number
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryTemplateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: AccountUpdateOneWithoutCreatedTemplatesNestedInput
+  }
+
+  export type InquiryTemplateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryTemplateCreateManyInput = {
+    id?: string
+    title: string
+    content: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    isDefault?: boolean
+    usageCount?: number
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryTemplateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryTemplateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryNotificationCreateInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    user: AccountCreateNestedOneWithoutNotificationsInput
+    inquiry?: InquiryCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type InquiryNotificationUncheckedCreateInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    userId: string
+    inquiryId?: string | null
+    isRead?: boolean
+    readAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type InquiryNotificationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: AccountUpdateOneRequiredWithoutNotificationsNestedInput
+    inquiry?: InquiryUpdateOneWithoutNotificationsNestedInput
+  }
+
+  export type InquiryNotificationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    inquiryId?: NullableStringFieldUpdateOperationsInput | string | null
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryNotificationCreateManyInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    userId: string
+    inquiryId?: string | null
+    isRead?: boolean
+    readAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type InquiryNotificationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryNotificationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    inquiryId?: NullableStringFieldUpdateOperationsInput | string | null
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryAnalyticsCreateInput = {
+    id?: string
+    date: Date | string
+    totalInquiries?: number
+    pendingInquiries?: number
+    resolvedInquiries?: number
+    avgFirstResponseTime?: number | null
+    avgResolutionTime?: number | null
+    seminarInquiries?: number
+    equipmentInquiries?: number
+    accountInquiries?: number
+    generalInquiries?: number
+    lowPriorityCount?: number
+    mediumPriorityCount?: number
+    highPriorityCount?: number
+    urgentPriorityCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admin?: AccountCreateNestedOneWithoutAnalyticsRecordsInput
+  }
+
+  export type InquiryAnalyticsUncheckedCreateInput = {
+    id?: string
+    date: Date | string
+    totalInquiries?: number
+    pendingInquiries?: number
+    resolvedInquiries?: number
+    avgFirstResponseTime?: number | null
+    avgResolutionTime?: number | null
+    seminarInquiries?: number
+    equipmentInquiries?: number
+    accountInquiries?: number
+    generalInquiries?: number
+    lowPriorityCount?: number
+    mediumPriorityCount?: number
+    highPriorityCount?: number
+    urgentPriorityCount?: number
+    adminId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryAnalyticsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalInquiries?: IntFieldUpdateOperationsInput | number
+    pendingInquiries?: IntFieldUpdateOperationsInput | number
+    resolvedInquiries?: IntFieldUpdateOperationsInput | number
+    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    seminarInquiries?: IntFieldUpdateOperationsInput | number
+    equipmentInquiries?: IntFieldUpdateOperationsInput | number
+    accountInquiries?: IntFieldUpdateOperationsInput | number
+    generalInquiries?: IntFieldUpdateOperationsInput | number
+    lowPriorityCount?: IntFieldUpdateOperationsInput | number
+    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
+    highPriorityCount?: IntFieldUpdateOperationsInput | number
+    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: AccountUpdateOneWithoutAnalyticsRecordsNestedInput
+  }
+
+  export type InquiryAnalyticsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalInquiries?: IntFieldUpdateOperationsInput | number
+    pendingInquiries?: IntFieldUpdateOperationsInput | number
+    resolvedInquiries?: IntFieldUpdateOperationsInput | number
+    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    seminarInquiries?: IntFieldUpdateOperationsInput | number
+    equipmentInquiries?: IntFieldUpdateOperationsInput | number
+    accountInquiries?: IntFieldUpdateOperationsInput | number
+    generalInquiries?: IntFieldUpdateOperationsInput | number
+    lowPriorityCount?: IntFieldUpdateOperationsInput | number
+    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
+    highPriorityCount?: IntFieldUpdateOperationsInput | number
+    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryAnalyticsCreateManyInput = {
+    id?: string
+    date: Date | string
+    totalInquiries?: number
+    pendingInquiries?: number
+    resolvedInquiries?: number
+    avgFirstResponseTime?: number | null
+    avgResolutionTime?: number | null
+    seminarInquiries?: number
+    equipmentInquiries?: number
+    accountInquiries?: number
+    generalInquiries?: number
+    lowPriorityCount?: number
+    mediumPriorityCount?: number
+    highPriorityCount?: number
+    urgentPriorityCount?: number
+    adminId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryAnalyticsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalInquiries?: IntFieldUpdateOperationsInput | number
+    pendingInquiries?: IntFieldUpdateOperationsInput | number
+    resolvedInquiries?: IntFieldUpdateOperationsInput | number
+    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    seminarInquiries?: IntFieldUpdateOperationsInput | number
+    equipmentInquiries?: IntFieldUpdateOperationsInput | number
+    accountInquiries?: IntFieldUpdateOperationsInput | number
+    generalInquiries?: IntFieldUpdateOperationsInput | number
+    lowPriorityCount?: IntFieldUpdateOperationsInput | number
+    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
+    highPriorityCount?: IntFieldUpdateOperationsInput | number
+    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryAnalyticsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalInquiries?: IntFieldUpdateOperationsInput | number
+    pendingInquiries?: IntFieldUpdateOperationsInput | number
+    resolvedInquiries?: IntFieldUpdateOperationsInput | number
+    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    seminarInquiries?: IntFieldUpdateOperationsInput | number
+    equipmentInquiries?: IntFieldUpdateOperationsInput | number
+    accountInquiries?: IntFieldUpdateOperationsInput | number
+    generalInquiries?: IntFieldUpdateOperationsInput | number
+    lowPriorityCount?: IntFieldUpdateOperationsInput | number
+    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
+    highPriorityCount?: IntFieldUpdateOperationsInput | number
+    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
+    adminId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InventoryItemCreateInput = {
@@ -11898,6 +22246,48 @@ export namespace Prisma {
     none?: AuditLogWhereInput
   }
 
+  export type InquiryListRelationFilter = {
+    every?: InquiryWhereInput
+    some?: InquiryWhereInput
+    none?: InquiryWhereInput
+  }
+
+  export type InquiryReplyListRelationFilter = {
+    every?: InquiryReplyWhereInput
+    some?: InquiryReplyWhereInput
+    none?: InquiryReplyWhereInput
+  }
+
+  export type InquiryAttachmentListRelationFilter = {
+    every?: InquiryAttachmentWhereInput
+    some?: InquiryAttachmentWhereInput
+    none?: InquiryAttachmentWhereInput
+  }
+
+  export type FAQListRelationFilter = {
+    every?: FAQWhereInput
+    some?: FAQWhereInput
+    none?: FAQWhereInput
+  }
+
+  export type InquiryTemplateListRelationFilter = {
+    every?: InquiryTemplateWhereInput
+    some?: InquiryTemplateWhereInput
+    none?: InquiryTemplateWhereInput
+  }
+
+  export type InquiryNotificationListRelationFilter = {
+    every?: InquiryNotificationWhereInput
+    some?: InquiryNotificationWhereInput
+    none?: InquiryNotificationWhereInput
+  }
+
+  export type InquiryAnalyticsListRelationFilter = {
+    every?: InquiryAnalyticsWhereInput
+    some?: InquiryAnalyticsWhereInput
+    none?: InquiryAnalyticsWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -11916,6 +22306,34 @@ export namespace Prisma {
   }
 
   export type AuditLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InquiryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InquiryReplyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InquiryAttachmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FAQOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InquiryTemplateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InquiryNotificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InquiryAnalyticsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -12335,6 +22753,598 @@ export namespace Prisma {
     _max?: NestedEnumaudit_actionFilter<$PrismaModel>
   }
 
+  export type EnumInquiryCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryCategory | EnumInquiryCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryCategory[]
+    notIn?: $Enums.InquiryCategory[]
+    not?: NestedEnumInquiryCategoryFilter<$PrismaModel> | $Enums.InquiryCategory
+  }
+
+  export type EnumInquiryPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryPriority[]
+    notIn?: $Enums.InquiryPriority[]
+    not?: NestedEnumInquiryPriorityFilter<$PrismaModel> | $Enums.InquiryPriority
+  }
+
+  export type EnumInquiryStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryStatus | EnumInquiryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryStatus[]
+    notIn?: $Enums.InquiryStatus[]
+    not?: NestedEnumInquiryStatusFilter<$PrismaModel> | $Enums.InquiryStatus
+  }
+
+  export type AccountNullableScalarRelationFilter = {
+    is?: AccountWhereInput | null
+    isNot?: AccountWhereInput | null
+  }
+
+  export type InquiryOrderByRelevanceInput = {
+    fields: InquiryOrderByRelevanceFieldEnum | InquiryOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type InquiryCountOrderByAggregateInput = {
+    id?: SortOrder
+    subject?: SortOrder
+    message?: SortOrder
+    category?: SortOrder
+    priority?: SortOrder
+    status?: SortOrder
+    userId?: SortOrder
+    guestName?: SortOrder
+    guestEmail?: SortOrder
+    assignedToId?: SortOrder
+    resolvedById?: SortOrder
+    resolvedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InquiryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    subject?: SortOrder
+    message?: SortOrder
+    category?: SortOrder
+    priority?: SortOrder
+    status?: SortOrder
+    userId?: SortOrder
+    guestName?: SortOrder
+    guestEmail?: SortOrder
+    assignedToId?: SortOrder
+    resolvedById?: SortOrder
+    resolvedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InquiryMinOrderByAggregateInput = {
+    id?: SortOrder
+    subject?: SortOrder
+    message?: SortOrder
+    category?: SortOrder
+    priority?: SortOrder
+    status?: SortOrder
+    userId?: SortOrder
+    guestName?: SortOrder
+    guestEmail?: SortOrder
+    assignedToId?: SortOrder
+    resolvedById?: SortOrder
+    resolvedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumInquiryCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryCategory | EnumInquiryCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryCategory[]
+    notIn?: $Enums.InquiryCategory[]
+    not?: NestedEnumInquiryCategoryWithAggregatesFilter<$PrismaModel> | $Enums.InquiryCategory
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInquiryCategoryFilter<$PrismaModel>
+    _max?: NestedEnumInquiryCategoryFilter<$PrismaModel>
+  }
+
+  export type EnumInquiryPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryPriority[]
+    notIn?: $Enums.InquiryPriority[]
+    not?: NestedEnumInquiryPriorityWithAggregatesFilter<$PrismaModel> | $Enums.InquiryPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInquiryPriorityFilter<$PrismaModel>
+    _max?: NestedEnumInquiryPriorityFilter<$PrismaModel>
+  }
+
+  export type EnumInquiryStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryStatus | EnumInquiryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryStatus[]
+    notIn?: $Enums.InquiryStatus[]
+    not?: NestedEnumInquiryStatusWithAggregatesFilter<$PrismaModel> | $Enums.InquiryStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInquiryStatusFilter<$PrismaModel>
+    _max?: NestedEnumInquiryStatusFilter<$PrismaModel>
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type EnumSenderTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SenderType | EnumSenderTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SenderType[]
+    notIn?: $Enums.SenderType[]
+    not?: NestedEnumSenderTypeFilter<$PrismaModel> | $Enums.SenderType
+  }
+
+  export type InquiryScalarRelationFilter = {
+    is?: InquiryWhereInput
+    isNot?: InquiryWhereInput
+  }
+
+  export type InquiryReplyNullableScalarRelationFilter = {
+    is?: InquiryReplyWhereInput | null
+    isNot?: InquiryReplyWhereInput | null
+  }
+
+  export type InquiryReplyOrderByRelevanceInput = {
+    fields: InquiryReplyOrderByRelevanceFieldEnum | InquiryReplyOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type InquiryReplyCountOrderByAggregateInput = {
+    id?: SortOrder
+    message?: SortOrder
+    isInternal?: SortOrder
+    senderId?: SortOrder
+    senderType?: SortOrder
+    senderName?: SortOrder
+    inquiryId?: SortOrder
+    parentReplyId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    readByUser?: SortOrder
+    readByAdmin?: SortOrder
+    readAt?: SortOrder
+  }
+
+  export type InquiryReplyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    message?: SortOrder
+    isInternal?: SortOrder
+    senderId?: SortOrder
+    senderType?: SortOrder
+    senderName?: SortOrder
+    inquiryId?: SortOrder
+    parentReplyId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    readByUser?: SortOrder
+    readByAdmin?: SortOrder
+    readAt?: SortOrder
+  }
+
+  export type InquiryReplyMinOrderByAggregateInput = {
+    id?: SortOrder
+    message?: SortOrder
+    isInternal?: SortOrder
+    senderId?: SortOrder
+    senderType?: SortOrder
+    senderName?: SortOrder
+    inquiryId?: SortOrder
+    parentReplyId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    readByUser?: SortOrder
+    readByAdmin?: SortOrder
+    readAt?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type EnumSenderTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SenderType | EnumSenderTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SenderType[]
+    notIn?: $Enums.SenderType[]
+    not?: NestedEnumSenderTypeWithAggregatesFilter<$PrismaModel> | $Enums.SenderType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSenderTypeFilter<$PrismaModel>
+    _max?: NestedEnumSenderTypeFilter<$PrismaModel>
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type InquiryAttachmentOrderByRelevanceInput = {
+    fields: InquiryAttachmentOrderByRelevanceFieldEnum | InquiryAttachmentOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type InquiryAttachmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    filename?: SortOrder
+    filepath?: SortOrder
+    filesize?: SortOrder
+    mimetype?: SortOrder
+    inquiryId?: SortOrder
+    uploadedById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type InquiryAttachmentAvgOrderByAggregateInput = {
+    filesize?: SortOrder
+  }
+
+  export type InquiryAttachmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    filename?: SortOrder
+    filepath?: SortOrder
+    filesize?: SortOrder
+    mimetype?: SortOrder
+    inquiryId?: SortOrder
+    uploadedById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type InquiryAttachmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    filename?: SortOrder
+    filepath?: SortOrder
+    filesize?: SortOrder
+    mimetype?: SortOrder
+    inquiryId?: SortOrder
+    uploadedById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type InquiryAttachmentSumOrderByAggregateInput = {
+    filesize?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type FAQOrderByRelevanceInput = {
+    fields: FAQOrderByRelevanceFieldEnum | FAQOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type FAQCountOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    orderIndex?: SortOrder
+    createdById?: SortOrder
+    viewCount?: SortOrder
+    helpfulCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FAQAvgOrderByAggregateInput = {
+    orderIndex?: SortOrder
+    viewCount?: SortOrder
+    helpfulCount?: SortOrder
+  }
+
+  export type FAQMaxOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    orderIndex?: SortOrder
+    createdById?: SortOrder
+    viewCount?: SortOrder
+    helpfulCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FAQMinOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    orderIndex?: SortOrder
+    createdById?: SortOrder
+    viewCount?: SortOrder
+    helpfulCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FAQSumOrderByAggregateInput = {
+    orderIndex?: SortOrder
+    viewCount?: SortOrder
+    helpfulCount?: SortOrder
+  }
+
+  export type InquiryTemplateOrderByRelevanceInput = {
+    fields: InquiryTemplateOrderByRelevanceFieldEnum | InquiryTemplateOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type InquiryTemplateCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    isDefault?: SortOrder
+    usageCount?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InquiryTemplateAvgOrderByAggregateInput = {
+    usageCount?: SortOrder
+  }
+
+  export type InquiryTemplateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    isDefault?: SortOrder
+    usageCount?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InquiryTemplateMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    isDefault?: SortOrder
+    usageCount?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InquiryTemplateSumOrderByAggregateInput = {
+    usageCount?: SortOrder
+  }
+
+  export type EnumNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[]
+    notIn?: $Enums.NotificationType[]
+    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+  }
+
+  export type InquiryNullableScalarRelationFilter = {
+    is?: InquiryWhereInput | null
+    isNot?: InquiryWhereInput | null
+  }
+
+  export type InquiryNotificationOrderByRelevanceInput = {
+    fields: InquiryNotificationOrderByRelevanceFieldEnum | InquiryNotificationOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type InquiryNotificationCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    userId?: SortOrder
+    inquiryId?: SortOrder
+    isRead?: SortOrder
+    readAt?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type InquiryNotificationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    userId?: SortOrder
+    inquiryId?: SortOrder
+    isRead?: SortOrder
+    readAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type InquiryNotificationMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    userId?: SortOrder
+    inquiryId?: SortOrder
+    isRead?: SortOrder
+    readAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[]
+    notIn?: $Enums.NotificationType[]
+    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type InquiryAnalyticsOrderByRelevanceInput = {
+    fields: InquiryAnalyticsOrderByRelevanceFieldEnum | InquiryAnalyticsOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type InquiryAnalyticsDateAdminIdCompoundUniqueInput = {
+    date: Date | string
+    adminId: string
+  }
+
+  export type InquiryAnalyticsCountOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    totalInquiries?: SortOrder
+    pendingInquiries?: SortOrder
+    resolvedInquiries?: SortOrder
+    avgFirstResponseTime?: SortOrder
+    avgResolutionTime?: SortOrder
+    seminarInquiries?: SortOrder
+    equipmentInquiries?: SortOrder
+    accountInquiries?: SortOrder
+    generalInquiries?: SortOrder
+    lowPriorityCount?: SortOrder
+    mediumPriorityCount?: SortOrder
+    highPriorityCount?: SortOrder
+    urgentPriorityCount?: SortOrder
+    adminId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InquiryAnalyticsAvgOrderByAggregateInput = {
+    totalInquiries?: SortOrder
+    pendingInquiries?: SortOrder
+    resolvedInquiries?: SortOrder
+    avgFirstResponseTime?: SortOrder
+    avgResolutionTime?: SortOrder
+    seminarInquiries?: SortOrder
+    equipmentInquiries?: SortOrder
+    accountInquiries?: SortOrder
+    generalInquiries?: SortOrder
+    lowPriorityCount?: SortOrder
+    mediumPriorityCount?: SortOrder
+    highPriorityCount?: SortOrder
+    urgentPriorityCount?: SortOrder
+  }
+
+  export type InquiryAnalyticsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    totalInquiries?: SortOrder
+    pendingInquiries?: SortOrder
+    resolvedInquiries?: SortOrder
+    avgFirstResponseTime?: SortOrder
+    avgResolutionTime?: SortOrder
+    seminarInquiries?: SortOrder
+    equipmentInquiries?: SortOrder
+    accountInquiries?: SortOrder
+    generalInquiries?: SortOrder
+    lowPriorityCount?: SortOrder
+    mediumPriorityCount?: SortOrder
+    highPriorityCount?: SortOrder
+    urgentPriorityCount?: SortOrder
+    adminId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InquiryAnalyticsMinOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    totalInquiries?: SortOrder
+    pendingInquiries?: SortOrder
+    resolvedInquiries?: SortOrder
+    avgFirstResponseTime?: SortOrder
+    avgResolutionTime?: SortOrder
+    seminarInquiries?: SortOrder
+    equipmentInquiries?: SortOrder
+    accountInquiries?: SortOrder
+    generalInquiries?: SortOrder
+    lowPriorityCount?: SortOrder
+    mediumPriorityCount?: SortOrder
+    highPriorityCount?: SortOrder
+    urgentPriorityCount?: SortOrder
+    adminId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InquiryAnalyticsSumOrderByAggregateInput = {
+    totalInquiries?: SortOrder
+    pendingInquiries?: SortOrder
+    resolvedInquiries?: SortOrder
+    avgFirstResponseTime?: SortOrder
+    avgResolutionTime?: SortOrder
+    seminarInquiries?: SortOrder
+    equipmentInquiries?: SortOrder
+    accountInquiries?: SortOrder
+    generalInquiries?: SortOrder
+    lowPriorityCount?: SortOrder
+    mediumPriorityCount?: SortOrder
+    highPriorityCount?: SortOrder
+    urgentPriorityCount?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type Enumitem_categoryFilter<$PrismaModel = never> = {
     equals?: $Enums.item_category | Enumitem_categoryFieldRefInput<$PrismaModel>
     in?: $Enums.item_category[]
@@ -12396,17 +23406,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumitem_categoryFilter<$PrismaModel>
     _max?: NestedEnumitem_categoryFilter<$PrismaModel>
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type Enumitem_statusFilter<$PrismaModel = never> = {
@@ -12478,22 +23477,6 @@ export namespace Prisma {
     date_limit?: SortOrder
   }
 
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
   export type Enumitem_statusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
     in?: $Enums.item_status[]
@@ -12530,11 +23513,6 @@ export namespace Prisma {
   export type ItemStackScalarRelationFilter = {
     is?: ItemStackWhereInput
     isNot?: ItemStackWhereInput
-  }
-
-  export type AccountNullableScalarRelationFilter = {
-    is?: AccountWhereInput | null
-    isNot?: AccountWhereInput | null
   }
 
   export type ItemTransactionOrderByRelevanceInput = {
@@ -12789,6 +23767,69 @@ export namespace Prisma {
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
   }
 
+  export type InquiryCreateNestedManyWithoutUserInput = {
+    create?: XOR<InquiryCreateWithoutUserInput, InquiryUncheckedCreateWithoutUserInput> | InquiryCreateWithoutUserInput[] | InquiryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutUserInput | InquiryCreateOrConnectWithoutUserInput[]
+    createMany?: InquiryCreateManyUserInputEnvelope
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+  }
+
+  export type InquiryCreateNestedManyWithoutAssignedToInput = {
+    create?: XOR<InquiryCreateWithoutAssignedToInput, InquiryUncheckedCreateWithoutAssignedToInput> | InquiryCreateWithoutAssignedToInput[] | InquiryUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutAssignedToInput | InquiryCreateOrConnectWithoutAssignedToInput[]
+    createMany?: InquiryCreateManyAssignedToInputEnvelope
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+  }
+
+  export type InquiryCreateNestedManyWithoutResolvedByInput = {
+    create?: XOR<InquiryCreateWithoutResolvedByInput, InquiryUncheckedCreateWithoutResolvedByInput> | InquiryCreateWithoutResolvedByInput[] | InquiryUncheckedCreateWithoutResolvedByInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutResolvedByInput | InquiryCreateOrConnectWithoutResolvedByInput[]
+    createMany?: InquiryCreateManyResolvedByInputEnvelope
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+  }
+
+  export type InquiryReplyCreateNestedManyWithoutSenderInput = {
+    create?: XOR<InquiryReplyCreateWithoutSenderInput, InquiryReplyUncheckedCreateWithoutSenderInput> | InquiryReplyCreateWithoutSenderInput[] | InquiryReplyUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutSenderInput | InquiryReplyCreateOrConnectWithoutSenderInput[]
+    createMany?: InquiryReplyCreateManySenderInputEnvelope
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+  }
+
+  export type InquiryAttachmentCreateNestedManyWithoutUploadedByInput = {
+    create?: XOR<InquiryAttachmentCreateWithoutUploadedByInput, InquiryAttachmentUncheckedCreateWithoutUploadedByInput> | InquiryAttachmentCreateWithoutUploadedByInput[] | InquiryAttachmentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: InquiryAttachmentCreateOrConnectWithoutUploadedByInput | InquiryAttachmentCreateOrConnectWithoutUploadedByInput[]
+    createMany?: InquiryAttachmentCreateManyUploadedByInputEnvelope
+    connect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+  }
+
+  export type FAQCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<FAQCreateWithoutCreatedByInput, FAQUncheckedCreateWithoutCreatedByInput> | FAQCreateWithoutCreatedByInput[] | FAQUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: FAQCreateOrConnectWithoutCreatedByInput | FAQCreateOrConnectWithoutCreatedByInput[]
+    createMany?: FAQCreateManyCreatedByInputEnvelope
+    connect?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
+  }
+
+  export type InquiryTemplateCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput> | InquiryTemplateCreateWithoutCreatedByInput[] | InquiryTemplateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: InquiryTemplateCreateOrConnectWithoutCreatedByInput | InquiryTemplateCreateOrConnectWithoutCreatedByInput[]
+    createMany?: InquiryTemplateCreateManyCreatedByInputEnvelope
+    connect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
+  }
+
+  export type InquiryNotificationCreateNestedManyWithoutUserInput = {
+    create?: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput> | InquiryNotificationCreateWithoutUserInput[] | InquiryNotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutUserInput | InquiryNotificationCreateOrConnectWithoutUserInput[]
+    createMany?: InquiryNotificationCreateManyUserInputEnvelope
+    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+  }
+
+  export type InquiryAnalyticsCreateNestedManyWithoutAdminInput = {
+    create?: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput> | InquiryAnalyticsCreateWithoutAdminInput[] | InquiryAnalyticsUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: InquiryAnalyticsCreateOrConnectWithoutAdminInput | InquiryAnalyticsCreateOrConnectWithoutAdminInput[]
+    createMany?: InquiryAnalyticsCreateManyAdminInputEnvelope
+    connect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
+  }
+
   export type SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -12822,6 +23863,69 @@ export namespace Prisma {
     connectOrCreate?: AuditLogCreateOrConnectWithoutAdminInput | AuditLogCreateOrConnectWithoutAdminInput[]
     createMany?: AuditLogCreateManyAdminInputEnvelope
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+  }
+
+  export type InquiryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<InquiryCreateWithoutUserInput, InquiryUncheckedCreateWithoutUserInput> | InquiryCreateWithoutUserInput[] | InquiryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutUserInput | InquiryCreateOrConnectWithoutUserInput[]
+    createMany?: InquiryCreateManyUserInputEnvelope
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+  }
+
+  export type InquiryUncheckedCreateNestedManyWithoutAssignedToInput = {
+    create?: XOR<InquiryCreateWithoutAssignedToInput, InquiryUncheckedCreateWithoutAssignedToInput> | InquiryCreateWithoutAssignedToInput[] | InquiryUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutAssignedToInput | InquiryCreateOrConnectWithoutAssignedToInput[]
+    createMany?: InquiryCreateManyAssignedToInputEnvelope
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+  }
+
+  export type InquiryUncheckedCreateNestedManyWithoutResolvedByInput = {
+    create?: XOR<InquiryCreateWithoutResolvedByInput, InquiryUncheckedCreateWithoutResolvedByInput> | InquiryCreateWithoutResolvedByInput[] | InquiryUncheckedCreateWithoutResolvedByInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutResolvedByInput | InquiryCreateOrConnectWithoutResolvedByInput[]
+    createMany?: InquiryCreateManyResolvedByInputEnvelope
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+  }
+
+  export type InquiryReplyUncheckedCreateNestedManyWithoutSenderInput = {
+    create?: XOR<InquiryReplyCreateWithoutSenderInput, InquiryReplyUncheckedCreateWithoutSenderInput> | InquiryReplyCreateWithoutSenderInput[] | InquiryReplyUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutSenderInput | InquiryReplyCreateOrConnectWithoutSenderInput[]
+    createMany?: InquiryReplyCreateManySenderInputEnvelope
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+  }
+
+  export type InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput = {
+    create?: XOR<InquiryAttachmentCreateWithoutUploadedByInput, InquiryAttachmentUncheckedCreateWithoutUploadedByInput> | InquiryAttachmentCreateWithoutUploadedByInput[] | InquiryAttachmentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: InquiryAttachmentCreateOrConnectWithoutUploadedByInput | InquiryAttachmentCreateOrConnectWithoutUploadedByInput[]
+    createMany?: InquiryAttachmentCreateManyUploadedByInputEnvelope
+    connect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+  }
+
+  export type FAQUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<FAQCreateWithoutCreatedByInput, FAQUncheckedCreateWithoutCreatedByInput> | FAQCreateWithoutCreatedByInput[] | FAQUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: FAQCreateOrConnectWithoutCreatedByInput | FAQCreateOrConnectWithoutCreatedByInput[]
+    createMany?: FAQCreateManyCreatedByInputEnvelope
+    connect?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
+  }
+
+  export type InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput> | InquiryTemplateCreateWithoutCreatedByInput[] | InquiryTemplateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: InquiryTemplateCreateOrConnectWithoutCreatedByInput | InquiryTemplateCreateOrConnectWithoutCreatedByInput[]
+    createMany?: InquiryTemplateCreateManyCreatedByInputEnvelope
+    connect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
+  }
+
+  export type InquiryNotificationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput> | InquiryNotificationCreateWithoutUserInput[] | InquiryNotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutUserInput | InquiryNotificationCreateOrConnectWithoutUserInput[]
+    createMany?: InquiryNotificationCreateManyUserInputEnvelope
+    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+  }
+
+  export type InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput = {
+    create?: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput> | InquiryAnalyticsCreateWithoutAdminInput[] | InquiryAnalyticsUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: InquiryAnalyticsCreateOrConnectWithoutAdminInput | InquiryAnalyticsCreateOrConnectWithoutAdminInput[]
+    createMany?: InquiryAnalyticsCreateManyAdminInputEnvelope
+    connect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -12946,6 +24050,132 @@ export namespace Prisma {
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
+  export type InquiryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<InquiryCreateWithoutUserInput, InquiryUncheckedCreateWithoutUserInput> | InquiryCreateWithoutUserInput[] | InquiryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutUserInput | InquiryCreateOrConnectWithoutUserInput[]
+    upsert?: InquiryUpsertWithWhereUniqueWithoutUserInput | InquiryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: InquiryCreateManyUserInputEnvelope
+    set?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    disconnect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    delete?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    update?: InquiryUpdateWithWhereUniqueWithoutUserInput | InquiryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: InquiryUpdateManyWithWhereWithoutUserInput | InquiryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+  }
+
+  export type InquiryUpdateManyWithoutAssignedToNestedInput = {
+    create?: XOR<InquiryCreateWithoutAssignedToInput, InquiryUncheckedCreateWithoutAssignedToInput> | InquiryCreateWithoutAssignedToInput[] | InquiryUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutAssignedToInput | InquiryCreateOrConnectWithoutAssignedToInput[]
+    upsert?: InquiryUpsertWithWhereUniqueWithoutAssignedToInput | InquiryUpsertWithWhereUniqueWithoutAssignedToInput[]
+    createMany?: InquiryCreateManyAssignedToInputEnvelope
+    set?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    disconnect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    delete?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    update?: InquiryUpdateWithWhereUniqueWithoutAssignedToInput | InquiryUpdateWithWhereUniqueWithoutAssignedToInput[]
+    updateMany?: InquiryUpdateManyWithWhereWithoutAssignedToInput | InquiryUpdateManyWithWhereWithoutAssignedToInput[]
+    deleteMany?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+  }
+
+  export type InquiryUpdateManyWithoutResolvedByNestedInput = {
+    create?: XOR<InquiryCreateWithoutResolvedByInput, InquiryUncheckedCreateWithoutResolvedByInput> | InquiryCreateWithoutResolvedByInput[] | InquiryUncheckedCreateWithoutResolvedByInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutResolvedByInput | InquiryCreateOrConnectWithoutResolvedByInput[]
+    upsert?: InquiryUpsertWithWhereUniqueWithoutResolvedByInput | InquiryUpsertWithWhereUniqueWithoutResolvedByInput[]
+    createMany?: InquiryCreateManyResolvedByInputEnvelope
+    set?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    disconnect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    delete?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    update?: InquiryUpdateWithWhereUniqueWithoutResolvedByInput | InquiryUpdateWithWhereUniqueWithoutResolvedByInput[]
+    updateMany?: InquiryUpdateManyWithWhereWithoutResolvedByInput | InquiryUpdateManyWithWhereWithoutResolvedByInput[]
+    deleteMany?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+  }
+
+  export type InquiryReplyUpdateManyWithoutSenderNestedInput = {
+    create?: XOR<InquiryReplyCreateWithoutSenderInput, InquiryReplyUncheckedCreateWithoutSenderInput> | InquiryReplyCreateWithoutSenderInput[] | InquiryReplyUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutSenderInput | InquiryReplyCreateOrConnectWithoutSenderInput[]
+    upsert?: InquiryReplyUpsertWithWhereUniqueWithoutSenderInput | InquiryReplyUpsertWithWhereUniqueWithoutSenderInput[]
+    createMany?: InquiryReplyCreateManySenderInputEnvelope
+    set?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    disconnect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    delete?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    update?: InquiryReplyUpdateWithWhereUniqueWithoutSenderInput | InquiryReplyUpdateWithWhereUniqueWithoutSenderInput[]
+    updateMany?: InquiryReplyUpdateManyWithWhereWithoutSenderInput | InquiryReplyUpdateManyWithWhereWithoutSenderInput[]
+    deleteMany?: InquiryReplyScalarWhereInput | InquiryReplyScalarWhereInput[]
+  }
+
+  export type InquiryAttachmentUpdateManyWithoutUploadedByNestedInput = {
+    create?: XOR<InquiryAttachmentCreateWithoutUploadedByInput, InquiryAttachmentUncheckedCreateWithoutUploadedByInput> | InquiryAttachmentCreateWithoutUploadedByInput[] | InquiryAttachmentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: InquiryAttachmentCreateOrConnectWithoutUploadedByInput | InquiryAttachmentCreateOrConnectWithoutUploadedByInput[]
+    upsert?: InquiryAttachmentUpsertWithWhereUniqueWithoutUploadedByInput | InquiryAttachmentUpsertWithWhereUniqueWithoutUploadedByInput[]
+    createMany?: InquiryAttachmentCreateManyUploadedByInputEnvelope
+    set?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    disconnect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    delete?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    connect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    update?: InquiryAttachmentUpdateWithWhereUniqueWithoutUploadedByInput | InquiryAttachmentUpdateWithWhereUniqueWithoutUploadedByInput[]
+    updateMany?: InquiryAttachmentUpdateManyWithWhereWithoutUploadedByInput | InquiryAttachmentUpdateManyWithWhereWithoutUploadedByInput[]
+    deleteMany?: InquiryAttachmentScalarWhereInput | InquiryAttachmentScalarWhereInput[]
+  }
+
+  export type FAQUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<FAQCreateWithoutCreatedByInput, FAQUncheckedCreateWithoutCreatedByInput> | FAQCreateWithoutCreatedByInput[] | FAQUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: FAQCreateOrConnectWithoutCreatedByInput | FAQCreateOrConnectWithoutCreatedByInput[]
+    upsert?: FAQUpsertWithWhereUniqueWithoutCreatedByInput | FAQUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: FAQCreateManyCreatedByInputEnvelope
+    set?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
+    disconnect?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
+    delete?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
+    connect?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
+    update?: FAQUpdateWithWhereUniqueWithoutCreatedByInput | FAQUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: FAQUpdateManyWithWhereWithoutCreatedByInput | FAQUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: FAQScalarWhereInput | FAQScalarWhereInput[]
+  }
+
+  export type InquiryTemplateUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput> | InquiryTemplateCreateWithoutCreatedByInput[] | InquiryTemplateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: InquiryTemplateCreateOrConnectWithoutCreatedByInput | InquiryTemplateCreateOrConnectWithoutCreatedByInput[]
+    upsert?: InquiryTemplateUpsertWithWhereUniqueWithoutCreatedByInput | InquiryTemplateUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: InquiryTemplateCreateManyCreatedByInputEnvelope
+    set?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
+    disconnect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
+    delete?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
+    connect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
+    update?: InquiryTemplateUpdateWithWhereUniqueWithoutCreatedByInput | InquiryTemplateUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: InquiryTemplateUpdateManyWithWhereWithoutCreatedByInput | InquiryTemplateUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: InquiryTemplateScalarWhereInput | InquiryTemplateScalarWhereInput[]
+  }
+
+  export type InquiryNotificationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput> | InquiryNotificationCreateWithoutUserInput[] | InquiryNotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutUserInput | InquiryNotificationCreateOrConnectWithoutUserInput[]
+    upsert?: InquiryNotificationUpsertWithWhereUniqueWithoutUserInput | InquiryNotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: InquiryNotificationCreateManyUserInputEnvelope
+    set?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    disconnect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    delete?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    update?: InquiryNotificationUpdateWithWhereUniqueWithoutUserInput | InquiryNotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: InquiryNotificationUpdateManyWithWhereWithoutUserInput | InquiryNotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
+  }
+
+  export type InquiryAnalyticsUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput> | InquiryAnalyticsCreateWithoutAdminInput[] | InquiryAnalyticsUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: InquiryAnalyticsCreateOrConnectWithoutAdminInput | InquiryAnalyticsCreateOrConnectWithoutAdminInput[]
+    upsert?: InquiryAnalyticsUpsertWithWhereUniqueWithoutAdminInput | InquiryAnalyticsUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: InquiryAnalyticsCreateManyAdminInputEnvelope
+    set?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
+    disconnect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
+    delete?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
+    connect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
+    update?: InquiryAnalyticsUpdateWithWhereUniqueWithoutAdminInput | InquiryAnalyticsUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: InquiryAnalyticsUpdateManyWithWhereWithoutAdminInput | InquiryAnalyticsUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: InquiryAnalyticsScalarWhereInput | InquiryAnalyticsScalarWhereInput[]
+  }
+
   export type SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -13016,6 +24246,132 @@ export namespace Prisma {
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
   }
 
+  export type InquiryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<InquiryCreateWithoutUserInput, InquiryUncheckedCreateWithoutUserInput> | InquiryCreateWithoutUserInput[] | InquiryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutUserInput | InquiryCreateOrConnectWithoutUserInput[]
+    upsert?: InquiryUpsertWithWhereUniqueWithoutUserInput | InquiryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: InquiryCreateManyUserInputEnvelope
+    set?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    disconnect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    delete?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    update?: InquiryUpdateWithWhereUniqueWithoutUserInput | InquiryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: InquiryUpdateManyWithWhereWithoutUserInput | InquiryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+  }
+
+  export type InquiryUncheckedUpdateManyWithoutAssignedToNestedInput = {
+    create?: XOR<InquiryCreateWithoutAssignedToInput, InquiryUncheckedCreateWithoutAssignedToInput> | InquiryCreateWithoutAssignedToInput[] | InquiryUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutAssignedToInput | InquiryCreateOrConnectWithoutAssignedToInput[]
+    upsert?: InquiryUpsertWithWhereUniqueWithoutAssignedToInput | InquiryUpsertWithWhereUniqueWithoutAssignedToInput[]
+    createMany?: InquiryCreateManyAssignedToInputEnvelope
+    set?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    disconnect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    delete?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    update?: InquiryUpdateWithWhereUniqueWithoutAssignedToInput | InquiryUpdateWithWhereUniqueWithoutAssignedToInput[]
+    updateMany?: InquiryUpdateManyWithWhereWithoutAssignedToInput | InquiryUpdateManyWithWhereWithoutAssignedToInput[]
+    deleteMany?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+  }
+
+  export type InquiryUncheckedUpdateManyWithoutResolvedByNestedInput = {
+    create?: XOR<InquiryCreateWithoutResolvedByInput, InquiryUncheckedCreateWithoutResolvedByInput> | InquiryCreateWithoutResolvedByInput[] | InquiryUncheckedCreateWithoutResolvedByInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutResolvedByInput | InquiryCreateOrConnectWithoutResolvedByInput[]
+    upsert?: InquiryUpsertWithWhereUniqueWithoutResolvedByInput | InquiryUpsertWithWhereUniqueWithoutResolvedByInput[]
+    createMany?: InquiryCreateManyResolvedByInputEnvelope
+    set?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    disconnect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    delete?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    update?: InquiryUpdateWithWhereUniqueWithoutResolvedByInput | InquiryUpdateWithWhereUniqueWithoutResolvedByInput[]
+    updateMany?: InquiryUpdateManyWithWhereWithoutResolvedByInput | InquiryUpdateManyWithWhereWithoutResolvedByInput[]
+    deleteMany?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+  }
+
+  export type InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput = {
+    create?: XOR<InquiryReplyCreateWithoutSenderInput, InquiryReplyUncheckedCreateWithoutSenderInput> | InquiryReplyCreateWithoutSenderInput[] | InquiryReplyUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutSenderInput | InquiryReplyCreateOrConnectWithoutSenderInput[]
+    upsert?: InquiryReplyUpsertWithWhereUniqueWithoutSenderInput | InquiryReplyUpsertWithWhereUniqueWithoutSenderInput[]
+    createMany?: InquiryReplyCreateManySenderInputEnvelope
+    set?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    disconnect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    delete?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    update?: InquiryReplyUpdateWithWhereUniqueWithoutSenderInput | InquiryReplyUpdateWithWhereUniqueWithoutSenderInput[]
+    updateMany?: InquiryReplyUpdateManyWithWhereWithoutSenderInput | InquiryReplyUpdateManyWithWhereWithoutSenderInput[]
+    deleteMany?: InquiryReplyScalarWhereInput | InquiryReplyScalarWhereInput[]
+  }
+
+  export type InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput = {
+    create?: XOR<InquiryAttachmentCreateWithoutUploadedByInput, InquiryAttachmentUncheckedCreateWithoutUploadedByInput> | InquiryAttachmentCreateWithoutUploadedByInput[] | InquiryAttachmentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: InquiryAttachmentCreateOrConnectWithoutUploadedByInput | InquiryAttachmentCreateOrConnectWithoutUploadedByInput[]
+    upsert?: InquiryAttachmentUpsertWithWhereUniqueWithoutUploadedByInput | InquiryAttachmentUpsertWithWhereUniqueWithoutUploadedByInput[]
+    createMany?: InquiryAttachmentCreateManyUploadedByInputEnvelope
+    set?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    disconnect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    delete?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    connect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    update?: InquiryAttachmentUpdateWithWhereUniqueWithoutUploadedByInput | InquiryAttachmentUpdateWithWhereUniqueWithoutUploadedByInput[]
+    updateMany?: InquiryAttachmentUpdateManyWithWhereWithoutUploadedByInput | InquiryAttachmentUpdateManyWithWhereWithoutUploadedByInput[]
+    deleteMany?: InquiryAttachmentScalarWhereInput | InquiryAttachmentScalarWhereInput[]
+  }
+
+  export type FAQUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<FAQCreateWithoutCreatedByInput, FAQUncheckedCreateWithoutCreatedByInput> | FAQCreateWithoutCreatedByInput[] | FAQUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: FAQCreateOrConnectWithoutCreatedByInput | FAQCreateOrConnectWithoutCreatedByInput[]
+    upsert?: FAQUpsertWithWhereUniqueWithoutCreatedByInput | FAQUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: FAQCreateManyCreatedByInputEnvelope
+    set?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
+    disconnect?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
+    delete?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
+    connect?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
+    update?: FAQUpdateWithWhereUniqueWithoutCreatedByInput | FAQUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: FAQUpdateManyWithWhereWithoutCreatedByInput | FAQUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: FAQScalarWhereInput | FAQScalarWhereInput[]
+  }
+
+  export type InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput> | InquiryTemplateCreateWithoutCreatedByInput[] | InquiryTemplateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: InquiryTemplateCreateOrConnectWithoutCreatedByInput | InquiryTemplateCreateOrConnectWithoutCreatedByInput[]
+    upsert?: InquiryTemplateUpsertWithWhereUniqueWithoutCreatedByInput | InquiryTemplateUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: InquiryTemplateCreateManyCreatedByInputEnvelope
+    set?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
+    disconnect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
+    delete?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
+    connect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
+    update?: InquiryTemplateUpdateWithWhereUniqueWithoutCreatedByInput | InquiryTemplateUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: InquiryTemplateUpdateManyWithWhereWithoutCreatedByInput | InquiryTemplateUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: InquiryTemplateScalarWhereInput | InquiryTemplateScalarWhereInput[]
+  }
+
+  export type InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput> | InquiryNotificationCreateWithoutUserInput[] | InquiryNotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutUserInput | InquiryNotificationCreateOrConnectWithoutUserInput[]
+    upsert?: InquiryNotificationUpsertWithWhereUniqueWithoutUserInput | InquiryNotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: InquiryNotificationCreateManyUserInputEnvelope
+    set?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    disconnect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    delete?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    update?: InquiryNotificationUpdateWithWhereUniqueWithoutUserInput | InquiryNotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: InquiryNotificationUpdateManyWithWhereWithoutUserInput | InquiryNotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
+  }
+
+  export type InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput> | InquiryAnalyticsCreateWithoutAdminInput[] | InquiryAnalyticsUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: InquiryAnalyticsCreateOrConnectWithoutAdminInput | InquiryAnalyticsCreateOrConnectWithoutAdminInput[]
+    upsert?: InquiryAnalyticsUpsertWithWhereUniqueWithoutAdminInput | InquiryAnalyticsUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: InquiryAnalyticsCreateManyAdminInputEnvelope
+    set?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
+    disconnect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
+    delete?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
+    connect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
+    update?: InquiryAnalyticsUpdateWithWhereUniqueWithoutAdminInput | InquiryAnalyticsUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: InquiryAnalyticsUpdateManyWithWhereWithoutAdminInput | InquiryAnalyticsUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: InquiryAnalyticsScalarWhereInput | InquiryAnalyticsScalarWhereInput[]
+  }
+
   export type AccountCreateNestedOneWithoutAuditLogsInput = {
     create?: XOR<AccountCreateWithoutAuditLogsInput, AccountUncheckedCreateWithoutAuditLogsInput>
     connectOrCreate?: AccountCreateOrConnectWithoutAuditLogsInput
@@ -13032,6 +24388,416 @@ export namespace Prisma {
     upsert?: AccountUpsertWithoutAuditLogsInput
     connect?: AccountWhereUniqueInput
     update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutAuditLogsInput, AccountUpdateWithoutAuditLogsInput>, AccountUncheckedUpdateWithoutAuditLogsInput>
+  }
+
+  export type AccountCreateNestedOneWithoutInquiriesInput = {
+    create?: XOR<AccountCreateWithoutInquiriesInput, AccountUncheckedCreateWithoutInquiriesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutInquiriesInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type AccountCreateNestedOneWithoutAssignedInquiriesInput = {
+    create?: XOR<AccountCreateWithoutAssignedInquiriesInput, AccountUncheckedCreateWithoutAssignedInquiriesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutAssignedInquiriesInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type AccountCreateNestedOneWithoutResolvedInquiriesInput = {
+    create?: XOR<AccountCreateWithoutResolvedInquiriesInput, AccountUncheckedCreateWithoutResolvedInquiriesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutResolvedInquiriesInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type InquiryReplyCreateNestedManyWithoutInquiryInput = {
+    create?: XOR<InquiryReplyCreateWithoutInquiryInput, InquiryReplyUncheckedCreateWithoutInquiryInput> | InquiryReplyCreateWithoutInquiryInput[] | InquiryReplyUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutInquiryInput | InquiryReplyCreateOrConnectWithoutInquiryInput[]
+    createMany?: InquiryReplyCreateManyInquiryInputEnvelope
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+  }
+
+  export type InquiryAttachmentCreateNestedManyWithoutInquiryInput = {
+    create?: XOR<InquiryAttachmentCreateWithoutInquiryInput, InquiryAttachmentUncheckedCreateWithoutInquiryInput> | InquiryAttachmentCreateWithoutInquiryInput[] | InquiryAttachmentUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryAttachmentCreateOrConnectWithoutInquiryInput | InquiryAttachmentCreateOrConnectWithoutInquiryInput[]
+    createMany?: InquiryAttachmentCreateManyInquiryInputEnvelope
+    connect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+  }
+
+  export type InquiryNotificationCreateNestedManyWithoutInquiryInput = {
+    create?: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput> | InquiryNotificationCreateWithoutInquiryInput[] | InquiryNotificationUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutInquiryInput | InquiryNotificationCreateOrConnectWithoutInquiryInput[]
+    createMany?: InquiryNotificationCreateManyInquiryInputEnvelope
+    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+  }
+
+  export type InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput = {
+    create?: XOR<InquiryReplyCreateWithoutInquiryInput, InquiryReplyUncheckedCreateWithoutInquiryInput> | InquiryReplyCreateWithoutInquiryInput[] | InquiryReplyUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutInquiryInput | InquiryReplyCreateOrConnectWithoutInquiryInput[]
+    createMany?: InquiryReplyCreateManyInquiryInputEnvelope
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+  }
+
+  export type InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput = {
+    create?: XOR<InquiryAttachmentCreateWithoutInquiryInput, InquiryAttachmentUncheckedCreateWithoutInquiryInput> | InquiryAttachmentCreateWithoutInquiryInput[] | InquiryAttachmentUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryAttachmentCreateOrConnectWithoutInquiryInput | InquiryAttachmentCreateOrConnectWithoutInquiryInput[]
+    createMany?: InquiryAttachmentCreateManyInquiryInputEnvelope
+    connect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+  }
+
+  export type InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput = {
+    create?: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput> | InquiryNotificationCreateWithoutInquiryInput[] | InquiryNotificationUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutInquiryInput | InquiryNotificationCreateOrConnectWithoutInquiryInput[]
+    createMany?: InquiryNotificationCreateManyInquiryInputEnvelope
+    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+  }
+
+  export type EnumInquiryCategoryFieldUpdateOperationsInput = {
+    set?: $Enums.InquiryCategory
+  }
+
+  export type EnumInquiryPriorityFieldUpdateOperationsInput = {
+    set?: $Enums.InquiryPriority
+  }
+
+  export type EnumInquiryStatusFieldUpdateOperationsInput = {
+    set?: $Enums.InquiryStatus
+  }
+
+  export type AccountUpdateOneWithoutInquiriesNestedInput = {
+    create?: XOR<AccountCreateWithoutInquiriesInput, AccountUncheckedCreateWithoutInquiriesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutInquiriesInput
+    upsert?: AccountUpsertWithoutInquiriesInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutInquiriesInput, AccountUpdateWithoutInquiriesInput>, AccountUncheckedUpdateWithoutInquiriesInput>
+  }
+
+  export type AccountUpdateOneWithoutAssignedInquiriesNestedInput = {
+    create?: XOR<AccountCreateWithoutAssignedInquiriesInput, AccountUncheckedCreateWithoutAssignedInquiriesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutAssignedInquiriesInput
+    upsert?: AccountUpsertWithoutAssignedInquiriesInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutAssignedInquiriesInput, AccountUpdateWithoutAssignedInquiriesInput>, AccountUncheckedUpdateWithoutAssignedInquiriesInput>
+  }
+
+  export type AccountUpdateOneWithoutResolvedInquiriesNestedInput = {
+    create?: XOR<AccountCreateWithoutResolvedInquiriesInput, AccountUncheckedCreateWithoutResolvedInquiriesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutResolvedInquiriesInput
+    upsert?: AccountUpsertWithoutResolvedInquiriesInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutResolvedInquiriesInput, AccountUpdateWithoutResolvedInquiriesInput>, AccountUncheckedUpdateWithoutResolvedInquiriesInput>
+  }
+
+  export type InquiryReplyUpdateManyWithoutInquiryNestedInput = {
+    create?: XOR<InquiryReplyCreateWithoutInquiryInput, InquiryReplyUncheckedCreateWithoutInquiryInput> | InquiryReplyCreateWithoutInquiryInput[] | InquiryReplyUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutInquiryInput | InquiryReplyCreateOrConnectWithoutInquiryInput[]
+    upsert?: InquiryReplyUpsertWithWhereUniqueWithoutInquiryInput | InquiryReplyUpsertWithWhereUniqueWithoutInquiryInput[]
+    createMany?: InquiryReplyCreateManyInquiryInputEnvelope
+    set?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    disconnect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    delete?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    update?: InquiryReplyUpdateWithWhereUniqueWithoutInquiryInput | InquiryReplyUpdateWithWhereUniqueWithoutInquiryInput[]
+    updateMany?: InquiryReplyUpdateManyWithWhereWithoutInquiryInput | InquiryReplyUpdateManyWithWhereWithoutInquiryInput[]
+    deleteMany?: InquiryReplyScalarWhereInput | InquiryReplyScalarWhereInput[]
+  }
+
+  export type InquiryAttachmentUpdateManyWithoutInquiryNestedInput = {
+    create?: XOR<InquiryAttachmentCreateWithoutInquiryInput, InquiryAttachmentUncheckedCreateWithoutInquiryInput> | InquiryAttachmentCreateWithoutInquiryInput[] | InquiryAttachmentUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryAttachmentCreateOrConnectWithoutInquiryInput | InquiryAttachmentCreateOrConnectWithoutInquiryInput[]
+    upsert?: InquiryAttachmentUpsertWithWhereUniqueWithoutInquiryInput | InquiryAttachmentUpsertWithWhereUniqueWithoutInquiryInput[]
+    createMany?: InquiryAttachmentCreateManyInquiryInputEnvelope
+    set?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    disconnect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    delete?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    connect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    update?: InquiryAttachmentUpdateWithWhereUniqueWithoutInquiryInput | InquiryAttachmentUpdateWithWhereUniqueWithoutInquiryInput[]
+    updateMany?: InquiryAttachmentUpdateManyWithWhereWithoutInquiryInput | InquiryAttachmentUpdateManyWithWhereWithoutInquiryInput[]
+    deleteMany?: InquiryAttachmentScalarWhereInput | InquiryAttachmentScalarWhereInput[]
+  }
+
+  export type InquiryNotificationUpdateManyWithoutInquiryNestedInput = {
+    create?: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput> | InquiryNotificationCreateWithoutInquiryInput[] | InquiryNotificationUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutInquiryInput | InquiryNotificationCreateOrConnectWithoutInquiryInput[]
+    upsert?: InquiryNotificationUpsertWithWhereUniqueWithoutInquiryInput | InquiryNotificationUpsertWithWhereUniqueWithoutInquiryInput[]
+    createMany?: InquiryNotificationCreateManyInquiryInputEnvelope
+    set?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    disconnect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    delete?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    update?: InquiryNotificationUpdateWithWhereUniqueWithoutInquiryInput | InquiryNotificationUpdateWithWhereUniqueWithoutInquiryInput[]
+    updateMany?: InquiryNotificationUpdateManyWithWhereWithoutInquiryInput | InquiryNotificationUpdateManyWithWhereWithoutInquiryInput[]
+    deleteMany?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
+  }
+
+  export type InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput = {
+    create?: XOR<InquiryReplyCreateWithoutInquiryInput, InquiryReplyUncheckedCreateWithoutInquiryInput> | InquiryReplyCreateWithoutInquiryInput[] | InquiryReplyUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutInquiryInput | InquiryReplyCreateOrConnectWithoutInquiryInput[]
+    upsert?: InquiryReplyUpsertWithWhereUniqueWithoutInquiryInput | InquiryReplyUpsertWithWhereUniqueWithoutInquiryInput[]
+    createMany?: InquiryReplyCreateManyInquiryInputEnvelope
+    set?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    disconnect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    delete?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    update?: InquiryReplyUpdateWithWhereUniqueWithoutInquiryInput | InquiryReplyUpdateWithWhereUniqueWithoutInquiryInput[]
+    updateMany?: InquiryReplyUpdateManyWithWhereWithoutInquiryInput | InquiryReplyUpdateManyWithWhereWithoutInquiryInput[]
+    deleteMany?: InquiryReplyScalarWhereInput | InquiryReplyScalarWhereInput[]
+  }
+
+  export type InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput = {
+    create?: XOR<InquiryAttachmentCreateWithoutInquiryInput, InquiryAttachmentUncheckedCreateWithoutInquiryInput> | InquiryAttachmentCreateWithoutInquiryInput[] | InquiryAttachmentUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryAttachmentCreateOrConnectWithoutInquiryInput | InquiryAttachmentCreateOrConnectWithoutInquiryInput[]
+    upsert?: InquiryAttachmentUpsertWithWhereUniqueWithoutInquiryInput | InquiryAttachmentUpsertWithWhereUniqueWithoutInquiryInput[]
+    createMany?: InquiryAttachmentCreateManyInquiryInputEnvelope
+    set?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    disconnect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    delete?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    connect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
+    update?: InquiryAttachmentUpdateWithWhereUniqueWithoutInquiryInput | InquiryAttachmentUpdateWithWhereUniqueWithoutInquiryInput[]
+    updateMany?: InquiryAttachmentUpdateManyWithWhereWithoutInquiryInput | InquiryAttachmentUpdateManyWithWhereWithoutInquiryInput[]
+    deleteMany?: InquiryAttachmentScalarWhereInput | InquiryAttachmentScalarWhereInput[]
+  }
+
+  export type InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput = {
+    create?: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput> | InquiryNotificationCreateWithoutInquiryInput[] | InquiryNotificationUncheckedCreateWithoutInquiryInput[]
+    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutInquiryInput | InquiryNotificationCreateOrConnectWithoutInquiryInput[]
+    upsert?: InquiryNotificationUpsertWithWhereUniqueWithoutInquiryInput | InquiryNotificationUpsertWithWhereUniqueWithoutInquiryInput[]
+    createMany?: InquiryNotificationCreateManyInquiryInputEnvelope
+    set?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    disconnect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    delete?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
+    update?: InquiryNotificationUpdateWithWhereUniqueWithoutInquiryInput | InquiryNotificationUpdateWithWhereUniqueWithoutInquiryInput[]
+    updateMany?: InquiryNotificationUpdateManyWithWhereWithoutInquiryInput | InquiryNotificationUpdateManyWithWhereWithoutInquiryInput[]
+    deleteMany?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
+  }
+
+  export type AccountCreateNestedOneWithoutInquiryRepliesInput = {
+    create?: XOR<AccountCreateWithoutInquiryRepliesInput, AccountUncheckedCreateWithoutInquiryRepliesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutInquiryRepliesInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type InquiryCreateNestedOneWithoutRepliesInput = {
+    create?: XOR<InquiryCreateWithoutRepliesInput, InquiryUncheckedCreateWithoutRepliesInput>
+    connectOrCreate?: InquiryCreateOrConnectWithoutRepliesInput
+    connect?: InquiryWhereUniqueInput
+  }
+
+  export type InquiryReplyCreateNestedOneWithoutChildRepliesInput = {
+    create?: XOR<InquiryReplyCreateWithoutChildRepliesInput, InquiryReplyUncheckedCreateWithoutChildRepliesInput>
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutChildRepliesInput
+    connect?: InquiryReplyWhereUniqueInput
+  }
+
+  export type InquiryReplyCreateNestedManyWithoutParentReplyInput = {
+    create?: XOR<InquiryReplyCreateWithoutParentReplyInput, InquiryReplyUncheckedCreateWithoutParentReplyInput> | InquiryReplyCreateWithoutParentReplyInput[] | InquiryReplyUncheckedCreateWithoutParentReplyInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutParentReplyInput | InquiryReplyCreateOrConnectWithoutParentReplyInput[]
+    createMany?: InquiryReplyCreateManyParentReplyInputEnvelope
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+  }
+
+  export type InquiryReplyUncheckedCreateNestedManyWithoutParentReplyInput = {
+    create?: XOR<InquiryReplyCreateWithoutParentReplyInput, InquiryReplyUncheckedCreateWithoutParentReplyInput> | InquiryReplyCreateWithoutParentReplyInput[] | InquiryReplyUncheckedCreateWithoutParentReplyInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutParentReplyInput | InquiryReplyCreateOrConnectWithoutParentReplyInput[]
+    createMany?: InquiryReplyCreateManyParentReplyInputEnvelope
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type EnumSenderTypeFieldUpdateOperationsInput = {
+    set?: $Enums.SenderType
+  }
+
+  export type AccountUpdateOneWithoutInquiryRepliesNestedInput = {
+    create?: XOR<AccountCreateWithoutInquiryRepliesInput, AccountUncheckedCreateWithoutInquiryRepliesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutInquiryRepliesInput
+    upsert?: AccountUpsertWithoutInquiryRepliesInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutInquiryRepliesInput, AccountUpdateWithoutInquiryRepliesInput>, AccountUncheckedUpdateWithoutInquiryRepliesInput>
+  }
+
+  export type InquiryUpdateOneRequiredWithoutRepliesNestedInput = {
+    create?: XOR<InquiryCreateWithoutRepliesInput, InquiryUncheckedCreateWithoutRepliesInput>
+    connectOrCreate?: InquiryCreateOrConnectWithoutRepliesInput
+    upsert?: InquiryUpsertWithoutRepliesInput
+    connect?: InquiryWhereUniqueInput
+    update?: XOR<XOR<InquiryUpdateToOneWithWhereWithoutRepliesInput, InquiryUpdateWithoutRepliesInput>, InquiryUncheckedUpdateWithoutRepliesInput>
+  }
+
+  export type InquiryReplyUpdateOneWithoutChildRepliesNestedInput = {
+    create?: XOR<InquiryReplyCreateWithoutChildRepliesInput, InquiryReplyUncheckedCreateWithoutChildRepliesInput>
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutChildRepliesInput
+    upsert?: InquiryReplyUpsertWithoutChildRepliesInput
+    disconnect?: InquiryReplyWhereInput | boolean
+    delete?: InquiryReplyWhereInput | boolean
+    connect?: InquiryReplyWhereUniqueInput
+    update?: XOR<XOR<InquiryReplyUpdateToOneWithWhereWithoutChildRepliesInput, InquiryReplyUpdateWithoutChildRepliesInput>, InquiryReplyUncheckedUpdateWithoutChildRepliesInput>
+  }
+
+  export type InquiryReplyUpdateManyWithoutParentReplyNestedInput = {
+    create?: XOR<InquiryReplyCreateWithoutParentReplyInput, InquiryReplyUncheckedCreateWithoutParentReplyInput> | InquiryReplyCreateWithoutParentReplyInput[] | InquiryReplyUncheckedCreateWithoutParentReplyInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutParentReplyInput | InquiryReplyCreateOrConnectWithoutParentReplyInput[]
+    upsert?: InquiryReplyUpsertWithWhereUniqueWithoutParentReplyInput | InquiryReplyUpsertWithWhereUniqueWithoutParentReplyInput[]
+    createMany?: InquiryReplyCreateManyParentReplyInputEnvelope
+    set?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    disconnect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    delete?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    update?: InquiryReplyUpdateWithWhereUniqueWithoutParentReplyInput | InquiryReplyUpdateWithWhereUniqueWithoutParentReplyInput[]
+    updateMany?: InquiryReplyUpdateManyWithWhereWithoutParentReplyInput | InquiryReplyUpdateManyWithWhereWithoutParentReplyInput[]
+    deleteMany?: InquiryReplyScalarWhereInput | InquiryReplyScalarWhereInput[]
+  }
+
+  export type InquiryReplyUncheckedUpdateManyWithoutParentReplyNestedInput = {
+    create?: XOR<InquiryReplyCreateWithoutParentReplyInput, InquiryReplyUncheckedCreateWithoutParentReplyInput> | InquiryReplyCreateWithoutParentReplyInput[] | InquiryReplyUncheckedCreateWithoutParentReplyInput[]
+    connectOrCreate?: InquiryReplyCreateOrConnectWithoutParentReplyInput | InquiryReplyCreateOrConnectWithoutParentReplyInput[]
+    upsert?: InquiryReplyUpsertWithWhereUniqueWithoutParentReplyInput | InquiryReplyUpsertWithWhereUniqueWithoutParentReplyInput[]
+    createMany?: InquiryReplyCreateManyParentReplyInputEnvelope
+    set?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    disconnect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    delete?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
+    update?: InquiryReplyUpdateWithWhereUniqueWithoutParentReplyInput | InquiryReplyUpdateWithWhereUniqueWithoutParentReplyInput[]
+    updateMany?: InquiryReplyUpdateManyWithWhereWithoutParentReplyInput | InquiryReplyUpdateManyWithWhereWithoutParentReplyInput[]
+    deleteMany?: InquiryReplyScalarWhereInput | InquiryReplyScalarWhereInput[]
+  }
+
+  export type InquiryCreateNestedOneWithoutAttachmentsInput = {
+    create?: XOR<InquiryCreateWithoutAttachmentsInput, InquiryUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: InquiryCreateOrConnectWithoutAttachmentsInput
+    connect?: InquiryWhereUniqueInput
+  }
+
+  export type AccountCreateNestedOneWithoutInquiryAttachmentsInput = {
+    create?: XOR<AccountCreateWithoutInquiryAttachmentsInput, AccountUncheckedCreateWithoutInquiryAttachmentsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutInquiryAttachmentsInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type InquiryUpdateOneRequiredWithoutAttachmentsNestedInput = {
+    create?: XOR<InquiryCreateWithoutAttachmentsInput, InquiryUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: InquiryCreateOrConnectWithoutAttachmentsInput
+    upsert?: InquiryUpsertWithoutAttachmentsInput
+    connect?: InquiryWhereUniqueInput
+    update?: XOR<XOR<InquiryUpdateToOneWithWhereWithoutAttachmentsInput, InquiryUpdateWithoutAttachmentsInput>, InquiryUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type AccountUpdateOneWithoutInquiryAttachmentsNestedInput = {
+    create?: XOR<AccountCreateWithoutInquiryAttachmentsInput, AccountUncheckedCreateWithoutInquiryAttachmentsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutInquiryAttachmentsInput
+    upsert?: AccountUpsertWithoutInquiryAttachmentsInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutInquiryAttachmentsInput, AccountUpdateWithoutInquiryAttachmentsInput>, AccountUncheckedUpdateWithoutInquiryAttachmentsInput>
+  }
+
+  export type AccountCreateNestedOneWithoutCreatedFAQsInput = {
+    create?: XOR<AccountCreateWithoutCreatedFAQsInput, AccountUncheckedCreateWithoutCreatedFAQsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutCreatedFAQsInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type AccountUpdateOneWithoutCreatedFAQsNestedInput = {
+    create?: XOR<AccountCreateWithoutCreatedFAQsInput, AccountUncheckedCreateWithoutCreatedFAQsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutCreatedFAQsInput
+    upsert?: AccountUpsertWithoutCreatedFAQsInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutCreatedFAQsInput, AccountUpdateWithoutCreatedFAQsInput>, AccountUncheckedUpdateWithoutCreatedFAQsInput>
+  }
+
+  export type AccountCreateNestedOneWithoutCreatedTemplatesInput = {
+    create?: XOR<AccountCreateWithoutCreatedTemplatesInput, AccountUncheckedCreateWithoutCreatedTemplatesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutCreatedTemplatesInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type AccountUpdateOneWithoutCreatedTemplatesNestedInput = {
+    create?: XOR<AccountCreateWithoutCreatedTemplatesInput, AccountUncheckedCreateWithoutCreatedTemplatesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutCreatedTemplatesInput
+    upsert?: AccountUpsertWithoutCreatedTemplatesInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutCreatedTemplatesInput, AccountUpdateWithoutCreatedTemplatesInput>, AccountUncheckedUpdateWithoutCreatedTemplatesInput>
+  }
+
+  export type AccountCreateNestedOneWithoutNotificationsInput = {
+    create?: XOR<AccountCreateWithoutNotificationsInput, AccountUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutNotificationsInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type InquiryCreateNestedOneWithoutNotificationsInput = {
+    create?: XOR<InquiryCreateWithoutNotificationsInput, InquiryUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: InquiryCreateOrConnectWithoutNotificationsInput
+    connect?: InquiryWhereUniqueInput
+  }
+
+  export type EnumNotificationTypeFieldUpdateOperationsInput = {
+    set?: $Enums.NotificationType
+  }
+
+  export type AccountUpdateOneRequiredWithoutNotificationsNestedInput = {
+    create?: XOR<AccountCreateWithoutNotificationsInput, AccountUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutNotificationsInput
+    upsert?: AccountUpsertWithoutNotificationsInput
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutNotificationsInput, AccountUpdateWithoutNotificationsInput>, AccountUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type InquiryUpdateOneWithoutNotificationsNestedInput = {
+    create?: XOR<InquiryCreateWithoutNotificationsInput, InquiryUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: InquiryCreateOrConnectWithoutNotificationsInput
+    upsert?: InquiryUpsertWithoutNotificationsInput
+    disconnect?: InquiryWhereInput | boolean
+    delete?: InquiryWhereInput | boolean
+    connect?: InquiryWhereUniqueInput
+    update?: XOR<XOR<InquiryUpdateToOneWithWhereWithoutNotificationsInput, InquiryUpdateWithoutNotificationsInput>, InquiryUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type AccountCreateNestedOneWithoutAnalyticsRecordsInput = {
+    create?: XOR<AccountCreateWithoutAnalyticsRecordsInput, AccountUncheckedCreateWithoutAnalyticsRecordsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutAnalyticsRecordsInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type AccountUpdateOneWithoutAnalyticsRecordsNestedInput = {
+    create?: XOR<AccountCreateWithoutAnalyticsRecordsInput, AccountUncheckedCreateWithoutAnalyticsRecordsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutAnalyticsRecordsInput
+    upsert?: AccountUpsertWithoutAnalyticsRecordsInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutAnalyticsRecordsInput, AccountUpdateWithoutAnalyticsRecordsInput>, AccountUncheckedUpdateWithoutAnalyticsRecordsInput>
   }
 
   export type ItemStackCreateNestedManyWithoutItemInput = {
@@ -13098,14 +24864,6 @@ export namespace Prisma {
     connectOrCreate?: ItemTransactionCreateOrConnectWithoutItemStackInput | ItemTransactionCreateOrConnectWithoutItemStackInput[]
     createMany?: ItemTransactionCreateManyItemStackInputEnvelope
     connect?: ItemTransactionWhereUniqueInput | ItemTransactionWhereUniqueInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type Enumitem_statusFieldUpdateOperationsInput = {
@@ -13623,28 +25381,85 @@ export namespace Prisma {
     _max?: NestedEnumaudit_actionFilter<$PrismaModel>
   }
 
-  export type NestedEnumitem_categoryFilter<$PrismaModel = never> = {
-    equals?: $Enums.item_category | Enumitem_categoryFieldRefInput<$PrismaModel>
-    in?: $Enums.item_category[]
-    notIn?: $Enums.item_category[]
-    not?: NestedEnumitem_categoryFilter<$PrismaModel> | $Enums.item_category
+  export type NestedEnumInquiryCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryCategory | EnumInquiryCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryCategory[]
+    notIn?: $Enums.InquiryCategory[]
+    not?: NestedEnumInquiryCategoryFilter<$PrismaModel> | $Enums.InquiryCategory
   }
 
-  export type NestedEnumitem_categoryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.item_category | Enumitem_categoryFieldRefInput<$PrismaModel>
-    in?: $Enums.item_category[]
-    notIn?: $Enums.item_category[]
-    not?: NestedEnumitem_categoryWithAggregatesFilter<$PrismaModel> | $Enums.item_category
+  export type NestedEnumInquiryPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryPriority[]
+    notIn?: $Enums.InquiryPriority[]
+    not?: NestedEnumInquiryPriorityFilter<$PrismaModel> | $Enums.InquiryPriority
+  }
+
+  export type NestedEnumInquiryStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryStatus | EnumInquiryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryStatus[]
+    notIn?: $Enums.InquiryStatus[]
+    not?: NestedEnumInquiryStatusFilter<$PrismaModel> | $Enums.InquiryStatus
+  }
+
+  export type NestedEnumInquiryCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryCategory | EnumInquiryCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryCategory[]
+    notIn?: $Enums.InquiryCategory[]
+    not?: NestedEnumInquiryCategoryWithAggregatesFilter<$PrismaModel> | $Enums.InquiryCategory
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumitem_categoryFilter<$PrismaModel>
-    _max?: NestedEnumitem_categoryFilter<$PrismaModel>
+    _min?: NestedEnumInquiryCategoryFilter<$PrismaModel>
+    _max?: NestedEnumInquiryCategoryFilter<$PrismaModel>
   }
 
-  export type NestedEnumitem_statusFilter<$PrismaModel = never> = {
-    equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
-    in?: $Enums.item_status[]
-    notIn?: $Enums.item_status[]
-    not?: NestedEnumitem_statusFilter<$PrismaModel> | $Enums.item_status
+  export type NestedEnumInquiryPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryPriority[]
+    notIn?: $Enums.InquiryPriority[]
+    not?: NestedEnumInquiryPriorityWithAggregatesFilter<$PrismaModel> | $Enums.InquiryPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInquiryPriorityFilter<$PrismaModel>
+    _max?: NestedEnumInquiryPriorityFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInquiryStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryStatus | EnumInquiryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryStatus[]
+    notIn?: $Enums.InquiryStatus[]
+    not?: NestedEnumInquiryStatusWithAggregatesFilter<$PrismaModel> | $Enums.InquiryStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInquiryStatusFilter<$PrismaModel>
+    _max?: NestedEnumInquiryStatusFilter<$PrismaModel>
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedEnumSenderTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SenderType | EnumSenderTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SenderType[]
+    notIn?: $Enums.SenderType[]
+    not?: NestedEnumSenderTypeFilter<$PrismaModel> | $Enums.SenderType
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSenderTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SenderType | EnumSenderTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SenderType[]
+    notIn?: $Enums.SenderType[]
+    not?: NestedEnumSenderTypeWithAggregatesFilter<$PrismaModel> | $Enums.SenderType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSenderTypeFilter<$PrismaModel>
+    _max?: NestedEnumSenderTypeFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -13674,6 +25489,74 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedEnumNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[]
+    notIn?: $Enums.NotificationType[]
+    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+  }
+
+  export type NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[]
+    notIn?: $Enums.NotificationType[]
+    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumitem_categoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_category | Enumitem_categoryFieldRefInput<$PrismaModel>
+    in?: $Enums.item_category[]
+    notIn?: $Enums.item_category[]
+    not?: NestedEnumitem_categoryFilter<$PrismaModel> | $Enums.item_category
+  }
+
+  export type NestedEnumitem_categoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_category | Enumitem_categoryFieldRefInput<$PrismaModel>
+    in?: $Enums.item_category[]
+    notIn?: $Enums.item_category[]
+    not?: NestedEnumitem_categoryWithAggregatesFilter<$PrismaModel> | $Enums.item_category
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumitem_categoryFilter<$PrismaModel>
+    _max?: NestedEnumitem_categoryFilter<$PrismaModel>
+  }
+
+  export type NestedEnumitem_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.item_status[]
+    notIn?: $Enums.item_status[]
+    not?: NestedEnumitem_statusFilter<$PrismaModel> | $Enums.item_status
+  }
+
   export type NestedEnumitem_statusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.item_status | Enumitem_statusFieldRefInput<$PrismaModel>
     in?: $Enums.item_status[]
@@ -13698,17 +25581,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumtransaction_statusFilter<$PrismaModel = never> = {
@@ -13946,6 +25818,376 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type InquiryCreateWithoutUserInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    guestName?: string | null
+    guestEmail?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedTo?: AccountCreateNestedOneWithoutAssignedInquiriesInput
+    resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
+    replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
+    attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryUncheckedCreateWithoutUserInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    guestName?: string | null
+    guestEmail?: string | null
+    assignedToId?: string | null
+    resolvedById?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
+    attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryCreateOrConnectWithoutUserInput = {
+    where: InquiryWhereUniqueInput
+    create: XOR<InquiryCreateWithoutUserInput, InquiryUncheckedCreateWithoutUserInput>
+  }
+
+  export type InquiryCreateManyUserInputEnvelope = {
+    data: InquiryCreateManyUserInput | InquiryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InquiryCreateWithoutAssignedToInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    guestName?: string | null
+    guestEmail?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: AccountCreateNestedOneWithoutInquiriesInput
+    resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
+    replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
+    attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryUncheckedCreateWithoutAssignedToInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    userId?: string | null
+    guestName?: string | null
+    guestEmail?: string | null
+    resolvedById?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
+    attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryCreateOrConnectWithoutAssignedToInput = {
+    where: InquiryWhereUniqueInput
+    create: XOR<InquiryCreateWithoutAssignedToInput, InquiryUncheckedCreateWithoutAssignedToInput>
+  }
+
+  export type InquiryCreateManyAssignedToInputEnvelope = {
+    data: InquiryCreateManyAssignedToInput | InquiryCreateManyAssignedToInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InquiryCreateWithoutResolvedByInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    guestName?: string | null
+    guestEmail?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: AccountCreateNestedOneWithoutInquiriesInput
+    assignedTo?: AccountCreateNestedOneWithoutAssignedInquiriesInput
+    replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
+    attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryUncheckedCreateWithoutResolvedByInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    userId?: string | null
+    guestName?: string | null
+    guestEmail?: string | null
+    assignedToId?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
+    attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryCreateOrConnectWithoutResolvedByInput = {
+    where: InquiryWhereUniqueInput
+    create: XOR<InquiryCreateWithoutResolvedByInput, InquiryUncheckedCreateWithoutResolvedByInput>
+  }
+
+  export type InquiryCreateManyResolvedByInputEnvelope = {
+    data: InquiryCreateManyResolvedByInput | InquiryCreateManyResolvedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InquiryReplyCreateWithoutSenderInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+    inquiry: InquiryCreateNestedOneWithoutRepliesInput
+    parentReply?: InquiryReplyCreateNestedOneWithoutChildRepliesInput
+    childReplies?: InquiryReplyCreateNestedManyWithoutParentReplyInput
+  }
+
+  export type InquiryReplyUncheckedCreateWithoutSenderInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    inquiryId: string
+    parentReplyId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+    childReplies?: InquiryReplyUncheckedCreateNestedManyWithoutParentReplyInput
+  }
+
+  export type InquiryReplyCreateOrConnectWithoutSenderInput = {
+    where: InquiryReplyWhereUniqueInput
+    create: XOR<InquiryReplyCreateWithoutSenderInput, InquiryReplyUncheckedCreateWithoutSenderInput>
+  }
+
+  export type InquiryReplyCreateManySenderInputEnvelope = {
+    data: InquiryReplyCreateManySenderInput | InquiryReplyCreateManySenderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InquiryAttachmentCreateWithoutUploadedByInput = {
+    id?: string
+    filename: string
+    filepath: string
+    filesize: number
+    mimetype: string
+    createdAt?: Date | string
+    inquiry: InquiryCreateNestedOneWithoutAttachmentsInput
+  }
+
+  export type InquiryAttachmentUncheckedCreateWithoutUploadedByInput = {
+    id?: string
+    filename: string
+    filepath: string
+    filesize: number
+    mimetype: string
+    inquiryId: string
+    createdAt?: Date | string
+  }
+
+  export type InquiryAttachmentCreateOrConnectWithoutUploadedByInput = {
+    where: InquiryAttachmentWhereUniqueInput
+    create: XOR<InquiryAttachmentCreateWithoutUploadedByInput, InquiryAttachmentUncheckedCreateWithoutUploadedByInput>
+  }
+
+  export type InquiryAttachmentCreateManyUploadedByInputEnvelope = {
+    data: InquiryAttachmentCreateManyUploadedByInput | InquiryAttachmentCreateManyUploadedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FAQCreateWithoutCreatedByInput = {
+    id?: string
+    question: string
+    answer: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    orderIndex?: number
+    viewCount?: number
+    helpfulCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FAQUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    question: string
+    answer: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    orderIndex?: number
+    viewCount?: number
+    helpfulCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FAQCreateOrConnectWithoutCreatedByInput = {
+    where: FAQWhereUniqueInput
+    create: XOR<FAQCreateWithoutCreatedByInput, FAQUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type FAQCreateManyCreatedByInputEnvelope = {
+    data: FAQCreateManyCreatedByInput | FAQCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InquiryTemplateCreateWithoutCreatedByInput = {
+    id?: string
+    title: string
+    content: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    isDefault?: boolean
+    usageCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryTemplateUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    title: string
+    content: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    isDefault?: boolean
+    usageCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryTemplateCreateOrConnectWithoutCreatedByInput = {
+    where: InquiryTemplateWhereUniqueInput
+    create: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type InquiryTemplateCreateManyCreatedByInputEnvelope = {
+    data: InquiryTemplateCreateManyCreatedByInput | InquiryTemplateCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InquiryNotificationCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    inquiry?: InquiryCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type InquiryNotificationUncheckedCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    inquiryId?: string | null
+    isRead?: boolean
+    readAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type InquiryNotificationCreateOrConnectWithoutUserInput = {
+    where: InquiryNotificationWhereUniqueInput
+    create: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput>
+  }
+
+  export type InquiryNotificationCreateManyUserInputEnvelope = {
+    data: InquiryNotificationCreateManyUserInput | InquiryNotificationCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InquiryAnalyticsCreateWithoutAdminInput = {
+    id?: string
+    date: Date | string
+    totalInquiries?: number
+    pendingInquiries?: number
+    resolvedInquiries?: number
+    avgFirstResponseTime?: number | null
+    avgResolutionTime?: number | null
+    seminarInquiries?: number
+    equipmentInquiries?: number
+    accountInquiries?: number
+    generalInquiries?: number
+    lowPriorityCount?: number
+    mediumPriorityCount?: number
+    highPriorityCount?: number
+    urgentPriorityCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryAnalyticsUncheckedCreateWithoutAdminInput = {
+    id?: string
+    date: Date | string
+    totalInquiries?: number
+    pendingInquiries?: number
+    resolvedInquiries?: number
+    avgFirstResponseTime?: number | null
+    avgResolutionTime?: number | null
+    seminarInquiries?: number
+    equipmentInquiries?: number
+    accountInquiries?: number
+    generalInquiries?: number
+    lowPriorityCount?: number
+    mediumPriorityCount?: number
+    highPriorityCount?: number
+    urgentPriorityCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryAnalyticsCreateOrConnectWithoutAdminInput = {
+    where: InquiryAnalyticsWhereUniqueInput
+    create: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput>
+  }
+
+  export type InquiryAnalyticsCreateManyAdminInputEnvelope = {
+    data: InquiryAnalyticsCreateManyAdminInput | InquiryAnalyticsCreateManyAdminInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SeminarParticipantUpsertWithWhereUniqueWithoutAccountInput = {
     where: SeminarParticipantWhereUniqueInput
     update: XOR<SeminarParticipantUpdateWithoutAccountInput, SeminarParticipantUncheckedUpdateWithoutAccountInput>
@@ -14095,6 +26337,276 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AuditLog"> | Date | string
   }
 
+  export type InquiryUpsertWithWhereUniqueWithoutUserInput = {
+    where: InquiryWhereUniqueInput
+    update: XOR<InquiryUpdateWithoutUserInput, InquiryUncheckedUpdateWithoutUserInput>
+    create: XOR<InquiryCreateWithoutUserInput, InquiryUncheckedCreateWithoutUserInput>
+  }
+
+  export type InquiryUpdateWithWhereUniqueWithoutUserInput = {
+    where: InquiryWhereUniqueInput
+    data: XOR<InquiryUpdateWithoutUserInput, InquiryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type InquiryUpdateManyWithWhereWithoutUserInput = {
+    where: InquiryScalarWhereInput
+    data: XOR<InquiryUpdateManyMutationInput, InquiryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type InquiryScalarWhereInput = {
+    AND?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+    OR?: InquiryScalarWhereInput[]
+    NOT?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+    id?: StringFilter<"Inquiry"> | string
+    subject?: StringFilter<"Inquiry"> | string
+    message?: StringFilter<"Inquiry"> | string
+    category?: EnumInquiryCategoryFilter<"Inquiry"> | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFilter<"Inquiry"> | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFilter<"Inquiry"> | $Enums.InquiryStatus
+    userId?: StringNullableFilter<"Inquiry"> | string | null
+    guestName?: StringNullableFilter<"Inquiry"> | string | null
+    guestEmail?: StringNullableFilter<"Inquiry"> | string | null
+    assignedToId?: StringNullableFilter<"Inquiry"> | string | null
+    resolvedById?: StringNullableFilter<"Inquiry"> | string | null
+    resolvedAt?: DateTimeNullableFilter<"Inquiry"> | Date | string | null
+    createdAt?: DateTimeFilter<"Inquiry"> | Date | string
+    updatedAt?: DateTimeFilter<"Inquiry"> | Date | string
+  }
+
+  export type InquiryUpsertWithWhereUniqueWithoutAssignedToInput = {
+    where: InquiryWhereUniqueInput
+    update: XOR<InquiryUpdateWithoutAssignedToInput, InquiryUncheckedUpdateWithoutAssignedToInput>
+    create: XOR<InquiryCreateWithoutAssignedToInput, InquiryUncheckedCreateWithoutAssignedToInput>
+  }
+
+  export type InquiryUpdateWithWhereUniqueWithoutAssignedToInput = {
+    where: InquiryWhereUniqueInput
+    data: XOR<InquiryUpdateWithoutAssignedToInput, InquiryUncheckedUpdateWithoutAssignedToInput>
+  }
+
+  export type InquiryUpdateManyWithWhereWithoutAssignedToInput = {
+    where: InquiryScalarWhereInput
+    data: XOR<InquiryUpdateManyMutationInput, InquiryUncheckedUpdateManyWithoutAssignedToInput>
+  }
+
+  export type InquiryUpsertWithWhereUniqueWithoutResolvedByInput = {
+    where: InquiryWhereUniqueInput
+    update: XOR<InquiryUpdateWithoutResolvedByInput, InquiryUncheckedUpdateWithoutResolvedByInput>
+    create: XOR<InquiryCreateWithoutResolvedByInput, InquiryUncheckedCreateWithoutResolvedByInput>
+  }
+
+  export type InquiryUpdateWithWhereUniqueWithoutResolvedByInput = {
+    where: InquiryWhereUniqueInput
+    data: XOR<InquiryUpdateWithoutResolvedByInput, InquiryUncheckedUpdateWithoutResolvedByInput>
+  }
+
+  export type InquiryUpdateManyWithWhereWithoutResolvedByInput = {
+    where: InquiryScalarWhereInput
+    data: XOR<InquiryUpdateManyMutationInput, InquiryUncheckedUpdateManyWithoutResolvedByInput>
+  }
+
+  export type InquiryReplyUpsertWithWhereUniqueWithoutSenderInput = {
+    where: InquiryReplyWhereUniqueInput
+    update: XOR<InquiryReplyUpdateWithoutSenderInput, InquiryReplyUncheckedUpdateWithoutSenderInput>
+    create: XOR<InquiryReplyCreateWithoutSenderInput, InquiryReplyUncheckedCreateWithoutSenderInput>
+  }
+
+  export type InquiryReplyUpdateWithWhereUniqueWithoutSenderInput = {
+    where: InquiryReplyWhereUniqueInput
+    data: XOR<InquiryReplyUpdateWithoutSenderInput, InquiryReplyUncheckedUpdateWithoutSenderInput>
+  }
+
+  export type InquiryReplyUpdateManyWithWhereWithoutSenderInput = {
+    where: InquiryReplyScalarWhereInput
+    data: XOR<InquiryReplyUpdateManyMutationInput, InquiryReplyUncheckedUpdateManyWithoutSenderInput>
+  }
+
+  export type InquiryReplyScalarWhereInput = {
+    AND?: InquiryReplyScalarWhereInput | InquiryReplyScalarWhereInput[]
+    OR?: InquiryReplyScalarWhereInput[]
+    NOT?: InquiryReplyScalarWhereInput | InquiryReplyScalarWhereInput[]
+    id?: StringFilter<"InquiryReply"> | string
+    message?: StringFilter<"InquiryReply"> | string
+    isInternal?: BoolFilter<"InquiryReply"> | boolean
+    senderId?: StringNullableFilter<"InquiryReply"> | string | null
+    senderType?: EnumSenderTypeFilter<"InquiryReply"> | $Enums.SenderType
+    senderName?: StringNullableFilter<"InquiryReply"> | string | null
+    inquiryId?: StringFilter<"InquiryReply"> | string
+    parentReplyId?: StringNullableFilter<"InquiryReply"> | string | null
+    createdAt?: DateTimeFilter<"InquiryReply"> | Date | string
+    updatedAt?: DateTimeFilter<"InquiryReply"> | Date | string
+    readByUser?: BoolFilter<"InquiryReply"> | boolean
+    readByAdmin?: BoolFilter<"InquiryReply"> | boolean
+    readAt?: DateTimeNullableFilter<"InquiryReply"> | Date | string | null
+  }
+
+  export type InquiryAttachmentUpsertWithWhereUniqueWithoutUploadedByInput = {
+    where: InquiryAttachmentWhereUniqueInput
+    update: XOR<InquiryAttachmentUpdateWithoutUploadedByInput, InquiryAttachmentUncheckedUpdateWithoutUploadedByInput>
+    create: XOR<InquiryAttachmentCreateWithoutUploadedByInput, InquiryAttachmentUncheckedCreateWithoutUploadedByInput>
+  }
+
+  export type InquiryAttachmentUpdateWithWhereUniqueWithoutUploadedByInput = {
+    where: InquiryAttachmentWhereUniqueInput
+    data: XOR<InquiryAttachmentUpdateWithoutUploadedByInput, InquiryAttachmentUncheckedUpdateWithoutUploadedByInput>
+  }
+
+  export type InquiryAttachmentUpdateManyWithWhereWithoutUploadedByInput = {
+    where: InquiryAttachmentScalarWhereInput
+    data: XOR<InquiryAttachmentUpdateManyMutationInput, InquiryAttachmentUncheckedUpdateManyWithoutUploadedByInput>
+  }
+
+  export type InquiryAttachmentScalarWhereInput = {
+    AND?: InquiryAttachmentScalarWhereInput | InquiryAttachmentScalarWhereInput[]
+    OR?: InquiryAttachmentScalarWhereInput[]
+    NOT?: InquiryAttachmentScalarWhereInput | InquiryAttachmentScalarWhereInput[]
+    id?: StringFilter<"InquiryAttachment"> | string
+    filename?: StringFilter<"InquiryAttachment"> | string
+    filepath?: StringFilter<"InquiryAttachment"> | string
+    filesize?: IntFilter<"InquiryAttachment"> | number
+    mimetype?: StringFilter<"InquiryAttachment"> | string
+    inquiryId?: StringFilter<"InquiryAttachment"> | string
+    uploadedById?: StringNullableFilter<"InquiryAttachment"> | string | null
+    createdAt?: DateTimeFilter<"InquiryAttachment"> | Date | string
+  }
+
+  export type FAQUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: FAQWhereUniqueInput
+    update: XOR<FAQUpdateWithoutCreatedByInput, FAQUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<FAQCreateWithoutCreatedByInput, FAQUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type FAQUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: FAQWhereUniqueInput
+    data: XOR<FAQUpdateWithoutCreatedByInput, FAQUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type FAQUpdateManyWithWhereWithoutCreatedByInput = {
+    where: FAQScalarWhereInput
+    data: XOR<FAQUpdateManyMutationInput, FAQUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type FAQScalarWhereInput = {
+    AND?: FAQScalarWhereInput | FAQScalarWhereInput[]
+    OR?: FAQScalarWhereInput[]
+    NOT?: FAQScalarWhereInput | FAQScalarWhereInput[]
+    id?: StringFilter<"FAQ"> | string
+    question?: StringFilter<"FAQ"> | string
+    answer?: StringFilter<"FAQ"> | string
+    category?: EnumInquiryCategoryFilter<"FAQ"> | $Enums.InquiryCategory
+    isActive?: BoolFilter<"FAQ"> | boolean
+    orderIndex?: IntFilter<"FAQ"> | number
+    createdById?: StringNullableFilter<"FAQ"> | string | null
+    viewCount?: IntFilter<"FAQ"> | number
+    helpfulCount?: IntFilter<"FAQ"> | number
+    createdAt?: DateTimeFilter<"FAQ"> | Date | string
+    updatedAt?: DateTimeFilter<"FAQ"> | Date | string
+  }
+
+  export type InquiryTemplateUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: InquiryTemplateWhereUniqueInput
+    update: XOR<InquiryTemplateUpdateWithoutCreatedByInput, InquiryTemplateUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type InquiryTemplateUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: InquiryTemplateWhereUniqueInput
+    data: XOR<InquiryTemplateUpdateWithoutCreatedByInput, InquiryTemplateUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type InquiryTemplateUpdateManyWithWhereWithoutCreatedByInput = {
+    where: InquiryTemplateScalarWhereInput
+    data: XOR<InquiryTemplateUpdateManyMutationInput, InquiryTemplateUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type InquiryTemplateScalarWhereInput = {
+    AND?: InquiryTemplateScalarWhereInput | InquiryTemplateScalarWhereInput[]
+    OR?: InquiryTemplateScalarWhereInput[]
+    NOT?: InquiryTemplateScalarWhereInput | InquiryTemplateScalarWhereInput[]
+    id?: StringFilter<"InquiryTemplate"> | string
+    title?: StringFilter<"InquiryTemplate"> | string
+    content?: StringFilter<"InquiryTemplate"> | string
+    category?: EnumInquiryCategoryFilter<"InquiryTemplate"> | $Enums.InquiryCategory
+    isActive?: BoolFilter<"InquiryTemplate"> | boolean
+    isDefault?: BoolFilter<"InquiryTemplate"> | boolean
+    usageCount?: IntFilter<"InquiryTemplate"> | number
+    createdById?: StringNullableFilter<"InquiryTemplate"> | string | null
+    createdAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
+    updatedAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
+  }
+
+  export type InquiryNotificationUpsertWithWhereUniqueWithoutUserInput = {
+    where: InquiryNotificationWhereUniqueInput
+    update: XOR<InquiryNotificationUpdateWithoutUserInput, InquiryNotificationUncheckedUpdateWithoutUserInput>
+    create: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput>
+  }
+
+  export type InquiryNotificationUpdateWithWhereUniqueWithoutUserInput = {
+    where: InquiryNotificationWhereUniqueInput
+    data: XOR<InquiryNotificationUpdateWithoutUserInput, InquiryNotificationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type InquiryNotificationUpdateManyWithWhereWithoutUserInput = {
+    where: InquiryNotificationScalarWhereInput
+    data: XOR<InquiryNotificationUpdateManyMutationInput, InquiryNotificationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type InquiryNotificationScalarWhereInput = {
+    AND?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
+    OR?: InquiryNotificationScalarWhereInput[]
+    NOT?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
+    id?: StringFilter<"InquiryNotification"> | string
+    type?: EnumNotificationTypeFilter<"InquiryNotification"> | $Enums.NotificationType
+    title?: StringFilter<"InquiryNotification"> | string
+    message?: StringFilter<"InquiryNotification"> | string
+    userId?: StringFilter<"InquiryNotification"> | string
+    inquiryId?: StringNullableFilter<"InquiryNotification"> | string | null
+    isRead?: BoolFilter<"InquiryNotification"> | boolean
+    readAt?: DateTimeNullableFilter<"InquiryNotification"> | Date | string | null
+    metadata?: JsonNullableFilter<"InquiryNotification">
+    createdAt?: DateTimeFilter<"InquiryNotification"> | Date | string
+  }
+
+  export type InquiryAnalyticsUpsertWithWhereUniqueWithoutAdminInput = {
+    where: InquiryAnalyticsWhereUniqueInput
+    update: XOR<InquiryAnalyticsUpdateWithoutAdminInput, InquiryAnalyticsUncheckedUpdateWithoutAdminInput>
+    create: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput>
+  }
+
+  export type InquiryAnalyticsUpdateWithWhereUniqueWithoutAdminInput = {
+    where: InquiryAnalyticsWhereUniqueInput
+    data: XOR<InquiryAnalyticsUpdateWithoutAdminInput, InquiryAnalyticsUncheckedUpdateWithoutAdminInput>
+  }
+
+  export type InquiryAnalyticsUpdateManyWithWhereWithoutAdminInput = {
+    where: InquiryAnalyticsScalarWhereInput
+    data: XOR<InquiryAnalyticsUpdateManyMutationInput, InquiryAnalyticsUncheckedUpdateManyWithoutAdminInput>
+  }
+
+  export type InquiryAnalyticsScalarWhereInput = {
+    AND?: InquiryAnalyticsScalarWhereInput | InquiryAnalyticsScalarWhereInput[]
+    OR?: InquiryAnalyticsScalarWhereInput[]
+    NOT?: InquiryAnalyticsScalarWhereInput | InquiryAnalyticsScalarWhereInput[]
+    id?: StringFilter<"InquiryAnalytics"> | string
+    date?: DateTimeFilter<"InquiryAnalytics"> | Date | string
+    totalInquiries?: IntFilter<"InquiryAnalytics"> | number
+    pendingInquiries?: IntFilter<"InquiryAnalytics"> | number
+    resolvedInquiries?: IntFilter<"InquiryAnalytics"> | number
+    avgFirstResponseTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
+    avgResolutionTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
+    seminarInquiries?: IntFilter<"InquiryAnalytics"> | number
+    equipmentInquiries?: IntFilter<"InquiryAnalytics"> | number
+    accountInquiries?: IntFilter<"InquiryAnalytics"> | number
+    generalInquiries?: IntFilter<"InquiryAnalytics"> | number
+    lowPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    mediumPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    highPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    urgentPriorityCount?: IntFilter<"InquiryAnalytics"> | number
+    adminId?: StringNullableFilter<"InquiryAnalytics"> | string | null
+    createdAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
+    updatedAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
+  }
+
   export type AccountCreateWithoutAuditLogsInput = {
     id?: string
     access?: $Enums.access
@@ -14155,6 +26667,15 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutAuditLogsInput = {
@@ -14217,6 +26738,15 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutAuditLogsInput = {
@@ -14295,6 +26825,15 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAuditLogsInput = {
@@ -14357,6 +26896,3283 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountCreateWithoutInquiriesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountUncheckedCreateWithoutInquiriesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountCreateOrConnectWithoutInquiriesInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutInquiriesInput, AccountUncheckedCreateWithoutInquiriesInput>
+  }
+
+  export type AccountCreateWithoutAssignedInquiriesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountUncheckedCreateWithoutAssignedInquiriesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountCreateOrConnectWithoutAssignedInquiriesInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutAssignedInquiriesInput, AccountUncheckedCreateWithoutAssignedInquiriesInput>
+  }
+
+  export type AccountCreateWithoutResolvedInquiriesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountUncheckedCreateWithoutResolvedInquiriesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountCreateOrConnectWithoutResolvedInquiriesInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutResolvedInquiriesInput, AccountUncheckedCreateWithoutResolvedInquiriesInput>
+  }
+
+  export type InquiryReplyCreateWithoutInquiryInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+    sender?: AccountCreateNestedOneWithoutInquiryRepliesInput
+    parentReply?: InquiryReplyCreateNestedOneWithoutChildRepliesInput
+    childReplies?: InquiryReplyCreateNestedManyWithoutParentReplyInput
+  }
+
+  export type InquiryReplyUncheckedCreateWithoutInquiryInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderId?: string | null
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    parentReplyId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+    childReplies?: InquiryReplyUncheckedCreateNestedManyWithoutParentReplyInput
+  }
+
+  export type InquiryReplyCreateOrConnectWithoutInquiryInput = {
+    where: InquiryReplyWhereUniqueInput
+    create: XOR<InquiryReplyCreateWithoutInquiryInput, InquiryReplyUncheckedCreateWithoutInquiryInput>
+  }
+
+  export type InquiryReplyCreateManyInquiryInputEnvelope = {
+    data: InquiryReplyCreateManyInquiryInput | InquiryReplyCreateManyInquiryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InquiryAttachmentCreateWithoutInquiryInput = {
+    id?: string
+    filename: string
+    filepath: string
+    filesize: number
+    mimetype: string
+    createdAt?: Date | string
+    uploadedBy?: AccountCreateNestedOneWithoutInquiryAttachmentsInput
+  }
+
+  export type InquiryAttachmentUncheckedCreateWithoutInquiryInput = {
+    id?: string
+    filename: string
+    filepath: string
+    filesize: number
+    mimetype: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type InquiryAttachmentCreateOrConnectWithoutInquiryInput = {
+    where: InquiryAttachmentWhereUniqueInput
+    create: XOR<InquiryAttachmentCreateWithoutInquiryInput, InquiryAttachmentUncheckedCreateWithoutInquiryInput>
+  }
+
+  export type InquiryAttachmentCreateManyInquiryInputEnvelope = {
+    data: InquiryAttachmentCreateManyInquiryInput | InquiryAttachmentCreateManyInquiryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InquiryNotificationCreateWithoutInquiryInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    user: AccountCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type InquiryNotificationUncheckedCreateWithoutInquiryInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    userId: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type InquiryNotificationCreateOrConnectWithoutInquiryInput = {
+    where: InquiryNotificationWhereUniqueInput
+    create: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput>
+  }
+
+  export type InquiryNotificationCreateManyInquiryInputEnvelope = {
+    data: InquiryNotificationCreateManyInquiryInput | InquiryNotificationCreateManyInquiryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AccountUpsertWithoutInquiriesInput = {
+    update: XOR<AccountUpdateWithoutInquiriesInput, AccountUncheckedUpdateWithoutInquiriesInput>
+    create: XOR<AccountCreateWithoutInquiriesInput, AccountUncheckedCreateWithoutInquiriesInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutInquiriesInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutInquiriesInput, AccountUncheckedUpdateWithoutInquiriesInput>
+  }
+
+  export type AccountUpdateWithoutInquiriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutInquiriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountUpsertWithoutAssignedInquiriesInput = {
+    update: XOR<AccountUpdateWithoutAssignedInquiriesInput, AccountUncheckedUpdateWithoutAssignedInquiriesInput>
+    create: XOR<AccountCreateWithoutAssignedInquiriesInput, AccountUncheckedCreateWithoutAssignedInquiriesInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutAssignedInquiriesInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutAssignedInquiriesInput, AccountUncheckedUpdateWithoutAssignedInquiriesInput>
+  }
+
+  export type AccountUpdateWithoutAssignedInquiriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutAssignedInquiriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountUpsertWithoutResolvedInquiriesInput = {
+    update: XOR<AccountUpdateWithoutResolvedInquiriesInput, AccountUncheckedUpdateWithoutResolvedInquiriesInput>
+    create: XOR<AccountCreateWithoutResolvedInquiriesInput, AccountUncheckedCreateWithoutResolvedInquiriesInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutResolvedInquiriesInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutResolvedInquiriesInput, AccountUncheckedUpdateWithoutResolvedInquiriesInput>
+  }
+
+  export type AccountUpdateWithoutResolvedInquiriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutResolvedInquiriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type InquiryReplyUpsertWithWhereUniqueWithoutInquiryInput = {
+    where: InquiryReplyWhereUniqueInput
+    update: XOR<InquiryReplyUpdateWithoutInquiryInput, InquiryReplyUncheckedUpdateWithoutInquiryInput>
+    create: XOR<InquiryReplyCreateWithoutInquiryInput, InquiryReplyUncheckedCreateWithoutInquiryInput>
+  }
+
+  export type InquiryReplyUpdateWithWhereUniqueWithoutInquiryInput = {
+    where: InquiryReplyWhereUniqueInput
+    data: XOR<InquiryReplyUpdateWithoutInquiryInput, InquiryReplyUncheckedUpdateWithoutInquiryInput>
+  }
+
+  export type InquiryReplyUpdateManyWithWhereWithoutInquiryInput = {
+    where: InquiryReplyScalarWhereInput
+    data: XOR<InquiryReplyUpdateManyMutationInput, InquiryReplyUncheckedUpdateManyWithoutInquiryInput>
+  }
+
+  export type InquiryAttachmentUpsertWithWhereUniqueWithoutInquiryInput = {
+    where: InquiryAttachmentWhereUniqueInput
+    update: XOR<InquiryAttachmentUpdateWithoutInquiryInput, InquiryAttachmentUncheckedUpdateWithoutInquiryInput>
+    create: XOR<InquiryAttachmentCreateWithoutInquiryInput, InquiryAttachmentUncheckedCreateWithoutInquiryInput>
+  }
+
+  export type InquiryAttachmentUpdateWithWhereUniqueWithoutInquiryInput = {
+    where: InquiryAttachmentWhereUniqueInput
+    data: XOR<InquiryAttachmentUpdateWithoutInquiryInput, InquiryAttachmentUncheckedUpdateWithoutInquiryInput>
+  }
+
+  export type InquiryAttachmentUpdateManyWithWhereWithoutInquiryInput = {
+    where: InquiryAttachmentScalarWhereInput
+    data: XOR<InquiryAttachmentUpdateManyMutationInput, InquiryAttachmentUncheckedUpdateManyWithoutInquiryInput>
+  }
+
+  export type InquiryNotificationUpsertWithWhereUniqueWithoutInquiryInput = {
+    where: InquiryNotificationWhereUniqueInput
+    update: XOR<InquiryNotificationUpdateWithoutInquiryInput, InquiryNotificationUncheckedUpdateWithoutInquiryInput>
+    create: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput>
+  }
+
+  export type InquiryNotificationUpdateWithWhereUniqueWithoutInquiryInput = {
+    where: InquiryNotificationWhereUniqueInput
+    data: XOR<InquiryNotificationUpdateWithoutInquiryInput, InquiryNotificationUncheckedUpdateWithoutInquiryInput>
+  }
+
+  export type InquiryNotificationUpdateManyWithWhereWithoutInquiryInput = {
+    where: InquiryNotificationScalarWhereInput
+    data: XOR<InquiryNotificationUpdateManyMutationInput, InquiryNotificationUncheckedUpdateManyWithoutInquiryInput>
+  }
+
+  export type AccountCreateWithoutInquiryRepliesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountUncheckedCreateWithoutInquiryRepliesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountCreateOrConnectWithoutInquiryRepliesInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutInquiryRepliesInput, AccountUncheckedCreateWithoutInquiryRepliesInput>
+  }
+
+  export type InquiryCreateWithoutRepliesInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    guestName?: string | null
+    guestEmail?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: AccountCreateNestedOneWithoutInquiriesInput
+    assignedTo?: AccountCreateNestedOneWithoutAssignedInquiriesInput
+    resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
+    attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryUncheckedCreateWithoutRepliesInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    userId?: string | null
+    guestName?: string | null
+    guestEmail?: string | null
+    assignedToId?: string | null
+    resolvedById?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryCreateOrConnectWithoutRepliesInput = {
+    where: InquiryWhereUniqueInput
+    create: XOR<InquiryCreateWithoutRepliesInput, InquiryUncheckedCreateWithoutRepliesInput>
+  }
+
+  export type InquiryReplyCreateWithoutChildRepliesInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+    sender?: AccountCreateNestedOneWithoutInquiryRepliesInput
+    inquiry: InquiryCreateNestedOneWithoutRepliesInput
+    parentReply?: InquiryReplyCreateNestedOneWithoutChildRepliesInput
+  }
+
+  export type InquiryReplyUncheckedCreateWithoutChildRepliesInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderId?: string | null
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    inquiryId: string
+    parentReplyId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+  }
+
+  export type InquiryReplyCreateOrConnectWithoutChildRepliesInput = {
+    where: InquiryReplyWhereUniqueInput
+    create: XOR<InquiryReplyCreateWithoutChildRepliesInput, InquiryReplyUncheckedCreateWithoutChildRepliesInput>
+  }
+
+  export type InquiryReplyCreateWithoutParentReplyInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+    sender?: AccountCreateNestedOneWithoutInquiryRepliesInput
+    inquiry: InquiryCreateNestedOneWithoutRepliesInput
+    childReplies?: InquiryReplyCreateNestedManyWithoutParentReplyInput
+  }
+
+  export type InquiryReplyUncheckedCreateWithoutParentReplyInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderId?: string | null
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    inquiryId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+    childReplies?: InquiryReplyUncheckedCreateNestedManyWithoutParentReplyInput
+  }
+
+  export type InquiryReplyCreateOrConnectWithoutParentReplyInput = {
+    where: InquiryReplyWhereUniqueInput
+    create: XOR<InquiryReplyCreateWithoutParentReplyInput, InquiryReplyUncheckedCreateWithoutParentReplyInput>
+  }
+
+  export type InquiryReplyCreateManyParentReplyInputEnvelope = {
+    data: InquiryReplyCreateManyParentReplyInput | InquiryReplyCreateManyParentReplyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AccountUpsertWithoutInquiryRepliesInput = {
+    update: XOR<AccountUpdateWithoutInquiryRepliesInput, AccountUncheckedUpdateWithoutInquiryRepliesInput>
+    create: XOR<AccountCreateWithoutInquiryRepliesInput, AccountUncheckedCreateWithoutInquiryRepliesInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutInquiryRepliesInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutInquiryRepliesInput, AccountUncheckedUpdateWithoutInquiryRepliesInput>
+  }
+
+  export type AccountUpdateWithoutInquiryRepliesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutInquiryRepliesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type InquiryUpsertWithoutRepliesInput = {
+    update: XOR<InquiryUpdateWithoutRepliesInput, InquiryUncheckedUpdateWithoutRepliesInput>
+    create: XOR<InquiryCreateWithoutRepliesInput, InquiryUncheckedCreateWithoutRepliesInput>
+    where?: InquiryWhereInput
+  }
+
+  export type InquiryUpdateToOneWithWhereWithoutRepliesInput = {
+    where?: InquiryWhereInput
+    data: XOR<InquiryUpdateWithoutRepliesInput, InquiryUncheckedUpdateWithoutRepliesInput>
+  }
+
+  export type InquiryUpdateWithoutRepliesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: AccountUpdateOneWithoutInquiriesNestedInput
+    assignedTo?: AccountUpdateOneWithoutAssignedInquiriesNestedInput
+    resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
+    attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryUncheckedUpdateWithoutRepliesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryReplyUpsertWithoutChildRepliesInput = {
+    update: XOR<InquiryReplyUpdateWithoutChildRepliesInput, InquiryReplyUncheckedUpdateWithoutChildRepliesInput>
+    create: XOR<InquiryReplyCreateWithoutChildRepliesInput, InquiryReplyUncheckedCreateWithoutChildRepliesInput>
+    where?: InquiryReplyWhereInput
+  }
+
+  export type InquiryReplyUpdateToOneWithWhereWithoutChildRepliesInput = {
+    where?: InquiryReplyWhereInput
+    data: XOR<InquiryReplyUpdateWithoutChildRepliesInput, InquiryReplyUncheckedUpdateWithoutChildRepliesInput>
+  }
+
+  export type InquiryReplyUpdateWithoutChildRepliesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sender?: AccountUpdateOneWithoutInquiryRepliesNestedInput
+    inquiry?: InquiryUpdateOneRequiredWithoutRepliesNestedInput
+    parentReply?: InquiryReplyUpdateOneWithoutChildRepliesNestedInput
+  }
+
+  export type InquiryReplyUncheckedUpdateWithoutChildRepliesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderId?: NullableStringFieldUpdateOperationsInput | string | null
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    inquiryId?: StringFieldUpdateOperationsInput | string
+    parentReplyId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type InquiryReplyUpsertWithWhereUniqueWithoutParentReplyInput = {
+    where: InquiryReplyWhereUniqueInput
+    update: XOR<InquiryReplyUpdateWithoutParentReplyInput, InquiryReplyUncheckedUpdateWithoutParentReplyInput>
+    create: XOR<InquiryReplyCreateWithoutParentReplyInput, InquiryReplyUncheckedCreateWithoutParentReplyInput>
+  }
+
+  export type InquiryReplyUpdateWithWhereUniqueWithoutParentReplyInput = {
+    where: InquiryReplyWhereUniqueInput
+    data: XOR<InquiryReplyUpdateWithoutParentReplyInput, InquiryReplyUncheckedUpdateWithoutParentReplyInput>
+  }
+
+  export type InquiryReplyUpdateManyWithWhereWithoutParentReplyInput = {
+    where: InquiryReplyScalarWhereInput
+    data: XOR<InquiryReplyUpdateManyMutationInput, InquiryReplyUncheckedUpdateManyWithoutParentReplyInput>
+  }
+
+  export type InquiryCreateWithoutAttachmentsInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    guestName?: string | null
+    guestEmail?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: AccountCreateNestedOneWithoutInquiriesInput
+    assignedTo?: AccountCreateNestedOneWithoutAssignedInquiriesInput
+    resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
+    replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryUncheckedCreateWithoutAttachmentsInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    userId?: string | null
+    guestName?: string | null
+    guestEmail?: string | null
+    assignedToId?: string | null
+    resolvedById?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryCreateOrConnectWithoutAttachmentsInput = {
+    where: InquiryWhereUniqueInput
+    create: XOR<InquiryCreateWithoutAttachmentsInput, InquiryUncheckedCreateWithoutAttachmentsInput>
+  }
+
+  export type AccountCreateWithoutInquiryAttachmentsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountUncheckedCreateWithoutInquiryAttachmentsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountCreateOrConnectWithoutInquiryAttachmentsInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutInquiryAttachmentsInput, AccountUncheckedCreateWithoutInquiryAttachmentsInput>
+  }
+
+  export type InquiryUpsertWithoutAttachmentsInput = {
+    update: XOR<InquiryUpdateWithoutAttachmentsInput, InquiryUncheckedUpdateWithoutAttachmentsInput>
+    create: XOR<InquiryCreateWithoutAttachmentsInput, InquiryUncheckedCreateWithoutAttachmentsInput>
+    where?: InquiryWhereInput
+  }
+
+  export type InquiryUpdateToOneWithWhereWithoutAttachmentsInput = {
+    where?: InquiryWhereInput
+    data: XOR<InquiryUpdateWithoutAttachmentsInput, InquiryUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type InquiryUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: AccountUpdateOneWithoutInquiriesNestedInput
+    assignedTo?: AccountUpdateOneWithoutAssignedInquiriesNestedInput
+    resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
+    replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryUncheckedUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type AccountUpsertWithoutInquiryAttachmentsInput = {
+    update: XOR<AccountUpdateWithoutInquiryAttachmentsInput, AccountUncheckedUpdateWithoutInquiryAttachmentsInput>
+    create: XOR<AccountCreateWithoutInquiryAttachmentsInput, AccountUncheckedCreateWithoutInquiryAttachmentsInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutInquiryAttachmentsInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutInquiryAttachmentsInput, AccountUncheckedUpdateWithoutInquiryAttachmentsInput>
+  }
+
+  export type AccountUpdateWithoutInquiryAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutInquiryAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountCreateWithoutCreatedFAQsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountUncheckedCreateWithoutCreatedFAQsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountCreateOrConnectWithoutCreatedFAQsInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutCreatedFAQsInput, AccountUncheckedCreateWithoutCreatedFAQsInput>
+  }
+
+  export type AccountUpsertWithoutCreatedFAQsInput = {
+    update: XOR<AccountUpdateWithoutCreatedFAQsInput, AccountUncheckedUpdateWithoutCreatedFAQsInput>
+    create: XOR<AccountCreateWithoutCreatedFAQsInput, AccountUncheckedCreateWithoutCreatedFAQsInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutCreatedFAQsInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutCreatedFAQsInput, AccountUncheckedUpdateWithoutCreatedFAQsInput>
+  }
+
+  export type AccountUpdateWithoutCreatedFAQsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutCreatedFAQsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountCreateWithoutCreatedTemplatesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountUncheckedCreateWithoutCreatedTemplatesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountCreateOrConnectWithoutCreatedTemplatesInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutCreatedTemplatesInput, AccountUncheckedCreateWithoutCreatedTemplatesInput>
+  }
+
+  export type AccountUpsertWithoutCreatedTemplatesInput = {
+    update: XOR<AccountUpdateWithoutCreatedTemplatesInput, AccountUncheckedUpdateWithoutCreatedTemplatesInput>
+    create: XOR<AccountCreateWithoutCreatedTemplatesInput, AccountUncheckedCreateWithoutCreatedTemplatesInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutCreatedTemplatesInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutCreatedTemplatesInput, AccountUncheckedUpdateWithoutCreatedTemplatesInput>
+  }
+
+  export type AccountUpdateWithoutCreatedTemplatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutCreatedTemplatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountCreateWithoutNotificationsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountUncheckedCreateWithoutNotificationsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AccountCreateOrConnectWithoutNotificationsInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutNotificationsInput, AccountUncheckedCreateWithoutNotificationsInput>
+  }
+
+  export type InquiryCreateWithoutNotificationsInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    guestName?: string | null
+    guestEmail?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: AccountCreateNestedOneWithoutInquiriesInput
+    assignedTo?: AccountCreateNestedOneWithoutAssignedInquiriesInput
+    resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
+    replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
+    attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryUncheckedCreateWithoutNotificationsInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    userId?: string | null
+    guestName?: string | null
+    guestEmail?: string | null
+    assignedToId?: string | null
+    resolvedById?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
+    attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
+  }
+
+  export type InquiryCreateOrConnectWithoutNotificationsInput = {
+    where: InquiryWhereUniqueInput
+    create: XOR<InquiryCreateWithoutNotificationsInput, InquiryUncheckedCreateWithoutNotificationsInput>
+  }
+
+  export type AccountUpsertWithoutNotificationsInput = {
+    update: XOR<AccountUpdateWithoutNotificationsInput, AccountUncheckedUpdateWithoutNotificationsInput>
+    create: XOR<AccountCreateWithoutNotificationsInput, AccountUncheckedCreateWithoutNotificationsInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutNotificationsInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutNotificationsInput, AccountUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type AccountUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type InquiryUpsertWithoutNotificationsInput = {
+    update: XOR<InquiryUpdateWithoutNotificationsInput, InquiryUncheckedUpdateWithoutNotificationsInput>
+    create: XOR<InquiryCreateWithoutNotificationsInput, InquiryUncheckedCreateWithoutNotificationsInput>
+    where?: InquiryWhereInput
+  }
+
+  export type InquiryUpdateToOneWithWhereWithoutNotificationsInput = {
+    where?: InquiryWhereInput
+    data: XOR<InquiryUpdateWithoutNotificationsInput, InquiryUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type InquiryUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: AccountUpdateOneWithoutInquiriesNestedInput
+    assignedTo?: AccountUpdateOneWithoutAssignedInquiriesNestedInput
+    resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
+    replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
+    attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryUncheckedUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
+    attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type AccountCreateWithoutAnalyticsRecordsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type AccountUncheckedCreateWithoutAnalyticsRecordsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type AccountCreateOrConnectWithoutAnalyticsRecordsInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutAnalyticsRecordsInput, AccountUncheckedCreateWithoutAnalyticsRecordsInput>
+  }
+
+  export type AccountUpsertWithoutAnalyticsRecordsInput = {
+    update: XOR<AccountUpdateWithoutAnalyticsRecordsInput, AccountUncheckedUpdateWithoutAnalyticsRecordsInput>
+    create: XOR<AccountCreateWithoutAnalyticsRecordsInput, AccountUncheckedCreateWithoutAnalyticsRecordsInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutAnalyticsRecordsInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutAnalyticsRecordsInput, AccountUncheckedUpdateWithoutAnalyticsRecordsInput>
+  }
+
+  export type AccountUpdateWithoutAnalyticsRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutAnalyticsRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ItemStackCreateWithoutItemInput = {
@@ -14611,6 +30427,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
     auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutItemTransactionsInput = {
@@ -14673,6 +30498,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutItemTransactionsInput = {
@@ -14740,6 +30574,15 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
     auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutAdminTransactionsInput = {
@@ -14802,6 +30645,15 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutAdminTransactionsInput = {
@@ -14911,6 +30763,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
     auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutItemTransactionsInput = {
@@ -14973,6 +30834,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUpsertWithoutAdminTransactionsInput = {
@@ -15046,6 +30916,15 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
     auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAdminTransactionsInput = {
@@ -15108,6 +30987,15 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type SeminarParticipantCreateWithoutSeminarInput = {
@@ -15196,6 +31084,15 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
     auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsCreatedInput = {
@@ -15258,6 +31155,15 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
     adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsCreatedInput = {
@@ -15352,6 +31258,15 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
     auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsCreatedInput = {
@@ -15414,6 +31329,15 @@ export namespace Prisma {
     itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
     adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type SeminarCreateWithoutParticipantsInput = {
@@ -15521,6 +31445,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
     auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsInput = {
@@ -15583,6 +31516,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
     seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
+    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsInput = {
@@ -15712,6 +31654,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
     auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsInput = {
@@ -15774,6 +31725,15 @@ export namespace Prisma {
     adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
+    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type SeminarParticipantCreateManyAccountInput = {
@@ -15840,6 +31800,136 @@ export namespace Prisma {
     ipAddress?: string | null
     userAgent?: string | null
     createdAt?: Date | string
+  }
+
+  export type InquiryCreateManyUserInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    guestName?: string | null
+    guestEmail?: string | null
+    assignedToId?: string | null
+    resolvedById?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryCreateManyAssignedToInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    userId?: string | null
+    guestName?: string | null
+    guestEmail?: string | null
+    resolvedById?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryCreateManyResolvedByInput = {
+    id?: string
+    subject: string
+    message: string
+    category?: $Enums.InquiryCategory
+    priority?: $Enums.InquiryPriority
+    status?: $Enums.InquiryStatus
+    userId?: string | null
+    guestName?: string | null
+    guestEmail?: string | null
+    assignedToId?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryReplyCreateManySenderInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    inquiryId: string
+    parentReplyId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+  }
+
+  export type InquiryAttachmentCreateManyUploadedByInput = {
+    id?: string
+    filename: string
+    filepath: string
+    filesize: number
+    mimetype: string
+    inquiryId: string
+    createdAt?: Date | string
+  }
+
+  export type FAQCreateManyCreatedByInput = {
+    id?: string
+    question: string
+    answer: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    orderIndex?: number
+    viewCount?: number
+    helpfulCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryTemplateCreateManyCreatedByInput = {
+    id?: string
+    title: string
+    content: string
+    category?: $Enums.InquiryCategory
+    isActive?: boolean
+    isDefault?: boolean
+    usageCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryNotificationCreateManyUserInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    inquiryId?: string | null
+    isRead?: boolean
+    readAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type InquiryAnalyticsCreateManyAdminInput = {
+    id?: string
+    date: Date | string
+    totalInquiries?: number
+    pendingInquiries?: number
+    resolvedInquiries?: number
+    avgFirstResponseTime?: number | null
+    avgResolutionTime?: number | null
+    seminarInquiries?: number
+    equipmentInquiries?: number
+    accountInquiries?: number
+    generalInquiries?: number
+    lowPriorityCount?: number
+    mediumPriorityCount?: number
+    highPriorityCount?: number
+    urgentPriorityCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type SeminarParticipantUpdateWithoutAccountInput = {
@@ -16040,6 +32130,628 @@ export namespace Prisma {
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedTo?: AccountUpdateOneWithoutAssignedInquiriesNestedInput
+    resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
+    replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
+    attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
+    attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryUpdateWithoutAssignedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: AccountUpdateOneWithoutInquiriesNestedInput
+    resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
+    replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
+    attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryUncheckedUpdateWithoutAssignedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
+    attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryUncheckedUpdateManyWithoutAssignedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryUpdateWithoutResolvedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: AccountUpdateOneWithoutInquiriesNestedInput
+    assignedTo?: AccountUpdateOneWithoutAssignedInquiriesNestedInput
+    replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
+    attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryUncheckedUpdateWithoutResolvedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
+    attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
+    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
+  }
+
+  export type InquiryUncheckedUpdateManyWithoutResolvedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    guestName?: NullableStringFieldUpdateOperationsInput | string | null
+    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryReplyUpdateWithoutSenderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    inquiry?: InquiryUpdateOneRequiredWithoutRepliesNestedInput
+    parentReply?: InquiryReplyUpdateOneWithoutChildRepliesNestedInput
+    childReplies?: InquiryReplyUpdateManyWithoutParentReplyNestedInput
+  }
+
+  export type InquiryReplyUncheckedUpdateWithoutSenderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    inquiryId?: StringFieldUpdateOperationsInput | string
+    parentReplyId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    childReplies?: InquiryReplyUncheckedUpdateManyWithoutParentReplyNestedInput
+  }
+
+  export type InquiryReplyUncheckedUpdateManyWithoutSenderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    inquiryId?: StringFieldUpdateOperationsInput | string
+    parentReplyId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type InquiryAttachmentUpdateWithoutUploadedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    filepath?: StringFieldUpdateOperationsInput | string
+    filesize?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    inquiry?: InquiryUpdateOneRequiredWithoutAttachmentsNestedInput
+  }
+
+  export type InquiryAttachmentUncheckedUpdateWithoutUploadedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    filepath?: StringFieldUpdateOperationsInput | string
+    filesize?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    inquiryId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryAttachmentUncheckedUpdateManyWithoutUploadedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    filepath?: StringFieldUpdateOperationsInput | string
+    filesize?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    inquiryId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FAQUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    orderIndex?: IntFieldUpdateOperationsInput | number
+    viewCount?: IntFieldUpdateOperationsInput | number
+    helpfulCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FAQUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    orderIndex?: IntFieldUpdateOperationsInput | number
+    viewCount?: IntFieldUpdateOperationsInput | number
+    helpfulCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FAQUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    orderIndex?: IntFieldUpdateOperationsInput | number
+    viewCount?: IntFieldUpdateOperationsInput | number
+    helpfulCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryTemplateUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryTemplateUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryTemplateUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryNotificationUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    inquiry?: InquiryUpdateOneWithoutNotificationsNestedInput
+  }
+
+  export type InquiryNotificationUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    inquiryId?: NullableStringFieldUpdateOperationsInput | string | null
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryNotificationUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    inquiryId?: NullableStringFieldUpdateOperationsInput | string | null
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryAnalyticsUpdateWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalInquiries?: IntFieldUpdateOperationsInput | number
+    pendingInquiries?: IntFieldUpdateOperationsInput | number
+    resolvedInquiries?: IntFieldUpdateOperationsInput | number
+    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    seminarInquiries?: IntFieldUpdateOperationsInput | number
+    equipmentInquiries?: IntFieldUpdateOperationsInput | number
+    accountInquiries?: IntFieldUpdateOperationsInput | number
+    generalInquiries?: IntFieldUpdateOperationsInput | number
+    lowPriorityCount?: IntFieldUpdateOperationsInput | number
+    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
+    highPriorityCount?: IntFieldUpdateOperationsInput | number
+    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryAnalyticsUncheckedUpdateWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalInquiries?: IntFieldUpdateOperationsInput | number
+    pendingInquiries?: IntFieldUpdateOperationsInput | number
+    resolvedInquiries?: IntFieldUpdateOperationsInput | number
+    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    seminarInquiries?: IntFieldUpdateOperationsInput | number
+    equipmentInquiries?: IntFieldUpdateOperationsInput | number
+    accountInquiries?: IntFieldUpdateOperationsInput | number
+    generalInquiries?: IntFieldUpdateOperationsInput | number
+    lowPriorityCount?: IntFieldUpdateOperationsInput | number
+    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
+    highPriorityCount?: IntFieldUpdateOperationsInput | number
+    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryAnalyticsUncheckedUpdateManyWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalInquiries?: IntFieldUpdateOperationsInput | number
+    pendingInquiries?: IntFieldUpdateOperationsInput | number
+    resolvedInquiries?: IntFieldUpdateOperationsInput | number
+    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    seminarInquiries?: IntFieldUpdateOperationsInput | number
+    equipmentInquiries?: IntFieldUpdateOperationsInput | number
+    accountInquiries?: IntFieldUpdateOperationsInput | number
+    generalInquiries?: IntFieldUpdateOperationsInput | number
+    lowPriorityCount?: IntFieldUpdateOperationsInput | number
+    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
+    highPriorityCount?: IntFieldUpdateOperationsInput | number
+    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryReplyCreateManyInquiryInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderId?: string | null
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    parentReplyId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+  }
+
+  export type InquiryAttachmentCreateManyInquiryInput = {
+    id?: string
+    filename: string
+    filepath: string
+    filesize: number
+    mimetype: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type InquiryNotificationCreateManyInquiryInput = {
+    id?: string
+    type: $Enums.NotificationType
+    title: string
+    message: string
+    userId: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type InquiryReplyUpdateWithoutInquiryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sender?: AccountUpdateOneWithoutInquiryRepliesNestedInput
+    parentReply?: InquiryReplyUpdateOneWithoutChildRepliesNestedInput
+    childReplies?: InquiryReplyUpdateManyWithoutParentReplyNestedInput
+  }
+
+  export type InquiryReplyUncheckedUpdateWithoutInquiryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderId?: NullableStringFieldUpdateOperationsInput | string | null
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReplyId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    childReplies?: InquiryReplyUncheckedUpdateManyWithoutParentReplyNestedInput
+  }
+
+  export type InquiryReplyUncheckedUpdateManyWithoutInquiryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderId?: NullableStringFieldUpdateOperationsInput | string | null
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    parentReplyId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type InquiryAttachmentUpdateWithoutInquiryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    filepath?: StringFieldUpdateOperationsInput | string
+    filesize?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    uploadedBy?: AccountUpdateOneWithoutInquiryAttachmentsNestedInput
+  }
+
+  export type InquiryAttachmentUncheckedUpdateWithoutInquiryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    filepath?: StringFieldUpdateOperationsInput | string
+    filesize?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryAttachmentUncheckedUpdateManyWithoutInquiryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    filename?: StringFieldUpdateOperationsInput | string
+    filepath?: StringFieldUpdateOperationsInput | string
+    filesize?: IntFieldUpdateOperationsInput | number
+    mimetype?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryNotificationUpdateWithoutInquiryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: AccountUpdateOneRequiredWithoutNotificationsNestedInput
+  }
+
+  export type InquiryNotificationUncheckedUpdateWithoutInquiryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryNotificationUncheckedUpdateManyWithoutInquiryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryReplyCreateManyParentReplyInput = {
+    id?: string
+    message: string
+    isInternal?: boolean
+    senderId?: string | null
+    senderType: $Enums.SenderType
+    senderName?: string | null
+    inquiryId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    readByUser?: boolean
+    readByAdmin?: boolean
+    readAt?: Date | string | null
+  }
+
+  export type InquiryReplyUpdateWithoutParentReplyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sender?: AccountUpdateOneWithoutInquiryRepliesNestedInput
+    inquiry?: InquiryUpdateOneRequiredWithoutRepliesNestedInput
+    childReplies?: InquiryReplyUpdateManyWithoutParentReplyNestedInput
+  }
+
+  export type InquiryReplyUncheckedUpdateWithoutParentReplyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderId?: NullableStringFieldUpdateOperationsInput | string | null
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    inquiryId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    childReplies?: InquiryReplyUncheckedUpdateManyWithoutParentReplyNestedInput
+  }
+
+  export type InquiryReplyUncheckedUpdateManyWithoutParentReplyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isInternal?: BoolFieldUpdateOperationsInput | boolean
+    senderId?: NullableStringFieldUpdateOperationsInput | string | null
+    senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
+    senderName?: NullableStringFieldUpdateOperationsInput | string | null
+    inquiryId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUser?: BoolFieldUpdateOperationsInput | boolean
+    readByAdmin?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ItemStackCreateManyItemInput = {

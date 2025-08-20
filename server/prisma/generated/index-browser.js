@@ -192,6 +192,111 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.InquiryScalarFieldEnum = {
+  id: 'id',
+  subject: 'subject',
+  message: 'message',
+  category: 'category',
+  priority: 'priority',
+  status: 'status',
+  userId: 'userId',
+  guestName: 'guestName',
+  guestEmail: 'guestEmail',
+  assignedToId: 'assignedToId',
+  resolvedById: 'resolvedById',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InquiryReplyScalarFieldEnum = {
+  id: 'id',
+  message: 'message',
+  isInternal: 'isInternal',
+  senderId: 'senderId',
+  senderType: 'senderType',
+  senderName: 'senderName',
+  inquiryId: 'inquiryId',
+  parentReplyId: 'parentReplyId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  readByUser: 'readByUser',
+  readByAdmin: 'readByAdmin',
+  readAt: 'readAt'
+};
+
+exports.Prisma.InquiryAttachmentScalarFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  filepath: 'filepath',
+  filesize: 'filesize',
+  mimetype: 'mimetype',
+  inquiryId: 'inquiryId',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.FAQScalarFieldEnum = {
+  id: 'id',
+  question: 'question',
+  answer: 'answer',
+  category: 'category',
+  isActive: 'isActive',
+  orderIndex: 'orderIndex',
+  createdById: 'createdById',
+  viewCount: 'viewCount',
+  helpfulCount: 'helpfulCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InquiryTemplateScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  category: 'category',
+  isActive: 'isActive',
+  isDefault: 'isDefault',
+  usageCount: 'usageCount',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InquiryNotificationScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  userId: 'userId',
+  inquiryId: 'inquiryId',
+  isRead: 'isRead',
+  readAt: 'readAt',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.InquiryAnalyticsScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  totalInquiries: 'totalInquiries',
+  pendingInquiries: 'pendingInquiries',
+  resolvedInquiries: 'resolvedInquiries',
+  avgFirstResponseTime: 'avgFirstResponseTime',
+  avgResolutionTime: 'avgResolutionTime',
+  seminarInquiries: 'seminarInquiries',
+  equipmentInquiries: 'equipmentInquiries',
+  accountInquiries: 'accountInquiries',
+  generalInquiries: 'generalInquiries',
+  lowPriorityCount: 'lowPriorityCount',
+  mediumPriorityCount: 'mediumPriorityCount',
+  highPriorityCount: 'highPriorityCount',
+  urgentPriorityCount: 'urgentPriorityCount',
+  adminId: 'adminId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.InventoryItemScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -329,6 +434,62 @@ exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
   details: 'details',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent'
+};
+
+exports.Prisma.InquiryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  subject: 'subject',
+  message: 'message',
+  userId: 'userId',
+  guestName: 'guestName',
+  guestEmail: 'guestEmail',
+  assignedToId: 'assignedToId',
+  resolvedById: 'resolvedById'
+};
+
+exports.Prisma.InquiryReplyOrderByRelevanceFieldEnum = {
+  id: 'id',
+  message: 'message',
+  senderId: 'senderId',
+  senderName: 'senderName',
+  inquiryId: 'inquiryId',
+  parentReplyId: 'parentReplyId'
+};
+
+exports.Prisma.InquiryAttachmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  filepath: 'filepath',
+  mimetype: 'mimetype',
+  inquiryId: 'inquiryId',
+  uploadedById: 'uploadedById'
+};
+
+exports.Prisma.FAQOrderByRelevanceFieldEnum = {
+  id: 'id',
+  question: 'question',
+  answer: 'answer',
+  createdById: 'createdById'
+};
+
+exports.Prisma.InquiryTemplateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  createdById: 'createdById'
+};
+
+exports.Prisma.InquiryNotificationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  message: 'message',
+  userId: 'userId',
+  inquiryId: 'inquiryId'
+};
+
+exports.Prisma.InquiryAnalyticsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  adminId: 'adminId'
 };
 
 exports.Prisma.InventoryItemOrderByRelevanceFieldEnum = {
@@ -483,6 +644,50 @@ exports.audit_action = exports.$Enums.audit_action = {
   SETTINGS_UPDATE: 'SETTINGS_UPDATE'
 };
 
+exports.InquiryCategory = exports.$Enums.InquiryCategory = {
+  GENERAL: 'GENERAL',
+  SEMINAR: 'SEMINAR',
+  EQUIPMENT: 'EQUIPMENT',
+  ACCOUNT: 'ACCOUNT',
+  TECHNICAL: 'TECHNICAL',
+  FEEDBACK: 'FEEDBACK',
+  COMPLAINT: 'COMPLAINT'
+};
+
+exports.InquiryPriority = exports.$Enums.InquiryPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+};
+
+exports.InquiryStatus = exports.$Enums.InquiryStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  WAITING_USER: 'WAITING_USER',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.SenderType = exports.$Enums.SenderType = {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+  SYSTEM: 'SYSTEM',
+  BOT: 'BOT'
+};
+
+exports.NotificationType = exports.$Enums.NotificationType = {
+  NEW_INQUIRY: 'NEW_INQUIRY',
+  NEW_REPLY: 'NEW_REPLY',
+  STATUS_CHANGE: 'STATUS_CHANGE',
+  ASSIGNMENT_CHANGE: 'ASSIGNMENT_CHANGE',
+  INQUIRY_RESOLVED: 'INQUIRY_RESOLVED',
+  INQUIRY_CLOSED: 'INQUIRY_CLOSED',
+  MENTION: 'MENTION',
+  REMINDER: 'REMINDER'
+};
+
 exports.item_category = exports.$Enums.item_category = {
   Farming_Equipment: 'Farming_Equipment',
   Harvesting_Tools: 'Harvesting_Tools',
@@ -534,6 +739,13 @@ exports.participant_status = exports.$Enums.participant_status = {
 exports.Prisma.ModelName = {
   Account: 'Account',
   AuditLog: 'AuditLog',
+  Inquiry: 'Inquiry',
+  InquiryReply: 'InquiryReply',
+  InquiryAttachment: 'InquiryAttachment',
+  FAQ: 'FAQ',
+  InquiryTemplate: 'InquiryTemplate',
+  InquiryNotification: 'InquiryNotification',
+  InquiryAnalytics: 'InquiryAnalytics',
   InventoryItem: 'InventoryItem',
   ItemStack: 'ItemStack',
   ItemTransaction: 'ItemTransaction',

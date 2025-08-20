@@ -91,6 +91,17 @@ model Account {
   adminTransactions ItemTransaction[]    @relation("AdminTransactions")
   seminarsCreated   Seminar[]            @relation("SeminarsCreated")
   auditLogs         AuditLog[]           @relation("AdminAuditLogs")
+  
+  // Inquiry System Relations
+  inquiries           Inquiry[]             // User's own inquiries
+  assignedInquiries   Inquiry[]             @relation("AssignedInquiries")
+  resolvedInquiries   Inquiry[]             @relation("ResolvedInquiries")
+  inquiryReplies      InquiryReply[]
+  inquiryAttachments  InquiryAttachment[]
+  createdFAQs         FAQ[]
+  createdTemplates    InquiryTemplate[]
+  notifications       InquiryNotification[]
+  analyticsRecords    InquiryAnalytics[]
 
   @@map("accounts")
 }
