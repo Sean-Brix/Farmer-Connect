@@ -94,14 +94,11 @@ model Account {
 
   // Inquiry System Relations
   inquiries          Inquiry[] // User's own inquiries
-  assignedInquiries  Inquiry[]             @relation("AssignedInquiries")
-  resolvedInquiries  Inquiry[]             @relation("ResolvedInquiries")
+  assignedInquiries  Inquiry[]           @relation("AssignedInquiries")
+  resolvedInquiries  Inquiry[]           @relation("ResolvedInquiries")
   inquiryReplies     InquiryReply[]
   inquiryAttachments InquiryAttachment[]
   createdFAQs        FAQ[]
-  createdTemplates   InquiryTemplate[]
-  notifications      InquiryNotification[]
-  analyticsRecords   InquiryAnalytics[]
 
   @@map("accounts")
 }
@@ -269,18 +266,18 @@ enum audit_action {
 // Inquiry System Schema for FITS-Tanza Chat Support
 // Supports: Client chat inquiries, Admin management, FAQ system, Real-time messaging
 
+//    !! REDO THE INQUIRY DATABASE SCHEMAS !!
+
 model Inquiry {
   id String @id @default(cuid())
 
   // Basic Information
-  subject  String // Inquiry title/subject
-  message  String          @db.LongText // Original inquiry message
-  category InquiryCategory @default(GENERAL) // Category classification
-  priority InquiryPriority @default(MEDIUM) // Priority level
-  status   InquiryStatus   @default(PENDING) // Current status
+  subject String // Inquiry title/subject
+  message String        @db.LongText // Original inquiry message
+  status  InquiryStatus @default(PENDING) // Current status
 
   // User Information (can be guest or registered user)
-  userId     String? // Reference to registered user (nullable for guests)
+  userId     String
   user       Account? @relation(fields: [userId], references: [id], onDelete: Cascade)
   guestName  String? // Name for guest users
   guestEmail String? // Email for guest users
@@ -297,14 +294,11 @@ model Inquiry {
   updatedAt DateTime @updatedAt
 
   // Relations
-  replies       InquiryReply[] // All messages/replies in this conversation
-  attachments   InquiryAttachment[] // File attachments (future feature)
-  notifications InquiryNotification[] // Notifications related to this inquiry
+  replies     InquiryReply[]
+  attachments InquiryAttachment[]
 
   // Indexes for performance
   @@index([status])
-  @@index([category])
-  @@index([priority])
   @@index([userId])
   @@index([assignedToId])
   @@index([createdAt])
@@ -315,13 +309,12 @@ model InquiryReply {
   id String @id @default(cuid())
 
   // Message Content
-  message    String  @db.LongText // Reply message content
-  isInternal Boolean @default(false) // Internal admin notes (not visible to user)
+  message String @db.LongText
 
   // Sender Information
   senderId   String? // User/Admin who sent this reply
   sender     Account?   @relation(fields: [senderId], references: [id], onDelete: SetNull)
-  senderType SenderType // USER, ADMIN, SYSTEM
+  senderType SenderType // USER, ADMIN, BOT
   senderName String? // Display name (for guest users or admin display names)
 
   // Inquiry Relation
@@ -378,8 +371,7 @@ model FAQ {
 
   // Content
   question String // FAQ question
-  answer   String          @db.LongText // FAQ answer
-  category InquiryCategory @default(GENERAL) // Category classification
+  answer   String @db.LongText // FAQ answer
 
   // Management
   isActive   Boolean @default(true) // Whether FAQ is publicly visible
@@ -398,135 +390,9 @@ model FAQ {
   updatedAt DateTime @updatedAt
 
   // Indexes
-  @@index([category])
   @@index([isActive])
   @@index([orderIndex])
   @@map("faqs")
-}
-
-model InquiryTemplate {
-  id String @id @default(cuid())
-
-  // Template Information
-  title    String // Template name
-  content  String          @db.LongText // Template message content
-  category InquiryCategory @default(GENERAL) // For which category
-
-  // Management
-  isActive  Boolean @default(true) // Whether template is available
-  isDefault Boolean @default(false) // Default template for category
-
-  // Usage Analytics
-  usageCount Int @default(0) // How many times used
-
-  // Metadata
-  createdById String? // Admin who created this template
-  createdBy   Account? @relation(fields: [createdById], references: [id], onDelete: SetNull)
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([category])
-  @@index([isActive])
-  @@map("inquiry_templates")
-}
-
-model InquiryNotification {
-  id String @id @default(cuid())
-
-  // Notification Details
-  type    NotificationType // NEW_INQUIRY, NEW_REPLY, STATUS_CHANGE, etc.
-  title   String // Notification title
-  message String // Notification message
-
-  // Target
-  userId String // Who should receive this notification
-  user   Account @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // Related Inquiry
-  inquiryId String? // Related inquiry (optional)
-  inquiry   Inquiry? @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
-
-  // Status
-  isRead Boolean   @default(false)
-  readAt DateTime?
-
-  // Metadata
-  metadata Json? // Additional data in JSON format
-
-  // Timestamps
-  createdAt DateTime @default(now())
-
-  @@index([userId])
-  @@index([isRead])
-  @@index([type])
-  @@index([createdAt])
-  @@map("inquiry_notifications")
-}
-
-model InquiryAnalytics {
-  id String @id @default(cuid())
-
-  // Analytics Data
-  date DateTime @db.Date // Date for analytics
-
-  // Counts
-  totalInquiries    Int @default(0) // Total inquiries created
-  pendingInquiries  Int @default(0) // Inquiries still pending
-  resolvedInquiries Int @default(0) // Inquiries resolved
-
-  // Response Times (in minutes)
-  avgFirstResponseTime Float? // Average time to first admin response
-  avgResolutionTime    Float? // Average time to resolution
-
-  // Category Breakdown
-  seminarInquiries   Int @default(0)
-  equipmentInquiries Int @default(0)
-  accountInquiries   Int @default(0)
-  generalInquiries   Int @default(0)
-
-  // Priority Breakdown
-  lowPriorityCount    Int @default(0)
-  mediumPriorityCount Int @default(0)
-  highPriorityCount   Int @default(0)
-  urgentPriorityCount Int @default(0)
-
-  // Admin Performance
-  adminId String? // Which admin's performance
-  admin   Account? @relation(fields: [adminId], references: [id], onDelete: Cascade)
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([date, adminId]) // One record per date per admin
-  @@index([date])
-  @@index([adminId])
-  @@map("inquiry_analytics")
-}
-
-// Enums for Inquiry System
-
-enum InquiryCategory {
-  GENERAL // General inquiries
-  SEMINAR // Seminar-related questions
-  EQUIPMENT // Equipment requests/issues
-  ACCOUNT // Account/authentication issues
-  TECHNICAL // Technical support
-  FEEDBACK // User feedback/suggestions
-  COMPLAINT // Complaints/issues
-
-  @@map("inquiry_category")
-}
-
-enum InquiryPriority {
-  LOW // Low priority - can wait
-  MEDIUM // Medium priority - normal response time
-  HIGH // High priority - faster response needed
-  URGENT // Urgent - immediate attention required
-
-  @@map("inquiry_priority")
 }
 
 enum InquiryStatus {
@@ -534,7 +400,6 @@ enum InquiryStatus {
   IN_PROGRESS // Being worked on by admin
   WAITING_USER // Waiting for user response
   RESOLVED // Issue resolved
-  CLOSED // Inquiry closed (resolved + confirmed)
   CANCELLED // Cancelled by user
 
   @@map("inquiry_status")
@@ -543,44 +408,10 @@ enum InquiryStatus {
 enum SenderType {
   USER // Regular user or guest
   ADMIN // Admin/moderator
-  SYSTEM // System-generated message
   BOT // Chatbot response
 
   @@map("sender_type")
 }
-
-enum NotificationType {
-  NEW_INQUIRY // New inquiry created
-  NEW_REPLY // New reply to inquiry
-  STATUS_CHANGE // Inquiry status changed
-  ASSIGNMENT_CHANGE // Inquiry reassigned
-  INQUIRY_RESOLVED // Inquiry marked as resolved
-  INQUIRY_CLOSED // Inquiry closed
-  MENTION // Admin mentioned in reply
-  REMINDER // Reminder for pending inquiry
-
-  @@map("notification_type")
-}
-
-// Add relations to existing User model (these would be added to your main user schema)
-// Uncomment and modify these in your main user schema file:
-
-/**
- * model User {
- * // ... existing user fields
- * // Inquiry Relations
- * inquiries           Inquiry[]             @relation("UserInquiries")
- * assignedInquiries   Inquiry[]             @relation("AssignedInquiries")
- * resolvedInquiries   Inquiry[]             @relation("ResolvedInquiries")
- * inquiryReplies      InquiryReply[]
- * inquiryAttachments  InquiryAttachment[]
- * createdFAQs         FAQ[]
- * createdTemplates    InquiryTemplate[]
- * notifications       InquiryNotification[]
- * analyticsRecords    InquiryAnalytics[]
- * // ... rest of user model
- * }
- */
 
 //? ======================================= ITEM SCHEMA ======================================= ?//
 

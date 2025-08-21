@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Navbar from '../../Client/Components/Navbar.jsx'
 import botAvatar from '../../Assets/default_picture.png';
 import userAvatar from '../../Assets/eic_default.png';
+import { socket } from '../../utils/socket.js';
 
 export default function Chat() {
     const [open, setOpen] = useState(false);
@@ -136,11 +137,8 @@ export default function Chat() {
         
         // If there's a current inquiry, add message to it
         if (currentInquiry) {
-            const newReply = {
-                from: "user",
-                message: message,
-                time: new Date().toLocaleString()
-            };
+
+            socket.emit('client_inquiry:send', message);
             
             setUserInquiries(prev => 
                 prev.map(inquiry => 
@@ -160,25 +158,10 @@ export default function Chat() {
                 lastUpdate: new Date().toLocaleDateString(),
                 replies: [...prev.replies, newReply]
             }));
-        } else {
+        } 
+        else {
             // Create new inquiry automatically for first message
-            const newInquiry = {
-                id: Date.now(),
-                subject: message.substring(0, 50) + (message.length > 50 ? '...' : ''),
-                category: 'general',
-                priority: 'medium',
-                status: 'pending',
-                message: message,
-                date: new Date().toLocaleDateString(),
-                lastUpdate: new Date().toLocaleDateString(),
-                replies: [
-                    { 
-                        from: "user", 
-                        message: message, 
-                        time: new Date().toLocaleString() 
-                    }
-                ]
-            };
+            socket.emit('client_inquiry:new', message);
             
             setUserInquiries(prev => [newInquiry, ...prev]);
             setCurrentInquiry(newInquiry);

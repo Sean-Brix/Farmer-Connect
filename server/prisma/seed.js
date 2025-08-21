@@ -979,9 +979,7 @@ async function main() {
     
     await createAuditLogs();
     console.log('Audit Logs created successfully.');
-    
-    // Create inquiry system data
-    console.log('\\n🎯 Starting inquiry system data creation...');
+
     await createFAQs();
     console.log('FAQs created successfully.');
     
@@ -993,59 +991,6 @@ async function main() {
     
     await createInquiryAnalytics();
     console.log('Inquiry Analytics created successfully.');
-    
-    console.log('\\n✅ All inquiry system data created successfully!');
-  } 
-
-  catch (error) {
-    console.error('Error seeding data:', error);
-  } 
-  
-  finally {
-    await prisma.$disconnect();
-  }
-}
-
-main();
-
-async function main() {
-  try {
-    await createAccount();
-    console.log('Accounts created successfully.');
-
-    await createSeminars();
-    console.log('Seminars created successfully.');
-
-    await createSeminarParticipants();
-    console.log('Seminar Participants created successfully.');
-    
-    await createInventoryItems();
-    console.log('Inventory Items created successfully.');
-    
-    await createItemStacks();
-    console.log('Inventory Item Stacks created successfully.');
-    
-    await createItemTransactions();
-    console.log('Item Transactions created successfully.');
-    
-    await createAuditLogs();
-    console.log('Audit Logs created successfully.');
-    
-    // Create inquiry system data
-    console.log('\n🎯 Starting inquiry system data creation...');
-    await createFAQs();
-    console.log('FAQs created successfully.');
-    
-    await createInquiryTemplates();
-    console.log('Inquiry Templates created successfully.');
-    
-    await createInquiries();
-    console.log('Inquiries created successfully.');
-    
-    await createInquiryAnalytics();
-    console.log('Inquiry Analytics created successfully.');
-    
-    console.log('\n✅ All inquiry system data created successfully!');
   } 
 
   catch (error) {

@@ -79,6 +79,83 @@ CREATE TABLE `audit_logs` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `inquiries` (
+    `id` VARCHAR(191) NOT NULL,
+    `subject` VARCHAR(191) NOT NULL,
+    `message` LONGTEXT NOT NULL,
+    `status` ENUM('PENDING', 'IN_PROGRESS', 'WAITING_USER', 'RESOLVED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
+    `userId` VARCHAR(191) NOT NULL,
+    `guestName` VARCHAR(191) NULL,
+    `guestEmail` VARCHAR(191) NULL,
+    `assignedToId` VARCHAR(191) NULL,
+    `resolvedById` VARCHAR(191) NULL,
+    `resolvedAt` DATETIME(3) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `inquiries_status_idx`(`status`),
+    INDEX `inquiries_userId_idx`(`userId`),
+    INDEX `inquiries_assignedToId_idx`(`assignedToId`),
+    INDEX `inquiries_createdAt_idx`(`createdAt`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `inquiry_replies` (
+    `id` VARCHAR(191) NOT NULL,
+    `message` LONGTEXT NOT NULL,
+    `senderId` VARCHAR(191) NULL,
+    `senderType` ENUM('USER', 'ADMIN', 'BOT') NOT NULL,
+    `senderName` VARCHAR(191) NULL,
+    `inquiryId` VARCHAR(191) NOT NULL,
+    `parentReplyId` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `readByUser` BOOLEAN NOT NULL DEFAULT false,
+    `readByAdmin` BOOLEAN NOT NULL DEFAULT false,
+    `readAt` DATETIME(3) NULL,
+
+    INDEX `inquiry_replies_inquiryId_idx`(`inquiryId`),
+    INDEX `inquiry_replies_senderId_idx`(`senderId`),
+    INDEX `inquiry_replies_createdAt_idx`(`createdAt`),
+    INDEX `inquiry_replies_senderType_idx`(`senderType`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `inquiry_attachments` (
+    `id` VARCHAR(191) NOT NULL,
+    `filename` VARCHAR(191) NOT NULL,
+    `filepath` VARCHAR(191) NOT NULL,
+    `filesize` INTEGER NOT NULL,
+    `mimetype` VARCHAR(191) NOT NULL,
+    `inquiryId` VARCHAR(191) NOT NULL,
+    `uploadedById` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    INDEX `inquiry_attachments_inquiryId_idx`(`inquiryId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `faqs` (
+    `id` VARCHAR(191) NOT NULL,
+    `question` VARCHAR(191) NOT NULL,
+    `answer` LONGTEXT NOT NULL,
+    `isActive` BOOLEAN NOT NULL DEFAULT true,
+    `orderIndex` INTEGER NOT NULL DEFAULT 0,
+    `createdById` VARCHAR(191) NULL,
+    `viewCount` INTEGER NOT NULL DEFAULT 0,
+    `helpfulCount` INTEGER NOT NULL DEFAULT 0,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `faqs_isActive_idx`(`isActive`),
+    INDEX `faqs_orderIndex_idx`(`orderIndex`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `inventory_items` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
@@ -160,6 +237,33 @@ CREATE TABLE `seminar_participants` (
 
 -- AddForeignKey
 ALTER TABLE `audit_logs` ADD CONSTRAINT `audit_logs_adminId_fkey` FOREIGN KEY (`adminId`) REFERENCES `accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `inquiries` ADD CONSTRAINT `inquiries_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `accounts`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `inquiries` ADD CONSTRAINT `inquiries_assignedToId_fkey` FOREIGN KEY (`assignedToId`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `inquiries` ADD CONSTRAINT `inquiries_resolvedById_fkey` FOREIGN KEY (`resolvedById`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `inquiry_replies` ADD CONSTRAINT `inquiry_replies_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `inquiry_replies` ADD CONSTRAINT `inquiry_replies_inquiryId_fkey` FOREIGN KEY (`inquiryId`) REFERENCES `inquiries`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `inquiry_replies` ADD CONSTRAINT `inquiry_replies_parentReplyId_fkey` FOREIGN KEY (`parentReplyId`) REFERENCES `inquiry_replies`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `inquiry_attachments` ADD CONSTRAINT `inquiry_attachments_inquiryId_fkey` FOREIGN KEY (`inquiryId`) REFERENCES `inquiries`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `inquiry_attachments` ADD CONSTRAINT `inquiry_attachments_uploadedById_fkey` FOREIGN KEY (`uploadedById`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `faqs` ADD CONSTRAINT `faqs_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `accounts`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `item_stacks` ADD CONSTRAINT `item_stacks_itemId_fkey` FOREIGN KEY (`itemId`) REFERENCES `inventory_items`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

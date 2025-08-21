@@ -99,9 +99,6 @@ model Account {
   inquiryReplies      InquiryReply[]
   inquiryAttachments  InquiryAttachment[]
   createdFAQs         FAQ[]
-  createdTemplates    InquiryTemplate[]
-  notifications       InquiryNotification[]
-  analyticsRecords    InquiryAnalytics[]
 
   @@map("accounts")
 }

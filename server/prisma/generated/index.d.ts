@@ -44,21 +44,6 @@ export type InquiryAttachment = $Result.DefaultSelection<Prisma.$InquiryAttachme
  */
 export type FAQ = $Result.DefaultSelection<Prisma.$FAQPayload>
 /**
- * Model InquiryTemplate
- * 
- */
-export type InquiryTemplate = $Result.DefaultSelection<Prisma.$InquiryTemplatePayload>
-/**
- * Model InquiryNotification
- * 
- */
-export type InquiryNotification = $Result.DefaultSelection<Prisma.$InquiryNotificationPayload>
-/**
- * Model InquiryAnalytics
- * 
- */
-export type InquiryAnalytics = $Result.DefaultSelection<Prisma.$InquiryAnalyticsPayload>
-/**
  * Model InventoryItem
  * 
  */
@@ -228,35 +213,11 @@ export const audit_action: {
 export type audit_action = (typeof audit_action)[keyof typeof audit_action]
 
 
-export const InquiryCategory: {
-  GENERAL: 'GENERAL',
-  SEMINAR: 'SEMINAR',
-  EQUIPMENT: 'EQUIPMENT',
-  ACCOUNT: 'ACCOUNT',
-  TECHNICAL: 'TECHNICAL',
-  FEEDBACK: 'FEEDBACK',
-  COMPLAINT: 'COMPLAINT'
-};
-
-export type InquiryCategory = (typeof InquiryCategory)[keyof typeof InquiryCategory]
-
-
-export const InquiryPriority: {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  URGENT: 'URGENT'
-};
-
-export type InquiryPriority = (typeof InquiryPriority)[keyof typeof InquiryPriority]
-
-
 export const InquiryStatus: {
   PENDING: 'PENDING',
   IN_PROGRESS: 'IN_PROGRESS',
   WAITING_USER: 'WAITING_USER',
   RESOLVED: 'RESOLVED',
-  CLOSED: 'CLOSED',
   CANCELLED: 'CANCELLED'
 };
 
@@ -266,25 +227,10 @@ export type InquiryStatus = (typeof InquiryStatus)[keyof typeof InquiryStatus]
 export const SenderType: {
   USER: 'USER',
   ADMIN: 'ADMIN',
-  SYSTEM: 'SYSTEM',
   BOT: 'BOT'
 };
 
 export type SenderType = (typeof SenderType)[keyof typeof SenderType]
-
-
-export const NotificationType: {
-  NEW_INQUIRY: 'NEW_INQUIRY',
-  NEW_REPLY: 'NEW_REPLY',
-  STATUS_CHANGE: 'STATUS_CHANGE',
-  ASSIGNMENT_CHANGE: 'ASSIGNMENT_CHANGE',
-  INQUIRY_RESOLVED: 'INQUIRY_RESOLVED',
-  INQUIRY_CLOSED: 'INQUIRY_CLOSED',
-  MENTION: 'MENTION',
-  REMINDER: 'REMINDER'
-};
-
-export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
 
 
 export const transaction_status: {
@@ -383,14 +329,6 @@ export type audit_action = $Enums.audit_action
 
 export const audit_action: typeof $Enums.audit_action
 
-export type InquiryCategory = $Enums.InquiryCategory
-
-export const InquiryCategory: typeof $Enums.InquiryCategory
-
-export type InquiryPriority = $Enums.InquiryPriority
-
-export const InquiryPriority: typeof $Enums.InquiryPriority
-
 export type InquiryStatus = $Enums.InquiryStatus
 
 export const InquiryStatus: typeof $Enums.InquiryStatus
@@ -398,10 +336,6 @@ export const InquiryStatus: typeof $Enums.InquiryStatus
 export type SenderType = $Enums.SenderType
 
 export const SenderType: typeof $Enums.SenderType
-
-export type NotificationType = $Enums.NotificationType
-
-export const NotificationType: typeof $Enums.NotificationType
 
 export type transaction_status = $Enums.transaction_status
 
@@ -600,36 +534,6 @@ export class PrismaClient<
     * ```
     */
   get fAQ(): Prisma.FAQDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.inquiryTemplate`: Exposes CRUD operations for the **InquiryTemplate** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more InquiryTemplates
-    * const inquiryTemplates = await prisma.inquiryTemplate.findMany()
-    * ```
-    */
-  get inquiryTemplate(): Prisma.InquiryTemplateDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.inquiryNotification`: Exposes CRUD operations for the **InquiryNotification** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more InquiryNotifications
-    * const inquiryNotifications = await prisma.inquiryNotification.findMany()
-    * ```
-    */
-  get inquiryNotification(): Prisma.InquiryNotificationDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.inquiryAnalytics`: Exposes CRUD operations for the **InquiryAnalytics** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more InquiryAnalytics
-    * const inquiryAnalytics = await prisma.inquiryAnalytics.findMany()
-    * ```
-    */
-  get inquiryAnalytics(): Prisma.InquiryAnalyticsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.inventoryItem`: Exposes CRUD operations for the **InventoryItem** model.
@@ -1126,9 +1030,6 @@ export namespace Prisma {
     InquiryReply: 'InquiryReply',
     InquiryAttachment: 'InquiryAttachment',
     FAQ: 'FAQ',
-    InquiryTemplate: 'InquiryTemplate',
-    InquiryNotification: 'InquiryNotification',
-    InquiryAnalytics: 'InquiryAnalytics',
     InventoryItem: 'InventoryItem',
     ItemStack: 'ItemStack',
     ItemTransaction: 'ItemTransaction',
@@ -1152,7 +1053,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "auditLog" | "inquiry" | "inquiryReply" | "inquiryAttachment" | "fAQ" | "inquiryTemplate" | "inquiryNotification" | "inquiryAnalytics" | "inventoryItem" | "itemStack" | "itemTransaction" | "seminar" | "seminarParticipant"
+      modelProps: "account" | "auditLog" | "inquiry" | "inquiryReply" | "inquiryAttachment" | "fAQ" | "inventoryItem" | "itemStack" | "itemTransaction" | "seminar" | "seminarParticipant"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1549,204 +1450,6 @@ export namespace Prisma {
           count: {
             args: Prisma.FAQCountArgs<ExtArgs>
             result: $Utils.Optional<FAQCountAggregateOutputType> | number
-          }
-        }
-      }
-      InquiryTemplate: {
-        payload: Prisma.$InquiryTemplatePayload<ExtArgs>
-        fields: Prisma.InquiryTemplateFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.InquiryTemplateFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.InquiryTemplateFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
-          }
-          findFirst: {
-            args: Prisma.InquiryTemplateFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.InquiryTemplateFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
-          }
-          findMany: {
-            args: Prisma.InquiryTemplateFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>[]
-          }
-          create: {
-            args: Prisma.InquiryTemplateCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
-          }
-          createMany: {
-            args: Prisma.InquiryTemplateCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.InquiryTemplateDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
-          }
-          update: {
-            args: Prisma.InquiryTemplateUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
-          }
-          deleteMany: {
-            args: Prisma.InquiryTemplateDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.InquiryTemplateUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.InquiryTemplateUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryTemplatePayload>
-          }
-          aggregate: {
-            args: Prisma.InquiryTemplateAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateInquiryTemplate>
-          }
-          groupBy: {
-            args: Prisma.InquiryTemplateGroupByArgs<ExtArgs>
-            result: $Utils.Optional<InquiryTemplateGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.InquiryTemplateCountArgs<ExtArgs>
-            result: $Utils.Optional<InquiryTemplateCountAggregateOutputType> | number
-          }
-        }
-      }
-      InquiryNotification: {
-        payload: Prisma.$InquiryNotificationPayload<ExtArgs>
-        fields: Prisma.InquiryNotificationFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.InquiryNotificationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.InquiryNotificationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
-          }
-          findFirst: {
-            args: Prisma.InquiryNotificationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.InquiryNotificationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
-          }
-          findMany: {
-            args: Prisma.InquiryNotificationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>[]
-          }
-          create: {
-            args: Prisma.InquiryNotificationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
-          }
-          createMany: {
-            args: Prisma.InquiryNotificationCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.InquiryNotificationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
-          }
-          update: {
-            args: Prisma.InquiryNotificationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
-          }
-          deleteMany: {
-            args: Prisma.InquiryNotificationDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.InquiryNotificationUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.InquiryNotificationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryNotificationPayload>
-          }
-          aggregate: {
-            args: Prisma.InquiryNotificationAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateInquiryNotification>
-          }
-          groupBy: {
-            args: Prisma.InquiryNotificationGroupByArgs<ExtArgs>
-            result: $Utils.Optional<InquiryNotificationGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.InquiryNotificationCountArgs<ExtArgs>
-            result: $Utils.Optional<InquiryNotificationCountAggregateOutputType> | number
-          }
-        }
-      }
-      InquiryAnalytics: {
-        payload: Prisma.$InquiryAnalyticsPayload<ExtArgs>
-        fields: Prisma.InquiryAnalyticsFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.InquiryAnalyticsFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.InquiryAnalyticsFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
-          }
-          findFirst: {
-            args: Prisma.InquiryAnalyticsFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.InquiryAnalyticsFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
-          }
-          findMany: {
-            args: Prisma.InquiryAnalyticsFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>[]
-          }
-          create: {
-            args: Prisma.InquiryAnalyticsCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
-          }
-          createMany: {
-            args: Prisma.InquiryAnalyticsCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.InquiryAnalyticsDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
-          }
-          update: {
-            args: Prisma.InquiryAnalyticsUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
-          }
-          deleteMany: {
-            args: Prisma.InquiryAnalyticsDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.InquiryAnalyticsUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.InquiryAnalyticsUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$InquiryAnalyticsPayload>
-          }
-          aggregate: {
-            args: Prisma.InquiryAnalyticsAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateInquiryAnalytics>
-          }
-          groupBy: {
-            args: Prisma.InquiryAnalyticsGroupByArgs<ExtArgs>
-            result: $Utils.Optional<InquiryAnalyticsGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.InquiryAnalyticsCountArgs<ExtArgs>
-            result: $Utils.Optional<InquiryAnalyticsCountAggregateOutputType> | number
           }
         }
       }
@@ -2178,9 +1881,6 @@ export namespace Prisma {
     inquiryReply?: InquiryReplyOmit
     inquiryAttachment?: InquiryAttachmentOmit
     fAQ?: FAQOmit
-    inquiryTemplate?: InquiryTemplateOmit
-    inquiryNotification?: InquiryNotificationOmit
-    inquiryAnalytics?: InquiryAnalyticsOmit
     inventoryItem?: InventoryItemOmit
     itemStack?: ItemStackOmit
     itemTransaction?: ItemTransactionOmit
@@ -2277,9 +1977,6 @@ export namespace Prisma {
     inquiryReplies: number
     inquiryAttachments: number
     createdFAQs: number
-    createdTemplates: number
-    notifications: number
-    analyticsRecords: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2294,9 +1991,6 @@ export namespace Prisma {
     inquiryReplies?: boolean | AccountCountOutputTypeCountInquiryRepliesArgs
     inquiryAttachments?: boolean | AccountCountOutputTypeCountInquiryAttachmentsArgs
     createdFAQs?: boolean | AccountCountOutputTypeCountCreatedFAQsArgs
-    createdTemplates?: boolean | AccountCountOutputTypeCountCreatedTemplatesArgs
-    notifications?: boolean | AccountCountOutputTypeCountNotificationsArgs
-    analyticsRecords?: boolean | AccountCountOutputTypeCountAnalyticsRecordsArgs
   }
 
   // Custom InputTypes
@@ -2387,27 +2081,6 @@ export namespace Prisma {
     where?: FAQWhereInput
   }
 
-  /**
-   * AccountCountOutputType without action
-   */
-  export type AccountCountOutputTypeCountCreatedTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InquiryTemplateWhereInput
-  }
-
-  /**
-   * AccountCountOutputType without action
-   */
-  export type AccountCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InquiryNotificationWhereInput
-  }
-
-  /**
-   * AccountCountOutputType without action
-   */
-  export type AccountCountOutputTypeCountAnalyticsRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InquiryAnalyticsWhereInput
-  }
-
 
   /**
    * Count Type InquiryCountOutputType
@@ -2416,13 +2089,11 @@ export namespace Prisma {
   export type InquiryCountOutputType = {
     replies: number
     attachments: number
-    notifications: number
   }
 
   export type InquiryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     replies?: boolean | InquiryCountOutputTypeCountRepliesArgs
     attachments?: boolean | InquiryCountOutputTypeCountAttachmentsArgs
-    notifications?: boolean | InquiryCountOutputTypeCountNotificationsArgs
   }
 
   // Custom InputTypes
@@ -2448,13 +2119,6 @@ export namespace Prisma {
    */
   export type InquiryCountOutputTypeCountAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InquiryAttachmentWhereInput
-  }
-
-  /**
-   * InquiryCountOutputType without action
-   */
-  export type InquiryCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InquiryNotificationWhereInput
   }
 
 
@@ -3141,9 +2805,6 @@ export namespace Prisma {
     inquiryReplies?: boolean | Account$inquiryRepliesArgs<ExtArgs>
     inquiryAttachments?: boolean | Account$inquiryAttachmentsArgs<ExtArgs>
     createdFAQs?: boolean | Account$createdFAQsArgs<ExtArgs>
-    createdTemplates?: boolean | Account$createdTemplatesArgs<ExtArgs>
-    notifications?: boolean | Account$notificationsArgs<ExtArgs>
-    analyticsRecords?: boolean | Account$analyticsRecordsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -3220,9 +2881,6 @@ export namespace Prisma {
     inquiryReplies?: boolean | Account$inquiryRepliesArgs<ExtArgs>
     inquiryAttachments?: boolean | Account$inquiryAttachmentsArgs<ExtArgs>
     createdFAQs?: boolean | Account$createdFAQsArgs<ExtArgs>
-    createdTemplates?: boolean | Account$createdTemplatesArgs<ExtArgs>
-    notifications?: boolean | Account$notificationsArgs<ExtArgs>
-    analyticsRecords?: boolean | Account$analyticsRecordsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -3240,9 +2898,6 @@ export namespace Prisma {
       inquiryReplies: Prisma.$InquiryReplyPayload<ExtArgs>[]
       inquiryAttachments: Prisma.$InquiryAttachmentPayload<ExtArgs>[]
       createdFAQs: Prisma.$FAQPayload<ExtArgs>[]
-      createdTemplates: Prisma.$InquiryTemplatePayload<ExtArgs>[]
-      notifications: Prisma.$InquiryNotificationPayload<ExtArgs>[]
-      analyticsRecords: Prisma.$InquiryAnalyticsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3651,9 +3306,6 @@ export namespace Prisma {
     inquiryReplies<T extends Account$inquiryRepliesArgs<ExtArgs> = {}>(args?: Subset<T, Account$inquiryRepliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     inquiryAttachments<T extends Account$inquiryAttachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Account$inquiryAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     createdFAQs<T extends Account$createdFAQsArgs<ExtArgs> = {}>(args?: Subset<T, Account$createdFAQsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FAQPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    createdTemplates<T extends Account$createdTemplatesArgs<ExtArgs> = {}>(args?: Subset<T, Account$createdTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    notifications<T extends Account$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Account$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    analyticsRecords<T extends Account$analyticsRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Account$analyticsRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4342,78 +3994,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FAQScalarFieldEnum | FAQScalarFieldEnum[]
-  }
-
-  /**
-   * Account.createdTemplates
-   */
-  export type Account$createdTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryTemplate
-     */
-    select?: InquiryTemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryTemplate
-     */
-    omit?: InquiryTemplateOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryTemplateInclude<ExtArgs> | null
-    where?: InquiryTemplateWhereInput
-    orderBy?: InquiryTemplateOrderByWithRelationInput | InquiryTemplateOrderByWithRelationInput[]
-    cursor?: InquiryTemplateWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: InquiryTemplateScalarFieldEnum | InquiryTemplateScalarFieldEnum[]
-  }
-
-  /**
-   * Account.notifications
-   */
-  export type Account$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-    where?: InquiryNotificationWhereInput
-    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
-    cursor?: InquiryNotificationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: InquiryNotificationScalarFieldEnum | InquiryNotificationScalarFieldEnum[]
-  }
-
-  /**
-   * Account.analyticsRecords
-   */
-  export type Account$analyticsRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryAnalytics
-     */
-    select?: InquiryAnalyticsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryAnalytics
-     */
-    omit?: InquiryAnalyticsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryAnalyticsInclude<ExtArgs> | null
-    where?: InquiryAnalyticsWhereInput
-    orderBy?: InquiryAnalyticsOrderByWithRelationInput | InquiryAnalyticsOrderByWithRelationInput[]
-    cursor?: InquiryAnalyticsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: InquiryAnalyticsScalarFieldEnum | InquiryAnalyticsScalarFieldEnum[]
   }
 
   /**
@@ -5440,8 +5020,6 @@ export namespace Prisma {
     id: string | null
     subject: string | null
     message: string | null
-    category: $Enums.InquiryCategory | null
-    priority: $Enums.InquiryPriority | null
     status: $Enums.InquiryStatus | null
     userId: string | null
     guestName: string | null
@@ -5457,8 +5035,6 @@ export namespace Prisma {
     id: string | null
     subject: string | null
     message: string | null
-    category: $Enums.InquiryCategory | null
-    priority: $Enums.InquiryPriority | null
     status: $Enums.InquiryStatus | null
     userId: string | null
     guestName: string | null
@@ -5474,8 +5050,6 @@ export namespace Prisma {
     id: number
     subject: number
     message: number
-    category: number
-    priority: number
     status: number
     userId: number
     guestName: number
@@ -5493,8 +5067,6 @@ export namespace Prisma {
     id?: true
     subject?: true
     message?: true
-    category?: true
-    priority?: true
     status?: true
     userId?: true
     guestName?: true
@@ -5510,8 +5082,6 @@ export namespace Prisma {
     id?: true
     subject?: true
     message?: true
-    category?: true
-    priority?: true
     status?: true
     userId?: true
     guestName?: true
@@ -5527,8 +5097,6 @@ export namespace Prisma {
     id?: true
     subject?: true
     message?: true
-    category?: true
-    priority?: true
     status?: true
     userId?: true
     guestName?: true
@@ -5617,10 +5185,8 @@ export namespace Prisma {
     id: string
     subject: string
     message: string
-    category: $Enums.InquiryCategory
-    priority: $Enums.InquiryPriority
     status: $Enums.InquiryStatus
-    userId: string | null
+    userId: string
     guestName: string | null
     guestEmail: string | null
     assignedToId: string | null
@@ -5651,8 +5217,6 @@ export namespace Prisma {
     id?: boolean
     subject?: boolean
     message?: boolean
-    category?: boolean
-    priority?: boolean
     status?: boolean
     userId?: boolean
     guestName?: boolean
@@ -5667,7 +5231,6 @@ export namespace Prisma {
     resolvedBy?: boolean | Inquiry$resolvedByArgs<ExtArgs>
     replies?: boolean | Inquiry$repliesArgs<ExtArgs>
     attachments?: boolean | Inquiry$attachmentsArgs<ExtArgs>
-    notifications?: boolean | Inquiry$notificationsArgs<ExtArgs>
     _count?: boolean | InquiryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inquiry"]>
 
@@ -5677,8 +5240,6 @@ export namespace Prisma {
     id?: boolean
     subject?: boolean
     message?: boolean
-    category?: boolean
-    priority?: boolean
     status?: boolean
     userId?: boolean
     guestName?: boolean
@@ -5690,14 +5251,13 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type InquiryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subject" | "message" | "category" | "priority" | "status" | "userId" | "guestName" | "guestEmail" | "assignedToId" | "resolvedById" | "resolvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["inquiry"]>
+  export type InquiryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subject" | "message" | "status" | "userId" | "guestName" | "guestEmail" | "assignedToId" | "resolvedById" | "resolvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["inquiry"]>
   export type InquiryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | Inquiry$userArgs<ExtArgs>
     assignedTo?: boolean | Inquiry$assignedToArgs<ExtArgs>
     resolvedBy?: boolean | Inquiry$resolvedByArgs<ExtArgs>
     replies?: boolean | Inquiry$repliesArgs<ExtArgs>
     attachments?: boolean | Inquiry$attachmentsArgs<ExtArgs>
-    notifications?: boolean | Inquiry$notificationsArgs<ExtArgs>
     _count?: boolean | InquiryCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -5709,16 +5269,13 @@ export namespace Prisma {
       resolvedBy: Prisma.$AccountPayload<ExtArgs> | null
       replies: Prisma.$InquiryReplyPayload<ExtArgs>[]
       attachments: Prisma.$InquiryAttachmentPayload<ExtArgs>[]
-      notifications: Prisma.$InquiryNotificationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       subject: string
       message: string
-      category: $Enums.InquiryCategory
-      priority: $Enums.InquiryPriority
       status: $Enums.InquiryStatus
-      userId: string | null
+      userId: string
       guestName: string | null
       guestEmail: string | null
       assignedToId: string | null
@@ -6071,7 +5628,6 @@ export namespace Prisma {
     resolvedBy<T extends Inquiry$resolvedByArgs<ExtArgs> = {}>(args?: Subset<T, Inquiry$resolvedByArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     replies<T extends Inquiry$repliesArgs<ExtArgs> = {}>(args?: Subset<T, Inquiry$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryReplyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     attachments<T extends Inquiry$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Inquiry$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    notifications<T extends Inquiry$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Inquiry$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6104,8 +5660,6 @@ export namespace Prisma {
     readonly id: FieldRef<"Inquiry", 'String'>
     readonly subject: FieldRef<"Inquiry", 'String'>
     readonly message: FieldRef<"Inquiry", 'String'>
-    readonly category: FieldRef<"Inquiry", 'InquiryCategory'>
-    readonly priority: FieldRef<"Inquiry", 'InquiryPriority'>
     readonly status: FieldRef<"Inquiry", 'InquiryStatus'>
     readonly userId: FieldRef<"Inquiry", 'String'>
     readonly guestName: FieldRef<"Inquiry", 'String'>
@@ -6563,30 +6117,6 @@ export namespace Prisma {
   }
 
   /**
-   * Inquiry.notifications
-   */
-  export type Inquiry$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-    where?: InquiryNotificationWhereInput
-    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
-    cursor?: InquiryNotificationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: InquiryNotificationScalarFieldEnum | InquiryNotificationScalarFieldEnum[]
-  }
-
-  /**
    * Inquiry without action
    */
   export type InquiryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6618,7 +6148,6 @@ export namespace Prisma {
   export type InquiryReplyMinAggregateOutputType = {
     id: string | null
     message: string | null
-    isInternal: boolean | null
     senderId: string | null
     senderType: $Enums.SenderType | null
     senderName: string | null
@@ -6634,7 +6163,6 @@ export namespace Prisma {
   export type InquiryReplyMaxAggregateOutputType = {
     id: string | null
     message: string | null
-    isInternal: boolean | null
     senderId: string | null
     senderType: $Enums.SenderType | null
     senderName: string | null
@@ -6650,7 +6178,6 @@ export namespace Prisma {
   export type InquiryReplyCountAggregateOutputType = {
     id: number
     message: number
-    isInternal: number
     senderId: number
     senderType: number
     senderName: number
@@ -6668,7 +6195,6 @@ export namespace Prisma {
   export type InquiryReplyMinAggregateInputType = {
     id?: true
     message?: true
-    isInternal?: true
     senderId?: true
     senderType?: true
     senderName?: true
@@ -6684,7 +6210,6 @@ export namespace Prisma {
   export type InquiryReplyMaxAggregateInputType = {
     id?: true
     message?: true
-    isInternal?: true
     senderId?: true
     senderType?: true
     senderName?: true
@@ -6700,7 +6225,6 @@ export namespace Prisma {
   export type InquiryReplyCountAggregateInputType = {
     id?: true
     message?: true
-    isInternal?: true
     senderId?: true
     senderType?: true
     senderName?: true
@@ -6789,7 +6313,6 @@ export namespace Prisma {
   export type InquiryReplyGroupByOutputType = {
     id: string
     message: string
-    isInternal: boolean
     senderId: string | null
     senderType: $Enums.SenderType
     senderName: string | null
@@ -6822,7 +6345,6 @@ export namespace Prisma {
   export type InquiryReplySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     message?: boolean
-    isInternal?: boolean
     senderId?: boolean
     senderType?: boolean
     senderName?: boolean
@@ -6845,7 +6367,6 @@ export namespace Prisma {
   export type InquiryReplySelectScalar = {
     id?: boolean
     message?: boolean
-    isInternal?: boolean
     senderId?: boolean
     senderType?: boolean
     senderName?: boolean
@@ -6858,7 +6379,7 @@ export namespace Prisma {
     readAt?: boolean
   }
 
-  export type InquiryReplyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "message" | "isInternal" | "senderId" | "senderType" | "senderName" | "inquiryId" | "parentReplyId" | "createdAt" | "updatedAt" | "readByUser" | "readByAdmin" | "readAt", ExtArgs["result"]["inquiryReply"]>
+  export type InquiryReplyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "message" | "senderId" | "senderType" | "senderName" | "inquiryId" | "parentReplyId" | "createdAt" | "updatedAt" | "readByUser" | "readByAdmin" | "readAt", ExtArgs["result"]["inquiryReply"]>
   export type InquiryReplyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sender?: boolean | InquiryReply$senderArgs<ExtArgs>
     inquiry?: boolean | InquiryDefaultArgs<ExtArgs>
@@ -6878,7 +6399,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       message: string
-      isInternal: boolean
       senderId: string | null
       senderType: $Enums.SenderType
       senderName: string | null
@@ -7264,7 +6784,6 @@ export namespace Prisma {
   interface InquiryReplyFieldRefs {
     readonly id: FieldRef<"InquiryReply", 'String'>
     readonly message: FieldRef<"InquiryReply", 'String'>
-    readonly isInternal: FieldRef<"InquiryReply", 'Boolean'>
     readonly senderId: FieldRef<"InquiryReply", 'String'>
     readonly senderType: FieldRef<"InquiryReply", 'SenderType'>
     readonly senderName: FieldRef<"InquiryReply", 'String'>
@@ -8745,7 +8264,6 @@ export namespace Prisma {
     id: string | null
     question: string | null
     answer: string | null
-    category: $Enums.InquiryCategory | null
     isActive: boolean | null
     orderIndex: number | null
     createdById: string | null
@@ -8759,7 +8277,6 @@ export namespace Prisma {
     id: string | null
     question: string | null
     answer: string | null
-    category: $Enums.InquiryCategory | null
     isActive: boolean | null
     orderIndex: number | null
     createdById: string | null
@@ -8773,7 +8290,6 @@ export namespace Prisma {
     id: number
     question: number
     answer: number
-    category: number
     isActive: number
     orderIndex: number
     createdById: number
@@ -8801,7 +8317,6 @@ export namespace Prisma {
     id?: true
     question?: true
     answer?: true
-    category?: true
     isActive?: true
     orderIndex?: true
     createdById?: true
@@ -8815,7 +8330,6 @@ export namespace Prisma {
     id?: true
     question?: true
     answer?: true
-    category?: true
     isActive?: true
     orderIndex?: true
     createdById?: true
@@ -8829,7 +8343,6 @@ export namespace Prisma {
     id?: true
     question?: true
     answer?: true
-    category?: true
     isActive?: true
     orderIndex?: true
     createdById?: true
@@ -8930,7 +8443,6 @@ export namespace Prisma {
     id: string
     question: string
     answer: string
-    category: $Enums.InquiryCategory
     isActive: boolean
     orderIndex: number
     createdById: string | null
@@ -8963,7 +8475,6 @@ export namespace Prisma {
     id?: boolean
     question?: boolean
     answer?: boolean
-    category?: boolean
     isActive?: boolean
     orderIndex?: boolean
     createdById?: boolean
@@ -8980,7 +8491,6 @@ export namespace Prisma {
     id?: boolean
     question?: boolean
     answer?: boolean
-    category?: boolean
     isActive?: boolean
     orderIndex?: boolean
     createdById?: boolean
@@ -8990,7 +8500,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type FAQOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "question" | "answer" | "category" | "isActive" | "orderIndex" | "createdById" | "viewCount" | "helpfulCount" | "createdAt" | "updatedAt", ExtArgs["result"]["fAQ"]>
+  export type FAQOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "question" | "answer" | "isActive" | "orderIndex" | "createdById" | "viewCount" | "helpfulCount" | "createdAt" | "updatedAt", ExtArgs["result"]["fAQ"]>
   export type FAQInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     createdBy?: boolean | FAQ$createdByArgs<ExtArgs>
   }
@@ -9004,7 +8514,6 @@ export namespace Prisma {
       id: string
       question: string
       answer: string
-      category: $Enums.InquiryCategory
       isActive: boolean
       orderIndex: number
       createdById: string | null
@@ -9385,7 +8894,6 @@ export namespace Prisma {
     readonly id: FieldRef<"FAQ", 'String'>
     readonly question: FieldRef<"FAQ", 'String'>
     readonly answer: FieldRef<"FAQ", 'String'>
-    readonly category: FieldRef<"FAQ", 'InquiryCategory'>
     readonly isActive: FieldRef<"FAQ", 'Boolean'>
     readonly orderIndex: FieldRef<"FAQ", 'Int'>
     readonly createdById: FieldRef<"FAQ", 'String'>
@@ -9770,3219 +9278,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: FAQInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model InquiryTemplate
-   */
-
-  export type AggregateInquiryTemplate = {
-    _count: InquiryTemplateCountAggregateOutputType | null
-    _avg: InquiryTemplateAvgAggregateOutputType | null
-    _sum: InquiryTemplateSumAggregateOutputType | null
-    _min: InquiryTemplateMinAggregateOutputType | null
-    _max: InquiryTemplateMaxAggregateOutputType | null
-  }
-
-  export type InquiryTemplateAvgAggregateOutputType = {
-    usageCount: number | null
-  }
-
-  export type InquiryTemplateSumAggregateOutputType = {
-    usageCount: number | null
-  }
-
-  export type InquiryTemplateMinAggregateOutputType = {
-    id: string | null
-    title: string | null
-    content: string | null
-    category: $Enums.InquiryCategory | null
-    isActive: boolean | null
-    isDefault: boolean | null
-    usageCount: number | null
-    createdById: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type InquiryTemplateMaxAggregateOutputType = {
-    id: string | null
-    title: string | null
-    content: string | null
-    category: $Enums.InquiryCategory | null
-    isActive: boolean | null
-    isDefault: boolean | null
-    usageCount: number | null
-    createdById: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type InquiryTemplateCountAggregateOutputType = {
-    id: number
-    title: number
-    content: number
-    category: number
-    isActive: number
-    isDefault: number
-    usageCount: number
-    createdById: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type InquiryTemplateAvgAggregateInputType = {
-    usageCount?: true
-  }
-
-  export type InquiryTemplateSumAggregateInputType = {
-    usageCount?: true
-  }
-
-  export type InquiryTemplateMinAggregateInputType = {
-    id?: true
-    title?: true
-    content?: true
-    category?: true
-    isActive?: true
-    isDefault?: true
-    usageCount?: true
-    createdById?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type InquiryTemplateMaxAggregateInputType = {
-    id?: true
-    title?: true
-    content?: true
-    category?: true
-    isActive?: true
-    isDefault?: true
-    usageCount?: true
-    createdById?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type InquiryTemplateCountAggregateInputType = {
-    id?: true
-    title?: true
-    content?: true
-    category?: true
-    isActive?: true
-    isDefault?: true
-    usageCount?: true
-    createdById?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type InquiryTemplateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which InquiryTemplate to aggregate.
-     */
-    where?: InquiryTemplateWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryTemplates to fetch.
-     */
-    orderBy?: InquiryTemplateOrderByWithRelationInput | InquiryTemplateOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: InquiryTemplateWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryTemplates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryTemplates.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned InquiryTemplates
-    **/
-    _count?: true | InquiryTemplateCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: InquiryTemplateAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: InquiryTemplateSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: InquiryTemplateMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: InquiryTemplateMaxAggregateInputType
-  }
-
-  export type GetInquiryTemplateAggregateType<T extends InquiryTemplateAggregateArgs> = {
-        [P in keyof T & keyof AggregateInquiryTemplate]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateInquiryTemplate[P]>
-      : GetScalarType<T[P], AggregateInquiryTemplate[P]>
-  }
-
-
-
-
-  export type InquiryTemplateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InquiryTemplateWhereInput
-    orderBy?: InquiryTemplateOrderByWithAggregationInput | InquiryTemplateOrderByWithAggregationInput[]
-    by: InquiryTemplateScalarFieldEnum[] | InquiryTemplateScalarFieldEnum
-    having?: InquiryTemplateScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: InquiryTemplateCountAggregateInputType | true
-    _avg?: InquiryTemplateAvgAggregateInputType
-    _sum?: InquiryTemplateSumAggregateInputType
-    _min?: InquiryTemplateMinAggregateInputType
-    _max?: InquiryTemplateMaxAggregateInputType
-  }
-
-  export type InquiryTemplateGroupByOutputType = {
-    id: string
-    title: string
-    content: string
-    category: $Enums.InquiryCategory
-    isActive: boolean
-    isDefault: boolean
-    usageCount: number
-    createdById: string | null
-    createdAt: Date
-    updatedAt: Date
-    _count: InquiryTemplateCountAggregateOutputType | null
-    _avg: InquiryTemplateAvgAggregateOutputType | null
-    _sum: InquiryTemplateSumAggregateOutputType | null
-    _min: InquiryTemplateMinAggregateOutputType | null
-    _max: InquiryTemplateMaxAggregateOutputType | null
-  }
-
-  type GetInquiryTemplateGroupByPayload<T extends InquiryTemplateGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<InquiryTemplateGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof InquiryTemplateGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], InquiryTemplateGroupByOutputType[P]>
-            : GetScalarType<T[P], InquiryTemplateGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type InquiryTemplateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    title?: boolean
-    content?: boolean
-    category?: boolean
-    isActive?: boolean
-    isDefault?: boolean
-    usageCount?: boolean
-    createdById?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    createdBy?: boolean | InquiryTemplate$createdByArgs<ExtArgs>
-  }, ExtArgs["result"]["inquiryTemplate"]>
-
-
-
-  export type InquiryTemplateSelectScalar = {
-    id?: boolean
-    title?: boolean
-    content?: boolean
-    category?: boolean
-    isActive?: boolean
-    isDefault?: boolean
-    usageCount?: boolean
-    createdById?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type InquiryTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "content" | "category" | "isActive" | "isDefault" | "usageCount" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["inquiryTemplate"]>
-  export type InquiryTemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    createdBy?: boolean | InquiryTemplate$createdByArgs<ExtArgs>
-  }
-
-  export type $InquiryTemplatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "InquiryTemplate"
-    objects: {
-      createdBy: Prisma.$AccountPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      title: string
-      content: string
-      category: $Enums.InquiryCategory
-      isActive: boolean
-      isDefault: boolean
-      usageCount: number
-      createdById: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["inquiryTemplate"]>
-    composites: {}
-  }
-
-  type InquiryTemplateGetPayload<S extends boolean | null | undefined | InquiryTemplateDefaultArgs> = $Result.GetResult<Prisma.$InquiryTemplatePayload, S>
-
-  type InquiryTemplateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<InquiryTemplateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: InquiryTemplateCountAggregateInputType | true
-    }
-
-  export interface InquiryTemplateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InquiryTemplate'], meta: { name: 'InquiryTemplate' } }
-    /**
-     * Find zero or one InquiryTemplate that matches the filter.
-     * @param {InquiryTemplateFindUniqueArgs} args - Arguments to find a InquiryTemplate
-     * @example
-     * // Get one InquiryTemplate
-     * const inquiryTemplate = await prisma.inquiryTemplate.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends InquiryTemplateFindUniqueArgs>(args: SelectSubset<T, InquiryTemplateFindUniqueArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one InquiryTemplate that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {InquiryTemplateFindUniqueOrThrowArgs} args - Arguments to find a InquiryTemplate
-     * @example
-     * // Get one InquiryTemplate
-     * const inquiryTemplate = await prisma.inquiryTemplate.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends InquiryTemplateFindUniqueOrThrowArgs>(args: SelectSubset<T, InquiryTemplateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first InquiryTemplate that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryTemplateFindFirstArgs} args - Arguments to find a InquiryTemplate
-     * @example
-     * // Get one InquiryTemplate
-     * const inquiryTemplate = await prisma.inquiryTemplate.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends InquiryTemplateFindFirstArgs>(args?: SelectSubset<T, InquiryTemplateFindFirstArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first InquiryTemplate that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryTemplateFindFirstOrThrowArgs} args - Arguments to find a InquiryTemplate
-     * @example
-     * // Get one InquiryTemplate
-     * const inquiryTemplate = await prisma.inquiryTemplate.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends InquiryTemplateFindFirstOrThrowArgs>(args?: SelectSubset<T, InquiryTemplateFindFirstOrThrowArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more InquiryTemplates that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryTemplateFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all InquiryTemplates
-     * const inquiryTemplates = await prisma.inquiryTemplate.findMany()
-     * 
-     * // Get first 10 InquiryTemplates
-     * const inquiryTemplates = await prisma.inquiryTemplate.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const inquiryTemplateWithIdOnly = await prisma.inquiryTemplate.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends InquiryTemplateFindManyArgs>(args?: SelectSubset<T, InquiryTemplateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a InquiryTemplate.
-     * @param {InquiryTemplateCreateArgs} args - Arguments to create a InquiryTemplate.
-     * @example
-     * // Create one InquiryTemplate
-     * const InquiryTemplate = await prisma.inquiryTemplate.create({
-     *   data: {
-     *     // ... data to create a InquiryTemplate
-     *   }
-     * })
-     * 
-     */
-    create<T extends InquiryTemplateCreateArgs>(args: SelectSubset<T, InquiryTemplateCreateArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many InquiryTemplates.
-     * @param {InquiryTemplateCreateManyArgs} args - Arguments to create many InquiryTemplates.
-     * @example
-     * // Create many InquiryTemplates
-     * const inquiryTemplate = await prisma.inquiryTemplate.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends InquiryTemplateCreateManyArgs>(args?: SelectSubset<T, InquiryTemplateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a InquiryTemplate.
-     * @param {InquiryTemplateDeleteArgs} args - Arguments to delete one InquiryTemplate.
-     * @example
-     * // Delete one InquiryTemplate
-     * const InquiryTemplate = await prisma.inquiryTemplate.delete({
-     *   where: {
-     *     // ... filter to delete one InquiryTemplate
-     *   }
-     * })
-     * 
-     */
-    delete<T extends InquiryTemplateDeleteArgs>(args: SelectSubset<T, InquiryTemplateDeleteArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one InquiryTemplate.
-     * @param {InquiryTemplateUpdateArgs} args - Arguments to update one InquiryTemplate.
-     * @example
-     * // Update one InquiryTemplate
-     * const inquiryTemplate = await prisma.inquiryTemplate.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends InquiryTemplateUpdateArgs>(args: SelectSubset<T, InquiryTemplateUpdateArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more InquiryTemplates.
-     * @param {InquiryTemplateDeleteManyArgs} args - Arguments to filter InquiryTemplates to delete.
-     * @example
-     * // Delete a few InquiryTemplates
-     * const { count } = await prisma.inquiryTemplate.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends InquiryTemplateDeleteManyArgs>(args?: SelectSubset<T, InquiryTemplateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more InquiryTemplates.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryTemplateUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many InquiryTemplates
-     * const inquiryTemplate = await prisma.inquiryTemplate.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends InquiryTemplateUpdateManyArgs>(args: SelectSubset<T, InquiryTemplateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one InquiryTemplate.
-     * @param {InquiryTemplateUpsertArgs} args - Arguments to update or create a InquiryTemplate.
-     * @example
-     * // Update or create a InquiryTemplate
-     * const inquiryTemplate = await prisma.inquiryTemplate.upsert({
-     *   create: {
-     *     // ... data to create a InquiryTemplate
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the InquiryTemplate we want to update
-     *   }
-     * })
-     */
-    upsert<T extends InquiryTemplateUpsertArgs>(args: SelectSubset<T, InquiryTemplateUpsertArgs<ExtArgs>>): Prisma__InquiryTemplateClient<$Result.GetResult<Prisma.$InquiryTemplatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of InquiryTemplates.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryTemplateCountArgs} args - Arguments to filter InquiryTemplates to count.
-     * @example
-     * // Count the number of InquiryTemplates
-     * const count = await prisma.inquiryTemplate.count({
-     *   where: {
-     *     // ... the filter for the InquiryTemplates we want to count
-     *   }
-     * })
-    **/
-    count<T extends InquiryTemplateCountArgs>(
-      args?: Subset<T, InquiryTemplateCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], InquiryTemplateCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a InquiryTemplate.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryTemplateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends InquiryTemplateAggregateArgs>(args: Subset<T, InquiryTemplateAggregateArgs>): Prisma.PrismaPromise<GetInquiryTemplateAggregateType<T>>
-
-    /**
-     * Group by InquiryTemplate.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryTemplateGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends InquiryTemplateGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: InquiryTemplateGroupByArgs['orderBy'] }
-        : { orderBy?: InquiryTemplateGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, InquiryTemplateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInquiryTemplateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the InquiryTemplate model
-   */
-  readonly fields: InquiryTemplateFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for InquiryTemplate.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__InquiryTemplateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    createdBy<T extends InquiryTemplate$createdByArgs<ExtArgs> = {}>(args?: Subset<T, InquiryTemplate$createdByArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the InquiryTemplate model
-   */
-  interface InquiryTemplateFieldRefs {
-    readonly id: FieldRef<"InquiryTemplate", 'String'>
-    readonly title: FieldRef<"InquiryTemplate", 'String'>
-    readonly content: FieldRef<"InquiryTemplate", 'String'>
-    readonly category: FieldRef<"InquiryTemplate", 'InquiryCategory'>
-    readonly isActive: FieldRef<"InquiryTemplate", 'Boolean'>
-    readonly isDefault: FieldRef<"InquiryTemplate", 'Boolean'>
-    readonly usageCount: FieldRef<"InquiryTemplate", 'Int'>
-    readonly createdById: FieldRef<"InquiryTemplate", 'String'>
-    readonly createdAt: FieldRef<"InquiryTemplate", 'DateTime'>
-    readonly updatedAt: FieldRef<"InquiryTemplate", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * InquiryTemplate findUnique
-   */
-  export type InquiryTemplateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryTemplate
-     */
-    select?: InquiryTemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryTemplate
-     */
-    omit?: InquiryTemplateOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryTemplateInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryTemplate to fetch.
-     */
-    where: InquiryTemplateWhereUniqueInput
-  }
-
-  /**
-   * InquiryTemplate findUniqueOrThrow
-   */
-  export type InquiryTemplateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryTemplate
-     */
-    select?: InquiryTemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryTemplate
-     */
-    omit?: InquiryTemplateOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryTemplateInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryTemplate to fetch.
-     */
-    where: InquiryTemplateWhereUniqueInput
-  }
-
-  /**
-   * InquiryTemplate findFirst
-   */
-  export type InquiryTemplateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryTemplate
-     */
-    select?: InquiryTemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryTemplate
-     */
-    omit?: InquiryTemplateOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryTemplateInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryTemplate to fetch.
-     */
-    where?: InquiryTemplateWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryTemplates to fetch.
-     */
-    orderBy?: InquiryTemplateOrderByWithRelationInput | InquiryTemplateOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for InquiryTemplates.
-     */
-    cursor?: InquiryTemplateWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryTemplates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryTemplates.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of InquiryTemplates.
-     */
-    distinct?: InquiryTemplateScalarFieldEnum | InquiryTemplateScalarFieldEnum[]
-  }
-
-  /**
-   * InquiryTemplate findFirstOrThrow
-   */
-  export type InquiryTemplateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryTemplate
-     */
-    select?: InquiryTemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryTemplate
-     */
-    omit?: InquiryTemplateOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryTemplateInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryTemplate to fetch.
-     */
-    where?: InquiryTemplateWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryTemplates to fetch.
-     */
-    orderBy?: InquiryTemplateOrderByWithRelationInput | InquiryTemplateOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for InquiryTemplates.
-     */
-    cursor?: InquiryTemplateWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryTemplates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryTemplates.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of InquiryTemplates.
-     */
-    distinct?: InquiryTemplateScalarFieldEnum | InquiryTemplateScalarFieldEnum[]
-  }
-
-  /**
-   * InquiryTemplate findMany
-   */
-  export type InquiryTemplateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryTemplate
-     */
-    select?: InquiryTemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryTemplate
-     */
-    omit?: InquiryTemplateOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryTemplateInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryTemplates to fetch.
-     */
-    where?: InquiryTemplateWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryTemplates to fetch.
-     */
-    orderBy?: InquiryTemplateOrderByWithRelationInput | InquiryTemplateOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing InquiryTemplates.
-     */
-    cursor?: InquiryTemplateWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryTemplates from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryTemplates.
-     */
-    skip?: number
-    distinct?: InquiryTemplateScalarFieldEnum | InquiryTemplateScalarFieldEnum[]
-  }
-
-  /**
-   * InquiryTemplate create
-   */
-  export type InquiryTemplateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryTemplate
-     */
-    select?: InquiryTemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryTemplate
-     */
-    omit?: InquiryTemplateOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryTemplateInclude<ExtArgs> | null
-    /**
-     * The data needed to create a InquiryTemplate.
-     */
-    data: XOR<InquiryTemplateCreateInput, InquiryTemplateUncheckedCreateInput>
-  }
-
-  /**
-   * InquiryTemplate createMany
-   */
-  export type InquiryTemplateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many InquiryTemplates.
-     */
-    data: InquiryTemplateCreateManyInput | InquiryTemplateCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * InquiryTemplate update
-   */
-  export type InquiryTemplateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryTemplate
-     */
-    select?: InquiryTemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryTemplate
-     */
-    omit?: InquiryTemplateOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryTemplateInclude<ExtArgs> | null
-    /**
-     * The data needed to update a InquiryTemplate.
-     */
-    data: XOR<InquiryTemplateUpdateInput, InquiryTemplateUncheckedUpdateInput>
-    /**
-     * Choose, which InquiryTemplate to update.
-     */
-    where: InquiryTemplateWhereUniqueInput
-  }
-
-  /**
-   * InquiryTemplate updateMany
-   */
-  export type InquiryTemplateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update InquiryTemplates.
-     */
-    data: XOR<InquiryTemplateUpdateManyMutationInput, InquiryTemplateUncheckedUpdateManyInput>
-    /**
-     * Filter which InquiryTemplates to update
-     */
-    where?: InquiryTemplateWhereInput
-    /**
-     * Limit how many InquiryTemplates to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * InquiryTemplate upsert
-   */
-  export type InquiryTemplateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryTemplate
-     */
-    select?: InquiryTemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryTemplate
-     */
-    omit?: InquiryTemplateOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryTemplateInclude<ExtArgs> | null
-    /**
-     * The filter to search for the InquiryTemplate to update in case it exists.
-     */
-    where: InquiryTemplateWhereUniqueInput
-    /**
-     * In case the InquiryTemplate found by the `where` argument doesn't exist, create a new InquiryTemplate with this data.
-     */
-    create: XOR<InquiryTemplateCreateInput, InquiryTemplateUncheckedCreateInput>
-    /**
-     * In case the InquiryTemplate was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<InquiryTemplateUpdateInput, InquiryTemplateUncheckedUpdateInput>
-  }
-
-  /**
-   * InquiryTemplate delete
-   */
-  export type InquiryTemplateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryTemplate
-     */
-    select?: InquiryTemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryTemplate
-     */
-    omit?: InquiryTemplateOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryTemplateInclude<ExtArgs> | null
-    /**
-     * Filter which InquiryTemplate to delete.
-     */
-    where: InquiryTemplateWhereUniqueInput
-  }
-
-  /**
-   * InquiryTemplate deleteMany
-   */
-  export type InquiryTemplateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which InquiryTemplates to delete
-     */
-    where?: InquiryTemplateWhereInput
-    /**
-     * Limit how many InquiryTemplates to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * InquiryTemplate.createdBy
-   */
-  export type InquiryTemplate$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Account
-     */
-    select?: AccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountInclude<ExtArgs> | null
-    where?: AccountWhereInput
-  }
-
-  /**
-   * InquiryTemplate without action
-   */
-  export type InquiryTemplateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryTemplate
-     */
-    select?: InquiryTemplateSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryTemplate
-     */
-    omit?: InquiryTemplateOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryTemplateInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model InquiryNotification
-   */
-
-  export type AggregateInquiryNotification = {
-    _count: InquiryNotificationCountAggregateOutputType | null
-    _min: InquiryNotificationMinAggregateOutputType | null
-    _max: InquiryNotificationMaxAggregateOutputType | null
-  }
-
-  export type InquiryNotificationMinAggregateOutputType = {
-    id: string | null
-    type: $Enums.NotificationType | null
-    title: string | null
-    message: string | null
-    userId: string | null
-    inquiryId: string | null
-    isRead: boolean | null
-    readAt: Date | null
-    createdAt: Date | null
-  }
-
-  export type InquiryNotificationMaxAggregateOutputType = {
-    id: string | null
-    type: $Enums.NotificationType | null
-    title: string | null
-    message: string | null
-    userId: string | null
-    inquiryId: string | null
-    isRead: boolean | null
-    readAt: Date | null
-    createdAt: Date | null
-  }
-
-  export type InquiryNotificationCountAggregateOutputType = {
-    id: number
-    type: number
-    title: number
-    message: number
-    userId: number
-    inquiryId: number
-    isRead: number
-    readAt: number
-    metadata: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type InquiryNotificationMinAggregateInputType = {
-    id?: true
-    type?: true
-    title?: true
-    message?: true
-    userId?: true
-    inquiryId?: true
-    isRead?: true
-    readAt?: true
-    createdAt?: true
-  }
-
-  export type InquiryNotificationMaxAggregateInputType = {
-    id?: true
-    type?: true
-    title?: true
-    message?: true
-    userId?: true
-    inquiryId?: true
-    isRead?: true
-    readAt?: true
-    createdAt?: true
-  }
-
-  export type InquiryNotificationCountAggregateInputType = {
-    id?: true
-    type?: true
-    title?: true
-    message?: true
-    userId?: true
-    inquiryId?: true
-    isRead?: true
-    readAt?: true
-    metadata?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type InquiryNotificationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which InquiryNotification to aggregate.
-     */
-    where?: InquiryNotificationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryNotifications to fetch.
-     */
-    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: InquiryNotificationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryNotifications from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryNotifications.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned InquiryNotifications
-    **/
-    _count?: true | InquiryNotificationCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: InquiryNotificationMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: InquiryNotificationMaxAggregateInputType
-  }
-
-  export type GetInquiryNotificationAggregateType<T extends InquiryNotificationAggregateArgs> = {
-        [P in keyof T & keyof AggregateInquiryNotification]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateInquiryNotification[P]>
-      : GetScalarType<T[P], AggregateInquiryNotification[P]>
-  }
-
-
-
-
-  export type InquiryNotificationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InquiryNotificationWhereInput
-    orderBy?: InquiryNotificationOrderByWithAggregationInput | InquiryNotificationOrderByWithAggregationInput[]
-    by: InquiryNotificationScalarFieldEnum[] | InquiryNotificationScalarFieldEnum
-    having?: InquiryNotificationScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: InquiryNotificationCountAggregateInputType | true
-    _min?: InquiryNotificationMinAggregateInputType
-    _max?: InquiryNotificationMaxAggregateInputType
-  }
-
-  export type InquiryNotificationGroupByOutputType = {
-    id: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    userId: string
-    inquiryId: string | null
-    isRead: boolean
-    readAt: Date | null
-    metadata: JsonValue | null
-    createdAt: Date
-    _count: InquiryNotificationCountAggregateOutputType | null
-    _min: InquiryNotificationMinAggregateOutputType | null
-    _max: InquiryNotificationMaxAggregateOutputType | null
-  }
-
-  type GetInquiryNotificationGroupByPayload<T extends InquiryNotificationGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<InquiryNotificationGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof InquiryNotificationGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], InquiryNotificationGroupByOutputType[P]>
-            : GetScalarType<T[P], InquiryNotificationGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type InquiryNotificationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    type?: boolean
-    title?: boolean
-    message?: boolean
-    userId?: boolean
-    inquiryId?: boolean
-    isRead?: boolean
-    readAt?: boolean
-    metadata?: boolean
-    createdAt?: boolean
-    user?: boolean | AccountDefaultArgs<ExtArgs>
-    inquiry?: boolean | InquiryNotification$inquiryArgs<ExtArgs>
-  }, ExtArgs["result"]["inquiryNotification"]>
-
-
-
-  export type InquiryNotificationSelectScalar = {
-    id?: boolean
-    type?: boolean
-    title?: boolean
-    message?: boolean
-    userId?: boolean
-    inquiryId?: boolean
-    isRead?: boolean
-    readAt?: boolean
-    metadata?: boolean
-    createdAt?: boolean
-  }
-
-  export type InquiryNotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "title" | "message" | "userId" | "inquiryId" | "isRead" | "readAt" | "metadata" | "createdAt", ExtArgs["result"]["inquiryNotification"]>
-  export type InquiryNotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | AccountDefaultArgs<ExtArgs>
-    inquiry?: boolean | InquiryNotification$inquiryArgs<ExtArgs>
-  }
-
-  export type $InquiryNotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "InquiryNotification"
-    objects: {
-      user: Prisma.$AccountPayload<ExtArgs>
-      inquiry: Prisma.$InquiryPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      type: $Enums.NotificationType
-      title: string
-      message: string
-      userId: string
-      inquiryId: string | null
-      isRead: boolean
-      readAt: Date | null
-      metadata: Prisma.JsonValue | null
-      createdAt: Date
-    }, ExtArgs["result"]["inquiryNotification"]>
-    composites: {}
-  }
-
-  type InquiryNotificationGetPayload<S extends boolean | null | undefined | InquiryNotificationDefaultArgs> = $Result.GetResult<Prisma.$InquiryNotificationPayload, S>
-
-  type InquiryNotificationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<InquiryNotificationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: InquiryNotificationCountAggregateInputType | true
-    }
-
-  export interface InquiryNotificationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InquiryNotification'], meta: { name: 'InquiryNotification' } }
-    /**
-     * Find zero or one InquiryNotification that matches the filter.
-     * @param {InquiryNotificationFindUniqueArgs} args - Arguments to find a InquiryNotification
-     * @example
-     * // Get one InquiryNotification
-     * const inquiryNotification = await prisma.inquiryNotification.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends InquiryNotificationFindUniqueArgs>(args: SelectSubset<T, InquiryNotificationFindUniqueArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one InquiryNotification that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {InquiryNotificationFindUniqueOrThrowArgs} args - Arguments to find a InquiryNotification
-     * @example
-     * // Get one InquiryNotification
-     * const inquiryNotification = await prisma.inquiryNotification.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends InquiryNotificationFindUniqueOrThrowArgs>(args: SelectSubset<T, InquiryNotificationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first InquiryNotification that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryNotificationFindFirstArgs} args - Arguments to find a InquiryNotification
-     * @example
-     * // Get one InquiryNotification
-     * const inquiryNotification = await prisma.inquiryNotification.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends InquiryNotificationFindFirstArgs>(args?: SelectSubset<T, InquiryNotificationFindFirstArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first InquiryNotification that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryNotificationFindFirstOrThrowArgs} args - Arguments to find a InquiryNotification
-     * @example
-     * // Get one InquiryNotification
-     * const inquiryNotification = await prisma.inquiryNotification.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends InquiryNotificationFindFirstOrThrowArgs>(args?: SelectSubset<T, InquiryNotificationFindFirstOrThrowArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more InquiryNotifications that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryNotificationFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all InquiryNotifications
-     * const inquiryNotifications = await prisma.inquiryNotification.findMany()
-     * 
-     * // Get first 10 InquiryNotifications
-     * const inquiryNotifications = await prisma.inquiryNotification.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const inquiryNotificationWithIdOnly = await prisma.inquiryNotification.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends InquiryNotificationFindManyArgs>(args?: SelectSubset<T, InquiryNotificationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a InquiryNotification.
-     * @param {InquiryNotificationCreateArgs} args - Arguments to create a InquiryNotification.
-     * @example
-     * // Create one InquiryNotification
-     * const InquiryNotification = await prisma.inquiryNotification.create({
-     *   data: {
-     *     // ... data to create a InquiryNotification
-     *   }
-     * })
-     * 
-     */
-    create<T extends InquiryNotificationCreateArgs>(args: SelectSubset<T, InquiryNotificationCreateArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many InquiryNotifications.
-     * @param {InquiryNotificationCreateManyArgs} args - Arguments to create many InquiryNotifications.
-     * @example
-     * // Create many InquiryNotifications
-     * const inquiryNotification = await prisma.inquiryNotification.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends InquiryNotificationCreateManyArgs>(args?: SelectSubset<T, InquiryNotificationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a InquiryNotification.
-     * @param {InquiryNotificationDeleteArgs} args - Arguments to delete one InquiryNotification.
-     * @example
-     * // Delete one InquiryNotification
-     * const InquiryNotification = await prisma.inquiryNotification.delete({
-     *   where: {
-     *     // ... filter to delete one InquiryNotification
-     *   }
-     * })
-     * 
-     */
-    delete<T extends InquiryNotificationDeleteArgs>(args: SelectSubset<T, InquiryNotificationDeleteArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one InquiryNotification.
-     * @param {InquiryNotificationUpdateArgs} args - Arguments to update one InquiryNotification.
-     * @example
-     * // Update one InquiryNotification
-     * const inquiryNotification = await prisma.inquiryNotification.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends InquiryNotificationUpdateArgs>(args: SelectSubset<T, InquiryNotificationUpdateArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more InquiryNotifications.
-     * @param {InquiryNotificationDeleteManyArgs} args - Arguments to filter InquiryNotifications to delete.
-     * @example
-     * // Delete a few InquiryNotifications
-     * const { count } = await prisma.inquiryNotification.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends InquiryNotificationDeleteManyArgs>(args?: SelectSubset<T, InquiryNotificationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more InquiryNotifications.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryNotificationUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many InquiryNotifications
-     * const inquiryNotification = await prisma.inquiryNotification.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends InquiryNotificationUpdateManyArgs>(args: SelectSubset<T, InquiryNotificationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one InquiryNotification.
-     * @param {InquiryNotificationUpsertArgs} args - Arguments to update or create a InquiryNotification.
-     * @example
-     * // Update or create a InquiryNotification
-     * const inquiryNotification = await prisma.inquiryNotification.upsert({
-     *   create: {
-     *     // ... data to create a InquiryNotification
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the InquiryNotification we want to update
-     *   }
-     * })
-     */
-    upsert<T extends InquiryNotificationUpsertArgs>(args: SelectSubset<T, InquiryNotificationUpsertArgs<ExtArgs>>): Prisma__InquiryNotificationClient<$Result.GetResult<Prisma.$InquiryNotificationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of InquiryNotifications.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryNotificationCountArgs} args - Arguments to filter InquiryNotifications to count.
-     * @example
-     * // Count the number of InquiryNotifications
-     * const count = await prisma.inquiryNotification.count({
-     *   where: {
-     *     // ... the filter for the InquiryNotifications we want to count
-     *   }
-     * })
-    **/
-    count<T extends InquiryNotificationCountArgs>(
-      args?: Subset<T, InquiryNotificationCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], InquiryNotificationCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a InquiryNotification.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryNotificationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends InquiryNotificationAggregateArgs>(args: Subset<T, InquiryNotificationAggregateArgs>): Prisma.PrismaPromise<GetInquiryNotificationAggregateType<T>>
-
-    /**
-     * Group by InquiryNotification.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryNotificationGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends InquiryNotificationGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: InquiryNotificationGroupByArgs['orderBy'] }
-        : { orderBy?: InquiryNotificationGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, InquiryNotificationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInquiryNotificationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the InquiryNotification model
-   */
-  readonly fields: InquiryNotificationFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for InquiryNotification.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__InquiryNotificationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    inquiry<T extends InquiryNotification$inquiryArgs<ExtArgs> = {}>(args?: Subset<T, InquiryNotification$inquiryArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the InquiryNotification model
-   */
-  interface InquiryNotificationFieldRefs {
-    readonly id: FieldRef<"InquiryNotification", 'String'>
-    readonly type: FieldRef<"InquiryNotification", 'NotificationType'>
-    readonly title: FieldRef<"InquiryNotification", 'String'>
-    readonly message: FieldRef<"InquiryNotification", 'String'>
-    readonly userId: FieldRef<"InquiryNotification", 'String'>
-    readonly inquiryId: FieldRef<"InquiryNotification", 'String'>
-    readonly isRead: FieldRef<"InquiryNotification", 'Boolean'>
-    readonly readAt: FieldRef<"InquiryNotification", 'DateTime'>
-    readonly metadata: FieldRef<"InquiryNotification", 'Json'>
-    readonly createdAt: FieldRef<"InquiryNotification", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * InquiryNotification findUnique
-   */
-  export type InquiryNotificationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryNotification to fetch.
-     */
-    where: InquiryNotificationWhereUniqueInput
-  }
-
-  /**
-   * InquiryNotification findUniqueOrThrow
-   */
-  export type InquiryNotificationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryNotification to fetch.
-     */
-    where: InquiryNotificationWhereUniqueInput
-  }
-
-  /**
-   * InquiryNotification findFirst
-   */
-  export type InquiryNotificationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryNotification to fetch.
-     */
-    where?: InquiryNotificationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryNotifications to fetch.
-     */
-    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for InquiryNotifications.
-     */
-    cursor?: InquiryNotificationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryNotifications from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryNotifications.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of InquiryNotifications.
-     */
-    distinct?: InquiryNotificationScalarFieldEnum | InquiryNotificationScalarFieldEnum[]
-  }
-
-  /**
-   * InquiryNotification findFirstOrThrow
-   */
-  export type InquiryNotificationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryNotification to fetch.
-     */
-    where?: InquiryNotificationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryNotifications to fetch.
-     */
-    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for InquiryNotifications.
-     */
-    cursor?: InquiryNotificationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryNotifications from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryNotifications.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of InquiryNotifications.
-     */
-    distinct?: InquiryNotificationScalarFieldEnum | InquiryNotificationScalarFieldEnum[]
-  }
-
-  /**
-   * InquiryNotification findMany
-   */
-  export type InquiryNotificationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryNotifications to fetch.
-     */
-    where?: InquiryNotificationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryNotifications to fetch.
-     */
-    orderBy?: InquiryNotificationOrderByWithRelationInput | InquiryNotificationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing InquiryNotifications.
-     */
-    cursor?: InquiryNotificationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryNotifications from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryNotifications.
-     */
-    skip?: number
-    distinct?: InquiryNotificationScalarFieldEnum | InquiryNotificationScalarFieldEnum[]
-  }
-
-  /**
-   * InquiryNotification create
-   */
-  export type InquiryNotificationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-    /**
-     * The data needed to create a InquiryNotification.
-     */
-    data: XOR<InquiryNotificationCreateInput, InquiryNotificationUncheckedCreateInput>
-  }
-
-  /**
-   * InquiryNotification createMany
-   */
-  export type InquiryNotificationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many InquiryNotifications.
-     */
-    data: InquiryNotificationCreateManyInput | InquiryNotificationCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * InquiryNotification update
-   */
-  export type InquiryNotificationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-    /**
-     * The data needed to update a InquiryNotification.
-     */
-    data: XOR<InquiryNotificationUpdateInput, InquiryNotificationUncheckedUpdateInput>
-    /**
-     * Choose, which InquiryNotification to update.
-     */
-    where: InquiryNotificationWhereUniqueInput
-  }
-
-  /**
-   * InquiryNotification updateMany
-   */
-  export type InquiryNotificationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update InquiryNotifications.
-     */
-    data: XOR<InquiryNotificationUpdateManyMutationInput, InquiryNotificationUncheckedUpdateManyInput>
-    /**
-     * Filter which InquiryNotifications to update
-     */
-    where?: InquiryNotificationWhereInput
-    /**
-     * Limit how many InquiryNotifications to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * InquiryNotification upsert
-   */
-  export type InquiryNotificationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-    /**
-     * The filter to search for the InquiryNotification to update in case it exists.
-     */
-    where: InquiryNotificationWhereUniqueInput
-    /**
-     * In case the InquiryNotification found by the `where` argument doesn't exist, create a new InquiryNotification with this data.
-     */
-    create: XOR<InquiryNotificationCreateInput, InquiryNotificationUncheckedCreateInput>
-    /**
-     * In case the InquiryNotification was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<InquiryNotificationUpdateInput, InquiryNotificationUncheckedUpdateInput>
-  }
-
-  /**
-   * InquiryNotification delete
-   */
-  export type InquiryNotificationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-    /**
-     * Filter which InquiryNotification to delete.
-     */
-    where: InquiryNotificationWhereUniqueInput
-  }
-
-  /**
-   * InquiryNotification deleteMany
-   */
-  export type InquiryNotificationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which InquiryNotifications to delete
-     */
-    where?: InquiryNotificationWhereInput
-    /**
-     * Limit how many InquiryNotifications to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * InquiryNotification.inquiry
-   */
-  export type InquiryNotification$inquiryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inquiry
-     */
-    select?: InquirySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Inquiry
-     */
-    omit?: InquiryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryInclude<ExtArgs> | null
-    where?: InquiryWhereInput
-  }
-
-  /**
-   * InquiryNotification without action
-   */
-  export type InquiryNotificationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryNotification
-     */
-    select?: InquiryNotificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryNotification
-     */
-    omit?: InquiryNotificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryNotificationInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model InquiryAnalytics
-   */
-
-  export type AggregateInquiryAnalytics = {
-    _count: InquiryAnalyticsCountAggregateOutputType | null
-    _avg: InquiryAnalyticsAvgAggregateOutputType | null
-    _sum: InquiryAnalyticsSumAggregateOutputType | null
-    _min: InquiryAnalyticsMinAggregateOutputType | null
-    _max: InquiryAnalyticsMaxAggregateOutputType | null
-  }
-
-  export type InquiryAnalyticsAvgAggregateOutputType = {
-    totalInquiries: number | null
-    pendingInquiries: number | null
-    resolvedInquiries: number | null
-    avgFirstResponseTime: number | null
-    avgResolutionTime: number | null
-    seminarInquiries: number | null
-    equipmentInquiries: number | null
-    accountInquiries: number | null
-    generalInquiries: number | null
-    lowPriorityCount: number | null
-    mediumPriorityCount: number | null
-    highPriorityCount: number | null
-    urgentPriorityCount: number | null
-  }
-
-  export type InquiryAnalyticsSumAggregateOutputType = {
-    totalInquiries: number | null
-    pendingInquiries: number | null
-    resolvedInquiries: number | null
-    avgFirstResponseTime: number | null
-    avgResolutionTime: number | null
-    seminarInquiries: number | null
-    equipmentInquiries: number | null
-    accountInquiries: number | null
-    generalInquiries: number | null
-    lowPriorityCount: number | null
-    mediumPriorityCount: number | null
-    highPriorityCount: number | null
-    urgentPriorityCount: number | null
-  }
-
-  export type InquiryAnalyticsMinAggregateOutputType = {
-    id: string | null
-    date: Date | null
-    totalInquiries: number | null
-    pendingInquiries: number | null
-    resolvedInquiries: number | null
-    avgFirstResponseTime: number | null
-    avgResolutionTime: number | null
-    seminarInquiries: number | null
-    equipmentInquiries: number | null
-    accountInquiries: number | null
-    generalInquiries: number | null
-    lowPriorityCount: number | null
-    mediumPriorityCount: number | null
-    highPriorityCount: number | null
-    urgentPriorityCount: number | null
-    adminId: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type InquiryAnalyticsMaxAggregateOutputType = {
-    id: string | null
-    date: Date | null
-    totalInquiries: number | null
-    pendingInquiries: number | null
-    resolvedInquiries: number | null
-    avgFirstResponseTime: number | null
-    avgResolutionTime: number | null
-    seminarInquiries: number | null
-    equipmentInquiries: number | null
-    accountInquiries: number | null
-    generalInquiries: number | null
-    lowPriorityCount: number | null
-    mediumPriorityCount: number | null
-    highPriorityCount: number | null
-    urgentPriorityCount: number | null
-    adminId: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type InquiryAnalyticsCountAggregateOutputType = {
-    id: number
-    date: number
-    totalInquiries: number
-    pendingInquiries: number
-    resolvedInquiries: number
-    avgFirstResponseTime: number
-    avgResolutionTime: number
-    seminarInquiries: number
-    equipmentInquiries: number
-    accountInquiries: number
-    generalInquiries: number
-    lowPriorityCount: number
-    mediumPriorityCount: number
-    highPriorityCount: number
-    urgentPriorityCount: number
-    adminId: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type InquiryAnalyticsAvgAggregateInputType = {
-    totalInquiries?: true
-    pendingInquiries?: true
-    resolvedInquiries?: true
-    avgFirstResponseTime?: true
-    avgResolutionTime?: true
-    seminarInquiries?: true
-    equipmentInquiries?: true
-    accountInquiries?: true
-    generalInquiries?: true
-    lowPriorityCount?: true
-    mediumPriorityCount?: true
-    highPriorityCount?: true
-    urgentPriorityCount?: true
-  }
-
-  export type InquiryAnalyticsSumAggregateInputType = {
-    totalInquiries?: true
-    pendingInquiries?: true
-    resolvedInquiries?: true
-    avgFirstResponseTime?: true
-    avgResolutionTime?: true
-    seminarInquiries?: true
-    equipmentInquiries?: true
-    accountInquiries?: true
-    generalInquiries?: true
-    lowPriorityCount?: true
-    mediumPriorityCount?: true
-    highPriorityCount?: true
-    urgentPriorityCount?: true
-  }
-
-  export type InquiryAnalyticsMinAggregateInputType = {
-    id?: true
-    date?: true
-    totalInquiries?: true
-    pendingInquiries?: true
-    resolvedInquiries?: true
-    avgFirstResponseTime?: true
-    avgResolutionTime?: true
-    seminarInquiries?: true
-    equipmentInquiries?: true
-    accountInquiries?: true
-    generalInquiries?: true
-    lowPriorityCount?: true
-    mediumPriorityCount?: true
-    highPriorityCount?: true
-    urgentPriorityCount?: true
-    adminId?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type InquiryAnalyticsMaxAggregateInputType = {
-    id?: true
-    date?: true
-    totalInquiries?: true
-    pendingInquiries?: true
-    resolvedInquiries?: true
-    avgFirstResponseTime?: true
-    avgResolutionTime?: true
-    seminarInquiries?: true
-    equipmentInquiries?: true
-    accountInquiries?: true
-    generalInquiries?: true
-    lowPriorityCount?: true
-    mediumPriorityCount?: true
-    highPriorityCount?: true
-    urgentPriorityCount?: true
-    adminId?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type InquiryAnalyticsCountAggregateInputType = {
-    id?: true
-    date?: true
-    totalInquiries?: true
-    pendingInquiries?: true
-    resolvedInquiries?: true
-    avgFirstResponseTime?: true
-    avgResolutionTime?: true
-    seminarInquiries?: true
-    equipmentInquiries?: true
-    accountInquiries?: true
-    generalInquiries?: true
-    lowPriorityCount?: true
-    mediumPriorityCount?: true
-    highPriorityCount?: true
-    urgentPriorityCount?: true
-    adminId?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type InquiryAnalyticsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which InquiryAnalytics to aggregate.
-     */
-    where?: InquiryAnalyticsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryAnalytics to fetch.
-     */
-    orderBy?: InquiryAnalyticsOrderByWithRelationInput | InquiryAnalyticsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: InquiryAnalyticsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryAnalytics from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryAnalytics.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned InquiryAnalytics
-    **/
-    _count?: true | InquiryAnalyticsCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: InquiryAnalyticsAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: InquiryAnalyticsSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: InquiryAnalyticsMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: InquiryAnalyticsMaxAggregateInputType
-  }
-
-  export type GetInquiryAnalyticsAggregateType<T extends InquiryAnalyticsAggregateArgs> = {
-        [P in keyof T & keyof AggregateInquiryAnalytics]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateInquiryAnalytics[P]>
-      : GetScalarType<T[P], AggregateInquiryAnalytics[P]>
-  }
-
-
-
-
-  export type InquiryAnalyticsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InquiryAnalyticsWhereInput
-    orderBy?: InquiryAnalyticsOrderByWithAggregationInput | InquiryAnalyticsOrderByWithAggregationInput[]
-    by: InquiryAnalyticsScalarFieldEnum[] | InquiryAnalyticsScalarFieldEnum
-    having?: InquiryAnalyticsScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: InquiryAnalyticsCountAggregateInputType | true
-    _avg?: InquiryAnalyticsAvgAggregateInputType
-    _sum?: InquiryAnalyticsSumAggregateInputType
-    _min?: InquiryAnalyticsMinAggregateInputType
-    _max?: InquiryAnalyticsMaxAggregateInputType
-  }
-
-  export type InquiryAnalyticsGroupByOutputType = {
-    id: string
-    date: Date
-    totalInquiries: number
-    pendingInquiries: number
-    resolvedInquiries: number
-    avgFirstResponseTime: number | null
-    avgResolutionTime: number | null
-    seminarInquiries: number
-    equipmentInquiries: number
-    accountInquiries: number
-    generalInquiries: number
-    lowPriorityCount: number
-    mediumPriorityCount: number
-    highPriorityCount: number
-    urgentPriorityCount: number
-    adminId: string | null
-    createdAt: Date
-    updatedAt: Date
-    _count: InquiryAnalyticsCountAggregateOutputType | null
-    _avg: InquiryAnalyticsAvgAggregateOutputType | null
-    _sum: InquiryAnalyticsSumAggregateOutputType | null
-    _min: InquiryAnalyticsMinAggregateOutputType | null
-    _max: InquiryAnalyticsMaxAggregateOutputType | null
-  }
-
-  type GetInquiryAnalyticsGroupByPayload<T extends InquiryAnalyticsGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<InquiryAnalyticsGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof InquiryAnalyticsGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], InquiryAnalyticsGroupByOutputType[P]>
-            : GetScalarType<T[P], InquiryAnalyticsGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type InquiryAnalyticsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    date?: boolean
-    totalInquiries?: boolean
-    pendingInquiries?: boolean
-    resolvedInquiries?: boolean
-    avgFirstResponseTime?: boolean
-    avgResolutionTime?: boolean
-    seminarInquiries?: boolean
-    equipmentInquiries?: boolean
-    accountInquiries?: boolean
-    generalInquiries?: boolean
-    lowPriorityCount?: boolean
-    mediumPriorityCount?: boolean
-    highPriorityCount?: boolean
-    urgentPriorityCount?: boolean
-    adminId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    admin?: boolean | InquiryAnalytics$adminArgs<ExtArgs>
-  }, ExtArgs["result"]["inquiryAnalytics"]>
-
-
-
-  export type InquiryAnalyticsSelectScalar = {
-    id?: boolean
-    date?: boolean
-    totalInquiries?: boolean
-    pendingInquiries?: boolean
-    resolvedInquiries?: boolean
-    avgFirstResponseTime?: boolean
-    avgResolutionTime?: boolean
-    seminarInquiries?: boolean
-    equipmentInquiries?: boolean
-    accountInquiries?: boolean
-    generalInquiries?: boolean
-    lowPriorityCount?: boolean
-    mediumPriorityCount?: boolean
-    highPriorityCount?: boolean
-    urgentPriorityCount?: boolean
-    adminId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type InquiryAnalyticsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "totalInquiries" | "pendingInquiries" | "resolvedInquiries" | "avgFirstResponseTime" | "avgResolutionTime" | "seminarInquiries" | "equipmentInquiries" | "accountInquiries" | "generalInquiries" | "lowPriorityCount" | "mediumPriorityCount" | "highPriorityCount" | "urgentPriorityCount" | "adminId" | "createdAt" | "updatedAt", ExtArgs["result"]["inquiryAnalytics"]>
-  export type InquiryAnalyticsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    admin?: boolean | InquiryAnalytics$adminArgs<ExtArgs>
-  }
-
-  export type $InquiryAnalyticsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "InquiryAnalytics"
-    objects: {
-      admin: Prisma.$AccountPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      date: Date
-      totalInquiries: number
-      pendingInquiries: number
-      resolvedInquiries: number
-      avgFirstResponseTime: number | null
-      avgResolutionTime: number | null
-      seminarInquiries: number
-      equipmentInquiries: number
-      accountInquiries: number
-      generalInquiries: number
-      lowPriorityCount: number
-      mediumPriorityCount: number
-      highPriorityCount: number
-      urgentPriorityCount: number
-      adminId: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["inquiryAnalytics"]>
-    composites: {}
-  }
-
-  type InquiryAnalyticsGetPayload<S extends boolean | null | undefined | InquiryAnalyticsDefaultArgs> = $Result.GetResult<Prisma.$InquiryAnalyticsPayload, S>
-
-  type InquiryAnalyticsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<InquiryAnalyticsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: InquiryAnalyticsCountAggregateInputType | true
-    }
-
-  export interface InquiryAnalyticsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InquiryAnalytics'], meta: { name: 'InquiryAnalytics' } }
-    /**
-     * Find zero or one InquiryAnalytics that matches the filter.
-     * @param {InquiryAnalyticsFindUniqueArgs} args - Arguments to find a InquiryAnalytics
-     * @example
-     * // Get one InquiryAnalytics
-     * const inquiryAnalytics = await prisma.inquiryAnalytics.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends InquiryAnalyticsFindUniqueArgs>(args: SelectSubset<T, InquiryAnalyticsFindUniqueArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one InquiryAnalytics that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {InquiryAnalyticsFindUniqueOrThrowArgs} args - Arguments to find a InquiryAnalytics
-     * @example
-     * // Get one InquiryAnalytics
-     * const inquiryAnalytics = await prisma.inquiryAnalytics.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends InquiryAnalyticsFindUniqueOrThrowArgs>(args: SelectSubset<T, InquiryAnalyticsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first InquiryAnalytics that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryAnalyticsFindFirstArgs} args - Arguments to find a InquiryAnalytics
-     * @example
-     * // Get one InquiryAnalytics
-     * const inquiryAnalytics = await prisma.inquiryAnalytics.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends InquiryAnalyticsFindFirstArgs>(args?: SelectSubset<T, InquiryAnalyticsFindFirstArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first InquiryAnalytics that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryAnalyticsFindFirstOrThrowArgs} args - Arguments to find a InquiryAnalytics
-     * @example
-     * // Get one InquiryAnalytics
-     * const inquiryAnalytics = await prisma.inquiryAnalytics.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends InquiryAnalyticsFindFirstOrThrowArgs>(args?: SelectSubset<T, InquiryAnalyticsFindFirstOrThrowArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more InquiryAnalytics that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryAnalyticsFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all InquiryAnalytics
-     * const inquiryAnalytics = await prisma.inquiryAnalytics.findMany()
-     * 
-     * // Get first 10 InquiryAnalytics
-     * const inquiryAnalytics = await prisma.inquiryAnalytics.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const inquiryAnalyticsWithIdOnly = await prisma.inquiryAnalytics.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends InquiryAnalyticsFindManyArgs>(args?: SelectSubset<T, InquiryAnalyticsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a InquiryAnalytics.
-     * @param {InquiryAnalyticsCreateArgs} args - Arguments to create a InquiryAnalytics.
-     * @example
-     * // Create one InquiryAnalytics
-     * const InquiryAnalytics = await prisma.inquiryAnalytics.create({
-     *   data: {
-     *     // ... data to create a InquiryAnalytics
-     *   }
-     * })
-     * 
-     */
-    create<T extends InquiryAnalyticsCreateArgs>(args: SelectSubset<T, InquiryAnalyticsCreateArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many InquiryAnalytics.
-     * @param {InquiryAnalyticsCreateManyArgs} args - Arguments to create many InquiryAnalytics.
-     * @example
-     * // Create many InquiryAnalytics
-     * const inquiryAnalytics = await prisma.inquiryAnalytics.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends InquiryAnalyticsCreateManyArgs>(args?: SelectSubset<T, InquiryAnalyticsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a InquiryAnalytics.
-     * @param {InquiryAnalyticsDeleteArgs} args - Arguments to delete one InquiryAnalytics.
-     * @example
-     * // Delete one InquiryAnalytics
-     * const InquiryAnalytics = await prisma.inquiryAnalytics.delete({
-     *   where: {
-     *     // ... filter to delete one InquiryAnalytics
-     *   }
-     * })
-     * 
-     */
-    delete<T extends InquiryAnalyticsDeleteArgs>(args: SelectSubset<T, InquiryAnalyticsDeleteArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one InquiryAnalytics.
-     * @param {InquiryAnalyticsUpdateArgs} args - Arguments to update one InquiryAnalytics.
-     * @example
-     * // Update one InquiryAnalytics
-     * const inquiryAnalytics = await prisma.inquiryAnalytics.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends InquiryAnalyticsUpdateArgs>(args: SelectSubset<T, InquiryAnalyticsUpdateArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more InquiryAnalytics.
-     * @param {InquiryAnalyticsDeleteManyArgs} args - Arguments to filter InquiryAnalytics to delete.
-     * @example
-     * // Delete a few InquiryAnalytics
-     * const { count } = await prisma.inquiryAnalytics.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends InquiryAnalyticsDeleteManyArgs>(args?: SelectSubset<T, InquiryAnalyticsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more InquiryAnalytics.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryAnalyticsUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many InquiryAnalytics
-     * const inquiryAnalytics = await prisma.inquiryAnalytics.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends InquiryAnalyticsUpdateManyArgs>(args: SelectSubset<T, InquiryAnalyticsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one InquiryAnalytics.
-     * @param {InquiryAnalyticsUpsertArgs} args - Arguments to update or create a InquiryAnalytics.
-     * @example
-     * // Update or create a InquiryAnalytics
-     * const inquiryAnalytics = await prisma.inquiryAnalytics.upsert({
-     *   create: {
-     *     // ... data to create a InquiryAnalytics
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the InquiryAnalytics we want to update
-     *   }
-     * })
-     */
-    upsert<T extends InquiryAnalyticsUpsertArgs>(args: SelectSubset<T, InquiryAnalyticsUpsertArgs<ExtArgs>>): Prisma__InquiryAnalyticsClient<$Result.GetResult<Prisma.$InquiryAnalyticsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of InquiryAnalytics.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryAnalyticsCountArgs} args - Arguments to filter InquiryAnalytics to count.
-     * @example
-     * // Count the number of InquiryAnalytics
-     * const count = await prisma.inquiryAnalytics.count({
-     *   where: {
-     *     // ... the filter for the InquiryAnalytics we want to count
-     *   }
-     * })
-    **/
-    count<T extends InquiryAnalyticsCountArgs>(
-      args?: Subset<T, InquiryAnalyticsCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], InquiryAnalyticsCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a InquiryAnalytics.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryAnalyticsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends InquiryAnalyticsAggregateArgs>(args: Subset<T, InquiryAnalyticsAggregateArgs>): Prisma.PrismaPromise<GetInquiryAnalyticsAggregateType<T>>
-
-    /**
-     * Group by InquiryAnalytics.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {InquiryAnalyticsGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends InquiryAnalyticsGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: InquiryAnalyticsGroupByArgs['orderBy'] }
-        : { orderBy?: InquiryAnalyticsGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, InquiryAnalyticsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInquiryAnalyticsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the InquiryAnalytics model
-   */
-  readonly fields: InquiryAnalyticsFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for InquiryAnalytics.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__InquiryAnalyticsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    admin<T extends InquiryAnalytics$adminArgs<ExtArgs> = {}>(args?: Subset<T, InquiryAnalytics$adminArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the InquiryAnalytics model
-   */
-  interface InquiryAnalyticsFieldRefs {
-    readonly id: FieldRef<"InquiryAnalytics", 'String'>
-    readonly date: FieldRef<"InquiryAnalytics", 'DateTime'>
-    readonly totalInquiries: FieldRef<"InquiryAnalytics", 'Int'>
-    readonly pendingInquiries: FieldRef<"InquiryAnalytics", 'Int'>
-    readonly resolvedInquiries: FieldRef<"InquiryAnalytics", 'Int'>
-    readonly avgFirstResponseTime: FieldRef<"InquiryAnalytics", 'Float'>
-    readonly avgResolutionTime: FieldRef<"InquiryAnalytics", 'Float'>
-    readonly seminarInquiries: FieldRef<"InquiryAnalytics", 'Int'>
-    readonly equipmentInquiries: FieldRef<"InquiryAnalytics", 'Int'>
-    readonly accountInquiries: FieldRef<"InquiryAnalytics", 'Int'>
-    readonly generalInquiries: FieldRef<"InquiryAnalytics", 'Int'>
-    readonly lowPriorityCount: FieldRef<"InquiryAnalytics", 'Int'>
-    readonly mediumPriorityCount: FieldRef<"InquiryAnalytics", 'Int'>
-    readonly highPriorityCount: FieldRef<"InquiryAnalytics", 'Int'>
-    readonly urgentPriorityCount: FieldRef<"InquiryAnalytics", 'Int'>
-    readonly adminId: FieldRef<"InquiryAnalytics", 'String'>
-    readonly createdAt: FieldRef<"InquiryAnalytics", 'DateTime'>
-    readonly updatedAt: FieldRef<"InquiryAnalytics", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * InquiryAnalytics findUnique
-   */
-  export type InquiryAnalyticsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryAnalytics
-     */
-    select?: InquiryAnalyticsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryAnalytics
-     */
-    omit?: InquiryAnalyticsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryAnalyticsInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryAnalytics to fetch.
-     */
-    where: InquiryAnalyticsWhereUniqueInput
-  }
-
-  /**
-   * InquiryAnalytics findUniqueOrThrow
-   */
-  export type InquiryAnalyticsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryAnalytics
-     */
-    select?: InquiryAnalyticsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryAnalytics
-     */
-    omit?: InquiryAnalyticsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryAnalyticsInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryAnalytics to fetch.
-     */
-    where: InquiryAnalyticsWhereUniqueInput
-  }
-
-  /**
-   * InquiryAnalytics findFirst
-   */
-  export type InquiryAnalyticsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryAnalytics
-     */
-    select?: InquiryAnalyticsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryAnalytics
-     */
-    omit?: InquiryAnalyticsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryAnalyticsInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryAnalytics to fetch.
-     */
-    where?: InquiryAnalyticsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryAnalytics to fetch.
-     */
-    orderBy?: InquiryAnalyticsOrderByWithRelationInput | InquiryAnalyticsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for InquiryAnalytics.
-     */
-    cursor?: InquiryAnalyticsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryAnalytics from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryAnalytics.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of InquiryAnalytics.
-     */
-    distinct?: InquiryAnalyticsScalarFieldEnum | InquiryAnalyticsScalarFieldEnum[]
-  }
-
-  /**
-   * InquiryAnalytics findFirstOrThrow
-   */
-  export type InquiryAnalyticsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryAnalytics
-     */
-    select?: InquiryAnalyticsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryAnalytics
-     */
-    omit?: InquiryAnalyticsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryAnalyticsInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryAnalytics to fetch.
-     */
-    where?: InquiryAnalyticsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryAnalytics to fetch.
-     */
-    orderBy?: InquiryAnalyticsOrderByWithRelationInput | InquiryAnalyticsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for InquiryAnalytics.
-     */
-    cursor?: InquiryAnalyticsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryAnalytics from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryAnalytics.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of InquiryAnalytics.
-     */
-    distinct?: InquiryAnalyticsScalarFieldEnum | InquiryAnalyticsScalarFieldEnum[]
-  }
-
-  /**
-   * InquiryAnalytics findMany
-   */
-  export type InquiryAnalyticsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryAnalytics
-     */
-    select?: InquiryAnalyticsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryAnalytics
-     */
-    omit?: InquiryAnalyticsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryAnalyticsInclude<ExtArgs> | null
-    /**
-     * Filter, which InquiryAnalytics to fetch.
-     */
-    where?: InquiryAnalyticsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of InquiryAnalytics to fetch.
-     */
-    orderBy?: InquiryAnalyticsOrderByWithRelationInput | InquiryAnalyticsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing InquiryAnalytics.
-     */
-    cursor?: InquiryAnalyticsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` InquiryAnalytics from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` InquiryAnalytics.
-     */
-    skip?: number
-    distinct?: InquiryAnalyticsScalarFieldEnum | InquiryAnalyticsScalarFieldEnum[]
-  }
-
-  /**
-   * InquiryAnalytics create
-   */
-  export type InquiryAnalyticsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryAnalytics
-     */
-    select?: InquiryAnalyticsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryAnalytics
-     */
-    omit?: InquiryAnalyticsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryAnalyticsInclude<ExtArgs> | null
-    /**
-     * The data needed to create a InquiryAnalytics.
-     */
-    data: XOR<InquiryAnalyticsCreateInput, InquiryAnalyticsUncheckedCreateInput>
-  }
-
-  /**
-   * InquiryAnalytics createMany
-   */
-  export type InquiryAnalyticsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many InquiryAnalytics.
-     */
-    data: InquiryAnalyticsCreateManyInput | InquiryAnalyticsCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * InquiryAnalytics update
-   */
-  export type InquiryAnalyticsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryAnalytics
-     */
-    select?: InquiryAnalyticsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryAnalytics
-     */
-    omit?: InquiryAnalyticsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryAnalyticsInclude<ExtArgs> | null
-    /**
-     * The data needed to update a InquiryAnalytics.
-     */
-    data: XOR<InquiryAnalyticsUpdateInput, InquiryAnalyticsUncheckedUpdateInput>
-    /**
-     * Choose, which InquiryAnalytics to update.
-     */
-    where: InquiryAnalyticsWhereUniqueInput
-  }
-
-  /**
-   * InquiryAnalytics updateMany
-   */
-  export type InquiryAnalyticsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update InquiryAnalytics.
-     */
-    data: XOR<InquiryAnalyticsUpdateManyMutationInput, InquiryAnalyticsUncheckedUpdateManyInput>
-    /**
-     * Filter which InquiryAnalytics to update
-     */
-    where?: InquiryAnalyticsWhereInput
-    /**
-     * Limit how many InquiryAnalytics to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * InquiryAnalytics upsert
-   */
-  export type InquiryAnalyticsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryAnalytics
-     */
-    select?: InquiryAnalyticsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryAnalytics
-     */
-    omit?: InquiryAnalyticsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryAnalyticsInclude<ExtArgs> | null
-    /**
-     * The filter to search for the InquiryAnalytics to update in case it exists.
-     */
-    where: InquiryAnalyticsWhereUniqueInput
-    /**
-     * In case the InquiryAnalytics found by the `where` argument doesn't exist, create a new InquiryAnalytics with this data.
-     */
-    create: XOR<InquiryAnalyticsCreateInput, InquiryAnalyticsUncheckedCreateInput>
-    /**
-     * In case the InquiryAnalytics was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<InquiryAnalyticsUpdateInput, InquiryAnalyticsUncheckedUpdateInput>
-  }
-
-  /**
-   * InquiryAnalytics delete
-   */
-  export type InquiryAnalyticsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryAnalytics
-     */
-    select?: InquiryAnalyticsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryAnalytics
-     */
-    omit?: InquiryAnalyticsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryAnalyticsInclude<ExtArgs> | null
-    /**
-     * Filter which InquiryAnalytics to delete.
-     */
-    where: InquiryAnalyticsWhereUniqueInput
-  }
-
-  /**
-   * InquiryAnalytics deleteMany
-   */
-  export type InquiryAnalyticsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which InquiryAnalytics to delete
-     */
-    where?: InquiryAnalyticsWhereInput
-    /**
-     * Limit how many InquiryAnalytics to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * InquiryAnalytics.admin
-   */
-  export type InquiryAnalytics$adminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Account
-     */
-    select?: AccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Account
-     */
-    omit?: AccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AccountInclude<ExtArgs> | null
-    where?: AccountWhereInput
-  }
-
-  /**
-   * InquiryAnalytics without action
-   */
-  export type InquiryAnalyticsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the InquiryAnalytics
-     */
-    select?: InquiryAnalyticsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the InquiryAnalytics
-     */
-    omit?: InquiryAnalyticsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InquiryAnalyticsInclude<ExtArgs> | null
   }
 
 
@@ -18203,8 +14498,6 @@ export namespace Prisma {
     id: 'id',
     subject: 'subject',
     message: 'message',
-    category: 'category',
-    priority: 'priority',
     status: 'status',
     userId: 'userId',
     guestName: 'guestName',
@@ -18222,7 +14515,6 @@ export namespace Prisma {
   export const InquiryReplyScalarFieldEnum: {
     id: 'id',
     message: 'message',
-    isInternal: 'isInternal',
     senderId: 'senderId',
     senderType: 'senderType',
     senderName: 'senderName',
@@ -18256,7 +14548,6 @@ export namespace Prisma {
     id: 'id',
     question: 'question',
     answer: 'answer',
-    category: 'category',
     isActive: 'isActive',
     orderIndex: 'orderIndex',
     createdById: 'createdById',
@@ -18267,62 +14558,6 @@ export namespace Prisma {
   };
 
   export type FAQScalarFieldEnum = (typeof FAQScalarFieldEnum)[keyof typeof FAQScalarFieldEnum]
-
-
-  export const InquiryTemplateScalarFieldEnum: {
-    id: 'id',
-    title: 'title',
-    content: 'content',
-    category: 'category',
-    isActive: 'isActive',
-    isDefault: 'isDefault',
-    usageCount: 'usageCount',
-    createdById: 'createdById',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type InquiryTemplateScalarFieldEnum = (typeof InquiryTemplateScalarFieldEnum)[keyof typeof InquiryTemplateScalarFieldEnum]
-
-
-  export const InquiryNotificationScalarFieldEnum: {
-    id: 'id',
-    type: 'type',
-    title: 'title',
-    message: 'message',
-    userId: 'userId',
-    inquiryId: 'inquiryId',
-    isRead: 'isRead',
-    readAt: 'readAt',
-    metadata: 'metadata',
-    createdAt: 'createdAt'
-  };
-
-  export type InquiryNotificationScalarFieldEnum = (typeof InquiryNotificationScalarFieldEnum)[keyof typeof InquiryNotificationScalarFieldEnum]
-
-
-  export const InquiryAnalyticsScalarFieldEnum: {
-    id: 'id',
-    date: 'date',
-    totalInquiries: 'totalInquiries',
-    pendingInquiries: 'pendingInquiries',
-    resolvedInquiries: 'resolvedInquiries',
-    avgFirstResponseTime: 'avgFirstResponseTime',
-    avgResolutionTime: 'avgResolutionTime',
-    seminarInquiries: 'seminarInquiries',
-    equipmentInquiries: 'equipmentInquiries',
-    accountInquiries: 'accountInquiries',
-    generalInquiries: 'generalInquiries',
-    lowPriorityCount: 'lowPriorityCount',
-    mediumPriorityCount: 'mediumPriorityCount',
-    highPriorityCount: 'highPriorityCount',
-    urgentPriorityCount: 'urgentPriorityCount',
-    adminId: 'adminId',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type InquiryAnalyticsScalarFieldEnum = (typeof InquiryAnalyticsScalarFieldEnum)[keyof typeof InquiryAnalyticsScalarFieldEnum]
 
 
   export const InventoryItemScalarFieldEnum: {
@@ -18548,35 +14783,6 @@ export namespace Prisma {
   export type FAQOrderByRelevanceFieldEnum = (typeof FAQOrderByRelevanceFieldEnum)[keyof typeof FAQOrderByRelevanceFieldEnum]
 
 
-  export const InquiryTemplateOrderByRelevanceFieldEnum: {
-    id: 'id',
-    title: 'title',
-    content: 'content',
-    createdById: 'createdById'
-  };
-
-  export type InquiryTemplateOrderByRelevanceFieldEnum = (typeof InquiryTemplateOrderByRelevanceFieldEnum)[keyof typeof InquiryTemplateOrderByRelevanceFieldEnum]
-
-
-  export const InquiryNotificationOrderByRelevanceFieldEnum: {
-    id: 'id',
-    title: 'title',
-    message: 'message',
-    userId: 'userId',
-    inquiryId: 'inquiryId'
-  };
-
-  export type InquiryNotificationOrderByRelevanceFieldEnum = (typeof InquiryNotificationOrderByRelevanceFieldEnum)[keyof typeof InquiryNotificationOrderByRelevanceFieldEnum]
-
-
-  export const InquiryAnalyticsOrderByRelevanceFieldEnum: {
-    id: 'id',
-    adminId: 'adminId'
-  };
-
-  export type InquiryAnalyticsOrderByRelevanceFieldEnum = (typeof InquiryAnalyticsOrderByRelevanceFieldEnum)[keyof typeof InquiryAnalyticsOrderByRelevanceFieldEnum]
-
-
   export const InventoryItemOrderByRelevanceFieldEnum: {
     id: 'id',
     name: 'name',
@@ -18733,20 +14939,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'InquiryCategory'
-   */
-  export type EnumInquiryCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryCategory'>
-    
-
-
-  /**
-   * Reference to a field of type 'InquiryPriority'
-   */
-  export type EnumInquiryPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryPriority'>
-    
-
-
-  /**
    * Reference to a field of type 'InquiryStatus'
    */
   export type EnumInquiryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryStatus'>
@@ -18764,20 +14956,6 @@ export namespace Prisma {
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'NotificationType'
-   */
-  export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
@@ -18813,6 +14991,13 @@ export namespace Prisma {
    * Reference to a field of type 'participant_status'
    */
   export type Enumparticipant_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'participant_status'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
   /**
    * Deep Input Types
@@ -18889,9 +15074,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyListRelationFilter
     inquiryAttachments?: InquiryAttachmentListRelationFilter
     createdFAQs?: FAQListRelationFilter
-    createdTemplates?: InquiryTemplateListRelationFilter
-    notifications?: InquiryNotificationListRelationFilter
-    analyticsRecords?: InquiryAnalyticsListRelationFilter
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -18961,9 +15143,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyOrderByRelationAggregateInput
     inquiryAttachments?: InquiryAttachmentOrderByRelationAggregateInput
     createdFAQs?: FAQOrderByRelationAggregateInput
-    createdTemplates?: InquiryTemplateOrderByRelationAggregateInput
-    notifications?: InquiryNotificationOrderByRelationAggregateInput
-    analyticsRecords?: InquiryAnalyticsOrderByRelationAggregateInput
     _relevance?: AccountOrderByRelevanceInput
   }
 
@@ -19037,9 +15216,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyListRelationFilter
     inquiryAttachments?: InquiryAttachmentListRelationFilter
     createdFAQs?: FAQListRelationFilter
-    createdTemplates?: InquiryTemplateListRelationFilter
-    notifications?: InquiryNotificationListRelationFilter
-    analyticsRecords?: InquiryAnalyticsListRelationFilter
   }, "id" | "username" | "email">
 
   export type AccountOrderByWithAggregationInput = {
@@ -19257,10 +15433,8 @@ export namespace Prisma {
     id?: StringFilter<"Inquiry"> | string
     subject?: StringFilter<"Inquiry"> | string
     message?: StringFilter<"Inquiry"> | string
-    category?: EnumInquiryCategoryFilter<"Inquiry"> | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFilter<"Inquiry"> | $Enums.InquiryPriority
     status?: EnumInquiryStatusFilter<"Inquiry"> | $Enums.InquiryStatus
-    userId?: StringNullableFilter<"Inquiry"> | string | null
+    userId?: StringFilter<"Inquiry"> | string
     guestName?: StringNullableFilter<"Inquiry"> | string | null
     guestEmail?: StringNullableFilter<"Inquiry"> | string | null
     assignedToId?: StringNullableFilter<"Inquiry"> | string | null
@@ -19273,17 +15447,14 @@ export namespace Prisma {
     resolvedBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     replies?: InquiryReplyListRelationFilter
     attachments?: InquiryAttachmentListRelationFilter
-    notifications?: InquiryNotificationListRelationFilter
   }
 
   export type InquiryOrderByWithRelationInput = {
     id?: SortOrder
     subject?: SortOrder
     message?: SortOrder
-    category?: SortOrder
-    priority?: SortOrder
     status?: SortOrder
-    userId?: SortOrderInput | SortOrder
+    userId?: SortOrder
     guestName?: SortOrderInput | SortOrder
     guestEmail?: SortOrderInput | SortOrder
     assignedToId?: SortOrderInput | SortOrder
@@ -19296,7 +15467,6 @@ export namespace Prisma {
     resolvedBy?: AccountOrderByWithRelationInput
     replies?: InquiryReplyOrderByRelationAggregateInput
     attachments?: InquiryAttachmentOrderByRelationAggregateInput
-    notifications?: InquiryNotificationOrderByRelationAggregateInput
     _relevance?: InquiryOrderByRelevanceInput
   }
 
@@ -19307,10 +15477,8 @@ export namespace Prisma {
     NOT?: InquiryWhereInput | InquiryWhereInput[]
     subject?: StringFilter<"Inquiry"> | string
     message?: StringFilter<"Inquiry"> | string
-    category?: EnumInquiryCategoryFilter<"Inquiry"> | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFilter<"Inquiry"> | $Enums.InquiryPriority
     status?: EnumInquiryStatusFilter<"Inquiry"> | $Enums.InquiryStatus
-    userId?: StringNullableFilter<"Inquiry"> | string | null
+    userId?: StringFilter<"Inquiry"> | string
     guestName?: StringNullableFilter<"Inquiry"> | string | null
     guestEmail?: StringNullableFilter<"Inquiry"> | string | null
     assignedToId?: StringNullableFilter<"Inquiry"> | string | null
@@ -19323,17 +15491,14 @@ export namespace Prisma {
     resolvedBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
     replies?: InquiryReplyListRelationFilter
     attachments?: InquiryAttachmentListRelationFilter
-    notifications?: InquiryNotificationListRelationFilter
   }, "id">
 
   export type InquiryOrderByWithAggregationInput = {
     id?: SortOrder
     subject?: SortOrder
     message?: SortOrder
-    category?: SortOrder
-    priority?: SortOrder
     status?: SortOrder
-    userId?: SortOrderInput | SortOrder
+    userId?: SortOrder
     guestName?: SortOrderInput | SortOrder
     guestEmail?: SortOrderInput | SortOrder
     assignedToId?: SortOrderInput | SortOrder
@@ -19353,10 +15518,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Inquiry"> | string
     subject?: StringWithAggregatesFilter<"Inquiry"> | string
     message?: StringWithAggregatesFilter<"Inquiry"> | string
-    category?: EnumInquiryCategoryWithAggregatesFilter<"Inquiry"> | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityWithAggregatesFilter<"Inquiry"> | $Enums.InquiryPriority
     status?: EnumInquiryStatusWithAggregatesFilter<"Inquiry"> | $Enums.InquiryStatus
-    userId?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
+    userId?: StringWithAggregatesFilter<"Inquiry"> | string
     guestName?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
     guestEmail?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
     assignedToId?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
@@ -19372,7 +15535,6 @@ export namespace Prisma {
     NOT?: InquiryReplyWhereInput | InquiryReplyWhereInput[]
     id?: StringFilter<"InquiryReply"> | string
     message?: StringFilter<"InquiryReply"> | string
-    isInternal?: BoolFilter<"InquiryReply"> | boolean
     senderId?: StringNullableFilter<"InquiryReply"> | string | null
     senderType?: EnumSenderTypeFilter<"InquiryReply"> | $Enums.SenderType
     senderName?: StringNullableFilter<"InquiryReply"> | string | null
@@ -19392,7 +15554,6 @@ export namespace Prisma {
   export type InquiryReplyOrderByWithRelationInput = {
     id?: SortOrder
     message?: SortOrder
-    isInternal?: SortOrder
     senderId?: SortOrderInput | SortOrder
     senderType?: SortOrder
     senderName?: SortOrderInput | SortOrder
@@ -19416,7 +15577,6 @@ export namespace Prisma {
     OR?: InquiryReplyWhereInput[]
     NOT?: InquiryReplyWhereInput | InquiryReplyWhereInput[]
     message?: StringFilter<"InquiryReply"> | string
-    isInternal?: BoolFilter<"InquiryReply"> | boolean
     senderId?: StringNullableFilter<"InquiryReply"> | string | null
     senderType?: EnumSenderTypeFilter<"InquiryReply"> | $Enums.SenderType
     senderName?: StringNullableFilter<"InquiryReply"> | string | null
@@ -19436,7 +15596,6 @@ export namespace Prisma {
   export type InquiryReplyOrderByWithAggregationInput = {
     id?: SortOrder
     message?: SortOrder
-    isInternal?: SortOrder
     senderId?: SortOrderInput | SortOrder
     senderType?: SortOrder
     senderName?: SortOrderInput | SortOrder
@@ -19458,7 +15617,6 @@ export namespace Prisma {
     NOT?: InquiryReplyScalarWhereWithAggregatesInput | InquiryReplyScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"InquiryReply"> | string
     message?: StringWithAggregatesFilter<"InquiryReply"> | string
-    isInternal?: BoolWithAggregatesFilter<"InquiryReply"> | boolean
     senderId?: StringNullableWithAggregatesFilter<"InquiryReply"> | string | null
     senderType?: EnumSenderTypeWithAggregatesFilter<"InquiryReply"> | $Enums.SenderType
     senderName?: StringNullableWithAggregatesFilter<"InquiryReply"> | string | null
@@ -19554,7 +15712,6 @@ export namespace Prisma {
     id?: StringFilter<"FAQ"> | string
     question?: StringFilter<"FAQ"> | string
     answer?: StringFilter<"FAQ"> | string
-    category?: EnumInquiryCategoryFilter<"FAQ"> | $Enums.InquiryCategory
     isActive?: BoolFilter<"FAQ"> | boolean
     orderIndex?: IntFilter<"FAQ"> | number
     createdById?: StringNullableFilter<"FAQ"> | string | null
@@ -19569,7 +15726,6 @@ export namespace Prisma {
     id?: SortOrder
     question?: SortOrder
     answer?: SortOrder
-    category?: SortOrder
     isActive?: SortOrder
     orderIndex?: SortOrder
     createdById?: SortOrderInput | SortOrder
@@ -19588,7 +15744,6 @@ export namespace Prisma {
     NOT?: FAQWhereInput | FAQWhereInput[]
     question?: StringFilter<"FAQ"> | string
     answer?: StringFilter<"FAQ"> | string
-    category?: EnumInquiryCategoryFilter<"FAQ"> | $Enums.InquiryCategory
     isActive?: BoolFilter<"FAQ"> | boolean
     orderIndex?: IntFilter<"FAQ"> | number
     createdById?: StringNullableFilter<"FAQ"> | string | null
@@ -19603,7 +15758,6 @@ export namespace Prisma {
     id?: SortOrder
     question?: SortOrder
     answer?: SortOrder
-    category?: SortOrder
     isActive?: SortOrder
     orderIndex?: SortOrder
     createdById?: SortOrderInput | SortOrder
@@ -19625,7 +15779,6 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"FAQ"> | string
     question?: StringWithAggregatesFilter<"FAQ"> | string
     answer?: StringWithAggregatesFilter<"FAQ"> | string
-    category?: EnumInquiryCategoryWithAggregatesFilter<"FAQ"> | $Enums.InquiryCategory
     isActive?: BoolWithAggregatesFilter<"FAQ"> | boolean
     orderIndex?: IntWithAggregatesFilter<"FAQ"> | number
     createdById?: StringNullableWithAggregatesFilter<"FAQ"> | string | null
@@ -19633,297 +15786,6 @@ export namespace Prisma {
     helpfulCount?: IntWithAggregatesFilter<"FAQ"> | number
     createdAt?: DateTimeWithAggregatesFilter<"FAQ"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"FAQ"> | Date | string
-  }
-
-  export type InquiryTemplateWhereInput = {
-    AND?: InquiryTemplateWhereInput | InquiryTemplateWhereInput[]
-    OR?: InquiryTemplateWhereInput[]
-    NOT?: InquiryTemplateWhereInput | InquiryTemplateWhereInput[]
-    id?: StringFilter<"InquiryTemplate"> | string
-    title?: StringFilter<"InquiryTemplate"> | string
-    content?: StringFilter<"InquiryTemplate"> | string
-    category?: EnumInquiryCategoryFilter<"InquiryTemplate"> | $Enums.InquiryCategory
-    isActive?: BoolFilter<"InquiryTemplate"> | boolean
-    isDefault?: BoolFilter<"InquiryTemplate"> | boolean
-    usageCount?: IntFilter<"InquiryTemplate"> | number
-    createdById?: StringNullableFilter<"InquiryTemplate"> | string | null
-    createdAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
-    updatedAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
-    createdBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
-  }
-
-  export type InquiryTemplateOrderByWithRelationInput = {
-    id?: SortOrder
-    title?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    isActive?: SortOrder
-    isDefault?: SortOrder
-    usageCount?: SortOrder
-    createdById?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    createdBy?: AccountOrderByWithRelationInput
-    _relevance?: InquiryTemplateOrderByRelevanceInput
-  }
-
-  export type InquiryTemplateWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: InquiryTemplateWhereInput | InquiryTemplateWhereInput[]
-    OR?: InquiryTemplateWhereInput[]
-    NOT?: InquiryTemplateWhereInput | InquiryTemplateWhereInput[]
-    title?: StringFilter<"InquiryTemplate"> | string
-    content?: StringFilter<"InquiryTemplate"> | string
-    category?: EnumInquiryCategoryFilter<"InquiryTemplate"> | $Enums.InquiryCategory
-    isActive?: BoolFilter<"InquiryTemplate"> | boolean
-    isDefault?: BoolFilter<"InquiryTemplate"> | boolean
-    usageCount?: IntFilter<"InquiryTemplate"> | number
-    createdById?: StringNullableFilter<"InquiryTemplate"> | string | null
-    createdAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
-    updatedAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
-    createdBy?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
-  }, "id">
-
-  export type InquiryTemplateOrderByWithAggregationInput = {
-    id?: SortOrder
-    title?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    isActive?: SortOrder
-    isDefault?: SortOrder
-    usageCount?: SortOrder
-    createdById?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: InquiryTemplateCountOrderByAggregateInput
-    _avg?: InquiryTemplateAvgOrderByAggregateInput
-    _max?: InquiryTemplateMaxOrderByAggregateInput
-    _min?: InquiryTemplateMinOrderByAggregateInput
-    _sum?: InquiryTemplateSumOrderByAggregateInput
-  }
-
-  export type InquiryTemplateScalarWhereWithAggregatesInput = {
-    AND?: InquiryTemplateScalarWhereWithAggregatesInput | InquiryTemplateScalarWhereWithAggregatesInput[]
-    OR?: InquiryTemplateScalarWhereWithAggregatesInput[]
-    NOT?: InquiryTemplateScalarWhereWithAggregatesInput | InquiryTemplateScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"InquiryTemplate"> | string
-    title?: StringWithAggregatesFilter<"InquiryTemplate"> | string
-    content?: StringWithAggregatesFilter<"InquiryTemplate"> | string
-    category?: EnumInquiryCategoryWithAggregatesFilter<"InquiryTemplate"> | $Enums.InquiryCategory
-    isActive?: BoolWithAggregatesFilter<"InquiryTemplate"> | boolean
-    isDefault?: BoolWithAggregatesFilter<"InquiryTemplate"> | boolean
-    usageCount?: IntWithAggregatesFilter<"InquiryTemplate"> | number
-    createdById?: StringNullableWithAggregatesFilter<"InquiryTemplate"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"InquiryTemplate"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"InquiryTemplate"> | Date | string
-  }
-
-  export type InquiryNotificationWhereInput = {
-    AND?: InquiryNotificationWhereInput | InquiryNotificationWhereInput[]
-    OR?: InquiryNotificationWhereInput[]
-    NOT?: InquiryNotificationWhereInput | InquiryNotificationWhereInput[]
-    id?: StringFilter<"InquiryNotification"> | string
-    type?: EnumNotificationTypeFilter<"InquiryNotification"> | $Enums.NotificationType
-    title?: StringFilter<"InquiryNotification"> | string
-    message?: StringFilter<"InquiryNotification"> | string
-    userId?: StringFilter<"InquiryNotification"> | string
-    inquiryId?: StringNullableFilter<"InquiryNotification"> | string | null
-    isRead?: BoolFilter<"InquiryNotification"> | boolean
-    readAt?: DateTimeNullableFilter<"InquiryNotification"> | Date | string | null
-    metadata?: JsonNullableFilter<"InquiryNotification">
-    createdAt?: DateTimeFilter<"InquiryNotification"> | Date | string
-    user?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-    inquiry?: XOR<InquiryNullableScalarRelationFilter, InquiryWhereInput> | null
-  }
-
-  export type InquiryNotificationOrderByWithRelationInput = {
-    id?: SortOrder
-    type?: SortOrder
-    title?: SortOrder
-    message?: SortOrder
-    userId?: SortOrder
-    inquiryId?: SortOrderInput | SortOrder
-    isRead?: SortOrder
-    readAt?: SortOrderInput | SortOrder
-    metadata?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    user?: AccountOrderByWithRelationInput
-    inquiry?: InquiryOrderByWithRelationInput
-    _relevance?: InquiryNotificationOrderByRelevanceInput
-  }
-
-  export type InquiryNotificationWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: InquiryNotificationWhereInput | InquiryNotificationWhereInput[]
-    OR?: InquiryNotificationWhereInput[]
-    NOT?: InquiryNotificationWhereInput | InquiryNotificationWhereInput[]
-    type?: EnumNotificationTypeFilter<"InquiryNotification"> | $Enums.NotificationType
-    title?: StringFilter<"InquiryNotification"> | string
-    message?: StringFilter<"InquiryNotification"> | string
-    userId?: StringFilter<"InquiryNotification"> | string
-    inquiryId?: StringNullableFilter<"InquiryNotification"> | string | null
-    isRead?: BoolFilter<"InquiryNotification"> | boolean
-    readAt?: DateTimeNullableFilter<"InquiryNotification"> | Date | string | null
-    metadata?: JsonNullableFilter<"InquiryNotification">
-    createdAt?: DateTimeFilter<"InquiryNotification"> | Date | string
-    user?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-    inquiry?: XOR<InquiryNullableScalarRelationFilter, InquiryWhereInput> | null
-  }, "id">
-
-  export type InquiryNotificationOrderByWithAggregationInput = {
-    id?: SortOrder
-    type?: SortOrder
-    title?: SortOrder
-    message?: SortOrder
-    userId?: SortOrder
-    inquiryId?: SortOrderInput | SortOrder
-    isRead?: SortOrder
-    readAt?: SortOrderInput | SortOrder
-    metadata?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    _count?: InquiryNotificationCountOrderByAggregateInput
-    _max?: InquiryNotificationMaxOrderByAggregateInput
-    _min?: InquiryNotificationMinOrderByAggregateInput
-  }
-
-  export type InquiryNotificationScalarWhereWithAggregatesInput = {
-    AND?: InquiryNotificationScalarWhereWithAggregatesInput | InquiryNotificationScalarWhereWithAggregatesInput[]
-    OR?: InquiryNotificationScalarWhereWithAggregatesInput[]
-    NOT?: InquiryNotificationScalarWhereWithAggregatesInput | InquiryNotificationScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"InquiryNotification"> | string
-    type?: EnumNotificationTypeWithAggregatesFilter<"InquiryNotification"> | $Enums.NotificationType
-    title?: StringWithAggregatesFilter<"InquiryNotification"> | string
-    message?: StringWithAggregatesFilter<"InquiryNotification"> | string
-    userId?: StringWithAggregatesFilter<"InquiryNotification"> | string
-    inquiryId?: StringNullableWithAggregatesFilter<"InquiryNotification"> | string | null
-    isRead?: BoolWithAggregatesFilter<"InquiryNotification"> | boolean
-    readAt?: DateTimeNullableWithAggregatesFilter<"InquiryNotification"> | Date | string | null
-    metadata?: JsonNullableWithAggregatesFilter<"InquiryNotification">
-    createdAt?: DateTimeWithAggregatesFilter<"InquiryNotification"> | Date | string
-  }
-
-  export type InquiryAnalyticsWhereInput = {
-    AND?: InquiryAnalyticsWhereInput | InquiryAnalyticsWhereInput[]
-    OR?: InquiryAnalyticsWhereInput[]
-    NOT?: InquiryAnalyticsWhereInput | InquiryAnalyticsWhereInput[]
-    id?: StringFilter<"InquiryAnalytics"> | string
-    date?: DateTimeFilter<"InquiryAnalytics"> | Date | string
-    totalInquiries?: IntFilter<"InquiryAnalytics"> | number
-    pendingInquiries?: IntFilter<"InquiryAnalytics"> | number
-    resolvedInquiries?: IntFilter<"InquiryAnalytics"> | number
-    avgFirstResponseTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
-    avgResolutionTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
-    seminarInquiries?: IntFilter<"InquiryAnalytics"> | number
-    equipmentInquiries?: IntFilter<"InquiryAnalytics"> | number
-    accountInquiries?: IntFilter<"InquiryAnalytics"> | number
-    generalInquiries?: IntFilter<"InquiryAnalytics"> | number
-    lowPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    mediumPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    highPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    urgentPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    adminId?: StringNullableFilter<"InquiryAnalytics"> | string | null
-    createdAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
-    updatedAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
-    admin?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
-  }
-
-  export type InquiryAnalyticsOrderByWithRelationInput = {
-    id?: SortOrder
-    date?: SortOrder
-    totalInquiries?: SortOrder
-    pendingInquiries?: SortOrder
-    resolvedInquiries?: SortOrder
-    avgFirstResponseTime?: SortOrderInput | SortOrder
-    avgResolutionTime?: SortOrderInput | SortOrder
-    seminarInquiries?: SortOrder
-    equipmentInquiries?: SortOrder
-    accountInquiries?: SortOrder
-    generalInquiries?: SortOrder
-    lowPriorityCount?: SortOrder
-    mediumPriorityCount?: SortOrder
-    highPriorityCount?: SortOrder
-    urgentPriorityCount?: SortOrder
-    adminId?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    admin?: AccountOrderByWithRelationInput
-    _relevance?: InquiryAnalyticsOrderByRelevanceInput
-  }
-
-  export type InquiryAnalyticsWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    date_adminId?: InquiryAnalyticsDateAdminIdCompoundUniqueInput
-    AND?: InquiryAnalyticsWhereInput | InquiryAnalyticsWhereInput[]
-    OR?: InquiryAnalyticsWhereInput[]
-    NOT?: InquiryAnalyticsWhereInput | InquiryAnalyticsWhereInput[]
-    date?: DateTimeFilter<"InquiryAnalytics"> | Date | string
-    totalInquiries?: IntFilter<"InquiryAnalytics"> | number
-    pendingInquiries?: IntFilter<"InquiryAnalytics"> | number
-    resolvedInquiries?: IntFilter<"InquiryAnalytics"> | number
-    avgFirstResponseTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
-    avgResolutionTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
-    seminarInquiries?: IntFilter<"InquiryAnalytics"> | number
-    equipmentInquiries?: IntFilter<"InquiryAnalytics"> | number
-    accountInquiries?: IntFilter<"InquiryAnalytics"> | number
-    generalInquiries?: IntFilter<"InquiryAnalytics"> | number
-    lowPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    mediumPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    highPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    urgentPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    adminId?: StringNullableFilter<"InquiryAnalytics"> | string | null
-    createdAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
-    updatedAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
-    admin?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
-  }, "id" | "date_adminId">
-
-  export type InquiryAnalyticsOrderByWithAggregationInput = {
-    id?: SortOrder
-    date?: SortOrder
-    totalInquiries?: SortOrder
-    pendingInquiries?: SortOrder
-    resolvedInquiries?: SortOrder
-    avgFirstResponseTime?: SortOrderInput | SortOrder
-    avgResolutionTime?: SortOrderInput | SortOrder
-    seminarInquiries?: SortOrder
-    equipmentInquiries?: SortOrder
-    accountInquiries?: SortOrder
-    generalInquiries?: SortOrder
-    lowPriorityCount?: SortOrder
-    mediumPriorityCount?: SortOrder
-    highPriorityCount?: SortOrder
-    urgentPriorityCount?: SortOrder
-    adminId?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: InquiryAnalyticsCountOrderByAggregateInput
-    _avg?: InquiryAnalyticsAvgOrderByAggregateInput
-    _max?: InquiryAnalyticsMaxOrderByAggregateInput
-    _min?: InquiryAnalyticsMinOrderByAggregateInput
-    _sum?: InquiryAnalyticsSumOrderByAggregateInput
-  }
-
-  export type InquiryAnalyticsScalarWhereWithAggregatesInput = {
-    AND?: InquiryAnalyticsScalarWhereWithAggregatesInput | InquiryAnalyticsScalarWhereWithAggregatesInput[]
-    OR?: InquiryAnalyticsScalarWhereWithAggregatesInput[]
-    NOT?: InquiryAnalyticsScalarWhereWithAggregatesInput | InquiryAnalyticsScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"InquiryAnalytics"> | string
-    date?: DateTimeWithAggregatesFilter<"InquiryAnalytics"> | Date | string
-    totalInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
-    pendingInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
-    resolvedInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
-    avgFirstResponseTime?: FloatNullableWithAggregatesFilter<"InquiryAnalytics"> | number | null
-    avgResolutionTime?: FloatNullableWithAggregatesFilter<"InquiryAnalytics"> | number | null
-    seminarInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
-    equipmentInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
-    accountInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
-    generalInquiries?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
-    lowPriorityCount?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
-    mediumPriorityCount?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
-    highPriorityCount?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
-    urgentPriorityCount?: IntWithAggregatesFilter<"InquiryAnalytics"> | number
-    adminId?: StringNullableWithAggregatesFilter<"InquiryAnalytics"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"InquiryAnalytics"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"InquiryAnalytics"> | Date | string
   }
 
   export type InventoryItemWhereInput = {
@@ -20410,9 +16272,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateInput = {
@@ -20482,9 +16341,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUpdateInput = {
@@ -20554,9 +16410,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateInput = {
@@ -20626,9 +16479,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountCreateManyInput = {
@@ -20906,8 +16756,6 @@ export namespace Prisma {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
     guestName?: string | null
     guestEmail?: string | null
@@ -20919,17 +16767,14 @@ export namespace Prisma {
     resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
     replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
     attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryUncheckedCreateInput = {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
-    userId?: string | null
+    userId: string
     guestName?: string | null
     guestEmail?: string | null
     assignedToId?: string | null
@@ -20939,15 +16784,12 @@ export namespace Prisma {
     updatedAt?: Date | string
     replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
     attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20959,17 +16801,14 @@ export namespace Prisma {
     resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
     replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
     attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
   }
 
   export type InquiryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20979,17 +16818,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
     attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
   }
 
   export type InquiryCreateManyInput = {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
-    userId?: string | null
+    userId: string
     guestName?: string | null
     guestEmail?: string | null
     assignedToId?: string | null
@@ -21003,8 +16839,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21017,10 +16851,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21033,7 +16865,6 @@ export namespace Prisma {
   export type InquiryReplyCreateInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderType: $Enums.SenderType
     senderName?: string | null
     createdAt?: Date | string
@@ -21050,7 +16881,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedCreateInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderId?: string | null
     senderType: $Enums.SenderType
     senderName?: string | null
@@ -21067,7 +16897,6 @@ export namespace Prisma {
   export type InquiryReplyUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21084,7 +16913,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderId?: NullableStringFieldUpdateOperationsInput | string | null
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21101,7 +16929,6 @@ export namespace Prisma {
   export type InquiryReplyCreateManyInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderId?: string | null
     senderType: $Enums.SenderType
     senderName?: string | null
@@ -21117,7 +16944,6 @@ export namespace Prisma {
   export type InquiryReplyUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21130,7 +16956,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderId?: NullableStringFieldUpdateOperationsInput | string | null
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21222,7 +17047,6 @@ export namespace Prisma {
     id?: string
     question: string
     answer: string
-    category?: $Enums.InquiryCategory
     isActive?: boolean
     orderIndex?: number
     viewCount?: number
@@ -21236,7 +17060,6 @@ export namespace Prisma {
     id?: string
     question: string
     answer: string
-    category?: $Enums.InquiryCategory
     isActive?: boolean
     orderIndex?: number
     createdById?: string | null
@@ -21250,7 +17073,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     answer?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
     isActive?: BoolFieldUpdateOperationsInput | boolean
     orderIndex?: IntFieldUpdateOperationsInput | number
     viewCount?: IntFieldUpdateOperationsInput | number
@@ -21264,7 +17086,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     answer?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
     isActive?: BoolFieldUpdateOperationsInput | boolean
     orderIndex?: IntFieldUpdateOperationsInput | number
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21278,7 +17099,6 @@ export namespace Prisma {
     id?: string
     question: string
     answer: string
-    category?: $Enums.InquiryCategory
     isActive?: boolean
     orderIndex?: number
     createdById?: string | null
@@ -21292,7 +17112,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     answer?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
     isActive?: BoolFieldUpdateOperationsInput | boolean
     orderIndex?: IntFieldUpdateOperationsInput | number
     viewCount?: IntFieldUpdateOperationsInput | number
@@ -21305,337 +17124,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     answer?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
     isActive?: BoolFieldUpdateOperationsInput | boolean
     orderIndex?: IntFieldUpdateOperationsInput | number
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     viewCount?: IntFieldUpdateOperationsInput | number
     helpfulCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryTemplateCreateInput = {
-    id?: string
-    title: string
-    content: string
-    category?: $Enums.InquiryCategory
-    isActive?: boolean
-    isDefault?: boolean
-    usageCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    createdBy?: AccountCreateNestedOneWithoutCreatedTemplatesInput
-  }
-
-  export type InquiryTemplateUncheckedCreateInput = {
-    id?: string
-    title: string
-    content: string
-    category?: $Enums.InquiryCategory
-    isActive?: boolean
-    isDefault?: boolean
-    usageCount?: number
-    createdById?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InquiryTemplateUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    usageCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdBy?: AccountUpdateOneWithoutCreatedTemplatesNestedInput
-  }
-
-  export type InquiryTemplateUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    usageCount?: IntFieldUpdateOperationsInput | number
-    createdById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryTemplateCreateManyInput = {
-    id?: string
-    title: string
-    content: string
-    category?: $Enums.InquiryCategory
-    isActive?: boolean
-    isDefault?: boolean
-    usageCount?: number
-    createdById?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InquiryTemplateUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    usageCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryTemplateUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    usageCount?: IntFieldUpdateOperationsInput | number
-    createdById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryNotificationCreateInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    isRead?: boolean
-    readAt?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    user: AccountCreateNestedOneWithoutNotificationsInput
-    inquiry?: InquiryCreateNestedOneWithoutNotificationsInput
-  }
-
-  export type InquiryNotificationUncheckedCreateInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    userId: string
-    inquiryId?: string | null
-    isRead?: boolean
-    readAt?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type InquiryNotificationUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: AccountUpdateOneRequiredWithoutNotificationsNestedInput
-    inquiry?: InquiryUpdateOneWithoutNotificationsNestedInput
-  }
-
-  export type InquiryNotificationUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    inquiryId?: NullableStringFieldUpdateOperationsInput | string | null
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryNotificationCreateManyInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    userId: string
-    inquiryId?: string | null
-    isRead?: boolean
-    readAt?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type InquiryNotificationUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryNotificationUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    inquiryId?: NullableStringFieldUpdateOperationsInput | string | null
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryAnalyticsCreateInput = {
-    id?: string
-    date: Date | string
-    totalInquiries?: number
-    pendingInquiries?: number
-    resolvedInquiries?: number
-    avgFirstResponseTime?: number | null
-    avgResolutionTime?: number | null
-    seminarInquiries?: number
-    equipmentInquiries?: number
-    accountInquiries?: number
-    generalInquiries?: number
-    lowPriorityCount?: number
-    mediumPriorityCount?: number
-    highPriorityCount?: number
-    urgentPriorityCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    admin?: AccountCreateNestedOneWithoutAnalyticsRecordsInput
-  }
-
-  export type InquiryAnalyticsUncheckedCreateInput = {
-    id?: string
-    date: Date | string
-    totalInquiries?: number
-    pendingInquiries?: number
-    resolvedInquiries?: number
-    avgFirstResponseTime?: number | null
-    avgResolutionTime?: number | null
-    seminarInquiries?: number
-    equipmentInquiries?: number
-    accountInquiries?: number
-    generalInquiries?: number
-    lowPriorityCount?: number
-    mediumPriorityCount?: number
-    highPriorityCount?: number
-    urgentPriorityCount?: number
-    adminId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InquiryAnalyticsUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    totalInquiries?: IntFieldUpdateOperationsInput | number
-    pendingInquiries?: IntFieldUpdateOperationsInput | number
-    resolvedInquiries?: IntFieldUpdateOperationsInput | number
-    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    seminarInquiries?: IntFieldUpdateOperationsInput | number
-    equipmentInquiries?: IntFieldUpdateOperationsInput | number
-    accountInquiries?: IntFieldUpdateOperationsInput | number
-    generalInquiries?: IntFieldUpdateOperationsInput | number
-    lowPriorityCount?: IntFieldUpdateOperationsInput | number
-    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
-    highPriorityCount?: IntFieldUpdateOperationsInput | number
-    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    admin?: AccountUpdateOneWithoutAnalyticsRecordsNestedInput
-  }
-
-  export type InquiryAnalyticsUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    totalInquiries?: IntFieldUpdateOperationsInput | number
-    pendingInquiries?: IntFieldUpdateOperationsInput | number
-    resolvedInquiries?: IntFieldUpdateOperationsInput | number
-    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    seminarInquiries?: IntFieldUpdateOperationsInput | number
-    equipmentInquiries?: IntFieldUpdateOperationsInput | number
-    accountInquiries?: IntFieldUpdateOperationsInput | number
-    generalInquiries?: IntFieldUpdateOperationsInput | number
-    lowPriorityCount?: IntFieldUpdateOperationsInput | number
-    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
-    highPriorityCount?: IntFieldUpdateOperationsInput | number
-    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
-    adminId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryAnalyticsCreateManyInput = {
-    id?: string
-    date: Date | string
-    totalInquiries?: number
-    pendingInquiries?: number
-    resolvedInquiries?: number
-    avgFirstResponseTime?: number | null
-    avgResolutionTime?: number | null
-    seminarInquiries?: number
-    equipmentInquiries?: number
-    accountInquiries?: number
-    generalInquiries?: number
-    lowPriorityCount?: number
-    mediumPriorityCount?: number
-    highPriorityCount?: number
-    urgentPriorityCount?: number
-    adminId?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InquiryAnalyticsUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    totalInquiries?: IntFieldUpdateOperationsInput | number
-    pendingInquiries?: IntFieldUpdateOperationsInput | number
-    resolvedInquiries?: IntFieldUpdateOperationsInput | number
-    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    seminarInquiries?: IntFieldUpdateOperationsInput | number
-    equipmentInquiries?: IntFieldUpdateOperationsInput | number
-    accountInquiries?: IntFieldUpdateOperationsInput | number
-    generalInquiries?: IntFieldUpdateOperationsInput | number
-    lowPriorityCount?: IntFieldUpdateOperationsInput | number
-    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
-    highPriorityCount?: IntFieldUpdateOperationsInput | number
-    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryAnalyticsUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    totalInquiries?: IntFieldUpdateOperationsInput | number
-    pendingInquiries?: IntFieldUpdateOperationsInput | number
-    resolvedInquiries?: IntFieldUpdateOperationsInput | number
-    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    seminarInquiries?: IntFieldUpdateOperationsInput | number
-    equipmentInquiries?: IntFieldUpdateOperationsInput | number
-    accountInquiries?: IntFieldUpdateOperationsInput | number
-    generalInquiries?: IntFieldUpdateOperationsInput | number
-    lowPriorityCount?: IntFieldUpdateOperationsInput | number
-    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
-    highPriorityCount?: IntFieldUpdateOperationsInput | number
-    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
-    adminId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22270,24 +17763,6 @@ export namespace Prisma {
     none?: FAQWhereInput
   }
 
-  export type InquiryTemplateListRelationFilter = {
-    every?: InquiryTemplateWhereInput
-    some?: InquiryTemplateWhereInput
-    none?: InquiryTemplateWhereInput
-  }
-
-  export type InquiryNotificationListRelationFilter = {
-    every?: InquiryNotificationWhereInput
-    some?: InquiryNotificationWhereInput
-    none?: InquiryNotificationWhereInput
-  }
-
-  export type InquiryAnalyticsListRelationFilter = {
-    every?: InquiryAnalyticsWhereInput
-    some?: InquiryAnalyticsWhereInput
-    none?: InquiryAnalyticsWhereInput
-  }
-
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -22322,18 +17797,6 @@ export namespace Prisma {
   }
 
   export type FAQOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type InquiryTemplateOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type InquiryNotificationOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type InquiryAnalyticsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -22753,20 +18216,6 @@ export namespace Prisma {
     _max?: NestedEnumaudit_actionFilter<$PrismaModel>
   }
 
-  export type EnumInquiryCategoryFilter<$PrismaModel = never> = {
-    equals?: $Enums.InquiryCategory | EnumInquiryCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.InquiryCategory[]
-    notIn?: $Enums.InquiryCategory[]
-    not?: NestedEnumInquiryCategoryFilter<$PrismaModel> | $Enums.InquiryCategory
-  }
-
-  export type EnumInquiryPriorityFilter<$PrismaModel = never> = {
-    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
-    in?: $Enums.InquiryPriority[]
-    notIn?: $Enums.InquiryPriority[]
-    not?: NestedEnumInquiryPriorityFilter<$PrismaModel> | $Enums.InquiryPriority
-  }
-
   export type EnumInquiryStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.InquiryStatus | EnumInquiryStatusFieldRefInput<$PrismaModel>
     in?: $Enums.InquiryStatus[]
@@ -22789,8 +18238,6 @@ export namespace Prisma {
     id?: SortOrder
     subject?: SortOrder
     message?: SortOrder
-    category?: SortOrder
-    priority?: SortOrder
     status?: SortOrder
     userId?: SortOrder
     guestName?: SortOrder
@@ -22806,8 +18253,6 @@ export namespace Prisma {
     id?: SortOrder
     subject?: SortOrder
     message?: SortOrder
-    category?: SortOrder
-    priority?: SortOrder
     status?: SortOrder
     userId?: SortOrder
     guestName?: SortOrder
@@ -22823,8 +18268,6 @@ export namespace Prisma {
     id?: SortOrder
     subject?: SortOrder
     message?: SortOrder
-    category?: SortOrder
-    priority?: SortOrder
     status?: SortOrder
     userId?: SortOrder
     guestName?: SortOrder
@@ -22834,26 +18277,6 @@ export namespace Prisma {
     resolvedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type EnumInquiryCategoryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.InquiryCategory | EnumInquiryCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.InquiryCategory[]
-    notIn?: $Enums.InquiryCategory[]
-    not?: NestedEnumInquiryCategoryWithAggregatesFilter<$PrismaModel> | $Enums.InquiryCategory
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumInquiryCategoryFilter<$PrismaModel>
-    _max?: NestedEnumInquiryCategoryFilter<$PrismaModel>
-  }
-
-  export type EnumInquiryPriorityWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
-    in?: $Enums.InquiryPriority[]
-    notIn?: $Enums.InquiryPriority[]
-    not?: NestedEnumInquiryPriorityWithAggregatesFilter<$PrismaModel> | $Enums.InquiryPriority
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumInquiryPriorityFilter<$PrismaModel>
-    _max?: NestedEnumInquiryPriorityFilter<$PrismaModel>
   }
 
   export type EnumInquiryStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -22866,16 +18289,16 @@ export namespace Prisma {
     _max?: NestedEnumInquiryStatusFilter<$PrismaModel>
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type EnumSenderTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.SenderType | EnumSenderTypeFieldRefInput<$PrismaModel>
     in?: $Enums.SenderType[]
     notIn?: $Enums.SenderType[]
     not?: NestedEnumSenderTypeFilter<$PrismaModel> | $Enums.SenderType
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type InquiryScalarRelationFilter = {
@@ -22897,7 +18320,6 @@ export namespace Prisma {
   export type InquiryReplyCountOrderByAggregateInput = {
     id?: SortOrder
     message?: SortOrder
-    isInternal?: SortOrder
     senderId?: SortOrder
     senderType?: SortOrder
     senderName?: SortOrder
@@ -22913,7 +18335,6 @@ export namespace Prisma {
   export type InquiryReplyMaxOrderByAggregateInput = {
     id?: SortOrder
     message?: SortOrder
-    isInternal?: SortOrder
     senderId?: SortOrder
     senderType?: SortOrder
     senderName?: SortOrder
@@ -22929,7 +18350,6 @@ export namespace Prisma {
   export type InquiryReplyMinOrderByAggregateInput = {
     id?: SortOrder
     message?: SortOrder
-    isInternal?: SortOrder
     senderId?: SortOrder
     senderType?: SortOrder
     senderName?: SortOrder
@@ -22942,14 +18362,6 @@ export namespace Prisma {
     readAt?: SortOrder
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type EnumSenderTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.SenderType | EnumSenderTypeFieldRefInput<$PrismaModel>
     in?: $Enums.SenderType[]
@@ -22958,6 +18370,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSenderTypeFilter<$PrismaModel>
     _max?: NestedEnumSenderTypeFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -23044,7 +18464,6 @@ export namespace Prisma {
     id?: SortOrder
     question?: SortOrder
     answer?: SortOrder
-    category?: SortOrder
     isActive?: SortOrder
     orderIndex?: SortOrder
     createdById?: SortOrder
@@ -23064,7 +18483,6 @@ export namespace Prisma {
     id?: SortOrder
     question?: SortOrder
     answer?: SortOrder
-    category?: SortOrder
     isActive?: SortOrder
     orderIndex?: SortOrder
     createdById?: SortOrder
@@ -23078,7 +18496,6 @@ export namespace Prisma {
     id?: SortOrder
     question?: SortOrder
     answer?: SortOrder
-    category?: SortOrder
     isActive?: SortOrder
     orderIndex?: SortOrder
     createdById?: SortOrder
@@ -23092,257 +18509,6 @@ export namespace Prisma {
     orderIndex?: SortOrder
     viewCount?: SortOrder
     helpfulCount?: SortOrder
-  }
-
-  export type InquiryTemplateOrderByRelevanceInput = {
-    fields: InquiryTemplateOrderByRelevanceFieldEnum | InquiryTemplateOrderByRelevanceFieldEnum[]
-    sort: SortOrder
-    search: string
-  }
-
-  export type InquiryTemplateCountOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    isActive?: SortOrder
-    isDefault?: SortOrder
-    usageCount?: SortOrder
-    createdById?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type InquiryTemplateAvgOrderByAggregateInput = {
-    usageCount?: SortOrder
-  }
-
-  export type InquiryTemplateMaxOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    isActive?: SortOrder
-    isDefault?: SortOrder
-    usageCount?: SortOrder
-    createdById?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type InquiryTemplateMinOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    content?: SortOrder
-    category?: SortOrder
-    isActive?: SortOrder
-    isDefault?: SortOrder
-    usageCount?: SortOrder
-    createdById?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type InquiryTemplateSumOrderByAggregateInput = {
-    usageCount?: SortOrder
-  }
-
-  export type EnumNotificationTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.NotificationType[]
-    notIn?: $Enums.NotificationType[]
-    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
-  }
-
-  export type InquiryNullableScalarRelationFilter = {
-    is?: InquiryWhereInput | null
-    isNot?: InquiryWhereInput | null
-  }
-
-  export type InquiryNotificationOrderByRelevanceInput = {
-    fields: InquiryNotificationOrderByRelevanceFieldEnum | InquiryNotificationOrderByRelevanceFieldEnum[]
-    sort: SortOrder
-    search: string
-  }
-
-  export type InquiryNotificationCountOrderByAggregateInput = {
-    id?: SortOrder
-    type?: SortOrder
-    title?: SortOrder
-    message?: SortOrder
-    userId?: SortOrder
-    inquiryId?: SortOrder
-    isRead?: SortOrder
-    readAt?: SortOrder
-    metadata?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type InquiryNotificationMaxOrderByAggregateInput = {
-    id?: SortOrder
-    type?: SortOrder
-    title?: SortOrder
-    message?: SortOrder
-    userId?: SortOrder
-    inquiryId?: SortOrder
-    isRead?: SortOrder
-    readAt?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type InquiryNotificationMinOrderByAggregateInput = {
-    id?: SortOrder
-    type?: SortOrder
-    title?: SortOrder
-    message?: SortOrder
-    userId?: SortOrder
-    inquiryId?: SortOrder
-    isRead?: SortOrder
-    readAt?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type EnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.NotificationType[]
-    notIn?: $Enums.NotificationType[]
-    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
-    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
-  }
-
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type InquiryAnalyticsOrderByRelevanceInput = {
-    fields: InquiryAnalyticsOrderByRelevanceFieldEnum | InquiryAnalyticsOrderByRelevanceFieldEnum[]
-    sort: SortOrder
-    search: string
-  }
-
-  export type InquiryAnalyticsDateAdminIdCompoundUniqueInput = {
-    date: Date | string
-    adminId: string
-  }
-
-  export type InquiryAnalyticsCountOrderByAggregateInput = {
-    id?: SortOrder
-    date?: SortOrder
-    totalInquiries?: SortOrder
-    pendingInquiries?: SortOrder
-    resolvedInquiries?: SortOrder
-    avgFirstResponseTime?: SortOrder
-    avgResolutionTime?: SortOrder
-    seminarInquiries?: SortOrder
-    equipmentInquiries?: SortOrder
-    accountInquiries?: SortOrder
-    generalInquiries?: SortOrder
-    lowPriorityCount?: SortOrder
-    mediumPriorityCount?: SortOrder
-    highPriorityCount?: SortOrder
-    urgentPriorityCount?: SortOrder
-    adminId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type InquiryAnalyticsAvgOrderByAggregateInput = {
-    totalInquiries?: SortOrder
-    pendingInquiries?: SortOrder
-    resolvedInquiries?: SortOrder
-    avgFirstResponseTime?: SortOrder
-    avgResolutionTime?: SortOrder
-    seminarInquiries?: SortOrder
-    equipmentInquiries?: SortOrder
-    accountInquiries?: SortOrder
-    generalInquiries?: SortOrder
-    lowPriorityCount?: SortOrder
-    mediumPriorityCount?: SortOrder
-    highPriorityCount?: SortOrder
-    urgentPriorityCount?: SortOrder
-  }
-
-  export type InquiryAnalyticsMaxOrderByAggregateInput = {
-    id?: SortOrder
-    date?: SortOrder
-    totalInquiries?: SortOrder
-    pendingInquiries?: SortOrder
-    resolvedInquiries?: SortOrder
-    avgFirstResponseTime?: SortOrder
-    avgResolutionTime?: SortOrder
-    seminarInquiries?: SortOrder
-    equipmentInquiries?: SortOrder
-    accountInquiries?: SortOrder
-    generalInquiries?: SortOrder
-    lowPriorityCount?: SortOrder
-    mediumPriorityCount?: SortOrder
-    highPriorityCount?: SortOrder
-    urgentPriorityCount?: SortOrder
-    adminId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type InquiryAnalyticsMinOrderByAggregateInput = {
-    id?: SortOrder
-    date?: SortOrder
-    totalInquiries?: SortOrder
-    pendingInquiries?: SortOrder
-    resolvedInquiries?: SortOrder
-    avgFirstResponseTime?: SortOrder
-    avgResolutionTime?: SortOrder
-    seminarInquiries?: SortOrder
-    equipmentInquiries?: SortOrder
-    accountInquiries?: SortOrder
-    generalInquiries?: SortOrder
-    lowPriorityCount?: SortOrder
-    mediumPriorityCount?: SortOrder
-    highPriorityCount?: SortOrder
-    urgentPriorityCount?: SortOrder
-    adminId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type InquiryAnalyticsSumOrderByAggregateInput = {
-    totalInquiries?: SortOrder
-    pendingInquiries?: SortOrder
-    resolvedInquiries?: SortOrder
-    avgFirstResponseTime?: SortOrder
-    avgResolutionTime?: SortOrder
-    seminarInquiries?: SortOrder
-    equipmentInquiries?: SortOrder
-    accountInquiries?: SortOrder
-    generalInquiries?: SortOrder
-    lowPriorityCount?: SortOrder
-    mediumPriorityCount?: SortOrder
-    highPriorityCount?: SortOrder
-    urgentPriorityCount?: SortOrder
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type Enumitem_categoryFilter<$PrismaModel = never> = {
@@ -23809,27 +18975,6 @@ export namespace Prisma {
     connect?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
   }
 
-  export type InquiryTemplateCreateNestedManyWithoutCreatedByInput = {
-    create?: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput> | InquiryTemplateCreateWithoutCreatedByInput[] | InquiryTemplateUncheckedCreateWithoutCreatedByInput[]
-    connectOrCreate?: InquiryTemplateCreateOrConnectWithoutCreatedByInput | InquiryTemplateCreateOrConnectWithoutCreatedByInput[]
-    createMany?: InquiryTemplateCreateManyCreatedByInputEnvelope
-    connect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
-  }
-
-  export type InquiryNotificationCreateNestedManyWithoutUserInput = {
-    create?: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput> | InquiryNotificationCreateWithoutUserInput[] | InquiryNotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutUserInput | InquiryNotificationCreateOrConnectWithoutUserInput[]
-    createMany?: InquiryNotificationCreateManyUserInputEnvelope
-    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-  }
-
-  export type InquiryAnalyticsCreateNestedManyWithoutAdminInput = {
-    create?: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput> | InquiryAnalyticsCreateWithoutAdminInput[] | InquiryAnalyticsUncheckedCreateWithoutAdminInput[]
-    connectOrCreate?: InquiryAnalyticsCreateOrConnectWithoutAdminInput | InquiryAnalyticsCreateOrConnectWithoutAdminInput[]
-    createMany?: InquiryAnalyticsCreateManyAdminInputEnvelope
-    connect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
-  }
-
   export type SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -23905,27 +19050,6 @@ export namespace Prisma {
     connectOrCreate?: FAQCreateOrConnectWithoutCreatedByInput | FAQCreateOrConnectWithoutCreatedByInput[]
     createMany?: FAQCreateManyCreatedByInputEnvelope
     connect?: FAQWhereUniqueInput | FAQWhereUniqueInput[]
-  }
-
-  export type InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput = {
-    create?: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput> | InquiryTemplateCreateWithoutCreatedByInput[] | InquiryTemplateUncheckedCreateWithoutCreatedByInput[]
-    connectOrCreate?: InquiryTemplateCreateOrConnectWithoutCreatedByInput | InquiryTemplateCreateOrConnectWithoutCreatedByInput[]
-    createMany?: InquiryTemplateCreateManyCreatedByInputEnvelope
-    connect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
-  }
-
-  export type InquiryNotificationUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput> | InquiryNotificationCreateWithoutUserInput[] | InquiryNotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutUserInput | InquiryNotificationCreateOrConnectWithoutUserInput[]
-    createMany?: InquiryNotificationCreateManyUserInputEnvelope
-    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-  }
-
-  export type InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput = {
-    create?: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput> | InquiryAnalyticsCreateWithoutAdminInput[] | InquiryAnalyticsUncheckedCreateWithoutAdminInput[]
-    connectOrCreate?: InquiryAnalyticsCreateOrConnectWithoutAdminInput | InquiryAnalyticsCreateOrConnectWithoutAdminInput[]
-    createMany?: InquiryAnalyticsCreateManyAdminInputEnvelope
-    connect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -24134,48 +19258,6 @@ export namespace Prisma {
     deleteMany?: FAQScalarWhereInput | FAQScalarWhereInput[]
   }
 
-  export type InquiryTemplateUpdateManyWithoutCreatedByNestedInput = {
-    create?: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput> | InquiryTemplateCreateWithoutCreatedByInput[] | InquiryTemplateUncheckedCreateWithoutCreatedByInput[]
-    connectOrCreate?: InquiryTemplateCreateOrConnectWithoutCreatedByInput | InquiryTemplateCreateOrConnectWithoutCreatedByInput[]
-    upsert?: InquiryTemplateUpsertWithWhereUniqueWithoutCreatedByInput | InquiryTemplateUpsertWithWhereUniqueWithoutCreatedByInput[]
-    createMany?: InquiryTemplateCreateManyCreatedByInputEnvelope
-    set?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
-    disconnect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
-    delete?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
-    connect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
-    update?: InquiryTemplateUpdateWithWhereUniqueWithoutCreatedByInput | InquiryTemplateUpdateWithWhereUniqueWithoutCreatedByInput[]
-    updateMany?: InquiryTemplateUpdateManyWithWhereWithoutCreatedByInput | InquiryTemplateUpdateManyWithWhereWithoutCreatedByInput[]
-    deleteMany?: InquiryTemplateScalarWhereInput | InquiryTemplateScalarWhereInput[]
-  }
-
-  export type InquiryNotificationUpdateManyWithoutUserNestedInput = {
-    create?: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput> | InquiryNotificationCreateWithoutUserInput[] | InquiryNotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutUserInput | InquiryNotificationCreateOrConnectWithoutUserInput[]
-    upsert?: InquiryNotificationUpsertWithWhereUniqueWithoutUserInput | InquiryNotificationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: InquiryNotificationCreateManyUserInputEnvelope
-    set?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    disconnect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    delete?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    update?: InquiryNotificationUpdateWithWhereUniqueWithoutUserInput | InquiryNotificationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: InquiryNotificationUpdateManyWithWhereWithoutUserInput | InquiryNotificationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
-  }
-
-  export type InquiryAnalyticsUpdateManyWithoutAdminNestedInput = {
-    create?: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput> | InquiryAnalyticsCreateWithoutAdminInput[] | InquiryAnalyticsUncheckedCreateWithoutAdminInput[]
-    connectOrCreate?: InquiryAnalyticsCreateOrConnectWithoutAdminInput | InquiryAnalyticsCreateOrConnectWithoutAdminInput[]
-    upsert?: InquiryAnalyticsUpsertWithWhereUniqueWithoutAdminInput | InquiryAnalyticsUpsertWithWhereUniqueWithoutAdminInput[]
-    createMany?: InquiryAnalyticsCreateManyAdminInputEnvelope
-    set?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
-    disconnect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
-    delete?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
-    connect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
-    update?: InquiryAnalyticsUpdateWithWhereUniqueWithoutAdminInput | InquiryAnalyticsUpdateWithWhereUniqueWithoutAdminInput[]
-    updateMany?: InquiryAnalyticsUpdateManyWithWhereWithoutAdminInput | InquiryAnalyticsUpdateManyWithWhereWithoutAdminInput[]
-    deleteMany?: InquiryAnalyticsScalarWhereInput | InquiryAnalyticsScalarWhereInput[]
-  }
-
   export type SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -24330,48 +19412,6 @@ export namespace Prisma {
     deleteMany?: FAQScalarWhereInput | FAQScalarWhereInput[]
   }
 
-  export type InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput = {
-    create?: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput> | InquiryTemplateCreateWithoutCreatedByInput[] | InquiryTemplateUncheckedCreateWithoutCreatedByInput[]
-    connectOrCreate?: InquiryTemplateCreateOrConnectWithoutCreatedByInput | InquiryTemplateCreateOrConnectWithoutCreatedByInput[]
-    upsert?: InquiryTemplateUpsertWithWhereUniqueWithoutCreatedByInput | InquiryTemplateUpsertWithWhereUniqueWithoutCreatedByInput[]
-    createMany?: InquiryTemplateCreateManyCreatedByInputEnvelope
-    set?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
-    disconnect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
-    delete?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
-    connect?: InquiryTemplateWhereUniqueInput | InquiryTemplateWhereUniqueInput[]
-    update?: InquiryTemplateUpdateWithWhereUniqueWithoutCreatedByInput | InquiryTemplateUpdateWithWhereUniqueWithoutCreatedByInput[]
-    updateMany?: InquiryTemplateUpdateManyWithWhereWithoutCreatedByInput | InquiryTemplateUpdateManyWithWhereWithoutCreatedByInput[]
-    deleteMany?: InquiryTemplateScalarWhereInput | InquiryTemplateScalarWhereInput[]
-  }
-
-  export type InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput> | InquiryNotificationCreateWithoutUserInput[] | InquiryNotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutUserInput | InquiryNotificationCreateOrConnectWithoutUserInput[]
-    upsert?: InquiryNotificationUpsertWithWhereUniqueWithoutUserInput | InquiryNotificationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: InquiryNotificationCreateManyUserInputEnvelope
-    set?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    disconnect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    delete?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    update?: InquiryNotificationUpdateWithWhereUniqueWithoutUserInput | InquiryNotificationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: InquiryNotificationUpdateManyWithWhereWithoutUserInput | InquiryNotificationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
-  }
-
-  export type InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput = {
-    create?: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput> | InquiryAnalyticsCreateWithoutAdminInput[] | InquiryAnalyticsUncheckedCreateWithoutAdminInput[]
-    connectOrCreate?: InquiryAnalyticsCreateOrConnectWithoutAdminInput | InquiryAnalyticsCreateOrConnectWithoutAdminInput[]
-    upsert?: InquiryAnalyticsUpsertWithWhereUniqueWithoutAdminInput | InquiryAnalyticsUpsertWithWhereUniqueWithoutAdminInput[]
-    createMany?: InquiryAnalyticsCreateManyAdminInputEnvelope
-    set?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
-    disconnect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
-    delete?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
-    connect?: InquiryAnalyticsWhereUniqueInput | InquiryAnalyticsWhereUniqueInput[]
-    update?: InquiryAnalyticsUpdateWithWhereUniqueWithoutAdminInput | InquiryAnalyticsUpdateWithWhereUniqueWithoutAdminInput[]
-    updateMany?: InquiryAnalyticsUpdateManyWithWhereWithoutAdminInput | InquiryAnalyticsUpdateManyWithWhereWithoutAdminInput[]
-    deleteMany?: InquiryAnalyticsScalarWhereInput | InquiryAnalyticsScalarWhereInput[]
-  }
-
   export type AccountCreateNestedOneWithoutAuditLogsInput = {
     create?: XOR<AccountCreateWithoutAuditLogsInput, AccountUncheckedCreateWithoutAuditLogsInput>
     connectOrCreate?: AccountCreateOrConnectWithoutAuditLogsInput
@@ -24422,13 +19462,6 @@ export namespace Prisma {
     connect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
   }
 
-  export type InquiryNotificationCreateNestedManyWithoutInquiryInput = {
-    create?: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput> | InquiryNotificationCreateWithoutInquiryInput[] | InquiryNotificationUncheckedCreateWithoutInquiryInput[]
-    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutInquiryInput | InquiryNotificationCreateOrConnectWithoutInquiryInput[]
-    createMany?: InquiryNotificationCreateManyInquiryInputEnvelope
-    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-  }
-
   export type InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput = {
     create?: XOR<InquiryReplyCreateWithoutInquiryInput, InquiryReplyUncheckedCreateWithoutInquiryInput> | InquiryReplyCreateWithoutInquiryInput[] | InquiryReplyUncheckedCreateWithoutInquiryInput[]
     connectOrCreate?: InquiryReplyCreateOrConnectWithoutInquiryInput | InquiryReplyCreateOrConnectWithoutInquiryInput[]
@@ -24441,21 +19474,6 @@ export namespace Prisma {
     connectOrCreate?: InquiryAttachmentCreateOrConnectWithoutInquiryInput | InquiryAttachmentCreateOrConnectWithoutInquiryInput[]
     createMany?: InquiryAttachmentCreateManyInquiryInputEnvelope
     connect?: InquiryAttachmentWhereUniqueInput | InquiryAttachmentWhereUniqueInput[]
-  }
-
-  export type InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput = {
-    create?: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput> | InquiryNotificationCreateWithoutInquiryInput[] | InquiryNotificationUncheckedCreateWithoutInquiryInput[]
-    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutInquiryInput | InquiryNotificationCreateOrConnectWithoutInquiryInput[]
-    createMany?: InquiryNotificationCreateManyInquiryInputEnvelope
-    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-  }
-
-  export type EnumInquiryCategoryFieldUpdateOperationsInput = {
-    set?: $Enums.InquiryCategory
-  }
-
-  export type EnumInquiryPriorityFieldUpdateOperationsInput = {
-    set?: $Enums.InquiryPriority
   }
 
   export type EnumInquiryStatusFieldUpdateOperationsInput = {
@@ -24520,20 +19538,6 @@ export namespace Prisma {
     deleteMany?: InquiryAttachmentScalarWhereInput | InquiryAttachmentScalarWhereInput[]
   }
 
-  export type InquiryNotificationUpdateManyWithoutInquiryNestedInput = {
-    create?: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput> | InquiryNotificationCreateWithoutInquiryInput[] | InquiryNotificationUncheckedCreateWithoutInquiryInput[]
-    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutInquiryInput | InquiryNotificationCreateOrConnectWithoutInquiryInput[]
-    upsert?: InquiryNotificationUpsertWithWhereUniqueWithoutInquiryInput | InquiryNotificationUpsertWithWhereUniqueWithoutInquiryInput[]
-    createMany?: InquiryNotificationCreateManyInquiryInputEnvelope
-    set?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    disconnect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    delete?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    update?: InquiryNotificationUpdateWithWhereUniqueWithoutInquiryInput | InquiryNotificationUpdateWithWhereUniqueWithoutInquiryInput[]
-    updateMany?: InquiryNotificationUpdateManyWithWhereWithoutInquiryInput | InquiryNotificationUpdateManyWithWhereWithoutInquiryInput[]
-    deleteMany?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
-  }
-
   export type InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput = {
     create?: XOR<InquiryReplyCreateWithoutInquiryInput, InquiryReplyUncheckedCreateWithoutInquiryInput> | InquiryReplyCreateWithoutInquiryInput[] | InquiryReplyUncheckedCreateWithoutInquiryInput[]
     connectOrCreate?: InquiryReplyCreateOrConnectWithoutInquiryInput | InquiryReplyCreateOrConnectWithoutInquiryInput[]
@@ -24560,20 +19564,6 @@ export namespace Prisma {
     update?: InquiryAttachmentUpdateWithWhereUniqueWithoutInquiryInput | InquiryAttachmentUpdateWithWhereUniqueWithoutInquiryInput[]
     updateMany?: InquiryAttachmentUpdateManyWithWhereWithoutInquiryInput | InquiryAttachmentUpdateManyWithWhereWithoutInquiryInput[]
     deleteMany?: InquiryAttachmentScalarWhereInput | InquiryAttachmentScalarWhereInput[]
-  }
-
-  export type InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput = {
-    create?: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput> | InquiryNotificationCreateWithoutInquiryInput[] | InquiryNotificationUncheckedCreateWithoutInquiryInput[]
-    connectOrCreate?: InquiryNotificationCreateOrConnectWithoutInquiryInput | InquiryNotificationCreateOrConnectWithoutInquiryInput[]
-    upsert?: InquiryNotificationUpsertWithWhereUniqueWithoutInquiryInput | InquiryNotificationUpsertWithWhereUniqueWithoutInquiryInput[]
-    createMany?: InquiryNotificationCreateManyInquiryInputEnvelope
-    set?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    disconnect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    delete?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    connect?: InquiryNotificationWhereUniqueInput | InquiryNotificationWhereUniqueInput[]
-    update?: InquiryNotificationUpdateWithWhereUniqueWithoutInquiryInput | InquiryNotificationUpdateWithWhereUniqueWithoutInquiryInput[]
-    updateMany?: InquiryNotificationUpdateManyWithWhereWithoutInquiryInput | InquiryNotificationUpdateManyWithWhereWithoutInquiryInput[]
-    deleteMany?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
   }
 
   export type AccountCreateNestedOneWithoutInquiryRepliesInput = {
@@ -24608,12 +19598,12 @@ export namespace Prisma {
     connect?: InquiryReplyWhereUniqueInput | InquiryReplyWhereUniqueInput[]
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type EnumSenderTypeFieldUpdateOperationsInput = {
     set?: $Enums.SenderType
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type AccountUpdateOneWithoutInquiryRepliesNestedInput = {
@@ -24724,80 +19714,6 @@ export namespace Prisma {
     delete?: AccountWhereInput | boolean
     connect?: AccountWhereUniqueInput
     update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutCreatedFAQsInput, AccountUpdateWithoutCreatedFAQsInput>, AccountUncheckedUpdateWithoutCreatedFAQsInput>
-  }
-
-  export type AccountCreateNestedOneWithoutCreatedTemplatesInput = {
-    create?: XOR<AccountCreateWithoutCreatedTemplatesInput, AccountUncheckedCreateWithoutCreatedTemplatesInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutCreatedTemplatesInput
-    connect?: AccountWhereUniqueInput
-  }
-
-  export type AccountUpdateOneWithoutCreatedTemplatesNestedInput = {
-    create?: XOR<AccountCreateWithoutCreatedTemplatesInput, AccountUncheckedCreateWithoutCreatedTemplatesInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutCreatedTemplatesInput
-    upsert?: AccountUpsertWithoutCreatedTemplatesInput
-    disconnect?: AccountWhereInput | boolean
-    delete?: AccountWhereInput | boolean
-    connect?: AccountWhereUniqueInput
-    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutCreatedTemplatesInput, AccountUpdateWithoutCreatedTemplatesInput>, AccountUncheckedUpdateWithoutCreatedTemplatesInput>
-  }
-
-  export type AccountCreateNestedOneWithoutNotificationsInput = {
-    create?: XOR<AccountCreateWithoutNotificationsInput, AccountUncheckedCreateWithoutNotificationsInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutNotificationsInput
-    connect?: AccountWhereUniqueInput
-  }
-
-  export type InquiryCreateNestedOneWithoutNotificationsInput = {
-    create?: XOR<InquiryCreateWithoutNotificationsInput, InquiryUncheckedCreateWithoutNotificationsInput>
-    connectOrCreate?: InquiryCreateOrConnectWithoutNotificationsInput
-    connect?: InquiryWhereUniqueInput
-  }
-
-  export type EnumNotificationTypeFieldUpdateOperationsInput = {
-    set?: $Enums.NotificationType
-  }
-
-  export type AccountUpdateOneRequiredWithoutNotificationsNestedInput = {
-    create?: XOR<AccountCreateWithoutNotificationsInput, AccountUncheckedCreateWithoutNotificationsInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutNotificationsInput
-    upsert?: AccountUpsertWithoutNotificationsInput
-    connect?: AccountWhereUniqueInput
-    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutNotificationsInput, AccountUpdateWithoutNotificationsInput>, AccountUncheckedUpdateWithoutNotificationsInput>
-  }
-
-  export type InquiryUpdateOneWithoutNotificationsNestedInput = {
-    create?: XOR<InquiryCreateWithoutNotificationsInput, InquiryUncheckedCreateWithoutNotificationsInput>
-    connectOrCreate?: InquiryCreateOrConnectWithoutNotificationsInput
-    upsert?: InquiryUpsertWithoutNotificationsInput
-    disconnect?: InquiryWhereInput | boolean
-    delete?: InquiryWhereInput | boolean
-    connect?: InquiryWhereUniqueInput
-    update?: XOR<XOR<InquiryUpdateToOneWithWhereWithoutNotificationsInput, InquiryUpdateWithoutNotificationsInput>, InquiryUncheckedUpdateWithoutNotificationsInput>
-  }
-
-  export type AccountCreateNestedOneWithoutAnalyticsRecordsInput = {
-    create?: XOR<AccountCreateWithoutAnalyticsRecordsInput, AccountUncheckedCreateWithoutAnalyticsRecordsInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutAnalyticsRecordsInput
-    connect?: AccountWhereUniqueInput
-  }
-
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
-  export type AccountUpdateOneWithoutAnalyticsRecordsNestedInput = {
-    create?: XOR<AccountCreateWithoutAnalyticsRecordsInput, AccountUncheckedCreateWithoutAnalyticsRecordsInput>
-    connectOrCreate?: AccountCreateOrConnectWithoutAnalyticsRecordsInput
-    upsert?: AccountUpsertWithoutAnalyticsRecordsInput
-    disconnect?: AccountWhereInput | boolean
-    delete?: AccountWhereInput | boolean
-    connect?: AccountWhereUniqueInput
-    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutAnalyticsRecordsInput, AccountUpdateWithoutAnalyticsRecordsInput>, AccountUncheckedUpdateWithoutAnalyticsRecordsInput>
   }
 
   export type ItemStackCreateNestedManyWithoutItemInput = {
@@ -25381,45 +20297,11 @@ export namespace Prisma {
     _max?: NestedEnumaudit_actionFilter<$PrismaModel>
   }
 
-  export type NestedEnumInquiryCategoryFilter<$PrismaModel = never> = {
-    equals?: $Enums.InquiryCategory | EnumInquiryCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.InquiryCategory[]
-    notIn?: $Enums.InquiryCategory[]
-    not?: NestedEnumInquiryCategoryFilter<$PrismaModel> | $Enums.InquiryCategory
-  }
-
-  export type NestedEnumInquiryPriorityFilter<$PrismaModel = never> = {
-    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
-    in?: $Enums.InquiryPriority[]
-    notIn?: $Enums.InquiryPriority[]
-    not?: NestedEnumInquiryPriorityFilter<$PrismaModel> | $Enums.InquiryPriority
-  }
-
   export type NestedEnumInquiryStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.InquiryStatus | EnumInquiryStatusFieldRefInput<$PrismaModel>
     in?: $Enums.InquiryStatus[]
     notIn?: $Enums.InquiryStatus[]
     not?: NestedEnumInquiryStatusFilter<$PrismaModel> | $Enums.InquiryStatus
-  }
-
-  export type NestedEnumInquiryCategoryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.InquiryCategory | EnumInquiryCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.InquiryCategory[]
-    notIn?: $Enums.InquiryCategory[]
-    not?: NestedEnumInquiryCategoryWithAggregatesFilter<$PrismaModel> | $Enums.InquiryCategory
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumInquiryCategoryFilter<$PrismaModel>
-    _max?: NestedEnumInquiryCategoryFilter<$PrismaModel>
-  }
-
-  export type NestedEnumInquiryPriorityWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
-    in?: $Enums.InquiryPriority[]
-    notIn?: $Enums.InquiryPriority[]
-    not?: NestedEnumInquiryPriorityWithAggregatesFilter<$PrismaModel> | $Enums.InquiryPriority
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumInquiryPriorityFilter<$PrismaModel>
-    _max?: NestedEnumInquiryPriorityFilter<$PrismaModel>
   }
 
   export type NestedEnumInquiryStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -25432,11 +20314,6 @@ export namespace Prisma {
     _max?: NestedEnumInquiryStatusFilter<$PrismaModel>
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedEnumSenderTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.SenderType | EnumSenderTypeFieldRefInput<$PrismaModel>
     in?: $Enums.SenderType[]
@@ -25444,12 +20321,9 @@ export namespace Prisma {
     not?: NestedEnumSenderTypeFilter<$PrismaModel> | $Enums.SenderType
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+  export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedEnumSenderTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -25460,6 +20334,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSenderTypeFilter<$PrismaModel>
     _max?: NestedEnumSenderTypeFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -25487,50 +20369,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type NestedEnumNotificationTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.NotificationType[]
-    notIn?: $Enums.NotificationType[]
-    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
-  }
-
-  export type NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.NotificationType[]
-    notIn?: $Enums.NotificationType[]
-    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
-    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumitem_categoryFilter<$PrismaModel = never> = {
@@ -25581,6 +20419,17 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumtransaction_statusFilter<$PrismaModel = never> = {
@@ -25822,8 +20671,6 @@ export namespace Prisma {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
     guestName?: string | null
     guestEmail?: string | null
@@ -25834,15 +20681,12 @@ export namespace Prisma {
     resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
     replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
     attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryUncheckedCreateWithoutUserInput = {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
     guestName?: string | null
     guestEmail?: string | null
@@ -25853,7 +20697,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
     attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryCreateOrConnectWithoutUserInput = {
@@ -25870,8 +20713,6 @@ export namespace Prisma {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
     guestName?: string | null
     guestEmail?: string | null
@@ -25882,17 +20723,14 @@ export namespace Prisma {
     resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
     replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
     attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryUncheckedCreateWithoutAssignedToInput = {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
-    userId?: string | null
+    userId: string
     guestName?: string | null
     guestEmail?: string | null
     resolvedById?: string | null
@@ -25901,7 +20739,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
     attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryCreateOrConnectWithoutAssignedToInput = {
@@ -25918,8 +20755,6 @@ export namespace Prisma {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
     guestName?: string | null
     guestEmail?: string | null
@@ -25930,17 +20765,14 @@ export namespace Prisma {
     assignedTo?: AccountCreateNestedOneWithoutAssignedInquiriesInput
     replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
     attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryUncheckedCreateWithoutResolvedByInput = {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
-    userId?: string | null
+    userId: string
     guestName?: string | null
     guestEmail?: string | null
     assignedToId?: string | null
@@ -25949,7 +20781,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
     attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryCreateOrConnectWithoutResolvedByInput = {
@@ -25965,7 +20796,6 @@ export namespace Prisma {
   export type InquiryReplyCreateWithoutSenderInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderType: $Enums.SenderType
     senderName?: string | null
     createdAt?: Date | string
@@ -25981,7 +20811,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedCreateWithoutSenderInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderType: $Enums.SenderType
     senderName?: string | null
     inquiryId: string
@@ -26038,7 +20867,6 @@ export namespace Prisma {
     id?: string
     question: string
     answer: string
-    category?: $Enums.InquiryCategory
     isActive?: boolean
     orderIndex?: number
     viewCount?: number
@@ -26051,7 +20879,6 @@ export namespace Prisma {
     id?: string
     question: string
     answer: string
-    category?: $Enums.InquiryCategory
     isActive?: boolean
     orderIndex?: number
     viewCount?: number
@@ -26067,124 +20894,6 @@ export namespace Prisma {
 
   export type FAQCreateManyCreatedByInputEnvelope = {
     data: FAQCreateManyCreatedByInput | FAQCreateManyCreatedByInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type InquiryTemplateCreateWithoutCreatedByInput = {
-    id?: string
-    title: string
-    content: string
-    category?: $Enums.InquiryCategory
-    isActive?: boolean
-    isDefault?: boolean
-    usageCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InquiryTemplateUncheckedCreateWithoutCreatedByInput = {
-    id?: string
-    title: string
-    content: string
-    category?: $Enums.InquiryCategory
-    isActive?: boolean
-    isDefault?: boolean
-    usageCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InquiryTemplateCreateOrConnectWithoutCreatedByInput = {
-    where: InquiryTemplateWhereUniqueInput
-    create: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput>
-  }
-
-  export type InquiryTemplateCreateManyCreatedByInputEnvelope = {
-    data: InquiryTemplateCreateManyCreatedByInput | InquiryTemplateCreateManyCreatedByInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type InquiryNotificationCreateWithoutUserInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    isRead?: boolean
-    readAt?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    inquiry?: InquiryCreateNestedOneWithoutNotificationsInput
-  }
-
-  export type InquiryNotificationUncheckedCreateWithoutUserInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    inquiryId?: string | null
-    isRead?: boolean
-    readAt?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type InquiryNotificationCreateOrConnectWithoutUserInput = {
-    where: InquiryNotificationWhereUniqueInput
-    create: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput>
-  }
-
-  export type InquiryNotificationCreateManyUserInputEnvelope = {
-    data: InquiryNotificationCreateManyUserInput | InquiryNotificationCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type InquiryAnalyticsCreateWithoutAdminInput = {
-    id?: string
-    date: Date | string
-    totalInquiries?: number
-    pendingInquiries?: number
-    resolvedInquiries?: number
-    avgFirstResponseTime?: number | null
-    avgResolutionTime?: number | null
-    seminarInquiries?: number
-    equipmentInquiries?: number
-    accountInquiries?: number
-    generalInquiries?: number
-    lowPriorityCount?: number
-    mediumPriorityCount?: number
-    highPriorityCount?: number
-    urgentPriorityCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InquiryAnalyticsUncheckedCreateWithoutAdminInput = {
-    id?: string
-    date: Date | string
-    totalInquiries?: number
-    pendingInquiries?: number
-    resolvedInquiries?: number
-    avgFirstResponseTime?: number | null
-    avgResolutionTime?: number | null
-    seminarInquiries?: number
-    equipmentInquiries?: number
-    accountInquiries?: number
-    generalInquiries?: number
-    lowPriorityCount?: number
-    mediumPriorityCount?: number
-    highPriorityCount?: number
-    urgentPriorityCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InquiryAnalyticsCreateOrConnectWithoutAdminInput = {
-    where: InquiryAnalyticsWhereUniqueInput
-    create: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput>
-  }
-
-  export type InquiryAnalyticsCreateManyAdminInputEnvelope = {
-    data: InquiryAnalyticsCreateManyAdminInput | InquiryAnalyticsCreateManyAdminInput[]
     skipDuplicates?: boolean
   }
 
@@ -26360,10 +21069,8 @@ export namespace Prisma {
     id?: StringFilter<"Inquiry"> | string
     subject?: StringFilter<"Inquiry"> | string
     message?: StringFilter<"Inquiry"> | string
-    category?: EnumInquiryCategoryFilter<"Inquiry"> | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFilter<"Inquiry"> | $Enums.InquiryPriority
     status?: EnumInquiryStatusFilter<"Inquiry"> | $Enums.InquiryStatus
-    userId?: StringNullableFilter<"Inquiry"> | string | null
+    userId?: StringFilter<"Inquiry"> | string
     guestName?: StringNullableFilter<"Inquiry"> | string | null
     guestEmail?: StringNullableFilter<"Inquiry"> | string | null
     assignedToId?: StringNullableFilter<"Inquiry"> | string | null
@@ -26427,7 +21134,6 @@ export namespace Prisma {
     NOT?: InquiryReplyScalarWhereInput | InquiryReplyScalarWhereInput[]
     id?: StringFilter<"InquiryReply"> | string
     message?: StringFilter<"InquiryReply"> | string
-    isInternal?: BoolFilter<"InquiryReply"> | boolean
     senderId?: StringNullableFilter<"InquiryReply"> | string | null
     senderType?: EnumSenderTypeFilter<"InquiryReply"> | $Enums.SenderType
     senderName?: StringNullableFilter<"InquiryReply"> | string | null
@@ -26493,7 +21199,6 @@ export namespace Prisma {
     id?: StringFilter<"FAQ"> | string
     question?: StringFilter<"FAQ"> | string
     answer?: StringFilter<"FAQ"> | string
-    category?: EnumInquiryCategoryFilter<"FAQ"> | $Enums.InquiryCategory
     isActive?: BoolFilter<"FAQ"> | boolean
     orderIndex?: IntFilter<"FAQ"> | number
     createdById?: StringNullableFilter<"FAQ"> | string | null
@@ -26501,110 +21206,6 @@ export namespace Prisma {
     helpfulCount?: IntFilter<"FAQ"> | number
     createdAt?: DateTimeFilter<"FAQ"> | Date | string
     updatedAt?: DateTimeFilter<"FAQ"> | Date | string
-  }
-
-  export type InquiryTemplateUpsertWithWhereUniqueWithoutCreatedByInput = {
-    where: InquiryTemplateWhereUniqueInput
-    update: XOR<InquiryTemplateUpdateWithoutCreatedByInput, InquiryTemplateUncheckedUpdateWithoutCreatedByInput>
-    create: XOR<InquiryTemplateCreateWithoutCreatedByInput, InquiryTemplateUncheckedCreateWithoutCreatedByInput>
-  }
-
-  export type InquiryTemplateUpdateWithWhereUniqueWithoutCreatedByInput = {
-    where: InquiryTemplateWhereUniqueInput
-    data: XOR<InquiryTemplateUpdateWithoutCreatedByInput, InquiryTemplateUncheckedUpdateWithoutCreatedByInput>
-  }
-
-  export type InquiryTemplateUpdateManyWithWhereWithoutCreatedByInput = {
-    where: InquiryTemplateScalarWhereInput
-    data: XOR<InquiryTemplateUpdateManyMutationInput, InquiryTemplateUncheckedUpdateManyWithoutCreatedByInput>
-  }
-
-  export type InquiryTemplateScalarWhereInput = {
-    AND?: InquiryTemplateScalarWhereInput | InquiryTemplateScalarWhereInput[]
-    OR?: InquiryTemplateScalarWhereInput[]
-    NOT?: InquiryTemplateScalarWhereInput | InquiryTemplateScalarWhereInput[]
-    id?: StringFilter<"InquiryTemplate"> | string
-    title?: StringFilter<"InquiryTemplate"> | string
-    content?: StringFilter<"InquiryTemplate"> | string
-    category?: EnumInquiryCategoryFilter<"InquiryTemplate"> | $Enums.InquiryCategory
-    isActive?: BoolFilter<"InquiryTemplate"> | boolean
-    isDefault?: BoolFilter<"InquiryTemplate"> | boolean
-    usageCount?: IntFilter<"InquiryTemplate"> | number
-    createdById?: StringNullableFilter<"InquiryTemplate"> | string | null
-    createdAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
-    updatedAt?: DateTimeFilter<"InquiryTemplate"> | Date | string
-  }
-
-  export type InquiryNotificationUpsertWithWhereUniqueWithoutUserInput = {
-    where: InquiryNotificationWhereUniqueInput
-    update: XOR<InquiryNotificationUpdateWithoutUserInput, InquiryNotificationUncheckedUpdateWithoutUserInput>
-    create: XOR<InquiryNotificationCreateWithoutUserInput, InquiryNotificationUncheckedCreateWithoutUserInput>
-  }
-
-  export type InquiryNotificationUpdateWithWhereUniqueWithoutUserInput = {
-    where: InquiryNotificationWhereUniqueInput
-    data: XOR<InquiryNotificationUpdateWithoutUserInput, InquiryNotificationUncheckedUpdateWithoutUserInput>
-  }
-
-  export type InquiryNotificationUpdateManyWithWhereWithoutUserInput = {
-    where: InquiryNotificationScalarWhereInput
-    data: XOR<InquiryNotificationUpdateManyMutationInput, InquiryNotificationUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type InquiryNotificationScalarWhereInput = {
-    AND?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
-    OR?: InquiryNotificationScalarWhereInput[]
-    NOT?: InquiryNotificationScalarWhereInput | InquiryNotificationScalarWhereInput[]
-    id?: StringFilter<"InquiryNotification"> | string
-    type?: EnumNotificationTypeFilter<"InquiryNotification"> | $Enums.NotificationType
-    title?: StringFilter<"InquiryNotification"> | string
-    message?: StringFilter<"InquiryNotification"> | string
-    userId?: StringFilter<"InquiryNotification"> | string
-    inquiryId?: StringNullableFilter<"InquiryNotification"> | string | null
-    isRead?: BoolFilter<"InquiryNotification"> | boolean
-    readAt?: DateTimeNullableFilter<"InquiryNotification"> | Date | string | null
-    metadata?: JsonNullableFilter<"InquiryNotification">
-    createdAt?: DateTimeFilter<"InquiryNotification"> | Date | string
-  }
-
-  export type InquiryAnalyticsUpsertWithWhereUniqueWithoutAdminInput = {
-    where: InquiryAnalyticsWhereUniqueInput
-    update: XOR<InquiryAnalyticsUpdateWithoutAdminInput, InquiryAnalyticsUncheckedUpdateWithoutAdminInput>
-    create: XOR<InquiryAnalyticsCreateWithoutAdminInput, InquiryAnalyticsUncheckedCreateWithoutAdminInput>
-  }
-
-  export type InquiryAnalyticsUpdateWithWhereUniqueWithoutAdminInput = {
-    where: InquiryAnalyticsWhereUniqueInput
-    data: XOR<InquiryAnalyticsUpdateWithoutAdminInput, InquiryAnalyticsUncheckedUpdateWithoutAdminInput>
-  }
-
-  export type InquiryAnalyticsUpdateManyWithWhereWithoutAdminInput = {
-    where: InquiryAnalyticsScalarWhereInput
-    data: XOR<InquiryAnalyticsUpdateManyMutationInput, InquiryAnalyticsUncheckedUpdateManyWithoutAdminInput>
-  }
-
-  export type InquiryAnalyticsScalarWhereInput = {
-    AND?: InquiryAnalyticsScalarWhereInput | InquiryAnalyticsScalarWhereInput[]
-    OR?: InquiryAnalyticsScalarWhereInput[]
-    NOT?: InquiryAnalyticsScalarWhereInput | InquiryAnalyticsScalarWhereInput[]
-    id?: StringFilter<"InquiryAnalytics"> | string
-    date?: DateTimeFilter<"InquiryAnalytics"> | Date | string
-    totalInquiries?: IntFilter<"InquiryAnalytics"> | number
-    pendingInquiries?: IntFilter<"InquiryAnalytics"> | number
-    resolvedInquiries?: IntFilter<"InquiryAnalytics"> | number
-    avgFirstResponseTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
-    avgResolutionTime?: FloatNullableFilter<"InquiryAnalytics"> | number | null
-    seminarInquiries?: IntFilter<"InquiryAnalytics"> | number
-    equipmentInquiries?: IntFilter<"InquiryAnalytics"> | number
-    accountInquiries?: IntFilter<"InquiryAnalytics"> | number
-    generalInquiries?: IntFilter<"InquiryAnalytics"> | number
-    lowPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    mediumPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    highPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    urgentPriorityCount?: IntFilter<"InquiryAnalytics"> | number
-    adminId?: StringNullableFilter<"InquiryAnalytics"> | string | null
-    createdAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
-    updatedAt?: DateTimeFilter<"InquiryAnalytics"> | Date | string
   }
 
   export type AccountCreateWithoutAuditLogsInput = {
@@ -26673,9 +21274,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutAuditLogsInput = {
@@ -26744,9 +21342,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutAuditLogsInput = {
@@ -26831,9 +21426,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAuditLogsInput = {
@@ -26902,9 +21494,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountCreateWithoutInquiriesInput = {
@@ -26973,9 +21562,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutInquiriesInput = {
@@ -27044,9 +21630,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutInquiriesInput = {
@@ -27120,9 +21703,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutAssignedInquiriesInput = {
@@ -27191,9 +21771,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutAssignedInquiriesInput = {
@@ -27267,9 +21844,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutResolvedInquiriesInput = {
@@ -27338,9 +21912,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutResolvedInquiriesInput = {
@@ -27351,7 +21922,6 @@ export namespace Prisma {
   export type InquiryReplyCreateWithoutInquiryInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderType: $Enums.SenderType
     senderName?: string | null
     createdAt?: Date | string
@@ -27367,7 +21937,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedCreateWithoutInquiryInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderId?: string | null
     senderType: $Enums.SenderType
     senderName?: string | null
@@ -27417,40 +21986,6 @@ export namespace Prisma {
 
   export type InquiryAttachmentCreateManyInquiryInputEnvelope = {
     data: InquiryAttachmentCreateManyInquiryInput | InquiryAttachmentCreateManyInquiryInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type InquiryNotificationCreateWithoutInquiryInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    isRead?: boolean
-    readAt?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    user: AccountCreateNestedOneWithoutNotificationsInput
-  }
-
-  export type InquiryNotificationUncheckedCreateWithoutInquiryInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    userId: string
-    isRead?: boolean
-    readAt?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type InquiryNotificationCreateOrConnectWithoutInquiryInput = {
-    where: InquiryNotificationWhereUniqueInput
-    create: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput>
-  }
-
-  export type InquiryNotificationCreateManyInquiryInputEnvelope = {
-    data: InquiryNotificationCreateManyInquiryInput | InquiryNotificationCreateManyInquiryInput[]
     skipDuplicates?: boolean
   }
 
@@ -27531,9 +22066,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiriesInput = {
@@ -27602,9 +22134,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUpsertWithoutAssignedInquiriesInput = {
@@ -27684,9 +22213,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAssignedInquiriesInput = {
@@ -27755,9 +22281,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUpsertWithoutResolvedInquiriesInput = {
@@ -27837,9 +22360,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutResolvedInquiriesInput = {
@@ -27908,9 +22428,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type InquiryReplyUpsertWithWhereUniqueWithoutInquiryInput = {
@@ -27943,22 +22460,6 @@ export namespace Prisma {
   export type InquiryAttachmentUpdateManyWithWhereWithoutInquiryInput = {
     where: InquiryAttachmentScalarWhereInput
     data: XOR<InquiryAttachmentUpdateManyMutationInput, InquiryAttachmentUncheckedUpdateManyWithoutInquiryInput>
-  }
-
-  export type InquiryNotificationUpsertWithWhereUniqueWithoutInquiryInput = {
-    where: InquiryNotificationWhereUniqueInput
-    update: XOR<InquiryNotificationUpdateWithoutInquiryInput, InquiryNotificationUncheckedUpdateWithoutInquiryInput>
-    create: XOR<InquiryNotificationCreateWithoutInquiryInput, InquiryNotificationUncheckedCreateWithoutInquiryInput>
-  }
-
-  export type InquiryNotificationUpdateWithWhereUniqueWithoutInquiryInput = {
-    where: InquiryNotificationWhereUniqueInput
-    data: XOR<InquiryNotificationUpdateWithoutInquiryInput, InquiryNotificationUncheckedUpdateWithoutInquiryInput>
-  }
-
-  export type InquiryNotificationUpdateManyWithWhereWithoutInquiryInput = {
-    where: InquiryNotificationScalarWhereInput
-    data: XOR<InquiryNotificationUpdateManyMutationInput, InquiryNotificationUncheckedUpdateManyWithoutInquiryInput>
   }
 
   export type AccountCreateWithoutInquiryRepliesInput = {
@@ -28027,9 +22528,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
     inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutInquiryRepliesInput = {
@@ -28098,9 +22596,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
     inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutInquiryRepliesInput = {
@@ -28112,8 +22607,6 @@ export namespace Prisma {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
     guestName?: string | null
     guestEmail?: string | null
@@ -28124,17 +22617,14 @@ export namespace Prisma {
     assignedTo?: AccountCreateNestedOneWithoutAssignedInquiriesInput
     resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
     attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryUncheckedCreateWithoutRepliesInput = {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
-    userId?: string | null
+    userId: string
     guestName?: string | null
     guestEmail?: string | null
     assignedToId?: string | null
@@ -28143,7 +22633,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryCreateOrConnectWithoutRepliesInput = {
@@ -28154,7 +22643,6 @@ export namespace Prisma {
   export type InquiryReplyCreateWithoutChildRepliesInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderType: $Enums.SenderType
     senderName?: string | null
     createdAt?: Date | string
@@ -28170,7 +22658,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedCreateWithoutChildRepliesInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderId?: string | null
     senderType: $Enums.SenderType
     senderName?: string | null
@@ -28191,7 +22678,6 @@ export namespace Prisma {
   export type InquiryReplyCreateWithoutParentReplyInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderType: $Enums.SenderType
     senderName?: string | null
     createdAt?: Date | string
@@ -28207,7 +22693,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedCreateWithoutParentReplyInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderId?: string | null
     senderType: $Enums.SenderType
     senderName?: string | null
@@ -28307,9 +22792,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
     inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiryRepliesInput = {
@@ -28378,9 +22860,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
     inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type InquiryUpsertWithoutRepliesInput = {
@@ -28398,8 +22877,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28410,17 +22887,14 @@ export namespace Prisma {
     assignedTo?: AccountUpdateOneWithoutAssignedInquiriesNestedInput
     resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
     attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
   }
 
   export type InquiryUncheckedUpdateWithoutRepliesInput = {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28429,7 +22903,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
   }
 
   export type InquiryReplyUpsertWithoutChildRepliesInput = {
@@ -28446,7 +22919,6 @@ export namespace Prisma {
   export type InquiryReplyUpdateWithoutChildRepliesInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28462,7 +22934,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedUpdateWithoutChildRepliesInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderId?: NullableStringFieldUpdateOperationsInput | string | null
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28495,8 +22966,6 @@ export namespace Prisma {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
     guestName?: string | null
     guestEmail?: string | null
@@ -28507,17 +22976,14 @@ export namespace Prisma {
     assignedTo?: AccountCreateNestedOneWithoutAssignedInquiriesInput
     resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
     replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryUncheckedCreateWithoutAttachmentsInput = {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
-    userId?: string | null
+    userId: string
     guestName?: string | null
     guestEmail?: string | null
     assignedToId?: string | null
@@ -28526,7 +22992,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutInquiryInput
   }
 
   export type InquiryCreateOrConnectWithoutAttachmentsInput = {
@@ -28600,9 +23065,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
     inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
     createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutInquiryAttachmentsInput = {
@@ -28671,9 +23133,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
     inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
     createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutInquiryAttachmentsInput = {
@@ -28696,8 +23155,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28708,17 +23165,14 @@ export namespace Prisma {
     assignedTo?: AccountUpdateOneWithoutAssignedInquiriesNestedInput
     resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
     replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
   }
 
   export type InquiryUncheckedUpdateWithoutAttachmentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28727,7 +23181,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
   }
 
   export type AccountUpsertWithoutInquiryAttachmentsInput = {
@@ -28807,9 +23260,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
     inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
     createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiryAttachmentsInput = {
@@ -28878,9 +23328,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
     inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
     createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountCreateWithoutCreatedFAQsInput = {
@@ -28949,9 +23396,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
     inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutCreatedFAQsInput = {
@@ -29020,9 +23464,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
     inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutCreatedFAQsInput = {
@@ -29107,9 +23548,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
     inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutCreatedFAQsInput = {
@@ -29178,1001 +23616,6 @@ export namespace Prisma {
     resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
     inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
-  }
-
-  export type AccountCreateWithoutCreatedTemplatesInput = {
-    id?: string
-    access?: $Enums.access
-    username: string
-    email: string
-    password: string
-    firstName: string
-    middleName?: string | null
-    surname: string
-    extensionName?: string | null
-    sex?: $Enums.gender
-    street?: string | null
-    barangay?: string | null
-    municipality?: string | null
-    province?: string | null
-    region?: string | null
-    houseNumber?: string | null
-    mobileNumber?: string | null
-    landlineNumber?: string | null
-    birthMunicipality?: string | null
-    birthProvince?: string | null
-    birthCountry?: string | null
-    dateOfBirth?: Date | string | null
-    religion?: string | null
-    otherReligionSpecify?: string | null
-    civilStatus?: string | null
-    spouseName?: string | null
-    femaleHouseholdMembers?: string | null
-    maleHouseholdMembers?: string | null
-    isHouseholdHead?: boolean | null
-    householdHeadName?: string | null
-    relationshipToHead?: $Enums.RelationshipToHead | null
-    hasGovId?: boolean | null
-    govIdType?: $Enums.GovIdType | null
-    govIdNumber?: string | null
-    education?: $Enums.EducationLevel | null
-    isPWD?: boolean | null
-    disabilityType?: string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: string | null
-    livestockSpecify?: string | null
-    fishingOthersSpecify?: string | null
-    farmworkOthersSpecify?: string | null
-    youthOthersSpecify?: string | null
-    grossAnnualIncome?: string | null
-    incomeSource?: $Enums.IncomeSource | null
-    picture?: Uint8Array | null
-    mimeType?: string | null
-    client_profile?: $Enums.client_profile
-    address?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
-    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
-    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
-    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
-    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
-    inquiries?: InquiryCreateNestedManyWithoutUserInput
-    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
-    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
-    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
-    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
-    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
-  }
-
-  export type AccountUncheckedCreateWithoutCreatedTemplatesInput = {
-    id?: string
-    access?: $Enums.access
-    username: string
-    email: string
-    password: string
-    firstName: string
-    middleName?: string | null
-    surname: string
-    extensionName?: string | null
-    sex?: $Enums.gender
-    street?: string | null
-    barangay?: string | null
-    municipality?: string | null
-    province?: string | null
-    region?: string | null
-    houseNumber?: string | null
-    mobileNumber?: string | null
-    landlineNumber?: string | null
-    birthMunicipality?: string | null
-    birthProvince?: string | null
-    birthCountry?: string | null
-    dateOfBirth?: Date | string | null
-    religion?: string | null
-    otherReligionSpecify?: string | null
-    civilStatus?: string | null
-    spouseName?: string | null
-    femaleHouseholdMembers?: string | null
-    maleHouseholdMembers?: string | null
-    isHouseholdHead?: boolean | null
-    householdHeadName?: string | null
-    relationshipToHead?: $Enums.RelationshipToHead | null
-    hasGovId?: boolean | null
-    govIdType?: $Enums.GovIdType | null
-    govIdNumber?: string | null
-    education?: $Enums.EducationLevel | null
-    isPWD?: boolean | null
-    disabilityType?: string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: string | null
-    livestockSpecify?: string | null
-    fishingOthersSpecify?: string | null
-    farmworkOthersSpecify?: string | null
-    youthOthersSpecify?: string | null
-    grossAnnualIncome?: string | null
-    incomeSource?: $Enums.IncomeSource | null
-    picture?: Uint8Array | null
-    mimeType?: string | null
-    client_profile?: $Enums.client_profile
-    address?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
-    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
-    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
-    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
-    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
-    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
-    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
-    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
-    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
-    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
-  }
-
-  export type AccountCreateOrConnectWithoutCreatedTemplatesInput = {
-    where: AccountWhereUniqueInput
-    create: XOR<AccountCreateWithoutCreatedTemplatesInput, AccountUncheckedCreateWithoutCreatedTemplatesInput>
-  }
-
-  export type AccountUpsertWithoutCreatedTemplatesInput = {
-    update: XOR<AccountUpdateWithoutCreatedTemplatesInput, AccountUncheckedUpdateWithoutCreatedTemplatesInput>
-    create: XOR<AccountCreateWithoutCreatedTemplatesInput, AccountUncheckedCreateWithoutCreatedTemplatesInput>
-    where?: AccountWhereInput
-  }
-
-  export type AccountUpdateToOneWithWhereWithoutCreatedTemplatesInput = {
-    where?: AccountWhereInput
-    data: XOR<AccountUpdateWithoutCreatedTemplatesInput, AccountUncheckedUpdateWithoutCreatedTemplatesInput>
-  }
-
-  export type AccountUpdateWithoutCreatedTemplatesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    surname?: StringFieldUpdateOperationsInput | string
-    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
-    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    street?: NullableStringFieldUpdateOperationsInput | string | null
-    barangay?: NullableStringFieldUpdateOperationsInput | string | null
-    municipality?: NullableStringFieldUpdateOperationsInput | string | null
-    province?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
-    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
-    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
-    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    religion?: NullableStringFieldUpdateOperationsInput | string | null
-    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
-    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
-    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
-    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
-    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
-    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
-    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
-    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
-    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
-    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
-    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
-    inquiries?: InquiryUpdateManyWithoutUserNestedInput
-    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
-    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
-    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
-    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
-    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
-  }
-
-  export type AccountUncheckedUpdateWithoutCreatedTemplatesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    surname?: StringFieldUpdateOperationsInput | string
-    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
-    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    street?: NullableStringFieldUpdateOperationsInput | string | null
-    barangay?: NullableStringFieldUpdateOperationsInput | string | null
-    municipality?: NullableStringFieldUpdateOperationsInput | string | null
-    province?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
-    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
-    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
-    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    religion?: NullableStringFieldUpdateOperationsInput | string | null
-    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
-    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
-    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
-    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
-    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
-    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
-    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
-    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
-    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
-    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
-    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
-    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
-    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
-    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
-    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
-    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
-    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
-  }
-
-  export type AccountCreateWithoutNotificationsInput = {
-    id?: string
-    access?: $Enums.access
-    username: string
-    email: string
-    password: string
-    firstName: string
-    middleName?: string | null
-    surname: string
-    extensionName?: string | null
-    sex?: $Enums.gender
-    street?: string | null
-    barangay?: string | null
-    municipality?: string | null
-    province?: string | null
-    region?: string | null
-    houseNumber?: string | null
-    mobileNumber?: string | null
-    landlineNumber?: string | null
-    birthMunicipality?: string | null
-    birthProvince?: string | null
-    birthCountry?: string | null
-    dateOfBirth?: Date | string | null
-    religion?: string | null
-    otherReligionSpecify?: string | null
-    civilStatus?: string | null
-    spouseName?: string | null
-    femaleHouseholdMembers?: string | null
-    maleHouseholdMembers?: string | null
-    isHouseholdHead?: boolean | null
-    householdHeadName?: string | null
-    relationshipToHead?: $Enums.RelationshipToHead | null
-    hasGovId?: boolean | null
-    govIdType?: $Enums.GovIdType | null
-    govIdNumber?: string | null
-    education?: $Enums.EducationLevel | null
-    isPWD?: boolean | null
-    disabilityType?: string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: string | null
-    livestockSpecify?: string | null
-    fishingOthersSpecify?: string | null
-    farmworkOthersSpecify?: string | null
-    youthOthersSpecify?: string | null
-    grossAnnualIncome?: string | null
-    incomeSource?: $Enums.IncomeSource | null
-    picture?: Uint8Array | null
-    mimeType?: string | null
-    client_profile?: $Enums.client_profile
-    address?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
-    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
-    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
-    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
-    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
-    inquiries?: InquiryCreateNestedManyWithoutUserInput
-    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
-    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
-    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
-    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
-    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
-  }
-
-  export type AccountUncheckedCreateWithoutNotificationsInput = {
-    id?: string
-    access?: $Enums.access
-    username: string
-    email: string
-    password: string
-    firstName: string
-    middleName?: string | null
-    surname: string
-    extensionName?: string | null
-    sex?: $Enums.gender
-    street?: string | null
-    barangay?: string | null
-    municipality?: string | null
-    province?: string | null
-    region?: string | null
-    houseNumber?: string | null
-    mobileNumber?: string | null
-    landlineNumber?: string | null
-    birthMunicipality?: string | null
-    birthProvince?: string | null
-    birthCountry?: string | null
-    dateOfBirth?: Date | string | null
-    religion?: string | null
-    otherReligionSpecify?: string | null
-    civilStatus?: string | null
-    spouseName?: string | null
-    femaleHouseholdMembers?: string | null
-    maleHouseholdMembers?: string | null
-    isHouseholdHead?: boolean | null
-    householdHeadName?: string | null
-    relationshipToHead?: $Enums.RelationshipToHead | null
-    hasGovId?: boolean | null
-    govIdType?: $Enums.GovIdType | null
-    govIdNumber?: string | null
-    education?: $Enums.EducationLevel | null
-    isPWD?: boolean | null
-    disabilityType?: string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: string | null
-    livestockSpecify?: string | null
-    fishingOthersSpecify?: string | null
-    farmworkOthersSpecify?: string | null
-    youthOthersSpecify?: string | null
-    grossAnnualIncome?: string | null
-    incomeSource?: $Enums.IncomeSource | null
-    picture?: Uint8Array | null
-    mimeType?: string | null
-    client_profile?: $Enums.client_profile
-    address?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
-    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
-    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
-    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
-    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
-    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
-    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
-    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
-    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
-    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
-  }
-
-  export type AccountCreateOrConnectWithoutNotificationsInput = {
-    where: AccountWhereUniqueInput
-    create: XOR<AccountCreateWithoutNotificationsInput, AccountUncheckedCreateWithoutNotificationsInput>
-  }
-
-  export type InquiryCreateWithoutNotificationsInput = {
-    id?: string
-    subject: string
-    message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
-    status?: $Enums.InquiryStatus
-    guestName?: string | null
-    guestEmail?: string | null
-    resolvedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user?: AccountCreateNestedOneWithoutInquiriesInput
-    assignedTo?: AccountCreateNestedOneWithoutAssignedInquiriesInput
-    resolvedBy?: AccountCreateNestedOneWithoutResolvedInquiriesInput
-    replies?: InquiryReplyCreateNestedManyWithoutInquiryInput
-    attachments?: InquiryAttachmentCreateNestedManyWithoutInquiryInput
-  }
-
-  export type InquiryUncheckedCreateWithoutNotificationsInput = {
-    id?: string
-    subject: string
-    message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
-    status?: $Enums.InquiryStatus
-    userId?: string | null
-    guestName?: string | null
-    guestEmail?: string | null
-    assignedToId?: string | null
-    resolvedById?: string | null
-    resolvedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    replies?: InquiryReplyUncheckedCreateNestedManyWithoutInquiryInput
-    attachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutInquiryInput
-  }
-
-  export type InquiryCreateOrConnectWithoutNotificationsInput = {
-    where: InquiryWhereUniqueInput
-    create: XOR<InquiryCreateWithoutNotificationsInput, InquiryUncheckedCreateWithoutNotificationsInput>
-  }
-
-  export type AccountUpsertWithoutNotificationsInput = {
-    update: XOR<AccountUpdateWithoutNotificationsInput, AccountUncheckedUpdateWithoutNotificationsInput>
-    create: XOR<AccountCreateWithoutNotificationsInput, AccountUncheckedCreateWithoutNotificationsInput>
-    where?: AccountWhereInput
-  }
-
-  export type AccountUpdateToOneWithWhereWithoutNotificationsInput = {
-    where?: AccountWhereInput
-    data: XOR<AccountUpdateWithoutNotificationsInput, AccountUncheckedUpdateWithoutNotificationsInput>
-  }
-
-  export type AccountUpdateWithoutNotificationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    surname?: StringFieldUpdateOperationsInput | string
-    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
-    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    street?: NullableStringFieldUpdateOperationsInput | string | null
-    barangay?: NullableStringFieldUpdateOperationsInput | string | null
-    municipality?: NullableStringFieldUpdateOperationsInput | string | null
-    province?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
-    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
-    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
-    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    religion?: NullableStringFieldUpdateOperationsInput | string | null
-    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
-    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
-    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
-    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
-    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
-    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
-    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
-    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
-    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
-    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
-    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
-    inquiries?: InquiryUpdateManyWithoutUserNestedInput
-    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
-    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
-    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
-    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
-    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
-  }
-
-  export type AccountUncheckedUpdateWithoutNotificationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    surname?: StringFieldUpdateOperationsInput | string
-    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
-    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    street?: NullableStringFieldUpdateOperationsInput | string | null
-    barangay?: NullableStringFieldUpdateOperationsInput | string | null
-    municipality?: NullableStringFieldUpdateOperationsInput | string | null
-    province?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
-    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
-    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
-    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    religion?: NullableStringFieldUpdateOperationsInput | string | null
-    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
-    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
-    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
-    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
-    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
-    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
-    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
-    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
-    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
-    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
-    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
-    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
-    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
-    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
-    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
-    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
-    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
-  }
-
-  export type InquiryUpsertWithoutNotificationsInput = {
-    update: XOR<InquiryUpdateWithoutNotificationsInput, InquiryUncheckedUpdateWithoutNotificationsInput>
-    create: XOR<InquiryCreateWithoutNotificationsInput, InquiryUncheckedCreateWithoutNotificationsInput>
-    where?: InquiryWhereInput
-  }
-
-  export type InquiryUpdateToOneWithWhereWithoutNotificationsInput = {
-    where?: InquiryWhereInput
-    data: XOR<InquiryUpdateWithoutNotificationsInput, InquiryUncheckedUpdateWithoutNotificationsInput>
-  }
-
-  export type InquiryUpdateWithoutNotificationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
-    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
-    guestName?: NullableStringFieldUpdateOperationsInput | string | null
-    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: AccountUpdateOneWithoutInquiriesNestedInput
-    assignedTo?: AccountUpdateOneWithoutAssignedInquiriesNestedInput
-    resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
-    replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
-    attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
-  }
-
-  export type InquiryUncheckedUpdateWithoutNotificationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
-    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    guestName?: NullableStringFieldUpdateOperationsInput | string | null
-    guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
-    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
-    attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
-  }
-
-  export type AccountCreateWithoutAnalyticsRecordsInput = {
-    id?: string
-    access?: $Enums.access
-    username: string
-    email: string
-    password: string
-    firstName: string
-    middleName?: string | null
-    surname: string
-    extensionName?: string | null
-    sex?: $Enums.gender
-    street?: string | null
-    barangay?: string | null
-    municipality?: string | null
-    province?: string | null
-    region?: string | null
-    houseNumber?: string | null
-    mobileNumber?: string | null
-    landlineNumber?: string | null
-    birthMunicipality?: string | null
-    birthProvince?: string | null
-    birthCountry?: string | null
-    dateOfBirth?: Date | string | null
-    religion?: string | null
-    otherReligionSpecify?: string | null
-    civilStatus?: string | null
-    spouseName?: string | null
-    femaleHouseholdMembers?: string | null
-    maleHouseholdMembers?: string | null
-    isHouseholdHead?: boolean | null
-    householdHeadName?: string | null
-    relationshipToHead?: $Enums.RelationshipToHead | null
-    hasGovId?: boolean | null
-    govIdType?: $Enums.GovIdType | null
-    govIdNumber?: string | null
-    education?: $Enums.EducationLevel | null
-    isPWD?: boolean | null
-    disabilityType?: string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: string | null
-    livestockSpecify?: string | null
-    fishingOthersSpecify?: string | null
-    farmworkOthersSpecify?: string | null
-    youthOthersSpecify?: string | null
-    grossAnnualIncome?: string | null
-    incomeSource?: $Enums.IncomeSource | null
-    picture?: Uint8Array | null
-    mimeType?: string | null
-    client_profile?: $Enums.client_profile
-    address?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
-    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
-    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
-    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
-    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
-    inquiries?: InquiryCreateNestedManyWithoutUserInput
-    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
-    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
-    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
-    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
-    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-  }
-
-  export type AccountUncheckedCreateWithoutAnalyticsRecordsInput = {
-    id?: string
-    access?: $Enums.access
-    username: string
-    email: string
-    password: string
-    firstName: string
-    middleName?: string | null
-    surname: string
-    extensionName?: string | null
-    sex?: $Enums.gender
-    street?: string | null
-    barangay?: string | null
-    municipality?: string | null
-    province?: string | null
-    region?: string | null
-    houseNumber?: string | null
-    mobileNumber?: string | null
-    landlineNumber?: string | null
-    birthMunicipality?: string | null
-    birthProvince?: string | null
-    birthCountry?: string | null
-    dateOfBirth?: Date | string | null
-    religion?: string | null
-    otherReligionSpecify?: string | null
-    civilStatus?: string | null
-    spouseName?: string | null
-    femaleHouseholdMembers?: string | null
-    maleHouseholdMembers?: string | null
-    isHouseholdHead?: boolean | null
-    householdHeadName?: string | null
-    relationshipToHead?: $Enums.RelationshipToHead | null
-    hasGovId?: boolean | null
-    govIdType?: $Enums.GovIdType | null
-    govIdNumber?: string | null
-    education?: $Enums.EducationLevel | null
-    isPWD?: boolean | null
-    disabilityType?: string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: string | null
-    livestockSpecify?: string | null
-    fishingOthersSpecify?: string | null
-    farmworkOthersSpecify?: string | null
-    youthOthersSpecify?: string | null
-    grossAnnualIncome?: string | null
-    incomeSource?: $Enums.IncomeSource | null
-    picture?: Uint8Array | null
-    mimeType?: string | null
-    client_profile?: $Enums.client_profile
-    address?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
-    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
-    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
-    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
-    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
-    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
-    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
-    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
-    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
-    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type AccountCreateOrConnectWithoutAnalyticsRecordsInput = {
-    where: AccountWhereUniqueInput
-    create: XOR<AccountCreateWithoutAnalyticsRecordsInput, AccountUncheckedCreateWithoutAnalyticsRecordsInput>
-  }
-
-  export type AccountUpsertWithoutAnalyticsRecordsInput = {
-    update: XOR<AccountUpdateWithoutAnalyticsRecordsInput, AccountUncheckedUpdateWithoutAnalyticsRecordsInput>
-    create: XOR<AccountCreateWithoutAnalyticsRecordsInput, AccountUncheckedCreateWithoutAnalyticsRecordsInput>
-    where?: AccountWhereInput
-  }
-
-  export type AccountUpdateToOneWithWhereWithoutAnalyticsRecordsInput = {
-    where?: AccountWhereInput
-    data: XOR<AccountUpdateWithoutAnalyticsRecordsInput, AccountUncheckedUpdateWithoutAnalyticsRecordsInput>
-  }
-
-  export type AccountUpdateWithoutAnalyticsRecordsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    surname?: StringFieldUpdateOperationsInput | string
-    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
-    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    street?: NullableStringFieldUpdateOperationsInput | string | null
-    barangay?: NullableStringFieldUpdateOperationsInput | string | null
-    municipality?: NullableStringFieldUpdateOperationsInput | string | null
-    province?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
-    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
-    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
-    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    religion?: NullableStringFieldUpdateOperationsInput | string | null
-    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
-    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
-    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
-    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
-    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
-    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
-    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
-    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
-    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
-    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
-    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
-    inquiries?: InquiryUpdateManyWithoutUserNestedInput
-    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
-    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
-    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
-    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
-    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-  }
-
-  export type AccountUncheckedUpdateWithoutAnalyticsRecordsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
-    username?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: StringFieldUpdateOperationsInput | string
-    middleName?: NullableStringFieldUpdateOperationsInput | string | null
-    surname?: StringFieldUpdateOperationsInput | string
-    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
-    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
-    street?: NullableStringFieldUpdateOperationsInput | string | null
-    barangay?: NullableStringFieldUpdateOperationsInput | string | null
-    municipality?: NullableStringFieldUpdateOperationsInput | string | null
-    province?: NullableStringFieldUpdateOperationsInput | string | null
-    region?: NullableStringFieldUpdateOperationsInput | string | null
-    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
-    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
-    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
-    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    religion?: NullableStringFieldUpdateOperationsInput | string | null
-    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
-    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
-    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
-    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
-    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
-    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
-    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
-    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
-    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
-    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
-    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
-    youthActivities?: NullableJsonNullValueInput | InputJsonValue
-    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
-    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
-    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
-    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
-    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
-    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
-    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
-    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
-    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
-    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
-    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
-    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
-    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ItemStackCreateWithoutItemInput = {
@@ -30433,9 +23876,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutItemTransactionsInput = {
@@ -30504,9 +23944,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutItemTransactionsInput = {
@@ -30580,9 +24017,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutAdminTransactionsInput = {
@@ -30651,9 +24085,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutAdminTransactionsInput = {
@@ -30769,9 +24200,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutItemTransactionsInput = {
@@ -30840,9 +24268,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUpsertWithoutAdminTransactionsInput = {
@@ -30922,9 +24347,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAdminTransactionsInput = {
@@ -30993,9 +24415,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type SeminarParticipantCreateWithoutSeminarInput = {
@@ -31090,9 +24509,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsCreatedInput = {
@@ -31161,9 +24577,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsCreatedInput = {
@@ -31264,9 +24677,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsCreatedInput = {
@@ -31335,9 +24745,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type SeminarCreateWithoutParticipantsInput = {
@@ -31451,9 +24858,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsCreateNestedManyWithoutAdminInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsInput = {
@@ -31522,9 +24926,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
     inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
-    createdTemplates?: InquiryTemplateUncheckedCreateNestedManyWithoutCreatedByInput
-    notifications?: InquiryNotificationUncheckedCreateNestedManyWithoutUserInput
-    analyticsRecords?: InquiryAnalyticsUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsInput = {
@@ -31660,9 +25061,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUpdateManyWithoutAdminNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsInput = {
@@ -31731,9 +25129,6 @@ export namespace Prisma {
     inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
     inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
-    createdTemplates?: InquiryTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutUserNestedInput
-    analyticsRecords?: InquiryAnalyticsUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type SeminarParticipantCreateManyAccountInput = {
@@ -31806,8 +25201,6 @@ export namespace Prisma {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
     guestName?: string | null
     guestEmail?: string | null
@@ -31822,10 +25215,8 @@ export namespace Prisma {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
-    userId?: string | null
+    userId: string
     guestName?: string | null
     guestEmail?: string | null
     resolvedById?: string | null
@@ -31838,10 +25229,8 @@ export namespace Prisma {
     id?: string
     subject: string
     message: string
-    category?: $Enums.InquiryCategory
-    priority?: $Enums.InquiryPriority
     status?: $Enums.InquiryStatus
-    userId?: string | null
+    userId: string
     guestName?: string | null
     guestEmail?: string | null
     assignedToId?: string | null
@@ -31853,7 +25242,6 @@ export namespace Prisma {
   export type InquiryReplyCreateManySenderInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderType: $Enums.SenderType
     senderName?: string | null
     inquiryId: string
@@ -31879,55 +25267,10 @@ export namespace Prisma {
     id?: string
     question: string
     answer: string
-    category?: $Enums.InquiryCategory
     isActive?: boolean
     orderIndex?: number
     viewCount?: number
     helpfulCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InquiryTemplateCreateManyCreatedByInput = {
-    id?: string
-    title: string
-    content: string
-    category?: $Enums.InquiryCategory
-    isActive?: boolean
-    isDefault?: boolean
-    usageCount?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type InquiryNotificationCreateManyUserInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    inquiryId?: string | null
-    isRead?: boolean
-    readAt?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type InquiryAnalyticsCreateManyAdminInput = {
-    id?: string
-    date: Date | string
-    totalInquiries?: number
-    pendingInquiries?: number
-    resolvedInquiries?: number
-    avgFirstResponseTime?: number | null
-    avgResolutionTime?: number | null
-    seminarInquiries?: number
-    equipmentInquiries?: number
-    accountInquiries?: number
-    generalInquiries?: number
-    lowPriorityCount?: number
-    mediumPriorityCount?: number
-    highPriorityCount?: number
-    urgentPriorityCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32136,8 +25479,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32148,15 +25489,12 @@ export namespace Prisma {
     resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
     replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
     attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
   }
 
   export type InquiryUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32167,15 +25505,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
     attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
   }
 
   export type InquiryUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32190,8 +25525,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32202,17 +25535,14 @@ export namespace Prisma {
     resolvedBy?: AccountUpdateOneWithoutResolvedInquiriesNestedInput
     replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
     attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
   }
 
   export type InquiryUncheckedUpdateWithoutAssignedToInput = {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
     resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32221,17 +25551,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
     attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
   }
 
   export type InquiryUncheckedUpdateManyWithoutAssignedToInput = {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
     resolvedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32244,8 +25571,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32256,17 +25581,14 @@ export namespace Prisma {
     assignedTo?: AccountUpdateOneWithoutAssignedInquiriesNestedInput
     replies?: InquiryReplyUpdateManyWithoutInquiryNestedInput
     attachments?: InquiryAttachmentUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUpdateManyWithoutInquiryNestedInput
   }
 
   export type InquiryUncheckedUpdateWithoutResolvedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32275,17 +25597,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: InquiryReplyUncheckedUpdateManyWithoutInquiryNestedInput
     attachments?: InquiryAttachmentUncheckedUpdateManyWithoutInquiryNestedInput
-    notifications?: InquiryNotificationUncheckedUpdateManyWithoutInquiryNestedInput
   }
 
   export type InquiryUncheckedUpdateManyWithoutResolvedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
     status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
     guestName?: NullableStringFieldUpdateOperationsInput | string | null
     guestEmail?: NullableStringFieldUpdateOperationsInput | string | null
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32297,7 +25616,6 @@ export namespace Prisma {
   export type InquiryReplyUpdateWithoutSenderInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32313,7 +25631,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedUpdateWithoutSenderInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
     inquiryId?: StringFieldUpdateOperationsInput | string
@@ -32329,7 +25646,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedUpdateManyWithoutSenderInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
     inquiryId?: StringFieldUpdateOperationsInput | string
@@ -32375,7 +25691,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     answer?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
     isActive?: BoolFieldUpdateOperationsInput | boolean
     orderIndex?: IntFieldUpdateOperationsInput | number
     viewCount?: IntFieldUpdateOperationsInput | number
@@ -32388,7 +25703,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     answer?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
     isActive?: BoolFieldUpdateOperationsInput | boolean
     orderIndex?: IntFieldUpdateOperationsInput | number
     viewCount?: IntFieldUpdateOperationsInput | number
@@ -32401,7 +25715,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     answer?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
     isActive?: BoolFieldUpdateOperationsInput | boolean
     orderIndex?: IntFieldUpdateOperationsInput | number
     viewCount?: IntFieldUpdateOperationsInput | number
@@ -32410,142 +25723,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type InquiryTemplateUpdateWithoutCreatedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    usageCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryTemplateUncheckedUpdateWithoutCreatedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    usageCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryTemplateUncheckedUpdateManyWithoutCreatedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    category?: EnumInquiryCategoryFieldUpdateOperationsInput | $Enums.InquiryCategory
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    usageCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryNotificationUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    inquiry?: InquiryUpdateOneWithoutNotificationsNestedInput
-  }
-
-  export type InquiryNotificationUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    inquiryId?: NullableStringFieldUpdateOperationsInput | string | null
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryNotificationUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    inquiryId?: NullableStringFieldUpdateOperationsInput | string | null
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryAnalyticsUpdateWithoutAdminInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    totalInquiries?: IntFieldUpdateOperationsInput | number
-    pendingInquiries?: IntFieldUpdateOperationsInput | number
-    resolvedInquiries?: IntFieldUpdateOperationsInput | number
-    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    seminarInquiries?: IntFieldUpdateOperationsInput | number
-    equipmentInquiries?: IntFieldUpdateOperationsInput | number
-    accountInquiries?: IntFieldUpdateOperationsInput | number
-    generalInquiries?: IntFieldUpdateOperationsInput | number
-    lowPriorityCount?: IntFieldUpdateOperationsInput | number
-    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
-    highPriorityCount?: IntFieldUpdateOperationsInput | number
-    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryAnalyticsUncheckedUpdateWithoutAdminInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    totalInquiries?: IntFieldUpdateOperationsInput | number
-    pendingInquiries?: IntFieldUpdateOperationsInput | number
-    resolvedInquiries?: IntFieldUpdateOperationsInput | number
-    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    seminarInquiries?: IntFieldUpdateOperationsInput | number
-    equipmentInquiries?: IntFieldUpdateOperationsInput | number
-    accountInquiries?: IntFieldUpdateOperationsInput | number
-    generalInquiries?: IntFieldUpdateOperationsInput | number
-    lowPriorityCount?: IntFieldUpdateOperationsInput | number
-    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
-    highPriorityCount?: IntFieldUpdateOperationsInput | number
-    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryAnalyticsUncheckedUpdateManyWithoutAdminInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    totalInquiries?: IntFieldUpdateOperationsInput | number
-    pendingInquiries?: IntFieldUpdateOperationsInput | number
-    resolvedInquiries?: IntFieldUpdateOperationsInput | number
-    avgFirstResponseTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    avgResolutionTime?: NullableFloatFieldUpdateOperationsInput | number | null
-    seminarInquiries?: IntFieldUpdateOperationsInput | number
-    equipmentInquiries?: IntFieldUpdateOperationsInput | number
-    accountInquiries?: IntFieldUpdateOperationsInput | number
-    generalInquiries?: IntFieldUpdateOperationsInput | number
-    lowPriorityCount?: IntFieldUpdateOperationsInput | number
-    mediumPriorityCount?: IntFieldUpdateOperationsInput | number
-    highPriorityCount?: IntFieldUpdateOperationsInput | number
-    urgentPriorityCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type InquiryReplyCreateManyInquiryInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderId?: string | null
     senderType: $Enums.SenderType
     senderName?: string | null
@@ -32567,22 +25747,9 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type InquiryNotificationCreateManyInquiryInput = {
-    id?: string
-    type: $Enums.NotificationType
-    title: string
-    message: string
-    userId: string
-    isRead?: boolean
-    readAt?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
   export type InquiryReplyUpdateWithoutInquiryInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32598,7 +25765,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedUpdateWithoutInquiryInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderId?: NullableStringFieldUpdateOperationsInput | string | null
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32614,7 +25780,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedUpdateManyWithoutInquiryInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderId?: NullableStringFieldUpdateOperationsInput | string | null
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32656,46 +25821,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type InquiryNotificationUpdateWithoutInquiryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: AccountUpdateOneRequiredWithoutNotificationsNestedInput
-  }
-
-  export type InquiryNotificationUncheckedUpdateWithoutInquiryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type InquiryNotificationUncheckedUpdateManyWithoutInquiryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type InquiryReplyCreateManyParentReplyInput = {
     id?: string
     message: string
-    isInternal?: boolean
     senderId?: string | null
     senderType: $Enums.SenderType
     senderName?: string | null
@@ -32710,7 +25838,6 @@ export namespace Prisma {
   export type InquiryReplyUpdateWithoutParentReplyInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32726,7 +25853,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedUpdateWithoutParentReplyInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderId?: NullableStringFieldUpdateOperationsInput | string | null
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32742,7 +25868,6 @@ export namespace Prisma {
   export type InquiryReplyUncheckedUpdateManyWithoutParentReplyInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
-    isInternal?: BoolFieldUpdateOperationsInput | boolean
     senderId?: NullableStringFieldUpdateOperationsInput | string | null
     senderType?: EnumSenderTypeFieldUpdateOperationsInput | $Enums.SenderType
     senderName?: NullableStringFieldUpdateOperationsInput | string | null

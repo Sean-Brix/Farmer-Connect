@@ -27,5 +27,6 @@ function connectSocket(role) {
 }
 
 export {
+  socket,
   connectSocket
 }

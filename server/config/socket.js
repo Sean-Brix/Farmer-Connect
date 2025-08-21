@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import { client_inquiry } from '../Sockets/handlers/client/client_inquiry.js';
+import { admin_inquiry } from '../Sockets/handlers/admin/admin_inquiry.js';
 
 function setup_socket(io){
 
@@ -31,7 +32,7 @@ function setup_socket(io){
 
             case 'Admin':
             case 'Super_Admin':
-                console.log('Admin connected:', socket.user.userId);
+                admin_inquiry(io, socket);
                 break;
 
             case 'User': 
