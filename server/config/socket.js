@@ -1,35 +1,31 @@
 import dotenv from 'dotenv';
-import cookie from 'cookie';
-import jwt from 'jsonwebtoken';
 import { client_inquiry } from '../Sockets/handlers/client/client_inquiry.js';
 import { admin_inquiry } from '../Sockets/handlers/admin/admin_inquiry.js';
+import { socketAuth, validateUser } from '../Sockets/middleware/auth.js';
+import { ROOMS } from '../Sockets/utils/socket-events.js';
+import socketSessionManager from '../Sockets/utils/session-manager.js';
+import socketLogoutService from '../Services/socketLogoutService.js';
 
 function setup_socket(io){
-
     dotenv.config();
-    // Authentication
-    io.use((socket, next) => {
-        const role = socket.handshake.auth.role;
-        const rawCookie = socket.handshake.headers.cookie;
-        if(!rawCookie) {
-            console.log('No cookie found, disconnecting socket');
-            socket.disconnect();
-            return;
-        }
-
-        const parsed = cookie.parse(rawCookie);
-        const token = parsed['token'];
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        socket.user = {...decoded, role};
-        next();
-    });
+    
+    // Initialize socket logout service
+    socketLogoutService.init(io);
+    
+    // Apply authentication middleware
+    io.use(socketAuth);
+    io.use(validateUser);
 
     // Connection event
     io.on('connection', (socket) => {
-
+        
+        // Register socket connection for session management
+        socketSessionManager.addSocket(socket.user.id, socket.id);
+        
+        // Join user-specific room for targeted messaging
+        socket.join(`user_${socket.user.id}`);
+        
         switch (socket.user.role) {
-
             case 'Admin':
             case 'Super_Admin':
                 admin_inquiry(io, socket);
@@ -40,15 +36,23 @@ function setup_socket(io){
                 break;
 
             default:
-                // Disconnect if role is not recognized
-                console.log('Unknown role, disconnecting socket');
+                console.log(`Unknown role: ${socket.user.role}, disconnecting socket`);
+                socket.emit('error', { message: 'Invalid user role' });
                 socket.disconnect();
                 return;
         }
 
-    }); 
+        // Handle disconnection
+        socket.on('disconnect', (reason) => {
+            socketSessionManager.removeSocket(socket.id);
+        });
 
-}
+        // Global error handler
+        socket.on('error', (error) => {
+            console.error(`Socket error for ${socket.user?.username}:`, error);
+        });
+
+    });}
 
 export { 
     setup_socket

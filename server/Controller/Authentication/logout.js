@@ -1,4 +1,5 @@
 import auditLogger from '../../Services/auditLogger.js';
+import socketLogoutService from '../../Services/socketLogoutService.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { PrismaClient } from '../../prisma/generated/client.js';
@@ -39,6 +40,7 @@ async function logout(req, res) {
                     }
                 }
             }
+
         } catch (tokenError) {
             // Continue with logout even if token is invalid
         }
@@ -74,6 +76,19 @@ async function logout(req, res) {
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'Strict',
         });
+
+        // Disconnect user's socket connections if user info available
+        if (userInfo) {
+            try {
+                const disconnectedSockets = socketLogoutService.disconnectUserOnLogout(
+                    userInfo.id,
+                    'manual_logout'
+                );
+            } catch (socketError) {
+                console.error('[ERROR] Failed to disconnect user sockets on logout:', socketError);
+                // Continue with logout even if socket disconnection fails
+            }
+        }
 
         // Send response
         return res.status(200).json({
