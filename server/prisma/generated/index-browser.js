@@ -192,6 +192,59 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ChatRoomScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isGroup: 'isGroup',
+  roomType: 'roomType',
+  isActive: 'isActive',
+  lastActivity: 'lastActivity',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ChatParticipantScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  roomId: 'roomId',
+  role: 'role',
+  isActive: 'isActive',
+  lastSeen: 'lastSeen',
+  unreadCount: 'unreadCount',
+  joinedAt: 'joinedAt'
+};
+
+exports.Prisma.ChatMessageScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  messageType: 'messageType',
+  senderId: 'senderId',
+  roomId: 'roomId',
+  isEdited: 'isEdited',
+  isDeleted: 'isDeleted',
+  replyToId: 'replyToId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ChatAttachmentScalarFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  filepath: 'filepath',
+  filesize: 'filesize',
+  mimetype: 'mimetype',
+  messageId: 'messageId',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ChatReadReceiptScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  userId: 'userId',
+  readAt: 'readAt'
+};
+
 exports.Prisma.InquiryScalarFieldEnum = {
   id: 'id',
   subject: 'subject',
@@ -385,6 +438,40 @@ exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
   userAgent: 'userAgent'
 };
 
+exports.Prisma.ChatRoomOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.ChatParticipantOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  roomId: 'roomId'
+};
+
+exports.Prisma.ChatMessageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  content: 'content',
+  senderId: 'senderId',
+  roomId: 'roomId',
+  replyToId: 'replyToId'
+};
+
+exports.Prisma.ChatAttachmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  filepath: 'filepath',
+  mimetype: 'mimetype',
+  messageId: 'messageId',
+  uploadedById: 'uploadedById'
+};
+
+exports.Prisma.ChatReadReceiptOrderByRelevanceFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  userId: 'userId'
+};
+
 exports.Prisma.InquiryOrderByRelevanceFieldEnum = {
   id: 'id',
   subject: 'subject',
@@ -573,6 +660,24 @@ exports.audit_action = exports.$Enums.audit_action = {
   SETTINGS_UPDATE: 'SETTINGS_UPDATE'
 };
 
+exports.RoomType = exports.$Enums.RoomType = {
+  DIRECT: 'DIRECT',
+  GROUP: 'GROUP',
+  SUPPORT: 'SUPPORT'
+};
+
+exports.ParticipantRole = exports.$Enums.ParticipantRole = {
+  ADMIN: 'ADMIN',
+  MEMBER: 'MEMBER'
+};
+
+exports.MessageType = exports.$Enums.MessageType = {
+  TEXT: 'TEXT',
+  IMAGE: 'IMAGE',
+  FILE: 'FILE',
+  SYSTEM: 'SYSTEM'
+};
+
 exports.InquiryStatus = exports.$Enums.InquiryStatus = {
   PENDING: 'PENDING',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -638,6 +743,11 @@ exports.participant_status = exports.$Enums.participant_status = {
 exports.Prisma.ModelName = {
   Account: 'Account',
   AuditLog: 'AuditLog',
+  ChatRoom: 'ChatRoom',
+  ChatParticipant: 'ChatParticipant',
+  ChatMessage: 'ChatMessage',
+  ChatAttachment: 'ChatAttachment',
+  ChatReadReceipt: 'ChatReadReceipt',
   Inquiry: 'Inquiry',
   InquiryReply: 'InquiryReply',
   InquiryAttachment: 'InquiryAttachment',

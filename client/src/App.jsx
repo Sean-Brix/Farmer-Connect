@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { SocketProvider } from './contexts/SocketContext.jsx';
 
 
 // COMPONENTS
@@ -29,38 +30,40 @@ import Farmer_Report from './Client/Services/Report/Farmer_Report.jsx';
 
 function App() {
     return (
-        <BrowserRouter>
-            <Routes>
-                {/* AUTHENTICATION */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
+        <SocketProvider>
+            <BrowserRouter>
+                <Routes>
+                    {/* AUTHENTICATION */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
 
-                {/* CLIENT ROUTES */}
-                <Route path="/" element={<Landing />} />
-                <Route path="/eic" element={<Eic />} />
-              
-                <Route path="/seminar" element={<Seminar />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/settings/profile" element={<User />} />
-                 
-                <Route path="/about" element={<About />} />
-                <Route path="/citizens-charter" element={<CitizensCharter />} />
-                <Route path="/distribution" element={<Distribution />} />
-                <Route path="/survey" element={<Survey />} />
-                <Route path="/chat" element={<Chat />} />
-                <Route path="/chat-support" element={<ChatSupport />} />
-                <Route path="/report" element={<Farmer_Report />} />
+                    {/* CLIENT ROUTES */}
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/eic" element={<Eic />} />
+                  
+                    <Route path="/seminar" element={<Seminar />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/settings/profile" element={<User />} />
+                     
+                    <Route path="/about" element={<About />} />
+                    <Route path="/citizens-charter" element={<CitizensCharter />} />
+                    <Route path="/distribution" element={<Distribution />} />
+                    <Route path="/survey" element={<Survey />} />
+                    <Route path="/chat" element={<Chat />} />
+                    <Route path="/chat-support" element={<ChatSupport />} />
+                    <Route path="/report" element={<Farmer_Report />} />
 
-                {/* ADMIN ROUTES */}
-                <Route path="/admin" element={<Dashboard />} />
-                <Route path="/admin/profile" element={<My_Profile />} />
+                    {/* ADMIN ROUTES */}
+                    <Route path="/admin" element={<Dashboard />} />
+                    <Route path="/admin/profile" element={<My_Profile />} />
 
-                {/* SERVER TESTING */}
-                <Route path="/testing/request" element={<API_Request />} />
-                <Route path="/testing/details" element={<Details_php />} />
-                
-            </Routes>
-        </BrowserRouter>
+                    {/* SERVER TESTING */}
+                    <Route path="/testing/request" element={<API_Request />} />
+                    <Route path="/testing/details" element={<Details_php />} />
+                    
+                </Routes>
+            </BrowserRouter>
+        </SocketProvider>
     );
 }
 

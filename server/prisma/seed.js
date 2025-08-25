@@ -11,14 +11,12 @@ const __dirname = path.dirname(__filename);
 const wait = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // Import data files
-const users = JSON.parse(fs.readFileSync(path.join(__dirname, 'Data/account.json'), 'utf8'));
-const seminarsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'Data/seminars.json'), 'utf8'));
-const inventoryItemsData = JSON.parse(fs.readFileSync(path.join(__dirname, 'Data/inventory_items.json'), 'utf8'));
-const inquiryData = JSON.parse(fs.readFileSync(path.join(__dirname, 'Data/inquiry.json'), 'utf8'));
-
+import users from './Data/account.json' with { type: 'json' }
+import seminarsData from './Data/seminars.json' with { type: 'json' }
+import inventoryItemsData from './Data/inventory_items.json' with { type: 'json' }
+import inquiryData from './Data/inquiry.json' with { type: 'json' }
 
 //? ========================================= ACCOUNT ========================================= ?//
-import users from './Data/account.json' with { type: 'json' }
 
 async function createAccount() {
   for (let i = 0; i < users.length; i++) {
@@ -29,6 +27,7 @@ async function createAccount() {
       where: { username: user.username }
     });
     if (existingUser) {
+      console.log(`User ${user.username} already exists, skipping...`);
       continue;
     }
 
@@ -170,7 +169,6 @@ async function createAccount() {
 
 //? ======================================== SEMINARS ======================================== ?//
 
-import seminarsData from './Data/seminars.json' with { type: 'json' }
 async function createSeminars() {
   const adminAccounts = await prisma.account.findMany({
     where: {
@@ -312,18 +310,22 @@ async function createSeminarParticipants() {
 
 //? =================================== INVENTORY ITEMS =================================== ?//
 
-import inventoryItemsData from './Data/inventory_items.json' with { type: 'json' }
-
 async function createInventoryItems() {
   for (const item of inventoryItemsData) {
-
-    await prisma.inventoryItem.create({
-      data: {
-        name: item.name,
-        description: item.description,
-        category: item.category || 'Other'
-      },
+    // Check if item already exists
+    const existingItem = await prisma.inventoryItem.findUnique({
+      where: { name: item.name }
     });
+    
+    if (!existingItem) {
+      await prisma.inventoryItem.create({
+        data: {
+          name: item.name,
+          description: item.description,
+          category: item.category || 'Other'
+        },
+      });
+    }
   }
 }
 
@@ -812,13 +814,12 @@ async function createFAQs() {
       data: {
         question: faq.question,
         answer: faq.answer,
-        category: faq.category,
         isActive: faq.isActive,
         orderIndex: orderIndex++,
-        viewCount: faq.viewCount,
-        helpfulCount: faq.helpfulCount,
+        viewCount: faq.viewCount || 0,
+        helpfulCount: faq.helpfulCount || 0,
         createdById: randomAdmin.id,
-        createdAt: new Date(faq.createdAt)
+        createdAt: faq.createdAt ? new Date(faq.createdAt) : new Date()
       }
     });
   }
@@ -844,9 +845,9 @@ async function createInquiryTemplates() {
         content: template.content,
         category: template.category,
         isActive: template.isActive,
-        usageCount: template.usageCount,
+        usageCount: template.usageCount || 0,
         createdById: randomAdmin.id,
-        createdAt: new Date(template.createdAt)
+        createdAt: template.createdAt ? new Date(template.createdAt) : new Date()
       }
     });
   }
@@ -857,9 +858,7 @@ async function createInquiryTemplates() {
 async function createInquiries() {
   const userAccounts = await prisma.account.findMany({
     where: {
-      access: {
-        in: ['Farmer', 'EIC']
-      }
+      access: 'User'  // Only regular users can create inquiries
     }
   });
 
@@ -876,6 +875,19 @@ async function createInquiries() {
     return;
   }
 
+  // Helper function to map status values
+  const mapStatus = (status) => {
+    const statusMap = {
+      'RESOLVED': 'RESOLVED',
+      'CLOSED': 'RESOLVED',
+      'PENDING': 'PENDING',
+      'IN_PROGRESS': 'IN_PROGRESS',
+      'WAITING_USER': 'WAITING_USER',
+      'CANCELLED': 'CANCELLED'
+    };
+    return statusMap[status] || 'PENDING';
+  };
+
   for (const inquiryItem of inquiryData.inquiries) {
     const randomUser = userAccounts[Math.floor(Math.random() * userAccounts.length)];
     const randomAdmin = adminAccounts[Math.floor(Math.random() * adminAccounts.length)];
@@ -883,11 +895,9 @@ async function createInquiries() {
     // Create the inquiry
     const createdInquiry = await prisma.inquiry.create({
       data: {
-        title: inquiryItem.title,
-        description: inquiryItem.description,
-        category: inquiryItem.category,
-        status: inquiryItem.status,
-        priority: inquiryItem.priority,
+        subject: inquiryItem.title || inquiryItem.subject || 'Chat Inquiry',
+        message: inquiryItem.description || inquiryItem.message || 'Initial inquiry message',
+        status: mapStatus(inquiryItem.status),
         userId: randomUser.id,
         assignedToId: inquiryItem.status !== 'PENDING' ? randomAdmin.id : null,
         createdAt: new Date(inquiryItem.createdAt),
@@ -901,9 +911,10 @@ async function createInquiries() {
       await prisma.inquiryReply.create({
         data: {
           message: reply.message,
-          isFromUser: reply.isFromUser,
+          senderId: reply.isFromUser ? randomUser.id : randomAdmin.id,
+          senderType: reply.isFromUser ? 'USER' : 'ADMIN',
+          senderName: reply.isFromUser ? `${randomUser.firstName} ${randomUser.surname}` : `${randomAdmin.firstName} ${randomAdmin.surname}`,
           inquiryId: createdInquiry.id,
-          userId: reply.isFromUser ? randomUser.id : randomAdmin.id,
           createdAt: new Date(reply.createdAt)
         }
       });
@@ -983,14 +994,18 @@ async function main() {
     await createFAQs();
     console.log('FAQs created successfully.');
     
+    /*
     await createInquiryTemplates();
     console.log('Inquiry Templates created successfully.');
+    */
     
     await createInquiries();
     console.log('Inquiries created successfully.');
     
+    /*
     await createInquiryAnalytics();
     console.log('Inquiry Analytics created successfully.');
+    */
   } 
 
   catch (error) {

@@ -100,6 +100,12 @@ model Account {
   inquiryAttachments InquiryAttachment[]
   createdFAQs        FAQ[]
 
+  // Chat System Relations
+  chatParticipants ChatParticipant[]
+  chatMessages     ChatMessage[]
+  chatAttachments  ChatAttachment[]
+  chatReadReceipts ChatReadReceipt[]
+
   @@map("accounts")
 }
 
@@ -261,6 +267,168 @@ enum audit_action {
 
   // Settings Actions
   SETTINGS_UPDATE
+}
+
+// Simple Chat System Schema - Facebook Messenger Style
+// Clean and simple real-time messaging
+
+model ChatRoom {
+  id String @id @default(cuid())
+
+  // Room Information
+  name     String? // Optional room name (for group chats)
+  isGroup  Boolean  @default(false) // false = direct message, true = group chat
+  roomType RoomType @default(DIRECT) // DIRECT or GROUP
+
+  // Room Settings
+  isActive     Boolean  @default(true)
+  lastActivity DateTime @default(now())
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  participants ChatParticipant[]
+  messages     ChatMessage[]
+
+  // Indexes
+  @@index([isActive])
+  @@index([lastActivity])
+  @@index([roomType])
+  @@map("chat_rooms")
+}
+
+model ChatParticipant {
+  id String @id @default(cuid())
+
+  // Participant Information
+  userId String
+  user   Account @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Room Relation
+  roomId String
+  room   ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  // Participant Settings
+  role     ParticipantRole @default(MEMBER) // ADMIN or MEMBER (for group chats)
+  isActive Boolean         @default(true)
+
+  // Last seen and notifications
+  lastSeen    DateTime @default(now())
+  unreadCount Int      @default(0)
+
+  // Timestamps
+  joinedAt DateTime @default(now())
+
+  // Unique constraint - one participation per user per room
+  @@unique([userId, roomId])
+  @@index([userId])
+  @@index([roomId])
+  @@map("chat_participants")
+}
+
+model ChatMessage {
+  id String @id @default(cuid())
+
+  // Message Content
+  content     String      @db.LongText
+  messageType MessageType @default(TEXT) // TEXT, IMAGE, FILE, etc.
+
+  // Sender Information
+  senderId String
+  sender   Account @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  // Room Relation
+  roomId String
+  room   ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  // Message Status
+  isEdited  Boolean @default(false)
+  isDeleted Boolean @default(false)
+
+  // Reply/Thread Support (optional)
+  replyToId String?
+  replyTo   ChatMessage?  @relation("MessageReply", fields: [replyToId], references: [id])
+  replies   ChatMessage[] @relation("MessageReply")
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  attachments  ChatAttachment[]
+  readReceipts ChatReadReceipt[]
+
+  // Indexes
+  @@index([roomId])
+  @@index([senderId])
+  @@index([createdAt])
+  @@index([isDeleted])
+  @@map("chat_messages")
+}
+
+model ChatAttachment {
+  id String @id @default(cuid())
+
+  // File Information
+  filename String
+  filepath String
+  filesize Int
+  mimetype String
+
+  // Message Relation
+  messageId String
+  message   ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  // Uploader
+  uploadedById String
+  uploadedBy   Account @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+
+  @@index([messageId])
+  @@map("chat_attachments")
+}
+
+model ChatReadReceipt {
+  id String @id @default(cuid())
+
+  // Message and User
+  messageId String
+  message   ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   Account @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Read Status
+  readAt DateTime @default(now())
+
+  // Unique constraint - one read receipt per user per message
+  @@unique([messageId, userId])
+  @@index([messageId])
+  @@index([userId])
+  @@map("chat_read_receipts")
+}
+
+// Enums
+enum RoomType {
+  DIRECT // 1-on-1 chat
+  GROUP // Group chat
+  SUPPORT // Support chat (user + admin)
+}
+
+enum ParticipantRole {
+  ADMIN // Can manage room settings
+  MEMBER // Regular participant
+}
+
+enum MessageType {
+  TEXT // Regular text message
+  IMAGE // Image message
+  FILE // File attachment
+  SYSTEM // System message (user joined, left, etc.)
 }
 
 // Inquiry System Schema for FITS-Tanza Chat Support

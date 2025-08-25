@@ -25,4 +25,7 @@ router.use('/analytics', analytics);
 import logs from './Logs/index.js';
 router.use('/logs', logs);
 
+import inquiry from './inquiry.js';
+router.use('/inquiries', inquiry);
+
 export default router;

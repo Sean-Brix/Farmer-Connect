@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 
-// Initialize socket connection
-const socket = io("/" ,{
+// Initialize socket connection  
+const socket = io("http://localhost:8080", {
   autoConnect: false,
   withCredentials: true,
 });
