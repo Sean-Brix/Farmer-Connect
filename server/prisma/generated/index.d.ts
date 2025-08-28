@@ -93,6 +93,31 @@ export type Seminar = $Result.DefaultSelection<Prisma.$SeminarPayload>
  * 
  */
 export type SeminarParticipant = $Result.DefaultSelection<Prisma.$SeminarParticipantPayload>
+/**
+ * Model SurveyForm
+ * 
+ */
+export type SurveyForm = $Result.DefaultSelection<Prisma.$SurveyFormPayload>
+/**
+ * Model SurveyField
+ * 
+ */
+export type SurveyField = $Result.DefaultSelection<Prisma.$SurveyFieldPayload>
+/**
+ * Model SurveyResponse
+ * 
+ */
+export type SurveyResponse = $Result.DefaultSelection<Prisma.$SurveyResponsePayload>
+/**
+ * Model SurveyAnswer
+ * 
+ */
+export type SurveyAnswer = $Result.DefaultSelection<Prisma.$SurveyAnswerPayload>
+/**
+ * Model SurveyStatistic
+ * 
+ */
+export type SurveyStatistic = $Result.DefaultSelection<Prisma.$SurveyStatisticPayload>
 
 /**
  * Enums
@@ -347,6 +372,44 @@ export const participant_status: {
 
 export type participant_status = (typeof participant_status)[keyof typeof participant_status]
 
+
+export const survey_status: {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  ARCHIVED: 'ARCHIVED'
+};
+
+export type survey_status = (typeof survey_status)[keyof typeof survey_status]
+
+
+export const field_type: {
+  TEXT: 'TEXT',
+  TEXTAREA: 'TEXTAREA',
+  EMAIL: 'EMAIL',
+  NUMBER: 'NUMBER',
+  DATE: 'DATE',
+  SELECT: 'SELECT',
+  RADIO: 'RADIO',
+  CHECKBOX: 'CHECKBOX',
+  FILE: 'FILE'
+};
+
+export type field_type = (typeof field_type)[keyof typeof field_type]
+
+
+export const chart_type: {
+  BAR: 'BAR',
+  PIE: 'PIE',
+  LINE: 'LINE',
+  DOUGHNUT: 'DOUGHNUT',
+  AREA: 'AREA',
+  COLUMN: 'COLUMN',
+  SCATTER: 'SCATTER'
+};
+
+export type chart_type = (typeof chart_type)[keyof typeof chart_type]
+
 }
 
 export type RelationshipToHead = $Enums.RelationshipToHead
@@ -420,6 +483,18 @@ export const seminar_status: typeof $Enums.seminar_status
 export type participant_status = $Enums.participant_status
 
 export const participant_status: typeof $Enums.participant_status
+
+export type survey_status = $Enums.survey_status
+
+export const survey_status: typeof $Enums.survey_status
+
+export type field_type = $Enums.field_type
+
+export const field_type: typeof $Enums.field_type
+
+export type chart_type = $Enums.chart_type
+
+export const chart_type: typeof $Enums.chart_type
 
 /**
  * ##  Prisma Client ʲˢ
@@ -698,6 +773,56 @@ export class PrismaClient<
     * ```
     */
   get seminarParticipant(): Prisma.SeminarParticipantDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.surveyForm`: Exposes CRUD operations for the **SurveyForm** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SurveyForms
+    * const surveyForms = await prisma.surveyForm.findMany()
+    * ```
+    */
+  get surveyForm(): Prisma.SurveyFormDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.surveyField`: Exposes CRUD operations for the **SurveyField** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SurveyFields
+    * const surveyFields = await prisma.surveyField.findMany()
+    * ```
+    */
+  get surveyField(): Prisma.SurveyFieldDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.surveyResponse`: Exposes CRUD operations for the **SurveyResponse** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SurveyResponses
+    * const surveyResponses = await prisma.surveyResponse.findMany()
+    * ```
+    */
+  get surveyResponse(): Prisma.SurveyResponseDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.surveyAnswer`: Exposes CRUD operations for the **SurveyAnswer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SurveyAnswers
+    * const surveyAnswers = await prisma.surveyAnswer.findMany()
+    * ```
+    */
+  get surveyAnswer(): Prisma.SurveyAnswerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.surveyStatistic`: Exposes CRUD operations for the **SurveyStatistic** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SurveyStatistics
+    * const surveyStatistics = await prisma.surveyStatistic.findMany()
+    * ```
+    */
+  get surveyStatistic(): Prisma.SurveyStatisticDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1153,7 +1278,12 @@ export namespace Prisma {
     ItemStack: 'ItemStack',
     ItemTransaction: 'ItemTransaction',
     Seminar: 'Seminar',
-    SeminarParticipant: 'SeminarParticipant'
+    SeminarParticipant: 'SeminarParticipant',
+    SurveyForm: 'SurveyForm',
+    SurveyField: 'SurveyField',
+    SurveyResponse: 'SurveyResponse',
+    SurveyAnswer: 'SurveyAnswer',
+    SurveyStatistic: 'SurveyStatistic'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1172,7 +1302,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "auditLog" | "chatRoom" | "chatParticipant" | "chatMessage" | "chatAttachment" | "chatReadReceipt" | "inquiry" | "inquiryReply" | "inquiryAttachment" | "fAQ" | "inventoryItem" | "itemStack" | "itemTransaction" | "seminar" | "seminarParticipant"
+      modelProps: "account" | "auditLog" | "chatRoom" | "chatParticipant" | "chatMessage" | "chatAttachment" | "chatReadReceipt" | "inquiry" | "inquiryReply" | "inquiryAttachment" | "fAQ" | "inventoryItem" | "itemStack" | "itemTransaction" | "seminar" | "seminarParticipant" | "surveyForm" | "surveyField" | "surveyResponse" | "surveyAnswer" | "surveyStatistic"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2232,6 +2362,336 @@ export namespace Prisma {
           }
         }
       }
+      SurveyForm: {
+        payload: Prisma.$SurveyFormPayload<ExtArgs>
+        fields: Prisma.SurveyFormFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SurveyFormFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFormPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SurveyFormFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFormPayload>
+          }
+          findFirst: {
+            args: Prisma.SurveyFormFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFormPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SurveyFormFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFormPayload>
+          }
+          findMany: {
+            args: Prisma.SurveyFormFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFormPayload>[]
+          }
+          create: {
+            args: Prisma.SurveyFormCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFormPayload>
+          }
+          createMany: {
+            args: Prisma.SurveyFormCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.SurveyFormDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFormPayload>
+          }
+          update: {
+            args: Prisma.SurveyFormUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFormPayload>
+          }
+          deleteMany: {
+            args: Prisma.SurveyFormDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SurveyFormUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SurveyFormUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFormPayload>
+          }
+          aggregate: {
+            args: Prisma.SurveyFormAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSurveyForm>
+          }
+          groupBy: {
+            args: Prisma.SurveyFormGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SurveyFormGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SurveyFormCountArgs<ExtArgs>
+            result: $Utils.Optional<SurveyFormCountAggregateOutputType> | number
+          }
+        }
+      }
+      SurveyField: {
+        payload: Prisma.$SurveyFieldPayload<ExtArgs>
+        fields: Prisma.SurveyFieldFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SurveyFieldFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFieldPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SurveyFieldFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFieldPayload>
+          }
+          findFirst: {
+            args: Prisma.SurveyFieldFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFieldPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SurveyFieldFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFieldPayload>
+          }
+          findMany: {
+            args: Prisma.SurveyFieldFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFieldPayload>[]
+          }
+          create: {
+            args: Prisma.SurveyFieldCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFieldPayload>
+          }
+          createMany: {
+            args: Prisma.SurveyFieldCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.SurveyFieldDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFieldPayload>
+          }
+          update: {
+            args: Prisma.SurveyFieldUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFieldPayload>
+          }
+          deleteMany: {
+            args: Prisma.SurveyFieldDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SurveyFieldUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SurveyFieldUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyFieldPayload>
+          }
+          aggregate: {
+            args: Prisma.SurveyFieldAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSurveyField>
+          }
+          groupBy: {
+            args: Prisma.SurveyFieldGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SurveyFieldGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SurveyFieldCountArgs<ExtArgs>
+            result: $Utils.Optional<SurveyFieldCountAggregateOutputType> | number
+          }
+        }
+      }
+      SurveyResponse: {
+        payload: Prisma.$SurveyResponsePayload<ExtArgs>
+        fields: Prisma.SurveyResponseFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SurveyResponseFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyResponsePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SurveyResponseFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyResponsePayload>
+          }
+          findFirst: {
+            args: Prisma.SurveyResponseFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyResponsePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SurveyResponseFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyResponsePayload>
+          }
+          findMany: {
+            args: Prisma.SurveyResponseFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyResponsePayload>[]
+          }
+          create: {
+            args: Prisma.SurveyResponseCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyResponsePayload>
+          }
+          createMany: {
+            args: Prisma.SurveyResponseCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.SurveyResponseDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyResponsePayload>
+          }
+          update: {
+            args: Prisma.SurveyResponseUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyResponsePayload>
+          }
+          deleteMany: {
+            args: Prisma.SurveyResponseDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SurveyResponseUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SurveyResponseUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyResponsePayload>
+          }
+          aggregate: {
+            args: Prisma.SurveyResponseAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSurveyResponse>
+          }
+          groupBy: {
+            args: Prisma.SurveyResponseGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SurveyResponseGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SurveyResponseCountArgs<ExtArgs>
+            result: $Utils.Optional<SurveyResponseCountAggregateOutputType> | number
+          }
+        }
+      }
+      SurveyAnswer: {
+        payload: Prisma.$SurveyAnswerPayload<ExtArgs>
+        fields: Prisma.SurveyAnswerFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SurveyAnswerFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyAnswerPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SurveyAnswerFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyAnswerPayload>
+          }
+          findFirst: {
+            args: Prisma.SurveyAnswerFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyAnswerPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SurveyAnswerFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyAnswerPayload>
+          }
+          findMany: {
+            args: Prisma.SurveyAnswerFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyAnswerPayload>[]
+          }
+          create: {
+            args: Prisma.SurveyAnswerCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyAnswerPayload>
+          }
+          createMany: {
+            args: Prisma.SurveyAnswerCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.SurveyAnswerDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyAnswerPayload>
+          }
+          update: {
+            args: Prisma.SurveyAnswerUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyAnswerPayload>
+          }
+          deleteMany: {
+            args: Prisma.SurveyAnswerDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SurveyAnswerUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SurveyAnswerUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyAnswerPayload>
+          }
+          aggregate: {
+            args: Prisma.SurveyAnswerAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSurveyAnswer>
+          }
+          groupBy: {
+            args: Prisma.SurveyAnswerGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SurveyAnswerGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SurveyAnswerCountArgs<ExtArgs>
+            result: $Utils.Optional<SurveyAnswerCountAggregateOutputType> | number
+          }
+        }
+      }
+      SurveyStatistic: {
+        payload: Prisma.$SurveyStatisticPayload<ExtArgs>
+        fields: Prisma.SurveyStatisticFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SurveyStatisticFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyStatisticPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SurveyStatisticFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyStatisticPayload>
+          }
+          findFirst: {
+            args: Prisma.SurveyStatisticFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyStatisticPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SurveyStatisticFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyStatisticPayload>
+          }
+          findMany: {
+            args: Prisma.SurveyStatisticFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyStatisticPayload>[]
+          }
+          create: {
+            args: Prisma.SurveyStatisticCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyStatisticPayload>
+          }
+          createMany: {
+            args: Prisma.SurveyStatisticCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.SurveyStatisticDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyStatisticPayload>
+          }
+          update: {
+            args: Prisma.SurveyStatisticUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyStatisticPayload>
+          }
+          deleteMany: {
+            args: Prisma.SurveyStatisticDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SurveyStatisticUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SurveyStatisticUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SurveyStatisticPayload>
+          }
+          aggregate: {
+            args: Prisma.SurveyStatisticAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSurveyStatistic>
+          }
+          groupBy: {
+            args: Prisma.SurveyStatisticGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SurveyStatisticGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SurveyStatisticCountArgs<ExtArgs>
+            result: $Utils.Optional<SurveyStatisticCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2340,6 +2800,11 @@ export namespace Prisma {
     itemTransaction?: ItemTransactionOmit
     seminar?: SeminarOmit
     seminarParticipant?: SeminarParticipantOmit
+    surveyForm?: SurveyFormOmit
+    surveyField?: SurveyFieldOmit
+    surveyResponse?: SurveyResponseOmit
+    surveyAnswer?: SurveyAnswerOmit
+    surveyStatistic?: SurveyStatisticOmit
   }
 
   /* Types for Logging */
@@ -2435,6 +2900,9 @@ export namespace Prisma {
     chatMessages: number
     chatAttachments: number
     chatReadReceipts: number
+    surveyFormsCreated: number
+    surveyResponses: number
+    surveyStatisticsCreated: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2453,6 +2921,9 @@ export namespace Prisma {
     chatMessages?: boolean | AccountCountOutputTypeCountChatMessagesArgs
     chatAttachments?: boolean | AccountCountOutputTypeCountChatAttachmentsArgs
     chatReadReceipts?: boolean | AccountCountOutputTypeCountChatReadReceiptsArgs
+    surveyFormsCreated?: boolean | AccountCountOutputTypeCountSurveyFormsCreatedArgs
+    surveyResponses?: boolean | AccountCountOutputTypeCountSurveyResponsesArgs
+    surveyStatisticsCreated?: boolean | AccountCountOutputTypeCountSurveyStatisticsCreatedArgs
   }
 
   // Custom InputTypes
@@ -2569,6 +3040,27 @@ export namespace Prisma {
    */
   export type AccountCountOutputTypeCountChatReadReceiptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChatReadReceiptWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountSurveyFormsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyFormWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountSurveyResponsesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyResponseWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountSurveyStatisticsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyStatisticWhereInput
   }
 
 
@@ -2822,6 +3314,117 @@ export namespace Prisma {
    */
   export type SeminarCountOutputTypeCountParticipantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SeminarParticipantWhereInput
+  }
+
+
+  /**
+   * Count Type SurveyFormCountOutputType
+   */
+
+  export type SurveyFormCountOutputType = {
+    fields: number
+    responses: number
+    statistics: number
+  }
+
+  export type SurveyFormCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    fields?: boolean | SurveyFormCountOutputTypeCountFieldsArgs
+    responses?: boolean | SurveyFormCountOutputTypeCountResponsesArgs
+    statistics?: boolean | SurveyFormCountOutputTypeCountStatisticsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SurveyFormCountOutputType without action
+   */
+  export type SurveyFormCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyFormCountOutputType
+     */
+    select?: SurveyFormCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SurveyFormCountOutputType without action
+   */
+  export type SurveyFormCountOutputTypeCountFieldsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyFieldWhereInput
+  }
+
+  /**
+   * SurveyFormCountOutputType without action
+   */
+  export type SurveyFormCountOutputTypeCountResponsesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyResponseWhereInput
+  }
+
+  /**
+   * SurveyFormCountOutputType without action
+   */
+  export type SurveyFormCountOutputTypeCountStatisticsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyStatisticWhereInput
+  }
+
+
+  /**
+   * Count Type SurveyFieldCountOutputType
+   */
+
+  export type SurveyFieldCountOutputType = {
+    answers: number
+  }
+
+  export type SurveyFieldCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    answers?: boolean | SurveyFieldCountOutputTypeCountAnswersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SurveyFieldCountOutputType without action
+   */
+  export type SurveyFieldCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyFieldCountOutputType
+     */
+    select?: SurveyFieldCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SurveyFieldCountOutputType without action
+   */
+  export type SurveyFieldCountOutputTypeCountAnswersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyAnswerWhereInput
+  }
+
+
+  /**
+   * Count Type SurveyResponseCountOutputType
+   */
+
+  export type SurveyResponseCountOutputType = {
+    answers: number
+  }
+
+  export type SurveyResponseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    answers?: boolean | SurveyResponseCountOutputTypeCountAnswersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SurveyResponseCountOutputType without action
+   */
+  export type SurveyResponseCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponseCountOutputType
+     */
+    select?: SurveyResponseCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SurveyResponseCountOutputType without action
+   */
+  export type SurveyResponseCountOutputTypeCountAnswersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyAnswerWhereInput
   }
 
 
@@ -3388,6 +3991,9 @@ export namespace Prisma {
     chatMessages?: boolean | Account$chatMessagesArgs<ExtArgs>
     chatAttachments?: boolean | Account$chatAttachmentsArgs<ExtArgs>
     chatReadReceipts?: boolean | Account$chatReadReceiptsArgs<ExtArgs>
+    surveyFormsCreated?: boolean | Account$surveyFormsCreatedArgs<ExtArgs>
+    surveyResponses?: boolean | Account$surveyResponsesArgs<ExtArgs>
+    surveyStatisticsCreated?: boolean | Account$surveyStatisticsCreatedArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -3468,6 +4074,9 @@ export namespace Prisma {
     chatMessages?: boolean | Account$chatMessagesArgs<ExtArgs>
     chatAttachments?: boolean | Account$chatAttachmentsArgs<ExtArgs>
     chatReadReceipts?: boolean | Account$chatReadReceiptsArgs<ExtArgs>
+    surveyFormsCreated?: boolean | Account$surveyFormsCreatedArgs<ExtArgs>
+    surveyResponses?: boolean | Account$surveyResponsesArgs<ExtArgs>
+    surveyStatisticsCreated?: boolean | Account$surveyStatisticsCreatedArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -3489,6 +4098,9 @@ export namespace Prisma {
       chatMessages: Prisma.$ChatMessagePayload<ExtArgs>[]
       chatAttachments: Prisma.$ChatAttachmentPayload<ExtArgs>[]
       chatReadReceipts: Prisma.$ChatReadReceiptPayload<ExtArgs>[]
+      surveyFormsCreated: Prisma.$SurveyFormPayload<ExtArgs>[]
+      surveyResponses: Prisma.$SurveyResponsePayload<ExtArgs>[]
+      surveyStatisticsCreated: Prisma.$SurveyStatisticPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3901,6 +4513,9 @@ export namespace Prisma {
     chatMessages<T extends Account$chatMessagesArgs<ExtArgs> = {}>(args?: Subset<T, Account$chatMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chatAttachments<T extends Account$chatAttachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Account$chatAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chatReadReceipts<T extends Account$chatReadReceiptsArgs<ExtArgs> = {}>(args?: Subset<T, Account$chatReadReceiptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatReadReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    surveyFormsCreated<T extends Account$surveyFormsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, Account$surveyFormsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    surveyResponses<T extends Account$surveyResponsesArgs<ExtArgs> = {}>(args?: Subset<T, Account$surveyResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    surveyStatisticsCreated<T extends Account$surveyStatisticsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, Account$surveyStatisticsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4685,6 +5300,78 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ChatReadReceiptScalarFieldEnum | ChatReadReceiptScalarFieldEnum[]
+  }
+
+  /**
+   * Account.surveyFormsCreated
+   */
+  export type Account$surveyFormsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyForm
+     */
+    select?: SurveyFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyForm
+     */
+    omit?: SurveyFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFormInclude<ExtArgs> | null
+    where?: SurveyFormWhereInput
+    orderBy?: SurveyFormOrderByWithRelationInput | SurveyFormOrderByWithRelationInput[]
+    cursor?: SurveyFormWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SurveyFormScalarFieldEnum | SurveyFormScalarFieldEnum[]
+  }
+
+  /**
+   * Account.surveyResponses
+   */
+  export type Account$surveyResponsesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+    where?: SurveyResponseWhereInput
+    orderBy?: SurveyResponseOrderByWithRelationInput | SurveyResponseOrderByWithRelationInput[]
+    cursor?: SurveyResponseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SurveyResponseScalarFieldEnum | SurveyResponseScalarFieldEnum[]
+  }
+
+  /**
+   * Account.surveyStatisticsCreated
+   */
+  export type Account$surveyStatisticsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+    where?: SurveyStatisticWhereInput
+    orderBy?: SurveyStatisticOrderByWithRelationInput | SurveyStatisticOrderByWithRelationInput[]
+    cursor?: SurveyStatisticWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SurveyStatisticScalarFieldEnum | SurveyStatisticScalarFieldEnum[]
   }
 
   /**
@@ -20129,6 +20816,4978 @@ export namespace Prisma {
 
 
   /**
+   * Model SurveyForm
+   */
+
+  export type AggregateSurveyForm = {
+    _count: SurveyFormCountAggregateOutputType | null
+    _min: SurveyFormMinAggregateOutputType | null
+    _max: SurveyFormMaxAggregateOutputType | null
+  }
+
+  export type SurveyFormMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    description: string | null
+    status: $Enums.survey_status | null
+    category: string | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SurveyFormMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    description: string | null
+    status: $Enums.survey_status | null
+    category: string | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SurveyFormCountAggregateOutputType = {
+    id: number
+    title: number
+    description: number
+    status: number
+    category: number
+    createdById: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SurveyFormMinAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    status?: true
+    category?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SurveyFormMaxAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    status?: true
+    category?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SurveyFormCountAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    status?: true
+    category?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SurveyFormAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SurveyForm to aggregate.
+     */
+    where?: SurveyFormWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyForms to fetch.
+     */
+    orderBy?: SurveyFormOrderByWithRelationInput | SurveyFormOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SurveyFormWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyForms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyForms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SurveyForms
+    **/
+    _count?: true | SurveyFormCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SurveyFormMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SurveyFormMaxAggregateInputType
+  }
+
+  export type GetSurveyFormAggregateType<T extends SurveyFormAggregateArgs> = {
+        [P in keyof T & keyof AggregateSurveyForm]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSurveyForm[P]>
+      : GetScalarType<T[P], AggregateSurveyForm[P]>
+  }
+
+
+
+
+  export type SurveyFormGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyFormWhereInput
+    orderBy?: SurveyFormOrderByWithAggregationInput | SurveyFormOrderByWithAggregationInput[]
+    by: SurveyFormScalarFieldEnum[] | SurveyFormScalarFieldEnum
+    having?: SurveyFormScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SurveyFormCountAggregateInputType | true
+    _min?: SurveyFormMinAggregateInputType
+    _max?: SurveyFormMaxAggregateInputType
+  }
+
+  export type SurveyFormGroupByOutputType = {
+    id: string
+    title: string
+    description: string | null
+    status: $Enums.survey_status
+    category: string
+    createdById: string
+    createdAt: Date
+    updatedAt: Date
+    _count: SurveyFormCountAggregateOutputType | null
+    _min: SurveyFormMinAggregateOutputType | null
+    _max: SurveyFormMaxAggregateOutputType | null
+  }
+
+  type GetSurveyFormGroupByPayload<T extends SurveyFormGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SurveyFormGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SurveyFormGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SurveyFormGroupByOutputType[P]>
+            : GetScalarType<T[P], SurveyFormGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SurveyFormSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    status?: boolean
+    category?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    creator?: boolean | AccountDefaultArgs<ExtArgs>
+    fields?: boolean | SurveyForm$fieldsArgs<ExtArgs>
+    responses?: boolean | SurveyForm$responsesArgs<ExtArgs>
+    statistics?: boolean | SurveyForm$statisticsArgs<ExtArgs>
+    _count?: boolean | SurveyFormCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["surveyForm"]>
+
+
+
+  export type SurveyFormSelectScalar = {
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    status?: boolean
+    category?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SurveyFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "status" | "category" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["surveyForm"]>
+  export type SurveyFormInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | AccountDefaultArgs<ExtArgs>
+    fields?: boolean | SurveyForm$fieldsArgs<ExtArgs>
+    responses?: boolean | SurveyForm$responsesArgs<ExtArgs>
+    statistics?: boolean | SurveyForm$statisticsArgs<ExtArgs>
+    _count?: boolean | SurveyFormCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $SurveyFormPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SurveyForm"
+    objects: {
+      creator: Prisma.$AccountPayload<ExtArgs>
+      fields: Prisma.$SurveyFieldPayload<ExtArgs>[]
+      responses: Prisma.$SurveyResponsePayload<ExtArgs>[]
+      statistics: Prisma.$SurveyStatisticPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string
+      description: string | null
+      status: $Enums.survey_status
+      category: string
+      createdById: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["surveyForm"]>
+    composites: {}
+  }
+
+  type SurveyFormGetPayload<S extends boolean | null | undefined | SurveyFormDefaultArgs> = $Result.GetResult<Prisma.$SurveyFormPayload, S>
+
+  type SurveyFormCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SurveyFormFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SurveyFormCountAggregateInputType | true
+    }
+
+  export interface SurveyFormDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SurveyForm'], meta: { name: 'SurveyForm' } }
+    /**
+     * Find zero or one SurveyForm that matches the filter.
+     * @param {SurveyFormFindUniqueArgs} args - Arguments to find a SurveyForm
+     * @example
+     * // Get one SurveyForm
+     * const surveyForm = await prisma.surveyForm.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SurveyFormFindUniqueArgs>(args: SelectSubset<T, SurveyFormFindUniqueArgs<ExtArgs>>): Prisma__SurveyFormClient<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SurveyForm that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SurveyFormFindUniqueOrThrowArgs} args - Arguments to find a SurveyForm
+     * @example
+     * // Get one SurveyForm
+     * const surveyForm = await prisma.surveyForm.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SurveyFormFindUniqueOrThrowArgs>(args: SelectSubset<T, SurveyFormFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SurveyFormClient<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SurveyForm that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFormFindFirstArgs} args - Arguments to find a SurveyForm
+     * @example
+     * // Get one SurveyForm
+     * const surveyForm = await prisma.surveyForm.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SurveyFormFindFirstArgs>(args?: SelectSubset<T, SurveyFormFindFirstArgs<ExtArgs>>): Prisma__SurveyFormClient<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SurveyForm that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFormFindFirstOrThrowArgs} args - Arguments to find a SurveyForm
+     * @example
+     * // Get one SurveyForm
+     * const surveyForm = await prisma.surveyForm.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SurveyFormFindFirstOrThrowArgs>(args?: SelectSubset<T, SurveyFormFindFirstOrThrowArgs<ExtArgs>>): Prisma__SurveyFormClient<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SurveyForms that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFormFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SurveyForms
+     * const surveyForms = await prisma.surveyForm.findMany()
+     * 
+     * // Get first 10 SurveyForms
+     * const surveyForms = await prisma.surveyForm.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const surveyFormWithIdOnly = await prisma.surveyForm.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SurveyFormFindManyArgs>(args?: SelectSubset<T, SurveyFormFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SurveyForm.
+     * @param {SurveyFormCreateArgs} args - Arguments to create a SurveyForm.
+     * @example
+     * // Create one SurveyForm
+     * const SurveyForm = await prisma.surveyForm.create({
+     *   data: {
+     *     // ... data to create a SurveyForm
+     *   }
+     * })
+     * 
+     */
+    create<T extends SurveyFormCreateArgs>(args: SelectSubset<T, SurveyFormCreateArgs<ExtArgs>>): Prisma__SurveyFormClient<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SurveyForms.
+     * @param {SurveyFormCreateManyArgs} args - Arguments to create many SurveyForms.
+     * @example
+     * // Create many SurveyForms
+     * const surveyForm = await prisma.surveyForm.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SurveyFormCreateManyArgs>(args?: SelectSubset<T, SurveyFormCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a SurveyForm.
+     * @param {SurveyFormDeleteArgs} args - Arguments to delete one SurveyForm.
+     * @example
+     * // Delete one SurveyForm
+     * const SurveyForm = await prisma.surveyForm.delete({
+     *   where: {
+     *     // ... filter to delete one SurveyForm
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SurveyFormDeleteArgs>(args: SelectSubset<T, SurveyFormDeleteArgs<ExtArgs>>): Prisma__SurveyFormClient<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SurveyForm.
+     * @param {SurveyFormUpdateArgs} args - Arguments to update one SurveyForm.
+     * @example
+     * // Update one SurveyForm
+     * const surveyForm = await prisma.surveyForm.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SurveyFormUpdateArgs>(args: SelectSubset<T, SurveyFormUpdateArgs<ExtArgs>>): Prisma__SurveyFormClient<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SurveyForms.
+     * @param {SurveyFormDeleteManyArgs} args - Arguments to filter SurveyForms to delete.
+     * @example
+     * // Delete a few SurveyForms
+     * const { count } = await prisma.surveyForm.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SurveyFormDeleteManyArgs>(args?: SelectSubset<T, SurveyFormDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SurveyForms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFormUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SurveyForms
+     * const surveyForm = await prisma.surveyForm.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SurveyFormUpdateManyArgs>(args: SelectSubset<T, SurveyFormUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SurveyForm.
+     * @param {SurveyFormUpsertArgs} args - Arguments to update or create a SurveyForm.
+     * @example
+     * // Update or create a SurveyForm
+     * const surveyForm = await prisma.surveyForm.upsert({
+     *   create: {
+     *     // ... data to create a SurveyForm
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SurveyForm we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SurveyFormUpsertArgs>(args: SelectSubset<T, SurveyFormUpsertArgs<ExtArgs>>): Prisma__SurveyFormClient<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SurveyForms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFormCountArgs} args - Arguments to filter SurveyForms to count.
+     * @example
+     * // Count the number of SurveyForms
+     * const count = await prisma.surveyForm.count({
+     *   where: {
+     *     // ... the filter for the SurveyForms we want to count
+     *   }
+     * })
+    **/
+    count<T extends SurveyFormCountArgs>(
+      args?: Subset<T, SurveyFormCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SurveyFormCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SurveyForm.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFormAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SurveyFormAggregateArgs>(args: Subset<T, SurveyFormAggregateArgs>): Prisma.PrismaPromise<GetSurveyFormAggregateType<T>>
+
+    /**
+     * Group by SurveyForm.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFormGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SurveyFormGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SurveyFormGroupByArgs['orderBy'] }
+        : { orderBy?: SurveyFormGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SurveyFormGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSurveyFormGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SurveyForm model
+   */
+  readonly fields: SurveyFormFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SurveyForm.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SurveyFormClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    creator<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    fields<T extends SurveyForm$fieldsArgs<ExtArgs> = {}>(args?: Subset<T, SurveyForm$fieldsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyFieldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    responses<T extends SurveyForm$responsesArgs<ExtArgs> = {}>(args?: Subset<T, SurveyForm$responsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    statistics<T extends SurveyForm$statisticsArgs<ExtArgs> = {}>(args?: Subset<T, SurveyForm$statisticsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SurveyForm model
+   */
+  interface SurveyFormFieldRefs {
+    readonly id: FieldRef<"SurveyForm", 'String'>
+    readonly title: FieldRef<"SurveyForm", 'String'>
+    readonly description: FieldRef<"SurveyForm", 'String'>
+    readonly status: FieldRef<"SurveyForm", 'survey_status'>
+    readonly category: FieldRef<"SurveyForm", 'String'>
+    readonly createdById: FieldRef<"SurveyForm", 'String'>
+    readonly createdAt: FieldRef<"SurveyForm", 'DateTime'>
+    readonly updatedAt: FieldRef<"SurveyForm", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SurveyForm findUnique
+   */
+  export type SurveyFormFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyForm
+     */
+    select?: SurveyFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyForm
+     */
+    omit?: SurveyFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFormInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyForm to fetch.
+     */
+    where: SurveyFormWhereUniqueInput
+  }
+
+  /**
+   * SurveyForm findUniqueOrThrow
+   */
+  export type SurveyFormFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyForm
+     */
+    select?: SurveyFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyForm
+     */
+    omit?: SurveyFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFormInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyForm to fetch.
+     */
+    where: SurveyFormWhereUniqueInput
+  }
+
+  /**
+   * SurveyForm findFirst
+   */
+  export type SurveyFormFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyForm
+     */
+    select?: SurveyFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyForm
+     */
+    omit?: SurveyFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFormInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyForm to fetch.
+     */
+    where?: SurveyFormWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyForms to fetch.
+     */
+    orderBy?: SurveyFormOrderByWithRelationInput | SurveyFormOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SurveyForms.
+     */
+    cursor?: SurveyFormWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyForms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyForms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SurveyForms.
+     */
+    distinct?: SurveyFormScalarFieldEnum | SurveyFormScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyForm findFirstOrThrow
+   */
+  export type SurveyFormFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyForm
+     */
+    select?: SurveyFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyForm
+     */
+    omit?: SurveyFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFormInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyForm to fetch.
+     */
+    where?: SurveyFormWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyForms to fetch.
+     */
+    orderBy?: SurveyFormOrderByWithRelationInput | SurveyFormOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SurveyForms.
+     */
+    cursor?: SurveyFormWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyForms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyForms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SurveyForms.
+     */
+    distinct?: SurveyFormScalarFieldEnum | SurveyFormScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyForm findMany
+   */
+  export type SurveyFormFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyForm
+     */
+    select?: SurveyFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyForm
+     */
+    omit?: SurveyFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFormInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyForms to fetch.
+     */
+    where?: SurveyFormWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyForms to fetch.
+     */
+    orderBy?: SurveyFormOrderByWithRelationInput | SurveyFormOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SurveyForms.
+     */
+    cursor?: SurveyFormWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyForms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyForms.
+     */
+    skip?: number
+    distinct?: SurveyFormScalarFieldEnum | SurveyFormScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyForm create
+   */
+  export type SurveyFormCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyForm
+     */
+    select?: SurveyFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyForm
+     */
+    omit?: SurveyFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFormInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SurveyForm.
+     */
+    data: XOR<SurveyFormCreateInput, SurveyFormUncheckedCreateInput>
+  }
+
+  /**
+   * SurveyForm createMany
+   */
+  export type SurveyFormCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SurveyForms.
+     */
+    data: SurveyFormCreateManyInput | SurveyFormCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SurveyForm update
+   */
+  export type SurveyFormUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyForm
+     */
+    select?: SurveyFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyForm
+     */
+    omit?: SurveyFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFormInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SurveyForm.
+     */
+    data: XOR<SurveyFormUpdateInput, SurveyFormUncheckedUpdateInput>
+    /**
+     * Choose, which SurveyForm to update.
+     */
+    where: SurveyFormWhereUniqueInput
+  }
+
+  /**
+   * SurveyForm updateMany
+   */
+  export type SurveyFormUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SurveyForms.
+     */
+    data: XOR<SurveyFormUpdateManyMutationInput, SurveyFormUncheckedUpdateManyInput>
+    /**
+     * Filter which SurveyForms to update
+     */
+    where?: SurveyFormWhereInput
+    /**
+     * Limit how many SurveyForms to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SurveyForm upsert
+   */
+  export type SurveyFormUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyForm
+     */
+    select?: SurveyFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyForm
+     */
+    omit?: SurveyFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFormInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SurveyForm to update in case it exists.
+     */
+    where: SurveyFormWhereUniqueInput
+    /**
+     * In case the SurveyForm found by the `where` argument doesn't exist, create a new SurveyForm with this data.
+     */
+    create: XOR<SurveyFormCreateInput, SurveyFormUncheckedCreateInput>
+    /**
+     * In case the SurveyForm was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SurveyFormUpdateInput, SurveyFormUncheckedUpdateInput>
+  }
+
+  /**
+   * SurveyForm delete
+   */
+  export type SurveyFormDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyForm
+     */
+    select?: SurveyFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyForm
+     */
+    omit?: SurveyFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFormInclude<ExtArgs> | null
+    /**
+     * Filter which SurveyForm to delete.
+     */
+    where: SurveyFormWhereUniqueInput
+  }
+
+  /**
+   * SurveyForm deleteMany
+   */
+  export type SurveyFormDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SurveyForms to delete
+     */
+    where?: SurveyFormWhereInput
+    /**
+     * Limit how many SurveyForms to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SurveyForm.fields
+   */
+  export type SurveyForm$fieldsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyField
+     */
+    select?: SurveyFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyField
+     */
+    omit?: SurveyFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFieldInclude<ExtArgs> | null
+    where?: SurveyFieldWhereInput
+    orderBy?: SurveyFieldOrderByWithRelationInput | SurveyFieldOrderByWithRelationInput[]
+    cursor?: SurveyFieldWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SurveyFieldScalarFieldEnum | SurveyFieldScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyForm.responses
+   */
+  export type SurveyForm$responsesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+    where?: SurveyResponseWhereInput
+    orderBy?: SurveyResponseOrderByWithRelationInput | SurveyResponseOrderByWithRelationInput[]
+    cursor?: SurveyResponseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SurveyResponseScalarFieldEnum | SurveyResponseScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyForm.statistics
+   */
+  export type SurveyForm$statisticsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+    where?: SurveyStatisticWhereInput
+    orderBy?: SurveyStatisticOrderByWithRelationInput | SurveyStatisticOrderByWithRelationInput[]
+    cursor?: SurveyStatisticWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SurveyStatisticScalarFieldEnum | SurveyStatisticScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyForm without action
+   */
+  export type SurveyFormDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyForm
+     */
+    select?: SurveyFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyForm
+     */
+    omit?: SurveyFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFormInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SurveyField
+   */
+
+  export type AggregateSurveyField = {
+    _count: SurveyFieldCountAggregateOutputType | null
+    _avg: SurveyFieldAvgAggregateOutputType | null
+    _sum: SurveyFieldSumAggregateOutputType | null
+    _min: SurveyFieldMinAggregateOutputType | null
+    _max: SurveyFieldMaxAggregateOutputType | null
+  }
+
+  export type SurveyFieldAvgAggregateOutputType = {
+    order: number | null
+  }
+
+  export type SurveyFieldSumAggregateOutputType = {
+    order: number | null
+  }
+
+  export type SurveyFieldMinAggregateOutputType = {
+    id: string | null
+    surveyFormId: string | null
+    type: $Enums.field_type | null
+    label: string | null
+    placeholder: string | null
+    required: boolean | null
+    order: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SurveyFieldMaxAggregateOutputType = {
+    id: string | null
+    surveyFormId: string | null
+    type: $Enums.field_type | null
+    label: string | null
+    placeholder: string | null
+    required: boolean | null
+    order: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SurveyFieldCountAggregateOutputType = {
+    id: number
+    surveyFormId: number
+    type: number
+    label: number
+    placeholder: number
+    required: number
+    options: number
+    order: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SurveyFieldAvgAggregateInputType = {
+    order?: true
+  }
+
+  export type SurveyFieldSumAggregateInputType = {
+    order?: true
+  }
+
+  export type SurveyFieldMinAggregateInputType = {
+    id?: true
+    surveyFormId?: true
+    type?: true
+    label?: true
+    placeholder?: true
+    required?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SurveyFieldMaxAggregateInputType = {
+    id?: true
+    surveyFormId?: true
+    type?: true
+    label?: true
+    placeholder?: true
+    required?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SurveyFieldCountAggregateInputType = {
+    id?: true
+    surveyFormId?: true
+    type?: true
+    label?: true
+    placeholder?: true
+    required?: true
+    options?: true
+    order?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SurveyFieldAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SurveyField to aggregate.
+     */
+    where?: SurveyFieldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyFields to fetch.
+     */
+    orderBy?: SurveyFieldOrderByWithRelationInput | SurveyFieldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SurveyFieldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyFields from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyFields.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SurveyFields
+    **/
+    _count?: true | SurveyFieldCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SurveyFieldAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SurveyFieldSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SurveyFieldMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SurveyFieldMaxAggregateInputType
+  }
+
+  export type GetSurveyFieldAggregateType<T extends SurveyFieldAggregateArgs> = {
+        [P in keyof T & keyof AggregateSurveyField]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSurveyField[P]>
+      : GetScalarType<T[P], AggregateSurveyField[P]>
+  }
+
+
+
+
+  export type SurveyFieldGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyFieldWhereInput
+    orderBy?: SurveyFieldOrderByWithAggregationInput | SurveyFieldOrderByWithAggregationInput[]
+    by: SurveyFieldScalarFieldEnum[] | SurveyFieldScalarFieldEnum
+    having?: SurveyFieldScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SurveyFieldCountAggregateInputType | true
+    _avg?: SurveyFieldAvgAggregateInputType
+    _sum?: SurveyFieldSumAggregateInputType
+    _min?: SurveyFieldMinAggregateInputType
+    _max?: SurveyFieldMaxAggregateInputType
+  }
+
+  export type SurveyFieldGroupByOutputType = {
+    id: string
+    surveyFormId: string
+    type: $Enums.field_type
+    label: string
+    placeholder: string | null
+    required: boolean
+    options: JsonValue | null
+    order: number
+    createdAt: Date
+    updatedAt: Date
+    _count: SurveyFieldCountAggregateOutputType | null
+    _avg: SurveyFieldAvgAggregateOutputType | null
+    _sum: SurveyFieldSumAggregateOutputType | null
+    _min: SurveyFieldMinAggregateOutputType | null
+    _max: SurveyFieldMaxAggregateOutputType | null
+  }
+
+  type GetSurveyFieldGroupByPayload<T extends SurveyFieldGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SurveyFieldGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SurveyFieldGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SurveyFieldGroupByOutputType[P]>
+            : GetScalarType<T[P], SurveyFieldGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SurveyFieldSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    surveyFormId?: boolean
+    type?: boolean
+    label?: boolean
+    placeholder?: boolean
+    required?: boolean
+    options?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    surveyForm?: boolean | SurveyFormDefaultArgs<ExtArgs>
+    answers?: boolean | SurveyField$answersArgs<ExtArgs>
+    _count?: boolean | SurveyFieldCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["surveyField"]>
+
+
+
+  export type SurveyFieldSelectScalar = {
+    id?: boolean
+    surveyFormId?: boolean
+    type?: boolean
+    label?: boolean
+    placeholder?: boolean
+    required?: boolean
+    options?: boolean
+    order?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SurveyFieldOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "surveyFormId" | "type" | "label" | "placeholder" | "required" | "options" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["surveyField"]>
+  export type SurveyFieldInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    surveyForm?: boolean | SurveyFormDefaultArgs<ExtArgs>
+    answers?: boolean | SurveyField$answersArgs<ExtArgs>
+    _count?: boolean | SurveyFieldCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $SurveyFieldPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SurveyField"
+    objects: {
+      surveyForm: Prisma.$SurveyFormPayload<ExtArgs>
+      answers: Prisma.$SurveyAnswerPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      surveyFormId: string
+      type: $Enums.field_type
+      label: string
+      placeholder: string | null
+      required: boolean
+      options: Prisma.JsonValue | null
+      order: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["surveyField"]>
+    composites: {}
+  }
+
+  type SurveyFieldGetPayload<S extends boolean | null | undefined | SurveyFieldDefaultArgs> = $Result.GetResult<Prisma.$SurveyFieldPayload, S>
+
+  type SurveyFieldCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SurveyFieldFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SurveyFieldCountAggregateInputType | true
+    }
+
+  export interface SurveyFieldDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SurveyField'], meta: { name: 'SurveyField' } }
+    /**
+     * Find zero or one SurveyField that matches the filter.
+     * @param {SurveyFieldFindUniqueArgs} args - Arguments to find a SurveyField
+     * @example
+     * // Get one SurveyField
+     * const surveyField = await prisma.surveyField.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SurveyFieldFindUniqueArgs>(args: SelectSubset<T, SurveyFieldFindUniqueArgs<ExtArgs>>): Prisma__SurveyFieldClient<$Result.GetResult<Prisma.$SurveyFieldPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SurveyField that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SurveyFieldFindUniqueOrThrowArgs} args - Arguments to find a SurveyField
+     * @example
+     * // Get one SurveyField
+     * const surveyField = await prisma.surveyField.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SurveyFieldFindUniqueOrThrowArgs>(args: SelectSubset<T, SurveyFieldFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SurveyFieldClient<$Result.GetResult<Prisma.$SurveyFieldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SurveyField that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFieldFindFirstArgs} args - Arguments to find a SurveyField
+     * @example
+     * // Get one SurveyField
+     * const surveyField = await prisma.surveyField.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SurveyFieldFindFirstArgs>(args?: SelectSubset<T, SurveyFieldFindFirstArgs<ExtArgs>>): Prisma__SurveyFieldClient<$Result.GetResult<Prisma.$SurveyFieldPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SurveyField that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFieldFindFirstOrThrowArgs} args - Arguments to find a SurveyField
+     * @example
+     * // Get one SurveyField
+     * const surveyField = await prisma.surveyField.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SurveyFieldFindFirstOrThrowArgs>(args?: SelectSubset<T, SurveyFieldFindFirstOrThrowArgs<ExtArgs>>): Prisma__SurveyFieldClient<$Result.GetResult<Prisma.$SurveyFieldPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SurveyFields that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFieldFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SurveyFields
+     * const surveyFields = await prisma.surveyField.findMany()
+     * 
+     * // Get first 10 SurveyFields
+     * const surveyFields = await prisma.surveyField.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const surveyFieldWithIdOnly = await prisma.surveyField.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SurveyFieldFindManyArgs>(args?: SelectSubset<T, SurveyFieldFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyFieldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SurveyField.
+     * @param {SurveyFieldCreateArgs} args - Arguments to create a SurveyField.
+     * @example
+     * // Create one SurveyField
+     * const SurveyField = await prisma.surveyField.create({
+     *   data: {
+     *     // ... data to create a SurveyField
+     *   }
+     * })
+     * 
+     */
+    create<T extends SurveyFieldCreateArgs>(args: SelectSubset<T, SurveyFieldCreateArgs<ExtArgs>>): Prisma__SurveyFieldClient<$Result.GetResult<Prisma.$SurveyFieldPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SurveyFields.
+     * @param {SurveyFieldCreateManyArgs} args - Arguments to create many SurveyFields.
+     * @example
+     * // Create many SurveyFields
+     * const surveyField = await prisma.surveyField.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SurveyFieldCreateManyArgs>(args?: SelectSubset<T, SurveyFieldCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a SurveyField.
+     * @param {SurveyFieldDeleteArgs} args - Arguments to delete one SurveyField.
+     * @example
+     * // Delete one SurveyField
+     * const SurveyField = await prisma.surveyField.delete({
+     *   where: {
+     *     // ... filter to delete one SurveyField
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SurveyFieldDeleteArgs>(args: SelectSubset<T, SurveyFieldDeleteArgs<ExtArgs>>): Prisma__SurveyFieldClient<$Result.GetResult<Prisma.$SurveyFieldPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SurveyField.
+     * @param {SurveyFieldUpdateArgs} args - Arguments to update one SurveyField.
+     * @example
+     * // Update one SurveyField
+     * const surveyField = await prisma.surveyField.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SurveyFieldUpdateArgs>(args: SelectSubset<T, SurveyFieldUpdateArgs<ExtArgs>>): Prisma__SurveyFieldClient<$Result.GetResult<Prisma.$SurveyFieldPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SurveyFields.
+     * @param {SurveyFieldDeleteManyArgs} args - Arguments to filter SurveyFields to delete.
+     * @example
+     * // Delete a few SurveyFields
+     * const { count } = await prisma.surveyField.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SurveyFieldDeleteManyArgs>(args?: SelectSubset<T, SurveyFieldDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SurveyFields.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFieldUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SurveyFields
+     * const surveyField = await prisma.surveyField.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SurveyFieldUpdateManyArgs>(args: SelectSubset<T, SurveyFieldUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SurveyField.
+     * @param {SurveyFieldUpsertArgs} args - Arguments to update or create a SurveyField.
+     * @example
+     * // Update or create a SurveyField
+     * const surveyField = await prisma.surveyField.upsert({
+     *   create: {
+     *     // ... data to create a SurveyField
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SurveyField we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SurveyFieldUpsertArgs>(args: SelectSubset<T, SurveyFieldUpsertArgs<ExtArgs>>): Prisma__SurveyFieldClient<$Result.GetResult<Prisma.$SurveyFieldPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SurveyFields.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFieldCountArgs} args - Arguments to filter SurveyFields to count.
+     * @example
+     * // Count the number of SurveyFields
+     * const count = await prisma.surveyField.count({
+     *   where: {
+     *     // ... the filter for the SurveyFields we want to count
+     *   }
+     * })
+    **/
+    count<T extends SurveyFieldCountArgs>(
+      args?: Subset<T, SurveyFieldCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SurveyFieldCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SurveyField.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFieldAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SurveyFieldAggregateArgs>(args: Subset<T, SurveyFieldAggregateArgs>): Prisma.PrismaPromise<GetSurveyFieldAggregateType<T>>
+
+    /**
+     * Group by SurveyField.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyFieldGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SurveyFieldGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SurveyFieldGroupByArgs['orderBy'] }
+        : { orderBy?: SurveyFieldGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SurveyFieldGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSurveyFieldGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SurveyField model
+   */
+  readonly fields: SurveyFieldFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SurveyField.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SurveyFieldClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    surveyForm<T extends SurveyFormDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SurveyFormDefaultArgs<ExtArgs>>): Prisma__SurveyFormClient<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    answers<T extends SurveyField$answersArgs<ExtArgs> = {}>(args?: Subset<T, SurveyField$answersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyAnswerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SurveyField model
+   */
+  interface SurveyFieldFieldRefs {
+    readonly id: FieldRef<"SurveyField", 'String'>
+    readonly surveyFormId: FieldRef<"SurveyField", 'String'>
+    readonly type: FieldRef<"SurveyField", 'field_type'>
+    readonly label: FieldRef<"SurveyField", 'String'>
+    readonly placeholder: FieldRef<"SurveyField", 'String'>
+    readonly required: FieldRef<"SurveyField", 'Boolean'>
+    readonly options: FieldRef<"SurveyField", 'Json'>
+    readonly order: FieldRef<"SurveyField", 'Int'>
+    readonly createdAt: FieldRef<"SurveyField", 'DateTime'>
+    readonly updatedAt: FieldRef<"SurveyField", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SurveyField findUnique
+   */
+  export type SurveyFieldFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyField
+     */
+    select?: SurveyFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyField
+     */
+    omit?: SurveyFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFieldInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyField to fetch.
+     */
+    where: SurveyFieldWhereUniqueInput
+  }
+
+  /**
+   * SurveyField findUniqueOrThrow
+   */
+  export type SurveyFieldFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyField
+     */
+    select?: SurveyFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyField
+     */
+    omit?: SurveyFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFieldInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyField to fetch.
+     */
+    where: SurveyFieldWhereUniqueInput
+  }
+
+  /**
+   * SurveyField findFirst
+   */
+  export type SurveyFieldFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyField
+     */
+    select?: SurveyFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyField
+     */
+    omit?: SurveyFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFieldInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyField to fetch.
+     */
+    where?: SurveyFieldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyFields to fetch.
+     */
+    orderBy?: SurveyFieldOrderByWithRelationInput | SurveyFieldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SurveyFields.
+     */
+    cursor?: SurveyFieldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyFields from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyFields.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SurveyFields.
+     */
+    distinct?: SurveyFieldScalarFieldEnum | SurveyFieldScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyField findFirstOrThrow
+   */
+  export type SurveyFieldFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyField
+     */
+    select?: SurveyFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyField
+     */
+    omit?: SurveyFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFieldInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyField to fetch.
+     */
+    where?: SurveyFieldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyFields to fetch.
+     */
+    orderBy?: SurveyFieldOrderByWithRelationInput | SurveyFieldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SurveyFields.
+     */
+    cursor?: SurveyFieldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyFields from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyFields.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SurveyFields.
+     */
+    distinct?: SurveyFieldScalarFieldEnum | SurveyFieldScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyField findMany
+   */
+  export type SurveyFieldFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyField
+     */
+    select?: SurveyFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyField
+     */
+    omit?: SurveyFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFieldInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyFields to fetch.
+     */
+    where?: SurveyFieldWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyFields to fetch.
+     */
+    orderBy?: SurveyFieldOrderByWithRelationInput | SurveyFieldOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SurveyFields.
+     */
+    cursor?: SurveyFieldWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyFields from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyFields.
+     */
+    skip?: number
+    distinct?: SurveyFieldScalarFieldEnum | SurveyFieldScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyField create
+   */
+  export type SurveyFieldCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyField
+     */
+    select?: SurveyFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyField
+     */
+    omit?: SurveyFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFieldInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SurveyField.
+     */
+    data: XOR<SurveyFieldCreateInput, SurveyFieldUncheckedCreateInput>
+  }
+
+  /**
+   * SurveyField createMany
+   */
+  export type SurveyFieldCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SurveyFields.
+     */
+    data: SurveyFieldCreateManyInput | SurveyFieldCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SurveyField update
+   */
+  export type SurveyFieldUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyField
+     */
+    select?: SurveyFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyField
+     */
+    omit?: SurveyFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFieldInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SurveyField.
+     */
+    data: XOR<SurveyFieldUpdateInput, SurveyFieldUncheckedUpdateInput>
+    /**
+     * Choose, which SurveyField to update.
+     */
+    where: SurveyFieldWhereUniqueInput
+  }
+
+  /**
+   * SurveyField updateMany
+   */
+  export type SurveyFieldUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SurveyFields.
+     */
+    data: XOR<SurveyFieldUpdateManyMutationInput, SurveyFieldUncheckedUpdateManyInput>
+    /**
+     * Filter which SurveyFields to update
+     */
+    where?: SurveyFieldWhereInput
+    /**
+     * Limit how many SurveyFields to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SurveyField upsert
+   */
+  export type SurveyFieldUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyField
+     */
+    select?: SurveyFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyField
+     */
+    omit?: SurveyFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFieldInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SurveyField to update in case it exists.
+     */
+    where: SurveyFieldWhereUniqueInput
+    /**
+     * In case the SurveyField found by the `where` argument doesn't exist, create a new SurveyField with this data.
+     */
+    create: XOR<SurveyFieldCreateInput, SurveyFieldUncheckedCreateInput>
+    /**
+     * In case the SurveyField was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SurveyFieldUpdateInput, SurveyFieldUncheckedUpdateInput>
+  }
+
+  /**
+   * SurveyField delete
+   */
+  export type SurveyFieldDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyField
+     */
+    select?: SurveyFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyField
+     */
+    omit?: SurveyFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFieldInclude<ExtArgs> | null
+    /**
+     * Filter which SurveyField to delete.
+     */
+    where: SurveyFieldWhereUniqueInput
+  }
+
+  /**
+   * SurveyField deleteMany
+   */
+  export type SurveyFieldDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SurveyFields to delete
+     */
+    where?: SurveyFieldWhereInput
+    /**
+     * Limit how many SurveyFields to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SurveyField.answers
+   */
+  export type SurveyField$answersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+    where?: SurveyAnswerWhereInput
+    orderBy?: SurveyAnswerOrderByWithRelationInput | SurveyAnswerOrderByWithRelationInput[]
+    cursor?: SurveyAnswerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SurveyAnswerScalarFieldEnum | SurveyAnswerScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyField without action
+   */
+  export type SurveyFieldDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyField
+     */
+    select?: SurveyFieldSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyField
+     */
+    omit?: SurveyFieldOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyFieldInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SurveyResponse
+   */
+
+  export type AggregateSurveyResponse = {
+    _count: SurveyResponseCountAggregateOutputType | null
+    _min: SurveyResponseMinAggregateOutputType | null
+    _max: SurveyResponseMaxAggregateOutputType | null
+  }
+
+  export type SurveyResponseMinAggregateOutputType = {
+    id: string | null
+    surveyFormId: string | null
+    userId: string | null
+    submittedAt: Date | null
+  }
+
+  export type SurveyResponseMaxAggregateOutputType = {
+    id: string | null
+    surveyFormId: string | null
+    userId: string | null
+    submittedAt: Date | null
+  }
+
+  export type SurveyResponseCountAggregateOutputType = {
+    id: number
+    surveyFormId: number
+    userId: number
+    submittedAt: number
+    metadata: number
+    _all: number
+  }
+
+
+  export type SurveyResponseMinAggregateInputType = {
+    id?: true
+    surveyFormId?: true
+    userId?: true
+    submittedAt?: true
+  }
+
+  export type SurveyResponseMaxAggregateInputType = {
+    id?: true
+    surveyFormId?: true
+    userId?: true
+    submittedAt?: true
+  }
+
+  export type SurveyResponseCountAggregateInputType = {
+    id?: true
+    surveyFormId?: true
+    userId?: true
+    submittedAt?: true
+    metadata?: true
+    _all?: true
+  }
+
+  export type SurveyResponseAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SurveyResponse to aggregate.
+     */
+    where?: SurveyResponseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyResponses to fetch.
+     */
+    orderBy?: SurveyResponseOrderByWithRelationInput | SurveyResponseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SurveyResponseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyResponses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyResponses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SurveyResponses
+    **/
+    _count?: true | SurveyResponseCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SurveyResponseMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SurveyResponseMaxAggregateInputType
+  }
+
+  export type GetSurveyResponseAggregateType<T extends SurveyResponseAggregateArgs> = {
+        [P in keyof T & keyof AggregateSurveyResponse]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSurveyResponse[P]>
+      : GetScalarType<T[P], AggregateSurveyResponse[P]>
+  }
+
+
+
+
+  export type SurveyResponseGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyResponseWhereInput
+    orderBy?: SurveyResponseOrderByWithAggregationInput | SurveyResponseOrderByWithAggregationInput[]
+    by: SurveyResponseScalarFieldEnum[] | SurveyResponseScalarFieldEnum
+    having?: SurveyResponseScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SurveyResponseCountAggregateInputType | true
+    _min?: SurveyResponseMinAggregateInputType
+    _max?: SurveyResponseMaxAggregateInputType
+  }
+
+  export type SurveyResponseGroupByOutputType = {
+    id: string
+    surveyFormId: string
+    userId: string | null
+    submittedAt: Date
+    metadata: JsonValue | null
+    _count: SurveyResponseCountAggregateOutputType | null
+    _min: SurveyResponseMinAggregateOutputType | null
+    _max: SurveyResponseMaxAggregateOutputType | null
+  }
+
+  type GetSurveyResponseGroupByPayload<T extends SurveyResponseGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SurveyResponseGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SurveyResponseGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SurveyResponseGroupByOutputType[P]>
+            : GetScalarType<T[P], SurveyResponseGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SurveyResponseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    surveyFormId?: boolean
+    userId?: boolean
+    submittedAt?: boolean
+    metadata?: boolean
+    surveyForm?: boolean | SurveyFormDefaultArgs<ExtArgs>
+    user?: boolean | SurveyResponse$userArgs<ExtArgs>
+    answers?: boolean | SurveyResponse$answersArgs<ExtArgs>
+    _count?: boolean | SurveyResponseCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["surveyResponse"]>
+
+
+
+  export type SurveyResponseSelectScalar = {
+    id?: boolean
+    surveyFormId?: boolean
+    userId?: boolean
+    submittedAt?: boolean
+    metadata?: boolean
+  }
+
+  export type SurveyResponseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "surveyFormId" | "userId" | "submittedAt" | "metadata", ExtArgs["result"]["surveyResponse"]>
+  export type SurveyResponseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    surveyForm?: boolean | SurveyFormDefaultArgs<ExtArgs>
+    user?: boolean | SurveyResponse$userArgs<ExtArgs>
+    answers?: boolean | SurveyResponse$answersArgs<ExtArgs>
+    _count?: boolean | SurveyResponseCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $SurveyResponsePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SurveyResponse"
+    objects: {
+      surveyForm: Prisma.$SurveyFormPayload<ExtArgs>
+      user: Prisma.$AccountPayload<ExtArgs> | null
+      answers: Prisma.$SurveyAnswerPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      surveyFormId: string
+      userId: string | null
+      submittedAt: Date
+      metadata: Prisma.JsonValue | null
+    }, ExtArgs["result"]["surveyResponse"]>
+    composites: {}
+  }
+
+  type SurveyResponseGetPayload<S extends boolean | null | undefined | SurveyResponseDefaultArgs> = $Result.GetResult<Prisma.$SurveyResponsePayload, S>
+
+  type SurveyResponseCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SurveyResponseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SurveyResponseCountAggregateInputType | true
+    }
+
+  export interface SurveyResponseDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SurveyResponse'], meta: { name: 'SurveyResponse' } }
+    /**
+     * Find zero or one SurveyResponse that matches the filter.
+     * @param {SurveyResponseFindUniqueArgs} args - Arguments to find a SurveyResponse
+     * @example
+     * // Get one SurveyResponse
+     * const surveyResponse = await prisma.surveyResponse.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SurveyResponseFindUniqueArgs>(args: SelectSubset<T, SurveyResponseFindUniqueArgs<ExtArgs>>): Prisma__SurveyResponseClient<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SurveyResponse that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SurveyResponseFindUniqueOrThrowArgs} args - Arguments to find a SurveyResponse
+     * @example
+     * // Get one SurveyResponse
+     * const surveyResponse = await prisma.surveyResponse.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SurveyResponseFindUniqueOrThrowArgs>(args: SelectSubset<T, SurveyResponseFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SurveyResponseClient<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SurveyResponse that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyResponseFindFirstArgs} args - Arguments to find a SurveyResponse
+     * @example
+     * // Get one SurveyResponse
+     * const surveyResponse = await prisma.surveyResponse.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SurveyResponseFindFirstArgs>(args?: SelectSubset<T, SurveyResponseFindFirstArgs<ExtArgs>>): Prisma__SurveyResponseClient<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SurveyResponse that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyResponseFindFirstOrThrowArgs} args - Arguments to find a SurveyResponse
+     * @example
+     * // Get one SurveyResponse
+     * const surveyResponse = await prisma.surveyResponse.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SurveyResponseFindFirstOrThrowArgs>(args?: SelectSubset<T, SurveyResponseFindFirstOrThrowArgs<ExtArgs>>): Prisma__SurveyResponseClient<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SurveyResponses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyResponseFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SurveyResponses
+     * const surveyResponses = await prisma.surveyResponse.findMany()
+     * 
+     * // Get first 10 SurveyResponses
+     * const surveyResponses = await prisma.surveyResponse.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const surveyResponseWithIdOnly = await prisma.surveyResponse.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SurveyResponseFindManyArgs>(args?: SelectSubset<T, SurveyResponseFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SurveyResponse.
+     * @param {SurveyResponseCreateArgs} args - Arguments to create a SurveyResponse.
+     * @example
+     * // Create one SurveyResponse
+     * const SurveyResponse = await prisma.surveyResponse.create({
+     *   data: {
+     *     // ... data to create a SurveyResponse
+     *   }
+     * })
+     * 
+     */
+    create<T extends SurveyResponseCreateArgs>(args: SelectSubset<T, SurveyResponseCreateArgs<ExtArgs>>): Prisma__SurveyResponseClient<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SurveyResponses.
+     * @param {SurveyResponseCreateManyArgs} args - Arguments to create many SurveyResponses.
+     * @example
+     * // Create many SurveyResponses
+     * const surveyResponse = await prisma.surveyResponse.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SurveyResponseCreateManyArgs>(args?: SelectSubset<T, SurveyResponseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a SurveyResponse.
+     * @param {SurveyResponseDeleteArgs} args - Arguments to delete one SurveyResponse.
+     * @example
+     * // Delete one SurveyResponse
+     * const SurveyResponse = await prisma.surveyResponse.delete({
+     *   where: {
+     *     // ... filter to delete one SurveyResponse
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SurveyResponseDeleteArgs>(args: SelectSubset<T, SurveyResponseDeleteArgs<ExtArgs>>): Prisma__SurveyResponseClient<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SurveyResponse.
+     * @param {SurveyResponseUpdateArgs} args - Arguments to update one SurveyResponse.
+     * @example
+     * // Update one SurveyResponse
+     * const surveyResponse = await prisma.surveyResponse.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SurveyResponseUpdateArgs>(args: SelectSubset<T, SurveyResponseUpdateArgs<ExtArgs>>): Prisma__SurveyResponseClient<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SurveyResponses.
+     * @param {SurveyResponseDeleteManyArgs} args - Arguments to filter SurveyResponses to delete.
+     * @example
+     * // Delete a few SurveyResponses
+     * const { count } = await prisma.surveyResponse.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SurveyResponseDeleteManyArgs>(args?: SelectSubset<T, SurveyResponseDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SurveyResponses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyResponseUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SurveyResponses
+     * const surveyResponse = await prisma.surveyResponse.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SurveyResponseUpdateManyArgs>(args: SelectSubset<T, SurveyResponseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SurveyResponse.
+     * @param {SurveyResponseUpsertArgs} args - Arguments to update or create a SurveyResponse.
+     * @example
+     * // Update or create a SurveyResponse
+     * const surveyResponse = await prisma.surveyResponse.upsert({
+     *   create: {
+     *     // ... data to create a SurveyResponse
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SurveyResponse we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SurveyResponseUpsertArgs>(args: SelectSubset<T, SurveyResponseUpsertArgs<ExtArgs>>): Prisma__SurveyResponseClient<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SurveyResponses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyResponseCountArgs} args - Arguments to filter SurveyResponses to count.
+     * @example
+     * // Count the number of SurveyResponses
+     * const count = await prisma.surveyResponse.count({
+     *   where: {
+     *     // ... the filter for the SurveyResponses we want to count
+     *   }
+     * })
+    **/
+    count<T extends SurveyResponseCountArgs>(
+      args?: Subset<T, SurveyResponseCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SurveyResponseCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SurveyResponse.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyResponseAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SurveyResponseAggregateArgs>(args: Subset<T, SurveyResponseAggregateArgs>): Prisma.PrismaPromise<GetSurveyResponseAggregateType<T>>
+
+    /**
+     * Group by SurveyResponse.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyResponseGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SurveyResponseGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SurveyResponseGroupByArgs['orderBy'] }
+        : { orderBy?: SurveyResponseGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SurveyResponseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSurveyResponseGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SurveyResponse model
+   */
+  readonly fields: SurveyResponseFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SurveyResponse.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SurveyResponseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    surveyForm<T extends SurveyFormDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SurveyFormDefaultArgs<ExtArgs>>): Prisma__SurveyFormClient<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends SurveyResponse$userArgs<ExtArgs> = {}>(args?: Subset<T, SurveyResponse$userArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    answers<T extends SurveyResponse$answersArgs<ExtArgs> = {}>(args?: Subset<T, SurveyResponse$answersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyAnswerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SurveyResponse model
+   */
+  interface SurveyResponseFieldRefs {
+    readonly id: FieldRef<"SurveyResponse", 'String'>
+    readonly surveyFormId: FieldRef<"SurveyResponse", 'String'>
+    readonly userId: FieldRef<"SurveyResponse", 'String'>
+    readonly submittedAt: FieldRef<"SurveyResponse", 'DateTime'>
+    readonly metadata: FieldRef<"SurveyResponse", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SurveyResponse findUnique
+   */
+  export type SurveyResponseFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyResponse to fetch.
+     */
+    where: SurveyResponseWhereUniqueInput
+  }
+
+  /**
+   * SurveyResponse findUniqueOrThrow
+   */
+  export type SurveyResponseFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyResponse to fetch.
+     */
+    where: SurveyResponseWhereUniqueInput
+  }
+
+  /**
+   * SurveyResponse findFirst
+   */
+  export type SurveyResponseFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyResponse to fetch.
+     */
+    where?: SurveyResponseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyResponses to fetch.
+     */
+    orderBy?: SurveyResponseOrderByWithRelationInput | SurveyResponseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SurveyResponses.
+     */
+    cursor?: SurveyResponseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyResponses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyResponses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SurveyResponses.
+     */
+    distinct?: SurveyResponseScalarFieldEnum | SurveyResponseScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyResponse findFirstOrThrow
+   */
+  export type SurveyResponseFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyResponse to fetch.
+     */
+    where?: SurveyResponseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyResponses to fetch.
+     */
+    orderBy?: SurveyResponseOrderByWithRelationInput | SurveyResponseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SurveyResponses.
+     */
+    cursor?: SurveyResponseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyResponses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyResponses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SurveyResponses.
+     */
+    distinct?: SurveyResponseScalarFieldEnum | SurveyResponseScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyResponse findMany
+   */
+  export type SurveyResponseFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyResponses to fetch.
+     */
+    where?: SurveyResponseWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyResponses to fetch.
+     */
+    orderBy?: SurveyResponseOrderByWithRelationInput | SurveyResponseOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SurveyResponses.
+     */
+    cursor?: SurveyResponseWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyResponses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyResponses.
+     */
+    skip?: number
+    distinct?: SurveyResponseScalarFieldEnum | SurveyResponseScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyResponse create
+   */
+  export type SurveyResponseCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SurveyResponse.
+     */
+    data: XOR<SurveyResponseCreateInput, SurveyResponseUncheckedCreateInput>
+  }
+
+  /**
+   * SurveyResponse createMany
+   */
+  export type SurveyResponseCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SurveyResponses.
+     */
+    data: SurveyResponseCreateManyInput | SurveyResponseCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SurveyResponse update
+   */
+  export type SurveyResponseUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SurveyResponse.
+     */
+    data: XOR<SurveyResponseUpdateInput, SurveyResponseUncheckedUpdateInput>
+    /**
+     * Choose, which SurveyResponse to update.
+     */
+    where: SurveyResponseWhereUniqueInput
+  }
+
+  /**
+   * SurveyResponse updateMany
+   */
+  export type SurveyResponseUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SurveyResponses.
+     */
+    data: XOR<SurveyResponseUpdateManyMutationInput, SurveyResponseUncheckedUpdateManyInput>
+    /**
+     * Filter which SurveyResponses to update
+     */
+    where?: SurveyResponseWhereInput
+    /**
+     * Limit how many SurveyResponses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SurveyResponse upsert
+   */
+  export type SurveyResponseUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SurveyResponse to update in case it exists.
+     */
+    where: SurveyResponseWhereUniqueInput
+    /**
+     * In case the SurveyResponse found by the `where` argument doesn't exist, create a new SurveyResponse with this data.
+     */
+    create: XOR<SurveyResponseCreateInput, SurveyResponseUncheckedCreateInput>
+    /**
+     * In case the SurveyResponse was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SurveyResponseUpdateInput, SurveyResponseUncheckedUpdateInput>
+  }
+
+  /**
+   * SurveyResponse delete
+   */
+  export type SurveyResponseDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+    /**
+     * Filter which SurveyResponse to delete.
+     */
+    where: SurveyResponseWhereUniqueInput
+  }
+
+  /**
+   * SurveyResponse deleteMany
+   */
+  export type SurveyResponseDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SurveyResponses to delete
+     */
+    where?: SurveyResponseWhereInput
+    /**
+     * Limit how many SurveyResponses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SurveyResponse.user
+   */
+  export type SurveyResponse$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * SurveyResponse.answers
+   */
+  export type SurveyResponse$answersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+    where?: SurveyAnswerWhereInput
+    orderBy?: SurveyAnswerOrderByWithRelationInput | SurveyAnswerOrderByWithRelationInput[]
+    cursor?: SurveyAnswerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SurveyAnswerScalarFieldEnum | SurveyAnswerScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyResponse without action
+   */
+  export type SurveyResponseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyResponse
+     */
+    select?: SurveyResponseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyResponse
+     */
+    omit?: SurveyResponseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyResponseInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SurveyAnswer
+   */
+
+  export type AggregateSurveyAnswer = {
+    _count: SurveyAnswerCountAggregateOutputType | null
+    _min: SurveyAnswerMinAggregateOutputType | null
+    _max: SurveyAnswerMaxAggregateOutputType | null
+  }
+
+  export type SurveyAnswerMinAggregateOutputType = {
+    id: string | null
+    responseId: string | null
+    fieldId: string | null
+    createdAt: Date | null
+  }
+
+  export type SurveyAnswerMaxAggregateOutputType = {
+    id: string | null
+    responseId: string | null
+    fieldId: string | null
+    createdAt: Date | null
+  }
+
+  export type SurveyAnswerCountAggregateOutputType = {
+    id: number
+    responseId: number
+    fieldId: number
+    answer: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type SurveyAnswerMinAggregateInputType = {
+    id?: true
+    responseId?: true
+    fieldId?: true
+    createdAt?: true
+  }
+
+  export type SurveyAnswerMaxAggregateInputType = {
+    id?: true
+    responseId?: true
+    fieldId?: true
+    createdAt?: true
+  }
+
+  export type SurveyAnswerCountAggregateInputType = {
+    id?: true
+    responseId?: true
+    fieldId?: true
+    answer?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type SurveyAnswerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SurveyAnswer to aggregate.
+     */
+    where?: SurveyAnswerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyAnswers to fetch.
+     */
+    orderBy?: SurveyAnswerOrderByWithRelationInput | SurveyAnswerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SurveyAnswerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyAnswers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyAnswers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SurveyAnswers
+    **/
+    _count?: true | SurveyAnswerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SurveyAnswerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SurveyAnswerMaxAggregateInputType
+  }
+
+  export type GetSurveyAnswerAggregateType<T extends SurveyAnswerAggregateArgs> = {
+        [P in keyof T & keyof AggregateSurveyAnswer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSurveyAnswer[P]>
+      : GetScalarType<T[P], AggregateSurveyAnswer[P]>
+  }
+
+
+
+
+  export type SurveyAnswerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyAnswerWhereInput
+    orderBy?: SurveyAnswerOrderByWithAggregationInput | SurveyAnswerOrderByWithAggregationInput[]
+    by: SurveyAnswerScalarFieldEnum[] | SurveyAnswerScalarFieldEnum
+    having?: SurveyAnswerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SurveyAnswerCountAggregateInputType | true
+    _min?: SurveyAnswerMinAggregateInputType
+    _max?: SurveyAnswerMaxAggregateInputType
+  }
+
+  export type SurveyAnswerGroupByOutputType = {
+    id: string
+    responseId: string
+    fieldId: string
+    answer: JsonValue
+    createdAt: Date
+    _count: SurveyAnswerCountAggregateOutputType | null
+    _min: SurveyAnswerMinAggregateOutputType | null
+    _max: SurveyAnswerMaxAggregateOutputType | null
+  }
+
+  type GetSurveyAnswerGroupByPayload<T extends SurveyAnswerGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SurveyAnswerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SurveyAnswerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SurveyAnswerGroupByOutputType[P]>
+            : GetScalarType<T[P], SurveyAnswerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SurveyAnswerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    responseId?: boolean
+    fieldId?: boolean
+    answer?: boolean
+    createdAt?: boolean
+    response?: boolean | SurveyResponseDefaultArgs<ExtArgs>
+    field?: boolean | SurveyFieldDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["surveyAnswer"]>
+
+
+
+  export type SurveyAnswerSelectScalar = {
+    id?: boolean
+    responseId?: boolean
+    fieldId?: boolean
+    answer?: boolean
+    createdAt?: boolean
+  }
+
+  export type SurveyAnswerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "responseId" | "fieldId" | "answer" | "createdAt", ExtArgs["result"]["surveyAnswer"]>
+  export type SurveyAnswerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    response?: boolean | SurveyResponseDefaultArgs<ExtArgs>
+    field?: boolean | SurveyFieldDefaultArgs<ExtArgs>
+  }
+
+  export type $SurveyAnswerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SurveyAnswer"
+    objects: {
+      response: Prisma.$SurveyResponsePayload<ExtArgs>
+      field: Prisma.$SurveyFieldPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      responseId: string
+      fieldId: string
+      answer: Prisma.JsonValue
+      createdAt: Date
+    }, ExtArgs["result"]["surveyAnswer"]>
+    composites: {}
+  }
+
+  type SurveyAnswerGetPayload<S extends boolean | null | undefined | SurveyAnswerDefaultArgs> = $Result.GetResult<Prisma.$SurveyAnswerPayload, S>
+
+  type SurveyAnswerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SurveyAnswerFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SurveyAnswerCountAggregateInputType | true
+    }
+
+  export interface SurveyAnswerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SurveyAnswer'], meta: { name: 'SurveyAnswer' } }
+    /**
+     * Find zero or one SurveyAnswer that matches the filter.
+     * @param {SurveyAnswerFindUniqueArgs} args - Arguments to find a SurveyAnswer
+     * @example
+     * // Get one SurveyAnswer
+     * const surveyAnswer = await prisma.surveyAnswer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SurveyAnswerFindUniqueArgs>(args: SelectSubset<T, SurveyAnswerFindUniqueArgs<ExtArgs>>): Prisma__SurveyAnswerClient<$Result.GetResult<Prisma.$SurveyAnswerPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SurveyAnswer that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SurveyAnswerFindUniqueOrThrowArgs} args - Arguments to find a SurveyAnswer
+     * @example
+     * // Get one SurveyAnswer
+     * const surveyAnswer = await prisma.surveyAnswer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SurveyAnswerFindUniqueOrThrowArgs>(args: SelectSubset<T, SurveyAnswerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SurveyAnswerClient<$Result.GetResult<Prisma.$SurveyAnswerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SurveyAnswer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyAnswerFindFirstArgs} args - Arguments to find a SurveyAnswer
+     * @example
+     * // Get one SurveyAnswer
+     * const surveyAnswer = await prisma.surveyAnswer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SurveyAnswerFindFirstArgs>(args?: SelectSubset<T, SurveyAnswerFindFirstArgs<ExtArgs>>): Prisma__SurveyAnswerClient<$Result.GetResult<Prisma.$SurveyAnswerPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SurveyAnswer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyAnswerFindFirstOrThrowArgs} args - Arguments to find a SurveyAnswer
+     * @example
+     * // Get one SurveyAnswer
+     * const surveyAnswer = await prisma.surveyAnswer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SurveyAnswerFindFirstOrThrowArgs>(args?: SelectSubset<T, SurveyAnswerFindFirstOrThrowArgs<ExtArgs>>): Prisma__SurveyAnswerClient<$Result.GetResult<Prisma.$SurveyAnswerPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SurveyAnswers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyAnswerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SurveyAnswers
+     * const surveyAnswers = await prisma.surveyAnswer.findMany()
+     * 
+     * // Get first 10 SurveyAnswers
+     * const surveyAnswers = await prisma.surveyAnswer.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const surveyAnswerWithIdOnly = await prisma.surveyAnswer.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SurveyAnswerFindManyArgs>(args?: SelectSubset<T, SurveyAnswerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyAnswerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SurveyAnswer.
+     * @param {SurveyAnswerCreateArgs} args - Arguments to create a SurveyAnswer.
+     * @example
+     * // Create one SurveyAnswer
+     * const SurveyAnswer = await prisma.surveyAnswer.create({
+     *   data: {
+     *     // ... data to create a SurveyAnswer
+     *   }
+     * })
+     * 
+     */
+    create<T extends SurveyAnswerCreateArgs>(args: SelectSubset<T, SurveyAnswerCreateArgs<ExtArgs>>): Prisma__SurveyAnswerClient<$Result.GetResult<Prisma.$SurveyAnswerPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SurveyAnswers.
+     * @param {SurveyAnswerCreateManyArgs} args - Arguments to create many SurveyAnswers.
+     * @example
+     * // Create many SurveyAnswers
+     * const surveyAnswer = await prisma.surveyAnswer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SurveyAnswerCreateManyArgs>(args?: SelectSubset<T, SurveyAnswerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a SurveyAnswer.
+     * @param {SurveyAnswerDeleteArgs} args - Arguments to delete one SurveyAnswer.
+     * @example
+     * // Delete one SurveyAnswer
+     * const SurveyAnswer = await prisma.surveyAnswer.delete({
+     *   where: {
+     *     // ... filter to delete one SurveyAnswer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SurveyAnswerDeleteArgs>(args: SelectSubset<T, SurveyAnswerDeleteArgs<ExtArgs>>): Prisma__SurveyAnswerClient<$Result.GetResult<Prisma.$SurveyAnswerPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SurveyAnswer.
+     * @param {SurveyAnswerUpdateArgs} args - Arguments to update one SurveyAnswer.
+     * @example
+     * // Update one SurveyAnswer
+     * const surveyAnswer = await prisma.surveyAnswer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SurveyAnswerUpdateArgs>(args: SelectSubset<T, SurveyAnswerUpdateArgs<ExtArgs>>): Prisma__SurveyAnswerClient<$Result.GetResult<Prisma.$SurveyAnswerPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SurveyAnswers.
+     * @param {SurveyAnswerDeleteManyArgs} args - Arguments to filter SurveyAnswers to delete.
+     * @example
+     * // Delete a few SurveyAnswers
+     * const { count } = await prisma.surveyAnswer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SurveyAnswerDeleteManyArgs>(args?: SelectSubset<T, SurveyAnswerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SurveyAnswers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyAnswerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SurveyAnswers
+     * const surveyAnswer = await prisma.surveyAnswer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SurveyAnswerUpdateManyArgs>(args: SelectSubset<T, SurveyAnswerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SurveyAnswer.
+     * @param {SurveyAnswerUpsertArgs} args - Arguments to update or create a SurveyAnswer.
+     * @example
+     * // Update or create a SurveyAnswer
+     * const surveyAnswer = await prisma.surveyAnswer.upsert({
+     *   create: {
+     *     // ... data to create a SurveyAnswer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SurveyAnswer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SurveyAnswerUpsertArgs>(args: SelectSubset<T, SurveyAnswerUpsertArgs<ExtArgs>>): Prisma__SurveyAnswerClient<$Result.GetResult<Prisma.$SurveyAnswerPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SurveyAnswers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyAnswerCountArgs} args - Arguments to filter SurveyAnswers to count.
+     * @example
+     * // Count the number of SurveyAnswers
+     * const count = await prisma.surveyAnswer.count({
+     *   where: {
+     *     // ... the filter for the SurveyAnswers we want to count
+     *   }
+     * })
+    **/
+    count<T extends SurveyAnswerCountArgs>(
+      args?: Subset<T, SurveyAnswerCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SurveyAnswerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SurveyAnswer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyAnswerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SurveyAnswerAggregateArgs>(args: Subset<T, SurveyAnswerAggregateArgs>): Prisma.PrismaPromise<GetSurveyAnswerAggregateType<T>>
+
+    /**
+     * Group by SurveyAnswer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyAnswerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SurveyAnswerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SurveyAnswerGroupByArgs['orderBy'] }
+        : { orderBy?: SurveyAnswerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SurveyAnswerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSurveyAnswerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SurveyAnswer model
+   */
+  readonly fields: SurveyAnswerFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SurveyAnswer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SurveyAnswerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    response<T extends SurveyResponseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SurveyResponseDefaultArgs<ExtArgs>>): Prisma__SurveyResponseClient<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    field<T extends SurveyFieldDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SurveyFieldDefaultArgs<ExtArgs>>): Prisma__SurveyFieldClient<$Result.GetResult<Prisma.$SurveyFieldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SurveyAnswer model
+   */
+  interface SurveyAnswerFieldRefs {
+    readonly id: FieldRef<"SurveyAnswer", 'String'>
+    readonly responseId: FieldRef<"SurveyAnswer", 'String'>
+    readonly fieldId: FieldRef<"SurveyAnswer", 'String'>
+    readonly answer: FieldRef<"SurveyAnswer", 'Json'>
+    readonly createdAt: FieldRef<"SurveyAnswer", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SurveyAnswer findUnique
+   */
+  export type SurveyAnswerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyAnswer to fetch.
+     */
+    where: SurveyAnswerWhereUniqueInput
+  }
+
+  /**
+   * SurveyAnswer findUniqueOrThrow
+   */
+  export type SurveyAnswerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyAnswer to fetch.
+     */
+    where: SurveyAnswerWhereUniqueInput
+  }
+
+  /**
+   * SurveyAnswer findFirst
+   */
+  export type SurveyAnswerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyAnswer to fetch.
+     */
+    where?: SurveyAnswerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyAnswers to fetch.
+     */
+    orderBy?: SurveyAnswerOrderByWithRelationInput | SurveyAnswerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SurveyAnswers.
+     */
+    cursor?: SurveyAnswerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyAnswers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyAnswers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SurveyAnswers.
+     */
+    distinct?: SurveyAnswerScalarFieldEnum | SurveyAnswerScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyAnswer findFirstOrThrow
+   */
+  export type SurveyAnswerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyAnswer to fetch.
+     */
+    where?: SurveyAnswerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyAnswers to fetch.
+     */
+    orderBy?: SurveyAnswerOrderByWithRelationInput | SurveyAnswerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SurveyAnswers.
+     */
+    cursor?: SurveyAnswerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyAnswers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyAnswers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SurveyAnswers.
+     */
+    distinct?: SurveyAnswerScalarFieldEnum | SurveyAnswerScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyAnswer findMany
+   */
+  export type SurveyAnswerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyAnswers to fetch.
+     */
+    where?: SurveyAnswerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyAnswers to fetch.
+     */
+    orderBy?: SurveyAnswerOrderByWithRelationInput | SurveyAnswerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SurveyAnswers.
+     */
+    cursor?: SurveyAnswerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyAnswers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyAnswers.
+     */
+    skip?: number
+    distinct?: SurveyAnswerScalarFieldEnum | SurveyAnswerScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyAnswer create
+   */
+  export type SurveyAnswerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SurveyAnswer.
+     */
+    data: XOR<SurveyAnswerCreateInput, SurveyAnswerUncheckedCreateInput>
+  }
+
+  /**
+   * SurveyAnswer createMany
+   */
+  export type SurveyAnswerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SurveyAnswers.
+     */
+    data: SurveyAnswerCreateManyInput | SurveyAnswerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SurveyAnswer update
+   */
+  export type SurveyAnswerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SurveyAnswer.
+     */
+    data: XOR<SurveyAnswerUpdateInput, SurveyAnswerUncheckedUpdateInput>
+    /**
+     * Choose, which SurveyAnswer to update.
+     */
+    where: SurveyAnswerWhereUniqueInput
+  }
+
+  /**
+   * SurveyAnswer updateMany
+   */
+  export type SurveyAnswerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SurveyAnswers.
+     */
+    data: XOR<SurveyAnswerUpdateManyMutationInput, SurveyAnswerUncheckedUpdateManyInput>
+    /**
+     * Filter which SurveyAnswers to update
+     */
+    where?: SurveyAnswerWhereInput
+    /**
+     * Limit how many SurveyAnswers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SurveyAnswer upsert
+   */
+  export type SurveyAnswerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SurveyAnswer to update in case it exists.
+     */
+    where: SurveyAnswerWhereUniqueInput
+    /**
+     * In case the SurveyAnswer found by the `where` argument doesn't exist, create a new SurveyAnswer with this data.
+     */
+    create: XOR<SurveyAnswerCreateInput, SurveyAnswerUncheckedCreateInput>
+    /**
+     * In case the SurveyAnswer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SurveyAnswerUpdateInput, SurveyAnswerUncheckedUpdateInput>
+  }
+
+  /**
+   * SurveyAnswer delete
+   */
+  export type SurveyAnswerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+    /**
+     * Filter which SurveyAnswer to delete.
+     */
+    where: SurveyAnswerWhereUniqueInput
+  }
+
+  /**
+   * SurveyAnswer deleteMany
+   */
+  export type SurveyAnswerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SurveyAnswers to delete
+     */
+    where?: SurveyAnswerWhereInput
+    /**
+     * Limit how many SurveyAnswers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SurveyAnswer without action
+   */
+  export type SurveyAnswerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyAnswer
+     */
+    select?: SurveyAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyAnswer
+     */
+    omit?: SurveyAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyAnswerInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SurveyStatistic
+   */
+
+  export type AggregateSurveyStatistic = {
+    _count: SurveyStatisticCountAggregateOutputType | null
+    _min: SurveyStatisticMinAggregateOutputType | null
+    _max: SurveyStatisticMaxAggregateOutputType | null
+  }
+
+  export type SurveyStatisticMinAggregateOutputType = {
+    id: string | null
+    surveyFormId: string | null
+    chartType: $Enums.chart_type | null
+    title: string | null
+    description: string | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SurveyStatisticMaxAggregateOutputType = {
+    id: string | null
+    surveyFormId: string | null
+    chartType: $Enums.chart_type | null
+    title: string | null
+    description: string | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SurveyStatisticCountAggregateOutputType = {
+    id: number
+    surveyFormId: number
+    chartType: number
+    title: number
+    description: number
+    config: number
+    createdById: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SurveyStatisticMinAggregateInputType = {
+    id?: true
+    surveyFormId?: true
+    chartType?: true
+    title?: true
+    description?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SurveyStatisticMaxAggregateInputType = {
+    id?: true
+    surveyFormId?: true
+    chartType?: true
+    title?: true
+    description?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SurveyStatisticCountAggregateInputType = {
+    id?: true
+    surveyFormId?: true
+    chartType?: true
+    title?: true
+    description?: true
+    config?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SurveyStatisticAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SurveyStatistic to aggregate.
+     */
+    where?: SurveyStatisticWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyStatistics to fetch.
+     */
+    orderBy?: SurveyStatisticOrderByWithRelationInput | SurveyStatisticOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SurveyStatisticWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyStatistics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyStatistics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SurveyStatistics
+    **/
+    _count?: true | SurveyStatisticCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SurveyStatisticMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SurveyStatisticMaxAggregateInputType
+  }
+
+  export type GetSurveyStatisticAggregateType<T extends SurveyStatisticAggregateArgs> = {
+        [P in keyof T & keyof AggregateSurveyStatistic]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSurveyStatistic[P]>
+      : GetScalarType<T[P], AggregateSurveyStatistic[P]>
+  }
+
+
+
+
+  export type SurveyStatisticGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SurveyStatisticWhereInput
+    orderBy?: SurveyStatisticOrderByWithAggregationInput | SurveyStatisticOrderByWithAggregationInput[]
+    by: SurveyStatisticScalarFieldEnum[] | SurveyStatisticScalarFieldEnum
+    having?: SurveyStatisticScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SurveyStatisticCountAggregateInputType | true
+    _min?: SurveyStatisticMinAggregateInputType
+    _max?: SurveyStatisticMaxAggregateInputType
+  }
+
+  export type SurveyStatisticGroupByOutputType = {
+    id: string
+    surveyFormId: string
+    chartType: $Enums.chart_type
+    title: string
+    description: string | null
+    config: JsonValue
+    createdById: string
+    createdAt: Date
+    updatedAt: Date
+    _count: SurveyStatisticCountAggregateOutputType | null
+    _min: SurveyStatisticMinAggregateOutputType | null
+    _max: SurveyStatisticMaxAggregateOutputType | null
+  }
+
+  type GetSurveyStatisticGroupByPayload<T extends SurveyStatisticGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SurveyStatisticGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SurveyStatisticGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SurveyStatisticGroupByOutputType[P]>
+            : GetScalarType<T[P], SurveyStatisticGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SurveyStatisticSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    surveyFormId?: boolean
+    chartType?: boolean
+    title?: boolean
+    description?: boolean
+    config?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    surveyForm?: boolean | SurveyFormDefaultArgs<ExtArgs>
+    creator?: boolean | AccountDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["surveyStatistic"]>
+
+
+
+  export type SurveyStatisticSelectScalar = {
+    id?: boolean
+    surveyFormId?: boolean
+    chartType?: boolean
+    title?: boolean
+    description?: boolean
+    config?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SurveyStatisticOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "surveyFormId" | "chartType" | "title" | "description" | "config" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["surveyStatistic"]>
+  export type SurveyStatisticInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    surveyForm?: boolean | SurveyFormDefaultArgs<ExtArgs>
+    creator?: boolean | AccountDefaultArgs<ExtArgs>
+  }
+
+  export type $SurveyStatisticPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SurveyStatistic"
+    objects: {
+      surveyForm: Prisma.$SurveyFormPayload<ExtArgs>
+      creator: Prisma.$AccountPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      surveyFormId: string
+      chartType: $Enums.chart_type
+      title: string
+      description: string | null
+      config: Prisma.JsonValue
+      createdById: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["surveyStatistic"]>
+    composites: {}
+  }
+
+  type SurveyStatisticGetPayload<S extends boolean | null | undefined | SurveyStatisticDefaultArgs> = $Result.GetResult<Prisma.$SurveyStatisticPayload, S>
+
+  type SurveyStatisticCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SurveyStatisticFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SurveyStatisticCountAggregateInputType | true
+    }
+
+  export interface SurveyStatisticDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SurveyStatistic'], meta: { name: 'SurveyStatistic' } }
+    /**
+     * Find zero or one SurveyStatistic that matches the filter.
+     * @param {SurveyStatisticFindUniqueArgs} args - Arguments to find a SurveyStatistic
+     * @example
+     * // Get one SurveyStatistic
+     * const surveyStatistic = await prisma.surveyStatistic.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SurveyStatisticFindUniqueArgs>(args: SelectSubset<T, SurveyStatisticFindUniqueArgs<ExtArgs>>): Prisma__SurveyStatisticClient<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SurveyStatistic that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SurveyStatisticFindUniqueOrThrowArgs} args - Arguments to find a SurveyStatistic
+     * @example
+     * // Get one SurveyStatistic
+     * const surveyStatistic = await prisma.surveyStatistic.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SurveyStatisticFindUniqueOrThrowArgs>(args: SelectSubset<T, SurveyStatisticFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SurveyStatisticClient<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SurveyStatistic that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyStatisticFindFirstArgs} args - Arguments to find a SurveyStatistic
+     * @example
+     * // Get one SurveyStatistic
+     * const surveyStatistic = await prisma.surveyStatistic.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SurveyStatisticFindFirstArgs>(args?: SelectSubset<T, SurveyStatisticFindFirstArgs<ExtArgs>>): Prisma__SurveyStatisticClient<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SurveyStatistic that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyStatisticFindFirstOrThrowArgs} args - Arguments to find a SurveyStatistic
+     * @example
+     * // Get one SurveyStatistic
+     * const surveyStatistic = await prisma.surveyStatistic.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SurveyStatisticFindFirstOrThrowArgs>(args?: SelectSubset<T, SurveyStatisticFindFirstOrThrowArgs<ExtArgs>>): Prisma__SurveyStatisticClient<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SurveyStatistics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyStatisticFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SurveyStatistics
+     * const surveyStatistics = await prisma.surveyStatistic.findMany()
+     * 
+     * // Get first 10 SurveyStatistics
+     * const surveyStatistics = await prisma.surveyStatistic.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const surveyStatisticWithIdOnly = await prisma.surveyStatistic.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SurveyStatisticFindManyArgs>(args?: SelectSubset<T, SurveyStatisticFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SurveyStatistic.
+     * @param {SurveyStatisticCreateArgs} args - Arguments to create a SurveyStatistic.
+     * @example
+     * // Create one SurveyStatistic
+     * const SurveyStatistic = await prisma.surveyStatistic.create({
+     *   data: {
+     *     // ... data to create a SurveyStatistic
+     *   }
+     * })
+     * 
+     */
+    create<T extends SurveyStatisticCreateArgs>(args: SelectSubset<T, SurveyStatisticCreateArgs<ExtArgs>>): Prisma__SurveyStatisticClient<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SurveyStatistics.
+     * @param {SurveyStatisticCreateManyArgs} args - Arguments to create many SurveyStatistics.
+     * @example
+     * // Create many SurveyStatistics
+     * const surveyStatistic = await prisma.surveyStatistic.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SurveyStatisticCreateManyArgs>(args?: SelectSubset<T, SurveyStatisticCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a SurveyStatistic.
+     * @param {SurveyStatisticDeleteArgs} args - Arguments to delete one SurveyStatistic.
+     * @example
+     * // Delete one SurveyStatistic
+     * const SurveyStatistic = await prisma.surveyStatistic.delete({
+     *   where: {
+     *     // ... filter to delete one SurveyStatistic
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SurveyStatisticDeleteArgs>(args: SelectSubset<T, SurveyStatisticDeleteArgs<ExtArgs>>): Prisma__SurveyStatisticClient<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SurveyStatistic.
+     * @param {SurveyStatisticUpdateArgs} args - Arguments to update one SurveyStatistic.
+     * @example
+     * // Update one SurveyStatistic
+     * const surveyStatistic = await prisma.surveyStatistic.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SurveyStatisticUpdateArgs>(args: SelectSubset<T, SurveyStatisticUpdateArgs<ExtArgs>>): Prisma__SurveyStatisticClient<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SurveyStatistics.
+     * @param {SurveyStatisticDeleteManyArgs} args - Arguments to filter SurveyStatistics to delete.
+     * @example
+     * // Delete a few SurveyStatistics
+     * const { count } = await prisma.surveyStatistic.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SurveyStatisticDeleteManyArgs>(args?: SelectSubset<T, SurveyStatisticDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SurveyStatistics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyStatisticUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SurveyStatistics
+     * const surveyStatistic = await prisma.surveyStatistic.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SurveyStatisticUpdateManyArgs>(args: SelectSubset<T, SurveyStatisticUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SurveyStatistic.
+     * @param {SurveyStatisticUpsertArgs} args - Arguments to update or create a SurveyStatistic.
+     * @example
+     * // Update or create a SurveyStatistic
+     * const surveyStatistic = await prisma.surveyStatistic.upsert({
+     *   create: {
+     *     // ... data to create a SurveyStatistic
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SurveyStatistic we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SurveyStatisticUpsertArgs>(args: SelectSubset<T, SurveyStatisticUpsertArgs<ExtArgs>>): Prisma__SurveyStatisticClient<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SurveyStatistics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyStatisticCountArgs} args - Arguments to filter SurveyStatistics to count.
+     * @example
+     * // Count the number of SurveyStatistics
+     * const count = await prisma.surveyStatistic.count({
+     *   where: {
+     *     // ... the filter for the SurveyStatistics we want to count
+     *   }
+     * })
+    **/
+    count<T extends SurveyStatisticCountArgs>(
+      args?: Subset<T, SurveyStatisticCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SurveyStatisticCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SurveyStatistic.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyStatisticAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SurveyStatisticAggregateArgs>(args: Subset<T, SurveyStatisticAggregateArgs>): Prisma.PrismaPromise<GetSurveyStatisticAggregateType<T>>
+
+    /**
+     * Group by SurveyStatistic.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SurveyStatisticGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SurveyStatisticGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SurveyStatisticGroupByArgs['orderBy'] }
+        : { orderBy?: SurveyStatisticGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SurveyStatisticGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSurveyStatisticGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SurveyStatistic model
+   */
+  readonly fields: SurveyStatisticFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SurveyStatistic.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SurveyStatisticClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    surveyForm<T extends SurveyFormDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SurveyFormDefaultArgs<ExtArgs>>): Prisma__SurveyFormClient<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    creator<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SurveyStatistic model
+   */
+  interface SurveyStatisticFieldRefs {
+    readonly id: FieldRef<"SurveyStatistic", 'String'>
+    readonly surveyFormId: FieldRef<"SurveyStatistic", 'String'>
+    readonly chartType: FieldRef<"SurveyStatistic", 'chart_type'>
+    readonly title: FieldRef<"SurveyStatistic", 'String'>
+    readonly description: FieldRef<"SurveyStatistic", 'String'>
+    readonly config: FieldRef<"SurveyStatistic", 'Json'>
+    readonly createdById: FieldRef<"SurveyStatistic", 'String'>
+    readonly createdAt: FieldRef<"SurveyStatistic", 'DateTime'>
+    readonly updatedAt: FieldRef<"SurveyStatistic", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SurveyStatistic findUnique
+   */
+  export type SurveyStatisticFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyStatistic to fetch.
+     */
+    where: SurveyStatisticWhereUniqueInput
+  }
+
+  /**
+   * SurveyStatistic findUniqueOrThrow
+   */
+  export type SurveyStatisticFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyStatistic to fetch.
+     */
+    where: SurveyStatisticWhereUniqueInput
+  }
+
+  /**
+   * SurveyStatistic findFirst
+   */
+  export type SurveyStatisticFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyStatistic to fetch.
+     */
+    where?: SurveyStatisticWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyStatistics to fetch.
+     */
+    orderBy?: SurveyStatisticOrderByWithRelationInput | SurveyStatisticOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SurveyStatistics.
+     */
+    cursor?: SurveyStatisticWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyStatistics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyStatistics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SurveyStatistics.
+     */
+    distinct?: SurveyStatisticScalarFieldEnum | SurveyStatisticScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyStatistic findFirstOrThrow
+   */
+  export type SurveyStatisticFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyStatistic to fetch.
+     */
+    where?: SurveyStatisticWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyStatistics to fetch.
+     */
+    orderBy?: SurveyStatisticOrderByWithRelationInput | SurveyStatisticOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SurveyStatistics.
+     */
+    cursor?: SurveyStatisticWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyStatistics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyStatistics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SurveyStatistics.
+     */
+    distinct?: SurveyStatisticScalarFieldEnum | SurveyStatisticScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyStatistic findMany
+   */
+  export type SurveyStatisticFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+    /**
+     * Filter, which SurveyStatistics to fetch.
+     */
+    where?: SurveyStatisticWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SurveyStatistics to fetch.
+     */
+    orderBy?: SurveyStatisticOrderByWithRelationInput | SurveyStatisticOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SurveyStatistics.
+     */
+    cursor?: SurveyStatisticWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SurveyStatistics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SurveyStatistics.
+     */
+    skip?: number
+    distinct?: SurveyStatisticScalarFieldEnum | SurveyStatisticScalarFieldEnum[]
+  }
+
+  /**
+   * SurveyStatistic create
+   */
+  export type SurveyStatisticCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SurveyStatistic.
+     */
+    data: XOR<SurveyStatisticCreateInput, SurveyStatisticUncheckedCreateInput>
+  }
+
+  /**
+   * SurveyStatistic createMany
+   */
+  export type SurveyStatisticCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SurveyStatistics.
+     */
+    data: SurveyStatisticCreateManyInput | SurveyStatisticCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SurveyStatistic update
+   */
+  export type SurveyStatisticUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SurveyStatistic.
+     */
+    data: XOR<SurveyStatisticUpdateInput, SurveyStatisticUncheckedUpdateInput>
+    /**
+     * Choose, which SurveyStatistic to update.
+     */
+    where: SurveyStatisticWhereUniqueInput
+  }
+
+  /**
+   * SurveyStatistic updateMany
+   */
+  export type SurveyStatisticUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SurveyStatistics.
+     */
+    data: XOR<SurveyStatisticUpdateManyMutationInput, SurveyStatisticUncheckedUpdateManyInput>
+    /**
+     * Filter which SurveyStatistics to update
+     */
+    where?: SurveyStatisticWhereInput
+    /**
+     * Limit how many SurveyStatistics to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SurveyStatistic upsert
+   */
+  export type SurveyStatisticUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SurveyStatistic to update in case it exists.
+     */
+    where: SurveyStatisticWhereUniqueInput
+    /**
+     * In case the SurveyStatistic found by the `where` argument doesn't exist, create a new SurveyStatistic with this data.
+     */
+    create: XOR<SurveyStatisticCreateInput, SurveyStatisticUncheckedCreateInput>
+    /**
+     * In case the SurveyStatistic was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SurveyStatisticUpdateInput, SurveyStatisticUncheckedUpdateInput>
+  }
+
+  /**
+   * SurveyStatistic delete
+   */
+  export type SurveyStatisticDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+    /**
+     * Filter which SurveyStatistic to delete.
+     */
+    where: SurveyStatisticWhereUniqueInput
+  }
+
+  /**
+   * SurveyStatistic deleteMany
+   */
+  export type SurveyStatisticDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SurveyStatistics to delete
+     */
+    where?: SurveyStatisticWhereInput
+    /**
+     * Limit how many SurveyStatistics to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SurveyStatistic without action
+   */
+  export type SurveyStatisticDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SurveyStatistic
+     */
+    select?: SurveyStatisticSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SurveyStatistic
+     */
+    omit?: SurveyStatisticOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SurveyStatisticInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -20432,6 +26091,73 @@ export namespace Prisma {
   export type SeminarParticipantScalarFieldEnum = (typeof SeminarParticipantScalarFieldEnum)[keyof typeof SeminarParticipantScalarFieldEnum]
 
 
+  export const SurveyFormScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    description: 'description',
+    status: 'status',
+    category: 'category',
+    createdById: 'createdById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SurveyFormScalarFieldEnum = (typeof SurveyFormScalarFieldEnum)[keyof typeof SurveyFormScalarFieldEnum]
+
+
+  export const SurveyFieldScalarFieldEnum: {
+    id: 'id',
+    surveyFormId: 'surveyFormId',
+    type: 'type',
+    label: 'label',
+    placeholder: 'placeholder',
+    required: 'required',
+    options: 'options',
+    order: 'order',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SurveyFieldScalarFieldEnum = (typeof SurveyFieldScalarFieldEnum)[keyof typeof SurveyFieldScalarFieldEnum]
+
+
+  export const SurveyResponseScalarFieldEnum: {
+    id: 'id',
+    surveyFormId: 'surveyFormId',
+    userId: 'userId',
+    submittedAt: 'submittedAt',
+    metadata: 'metadata'
+  };
+
+  export type SurveyResponseScalarFieldEnum = (typeof SurveyResponseScalarFieldEnum)[keyof typeof SurveyResponseScalarFieldEnum]
+
+
+  export const SurveyAnswerScalarFieldEnum: {
+    id: 'id',
+    responseId: 'responseId',
+    fieldId: 'fieldId',
+    answer: 'answer',
+    createdAt: 'createdAt'
+  };
+
+  export type SurveyAnswerScalarFieldEnum = (typeof SurveyAnswerScalarFieldEnum)[keyof typeof SurveyAnswerScalarFieldEnum]
+
+
+  export const SurveyStatisticScalarFieldEnum: {
+    id: 'id',
+    surveyFormId: 'surveyFormId',
+    chartType: 'chartType',
+    title: 'title',
+    description: 'description',
+    config: 'config',
+    createdById: 'createdById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SurveyStatisticScalarFieldEnum = (typeof SurveyStatisticScalarFieldEnum)[keyof typeof SurveyStatisticScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -20446,6 +26172,13 @@ export namespace Prisma {
   };
 
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const JsonNullValueFilter: {
@@ -20678,6 +26411,56 @@ export namespace Prisma {
   export type SeminarParticipantOrderByRelevanceFieldEnum = (typeof SeminarParticipantOrderByRelevanceFieldEnum)[keyof typeof SeminarParticipantOrderByRelevanceFieldEnum]
 
 
+  export const SurveyFormOrderByRelevanceFieldEnum: {
+    id: 'id',
+    title: 'title',
+    description: 'description',
+    category: 'category',
+    createdById: 'createdById'
+  };
+
+  export type SurveyFormOrderByRelevanceFieldEnum = (typeof SurveyFormOrderByRelevanceFieldEnum)[keyof typeof SurveyFormOrderByRelevanceFieldEnum]
+
+
+  export const SurveyFieldOrderByRelevanceFieldEnum: {
+    id: 'id',
+    surveyFormId: 'surveyFormId',
+    label: 'label',
+    placeholder: 'placeholder'
+  };
+
+  export type SurveyFieldOrderByRelevanceFieldEnum = (typeof SurveyFieldOrderByRelevanceFieldEnum)[keyof typeof SurveyFieldOrderByRelevanceFieldEnum]
+
+
+  export const SurveyResponseOrderByRelevanceFieldEnum: {
+    id: 'id',
+    surveyFormId: 'surveyFormId',
+    userId: 'userId'
+  };
+
+  export type SurveyResponseOrderByRelevanceFieldEnum = (typeof SurveyResponseOrderByRelevanceFieldEnum)[keyof typeof SurveyResponseOrderByRelevanceFieldEnum]
+
+
+  export const SurveyAnswerOrderByRelevanceFieldEnum: {
+    id: 'id',
+    responseId: 'responseId',
+    fieldId: 'fieldId'
+  };
+
+  export type SurveyAnswerOrderByRelevanceFieldEnum = (typeof SurveyAnswerOrderByRelevanceFieldEnum)[keyof typeof SurveyAnswerOrderByRelevanceFieldEnum]
+
+
+  export const SurveyStatisticOrderByRelevanceFieldEnum: {
+    id: 'id',
+    surveyFormId: 'surveyFormId',
+    title: 'title',
+    description: 'description',
+    createdById: 'createdById'
+  };
+
+  export type SurveyStatisticOrderByRelevanceFieldEnum = (typeof SurveyStatisticOrderByRelevanceFieldEnum)[keyof typeof SurveyStatisticOrderByRelevanceFieldEnum]
+
+
   /**
    * Field references
    */
@@ -20859,6 +26642,27 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'survey_status'
+   */
+  export type Enumsurvey_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'survey_status'>
+    
+
+
+  /**
+   * Reference to a field of type 'field_type'
+   */
+  export type Enumfield_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'field_type'>
+    
+
+
+  /**
+   * Reference to a field of type 'chart_type'
+   */
+  export type Enumchart_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'chart_type'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -20942,6 +26746,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageListRelationFilter
     chatAttachments?: ChatAttachmentListRelationFilter
     chatReadReceipts?: ChatReadReceiptListRelationFilter
+    surveyFormsCreated?: SurveyFormListRelationFilter
+    surveyResponses?: SurveyResponseListRelationFilter
+    surveyStatisticsCreated?: SurveyStatisticListRelationFilter
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -21015,6 +26822,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageOrderByRelationAggregateInput
     chatAttachments?: ChatAttachmentOrderByRelationAggregateInput
     chatReadReceipts?: ChatReadReceiptOrderByRelationAggregateInput
+    surveyFormsCreated?: SurveyFormOrderByRelationAggregateInput
+    surveyResponses?: SurveyResponseOrderByRelationAggregateInput
+    surveyStatisticsCreated?: SurveyStatisticOrderByRelationAggregateInput
     _relevance?: AccountOrderByRelevanceInput
   }
 
@@ -21092,6 +26902,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageListRelationFilter
     chatAttachments?: ChatAttachmentListRelationFilter
     chatReadReceipts?: ChatReadReceiptListRelationFilter
+    surveyFormsCreated?: SurveyFormListRelationFilter
+    surveyResponses?: SurveyResponseListRelationFilter
+    surveyStatisticsCreated?: SurveyStatisticListRelationFilter
   }, "id" | "username" | "email">
 
   export type AccountOrderByWithAggregationInput = {
@@ -22459,6 +28272,373 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"SeminarParticipant"> | Date | string
   }
 
+  export type SurveyFormWhereInput = {
+    AND?: SurveyFormWhereInput | SurveyFormWhereInput[]
+    OR?: SurveyFormWhereInput[]
+    NOT?: SurveyFormWhereInput | SurveyFormWhereInput[]
+    id?: StringFilter<"SurveyForm"> | string
+    title?: StringFilter<"SurveyForm"> | string
+    description?: StringNullableFilter<"SurveyForm"> | string | null
+    status?: Enumsurvey_statusFilter<"SurveyForm"> | $Enums.survey_status
+    category?: StringFilter<"SurveyForm"> | string
+    createdById?: StringFilter<"SurveyForm"> | string
+    createdAt?: DateTimeFilter<"SurveyForm"> | Date | string
+    updatedAt?: DateTimeFilter<"SurveyForm"> | Date | string
+    creator?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+    fields?: SurveyFieldListRelationFilter
+    responses?: SurveyResponseListRelationFilter
+    statistics?: SurveyStatisticListRelationFilter
+  }
+
+  export type SurveyFormOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    category?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    creator?: AccountOrderByWithRelationInput
+    fields?: SurveyFieldOrderByRelationAggregateInput
+    responses?: SurveyResponseOrderByRelationAggregateInput
+    statistics?: SurveyStatisticOrderByRelationAggregateInput
+    _relevance?: SurveyFormOrderByRelevanceInput
+  }
+
+  export type SurveyFormWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SurveyFormWhereInput | SurveyFormWhereInput[]
+    OR?: SurveyFormWhereInput[]
+    NOT?: SurveyFormWhereInput | SurveyFormWhereInput[]
+    title?: StringFilter<"SurveyForm"> | string
+    description?: StringNullableFilter<"SurveyForm"> | string | null
+    status?: Enumsurvey_statusFilter<"SurveyForm"> | $Enums.survey_status
+    category?: StringFilter<"SurveyForm"> | string
+    createdById?: StringFilter<"SurveyForm"> | string
+    createdAt?: DateTimeFilter<"SurveyForm"> | Date | string
+    updatedAt?: DateTimeFilter<"SurveyForm"> | Date | string
+    creator?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+    fields?: SurveyFieldListRelationFilter
+    responses?: SurveyResponseListRelationFilter
+    statistics?: SurveyStatisticListRelationFilter
+  }, "id">
+
+  export type SurveyFormOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    category?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SurveyFormCountOrderByAggregateInput
+    _max?: SurveyFormMaxOrderByAggregateInput
+    _min?: SurveyFormMinOrderByAggregateInput
+  }
+
+  export type SurveyFormScalarWhereWithAggregatesInput = {
+    AND?: SurveyFormScalarWhereWithAggregatesInput | SurveyFormScalarWhereWithAggregatesInput[]
+    OR?: SurveyFormScalarWhereWithAggregatesInput[]
+    NOT?: SurveyFormScalarWhereWithAggregatesInput | SurveyFormScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SurveyForm"> | string
+    title?: StringWithAggregatesFilter<"SurveyForm"> | string
+    description?: StringNullableWithAggregatesFilter<"SurveyForm"> | string | null
+    status?: Enumsurvey_statusWithAggregatesFilter<"SurveyForm"> | $Enums.survey_status
+    category?: StringWithAggregatesFilter<"SurveyForm"> | string
+    createdById?: StringWithAggregatesFilter<"SurveyForm"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SurveyForm"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SurveyForm"> | Date | string
+  }
+
+  export type SurveyFieldWhereInput = {
+    AND?: SurveyFieldWhereInput | SurveyFieldWhereInput[]
+    OR?: SurveyFieldWhereInput[]
+    NOT?: SurveyFieldWhereInput | SurveyFieldWhereInput[]
+    id?: StringFilter<"SurveyField"> | string
+    surveyFormId?: StringFilter<"SurveyField"> | string
+    type?: Enumfield_typeFilter<"SurveyField"> | $Enums.field_type
+    label?: StringFilter<"SurveyField"> | string
+    placeholder?: StringNullableFilter<"SurveyField"> | string | null
+    required?: BoolFilter<"SurveyField"> | boolean
+    options?: JsonNullableFilter<"SurveyField">
+    order?: IntFilter<"SurveyField"> | number
+    createdAt?: DateTimeFilter<"SurveyField"> | Date | string
+    updatedAt?: DateTimeFilter<"SurveyField"> | Date | string
+    surveyForm?: XOR<SurveyFormScalarRelationFilter, SurveyFormWhereInput>
+    answers?: SurveyAnswerListRelationFilter
+  }
+
+  export type SurveyFieldOrderByWithRelationInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    type?: SortOrder
+    label?: SortOrder
+    placeholder?: SortOrderInput | SortOrder
+    required?: SortOrder
+    options?: SortOrderInput | SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    surveyForm?: SurveyFormOrderByWithRelationInput
+    answers?: SurveyAnswerOrderByRelationAggregateInput
+    _relevance?: SurveyFieldOrderByRelevanceInput
+  }
+
+  export type SurveyFieldWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SurveyFieldWhereInput | SurveyFieldWhereInput[]
+    OR?: SurveyFieldWhereInput[]
+    NOT?: SurveyFieldWhereInput | SurveyFieldWhereInput[]
+    surveyFormId?: StringFilter<"SurveyField"> | string
+    type?: Enumfield_typeFilter<"SurveyField"> | $Enums.field_type
+    label?: StringFilter<"SurveyField"> | string
+    placeholder?: StringNullableFilter<"SurveyField"> | string | null
+    required?: BoolFilter<"SurveyField"> | boolean
+    options?: JsonNullableFilter<"SurveyField">
+    order?: IntFilter<"SurveyField"> | number
+    createdAt?: DateTimeFilter<"SurveyField"> | Date | string
+    updatedAt?: DateTimeFilter<"SurveyField"> | Date | string
+    surveyForm?: XOR<SurveyFormScalarRelationFilter, SurveyFormWhereInput>
+    answers?: SurveyAnswerListRelationFilter
+  }, "id">
+
+  export type SurveyFieldOrderByWithAggregationInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    type?: SortOrder
+    label?: SortOrder
+    placeholder?: SortOrderInput | SortOrder
+    required?: SortOrder
+    options?: SortOrderInput | SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SurveyFieldCountOrderByAggregateInput
+    _avg?: SurveyFieldAvgOrderByAggregateInput
+    _max?: SurveyFieldMaxOrderByAggregateInput
+    _min?: SurveyFieldMinOrderByAggregateInput
+    _sum?: SurveyFieldSumOrderByAggregateInput
+  }
+
+  export type SurveyFieldScalarWhereWithAggregatesInput = {
+    AND?: SurveyFieldScalarWhereWithAggregatesInput | SurveyFieldScalarWhereWithAggregatesInput[]
+    OR?: SurveyFieldScalarWhereWithAggregatesInput[]
+    NOT?: SurveyFieldScalarWhereWithAggregatesInput | SurveyFieldScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SurveyField"> | string
+    surveyFormId?: StringWithAggregatesFilter<"SurveyField"> | string
+    type?: Enumfield_typeWithAggregatesFilter<"SurveyField"> | $Enums.field_type
+    label?: StringWithAggregatesFilter<"SurveyField"> | string
+    placeholder?: StringNullableWithAggregatesFilter<"SurveyField"> | string | null
+    required?: BoolWithAggregatesFilter<"SurveyField"> | boolean
+    options?: JsonNullableWithAggregatesFilter<"SurveyField">
+    order?: IntWithAggregatesFilter<"SurveyField"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"SurveyField"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SurveyField"> | Date | string
+  }
+
+  export type SurveyResponseWhereInput = {
+    AND?: SurveyResponseWhereInput | SurveyResponseWhereInput[]
+    OR?: SurveyResponseWhereInput[]
+    NOT?: SurveyResponseWhereInput | SurveyResponseWhereInput[]
+    id?: StringFilter<"SurveyResponse"> | string
+    surveyFormId?: StringFilter<"SurveyResponse"> | string
+    userId?: StringNullableFilter<"SurveyResponse"> | string | null
+    submittedAt?: DateTimeFilter<"SurveyResponse"> | Date | string
+    metadata?: JsonNullableFilter<"SurveyResponse">
+    surveyForm?: XOR<SurveyFormScalarRelationFilter, SurveyFormWhereInput>
+    user?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    answers?: SurveyAnswerListRelationFilter
+  }
+
+  export type SurveyResponseOrderByWithRelationInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    submittedAt?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    surveyForm?: SurveyFormOrderByWithRelationInput
+    user?: AccountOrderByWithRelationInput
+    answers?: SurveyAnswerOrderByRelationAggregateInput
+    _relevance?: SurveyResponseOrderByRelevanceInput
+  }
+
+  export type SurveyResponseWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SurveyResponseWhereInput | SurveyResponseWhereInput[]
+    OR?: SurveyResponseWhereInput[]
+    NOT?: SurveyResponseWhereInput | SurveyResponseWhereInput[]
+    surveyFormId?: StringFilter<"SurveyResponse"> | string
+    userId?: StringNullableFilter<"SurveyResponse"> | string | null
+    submittedAt?: DateTimeFilter<"SurveyResponse"> | Date | string
+    metadata?: JsonNullableFilter<"SurveyResponse">
+    surveyForm?: XOR<SurveyFormScalarRelationFilter, SurveyFormWhereInput>
+    user?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    answers?: SurveyAnswerListRelationFilter
+  }, "id">
+
+  export type SurveyResponseOrderByWithAggregationInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    submittedAt?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    _count?: SurveyResponseCountOrderByAggregateInput
+    _max?: SurveyResponseMaxOrderByAggregateInput
+    _min?: SurveyResponseMinOrderByAggregateInput
+  }
+
+  export type SurveyResponseScalarWhereWithAggregatesInput = {
+    AND?: SurveyResponseScalarWhereWithAggregatesInput | SurveyResponseScalarWhereWithAggregatesInput[]
+    OR?: SurveyResponseScalarWhereWithAggregatesInput[]
+    NOT?: SurveyResponseScalarWhereWithAggregatesInput | SurveyResponseScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SurveyResponse"> | string
+    surveyFormId?: StringWithAggregatesFilter<"SurveyResponse"> | string
+    userId?: StringNullableWithAggregatesFilter<"SurveyResponse"> | string | null
+    submittedAt?: DateTimeWithAggregatesFilter<"SurveyResponse"> | Date | string
+    metadata?: JsonNullableWithAggregatesFilter<"SurveyResponse">
+  }
+
+  export type SurveyAnswerWhereInput = {
+    AND?: SurveyAnswerWhereInput | SurveyAnswerWhereInput[]
+    OR?: SurveyAnswerWhereInput[]
+    NOT?: SurveyAnswerWhereInput | SurveyAnswerWhereInput[]
+    id?: StringFilter<"SurveyAnswer"> | string
+    responseId?: StringFilter<"SurveyAnswer"> | string
+    fieldId?: StringFilter<"SurveyAnswer"> | string
+    answer?: JsonFilter<"SurveyAnswer">
+    createdAt?: DateTimeFilter<"SurveyAnswer"> | Date | string
+    response?: XOR<SurveyResponseScalarRelationFilter, SurveyResponseWhereInput>
+    field?: XOR<SurveyFieldScalarRelationFilter, SurveyFieldWhereInput>
+  }
+
+  export type SurveyAnswerOrderByWithRelationInput = {
+    id?: SortOrder
+    responseId?: SortOrder
+    fieldId?: SortOrder
+    answer?: SortOrder
+    createdAt?: SortOrder
+    response?: SurveyResponseOrderByWithRelationInput
+    field?: SurveyFieldOrderByWithRelationInput
+    _relevance?: SurveyAnswerOrderByRelevanceInput
+  }
+
+  export type SurveyAnswerWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    responseId_fieldId?: SurveyAnswerResponseIdFieldIdCompoundUniqueInput
+    AND?: SurveyAnswerWhereInput | SurveyAnswerWhereInput[]
+    OR?: SurveyAnswerWhereInput[]
+    NOT?: SurveyAnswerWhereInput | SurveyAnswerWhereInput[]
+    responseId?: StringFilter<"SurveyAnswer"> | string
+    fieldId?: StringFilter<"SurveyAnswer"> | string
+    answer?: JsonFilter<"SurveyAnswer">
+    createdAt?: DateTimeFilter<"SurveyAnswer"> | Date | string
+    response?: XOR<SurveyResponseScalarRelationFilter, SurveyResponseWhereInput>
+    field?: XOR<SurveyFieldScalarRelationFilter, SurveyFieldWhereInput>
+  }, "id" | "responseId_fieldId">
+
+  export type SurveyAnswerOrderByWithAggregationInput = {
+    id?: SortOrder
+    responseId?: SortOrder
+    fieldId?: SortOrder
+    answer?: SortOrder
+    createdAt?: SortOrder
+    _count?: SurveyAnswerCountOrderByAggregateInput
+    _max?: SurveyAnswerMaxOrderByAggregateInput
+    _min?: SurveyAnswerMinOrderByAggregateInput
+  }
+
+  export type SurveyAnswerScalarWhereWithAggregatesInput = {
+    AND?: SurveyAnswerScalarWhereWithAggregatesInput | SurveyAnswerScalarWhereWithAggregatesInput[]
+    OR?: SurveyAnswerScalarWhereWithAggregatesInput[]
+    NOT?: SurveyAnswerScalarWhereWithAggregatesInput | SurveyAnswerScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SurveyAnswer"> | string
+    responseId?: StringWithAggregatesFilter<"SurveyAnswer"> | string
+    fieldId?: StringWithAggregatesFilter<"SurveyAnswer"> | string
+    answer?: JsonWithAggregatesFilter<"SurveyAnswer">
+    createdAt?: DateTimeWithAggregatesFilter<"SurveyAnswer"> | Date | string
+  }
+
+  export type SurveyStatisticWhereInput = {
+    AND?: SurveyStatisticWhereInput | SurveyStatisticWhereInput[]
+    OR?: SurveyStatisticWhereInput[]
+    NOT?: SurveyStatisticWhereInput | SurveyStatisticWhereInput[]
+    id?: StringFilter<"SurveyStatistic"> | string
+    surveyFormId?: StringFilter<"SurveyStatistic"> | string
+    chartType?: Enumchart_typeFilter<"SurveyStatistic"> | $Enums.chart_type
+    title?: StringFilter<"SurveyStatistic"> | string
+    description?: StringNullableFilter<"SurveyStatistic"> | string | null
+    config?: JsonFilter<"SurveyStatistic">
+    createdById?: StringFilter<"SurveyStatistic"> | string
+    createdAt?: DateTimeFilter<"SurveyStatistic"> | Date | string
+    updatedAt?: DateTimeFilter<"SurveyStatistic"> | Date | string
+    surveyForm?: XOR<SurveyFormScalarRelationFilter, SurveyFormWhereInput>
+    creator?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+  }
+
+  export type SurveyStatisticOrderByWithRelationInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    chartType?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    config?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    surveyForm?: SurveyFormOrderByWithRelationInput
+    creator?: AccountOrderByWithRelationInput
+    _relevance?: SurveyStatisticOrderByRelevanceInput
+  }
+
+  export type SurveyStatisticWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SurveyStatisticWhereInput | SurveyStatisticWhereInput[]
+    OR?: SurveyStatisticWhereInput[]
+    NOT?: SurveyStatisticWhereInput | SurveyStatisticWhereInput[]
+    surveyFormId?: StringFilter<"SurveyStatistic"> | string
+    chartType?: Enumchart_typeFilter<"SurveyStatistic"> | $Enums.chart_type
+    title?: StringFilter<"SurveyStatistic"> | string
+    description?: StringNullableFilter<"SurveyStatistic"> | string | null
+    config?: JsonFilter<"SurveyStatistic">
+    createdById?: StringFilter<"SurveyStatistic"> | string
+    createdAt?: DateTimeFilter<"SurveyStatistic"> | Date | string
+    updatedAt?: DateTimeFilter<"SurveyStatistic"> | Date | string
+    surveyForm?: XOR<SurveyFormScalarRelationFilter, SurveyFormWhereInput>
+    creator?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+  }, "id">
+
+  export type SurveyStatisticOrderByWithAggregationInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    chartType?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    config?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SurveyStatisticCountOrderByAggregateInput
+    _max?: SurveyStatisticMaxOrderByAggregateInput
+    _min?: SurveyStatisticMinOrderByAggregateInput
+  }
+
+  export type SurveyStatisticScalarWhereWithAggregatesInput = {
+    AND?: SurveyStatisticScalarWhereWithAggregatesInput | SurveyStatisticScalarWhereWithAggregatesInput[]
+    OR?: SurveyStatisticScalarWhereWithAggregatesInput[]
+    NOT?: SurveyStatisticScalarWhereWithAggregatesInput | SurveyStatisticScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SurveyStatistic"> | string
+    surveyFormId?: StringWithAggregatesFilter<"SurveyStatistic"> | string
+    chartType?: Enumchart_typeWithAggregatesFilter<"SurveyStatistic"> | $Enums.chart_type
+    title?: StringWithAggregatesFilter<"SurveyStatistic"> | string
+    description?: StringNullableWithAggregatesFilter<"SurveyStatistic"> | string | null
+    config?: JsonWithAggregatesFilter<"SurveyStatistic">
+    createdById?: StringWithAggregatesFilter<"SurveyStatistic"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SurveyStatistic"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SurveyStatistic"> | Date | string
+  }
+
   export type AccountCreateInput = {
     id?: string
     access?: $Enums.access
@@ -22530,6 +28710,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateInput = {
@@ -22603,6 +28786,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUpdateInput = {
@@ -22676,6 +28862,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateInput = {
@@ -22749,6 +28938,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountCreateManyInput = {
@@ -24231,6 +30423,382 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SurveyFormCreateInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: AccountCreateNestedOneWithoutSurveyFormsCreatedInput
+    fields?: SurveyFieldCreateNestedManyWithoutSurveyFormInput
+    responses?: SurveyResponseCreateNestedManyWithoutSurveyFormInput
+    statistics?: SurveyStatisticCreateNestedManyWithoutSurveyFormInput
+  }
+
+  export type SurveyFormUncheckedCreateInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    fields?: SurveyFieldUncheckedCreateNestedManyWithoutSurveyFormInput
+    responses?: SurveyResponseUncheckedCreateNestedManyWithoutSurveyFormInput
+    statistics?: SurveyStatisticUncheckedCreateNestedManyWithoutSurveyFormInput
+  }
+
+  export type SurveyFormUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: AccountUpdateOneRequiredWithoutSurveyFormsCreatedNestedInput
+    fields?: SurveyFieldUpdateManyWithoutSurveyFormNestedInput
+    responses?: SurveyResponseUpdateManyWithoutSurveyFormNestedInput
+    statistics?: SurveyStatisticUpdateManyWithoutSurveyFormNestedInput
+  }
+
+  export type SurveyFormUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fields?: SurveyFieldUncheckedUpdateManyWithoutSurveyFormNestedInput
+    responses?: SurveyResponseUncheckedUpdateManyWithoutSurveyFormNestedInput
+    statistics?: SurveyStatisticUncheckedUpdateManyWithoutSurveyFormNestedInput
+  }
+
+  export type SurveyFormCreateManyInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SurveyFormUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyFormUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyFieldCreateInput = {
+    id?: string
+    type: $Enums.field_type
+    label: string
+    placeholder?: string | null
+    required?: boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyForm: SurveyFormCreateNestedOneWithoutFieldsInput
+    answers?: SurveyAnswerCreateNestedManyWithoutFieldInput
+  }
+
+  export type SurveyFieldUncheckedCreateInput = {
+    id?: string
+    surveyFormId: string
+    type: $Enums.field_type
+    label: string
+    placeholder?: string | null
+    required?: boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    answers?: SurveyAnswerUncheckedCreateNestedManyWithoutFieldInput
+  }
+
+  export type SurveyFieldUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: Enumfield_typeFieldUpdateOperationsInput | $Enums.field_type
+    label?: StringFieldUpdateOperationsInput | string
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyForm?: SurveyFormUpdateOneRequiredWithoutFieldsNestedInput
+    answers?: SurveyAnswerUpdateManyWithoutFieldNestedInput
+  }
+
+  export type SurveyFieldUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    type?: Enumfield_typeFieldUpdateOperationsInput | $Enums.field_type
+    label?: StringFieldUpdateOperationsInput | string
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    answers?: SurveyAnswerUncheckedUpdateManyWithoutFieldNestedInput
+  }
+
+  export type SurveyFieldCreateManyInput = {
+    id?: string
+    surveyFormId: string
+    type: $Enums.field_type
+    label: string
+    placeholder?: string | null
+    required?: boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SurveyFieldUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: Enumfield_typeFieldUpdateOperationsInput | $Enums.field_type
+    label?: StringFieldUpdateOperationsInput | string
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyFieldUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    type?: Enumfield_typeFieldUpdateOperationsInput | $Enums.field_type
+    label?: StringFieldUpdateOperationsInput | string
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyResponseCreateInput = {
+    id?: string
+    submittedAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    surveyForm: SurveyFormCreateNestedOneWithoutResponsesInput
+    user?: AccountCreateNestedOneWithoutSurveyResponsesInput
+    answers?: SurveyAnswerCreateNestedManyWithoutResponseInput
+  }
+
+  export type SurveyResponseUncheckedCreateInput = {
+    id?: string
+    surveyFormId: string
+    userId?: string | null
+    submittedAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    answers?: SurveyAnswerUncheckedCreateNestedManyWithoutResponseInput
+  }
+
+  export type SurveyResponseUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    surveyForm?: SurveyFormUpdateOneRequiredWithoutResponsesNestedInput
+    user?: AccountUpdateOneWithoutSurveyResponsesNestedInput
+    answers?: SurveyAnswerUpdateManyWithoutResponseNestedInput
+  }
+
+  export type SurveyResponseUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    answers?: SurveyAnswerUncheckedUpdateManyWithoutResponseNestedInput
+  }
+
+  export type SurveyResponseCreateManyInput = {
+    id?: string
+    surveyFormId: string
+    userId?: string | null
+    submittedAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SurveyResponseUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SurveyResponseUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SurveyAnswerCreateInput = {
+    id?: string
+    answer: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    response: SurveyResponseCreateNestedOneWithoutAnswersInput
+    field: SurveyFieldCreateNestedOneWithoutAnswersInput
+  }
+
+  export type SurveyAnswerUncheckedCreateInput = {
+    id?: string
+    responseId: string
+    fieldId: string
+    answer: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type SurveyAnswerUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    answer?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    response?: SurveyResponseUpdateOneRequiredWithoutAnswersNestedInput
+    field?: SurveyFieldUpdateOneRequiredWithoutAnswersNestedInput
+  }
+
+  export type SurveyAnswerUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    responseId?: StringFieldUpdateOperationsInput | string
+    fieldId?: StringFieldUpdateOperationsInput | string
+    answer?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyAnswerCreateManyInput = {
+    id?: string
+    responseId: string
+    fieldId: string
+    answer: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type SurveyAnswerUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    answer?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyAnswerUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    responseId?: StringFieldUpdateOperationsInput | string
+    fieldId?: StringFieldUpdateOperationsInput | string
+    answer?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyStatisticCreateInput = {
+    id?: string
+    chartType: $Enums.chart_type
+    title: string
+    description?: string | null
+    config: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyForm: SurveyFormCreateNestedOneWithoutStatisticsInput
+    creator: AccountCreateNestedOneWithoutSurveyStatisticsCreatedInput
+  }
+
+  export type SurveyStatisticUncheckedCreateInput = {
+    id?: string
+    surveyFormId: string
+    chartType: $Enums.chart_type
+    title: string
+    description?: string | null
+    config: JsonNullValueInput | InputJsonValue
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SurveyStatisticUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chartType?: Enumchart_typeFieldUpdateOperationsInput | $Enums.chart_type
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyForm?: SurveyFormUpdateOneRequiredWithoutStatisticsNestedInput
+    creator?: AccountUpdateOneRequiredWithoutSurveyStatisticsCreatedNestedInput
+  }
+
+  export type SurveyStatisticUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    chartType?: Enumchart_typeFieldUpdateOperationsInput | $Enums.chart_type
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    config?: JsonNullValueInput | InputJsonValue
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyStatisticCreateManyInput = {
+    id?: string
+    surveyFormId: string
+    chartType: $Enums.chart_type
+    title: string
+    description?: string | null
+    config: JsonNullValueInput | InputJsonValue
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SurveyStatisticUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chartType?: Enumchart_typeFieldUpdateOperationsInput | $Enums.chart_type
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyStatisticUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    chartType?: Enumchart_typeFieldUpdateOperationsInput | $Enums.chart_type
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    config?: JsonNullValueInput | InputJsonValue
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -24439,6 +31007,24 @@ export namespace Prisma {
     none?: ChatReadReceiptWhereInput
   }
 
+  export type SurveyFormListRelationFilter = {
+    every?: SurveyFormWhereInput
+    some?: SurveyFormWhereInput
+    none?: SurveyFormWhereInput
+  }
+
+  export type SurveyResponseListRelationFilter = {
+    every?: SurveyResponseWhereInput
+    some?: SurveyResponseWhereInput
+    none?: SurveyResponseWhereInput
+  }
+
+  export type SurveyStatisticListRelationFilter = {
+    every?: SurveyStatisticWhereInput
+    some?: SurveyStatisticWhereInput
+    none?: SurveyStatisticWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -24489,6 +31075,18 @@ export namespace Prisma {
   }
 
   export type ChatReadReceiptOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SurveyFormOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SurveyResponseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SurveyStatisticOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -25871,6 +32469,332 @@ export namespace Prisma {
     _max?: NestedEnumparticipant_statusFilter<$PrismaModel>
   }
 
+  export type Enumsurvey_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.survey_status | Enumsurvey_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.survey_status[]
+    notIn?: $Enums.survey_status[]
+    not?: NestedEnumsurvey_statusFilter<$PrismaModel> | $Enums.survey_status
+  }
+
+  export type SurveyFieldListRelationFilter = {
+    every?: SurveyFieldWhereInput
+    some?: SurveyFieldWhereInput
+    none?: SurveyFieldWhereInput
+  }
+
+  export type SurveyFieldOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SurveyFormOrderByRelevanceInput = {
+    fields: SurveyFormOrderByRelevanceFieldEnum | SurveyFormOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type SurveyFormCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    category?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SurveyFormMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    category?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SurveyFormMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    category?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type Enumsurvey_statusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.survey_status | Enumsurvey_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.survey_status[]
+    notIn?: $Enums.survey_status[]
+    not?: NestedEnumsurvey_statusWithAggregatesFilter<$PrismaModel> | $Enums.survey_status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumsurvey_statusFilter<$PrismaModel>
+    _max?: NestedEnumsurvey_statusFilter<$PrismaModel>
+  }
+
+  export type Enumfield_typeFilter<$PrismaModel = never> = {
+    equals?: $Enums.field_type | Enumfield_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.field_type[]
+    notIn?: $Enums.field_type[]
+    not?: NestedEnumfield_typeFilter<$PrismaModel> | $Enums.field_type
+  }
+
+  export type SurveyFormScalarRelationFilter = {
+    is?: SurveyFormWhereInput
+    isNot?: SurveyFormWhereInput
+  }
+
+  export type SurveyAnswerListRelationFilter = {
+    every?: SurveyAnswerWhereInput
+    some?: SurveyAnswerWhereInput
+    none?: SurveyAnswerWhereInput
+  }
+
+  export type SurveyAnswerOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SurveyFieldOrderByRelevanceInput = {
+    fields: SurveyFieldOrderByRelevanceFieldEnum | SurveyFieldOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type SurveyFieldCountOrderByAggregateInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    type?: SortOrder
+    label?: SortOrder
+    placeholder?: SortOrder
+    required?: SortOrder
+    options?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SurveyFieldAvgOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type SurveyFieldMaxOrderByAggregateInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    type?: SortOrder
+    label?: SortOrder
+    placeholder?: SortOrder
+    required?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SurveyFieldMinOrderByAggregateInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    type?: SortOrder
+    label?: SortOrder
+    placeholder?: SortOrder
+    required?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SurveyFieldSumOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type Enumfield_typeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.field_type | Enumfield_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.field_type[]
+    notIn?: $Enums.field_type[]
+    not?: NestedEnumfield_typeWithAggregatesFilter<$PrismaModel> | $Enums.field_type
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumfield_typeFilter<$PrismaModel>
+    _max?: NestedEnumfield_typeFilter<$PrismaModel>
+  }
+
+  export type SurveyResponseOrderByRelevanceInput = {
+    fields: SurveyResponseOrderByRelevanceFieldEnum | SurveyResponseOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type SurveyResponseCountOrderByAggregateInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    userId?: SortOrder
+    submittedAt?: SortOrder
+    metadata?: SortOrder
+  }
+
+  export type SurveyResponseMaxOrderByAggregateInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    userId?: SortOrder
+    submittedAt?: SortOrder
+  }
+
+  export type SurveyResponseMinOrderByAggregateInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    userId?: SortOrder
+    submittedAt?: SortOrder
+  }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type SurveyResponseScalarRelationFilter = {
+    is?: SurveyResponseWhereInput
+    isNot?: SurveyResponseWhereInput
+  }
+
+  export type SurveyFieldScalarRelationFilter = {
+    is?: SurveyFieldWhereInput
+    isNot?: SurveyFieldWhereInput
+  }
+
+  export type SurveyAnswerOrderByRelevanceInput = {
+    fields: SurveyAnswerOrderByRelevanceFieldEnum | SurveyAnswerOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type SurveyAnswerResponseIdFieldIdCompoundUniqueInput = {
+    responseId: string
+    fieldId: string
+  }
+
+  export type SurveyAnswerCountOrderByAggregateInput = {
+    id?: SortOrder
+    responseId?: SortOrder
+    fieldId?: SortOrder
+    answer?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SurveyAnswerMaxOrderByAggregateInput = {
+    id?: SortOrder
+    responseId?: SortOrder
+    fieldId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SurveyAnswerMinOrderByAggregateInput = {
+    id?: SortOrder
+    responseId?: SortOrder
+    fieldId?: SortOrder
+    createdAt?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type Enumchart_typeFilter<$PrismaModel = never> = {
+    equals?: $Enums.chart_type | Enumchart_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.chart_type[]
+    notIn?: $Enums.chart_type[]
+    not?: NestedEnumchart_typeFilter<$PrismaModel> | $Enums.chart_type
+  }
+
+  export type SurveyStatisticOrderByRelevanceInput = {
+    fields: SurveyStatisticOrderByRelevanceFieldEnum | SurveyStatisticOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type SurveyStatisticCountOrderByAggregateInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    chartType?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    config?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SurveyStatisticMaxOrderByAggregateInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    chartType?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SurveyStatisticMinOrderByAggregateInput = {
+    id?: SortOrder
+    surveyFormId?: SortOrder
+    chartType?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type Enumchart_typeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.chart_type | Enumchart_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.chart_type[]
+    notIn?: $Enums.chart_type[]
+    not?: NestedEnumchart_typeWithAggregatesFilter<$PrismaModel> | $Enums.chart_type
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumchart_typeFilter<$PrismaModel>
+    _max?: NestedEnumchart_typeFilter<$PrismaModel>
+  }
+
   export type SeminarParticipantCreateNestedManyWithoutAccountInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -25976,6 +32900,27 @@ export namespace Prisma {
     connect?: ChatReadReceiptWhereUniqueInput | ChatReadReceiptWhereUniqueInput[]
   }
 
+  export type SurveyFormCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<SurveyFormCreateWithoutCreatorInput, SurveyFormUncheckedCreateWithoutCreatorInput> | SurveyFormCreateWithoutCreatorInput[] | SurveyFormUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SurveyFormCreateOrConnectWithoutCreatorInput | SurveyFormCreateOrConnectWithoutCreatorInput[]
+    createMany?: SurveyFormCreateManyCreatorInputEnvelope
+    connect?: SurveyFormWhereUniqueInput | SurveyFormWhereUniqueInput[]
+  }
+
+  export type SurveyResponseCreateNestedManyWithoutUserInput = {
+    create?: XOR<SurveyResponseCreateWithoutUserInput, SurveyResponseUncheckedCreateWithoutUserInput> | SurveyResponseCreateWithoutUserInput[] | SurveyResponseUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SurveyResponseCreateOrConnectWithoutUserInput | SurveyResponseCreateOrConnectWithoutUserInput[]
+    createMany?: SurveyResponseCreateManyUserInputEnvelope
+    connect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+  }
+
+  export type SurveyStatisticCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<SurveyStatisticCreateWithoutCreatorInput, SurveyStatisticUncheckedCreateWithoutCreatorInput> | SurveyStatisticCreateWithoutCreatorInput[] | SurveyStatisticUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SurveyStatisticCreateOrConnectWithoutCreatorInput | SurveyStatisticCreateOrConnectWithoutCreatorInput[]
+    createMany?: SurveyStatisticCreateManyCreatorInputEnvelope
+    connect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+  }
+
   export type SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -26079,6 +33024,27 @@ export namespace Prisma {
     connectOrCreate?: ChatReadReceiptCreateOrConnectWithoutUserInput | ChatReadReceiptCreateOrConnectWithoutUserInput[]
     createMany?: ChatReadReceiptCreateManyUserInputEnvelope
     connect?: ChatReadReceiptWhereUniqueInput | ChatReadReceiptWhereUniqueInput[]
+  }
+
+  export type SurveyFormUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<SurveyFormCreateWithoutCreatorInput, SurveyFormUncheckedCreateWithoutCreatorInput> | SurveyFormCreateWithoutCreatorInput[] | SurveyFormUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SurveyFormCreateOrConnectWithoutCreatorInput | SurveyFormCreateOrConnectWithoutCreatorInput[]
+    createMany?: SurveyFormCreateManyCreatorInputEnvelope
+    connect?: SurveyFormWhereUniqueInput | SurveyFormWhereUniqueInput[]
+  }
+
+  export type SurveyResponseUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SurveyResponseCreateWithoutUserInput, SurveyResponseUncheckedCreateWithoutUserInput> | SurveyResponseCreateWithoutUserInput[] | SurveyResponseUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SurveyResponseCreateOrConnectWithoutUserInput | SurveyResponseCreateOrConnectWithoutUserInput[]
+    createMany?: SurveyResponseCreateManyUserInputEnvelope
+    connect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+  }
+
+  export type SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<SurveyStatisticCreateWithoutCreatorInput, SurveyStatisticUncheckedCreateWithoutCreatorInput> | SurveyStatisticCreateWithoutCreatorInput[] | SurveyStatisticUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SurveyStatisticCreateOrConnectWithoutCreatorInput | SurveyStatisticCreateOrConnectWithoutCreatorInput[]
+    createMany?: SurveyStatisticCreateManyCreatorInputEnvelope
+    connect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -26343,6 +33309,48 @@ export namespace Prisma {
     deleteMany?: ChatReadReceiptScalarWhereInput | ChatReadReceiptScalarWhereInput[]
   }
 
+  export type SurveyFormUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<SurveyFormCreateWithoutCreatorInput, SurveyFormUncheckedCreateWithoutCreatorInput> | SurveyFormCreateWithoutCreatorInput[] | SurveyFormUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SurveyFormCreateOrConnectWithoutCreatorInput | SurveyFormCreateOrConnectWithoutCreatorInput[]
+    upsert?: SurveyFormUpsertWithWhereUniqueWithoutCreatorInput | SurveyFormUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: SurveyFormCreateManyCreatorInputEnvelope
+    set?: SurveyFormWhereUniqueInput | SurveyFormWhereUniqueInput[]
+    disconnect?: SurveyFormWhereUniqueInput | SurveyFormWhereUniqueInput[]
+    delete?: SurveyFormWhereUniqueInput | SurveyFormWhereUniqueInput[]
+    connect?: SurveyFormWhereUniqueInput | SurveyFormWhereUniqueInput[]
+    update?: SurveyFormUpdateWithWhereUniqueWithoutCreatorInput | SurveyFormUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: SurveyFormUpdateManyWithWhereWithoutCreatorInput | SurveyFormUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: SurveyFormScalarWhereInput | SurveyFormScalarWhereInput[]
+  }
+
+  export type SurveyResponseUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SurveyResponseCreateWithoutUserInput, SurveyResponseUncheckedCreateWithoutUserInput> | SurveyResponseCreateWithoutUserInput[] | SurveyResponseUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SurveyResponseCreateOrConnectWithoutUserInput | SurveyResponseCreateOrConnectWithoutUserInput[]
+    upsert?: SurveyResponseUpsertWithWhereUniqueWithoutUserInput | SurveyResponseUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SurveyResponseCreateManyUserInputEnvelope
+    set?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    disconnect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    delete?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    connect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    update?: SurveyResponseUpdateWithWhereUniqueWithoutUserInput | SurveyResponseUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SurveyResponseUpdateManyWithWhereWithoutUserInput | SurveyResponseUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SurveyResponseScalarWhereInput | SurveyResponseScalarWhereInput[]
+  }
+
+  export type SurveyStatisticUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<SurveyStatisticCreateWithoutCreatorInput, SurveyStatisticUncheckedCreateWithoutCreatorInput> | SurveyStatisticCreateWithoutCreatorInput[] | SurveyStatisticUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SurveyStatisticCreateOrConnectWithoutCreatorInput | SurveyStatisticCreateOrConnectWithoutCreatorInput[]
+    upsert?: SurveyStatisticUpsertWithWhereUniqueWithoutCreatorInput | SurveyStatisticUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: SurveyStatisticCreateManyCreatorInputEnvelope
+    set?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    disconnect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    delete?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    connect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    update?: SurveyStatisticUpdateWithWhereUniqueWithoutCreatorInput | SurveyStatisticUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: SurveyStatisticUpdateManyWithWhereWithoutCreatorInput | SurveyStatisticUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: SurveyStatisticScalarWhereInput | SurveyStatisticScalarWhereInput[]
+  }
+
   export type SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -26551,6 +33559,48 @@ export namespace Prisma {
     update?: ChatReadReceiptUpdateWithWhereUniqueWithoutUserInput | ChatReadReceiptUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ChatReadReceiptUpdateManyWithWhereWithoutUserInput | ChatReadReceiptUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ChatReadReceiptScalarWhereInput | ChatReadReceiptScalarWhereInput[]
+  }
+
+  export type SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<SurveyFormCreateWithoutCreatorInput, SurveyFormUncheckedCreateWithoutCreatorInput> | SurveyFormCreateWithoutCreatorInput[] | SurveyFormUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SurveyFormCreateOrConnectWithoutCreatorInput | SurveyFormCreateOrConnectWithoutCreatorInput[]
+    upsert?: SurveyFormUpsertWithWhereUniqueWithoutCreatorInput | SurveyFormUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: SurveyFormCreateManyCreatorInputEnvelope
+    set?: SurveyFormWhereUniqueInput | SurveyFormWhereUniqueInput[]
+    disconnect?: SurveyFormWhereUniqueInput | SurveyFormWhereUniqueInput[]
+    delete?: SurveyFormWhereUniqueInput | SurveyFormWhereUniqueInput[]
+    connect?: SurveyFormWhereUniqueInput | SurveyFormWhereUniqueInput[]
+    update?: SurveyFormUpdateWithWhereUniqueWithoutCreatorInput | SurveyFormUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: SurveyFormUpdateManyWithWhereWithoutCreatorInput | SurveyFormUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: SurveyFormScalarWhereInput | SurveyFormScalarWhereInput[]
+  }
+
+  export type SurveyResponseUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SurveyResponseCreateWithoutUserInput, SurveyResponseUncheckedCreateWithoutUserInput> | SurveyResponseCreateWithoutUserInput[] | SurveyResponseUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SurveyResponseCreateOrConnectWithoutUserInput | SurveyResponseCreateOrConnectWithoutUserInput[]
+    upsert?: SurveyResponseUpsertWithWhereUniqueWithoutUserInput | SurveyResponseUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SurveyResponseCreateManyUserInputEnvelope
+    set?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    disconnect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    delete?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    connect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    update?: SurveyResponseUpdateWithWhereUniqueWithoutUserInput | SurveyResponseUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SurveyResponseUpdateManyWithWhereWithoutUserInput | SurveyResponseUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SurveyResponseScalarWhereInput | SurveyResponseScalarWhereInput[]
+  }
+
+  export type SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<SurveyStatisticCreateWithoutCreatorInput, SurveyStatisticUncheckedCreateWithoutCreatorInput> | SurveyStatisticCreateWithoutCreatorInput[] | SurveyStatisticUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: SurveyStatisticCreateOrConnectWithoutCreatorInput | SurveyStatisticCreateOrConnectWithoutCreatorInput[]
+    upsert?: SurveyStatisticUpsertWithWhereUniqueWithoutCreatorInput | SurveyStatisticUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: SurveyStatisticCreateManyCreatorInputEnvelope
+    set?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    disconnect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    delete?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    connect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    update?: SurveyStatisticUpdateWithWhereUniqueWithoutCreatorInput | SurveyStatisticUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: SurveyStatisticUpdateManyWithWhereWithoutCreatorInput | SurveyStatisticUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: SurveyStatisticScalarWhereInput | SurveyStatisticScalarWhereInput[]
   }
 
   export type AccountCreateNestedOneWithoutAuditLogsInput = {
@@ -27461,6 +34511,342 @@ export namespace Prisma {
     update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutSeminarsInput, AccountUpdateWithoutSeminarsInput>, AccountUncheckedUpdateWithoutSeminarsInput>
   }
 
+  export type AccountCreateNestedOneWithoutSurveyFormsCreatedInput = {
+    create?: XOR<AccountCreateWithoutSurveyFormsCreatedInput, AccountUncheckedCreateWithoutSurveyFormsCreatedInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutSurveyFormsCreatedInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type SurveyFieldCreateNestedManyWithoutSurveyFormInput = {
+    create?: XOR<SurveyFieldCreateWithoutSurveyFormInput, SurveyFieldUncheckedCreateWithoutSurveyFormInput> | SurveyFieldCreateWithoutSurveyFormInput[] | SurveyFieldUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyFieldCreateOrConnectWithoutSurveyFormInput | SurveyFieldCreateOrConnectWithoutSurveyFormInput[]
+    createMany?: SurveyFieldCreateManySurveyFormInputEnvelope
+    connect?: SurveyFieldWhereUniqueInput | SurveyFieldWhereUniqueInput[]
+  }
+
+  export type SurveyResponseCreateNestedManyWithoutSurveyFormInput = {
+    create?: XOR<SurveyResponseCreateWithoutSurveyFormInput, SurveyResponseUncheckedCreateWithoutSurveyFormInput> | SurveyResponseCreateWithoutSurveyFormInput[] | SurveyResponseUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyResponseCreateOrConnectWithoutSurveyFormInput | SurveyResponseCreateOrConnectWithoutSurveyFormInput[]
+    createMany?: SurveyResponseCreateManySurveyFormInputEnvelope
+    connect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+  }
+
+  export type SurveyStatisticCreateNestedManyWithoutSurveyFormInput = {
+    create?: XOR<SurveyStatisticCreateWithoutSurveyFormInput, SurveyStatisticUncheckedCreateWithoutSurveyFormInput> | SurveyStatisticCreateWithoutSurveyFormInput[] | SurveyStatisticUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyStatisticCreateOrConnectWithoutSurveyFormInput | SurveyStatisticCreateOrConnectWithoutSurveyFormInput[]
+    createMany?: SurveyStatisticCreateManySurveyFormInputEnvelope
+    connect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+  }
+
+  export type SurveyFieldUncheckedCreateNestedManyWithoutSurveyFormInput = {
+    create?: XOR<SurveyFieldCreateWithoutSurveyFormInput, SurveyFieldUncheckedCreateWithoutSurveyFormInput> | SurveyFieldCreateWithoutSurveyFormInput[] | SurveyFieldUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyFieldCreateOrConnectWithoutSurveyFormInput | SurveyFieldCreateOrConnectWithoutSurveyFormInput[]
+    createMany?: SurveyFieldCreateManySurveyFormInputEnvelope
+    connect?: SurveyFieldWhereUniqueInput | SurveyFieldWhereUniqueInput[]
+  }
+
+  export type SurveyResponseUncheckedCreateNestedManyWithoutSurveyFormInput = {
+    create?: XOR<SurveyResponseCreateWithoutSurveyFormInput, SurveyResponseUncheckedCreateWithoutSurveyFormInput> | SurveyResponseCreateWithoutSurveyFormInput[] | SurveyResponseUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyResponseCreateOrConnectWithoutSurveyFormInput | SurveyResponseCreateOrConnectWithoutSurveyFormInput[]
+    createMany?: SurveyResponseCreateManySurveyFormInputEnvelope
+    connect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+  }
+
+  export type SurveyStatisticUncheckedCreateNestedManyWithoutSurveyFormInput = {
+    create?: XOR<SurveyStatisticCreateWithoutSurveyFormInput, SurveyStatisticUncheckedCreateWithoutSurveyFormInput> | SurveyStatisticCreateWithoutSurveyFormInput[] | SurveyStatisticUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyStatisticCreateOrConnectWithoutSurveyFormInput | SurveyStatisticCreateOrConnectWithoutSurveyFormInput[]
+    createMany?: SurveyStatisticCreateManySurveyFormInputEnvelope
+    connect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+  }
+
+  export type Enumsurvey_statusFieldUpdateOperationsInput = {
+    set?: $Enums.survey_status
+  }
+
+  export type AccountUpdateOneRequiredWithoutSurveyFormsCreatedNestedInput = {
+    create?: XOR<AccountCreateWithoutSurveyFormsCreatedInput, AccountUncheckedCreateWithoutSurveyFormsCreatedInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutSurveyFormsCreatedInput
+    upsert?: AccountUpsertWithoutSurveyFormsCreatedInput
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutSurveyFormsCreatedInput, AccountUpdateWithoutSurveyFormsCreatedInput>, AccountUncheckedUpdateWithoutSurveyFormsCreatedInput>
+  }
+
+  export type SurveyFieldUpdateManyWithoutSurveyFormNestedInput = {
+    create?: XOR<SurveyFieldCreateWithoutSurveyFormInput, SurveyFieldUncheckedCreateWithoutSurveyFormInput> | SurveyFieldCreateWithoutSurveyFormInput[] | SurveyFieldUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyFieldCreateOrConnectWithoutSurveyFormInput | SurveyFieldCreateOrConnectWithoutSurveyFormInput[]
+    upsert?: SurveyFieldUpsertWithWhereUniqueWithoutSurveyFormInput | SurveyFieldUpsertWithWhereUniqueWithoutSurveyFormInput[]
+    createMany?: SurveyFieldCreateManySurveyFormInputEnvelope
+    set?: SurveyFieldWhereUniqueInput | SurveyFieldWhereUniqueInput[]
+    disconnect?: SurveyFieldWhereUniqueInput | SurveyFieldWhereUniqueInput[]
+    delete?: SurveyFieldWhereUniqueInput | SurveyFieldWhereUniqueInput[]
+    connect?: SurveyFieldWhereUniqueInput | SurveyFieldWhereUniqueInput[]
+    update?: SurveyFieldUpdateWithWhereUniqueWithoutSurveyFormInput | SurveyFieldUpdateWithWhereUniqueWithoutSurveyFormInput[]
+    updateMany?: SurveyFieldUpdateManyWithWhereWithoutSurveyFormInput | SurveyFieldUpdateManyWithWhereWithoutSurveyFormInput[]
+    deleteMany?: SurveyFieldScalarWhereInput | SurveyFieldScalarWhereInput[]
+  }
+
+  export type SurveyResponseUpdateManyWithoutSurveyFormNestedInput = {
+    create?: XOR<SurveyResponseCreateWithoutSurveyFormInput, SurveyResponseUncheckedCreateWithoutSurveyFormInput> | SurveyResponseCreateWithoutSurveyFormInput[] | SurveyResponseUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyResponseCreateOrConnectWithoutSurveyFormInput | SurveyResponseCreateOrConnectWithoutSurveyFormInput[]
+    upsert?: SurveyResponseUpsertWithWhereUniqueWithoutSurveyFormInput | SurveyResponseUpsertWithWhereUniqueWithoutSurveyFormInput[]
+    createMany?: SurveyResponseCreateManySurveyFormInputEnvelope
+    set?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    disconnect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    delete?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    connect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    update?: SurveyResponseUpdateWithWhereUniqueWithoutSurveyFormInput | SurveyResponseUpdateWithWhereUniqueWithoutSurveyFormInput[]
+    updateMany?: SurveyResponseUpdateManyWithWhereWithoutSurveyFormInput | SurveyResponseUpdateManyWithWhereWithoutSurveyFormInput[]
+    deleteMany?: SurveyResponseScalarWhereInput | SurveyResponseScalarWhereInput[]
+  }
+
+  export type SurveyStatisticUpdateManyWithoutSurveyFormNestedInput = {
+    create?: XOR<SurveyStatisticCreateWithoutSurveyFormInput, SurveyStatisticUncheckedCreateWithoutSurveyFormInput> | SurveyStatisticCreateWithoutSurveyFormInput[] | SurveyStatisticUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyStatisticCreateOrConnectWithoutSurveyFormInput | SurveyStatisticCreateOrConnectWithoutSurveyFormInput[]
+    upsert?: SurveyStatisticUpsertWithWhereUniqueWithoutSurveyFormInput | SurveyStatisticUpsertWithWhereUniqueWithoutSurveyFormInput[]
+    createMany?: SurveyStatisticCreateManySurveyFormInputEnvelope
+    set?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    disconnect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    delete?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    connect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    update?: SurveyStatisticUpdateWithWhereUniqueWithoutSurveyFormInput | SurveyStatisticUpdateWithWhereUniqueWithoutSurveyFormInput[]
+    updateMany?: SurveyStatisticUpdateManyWithWhereWithoutSurveyFormInput | SurveyStatisticUpdateManyWithWhereWithoutSurveyFormInput[]
+    deleteMany?: SurveyStatisticScalarWhereInput | SurveyStatisticScalarWhereInput[]
+  }
+
+  export type SurveyFieldUncheckedUpdateManyWithoutSurveyFormNestedInput = {
+    create?: XOR<SurveyFieldCreateWithoutSurveyFormInput, SurveyFieldUncheckedCreateWithoutSurveyFormInput> | SurveyFieldCreateWithoutSurveyFormInput[] | SurveyFieldUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyFieldCreateOrConnectWithoutSurveyFormInput | SurveyFieldCreateOrConnectWithoutSurveyFormInput[]
+    upsert?: SurveyFieldUpsertWithWhereUniqueWithoutSurveyFormInput | SurveyFieldUpsertWithWhereUniqueWithoutSurveyFormInput[]
+    createMany?: SurveyFieldCreateManySurveyFormInputEnvelope
+    set?: SurveyFieldWhereUniqueInput | SurveyFieldWhereUniqueInput[]
+    disconnect?: SurveyFieldWhereUniqueInput | SurveyFieldWhereUniqueInput[]
+    delete?: SurveyFieldWhereUniqueInput | SurveyFieldWhereUniqueInput[]
+    connect?: SurveyFieldWhereUniqueInput | SurveyFieldWhereUniqueInput[]
+    update?: SurveyFieldUpdateWithWhereUniqueWithoutSurveyFormInput | SurveyFieldUpdateWithWhereUniqueWithoutSurveyFormInput[]
+    updateMany?: SurveyFieldUpdateManyWithWhereWithoutSurveyFormInput | SurveyFieldUpdateManyWithWhereWithoutSurveyFormInput[]
+    deleteMany?: SurveyFieldScalarWhereInput | SurveyFieldScalarWhereInput[]
+  }
+
+  export type SurveyResponseUncheckedUpdateManyWithoutSurveyFormNestedInput = {
+    create?: XOR<SurveyResponseCreateWithoutSurveyFormInput, SurveyResponseUncheckedCreateWithoutSurveyFormInput> | SurveyResponseCreateWithoutSurveyFormInput[] | SurveyResponseUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyResponseCreateOrConnectWithoutSurveyFormInput | SurveyResponseCreateOrConnectWithoutSurveyFormInput[]
+    upsert?: SurveyResponseUpsertWithWhereUniqueWithoutSurveyFormInput | SurveyResponseUpsertWithWhereUniqueWithoutSurveyFormInput[]
+    createMany?: SurveyResponseCreateManySurveyFormInputEnvelope
+    set?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    disconnect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    delete?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    connect?: SurveyResponseWhereUniqueInput | SurveyResponseWhereUniqueInput[]
+    update?: SurveyResponseUpdateWithWhereUniqueWithoutSurveyFormInput | SurveyResponseUpdateWithWhereUniqueWithoutSurveyFormInput[]
+    updateMany?: SurveyResponseUpdateManyWithWhereWithoutSurveyFormInput | SurveyResponseUpdateManyWithWhereWithoutSurveyFormInput[]
+    deleteMany?: SurveyResponseScalarWhereInput | SurveyResponseScalarWhereInput[]
+  }
+
+  export type SurveyStatisticUncheckedUpdateManyWithoutSurveyFormNestedInput = {
+    create?: XOR<SurveyStatisticCreateWithoutSurveyFormInput, SurveyStatisticUncheckedCreateWithoutSurveyFormInput> | SurveyStatisticCreateWithoutSurveyFormInput[] | SurveyStatisticUncheckedCreateWithoutSurveyFormInput[]
+    connectOrCreate?: SurveyStatisticCreateOrConnectWithoutSurveyFormInput | SurveyStatisticCreateOrConnectWithoutSurveyFormInput[]
+    upsert?: SurveyStatisticUpsertWithWhereUniqueWithoutSurveyFormInput | SurveyStatisticUpsertWithWhereUniqueWithoutSurveyFormInput[]
+    createMany?: SurveyStatisticCreateManySurveyFormInputEnvelope
+    set?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    disconnect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    delete?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    connect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+    update?: SurveyStatisticUpdateWithWhereUniqueWithoutSurveyFormInput | SurveyStatisticUpdateWithWhereUniqueWithoutSurveyFormInput[]
+    updateMany?: SurveyStatisticUpdateManyWithWhereWithoutSurveyFormInput | SurveyStatisticUpdateManyWithWhereWithoutSurveyFormInput[]
+    deleteMany?: SurveyStatisticScalarWhereInput | SurveyStatisticScalarWhereInput[]
+  }
+
+  export type SurveyFormCreateNestedOneWithoutFieldsInput = {
+    create?: XOR<SurveyFormCreateWithoutFieldsInput, SurveyFormUncheckedCreateWithoutFieldsInput>
+    connectOrCreate?: SurveyFormCreateOrConnectWithoutFieldsInput
+    connect?: SurveyFormWhereUniqueInput
+  }
+
+  export type SurveyAnswerCreateNestedManyWithoutFieldInput = {
+    create?: XOR<SurveyAnswerCreateWithoutFieldInput, SurveyAnswerUncheckedCreateWithoutFieldInput> | SurveyAnswerCreateWithoutFieldInput[] | SurveyAnswerUncheckedCreateWithoutFieldInput[]
+    connectOrCreate?: SurveyAnswerCreateOrConnectWithoutFieldInput | SurveyAnswerCreateOrConnectWithoutFieldInput[]
+    createMany?: SurveyAnswerCreateManyFieldInputEnvelope
+    connect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+  }
+
+  export type SurveyAnswerUncheckedCreateNestedManyWithoutFieldInput = {
+    create?: XOR<SurveyAnswerCreateWithoutFieldInput, SurveyAnswerUncheckedCreateWithoutFieldInput> | SurveyAnswerCreateWithoutFieldInput[] | SurveyAnswerUncheckedCreateWithoutFieldInput[]
+    connectOrCreate?: SurveyAnswerCreateOrConnectWithoutFieldInput | SurveyAnswerCreateOrConnectWithoutFieldInput[]
+    createMany?: SurveyAnswerCreateManyFieldInputEnvelope
+    connect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+  }
+
+  export type Enumfield_typeFieldUpdateOperationsInput = {
+    set?: $Enums.field_type
+  }
+
+  export type SurveyFormUpdateOneRequiredWithoutFieldsNestedInput = {
+    create?: XOR<SurveyFormCreateWithoutFieldsInput, SurveyFormUncheckedCreateWithoutFieldsInput>
+    connectOrCreate?: SurveyFormCreateOrConnectWithoutFieldsInput
+    upsert?: SurveyFormUpsertWithoutFieldsInput
+    connect?: SurveyFormWhereUniqueInput
+    update?: XOR<XOR<SurveyFormUpdateToOneWithWhereWithoutFieldsInput, SurveyFormUpdateWithoutFieldsInput>, SurveyFormUncheckedUpdateWithoutFieldsInput>
+  }
+
+  export type SurveyAnswerUpdateManyWithoutFieldNestedInput = {
+    create?: XOR<SurveyAnswerCreateWithoutFieldInput, SurveyAnswerUncheckedCreateWithoutFieldInput> | SurveyAnswerCreateWithoutFieldInput[] | SurveyAnswerUncheckedCreateWithoutFieldInput[]
+    connectOrCreate?: SurveyAnswerCreateOrConnectWithoutFieldInput | SurveyAnswerCreateOrConnectWithoutFieldInput[]
+    upsert?: SurveyAnswerUpsertWithWhereUniqueWithoutFieldInput | SurveyAnswerUpsertWithWhereUniqueWithoutFieldInput[]
+    createMany?: SurveyAnswerCreateManyFieldInputEnvelope
+    set?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    disconnect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    delete?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    connect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    update?: SurveyAnswerUpdateWithWhereUniqueWithoutFieldInput | SurveyAnswerUpdateWithWhereUniqueWithoutFieldInput[]
+    updateMany?: SurveyAnswerUpdateManyWithWhereWithoutFieldInput | SurveyAnswerUpdateManyWithWhereWithoutFieldInput[]
+    deleteMany?: SurveyAnswerScalarWhereInput | SurveyAnswerScalarWhereInput[]
+  }
+
+  export type SurveyAnswerUncheckedUpdateManyWithoutFieldNestedInput = {
+    create?: XOR<SurveyAnswerCreateWithoutFieldInput, SurveyAnswerUncheckedCreateWithoutFieldInput> | SurveyAnswerCreateWithoutFieldInput[] | SurveyAnswerUncheckedCreateWithoutFieldInput[]
+    connectOrCreate?: SurveyAnswerCreateOrConnectWithoutFieldInput | SurveyAnswerCreateOrConnectWithoutFieldInput[]
+    upsert?: SurveyAnswerUpsertWithWhereUniqueWithoutFieldInput | SurveyAnswerUpsertWithWhereUniqueWithoutFieldInput[]
+    createMany?: SurveyAnswerCreateManyFieldInputEnvelope
+    set?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    disconnect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    delete?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    connect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    update?: SurveyAnswerUpdateWithWhereUniqueWithoutFieldInput | SurveyAnswerUpdateWithWhereUniqueWithoutFieldInput[]
+    updateMany?: SurveyAnswerUpdateManyWithWhereWithoutFieldInput | SurveyAnswerUpdateManyWithWhereWithoutFieldInput[]
+    deleteMany?: SurveyAnswerScalarWhereInput | SurveyAnswerScalarWhereInput[]
+  }
+
+  export type SurveyFormCreateNestedOneWithoutResponsesInput = {
+    create?: XOR<SurveyFormCreateWithoutResponsesInput, SurveyFormUncheckedCreateWithoutResponsesInput>
+    connectOrCreate?: SurveyFormCreateOrConnectWithoutResponsesInput
+    connect?: SurveyFormWhereUniqueInput
+  }
+
+  export type AccountCreateNestedOneWithoutSurveyResponsesInput = {
+    create?: XOR<AccountCreateWithoutSurveyResponsesInput, AccountUncheckedCreateWithoutSurveyResponsesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutSurveyResponsesInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type SurveyAnswerCreateNestedManyWithoutResponseInput = {
+    create?: XOR<SurveyAnswerCreateWithoutResponseInput, SurveyAnswerUncheckedCreateWithoutResponseInput> | SurveyAnswerCreateWithoutResponseInput[] | SurveyAnswerUncheckedCreateWithoutResponseInput[]
+    connectOrCreate?: SurveyAnswerCreateOrConnectWithoutResponseInput | SurveyAnswerCreateOrConnectWithoutResponseInput[]
+    createMany?: SurveyAnswerCreateManyResponseInputEnvelope
+    connect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+  }
+
+  export type SurveyAnswerUncheckedCreateNestedManyWithoutResponseInput = {
+    create?: XOR<SurveyAnswerCreateWithoutResponseInput, SurveyAnswerUncheckedCreateWithoutResponseInput> | SurveyAnswerCreateWithoutResponseInput[] | SurveyAnswerUncheckedCreateWithoutResponseInput[]
+    connectOrCreate?: SurveyAnswerCreateOrConnectWithoutResponseInput | SurveyAnswerCreateOrConnectWithoutResponseInput[]
+    createMany?: SurveyAnswerCreateManyResponseInputEnvelope
+    connect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+  }
+
+  export type SurveyFormUpdateOneRequiredWithoutResponsesNestedInput = {
+    create?: XOR<SurveyFormCreateWithoutResponsesInput, SurveyFormUncheckedCreateWithoutResponsesInput>
+    connectOrCreate?: SurveyFormCreateOrConnectWithoutResponsesInput
+    upsert?: SurveyFormUpsertWithoutResponsesInput
+    connect?: SurveyFormWhereUniqueInput
+    update?: XOR<XOR<SurveyFormUpdateToOneWithWhereWithoutResponsesInput, SurveyFormUpdateWithoutResponsesInput>, SurveyFormUncheckedUpdateWithoutResponsesInput>
+  }
+
+  export type AccountUpdateOneWithoutSurveyResponsesNestedInput = {
+    create?: XOR<AccountCreateWithoutSurveyResponsesInput, AccountUncheckedCreateWithoutSurveyResponsesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutSurveyResponsesInput
+    upsert?: AccountUpsertWithoutSurveyResponsesInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutSurveyResponsesInput, AccountUpdateWithoutSurveyResponsesInput>, AccountUncheckedUpdateWithoutSurveyResponsesInput>
+  }
+
+  export type SurveyAnswerUpdateManyWithoutResponseNestedInput = {
+    create?: XOR<SurveyAnswerCreateWithoutResponseInput, SurveyAnswerUncheckedCreateWithoutResponseInput> | SurveyAnswerCreateWithoutResponseInput[] | SurveyAnswerUncheckedCreateWithoutResponseInput[]
+    connectOrCreate?: SurveyAnswerCreateOrConnectWithoutResponseInput | SurveyAnswerCreateOrConnectWithoutResponseInput[]
+    upsert?: SurveyAnswerUpsertWithWhereUniqueWithoutResponseInput | SurveyAnswerUpsertWithWhereUniqueWithoutResponseInput[]
+    createMany?: SurveyAnswerCreateManyResponseInputEnvelope
+    set?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    disconnect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    delete?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    connect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    update?: SurveyAnswerUpdateWithWhereUniqueWithoutResponseInput | SurveyAnswerUpdateWithWhereUniqueWithoutResponseInput[]
+    updateMany?: SurveyAnswerUpdateManyWithWhereWithoutResponseInput | SurveyAnswerUpdateManyWithWhereWithoutResponseInput[]
+    deleteMany?: SurveyAnswerScalarWhereInput | SurveyAnswerScalarWhereInput[]
+  }
+
+  export type SurveyAnswerUncheckedUpdateManyWithoutResponseNestedInput = {
+    create?: XOR<SurveyAnswerCreateWithoutResponseInput, SurveyAnswerUncheckedCreateWithoutResponseInput> | SurveyAnswerCreateWithoutResponseInput[] | SurveyAnswerUncheckedCreateWithoutResponseInput[]
+    connectOrCreate?: SurveyAnswerCreateOrConnectWithoutResponseInput | SurveyAnswerCreateOrConnectWithoutResponseInput[]
+    upsert?: SurveyAnswerUpsertWithWhereUniqueWithoutResponseInput | SurveyAnswerUpsertWithWhereUniqueWithoutResponseInput[]
+    createMany?: SurveyAnswerCreateManyResponseInputEnvelope
+    set?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    disconnect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    delete?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    connect?: SurveyAnswerWhereUniqueInput | SurveyAnswerWhereUniqueInput[]
+    update?: SurveyAnswerUpdateWithWhereUniqueWithoutResponseInput | SurveyAnswerUpdateWithWhereUniqueWithoutResponseInput[]
+    updateMany?: SurveyAnswerUpdateManyWithWhereWithoutResponseInput | SurveyAnswerUpdateManyWithWhereWithoutResponseInput[]
+    deleteMany?: SurveyAnswerScalarWhereInput | SurveyAnswerScalarWhereInput[]
+  }
+
+  export type SurveyResponseCreateNestedOneWithoutAnswersInput = {
+    create?: XOR<SurveyResponseCreateWithoutAnswersInput, SurveyResponseUncheckedCreateWithoutAnswersInput>
+    connectOrCreate?: SurveyResponseCreateOrConnectWithoutAnswersInput
+    connect?: SurveyResponseWhereUniqueInput
+  }
+
+  export type SurveyFieldCreateNestedOneWithoutAnswersInput = {
+    create?: XOR<SurveyFieldCreateWithoutAnswersInput, SurveyFieldUncheckedCreateWithoutAnswersInput>
+    connectOrCreate?: SurveyFieldCreateOrConnectWithoutAnswersInput
+    connect?: SurveyFieldWhereUniqueInput
+  }
+
+  export type SurveyResponseUpdateOneRequiredWithoutAnswersNestedInput = {
+    create?: XOR<SurveyResponseCreateWithoutAnswersInput, SurveyResponseUncheckedCreateWithoutAnswersInput>
+    connectOrCreate?: SurveyResponseCreateOrConnectWithoutAnswersInput
+    upsert?: SurveyResponseUpsertWithoutAnswersInput
+    connect?: SurveyResponseWhereUniqueInput
+    update?: XOR<XOR<SurveyResponseUpdateToOneWithWhereWithoutAnswersInput, SurveyResponseUpdateWithoutAnswersInput>, SurveyResponseUncheckedUpdateWithoutAnswersInput>
+  }
+
+  export type SurveyFieldUpdateOneRequiredWithoutAnswersNestedInput = {
+    create?: XOR<SurveyFieldCreateWithoutAnswersInput, SurveyFieldUncheckedCreateWithoutAnswersInput>
+    connectOrCreate?: SurveyFieldCreateOrConnectWithoutAnswersInput
+    upsert?: SurveyFieldUpsertWithoutAnswersInput
+    connect?: SurveyFieldWhereUniqueInput
+    update?: XOR<XOR<SurveyFieldUpdateToOneWithWhereWithoutAnswersInput, SurveyFieldUpdateWithoutAnswersInput>, SurveyFieldUncheckedUpdateWithoutAnswersInput>
+  }
+
+  export type SurveyFormCreateNestedOneWithoutStatisticsInput = {
+    create?: XOR<SurveyFormCreateWithoutStatisticsInput, SurveyFormUncheckedCreateWithoutStatisticsInput>
+    connectOrCreate?: SurveyFormCreateOrConnectWithoutStatisticsInput
+    connect?: SurveyFormWhereUniqueInput
+  }
+
+  export type AccountCreateNestedOneWithoutSurveyStatisticsCreatedInput = {
+    create?: XOR<AccountCreateWithoutSurveyStatisticsCreatedInput, AccountUncheckedCreateWithoutSurveyStatisticsCreatedInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutSurveyStatisticsCreatedInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type Enumchart_typeFieldUpdateOperationsInput = {
+    set?: $Enums.chart_type
+  }
+
+  export type SurveyFormUpdateOneRequiredWithoutStatisticsNestedInput = {
+    create?: XOR<SurveyFormCreateWithoutStatisticsInput, SurveyFormUncheckedCreateWithoutStatisticsInput>
+    connectOrCreate?: SurveyFormCreateOrConnectWithoutStatisticsInput
+    upsert?: SurveyFormUpsertWithoutStatisticsInput
+    connect?: SurveyFormWhereUniqueInput
+    update?: XOR<XOR<SurveyFormUpdateToOneWithWhereWithoutStatisticsInput, SurveyFormUpdateWithoutStatisticsInput>, SurveyFormUncheckedUpdateWithoutStatisticsInput>
+  }
+
+  export type AccountUpdateOneRequiredWithoutSurveyStatisticsCreatedNestedInput = {
+    create?: XOR<AccountCreateWithoutSurveyStatisticsCreatedInput, AccountUncheckedCreateWithoutSurveyStatisticsCreatedInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutSurveyStatisticsCreatedInput
+    upsert?: AccountUpsertWithoutSurveyStatisticsCreatedInput
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutSurveyStatisticsCreatedInput, AccountUpdateWithoutSurveyStatisticsCreatedInput>, AccountUncheckedUpdateWithoutSurveyStatisticsCreatedInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -28025,6 +35411,80 @@ export namespace Prisma {
     _max?: NestedEnumparticipant_statusFilter<$PrismaModel>
   }
 
+  export type NestedEnumsurvey_statusFilter<$PrismaModel = never> = {
+    equals?: $Enums.survey_status | Enumsurvey_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.survey_status[]
+    notIn?: $Enums.survey_status[]
+    not?: NestedEnumsurvey_statusFilter<$PrismaModel> | $Enums.survey_status
+  }
+
+  export type NestedEnumsurvey_statusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.survey_status | Enumsurvey_statusFieldRefInput<$PrismaModel>
+    in?: $Enums.survey_status[]
+    notIn?: $Enums.survey_status[]
+    not?: NestedEnumsurvey_statusWithAggregatesFilter<$PrismaModel> | $Enums.survey_status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumsurvey_statusFilter<$PrismaModel>
+    _max?: NestedEnumsurvey_statusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumfield_typeFilter<$PrismaModel = never> = {
+    equals?: $Enums.field_type | Enumfield_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.field_type[]
+    notIn?: $Enums.field_type[]
+    not?: NestedEnumfield_typeFilter<$PrismaModel> | $Enums.field_type
+  }
+
+  export type NestedEnumfield_typeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.field_type | Enumfield_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.field_type[]
+    notIn?: $Enums.field_type[]
+    not?: NestedEnumfield_typeWithAggregatesFilter<$PrismaModel> | $Enums.field_type
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumfield_typeFilter<$PrismaModel>
+    _max?: NestedEnumfield_typeFilter<$PrismaModel>
+  }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumchart_typeFilter<$PrismaModel = never> = {
+    equals?: $Enums.chart_type | Enumchart_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.chart_type[]
+    notIn?: $Enums.chart_type[]
+    not?: NestedEnumchart_typeFilter<$PrismaModel> | $Enums.chart_type
+  }
+
+  export type NestedEnumchart_typeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.chart_type | Enumchart_typeFieldRefInput<$PrismaModel>
+    in?: $Enums.chart_type[]
+    notIn?: $Enums.chart_type[]
+    not?: NestedEnumchart_typeWithAggregatesFilter<$PrismaModel> | $Enums.chart_type
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumchart_typeFilter<$PrismaModel>
+    _max?: NestedEnumchart_typeFilter<$PrismaModel>
+  }
+
   export type SeminarParticipantCreateWithoutAccountInput = {
     id?: string
     status?: $Enums.participant_status
@@ -28561,6 +36021,100 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SurveyFormCreateWithoutCreatorInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    fields?: SurveyFieldCreateNestedManyWithoutSurveyFormInput
+    responses?: SurveyResponseCreateNestedManyWithoutSurveyFormInput
+    statistics?: SurveyStatisticCreateNestedManyWithoutSurveyFormInput
+  }
+
+  export type SurveyFormUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    fields?: SurveyFieldUncheckedCreateNestedManyWithoutSurveyFormInput
+    responses?: SurveyResponseUncheckedCreateNestedManyWithoutSurveyFormInput
+    statistics?: SurveyStatisticUncheckedCreateNestedManyWithoutSurveyFormInput
+  }
+
+  export type SurveyFormCreateOrConnectWithoutCreatorInput = {
+    where: SurveyFormWhereUniqueInput
+    create: XOR<SurveyFormCreateWithoutCreatorInput, SurveyFormUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type SurveyFormCreateManyCreatorInputEnvelope = {
+    data: SurveyFormCreateManyCreatorInput | SurveyFormCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SurveyResponseCreateWithoutUserInput = {
+    id?: string
+    submittedAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    surveyForm: SurveyFormCreateNestedOneWithoutResponsesInput
+    answers?: SurveyAnswerCreateNestedManyWithoutResponseInput
+  }
+
+  export type SurveyResponseUncheckedCreateWithoutUserInput = {
+    id?: string
+    surveyFormId: string
+    submittedAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    answers?: SurveyAnswerUncheckedCreateNestedManyWithoutResponseInput
+  }
+
+  export type SurveyResponseCreateOrConnectWithoutUserInput = {
+    where: SurveyResponseWhereUniqueInput
+    create: XOR<SurveyResponseCreateWithoutUserInput, SurveyResponseUncheckedCreateWithoutUserInput>
+  }
+
+  export type SurveyResponseCreateManyUserInputEnvelope = {
+    data: SurveyResponseCreateManyUserInput | SurveyResponseCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SurveyStatisticCreateWithoutCreatorInput = {
+    id?: string
+    chartType: $Enums.chart_type
+    title: string
+    description?: string | null
+    config: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyForm: SurveyFormCreateNestedOneWithoutStatisticsInput
+  }
+
+  export type SurveyStatisticUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    surveyFormId: string
+    chartType: $Enums.chart_type
+    title: string
+    description?: string | null
+    config: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SurveyStatisticCreateOrConnectWithoutCreatorInput = {
+    where: SurveyStatisticWhereUniqueInput
+    create: XOR<SurveyStatisticCreateWithoutCreatorInput, SurveyStatisticUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type SurveyStatisticCreateManyCreatorInputEnvelope = {
+    data: SurveyStatisticCreateManyCreatorInput | SurveyStatisticCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SeminarParticipantUpsertWithWhereUniqueWithoutAccountInput = {
     where: SeminarParticipantWhereUniqueInput
     update: XOR<SeminarParticipantUpdateWithoutAccountInput, SeminarParticipantUncheckedUpdateWithoutAccountInput>
@@ -28990,6 +36544,94 @@ export namespace Prisma {
     readAt?: DateTimeFilter<"ChatReadReceipt"> | Date | string
   }
 
+  export type SurveyFormUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: SurveyFormWhereUniqueInput
+    update: XOR<SurveyFormUpdateWithoutCreatorInput, SurveyFormUncheckedUpdateWithoutCreatorInput>
+    create: XOR<SurveyFormCreateWithoutCreatorInput, SurveyFormUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type SurveyFormUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: SurveyFormWhereUniqueInput
+    data: XOR<SurveyFormUpdateWithoutCreatorInput, SurveyFormUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type SurveyFormUpdateManyWithWhereWithoutCreatorInput = {
+    where: SurveyFormScalarWhereInput
+    data: XOR<SurveyFormUpdateManyMutationInput, SurveyFormUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type SurveyFormScalarWhereInput = {
+    AND?: SurveyFormScalarWhereInput | SurveyFormScalarWhereInput[]
+    OR?: SurveyFormScalarWhereInput[]
+    NOT?: SurveyFormScalarWhereInput | SurveyFormScalarWhereInput[]
+    id?: StringFilter<"SurveyForm"> | string
+    title?: StringFilter<"SurveyForm"> | string
+    description?: StringNullableFilter<"SurveyForm"> | string | null
+    status?: Enumsurvey_statusFilter<"SurveyForm"> | $Enums.survey_status
+    category?: StringFilter<"SurveyForm"> | string
+    createdById?: StringFilter<"SurveyForm"> | string
+    createdAt?: DateTimeFilter<"SurveyForm"> | Date | string
+    updatedAt?: DateTimeFilter<"SurveyForm"> | Date | string
+  }
+
+  export type SurveyResponseUpsertWithWhereUniqueWithoutUserInput = {
+    where: SurveyResponseWhereUniqueInput
+    update: XOR<SurveyResponseUpdateWithoutUserInput, SurveyResponseUncheckedUpdateWithoutUserInput>
+    create: XOR<SurveyResponseCreateWithoutUserInput, SurveyResponseUncheckedCreateWithoutUserInput>
+  }
+
+  export type SurveyResponseUpdateWithWhereUniqueWithoutUserInput = {
+    where: SurveyResponseWhereUniqueInput
+    data: XOR<SurveyResponseUpdateWithoutUserInput, SurveyResponseUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SurveyResponseUpdateManyWithWhereWithoutUserInput = {
+    where: SurveyResponseScalarWhereInput
+    data: XOR<SurveyResponseUpdateManyMutationInput, SurveyResponseUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type SurveyResponseScalarWhereInput = {
+    AND?: SurveyResponseScalarWhereInput | SurveyResponseScalarWhereInput[]
+    OR?: SurveyResponseScalarWhereInput[]
+    NOT?: SurveyResponseScalarWhereInput | SurveyResponseScalarWhereInput[]
+    id?: StringFilter<"SurveyResponse"> | string
+    surveyFormId?: StringFilter<"SurveyResponse"> | string
+    userId?: StringNullableFilter<"SurveyResponse"> | string | null
+    submittedAt?: DateTimeFilter<"SurveyResponse"> | Date | string
+    metadata?: JsonNullableFilter<"SurveyResponse">
+  }
+
+  export type SurveyStatisticUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: SurveyStatisticWhereUniqueInput
+    update: XOR<SurveyStatisticUpdateWithoutCreatorInput, SurveyStatisticUncheckedUpdateWithoutCreatorInput>
+    create: XOR<SurveyStatisticCreateWithoutCreatorInput, SurveyStatisticUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type SurveyStatisticUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: SurveyStatisticWhereUniqueInput
+    data: XOR<SurveyStatisticUpdateWithoutCreatorInput, SurveyStatisticUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type SurveyStatisticUpdateManyWithWhereWithoutCreatorInput = {
+    where: SurveyStatisticScalarWhereInput
+    data: XOR<SurveyStatisticUpdateManyMutationInput, SurveyStatisticUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type SurveyStatisticScalarWhereInput = {
+    AND?: SurveyStatisticScalarWhereInput | SurveyStatisticScalarWhereInput[]
+    OR?: SurveyStatisticScalarWhereInput[]
+    NOT?: SurveyStatisticScalarWhereInput | SurveyStatisticScalarWhereInput[]
+    id?: StringFilter<"SurveyStatistic"> | string
+    surveyFormId?: StringFilter<"SurveyStatistic"> | string
+    chartType?: Enumchart_typeFilter<"SurveyStatistic"> | $Enums.chart_type
+    title?: StringFilter<"SurveyStatistic"> | string
+    description?: StringNullableFilter<"SurveyStatistic"> | string | null
+    config?: JsonFilter<"SurveyStatistic">
+    createdById?: StringFilter<"SurveyStatistic"> | string
+    createdAt?: DateTimeFilter<"SurveyStatistic"> | Date | string
+    updatedAt?: DateTimeFilter<"SurveyStatistic"> | Date | string
+  }
+
   export type AccountCreateWithoutAuditLogsInput = {
     id?: string
     access?: $Enums.access
@@ -29060,6 +36702,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutAuditLogsInput = {
@@ -29132,6 +36777,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutAuditLogsInput = {
@@ -29220,6 +36868,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAuditLogsInput = {
@@ -29292,6 +36943,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type ChatParticipantCreateWithoutRoomInput = {
@@ -29466,6 +37120,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutChatParticipantsInput = {
@@ -29538,6 +37195,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutChatParticipantsInput = {
@@ -29655,6 +37315,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatParticipantsInput = {
@@ -29727,6 +37390,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type ChatRoomUpsertWithoutParticipantsInput = {
@@ -29834,6 +37500,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutChatMessagesInput = {
@@ -29906,6 +37575,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutChatMessagesInput = {
@@ -30150,6 +37822,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatMessagesInput = {
@@ -30222,6 +37897,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type ChatRoomUpsertWithoutMessagesInput = {
@@ -30453,6 +38131,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantCreateNestedManyWithoutUserInput
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutChatAttachmentsInput = {
@@ -30525,6 +38206,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantUncheckedCreateNestedManyWithoutUserInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutChatAttachmentsInput = {
@@ -30654,6 +38338,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantUpdateManyWithoutUserNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatAttachmentsInput = {
@@ -30726,6 +38413,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type ChatMessageCreateWithoutReadReceiptsInput = {
@@ -30833,6 +38523,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantCreateNestedManyWithoutUserInput
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutChatReadReceiptsInput = {
@@ -30905,6 +38598,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantUncheckedCreateNestedManyWithoutUserInput
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutChatReadReceiptsInput = {
@@ -31034,6 +38730,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantUpdateManyWithoutUserNestedInput
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatReadReceiptsInput = {
@@ -31106,6 +38805,9 @@ export namespace Prisma {
     chatParticipants?: ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountCreateWithoutInquiriesInput = {
@@ -31178,6 +38880,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutInquiriesInput = {
@@ -31250,6 +38955,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutInquiriesInput = {
@@ -31327,6 +39035,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutAssignedInquiriesInput = {
@@ -31399,6 +39110,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutAssignedInquiriesInput = {
@@ -31476,6 +39190,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutResolvedInquiriesInput = {
@@ -31548,6 +39265,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutResolvedInquiriesInput = {
@@ -31706,6 +39426,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiriesInput = {
@@ -31778,6 +39501,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUpsertWithoutAssignedInquiriesInput = {
@@ -31861,6 +39587,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAssignedInquiriesInput = {
@@ -31933,6 +39662,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUpsertWithoutResolvedInquiriesInput = {
@@ -32016,6 +39748,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutResolvedInquiriesInput = {
@@ -32088,6 +39823,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type InquiryReplyUpsertWithWhereUniqueWithoutInquiryInput = {
@@ -32192,6 +39930,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutInquiryRepliesInput = {
@@ -32264,6 +40005,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutInquiryRepliesInput = {
@@ -32464,6 +40208,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiryRepliesInput = {
@@ -32536,6 +40283,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type InquiryUpsertWithoutRepliesInput = {
@@ -32745,6 +40495,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutInquiryAttachmentsInput = {
@@ -32817,6 +40570,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutInquiryAttachmentsInput = {
@@ -32948,6 +40704,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiryAttachmentsInput = {
@@ -33020,6 +40779,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountCreateWithoutCreatedFAQsInput = {
@@ -33092,6 +40854,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutCreatedFAQsInput = {
@@ -33164,6 +40929,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutCreatedFAQsInput = {
@@ -33252,6 +41020,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutCreatedFAQsInput = {
@@ -33324,6 +41095,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type ItemStackCreateWithoutItemInput = {
@@ -33588,6 +41362,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutItemTransactionsInput = {
@@ -33660,6 +41437,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutItemTransactionsInput = {
@@ -33737,6 +41517,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutAdminTransactionsInput = {
@@ -33809,6 +41592,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutAdminTransactionsInput = {
@@ -33928,6 +41714,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutItemTransactionsInput = {
@@ -34000,6 +41789,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUpsertWithoutAdminTransactionsInput = {
@@ -34083,6 +41875,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAdminTransactionsInput = {
@@ -34155,6 +41950,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type SeminarParticipantCreateWithoutSeminarInput = {
@@ -34253,6 +42051,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsCreatedInput = {
@@ -34325,6 +42126,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsCreatedInput = {
@@ -34429,6 +42233,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsCreatedInput = {
@@ -34501,6 +42308,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type SeminarCreateWithoutParticipantsInput = {
@@ -34618,6 +42428,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsInput = {
@@ -34690,6 +42503,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsInput = {
@@ -34829,6 +42645,9 @@ export namespace Prisma {
     chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsInput = {
@@ -34901,6 +42720,1526 @@ export namespace Prisma {
     chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type AccountCreateWithoutSurveyFormsCreatedInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    chatParticipants?: ChatParticipantCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
+    chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+  }
+
+  export type AccountUncheckedCreateWithoutSurveyFormsCreatedInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    chatParticipants?: ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+  }
+
+  export type AccountCreateOrConnectWithoutSurveyFormsCreatedInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutSurveyFormsCreatedInput, AccountUncheckedCreateWithoutSurveyFormsCreatedInput>
+  }
+
+  export type SurveyFieldCreateWithoutSurveyFormInput = {
+    id?: string
+    type: $Enums.field_type
+    label: string
+    placeholder?: string | null
+    required?: boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    answers?: SurveyAnswerCreateNestedManyWithoutFieldInput
+  }
+
+  export type SurveyFieldUncheckedCreateWithoutSurveyFormInput = {
+    id?: string
+    type: $Enums.field_type
+    label: string
+    placeholder?: string | null
+    required?: boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    answers?: SurveyAnswerUncheckedCreateNestedManyWithoutFieldInput
+  }
+
+  export type SurveyFieldCreateOrConnectWithoutSurveyFormInput = {
+    where: SurveyFieldWhereUniqueInput
+    create: XOR<SurveyFieldCreateWithoutSurveyFormInput, SurveyFieldUncheckedCreateWithoutSurveyFormInput>
+  }
+
+  export type SurveyFieldCreateManySurveyFormInputEnvelope = {
+    data: SurveyFieldCreateManySurveyFormInput | SurveyFieldCreateManySurveyFormInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SurveyResponseCreateWithoutSurveyFormInput = {
+    id?: string
+    submittedAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    user?: AccountCreateNestedOneWithoutSurveyResponsesInput
+    answers?: SurveyAnswerCreateNestedManyWithoutResponseInput
+  }
+
+  export type SurveyResponseUncheckedCreateWithoutSurveyFormInput = {
+    id?: string
+    userId?: string | null
+    submittedAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    answers?: SurveyAnswerUncheckedCreateNestedManyWithoutResponseInput
+  }
+
+  export type SurveyResponseCreateOrConnectWithoutSurveyFormInput = {
+    where: SurveyResponseWhereUniqueInput
+    create: XOR<SurveyResponseCreateWithoutSurveyFormInput, SurveyResponseUncheckedCreateWithoutSurveyFormInput>
+  }
+
+  export type SurveyResponseCreateManySurveyFormInputEnvelope = {
+    data: SurveyResponseCreateManySurveyFormInput | SurveyResponseCreateManySurveyFormInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SurveyStatisticCreateWithoutSurveyFormInput = {
+    id?: string
+    chartType: $Enums.chart_type
+    title: string
+    description?: string | null
+    config: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: AccountCreateNestedOneWithoutSurveyStatisticsCreatedInput
+  }
+
+  export type SurveyStatisticUncheckedCreateWithoutSurveyFormInput = {
+    id?: string
+    chartType: $Enums.chart_type
+    title: string
+    description?: string | null
+    config: JsonNullValueInput | InputJsonValue
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SurveyStatisticCreateOrConnectWithoutSurveyFormInput = {
+    where: SurveyStatisticWhereUniqueInput
+    create: XOR<SurveyStatisticCreateWithoutSurveyFormInput, SurveyStatisticUncheckedCreateWithoutSurveyFormInput>
+  }
+
+  export type SurveyStatisticCreateManySurveyFormInputEnvelope = {
+    data: SurveyStatisticCreateManySurveyFormInput | SurveyStatisticCreateManySurveyFormInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AccountUpsertWithoutSurveyFormsCreatedInput = {
+    update: XOR<AccountUpdateWithoutSurveyFormsCreatedInput, AccountUncheckedUpdateWithoutSurveyFormsCreatedInput>
+    create: XOR<AccountCreateWithoutSurveyFormsCreatedInput, AccountUncheckedCreateWithoutSurveyFormsCreatedInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutSurveyFormsCreatedInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutSurveyFormsCreatedInput, AccountUncheckedUpdateWithoutSurveyFormsCreatedInput>
+  }
+
+  export type AccountUpdateWithoutSurveyFormsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    chatParticipants?: ChatParticipantUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
+    chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutSurveyFormsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    chatParticipants?: ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type SurveyFieldUpsertWithWhereUniqueWithoutSurveyFormInput = {
+    where: SurveyFieldWhereUniqueInput
+    update: XOR<SurveyFieldUpdateWithoutSurveyFormInput, SurveyFieldUncheckedUpdateWithoutSurveyFormInput>
+    create: XOR<SurveyFieldCreateWithoutSurveyFormInput, SurveyFieldUncheckedCreateWithoutSurveyFormInput>
+  }
+
+  export type SurveyFieldUpdateWithWhereUniqueWithoutSurveyFormInput = {
+    where: SurveyFieldWhereUniqueInput
+    data: XOR<SurveyFieldUpdateWithoutSurveyFormInput, SurveyFieldUncheckedUpdateWithoutSurveyFormInput>
+  }
+
+  export type SurveyFieldUpdateManyWithWhereWithoutSurveyFormInput = {
+    where: SurveyFieldScalarWhereInput
+    data: XOR<SurveyFieldUpdateManyMutationInput, SurveyFieldUncheckedUpdateManyWithoutSurveyFormInput>
+  }
+
+  export type SurveyFieldScalarWhereInput = {
+    AND?: SurveyFieldScalarWhereInput | SurveyFieldScalarWhereInput[]
+    OR?: SurveyFieldScalarWhereInput[]
+    NOT?: SurveyFieldScalarWhereInput | SurveyFieldScalarWhereInput[]
+    id?: StringFilter<"SurveyField"> | string
+    surveyFormId?: StringFilter<"SurveyField"> | string
+    type?: Enumfield_typeFilter<"SurveyField"> | $Enums.field_type
+    label?: StringFilter<"SurveyField"> | string
+    placeholder?: StringNullableFilter<"SurveyField"> | string | null
+    required?: BoolFilter<"SurveyField"> | boolean
+    options?: JsonNullableFilter<"SurveyField">
+    order?: IntFilter<"SurveyField"> | number
+    createdAt?: DateTimeFilter<"SurveyField"> | Date | string
+    updatedAt?: DateTimeFilter<"SurveyField"> | Date | string
+  }
+
+  export type SurveyResponseUpsertWithWhereUniqueWithoutSurveyFormInput = {
+    where: SurveyResponseWhereUniqueInput
+    update: XOR<SurveyResponseUpdateWithoutSurveyFormInput, SurveyResponseUncheckedUpdateWithoutSurveyFormInput>
+    create: XOR<SurveyResponseCreateWithoutSurveyFormInput, SurveyResponseUncheckedCreateWithoutSurveyFormInput>
+  }
+
+  export type SurveyResponseUpdateWithWhereUniqueWithoutSurveyFormInput = {
+    where: SurveyResponseWhereUniqueInput
+    data: XOR<SurveyResponseUpdateWithoutSurveyFormInput, SurveyResponseUncheckedUpdateWithoutSurveyFormInput>
+  }
+
+  export type SurveyResponseUpdateManyWithWhereWithoutSurveyFormInput = {
+    where: SurveyResponseScalarWhereInput
+    data: XOR<SurveyResponseUpdateManyMutationInput, SurveyResponseUncheckedUpdateManyWithoutSurveyFormInput>
+  }
+
+  export type SurveyStatisticUpsertWithWhereUniqueWithoutSurveyFormInput = {
+    where: SurveyStatisticWhereUniqueInput
+    update: XOR<SurveyStatisticUpdateWithoutSurveyFormInput, SurveyStatisticUncheckedUpdateWithoutSurveyFormInput>
+    create: XOR<SurveyStatisticCreateWithoutSurveyFormInput, SurveyStatisticUncheckedCreateWithoutSurveyFormInput>
+  }
+
+  export type SurveyStatisticUpdateWithWhereUniqueWithoutSurveyFormInput = {
+    where: SurveyStatisticWhereUniqueInput
+    data: XOR<SurveyStatisticUpdateWithoutSurveyFormInput, SurveyStatisticUncheckedUpdateWithoutSurveyFormInput>
+  }
+
+  export type SurveyStatisticUpdateManyWithWhereWithoutSurveyFormInput = {
+    where: SurveyStatisticScalarWhereInput
+    data: XOR<SurveyStatisticUpdateManyMutationInput, SurveyStatisticUncheckedUpdateManyWithoutSurveyFormInput>
+  }
+
+  export type SurveyFormCreateWithoutFieldsInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: AccountCreateNestedOneWithoutSurveyFormsCreatedInput
+    responses?: SurveyResponseCreateNestedManyWithoutSurveyFormInput
+    statistics?: SurveyStatisticCreateNestedManyWithoutSurveyFormInput
+  }
+
+  export type SurveyFormUncheckedCreateWithoutFieldsInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    responses?: SurveyResponseUncheckedCreateNestedManyWithoutSurveyFormInput
+    statistics?: SurveyStatisticUncheckedCreateNestedManyWithoutSurveyFormInput
+  }
+
+  export type SurveyFormCreateOrConnectWithoutFieldsInput = {
+    where: SurveyFormWhereUniqueInput
+    create: XOR<SurveyFormCreateWithoutFieldsInput, SurveyFormUncheckedCreateWithoutFieldsInput>
+  }
+
+  export type SurveyAnswerCreateWithoutFieldInput = {
+    id?: string
+    answer: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    response: SurveyResponseCreateNestedOneWithoutAnswersInput
+  }
+
+  export type SurveyAnswerUncheckedCreateWithoutFieldInput = {
+    id?: string
+    responseId: string
+    answer: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type SurveyAnswerCreateOrConnectWithoutFieldInput = {
+    where: SurveyAnswerWhereUniqueInput
+    create: XOR<SurveyAnswerCreateWithoutFieldInput, SurveyAnswerUncheckedCreateWithoutFieldInput>
+  }
+
+  export type SurveyAnswerCreateManyFieldInputEnvelope = {
+    data: SurveyAnswerCreateManyFieldInput | SurveyAnswerCreateManyFieldInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SurveyFormUpsertWithoutFieldsInput = {
+    update: XOR<SurveyFormUpdateWithoutFieldsInput, SurveyFormUncheckedUpdateWithoutFieldsInput>
+    create: XOR<SurveyFormCreateWithoutFieldsInput, SurveyFormUncheckedCreateWithoutFieldsInput>
+    where?: SurveyFormWhereInput
+  }
+
+  export type SurveyFormUpdateToOneWithWhereWithoutFieldsInput = {
+    where?: SurveyFormWhereInput
+    data: XOR<SurveyFormUpdateWithoutFieldsInput, SurveyFormUncheckedUpdateWithoutFieldsInput>
+  }
+
+  export type SurveyFormUpdateWithoutFieldsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: AccountUpdateOneRequiredWithoutSurveyFormsCreatedNestedInput
+    responses?: SurveyResponseUpdateManyWithoutSurveyFormNestedInput
+    statistics?: SurveyStatisticUpdateManyWithoutSurveyFormNestedInput
+  }
+
+  export type SurveyFormUncheckedUpdateWithoutFieldsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responses?: SurveyResponseUncheckedUpdateManyWithoutSurveyFormNestedInput
+    statistics?: SurveyStatisticUncheckedUpdateManyWithoutSurveyFormNestedInput
+  }
+
+  export type SurveyAnswerUpsertWithWhereUniqueWithoutFieldInput = {
+    where: SurveyAnswerWhereUniqueInput
+    update: XOR<SurveyAnswerUpdateWithoutFieldInput, SurveyAnswerUncheckedUpdateWithoutFieldInput>
+    create: XOR<SurveyAnswerCreateWithoutFieldInput, SurveyAnswerUncheckedCreateWithoutFieldInput>
+  }
+
+  export type SurveyAnswerUpdateWithWhereUniqueWithoutFieldInput = {
+    where: SurveyAnswerWhereUniqueInput
+    data: XOR<SurveyAnswerUpdateWithoutFieldInput, SurveyAnswerUncheckedUpdateWithoutFieldInput>
+  }
+
+  export type SurveyAnswerUpdateManyWithWhereWithoutFieldInput = {
+    where: SurveyAnswerScalarWhereInput
+    data: XOR<SurveyAnswerUpdateManyMutationInput, SurveyAnswerUncheckedUpdateManyWithoutFieldInput>
+  }
+
+  export type SurveyAnswerScalarWhereInput = {
+    AND?: SurveyAnswerScalarWhereInput | SurveyAnswerScalarWhereInput[]
+    OR?: SurveyAnswerScalarWhereInput[]
+    NOT?: SurveyAnswerScalarWhereInput | SurveyAnswerScalarWhereInput[]
+    id?: StringFilter<"SurveyAnswer"> | string
+    responseId?: StringFilter<"SurveyAnswer"> | string
+    fieldId?: StringFilter<"SurveyAnswer"> | string
+    answer?: JsonFilter<"SurveyAnswer">
+    createdAt?: DateTimeFilter<"SurveyAnswer"> | Date | string
+  }
+
+  export type SurveyFormCreateWithoutResponsesInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: AccountCreateNestedOneWithoutSurveyFormsCreatedInput
+    fields?: SurveyFieldCreateNestedManyWithoutSurveyFormInput
+    statistics?: SurveyStatisticCreateNestedManyWithoutSurveyFormInput
+  }
+
+  export type SurveyFormUncheckedCreateWithoutResponsesInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    fields?: SurveyFieldUncheckedCreateNestedManyWithoutSurveyFormInput
+    statistics?: SurveyStatisticUncheckedCreateNestedManyWithoutSurveyFormInput
+  }
+
+  export type SurveyFormCreateOrConnectWithoutResponsesInput = {
+    where: SurveyFormWhereUniqueInput
+    create: XOR<SurveyFormCreateWithoutResponsesInput, SurveyFormUncheckedCreateWithoutResponsesInput>
+  }
+
+  export type AccountCreateWithoutSurveyResponsesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    chatParticipants?: ChatParticipantCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
+    chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+  }
+
+  export type AccountUncheckedCreateWithoutSurveyResponsesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    chatParticipants?: ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+  }
+
+  export type AccountCreateOrConnectWithoutSurveyResponsesInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutSurveyResponsesInput, AccountUncheckedCreateWithoutSurveyResponsesInput>
+  }
+
+  export type SurveyAnswerCreateWithoutResponseInput = {
+    id?: string
+    answer: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    field: SurveyFieldCreateNestedOneWithoutAnswersInput
+  }
+
+  export type SurveyAnswerUncheckedCreateWithoutResponseInput = {
+    id?: string
+    fieldId: string
+    answer: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type SurveyAnswerCreateOrConnectWithoutResponseInput = {
+    where: SurveyAnswerWhereUniqueInput
+    create: XOR<SurveyAnswerCreateWithoutResponseInput, SurveyAnswerUncheckedCreateWithoutResponseInput>
+  }
+
+  export type SurveyAnswerCreateManyResponseInputEnvelope = {
+    data: SurveyAnswerCreateManyResponseInput | SurveyAnswerCreateManyResponseInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SurveyFormUpsertWithoutResponsesInput = {
+    update: XOR<SurveyFormUpdateWithoutResponsesInput, SurveyFormUncheckedUpdateWithoutResponsesInput>
+    create: XOR<SurveyFormCreateWithoutResponsesInput, SurveyFormUncheckedCreateWithoutResponsesInput>
+    where?: SurveyFormWhereInput
+  }
+
+  export type SurveyFormUpdateToOneWithWhereWithoutResponsesInput = {
+    where?: SurveyFormWhereInput
+    data: XOR<SurveyFormUpdateWithoutResponsesInput, SurveyFormUncheckedUpdateWithoutResponsesInput>
+  }
+
+  export type SurveyFormUpdateWithoutResponsesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: AccountUpdateOneRequiredWithoutSurveyFormsCreatedNestedInput
+    fields?: SurveyFieldUpdateManyWithoutSurveyFormNestedInput
+    statistics?: SurveyStatisticUpdateManyWithoutSurveyFormNestedInput
+  }
+
+  export type SurveyFormUncheckedUpdateWithoutResponsesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fields?: SurveyFieldUncheckedUpdateManyWithoutSurveyFormNestedInput
+    statistics?: SurveyStatisticUncheckedUpdateManyWithoutSurveyFormNestedInput
+  }
+
+  export type AccountUpsertWithoutSurveyResponsesInput = {
+    update: XOR<AccountUpdateWithoutSurveyResponsesInput, AccountUncheckedUpdateWithoutSurveyResponsesInput>
+    create: XOR<AccountCreateWithoutSurveyResponsesInput, AccountUncheckedCreateWithoutSurveyResponsesInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutSurveyResponsesInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutSurveyResponsesInput, AccountUncheckedUpdateWithoutSurveyResponsesInput>
+  }
+
+  export type AccountUpdateWithoutSurveyResponsesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    chatParticipants?: ChatParticipantUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
+    chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutSurveyResponsesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    chatParticipants?: ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type SurveyAnswerUpsertWithWhereUniqueWithoutResponseInput = {
+    where: SurveyAnswerWhereUniqueInput
+    update: XOR<SurveyAnswerUpdateWithoutResponseInput, SurveyAnswerUncheckedUpdateWithoutResponseInput>
+    create: XOR<SurveyAnswerCreateWithoutResponseInput, SurveyAnswerUncheckedCreateWithoutResponseInput>
+  }
+
+  export type SurveyAnswerUpdateWithWhereUniqueWithoutResponseInput = {
+    where: SurveyAnswerWhereUniqueInput
+    data: XOR<SurveyAnswerUpdateWithoutResponseInput, SurveyAnswerUncheckedUpdateWithoutResponseInput>
+  }
+
+  export type SurveyAnswerUpdateManyWithWhereWithoutResponseInput = {
+    where: SurveyAnswerScalarWhereInput
+    data: XOR<SurveyAnswerUpdateManyMutationInput, SurveyAnswerUncheckedUpdateManyWithoutResponseInput>
+  }
+
+  export type SurveyResponseCreateWithoutAnswersInput = {
+    id?: string
+    submittedAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    surveyForm: SurveyFormCreateNestedOneWithoutResponsesInput
+    user?: AccountCreateNestedOneWithoutSurveyResponsesInput
+  }
+
+  export type SurveyResponseUncheckedCreateWithoutAnswersInput = {
+    id?: string
+    surveyFormId: string
+    userId?: string | null
+    submittedAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SurveyResponseCreateOrConnectWithoutAnswersInput = {
+    where: SurveyResponseWhereUniqueInput
+    create: XOR<SurveyResponseCreateWithoutAnswersInput, SurveyResponseUncheckedCreateWithoutAnswersInput>
+  }
+
+  export type SurveyFieldCreateWithoutAnswersInput = {
+    id?: string
+    type: $Enums.field_type
+    label: string
+    placeholder?: string | null
+    required?: boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyForm: SurveyFormCreateNestedOneWithoutFieldsInput
+  }
+
+  export type SurveyFieldUncheckedCreateWithoutAnswersInput = {
+    id?: string
+    surveyFormId: string
+    type: $Enums.field_type
+    label: string
+    placeholder?: string | null
+    required?: boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SurveyFieldCreateOrConnectWithoutAnswersInput = {
+    where: SurveyFieldWhereUniqueInput
+    create: XOR<SurveyFieldCreateWithoutAnswersInput, SurveyFieldUncheckedCreateWithoutAnswersInput>
+  }
+
+  export type SurveyResponseUpsertWithoutAnswersInput = {
+    update: XOR<SurveyResponseUpdateWithoutAnswersInput, SurveyResponseUncheckedUpdateWithoutAnswersInput>
+    create: XOR<SurveyResponseCreateWithoutAnswersInput, SurveyResponseUncheckedCreateWithoutAnswersInput>
+    where?: SurveyResponseWhereInput
+  }
+
+  export type SurveyResponseUpdateToOneWithWhereWithoutAnswersInput = {
+    where?: SurveyResponseWhereInput
+    data: XOR<SurveyResponseUpdateWithoutAnswersInput, SurveyResponseUncheckedUpdateWithoutAnswersInput>
+  }
+
+  export type SurveyResponseUpdateWithoutAnswersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    surveyForm?: SurveyFormUpdateOneRequiredWithoutResponsesNestedInput
+    user?: AccountUpdateOneWithoutSurveyResponsesNestedInput
+  }
+
+  export type SurveyResponseUncheckedUpdateWithoutAnswersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SurveyFieldUpsertWithoutAnswersInput = {
+    update: XOR<SurveyFieldUpdateWithoutAnswersInput, SurveyFieldUncheckedUpdateWithoutAnswersInput>
+    create: XOR<SurveyFieldCreateWithoutAnswersInput, SurveyFieldUncheckedCreateWithoutAnswersInput>
+    where?: SurveyFieldWhereInput
+  }
+
+  export type SurveyFieldUpdateToOneWithWhereWithoutAnswersInput = {
+    where?: SurveyFieldWhereInput
+    data: XOR<SurveyFieldUpdateWithoutAnswersInput, SurveyFieldUncheckedUpdateWithoutAnswersInput>
+  }
+
+  export type SurveyFieldUpdateWithoutAnswersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: Enumfield_typeFieldUpdateOperationsInput | $Enums.field_type
+    label?: StringFieldUpdateOperationsInput | string
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyForm?: SurveyFormUpdateOneRequiredWithoutFieldsNestedInput
+  }
+
+  export type SurveyFieldUncheckedUpdateWithoutAnswersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    type?: Enumfield_typeFieldUpdateOperationsInput | $Enums.field_type
+    label?: StringFieldUpdateOperationsInput | string
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyFormCreateWithoutStatisticsInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: AccountCreateNestedOneWithoutSurveyFormsCreatedInput
+    fields?: SurveyFieldCreateNestedManyWithoutSurveyFormInput
+    responses?: SurveyResponseCreateNestedManyWithoutSurveyFormInput
+  }
+
+  export type SurveyFormUncheckedCreateWithoutStatisticsInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    fields?: SurveyFieldUncheckedCreateNestedManyWithoutSurveyFormInput
+    responses?: SurveyResponseUncheckedCreateNestedManyWithoutSurveyFormInput
+  }
+
+  export type SurveyFormCreateOrConnectWithoutStatisticsInput = {
+    where: SurveyFormWhereUniqueInput
+    create: XOR<SurveyFormCreateWithoutStatisticsInput, SurveyFormUncheckedCreateWithoutStatisticsInput>
+  }
+
+  export type AccountCreateWithoutSurveyStatisticsCreatedInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    chatParticipants?: ChatParticipantCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
+    chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+  }
+
+  export type AccountUncheckedCreateWithoutSurveyStatisticsCreatedInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    chatParticipants?: ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type AccountCreateOrConnectWithoutSurveyStatisticsCreatedInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutSurveyStatisticsCreatedInput, AccountUncheckedCreateWithoutSurveyStatisticsCreatedInput>
+  }
+
+  export type SurveyFormUpsertWithoutStatisticsInput = {
+    update: XOR<SurveyFormUpdateWithoutStatisticsInput, SurveyFormUncheckedUpdateWithoutStatisticsInput>
+    create: XOR<SurveyFormCreateWithoutStatisticsInput, SurveyFormUncheckedCreateWithoutStatisticsInput>
+    where?: SurveyFormWhereInput
+  }
+
+  export type SurveyFormUpdateToOneWithWhereWithoutStatisticsInput = {
+    where?: SurveyFormWhereInput
+    data: XOR<SurveyFormUpdateWithoutStatisticsInput, SurveyFormUncheckedUpdateWithoutStatisticsInput>
+  }
+
+  export type SurveyFormUpdateWithoutStatisticsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: AccountUpdateOneRequiredWithoutSurveyFormsCreatedNestedInput
+    fields?: SurveyFieldUpdateManyWithoutSurveyFormNestedInput
+    responses?: SurveyResponseUpdateManyWithoutSurveyFormNestedInput
+  }
+
+  export type SurveyFormUncheckedUpdateWithoutStatisticsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fields?: SurveyFieldUncheckedUpdateManyWithoutSurveyFormNestedInput
+    responses?: SurveyResponseUncheckedUpdateManyWithoutSurveyFormNestedInput
+  }
+
+  export type AccountUpsertWithoutSurveyStatisticsCreatedInput = {
+    update: XOR<AccountUpdateWithoutSurveyStatisticsCreatedInput, AccountUncheckedUpdateWithoutSurveyStatisticsCreatedInput>
+    create: XOR<AccountCreateWithoutSurveyStatisticsCreatedInput, AccountUncheckedCreateWithoutSurveyStatisticsCreatedInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutSurveyStatisticsCreatedInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutSurveyStatisticsCreatedInput, AccountUncheckedUpdateWithoutSurveyStatisticsCreatedInput>
+  }
+
+  export type AccountUpdateWithoutSurveyStatisticsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    chatParticipants?: ChatParticipantUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
+    chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutSurveyStatisticsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    chatParticipants?: ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SeminarParticipantCreateManyAccountInput = {
@@ -35083,6 +44422,34 @@ export namespace Prisma {
     id?: string
     messageId: string
     readAt?: Date | string
+  }
+
+  export type SurveyFormCreateManyCreatorInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.survey_status
+    category: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SurveyResponseCreateManyUserInput = {
+    id?: string
+    surveyFormId: string
+    submittedAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SurveyStatisticCreateManyCreatorInput = {
+    id?: string
+    surveyFormId: string
+    chartType: $Enums.chart_type
+    title: string
+    description?: string | null
+    config: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type SeminarParticipantUpdateWithoutAccountInput = {
@@ -35653,6 +45020,98 @@ export namespace Prisma {
     readAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SurveyFormUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fields?: SurveyFieldUpdateManyWithoutSurveyFormNestedInput
+    responses?: SurveyResponseUpdateManyWithoutSurveyFormNestedInput
+    statistics?: SurveyStatisticUpdateManyWithoutSurveyFormNestedInput
+  }
+
+  export type SurveyFormUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fields?: SurveyFieldUncheckedUpdateManyWithoutSurveyFormNestedInput
+    responses?: SurveyResponseUncheckedUpdateManyWithoutSurveyFormNestedInput
+    statistics?: SurveyStatisticUncheckedUpdateManyWithoutSurveyFormNestedInput
+  }
+
+  export type SurveyFormUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: Enumsurvey_statusFieldUpdateOperationsInput | $Enums.survey_status
+    category?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyResponseUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    surveyForm?: SurveyFormUpdateOneRequiredWithoutResponsesNestedInput
+    answers?: SurveyAnswerUpdateManyWithoutResponseNestedInput
+  }
+
+  export type SurveyResponseUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    answers?: SurveyAnswerUncheckedUpdateManyWithoutResponseNestedInput
+  }
+
+  export type SurveyResponseUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SurveyStatisticUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chartType?: Enumchart_typeFieldUpdateOperationsInput | $Enums.chart_type
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyForm?: SurveyFormUpdateOneRequiredWithoutStatisticsNestedInput
+  }
+
+  export type SurveyStatisticUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    chartType?: Enumchart_typeFieldUpdateOperationsInput | $Enums.chart_type
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyStatisticUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    surveyFormId?: StringFieldUpdateOperationsInput | string
+    chartType?: Enumchart_typeFieldUpdateOperationsInput | $Enums.chart_type
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ChatParticipantCreateManyRoomInput = {
     id?: string
     userId: string
@@ -36141,6 +45600,186 @@ export namespace Prisma {
     status?: Enumparticipant_statusFieldUpdateOperationsInput | $Enums.participant_status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyFieldCreateManySurveyFormInput = {
+    id?: string
+    type: $Enums.field_type
+    label: string
+    placeholder?: string | null
+    required?: boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SurveyResponseCreateManySurveyFormInput = {
+    id?: string
+    userId?: string | null
+    submittedAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SurveyStatisticCreateManySurveyFormInput = {
+    id?: string
+    chartType: $Enums.chart_type
+    title: string
+    description?: string | null
+    config: JsonNullValueInput | InputJsonValue
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SurveyFieldUpdateWithoutSurveyFormInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: Enumfield_typeFieldUpdateOperationsInput | $Enums.field_type
+    label?: StringFieldUpdateOperationsInput | string
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    answers?: SurveyAnswerUpdateManyWithoutFieldNestedInput
+  }
+
+  export type SurveyFieldUncheckedUpdateWithoutSurveyFormInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: Enumfield_typeFieldUpdateOperationsInput | $Enums.field_type
+    label?: StringFieldUpdateOperationsInput | string
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    answers?: SurveyAnswerUncheckedUpdateManyWithoutFieldNestedInput
+  }
+
+  export type SurveyFieldUncheckedUpdateManyWithoutSurveyFormInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: Enumfield_typeFieldUpdateOperationsInput | $Enums.field_type
+    label?: StringFieldUpdateOperationsInput | string
+    placeholder?: NullableStringFieldUpdateOperationsInput | string | null
+    required?: BoolFieldUpdateOperationsInput | boolean
+    options?: NullableJsonNullValueInput | InputJsonValue
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyResponseUpdateWithoutSurveyFormInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    user?: AccountUpdateOneWithoutSurveyResponsesNestedInput
+    answers?: SurveyAnswerUpdateManyWithoutResponseNestedInput
+  }
+
+  export type SurveyResponseUncheckedUpdateWithoutSurveyFormInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    answers?: SurveyAnswerUncheckedUpdateManyWithoutResponseNestedInput
+  }
+
+  export type SurveyResponseUncheckedUpdateManyWithoutSurveyFormInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SurveyStatisticUpdateWithoutSurveyFormInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chartType?: Enumchart_typeFieldUpdateOperationsInput | $Enums.chart_type
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: AccountUpdateOneRequiredWithoutSurveyStatisticsCreatedNestedInput
+  }
+
+  export type SurveyStatisticUncheckedUpdateWithoutSurveyFormInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chartType?: Enumchart_typeFieldUpdateOperationsInput | $Enums.chart_type
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    config?: JsonNullValueInput | InputJsonValue
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyStatisticUncheckedUpdateManyWithoutSurveyFormInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chartType?: Enumchart_typeFieldUpdateOperationsInput | $Enums.chart_type
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    config?: JsonNullValueInput | InputJsonValue
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyAnswerCreateManyFieldInput = {
+    id?: string
+    responseId: string
+    answer: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type SurveyAnswerUpdateWithoutFieldInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    answer?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    response?: SurveyResponseUpdateOneRequiredWithoutAnswersNestedInput
+  }
+
+  export type SurveyAnswerUncheckedUpdateWithoutFieldInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    responseId?: StringFieldUpdateOperationsInput | string
+    answer?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyAnswerUncheckedUpdateManyWithoutFieldInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    responseId?: StringFieldUpdateOperationsInput | string
+    answer?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyAnswerCreateManyResponseInput = {
+    id?: string
+    fieldId: string
+    answer: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type SurveyAnswerUpdateWithoutResponseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    answer?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    field?: SurveyFieldUpdateOneRequiredWithoutAnswersNestedInput
+  }
+
+  export type SurveyAnswerUncheckedUpdateWithoutResponseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fieldId?: StringFieldUpdateOperationsInput | string
+    answer?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SurveyAnswerUncheckedUpdateManyWithoutResponseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fieldId?: StringFieldUpdateOperationsInput | string
+    answer?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

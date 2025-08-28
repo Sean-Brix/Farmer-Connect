@@ -28,4 +28,7 @@ router.use('/logs', logs);
 import inquiry from './inquiry.js';
 router.use('/inquiries', inquiry);
 
+import surveyForms from './Survey_Forms/index.js';
+router.use('/survey-forms', surveyForms);
+
 export default router;

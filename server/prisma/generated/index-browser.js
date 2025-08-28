@@ -362,6 +362,58 @@ exports.Prisma.SeminarParticipantScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SurveyFormScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  category: 'category',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SurveyFieldScalarFieldEnum = {
+  id: 'id',
+  surveyFormId: 'surveyFormId',
+  type: 'type',
+  label: 'label',
+  placeholder: 'placeholder',
+  required: 'required',
+  options: 'options',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SurveyResponseScalarFieldEnum = {
+  id: 'id',
+  surveyFormId: 'surveyFormId',
+  userId: 'userId',
+  submittedAt: 'submittedAt',
+  metadata: 'metadata'
+};
+
+exports.Prisma.SurveyAnswerScalarFieldEnum = {
+  id: 'id',
+  responseId: 'responseId',
+  fieldId: 'fieldId',
+  answer: 'answer',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SurveyStatisticScalarFieldEnum = {
+  id: 'id',
+  surveyFormId: 'surveyFormId',
+  chartType: 'chartType',
+  title: 'title',
+  description: 'description',
+  config: 'config',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -369,6 +421,10 @@ exports.Prisma.SortOrder = {
 
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -543,6 +599,41 @@ exports.Prisma.SeminarParticipantOrderByRelevanceFieldEnum = {
   id: 'id',
   seminar_id: 'seminar_id',
   account_id: 'account_id'
+};
+
+exports.Prisma.SurveyFormOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  createdById: 'createdById'
+};
+
+exports.Prisma.SurveyFieldOrderByRelevanceFieldEnum = {
+  id: 'id',
+  surveyFormId: 'surveyFormId',
+  label: 'label',
+  placeholder: 'placeholder'
+};
+
+exports.Prisma.SurveyResponseOrderByRelevanceFieldEnum = {
+  id: 'id',
+  surveyFormId: 'surveyFormId',
+  userId: 'userId'
+};
+
+exports.Prisma.SurveyAnswerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  responseId: 'responseId',
+  fieldId: 'fieldId'
+};
+
+exports.Prisma.SurveyStatisticOrderByRelevanceFieldEnum = {
+  id: 'id',
+  surveyFormId: 'surveyFormId',
+  title: 'title',
+  description: 'description',
+  createdById: 'createdById'
 };
 exports.access = exports.$Enums.access = {
   Admin: 'Admin',
@@ -740,6 +831,35 @@ exports.participant_status = exports.$Enums.participant_status = {
   Cancelled: 'Cancelled'
 };
 
+exports.survey_status = exports.$Enums.survey_status = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  ARCHIVED: 'ARCHIVED'
+};
+
+exports.field_type = exports.$Enums.field_type = {
+  TEXT: 'TEXT',
+  TEXTAREA: 'TEXTAREA',
+  EMAIL: 'EMAIL',
+  NUMBER: 'NUMBER',
+  DATE: 'DATE',
+  SELECT: 'SELECT',
+  RADIO: 'RADIO',
+  CHECKBOX: 'CHECKBOX',
+  FILE: 'FILE'
+};
+
+exports.chart_type = exports.$Enums.chart_type = {
+  BAR: 'BAR',
+  PIE: 'PIE',
+  LINE: 'LINE',
+  DOUGHNUT: 'DOUGHNUT',
+  AREA: 'AREA',
+  COLUMN: 'COLUMN',
+  SCATTER: 'SCATTER'
+};
+
 exports.Prisma.ModelName = {
   Account: 'Account',
   AuditLog: 'AuditLog',
@@ -756,7 +876,12 @@ exports.Prisma.ModelName = {
   ItemStack: 'ItemStack',
   ItemTransaction: 'ItemTransaction',
   Seminar: 'Seminar',
-  SeminarParticipant: 'SeminarParticipant'
+  SeminarParticipant: 'SeminarParticipant',
+  SurveyForm: 'SurveyForm',
+  SurveyField: 'SurveyField',
+  SurveyResponse: 'SurveyResponse',
+  SurveyAnswer: 'SurveyAnswer',
+  SurveyStatistic: 'SurveyStatistic'
 };
 
 /**

@@ -105,6 +105,11 @@ model Account {
   chatMessages        ChatMessage[]
   chatAttachments     ChatAttachment[]
   chatReadReceipts    ChatReadReceipt[]
+  
+  // Survey Forms Relations
+  surveyFormsCreated  SurveyForm[]        @relation("SurveyFormsCreated")
+  surveyResponses     SurveyResponse[]    @relation("SurveyResponses")
+  surveyStatisticsCreated SurveyStatistic[] @relation("SurveyStatisticsCreated")
 
   @@map("accounts")
 }

@@ -966,6 +966,584 @@ async function createInquiryAnalytics() {
 
   console.log(`Created ${inquiryData.analytics.length} inquiry analytics entries.`);
 }
+
+//? ===================================== SURVEY FORMS ===================================== ?//
+
+async function createSurveyForms() {
+  const adminAccounts = await prisma.account.findMany({
+    where: {
+      access: {
+        in: ['Admin', 'Super_Admin']
+      }
+    }
+  });
+
+  if (adminAccounts.length === 0) {
+    console.log('No admin accounts found for creating survey forms.');
+    return;
+  }
+
+  const surveyFormsData = [
+    {
+      title: "Equipment Request Feedback Survey",
+      description: "Help us improve our equipment distribution process by sharing your feedback about the request and approval workflow.",
+      status: "ACTIVE",
+      category: "equipment",
+      fields: [
+        {
+          type: "TEXT",
+          label: "Full Name",
+          placeholder: "Enter your full name",
+          required: true,
+          order: 1
+        },
+        {
+          type: "EMAIL",
+          label: "Email Address",
+          placeholder: "your.email@example.com",
+          required: true,
+          order: 2
+        },
+        {
+          type: "SELECT",
+          label: "Equipment Category",
+          placeholder: "",
+          required: true,
+          options: ["Farming Tools", "Irrigation Equipment", "Harvesting Equipment", "Processing Equipment", "Other"],
+          order: 3
+        },
+        {
+          type: "RADIO",
+          label: "Overall Satisfaction",
+          placeholder: "",
+          required: true,
+          options: ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied"],
+          order: 4
+        },
+        {
+          type: "TEXTAREA",
+          label: "Additional Comments",
+          placeholder: "Please share any additional feedback or suggestions...",
+          required: false,
+          order: 5
+        }
+      ]
+    },
+    {
+      title: "Agricultural Seminar Evaluation",
+      description: "Rate your experience attending our agricultural seminars and help us improve future events.",
+      status: "ACTIVE",
+      category: "seminar",
+      fields: [
+        {
+          type: "TEXT",
+          label: "Participant Name",
+          placeholder: "Enter your name",
+          required: true,
+          order: 1
+        },
+        {
+          type: "SELECT",
+          label: "Seminar Attended",
+          placeholder: "Select the seminar you attended",
+          required: true,
+          options: ["Sustainable Farming Techniques", "Crop Disease Management", "Irrigation Systems", "Post-Harvest Processing", "Market Linkage"],
+          order: 2
+        },
+        {
+          type: "RADIO",
+          label: "Content Quality",
+          placeholder: "",
+          required: true,
+          options: ["Excellent", "Good", "Average", "Poor"],
+          order: 3
+        },
+        {
+          type: "RADIO",
+          label: "Speaker Effectiveness",
+          placeholder: "",
+          required: true,
+          options: ["Excellent", "Good", "Average", "Poor"],
+          order: 4
+        },
+        {
+          type: "CHECKBOX",
+          label: "Topics of Interest for Future Seminars",
+          placeholder: "",
+          required: false,
+          options: ["Organic Farming", "Climate-Smart Agriculture", "Farm Business Management", "Technology in Agriculture", "Water Conservation"],
+          order: 5
+        },
+        {
+          type: "NUMBER",
+          label: "How likely are you to recommend this seminar? (1-10)",
+          placeholder: "Rate from 1 to 10",
+          required: true,
+          order: 6
+        }
+      ]
+    },
+    {
+      title: "Farm Profile Registration",
+      description: "Register your farm details to help us provide better agricultural support and services.",
+      status: "ACTIVE",
+      category: "agriculture",
+      fields: [
+        {
+          type: "TEXT",
+          label: "Farm Name",
+          placeholder: "Enter your farm name",
+          required: true,
+          order: 1
+        },
+        {
+          type: "TEXT",
+          label: "Farmer Name",
+          placeholder: "Enter your full name",
+          required: true,
+          order: 2
+        },
+        {
+          type: "EMAIL",
+          label: "Contact Email",
+          placeholder: "your.email@example.com",
+          required: true,
+          order: 3
+        },
+        {
+          type: "TEXT",
+          label: "Phone Number",
+          placeholder: "Enter your phone number",
+          required: true,
+          order: 4
+        },
+        {
+          type: "TEXTAREA",
+          label: "Farm Location",
+          placeholder: "Provide detailed farm location/address",
+          required: true,
+          order: 5
+        },
+        {
+          type: "NUMBER",
+          label: "Farm Size (hectares)",
+          placeholder: "Enter farm size in hectares",
+          required: true,
+          order: 6
+        },
+        {
+          type: "CHECKBOX",
+          label: "Crops Grown",
+          placeholder: "",
+          required: true,
+          options: ["Rice", "Corn", "Vegetables", "Fruits", "Root Crops", "Legumes", "Other"],
+          order: 7
+        },
+        {
+          type: "SELECT",
+          label: "Farming Experience",
+          placeholder: "Select your farming experience level",
+          required: true,
+          options: ["Less than 1 year", "1-5 years", "6-10 years", "11-20 years", "More than 20 years"],
+          order: 8
+        }
+      ]
+    },
+    {
+      title: "Service Quality Feedback",
+      description: "Help us improve our services by providing feedback on your recent interaction with our team.",
+      status: "ACTIVE",
+      category: "feedback",
+      fields: [
+        {
+          type: "TEXT",
+          label: "Your Name",
+          placeholder: "Enter your name",
+          required: true,
+          order: 1
+        },
+        {
+          type: "DATE",
+          label: "Date of Service",
+          placeholder: "",
+          required: true,
+          order: 2
+        },
+        {
+          type: "SELECT",
+          label: "Service Type",
+          placeholder: "Select the service you received",
+          required: true,
+          options: ["Equipment Distribution", "Technical Consultation", "Training/Seminar", "Information Request", "Other"],
+          order: 3
+        },
+        {
+          type: "RADIO",
+          label: "Service Quality Rating",
+          placeholder: "",
+          required: true,
+          options: ["Excellent", "Good", "Satisfactory", "Needs Improvement", "Poor"],
+          order: 4
+        },
+        {
+          type: "RADIO",
+          label: "Staff Responsiveness",
+          placeholder: "",
+          required: true,
+          options: ["Very Responsive", "Responsive", "Adequate", "Slow", "Very Slow"],
+          order: 5
+        },
+        {
+          type: "TEXTAREA",
+          label: "Suggestions for Improvement",
+          placeholder: "Share your suggestions on how we can improve our services...",
+          required: false,
+          order: 6
+        }
+      ]
+    },
+    {
+      title: "Annual Agricultural Report Survey",
+      description: "Contribute to our annual agricultural report by sharing information about your farming activities and challenges.",
+      status: "DRAFT",
+      category: "general",
+      fields: [
+        {
+          type: "TEXT",
+          label: "Farmer/Organization Name",
+          placeholder: "Enter name",
+          required: true,
+          order: 1
+        },
+        {
+          type: "SELECT",
+          label: "Primary Crop Type",
+          placeholder: "Select your main crop",
+          required: true,
+          options: ["Rice", "Corn", "Coconut", "Sugarcane", "Banana", "Other Vegetables", "Mixed Farming"],
+          order: 2
+        },
+        {
+          type: "NUMBER",
+          label: "Total Production This Year (tons)",
+          placeholder: "Enter production amount",
+          required: true,
+          order: 3
+        },
+        {
+          type: "CHECKBOX",
+          label: "Challenges Faced This Year",
+          placeholder: "",
+          required: false,
+          options: ["Weather/Climate", "Pest and Diseases", "Market Access", "Financing", "Technology Access", "Labor Shortage"],
+          order: 4
+        },
+        {
+          type: "RADIO",
+          label: "Income Level Compared to Last Year",
+          placeholder: "",
+          required: true,
+          options: ["Significantly Increased", "Slightly Increased", "Same", "Slightly Decreased", "Significantly Decreased"],
+          order: 5
+        },
+        {
+          type: "TEXTAREA",
+          label: "Additional Comments or Recommendations",
+          placeholder: "Share any additional information that might be helpful for our report...",
+          required: false,
+          order: 6
+        }
+      ]
+    }
+  ];
+
+  for (let i = 0; i < surveyFormsData.length; i++) {
+    const surveyData = surveyFormsData[i];
+    const randomAdmin = adminAccounts[Math.floor(Math.random() * adminAccounts.length)];
+
+    // Create survey form
+    const createdSurvey = await prisma.surveyForm.create({
+      data: {
+        title: surveyData.title,
+        description: surveyData.description,
+        status: surveyData.status,
+        category: surveyData.category,
+        createdById: randomAdmin.id,
+        createdAt: faker.date.between({
+          from: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000), // 60 days ago
+          to: new Date()
+        })
+      }
+    });
+
+    // Create survey fields
+    for (const fieldData of surveyData.fields) {
+      await prisma.surveyField.create({
+        data: {
+          surveyFormId: createdSurvey.id,
+          type: fieldData.type,
+          label: fieldData.label,
+          placeholder: fieldData.placeholder,
+          required: fieldData.required,
+          options: fieldData.options || null,
+          order: fieldData.order
+        }
+      });
+    }
+
+    await wait(100);
+  }
+
+  console.log(`Created ${surveyFormsData.length} survey forms with their fields.`);
+}
+
+async function createSurveyResponses() {
+  const surveyForms = await prisma.surveyForm.findMany({
+    include: {
+      fields: true
+    }
+  });
+
+  const userAccounts = await prisma.account.findMany({
+    where: {
+      access: 'User'
+    }
+  });
+
+  if (surveyForms.length === 0 || userAccounts.length === 0) {
+    console.log('No survey forms or user accounts found for creating responses.');
+    return;
+  }
+
+  // Sample response data for different field types
+  const sampleTextResponses = [
+    "John Doe", "Maria Santos", "Roberto Cruz", "Ana Garcia", "Carlos Mendoza",
+    "Elena Rodriguez", "Miguel Torres", "Sofia Reyes", "Diego Morales", "Isabella Flores"
+  ];
+
+  const sampleEmailResponses = [
+    "john.doe@email.com", "maria.santos@email.com", "roberto.cruz@email.com",
+    "ana.garcia@email.com", "carlos.mendoza@email.com"
+  ];
+
+  const sampleTextareaResponses = [
+    "This service was very helpful and the staff was knowledgeable.",
+    "I appreciate the quick response time and professional service.",
+    "The equipment provided was in excellent condition and very useful.",
+    "Could improve the waiting time but overall satisfied with the service.",
+    "Excellent training session, learned many practical techniques.",
+    "The seminar content was very relevant to my farming needs.",
+    "Good service but could use more variety in equipment options.",
+    "Staff was friendly and patient in explaining the procedures."
+  ];
+
+  const sampleLocationResponses = [
+    "Barangay San Miguel, Lipa City, Batangas",
+    "Barangay Poblacion, Tanauan City, Batangas",
+    "Barangay Malvar, Malvar, Batangas",
+    "Barangay Santo Tomas, Santo Tomas, Batangas",
+    "Barangay Balete, Balete, Batangas"
+  ];
+
+  for (const survey of surveyForms) {
+    // Generate 10-50 responses per survey
+    const numberOfResponses = faker.number.int({ min: 10, max: 50 });
+
+    for (let i = 0; i < numberOfResponses; i++) {
+      const randomUser = userAccounts[Math.floor(Math.random() * userAccounts.length)];
+      
+      // Create survey response
+      const createdResponse = await prisma.surveyResponse.create({
+        data: {
+          surveyFormId: survey.id,
+          userId: randomUser.id,
+          submittedAt: faker.date.between({
+            from: new Date(survey.createdAt),
+            to: new Date()
+          })
+        }
+      });
+
+      // Create answers for each field
+      for (const field of survey.fields) {
+        let answerValue = '';
+
+        switch (field.type) {
+          case 'TEXT':
+            if (field.label.toLowerCase().includes('name')) {
+              answerValue = faker.helpers.arrayElement(sampleTextResponses);
+            } else if (field.label.toLowerCase().includes('phone')) {
+              answerValue = faker.phone.number();
+            } else if (field.label.toLowerCase().includes('farm')) {
+              answerValue = `${faker.helpers.arrayElement(['Sunrise', 'Green Valley', 'Golden Harvest', 'Peaceful', 'Abundant'])} Farm`;
+            } else {
+              answerValue = faker.lorem.words({ min: 2, max: 4 });
+            }
+            break;
+
+          case 'EMAIL':
+            answerValue = faker.helpers.arrayElement(sampleEmailResponses);
+            break;
+
+          case 'TEXTAREA':
+            if (field.label.toLowerCase().includes('location') || field.label.toLowerCase().includes('address')) {
+              answerValue = faker.helpers.arrayElement(sampleLocationResponses);
+            } else {
+              answerValue = faker.helpers.arrayElement(sampleTextareaResponses);
+            }
+            break;
+
+          case 'NUMBER':
+            if (field.label.toLowerCase().includes('size')) {
+              answerValue = faker.number.float({ min: 0.5, max: 10, fractionDigits: 1 }).toString();
+            } else if (field.label.toLowerCase().includes('production')) {
+              answerValue = faker.number.int({ min: 1, max: 100 }).toString();
+            } else if (field.label.toLowerCase().includes('recommend')) {
+              answerValue = faker.number.int({ min: 1, max: 10 }).toString();
+            } else {
+              answerValue = faker.number.int({ min: 1, max: 50 }).toString();
+            }
+            break;
+
+          case 'DATE':
+            answerValue = faker.date.between({
+              from: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000), // 1 year ago
+              to: new Date()
+            }).toISOString().split('T')[0];
+            break;
+
+          case 'SELECT':
+          case 'RADIO':
+            if (field.options && field.options.length > 0) {
+              answerValue = faker.helpers.arrayElement(field.options);
+            }
+            break;
+
+          case 'CHECKBOX':
+            if (field.options && field.options.length > 0) {
+              // Select 1-3 random options
+              const numSelections = faker.number.int({ min: 1, max: Math.min(3, field.options.length) });
+              const selectedOptions = faker.helpers.arrayElements(field.options, numSelections);
+              answerValue = selectedOptions.join(', ');
+            }
+            break;
+
+          case 'FILE':
+            answerValue = 'sample_document.pdf';
+            break;
+
+          default:
+            answerValue = faker.lorem.sentence();
+        }
+
+        await prisma.surveyAnswer.create({
+          data: {
+            responseId: createdResponse.id,
+            fieldId: field.id,
+            answer: answerValue
+          }
+        });
+      }
+    }
+  }
+
+  console.log('Created survey responses with answers for all survey forms.');
+}
+
+async function createSurveyStatistics() {
+  const adminAccounts = await prisma.account.findMany({
+    where: {
+      access: {
+        in: ['Admin', 'Super_Admin']
+      }
+    }
+  });
+
+  const surveyForms = await prisma.surveyForm.findMany();
+
+  if (adminAccounts.length === 0 || surveyForms.length === 0) {
+    console.log('No admin accounts or survey forms found for creating statistics.');
+    return;
+  }
+
+  const statisticsData = [
+    {
+      title: "Equipment Request Satisfaction Analysis",
+      description: "Analysis of satisfaction levels across equipment request categories",
+      chartType: "PIE",
+      chartConfig: {
+        labels: ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied", "Very Dissatisfied"],
+        datasets: [{
+          data: [45, 35, 12, 6, 2],
+          backgroundColor: ["#10B981", "#34D399", "#FCD34D", "#F97316", "#EF4444"]
+        }]
+      },
+      filters: {
+        dateRange: "last_30_days",
+        category: "equipment"
+      }
+    },
+    {
+      title: "Seminar Attendance by Topic",
+      description: "Distribution of seminar attendance across different agricultural topics",
+      chartType: "BAR",
+      chartConfig: {
+        labels: ["Sustainable Farming", "Disease Management", "Irrigation", "Post-Harvest", "Market Linkage"],
+        datasets: [{
+          label: "Participants",
+          data: [85, 72, 68, 58, 45],
+          backgroundColor: "#10B981"
+        }]
+      },
+      filters: {
+        dateRange: "last_3_months",
+        category: "seminar"
+      }
+    },
+    {
+      title: "Service Quality Trends",
+      description: "Monthly trends in service quality ratings over time",
+      chartType: "LINE",
+      chartConfig: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        datasets: [{
+          label: "Average Rating",
+          data: [4.2, 4.3, 4.1, 4.5, 4.4, 4.6],
+          borderColor: "#10B981",
+          backgroundColor: "rgba(16, 185, 129, 0.1)"
+        }]
+      },
+      filters: {
+        dateRange: "last_6_months",
+        category: "feedback"
+      }
+    }
+  ];
+
+  for (let i = 0; i < statisticsData.length; i++) {
+    const stat = statisticsData[i];
+    const randomAdmin = adminAccounts[Math.floor(Math.random() * adminAccounts.length)];
+    const randomSurvey = surveyForms[Math.floor(Math.random() * surveyForms.length)];
+
+    await prisma.surveyStatistic.create({
+      data: {
+        surveyFormId: randomSurvey.id,
+        title: stat.title,
+        description: stat.description,
+        chartType: stat.chartType,
+        config: stat.chartConfig,
+        createdById: randomAdmin.id,
+        createdAt: faker.date.between({
+          from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+          to: new Date()
+        })
+      }
+    });
+  }
+
+  console.log(`Created ${statisticsData.length} survey statistics.`);
+}
+
 //? ====================================== EXECUTE SEEDS ====================================== ?//
 
 async function main() {
@@ -1006,6 +1584,15 @@ async function main() {
     await createInquiryAnalytics();
     console.log('Inquiry Analytics created successfully.');
     */
+
+    await createSurveyForms();
+    console.log('Survey Forms created successfully.');
+    
+    await createSurveyResponses();
+    console.log('Survey Responses created successfully.');
+    
+    await createSurveyStatistics();
+    console.log('Survey Statistics created successfully.');
   } 
 
   catch (error) {
