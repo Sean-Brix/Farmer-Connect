@@ -2,7 +2,7 @@ import auditLogger from '../../Services/auditLogger.js';
 import socketLogoutService from '../../Services/socketLogoutService.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { PrismaClient } from '../../prisma/generated/client.js';
+import { PrismaClient } from '@prisma/client';
 
 dotenv.config();
 const prisma = new PrismaClient();

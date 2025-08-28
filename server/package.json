@@ -10,6 +10,9 @@
         "dotenv": "^16.5.0",
         "express": "^5.1.0",
         "http": "^0.0.1-security",
+        "i18next": "^25.4.2",
+        "i18next-fs-backend": "^2.6.0",
+        "i18next-http-middleware": "^3.8.0",
         "jsonwebtoken": "^9.0.2",
         "multer": "^2.0.1",
         "socket.io": "^4.8.1"

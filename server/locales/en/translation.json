@@ -1,0 +1,41 @@
+{
+  "api": {
+    "error": {
+      "unauthorized": "Unauthorized access",
+      "forbidden": "Access forbidden",
+      "not_found": "Resource not found",
+      "validation_error": "Validation error",
+      "server_error": "Internal server error"
+    },
+    "success": {
+      "created": "Resource created successfully",
+      "updated": "Resource updated successfully",
+      "deleted": "Resource deleted successfully",
+      "retrieved": "Resource retrieved successfully"
+    }
+  },
+  "auth": {
+    "login_successful": "Login successful",
+    "logout_successful": "Logout successful",
+    "invalid_credentials": "Invalid username or password",
+    "account_locked": "Account has been locked",
+    "password_changed": "Password changed successfully"
+  },
+  "user": {
+    "profile_updated": "Profile updated successfully",
+    "preferences_saved": "Preferences saved successfully",
+    "notification_settings_updated": "Notification settings updated"
+  },
+  "seminar": {
+    "enrolled_successfully": "Enrolled in seminar successfully",
+    "enrollment_failed": "Enrollment failed",
+    "seminar_not_found": "Seminar not found",
+    "seminar_full": "Seminar is full"
+  },
+  "distribution": {
+    "request_submitted": "Distribution request submitted",
+    "request_approved": "Distribution request approved",
+    "request_denied": "Distribution request denied",
+    "insufficient_stock": "Insufficient stock available"
+  }
+}

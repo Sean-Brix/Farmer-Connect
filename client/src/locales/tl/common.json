@@ -1,0 +1,74 @@
+{
+  "navigation": {
+    "home": "Tahanan",
+    "about": "Tungkol",
+    "contact": "Makipag-ugnayan",
+    "seminar": "Seminar",
+    "eic": "EIC",
+    "distribution": "Pamamahagi",
+    "chat_support": "Suportang Chat",
+    "report": "Ulat",
+    "citizens_charter": "Charter ng mga Mamamayan",
+    "profile_settings": "Mga Setting ng Profile",
+    "settings": "Mga Setting",
+    "admin_panel": "Admin Panel",
+    "logout": "Mag-logout",
+    "login": "Mag-login"
+  },
+  "settings": {
+    "title": "Mga Setting",
+    "preferences": "Mga Kagustuhan",
+    "notifications": "Mga Abiso",
+    "account_settings": "Mga Setting ng Account",
+    "language": "Wika",
+    "select_language": "Pumili ng Wika",
+    "english": "Ingles",
+    "tagalog": "Tagalog",
+    "save_changes": "I-save ang mga Pagbabago",
+    "cancel": "Kanselahin",
+    "language_changed": "Matagumpay na nabago ang wika!",
+    "settings_saved": "Matagumpay na na-save ang mga setting!",
+    "preferences_updated": "Matagumpay na na-update ang mga preference!"
+  },
+  "preferences": {
+    "language_preference": "Kagustuhan sa Wika",
+    "theme": "Tema",
+    "light": "Maliwanag",
+    "dark": "Madilim",
+    "auto": "Kusang"
+  },
+  "notifications": {
+    "email_notifications": "Mga Abiso sa Email",
+    "push_notifications": "Mga Push Notification",
+    "sms_notifications": "Mga Abiso sa SMS",
+    "seminar_updates": "Mga Update sa Seminar",
+    "distribution_alerts": "Mga Alerto sa Pamamahagi",
+    "system_notifications": "Mga Abiso ng Sistema"
+  },
+  "account": {
+    "profile_information": "Impormasyon ng Profile",
+    "change_password": "Baguhin ang Password",
+    "delete_account": "Tanggalin ang Account",
+    "privacy_settings": "Mga Setting ng Privacy"
+  },
+  "common": {
+    "save": "I-save",
+    "cancel": "Kanselahin",
+    "edit": "I-edit",
+    "delete": "Tanggalin",
+    "confirm": "Kumpirmahin",
+    "loading": "Naglo-load...",
+    "success": "Tagumpay",
+    "error": "Mali",
+    "warning": "Babala",
+    "info": "Impormasyon"
+  },
+  "messages": {
+    "welcome": "Maligayang pagdating sa Farmer Connect",
+    "goodbye": "Salamat sa paggamit ng Farmer Connect",
+    "confirm_logout": "Sigurado ka bang gusto mong mag-logout?",
+    "confirm_delete": "Sigurado ka bang gusto mong tanggalin ito?",
+    "no_data": "Walang available na data",
+    "loading_error": "May mali sa pag-load ng data"
+  }
+}

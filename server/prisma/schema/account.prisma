@@ -111,6 +111,9 @@ model Account {
   surveyResponses     SurveyResponse[]    @relation("SurveyResponses")
   surveyStatisticsCreated SurveyStatistic[] @relation("SurveyStatisticsCreated")
 
+  // User Preferences Relations
+  preferences         UserPreference[]
+
   @@map("accounts")
 }
 

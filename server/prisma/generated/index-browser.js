@@ -333,6 +333,15 @@ exports.Prisma.ItemTransactionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.UserPreferenceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  key: 'key',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SeminarScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -581,6 +590,12 @@ exports.Prisma.ItemTransactionOrderByRelevanceFieldEnum = {
   accountId: 'accountId',
   adminId: 'adminId',
   requestNote: 'requestNote'
+};
+
+exports.Prisma.UserPreferenceOrderByRelevanceFieldEnum = {
+  userId: 'userId',
+  key: 'key',
+  value: 'value'
 };
 
 exports.Prisma.SeminarOrderByRelevanceFieldEnum = {
@@ -875,6 +890,7 @@ exports.Prisma.ModelName = {
   InventoryItem: 'InventoryItem',
   ItemStack: 'ItemStack',
   ItemTransaction: 'ItemTransaction',
+  UserPreference: 'UserPreference',
   Seminar: 'Seminar',
   SeminarParticipant: 'SeminarParticipant',
   SurveyForm: 'SurveyForm',

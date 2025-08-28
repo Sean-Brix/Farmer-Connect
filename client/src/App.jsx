@@ -24,6 +24,7 @@ import About from './Client/Services/Info/About.jsx';
 import CitizensCharter from './Client/Components/CitizensCharter.jsx';
 import Distribution from './Client/Services/Distributions/Distribution.jsx';
 import Survey from './Components/Survey/Survey.jsx';
+import Settings from './Components/Settings/Settings.jsx';
 import My_Profile from './Admin/Components/Profile/My_Profile.jsx';
 import ForgotPassword from './Authentication/Components/ForgotPassword';
 import Farmer_Report from './Client/Services/Report/Farmer_Report.jsx';
@@ -44,6 +45,7 @@ function App() {
                     <Route path="/seminar" element={<Seminar />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/settings/profile" element={<User />} />
+                    <Route path="/settings" element={<Settings />} />
                      
                     <Route path="/about" element={<About />} />
                     <Route path="/citizens-charter" element={<CitizensCharter />} />

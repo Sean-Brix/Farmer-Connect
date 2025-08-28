@@ -84,6 +84,11 @@ export type ItemStack = $Result.DefaultSelection<Prisma.$ItemStackPayload>
  */
 export type ItemTransaction = $Result.DefaultSelection<Prisma.$ItemTransactionPayload>
 /**
+ * Model UserPreference
+ * 
+ */
+export type UserPreference = $Result.DefaultSelection<Prisma.$UserPreferencePayload>
+/**
  * Model Seminar
  * 
  */
@@ -755,6 +760,16 @@ export class PrismaClient<
   get itemTransaction(): Prisma.ItemTransactionDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.userPreference`: Exposes CRUD operations for the **UserPreference** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserPreferences
+    * const userPreferences = await prisma.userPreference.findMany()
+    * ```
+    */
+  get userPreference(): Prisma.UserPreferenceDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.seminar`: Exposes CRUD operations for the **Seminar** model.
     * Example usage:
     * ```ts
@@ -1277,6 +1292,7 @@ export namespace Prisma {
     InventoryItem: 'InventoryItem',
     ItemStack: 'ItemStack',
     ItemTransaction: 'ItemTransaction',
+    UserPreference: 'UserPreference',
     Seminar: 'Seminar',
     SeminarParticipant: 'SeminarParticipant',
     SurveyForm: 'SurveyForm',
@@ -1302,7 +1318,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "auditLog" | "chatRoom" | "chatParticipant" | "chatMessage" | "chatAttachment" | "chatReadReceipt" | "inquiry" | "inquiryReply" | "inquiryAttachment" | "fAQ" | "inventoryItem" | "itemStack" | "itemTransaction" | "seminar" | "seminarParticipant" | "surveyForm" | "surveyField" | "surveyResponse" | "surveyAnswer" | "surveyStatistic"
+      modelProps: "account" | "auditLog" | "chatRoom" | "chatParticipant" | "chatMessage" | "chatAttachment" | "chatReadReceipt" | "inquiry" | "inquiryReply" | "inquiryAttachment" | "fAQ" | "inventoryItem" | "itemStack" | "itemTransaction" | "userPreference" | "seminar" | "seminarParticipant" | "surveyForm" | "surveyField" | "surveyResponse" | "surveyAnswer" | "surveyStatistic"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2230,6 +2246,72 @@ export namespace Prisma {
           }
         }
       }
+      UserPreference: {
+        payload: Prisma.$UserPreferencePayload<ExtArgs>
+        fields: Prisma.UserPreferenceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserPreferenceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserPreferenceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          findFirst: {
+            args: Prisma.UserPreferenceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserPreferenceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          findMany: {
+            args: Prisma.UserPreferenceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>[]
+          }
+          create: {
+            args: Prisma.UserPreferenceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          createMany: {
+            args: Prisma.UserPreferenceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.UserPreferenceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          update: {
+            args: Prisma.UserPreferenceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          deleteMany: {
+            args: Prisma.UserPreferenceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserPreferenceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.UserPreferenceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPreferencePayload>
+          }
+          aggregate: {
+            args: Prisma.UserPreferenceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserPreference>
+          }
+          groupBy: {
+            args: Prisma.UserPreferenceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserPreferenceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserPreferenceCountArgs<ExtArgs>
+            result: $Utils.Optional<UserPreferenceCountAggregateOutputType> | number
+          }
+        }
+      }
       Seminar: {
         payload: Prisma.$SeminarPayload<ExtArgs>
         fields: Prisma.SeminarFieldRefs
@@ -2798,6 +2880,7 @@ export namespace Prisma {
     inventoryItem?: InventoryItemOmit
     itemStack?: ItemStackOmit
     itemTransaction?: ItemTransactionOmit
+    userPreference?: UserPreferenceOmit
     seminar?: SeminarOmit
     seminarParticipant?: SeminarParticipantOmit
     surveyForm?: SurveyFormOmit
@@ -2903,6 +2986,7 @@ export namespace Prisma {
     surveyFormsCreated: number
     surveyResponses: number
     surveyStatisticsCreated: number
+    preferences: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2924,6 +3008,7 @@ export namespace Prisma {
     surveyFormsCreated?: boolean | AccountCountOutputTypeCountSurveyFormsCreatedArgs
     surveyResponses?: boolean | AccountCountOutputTypeCountSurveyResponsesArgs
     surveyStatisticsCreated?: boolean | AccountCountOutputTypeCountSurveyStatisticsCreatedArgs
+    preferences?: boolean | AccountCountOutputTypeCountPreferencesArgs
   }
 
   // Custom InputTypes
@@ -3061,6 +3146,13 @@ export namespace Prisma {
    */
   export type AccountCountOutputTypeCountSurveyStatisticsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SurveyStatisticWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountPreferencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserPreferenceWhereInput
   }
 
 
@@ -3994,6 +4086,7 @@ export namespace Prisma {
     surveyFormsCreated?: boolean | Account$surveyFormsCreatedArgs<ExtArgs>
     surveyResponses?: boolean | Account$surveyResponsesArgs<ExtArgs>
     surveyStatisticsCreated?: boolean | Account$surveyStatisticsCreatedArgs<ExtArgs>
+    preferences?: boolean | Account$preferencesArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -4077,6 +4170,7 @@ export namespace Prisma {
     surveyFormsCreated?: boolean | Account$surveyFormsCreatedArgs<ExtArgs>
     surveyResponses?: boolean | Account$surveyResponsesArgs<ExtArgs>
     surveyStatisticsCreated?: boolean | Account$surveyStatisticsCreatedArgs<ExtArgs>
+    preferences?: boolean | Account$preferencesArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -4101,6 +4195,7 @@ export namespace Prisma {
       surveyFormsCreated: Prisma.$SurveyFormPayload<ExtArgs>[]
       surveyResponses: Prisma.$SurveyResponsePayload<ExtArgs>[]
       surveyStatisticsCreated: Prisma.$SurveyStatisticPayload<ExtArgs>[]
+      preferences: Prisma.$UserPreferencePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4516,6 +4611,7 @@ export namespace Prisma {
     surveyFormsCreated<T extends Account$surveyFormsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, Account$surveyFormsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     surveyResponses<T extends Account$surveyResponsesArgs<ExtArgs> = {}>(args?: Subset<T, Account$surveyResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     surveyStatisticsCreated<T extends Account$surveyStatisticsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, Account$surveyStatisticsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    preferences<T extends Account$preferencesArgs<ExtArgs> = {}>(args?: Subset<T, Account$preferencesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5372,6 +5468,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SurveyStatisticScalarFieldEnum | SurveyStatisticScalarFieldEnum[]
+  }
+
+  /**
+   * Account.preferences
+   */
+  export type Account$preferencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    where?: UserPreferenceWhereInput
+    orderBy?: UserPreferenceOrderByWithRelationInput | UserPreferenceOrderByWithRelationInput[]
+    cursor?: UserPreferenceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserPreferenceScalarFieldEnum | UserPreferenceScalarFieldEnum[]
   }
 
   /**
@@ -18747,6 +18867,980 @@ export namespace Prisma {
 
 
   /**
+   * Model UserPreference
+   */
+
+  export type AggregateUserPreference = {
+    _count: UserPreferenceCountAggregateOutputType | null
+    _avg: UserPreferenceAvgAggregateOutputType | null
+    _sum: UserPreferenceSumAggregateOutputType | null
+    _min: UserPreferenceMinAggregateOutputType | null
+    _max: UserPreferenceMaxAggregateOutputType | null
+  }
+
+  export type UserPreferenceAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type UserPreferenceSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type UserPreferenceMinAggregateOutputType = {
+    id: number | null
+    userId: string | null
+    key: string | null
+    value: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserPreferenceMaxAggregateOutputType = {
+    id: number | null
+    userId: string | null
+    key: string | null
+    value: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserPreferenceCountAggregateOutputType = {
+    id: number
+    userId: number
+    key: number
+    value: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserPreferenceAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type UserPreferenceSumAggregateInputType = {
+    id?: true
+  }
+
+  export type UserPreferenceMinAggregateInputType = {
+    id?: true
+    userId?: true
+    key?: true
+    value?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserPreferenceMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    key?: true
+    value?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserPreferenceCountAggregateInputType = {
+    id?: true
+    userId?: true
+    key?: true
+    value?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserPreferenceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPreference to aggregate.
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPreferences to fetch.
+     */
+    orderBy?: UserPreferenceOrderByWithRelationInput | UserPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPreferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserPreferences
+    **/
+    _count?: true | UserPreferenceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserPreferenceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserPreferenceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserPreferenceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserPreferenceMaxAggregateInputType
+  }
+
+  export type GetUserPreferenceAggregateType<T extends UserPreferenceAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserPreference]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserPreference[P]>
+      : GetScalarType<T[P], AggregateUserPreference[P]>
+  }
+
+
+
+
+  export type UserPreferenceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserPreferenceWhereInput
+    orderBy?: UserPreferenceOrderByWithAggregationInput | UserPreferenceOrderByWithAggregationInput[]
+    by: UserPreferenceScalarFieldEnum[] | UserPreferenceScalarFieldEnum
+    having?: UserPreferenceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserPreferenceCountAggregateInputType | true
+    _avg?: UserPreferenceAvgAggregateInputType
+    _sum?: UserPreferenceSumAggregateInputType
+    _min?: UserPreferenceMinAggregateInputType
+    _max?: UserPreferenceMaxAggregateInputType
+  }
+
+  export type UserPreferenceGroupByOutputType = {
+    id: number
+    userId: string
+    key: string
+    value: string
+    createdAt: Date
+    updatedAt: Date
+    _count: UserPreferenceCountAggregateOutputType | null
+    _avg: UserPreferenceAvgAggregateOutputType | null
+    _sum: UserPreferenceSumAggregateOutputType | null
+    _min: UserPreferenceMinAggregateOutputType | null
+    _max: UserPreferenceMaxAggregateOutputType | null
+  }
+
+  type GetUserPreferenceGroupByPayload<T extends UserPreferenceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserPreferenceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserPreferenceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserPreferenceGroupByOutputType[P]>
+            : GetScalarType<T[P], UserPreferenceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserPreferenceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    key?: boolean
+    value?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | AccountDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userPreference"]>
+
+
+
+  export type UserPreferenceSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    key?: boolean
+    value?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserPreferenceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "key" | "value" | "createdAt" | "updatedAt", ExtArgs["result"]["userPreference"]>
+  export type UserPreferenceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | AccountDefaultArgs<ExtArgs>
+  }
+
+  export type $UserPreferencePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserPreference"
+    objects: {
+      user: Prisma.$AccountPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: string
+      key: string
+      value: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userPreference"]>
+    composites: {}
+  }
+
+  type UserPreferenceGetPayload<S extends boolean | null | undefined | UserPreferenceDefaultArgs> = $Result.GetResult<Prisma.$UserPreferencePayload, S>
+
+  type UserPreferenceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserPreferenceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserPreferenceCountAggregateInputType | true
+    }
+
+  export interface UserPreferenceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserPreference'], meta: { name: 'UserPreference' } }
+    /**
+     * Find zero or one UserPreference that matches the filter.
+     * @param {UserPreferenceFindUniqueArgs} args - Arguments to find a UserPreference
+     * @example
+     * // Get one UserPreference
+     * const userPreference = await prisma.userPreference.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserPreferenceFindUniqueArgs>(args: SelectSubset<T, UserPreferenceFindUniqueArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserPreference that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserPreferenceFindUniqueOrThrowArgs} args - Arguments to find a UserPreference
+     * @example
+     * // Get one UserPreference
+     * const userPreference = await prisma.userPreference.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserPreferenceFindUniqueOrThrowArgs>(args: SelectSubset<T, UserPreferenceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPreference that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceFindFirstArgs} args - Arguments to find a UserPreference
+     * @example
+     * // Get one UserPreference
+     * const userPreference = await prisma.userPreference.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserPreferenceFindFirstArgs>(args?: SelectSubset<T, UserPreferenceFindFirstArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPreference that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceFindFirstOrThrowArgs} args - Arguments to find a UserPreference
+     * @example
+     * // Get one UserPreference
+     * const userPreference = await prisma.userPreference.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserPreferenceFindFirstOrThrowArgs>(args?: SelectSubset<T, UserPreferenceFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserPreferences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserPreferences
+     * const userPreferences = await prisma.userPreference.findMany()
+     * 
+     * // Get first 10 UserPreferences
+     * const userPreferences = await prisma.userPreference.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userPreferenceWithIdOnly = await prisma.userPreference.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserPreferenceFindManyArgs>(args?: SelectSubset<T, UserPreferenceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserPreference.
+     * @param {UserPreferenceCreateArgs} args - Arguments to create a UserPreference.
+     * @example
+     * // Create one UserPreference
+     * const UserPreference = await prisma.userPreference.create({
+     *   data: {
+     *     // ... data to create a UserPreference
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserPreferenceCreateArgs>(args: SelectSubset<T, UserPreferenceCreateArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserPreferences.
+     * @param {UserPreferenceCreateManyArgs} args - Arguments to create many UserPreferences.
+     * @example
+     * // Create many UserPreferences
+     * const userPreference = await prisma.userPreference.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserPreferenceCreateManyArgs>(args?: SelectSubset<T, UserPreferenceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a UserPreference.
+     * @param {UserPreferenceDeleteArgs} args - Arguments to delete one UserPreference.
+     * @example
+     * // Delete one UserPreference
+     * const UserPreference = await prisma.userPreference.delete({
+     *   where: {
+     *     // ... filter to delete one UserPreference
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserPreferenceDeleteArgs>(args: SelectSubset<T, UserPreferenceDeleteArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserPreference.
+     * @param {UserPreferenceUpdateArgs} args - Arguments to update one UserPreference.
+     * @example
+     * // Update one UserPreference
+     * const userPreference = await prisma.userPreference.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserPreferenceUpdateArgs>(args: SelectSubset<T, UserPreferenceUpdateArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserPreferences.
+     * @param {UserPreferenceDeleteManyArgs} args - Arguments to filter UserPreferences to delete.
+     * @example
+     * // Delete a few UserPreferences
+     * const { count } = await prisma.userPreference.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserPreferenceDeleteManyArgs>(args?: SelectSubset<T, UserPreferenceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserPreferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserPreferences
+     * const userPreference = await prisma.userPreference.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserPreferenceUpdateManyArgs>(args: SelectSubset<T, UserPreferenceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one UserPreference.
+     * @param {UserPreferenceUpsertArgs} args - Arguments to update or create a UserPreference.
+     * @example
+     * // Update or create a UserPreference
+     * const userPreference = await prisma.userPreference.upsert({
+     *   create: {
+     *     // ... data to create a UserPreference
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserPreference we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserPreferenceUpsertArgs>(args: SelectSubset<T, UserPreferenceUpsertArgs<ExtArgs>>): Prisma__UserPreferenceClient<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserPreferences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceCountArgs} args - Arguments to filter UserPreferences to count.
+     * @example
+     * // Count the number of UserPreferences
+     * const count = await prisma.userPreference.count({
+     *   where: {
+     *     // ... the filter for the UserPreferences we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserPreferenceCountArgs>(
+      args?: Subset<T, UserPreferenceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserPreferenceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserPreference.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserPreferenceAggregateArgs>(args: Subset<T, UserPreferenceAggregateArgs>): Prisma.PrismaPromise<GetUserPreferenceAggregateType<T>>
+
+    /**
+     * Group by UserPreference.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPreferenceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserPreferenceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserPreferenceGroupByArgs['orderBy'] }
+        : { orderBy?: UserPreferenceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserPreferenceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserPreferenceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserPreference model
+   */
+  readonly fields: UserPreferenceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserPreference.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserPreferenceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserPreference model
+   */
+  interface UserPreferenceFieldRefs {
+    readonly id: FieldRef<"UserPreference", 'Int'>
+    readonly userId: FieldRef<"UserPreference", 'String'>
+    readonly key: FieldRef<"UserPreference", 'String'>
+    readonly value: FieldRef<"UserPreference", 'String'>
+    readonly createdAt: FieldRef<"UserPreference", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserPreference", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserPreference findUnique
+   */
+  export type UserPreferenceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPreference to fetch.
+     */
+    where: UserPreferenceWhereUniqueInput
+  }
+
+  /**
+   * UserPreference findUniqueOrThrow
+   */
+  export type UserPreferenceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPreference to fetch.
+     */
+    where: UserPreferenceWhereUniqueInput
+  }
+
+  /**
+   * UserPreference findFirst
+   */
+  export type UserPreferenceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPreference to fetch.
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPreferences to fetch.
+     */
+    orderBy?: UserPreferenceOrderByWithRelationInput | UserPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPreferences.
+     */
+    cursor?: UserPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPreferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPreferences.
+     */
+    distinct?: UserPreferenceScalarFieldEnum | UserPreferenceScalarFieldEnum[]
+  }
+
+  /**
+   * UserPreference findFirstOrThrow
+   */
+  export type UserPreferenceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPreference to fetch.
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPreferences to fetch.
+     */
+    orderBy?: UserPreferenceOrderByWithRelationInput | UserPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPreferences.
+     */
+    cursor?: UserPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPreferences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPreferences.
+     */
+    distinct?: UserPreferenceScalarFieldEnum | UserPreferenceScalarFieldEnum[]
+  }
+
+  /**
+   * UserPreference findMany
+   */
+  export type UserPreferenceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPreferences to fetch.
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPreferences to fetch.
+     */
+    orderBy?: UserPreferenceOrderByWithRelationInput | UserPreferenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserPreferences.
+     */
+    cursor?: UserPreferenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPreferences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPreferences.
+     */
+    skip?: number
+    distinct?: UserPreferenceScalarFieldEnum | UserPreferenceScalarFieldEnum[]
+  }
+
+  /**
+   * UserPreference create
+   */
+  export type UserPreferenceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserPreference.
+     */
+    data: XOR<UserPreferenceCreateInput, UserPreferenceUncheckedCreateInput>
+  }
+
+  /**
+   * UserPreference createMany
+   */
+  export type UserPreferenceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserPreferences.
+     */
+    data: UserPreferenceCreateManyInput | UserPreferenceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserPreference update
+   */
+  export type UserPreferenceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserPreference.
+     */
+    data: XOR<UserPreferenceUpdateInput, UserPreferenceUncheckedUpdateInput>
+    /**
+     * Choose, which UserPreference to update.
+     */
+    where: UserPreferenceWhereUniqueInput
+  }
+
+  /**
+   * UserPreference updateMany
+   */
+  export type UserPreferenceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserPreferences.
+     */
+    data: XOR<UserPreferenceUpdateManyMutationInput, UserPreferenceUncheckedUpdateManyInput>
+    /**
+     * Filter which UserPreferences to update
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * Limit how many UserPreferences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPreference upsert
+   */
+  export type UserPreferenceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserPreference to update in case it exists.
+     */
+    where: UserPreferenceWhereUniqueInput
+    /**
+     * In case the UserPreference found by the `where` argument doesn't exist, create a new UserPreference with this data.
+     */
+    create: XOR<UserPreferenceCreateInput, UserPreferenceUncheckedCreateInput>
+    /**
+     * In case the UserPreference was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserPreferenceUpdateInput, UserPreferenceUncheckedUpdateInput>
+  }
+
+  /**
+   * UserPreference delete
+   */
+  export type UserPreferenceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+    /**
+     * Filter which UserPreference to delete.
+     */
+    where: UserPreferenceWhereUniqueInput
+  }
+
+  /**
+   * UserPreference deleteMany
+   */
+  export type UserPreferenceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPreferences to delete
+     */
+    where?: UserPreferenceWhereInput
+    /**
+     * Limit how many UserPreferences to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPreference without action
+   */
+  export type UserPreferenceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPreference
+     */
+    select?: UserPreferenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPreference
+     */
+    omit?: UserPreferenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPreferenceInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Seminar
    */
 
@@ -26056,6 +27150,18 @@ export namespace Prisma {
   export type ItemTransactionScalarFieldEnum = (typeof ItemTransactionScalarFieldEnum)[keyof typeof ItemTransactionScalarFieldEnum]
 
 
+  export const UserPreferenceScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    key: 'key',
+    value: 'value',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserPreferenceScalarFieldEnum = (typeof UserPreferenceScalarFieldEnum)[keyof typeof UserPreferenceScalarFieldEnum]
+
+
   export const SeminarScalarFieldEnum: {
     id: 'id',
     title: 'title',
@@ -26385,6 +27491,15 @@ export namespace Prisma {
   };
 
   export type ItemTransactionOrderByRelevanceFieldEnum = (typeof ItemTransactionOrderByRelevanceFieldEnum)[keyof typeof ItemTransactionOrderByRelevanceFieldEnum]
+
+
+  export const UserPreferenceOrderByRelevanceFieldEnum: {
+    userId: 'userId',
+    key: 'key',
+    value: 'value'
+  };
+
+  export type UserPreferenceOrderByRelevanceFieldEnum = (typeof UserPreferenceOrderByRelevanceFieldEnum)[keyof typeof UserPreferenceOrderByRelevanceFieldEnum]
 
 
   export const SeminarOrderByRelevanceFieldEnum: {
@@ -26749,6 +27864,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormListRelationFilter
     surveyResponses?: SurveyResponseListRelationFilter
     surveyStatisticsCreated?: SurveyStatisticListRelationFilter
+    preferences?: UserPreferenceListRelationFilter
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -26825,6 +27941,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormOrderByRelationAggregateInput
     surveyResponses?: SurveyResponseOrderByRelationAggregateInput
     surveyStatisticsCreated?: SurveyStatisticOrderByRelationAggregateInput
+    preferences?: UserPreferenceOrderByRelationAggregateInput
     _relevance?: AccountOrderByRelevanceInput
   }
 
@@ -26905,6 +28022,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormListRelationFilter
     surveyResponses?: SurveyResponseListRelationFilter
     surveyStatisticsCreated?: SurveyStatisticListRelationFilter
+    preferences?: UserPreferenceListRelationFilter
   }, "id" | "username" | "email">
 
   export type AccountOrderByWithAggregationInput = {
@@ -28086,6 +29204,70 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"ItemTransaction"> | Date | string
   }
 
+  export type UserPreferenceWhereInput = {
+    AND?: UserPreferenceWhereInput | UserPreferenceWhereInput[]
+    OR?: UserPreferenceWhereInput[]
+    NOT?: UserPreferenceWhereInput | UserPreferenceWhereInput[]
+    id?: IntFilter<"UserPreference"> | number
+    userId?: StringFilter<"UserPreference"> | string
+    key?: StringFilter<"UserPreference"> | string
+    value?: StringFilter<"UserPreference"> | string
+    createdAt?: DateTimeFilter<"UserPreference"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPreference"> | Date | string
+    user?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+  }
+
+  export type UserPreferenceOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    key?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: AccountOrderByWithRelationInput
+    _relevance?: UserPreferenceOrderByRelevanceInput
+  }
+
+  export type UserPreferenceWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    userId_key?: UserPreferenceUserIdKeyCompoundUniqueInput
+    AND?: UserPreferenceWhereInput | UserPreferenceWhereInput[]
+    OR?: UserPreferenceWhereInput[]
+    NOT?: UserPreferenceWhereInput | UserPreferenceWhereInput[]
+    userId?: StringFilter<"UserPreference"> | string
+    key?: StringFilter<"UserPreference"> | string
+    value?: StringFilter<"UserPreference"> | string
+    createdAt?: DateTimeFilter<"UserPreference"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPreference"> | Date | string
+    user?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+  }, "id" | "userId_key">
+
+  export type UserPreferenceOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    key?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserPreferenceCountOrderByAggregateInput
+    _avg?: UserPreferenceAvgOrderByAggregateInput
+    _max?: UserPreferenceMaxOrderByAggregateInput
+    _min?: UserPreferenceMinOrderByAggregateInput
+    _sum?: UserPreferenceSumOrderByAggregateInput
+  }
+
+  export type UserPreferenceScalarWhereWithAggregatesInput = {
+    AND?: UserPreferenceScalarWhereWithAggregatesInput | UserPreferenceScalarWhereWithAggregatesInput[]
+    OR?: UserPreferenceScalarWhereWithAggregatesInput[]
+    NOT?: UserPreferenceScalarWhereWithAggregatesInput | UserPreferenceScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"UserPreference"> | number
+    userId?: StringWithAggregatesFilter<"UserPreference"> | string
+    key?: StringWithAggregatesFilter<"UserPreference"> | string
+    value?: StringWithAggregatesFilter<"UserPreference"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"UserPreference"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserPreference"> | Date | string
+  }
+
   export type SeminarWhereInput = {
     AND?: SeminarWhereInput | SeminarWhereInput[]
     OR?: SeminarWhereInput[]
@@ -28713,6 +29895,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateInput = {
@@ -28789,6 +29972,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountUpdateInput = {
@@ -28865,6 +30049,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateInput = {
@@ -28941,6 +30126,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateManyInput = {
@@ -30219,6 +31405,65 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserPreferenceCreateInput = {
+    key: string
+    value: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: AccountCreateNestedOneWithoutPreferencesInput
+  }
+
+  export type UserPreferenceUncheckedCreateInput = {
+    id?: number
+    userId: string
+    key: string
+    value: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPreferenceUpdateInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: AccountUpdateOneRequiredWithoutPreferencesNestedInput
+  }
+
+  export type UserPreferenceUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPreferenceCreateManyInput = {
+    id?: number
+    userId: string
+    key: string
+    value: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPreferenceUpdateManyMutationInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPreferenceUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type SeminarCreateInput = {
     id?: string
     title: string
@@ -31025,6 +32270,12 @@ export namespace Prisma {
     none?: SurveyStatisticWhereInput
   }
 
+  export type UserPreferenceListRelationFilter = {
+    every?: UserPreferenceWhereInput
+    some?: UserPreferenceWhereInput
+    none?: UserPreferenceWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -31087,6 +32338,10 @@ export namespace Prisma {
   }
 
   export type SurveyStatisticOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserPreferenceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -32318,6 +33573,52 @@ export namespace Prisma {
     _max?: NestedEnumtransaction_statusFilter<$PrismaModel>
   }
 
+  export type UserPreferenceOrderByRelevanceInput = {
+    fields: UserPreferenceOrderByRelevanceFieldEnum | UserPreferenceOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type UserPreferenceUserIdKeyCompoundUniqueInput = {
+    userId: string
+    key: string
+  }
+
+  export type UserPreferenceCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    key?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPreferenceAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type UserPreferenceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    key?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPreferenceMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    key?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPreferenceSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
   export type Enumseminar_statusFilter<$PrismaModel = never> = {
     equals?: $Enums.seminar_status | Enumseminar_statusFieldRefInput<$PrismaModel>
     in?: $Enums.seminar_status[]
@@ -32921,6 +34222,13 @@ export namespace Prisma {
     connect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
   }
 
+  export type UserPreferenceCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput> | UserPreferenceCreateWithoutUserInput[] | UserPreferenceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput | UserPreferenceCreateOrConnectWithoutUserInput[]
+    createMany?: UserPreferenceCreateManyUserInputEnvelope
+    connect?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+  }
+
   export type SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -33045,6 +34353,13 @@ export namespace Prisma {
     connectOrCreate?: SurveyStatisticCreateOrConnectWithoutCreatorInput | SurveyStatisticCreateOrConnectWithoutCreatorInput[]
     createMany?: SurveyStatisticCreateManyCreatorInputEnvelope
     connect?: SurveyStatisticWhereUniqueInput | SurveyStatisticWhereUniqueInput[]
+  }
+
+  export type UserPreferenceUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput> | UserPreferenceCreateWithoutUserInput[] | UserPreferenceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput | UserPreferenceCreateOrConnectWithoutUserInput[]
+    createMany?: UserPreferenceCreateManyUserInputEnvelope
+    connect?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -33351,6 +34666,20 @@ export namespace Prisma {
     deleteMany?: SurveyStatisticScalarWhereInput | SurveyStatisticScalarWhereInput[]
   }
 
+  export type UserPreferenceUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput> | UserPreferenceCreateWithoutUserInput[] | UserPreferenceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput | UserPreferenceCreateOrConnectWithoutUserInput[]
+    upsert?: UserPreferenceUpsertWithWhereUniqueWithoutUserInput | UserPreferenceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserPreferenceCreateManyUserInputEnvelope
+    set?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+    disconnect?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+    delete?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+    connect?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+    update?: UserPreferenceUpdateWithWhereUniqueWithoutUserInput | UserPreferenceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserPreferenceUpdateManyWithWhereWithoutUserInput | UserPreferenceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserPreferenceScalarWhereInput | UserPreferenceScalarWhereInput[]
+  }
+
   export type SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -33601,6 +34930,20 @@ export namespace Prisma {
     update?: SurveyStatisticUpdateWithWhereUniqueWithoutCreatorInput | SurveyStatisticUpdateWithWhereUniqueWithoutCreatorInput[]
     updateMany?: SurveyStatisticUpdateManyWithWhereWithoutCreatorInput | SurveyStatisticUpdateManyWithWhereWithoutCreatorInput[]
     deleteMany?: SurveyStatisticScalarWhereInput | SurveyStatisticScalarWhereInput[]
+  }
+
+  export type UserPreferenceUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput> | UserPreferenceCreateWithoutUserInput[] | UserPreferenceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput | UserPreferenceCreateOrConnectWithoutUserInput[]
+    upsert?: UserPreferenceUpsertWithWhereUniqueWithoutUserInput | UserPreferenceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserPreferenceCreateManyUserInputEnvelope
+    set?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+    disconnect?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+    delete?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+    connect?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+    update?: UserPreferenceUpdateWithWhereUniqueWithoutUserInput | UserPreferenceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserPreferenceUpdateManyWithWhereWithoutUserInput | UserPreferenceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserPreferenceScalarWhereInput | UserPreferenceScalarWhereInput[]
   }
 
   export type AccountCreateNestedOneWithoutAuditLogsInput = {
@@ -34417,6 +35760,20 @@ export namespace Prisma {
     delete?: AccountWhereInput | boolean
     connect?: AccountWhereUniqueInput
     update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutAdminTransactionsInput, AccountUpdateWithoutAdminTransactionsInput>, AccountUncheckedUpdateWithoutAdminTransactionsInput>
+  }
+
+  export type AccountCreateNestedOneWithoutPreferencesInput = {
+    create?: XOR<AccountCreateWithoutPreferencesInput, AccountUncheckedCreateWithoutPreferencesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutPreferencesInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type AccountUpdateOneRequiredWithoutPreferencesNestedInput = {
+    create?: XOR<AccountCreateWithoutPreferencesInput, AccountUncheckedCreateWithoutPreferencesInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutPreferencesInput
+    upsert?: AccountUpsertWithoutPreferencesInput
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutPreferencesInput, AccountUpdateWithoutPreferencesInput>, AccountUncheckedUpdateWithoutPreferencesInput>
   }
 
   export type SeminarParticipantCreateNestedManyWithoutSeminarInput = {
@@ -36115,6 +37472,31 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserPreferenceCreateWithoutUserInput = {
+    key: string
+    value: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPreferenceUncheckedCreateWithoutUserInput = {
+    id?: number
+    key: string
+    value: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPreferenceCreateOrConnectWithoutUserInput = {
+    where: UserPreferenceWhereUniqueInput
+    create: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserPreferenceCreateManyUserInputEnvelope = {
+    data: UserPreferenceCreateManyUserInput | UserPreferenceCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SeminarParticipantUpsertWithWhereUniqueWithoutAccountInput = {
     where: SeminarParticipantWhereUniqueInput
     update: XOR<SeminarParticipantUpdateWithoutAccountInput, SeminarParticipantUncheckedUpdateWithoutAccountInput>
@@ -36632,6 +38014,34 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"SurveyStatistic"> | Date | string
   }
 
+  export type UserPreferenceUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserPreferenceWhereUniqueInput
+    update: XOR<UserPreferenceUpdateWithoutUserInput, UserPreferenceUncheckedUpdateWithoutUserInput>
+    create: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserPreferenceUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserPreferenceWhereUniqueInput
+    data: XOR<UserPreferenceUpdateWithoutUserInput, UserPreferenceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserPreferenceUpdateManyWithWhereWithoutUserInput = {
+    where: UserPreferenceScalarWhereInput
+    data: XOR<UserPreferenceUpdateManyMutationInput, UserPreferenceUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserPreferenceScalarWhereInput = {
+    AND?: UserPreferenceScalarWhereInput | UserPreferenceScalarWhereInput[]
+    OR?: UserPreferenceScalarWhereInput[]
+    NOT?: UserPreferenceScalarWhereInput | UserPreferenceScalarWhereInput[]
+    id?: IntFilter<"UserPreference"> | number
+    userId?: StringFilter<"UserPreference"> | string
+    key?: StringFilter<"UserPreference"> | string
+    value?: StringFilter<"UserPreference"> | string
+    createdAt?: DateTimeFilter<"UserPreference"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPreference"> | Date | string
+  }
+
   export type AccountCreateWithoutAuditLogsInput = {
     id?: string
     access?: $Enums.access
@@ -36705,6 +38115,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutAuditLogsInput = {
@@ -36780,6 +38191,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutAuditLogsInput = {
@@ -36871,6 +38283,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAuditLogsInput = {
@@ -36946,6 +38359,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ChatParticipantCreateWithoutRoomInput = {
@@ -37123,6 +38537,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutChatParticipantsInput = {
@@ -37198,6 +38613,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutChatParticipantsInput = {
@@ -37318,6 +38734,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatParticipantsInput = {
@@ -37393,6 +38810,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ChatRoomUpsertWithoutParticipantsInput = {
@@ -37503,6 +38921,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutChatMessagesInput = {
@@ -37578,6 +38997,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutChatMessagesInput = {
@@ -37825,6 +39245,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatMessagesInput = {
@@ -37900,6 +39321,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ChatRoomUpsertWithoutMessagesInput = {
@@ -38134,6 +39556,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutChatAttachmentsInput = {
@@ -38209,6 +39632,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutChatAttachmentsInput = {
@@ -38341,6 +39765,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatAttachmentsInput = {
@@ -38416,6 +39841,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ChatMessageCreateWithoutReadReceiptsInput = {
@@ -38526,6 +39952,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutChatReadReceiptsInput = {
@@ -38601,6 +40028,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutChatReadReceiptsInput = {
@@ -38733,6 +40161,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatReadReceiptsInput = {
@@ -38808,6 +40237,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutInquiriesInput = {
@@ -38883,6 +40313,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutInquiriesInput = {
@@ -38958,6 +40389,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutInquiriesInput = {
@@ -39038,6 +40470,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutAssignedInquiriesInput = {
@@ -39113,6 +40546,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutAssignedInquiriesInput = {
@@ -39193,6 +40627,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutResolvedInquiriesInput = {
@@ -39268,6 +40703,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutResolvedInquiriesInput = {
@@ -39429,6 +40865,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiriesInput = {
@@ -39504,6 +40941,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUpsertWithoutAssignedInquiriesInput = {
@@ -39590,6 +41028,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAssignedInquiriesInput = {
@@ -39665,6 +41104,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUpsertWithoutResolvedInquiriesInput = {
@@ -39751,6 +41191,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutResolvedInquiriesInput = {
@@ -39826,6 +41267,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type InquiryReplyUpsertWithWhereUniqueWithoutInquiryInput = {
@@ -39933,6 +41375,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutInquiryRepliesInput = {
@@ -40008,6 +41451,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutInquiryRepliesInput = {
@@ -40211,6 +41655,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiryRepliesInput = {
@@ -40286,6 +41731,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type InquiryUpsertWithoutRepliesInput = {
@@ -40498,6 +41944,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutInquiryAttachmentsInput = {
@@ -40573,6 +42020,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutInquiryAttachmentsInput = {
@@ -40707,6 +42155,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiryAttachmentsInput = {
@@ -40782,6 +42231,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutCreatedFAQsInput = {
@@ -40857,6 +42307,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutCreatedFAQsInput = {
@@ -40932,6 +42383,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutCreatedFAQsInput = {
@@ -41023,6 +42475,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutCreatedFAQsInput = {
@@ -41098,6 +42551,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ItemStackCreateWithoutItemInput = {
@@ -41365,6 +42819,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutItemTransactionsInput = {
@@ -41440,6 +42895,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutItemTransactionsInput = {
@@ -41520,6 +42976,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutAdminTransactionsInput = {
@@ -41595,6 +43052,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutAdminTransactionsInput = {
@@ -41717,6 +43175,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutItemTransactionsInput = {
@@ -41792,6 +43251,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUpsertWithoutAdminTransactionsInput = {
@@ -41878,6 +43338,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAdminTransactionsInput = {
@@ -41938,6 +43399,327 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
     itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    chatParticipants?: ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type AccountCreateWithoutPreferencesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    chatParticipants?: ChatParticipantCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
+    chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+  }
+
+  export type AccountUncheckedCreateWithoutPreferencesInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    chatParticipants?: ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+  }
+
+  export type AccountCreateOrConnectWithoutPreferencesInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutPreferencesInput, AccountUncheckedCreateWithoutPreferencesInput>
+  }
+
+  export type AccountUpsertWithoutPreferencesInput = {
+    update: XOR<AccountUpdateWithoutPreferencesInput, AccountUncheckedUpdateWithoutPreferencesInput>
+    create: XOR<AccountCreateWithoutPreferencesInput, AccountUncheckedCreateWithoutPreferencesInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutPreferencesInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutPreferencesInput, AccountUncheckedUpdateWithoutPreferencesInput>
+  }
+
+  export type AccountUpdateWithoutPreferencesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    chatParticipants?: ChatParticipantUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
+    chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutPreferencesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
     seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
     inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
@@ -42054,6 +43836,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsCreatedInput = {
@@ -42129,6 +43912,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsCreatedInput = {
@@ -42236,6 +44020,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsCreatedInput = {
@@ -42311,6 +44096,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SeminarCreateWithoutParticipantsInput = {
@@ -42431,6 +44217,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsInput = {
@@ -42506,6 +44293,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsInput = {
@@ -42648,6 +44436,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsInput = {
@@ -42723,6 +44512,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutSurveyFormsCreatedInput = {
@@ -42798,6 +44588,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutSurveyFormsCreatedInput = {
@@ -42873,6 +44664,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutSurveyFormsCreatedInput = {
@@ -43058,6 +44850,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSurveyFormsCreatedInput = {
@@ -43133,6 +44926,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SurveyFieldUpsertWithWhereUniqueWithoutSurveyFormInput = {
@@ -43422,6 +45216,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutSurveyResponsesInput = {
@@ -43497,6 +45292,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutSurveyResponsesInput = {
@@ -43649,6 +45445,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSurveyResponsesInput = {
@@ -43724,6 +45521,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SurveyAnswerUpsertWithWhereUniqueWithoutResponseInput = {
@@ -43962,6 +45760,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutSurveyStatisticsCreatedInput = {
@@ -44037,6 +45836,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutSurveyStatisticsCreatedInput = {
@@ -44165,6 +45965,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSurveyStatisticsCreatedInput = {
@@ -44240,6 +46041,7 @@ export namespace Prisma {
     chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SeminarParticipantCreateManyAccountInput = {
@@ -44448,6 +46250,14 @@ export namespace Prisma {
     title: string
     description?: string | null
     config: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPreferenceCreateManyUserInput = {
+    id?: number
+    key: string
+    value: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -45108,6 +46918,29 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     config?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPreferenceUpdateWithoutUserInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPreferenceUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPreferenceUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

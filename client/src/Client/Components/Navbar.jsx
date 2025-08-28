@@ -6,9 +6,12 @@ import logo from '../../Assets/Logo.png';
 import Chat from '../../Components/Chats/Chat.jsx';
 import logo2 from '../Assets/farmerconnect.png'; 
 import { connectSocket } from '../../utils/socket.js';
+import { useCustomTranslation } from '../../hooks/useCustomTranslation.js';
 
 export default function Navbar({refresh}) {
     const location = useLocation();
+    const { t } = useCustomTranslation();
+    
     // Inject Google Fonts Poppins if not already present
     if (typeof document !== 'undefined' && !document.getElementById('poppins-font')) {
         const link = document.createElement('link');
@@ -466,7 +469,7 @@ export default function Navbar({refresh}) {
                                             strokeLinejoin="round"
                                         />
                                     </svg>
-                                    {!isMidScreen && <span className="nav-text-underline">Home</span>}
+                                    {!isMidScreen && <span className="nav-text-underline">{t('navigation.home')}</span>}
                                 </NavLink>
                             </li>
                             <li 
@@ -560,7 +563,7 @@ export default function Navbar({refresh}) {
                                                     strokeWidth="2"
                                                 />
                                             </svg>
-                                            About
+                                            {t('navigation.about')}
                                         </NavLink>
                                     </li>
                                     <li>
@@ -588,7 +591,7 @@ export default function Navbar({refresh}) {
                                                     strokeLinejoin="round"
                                                 />
                                             </svg>
-                                            Contact
+                                            {t('navigation.contact')}
                                         </NavLink>
                                     </li>
                                     <li>
@@ -695,7 +698,7 @@ export default function Navbar({refresh}) {
                                                     strokeLinejoin="round"
                                                 />
                                             </svg>
-                                            Seminar Programs
+                                            {t('navigation.seminar')}
                                         </NavLink>
                                     </li>
                                     <li>
@@ -860,7 +863,29 @@ export default function Navbar({refresh}) {
                                                     <circle cx="12" cy="7" r="4" />
                                                     <path d="M5.5 21a8.38 8.38 0 0113 0" />
                                                 </svg>
-                                                Profile Settings
+                                                {t('navigation.profile_settings')}
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                to="/settings"
+                                                className="flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium"
+                                                onClick={() => setOpen(false)}
+                                            >
+                                                <svg
+                                                    className="w-5 h-5 text-emerald-500"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        d="M12 15v-3m0 0V9m0 3h3m-3 0H9m6 3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                                {t('navigation.settings')}
                                             </Link>
                                         </li>
                                         {/* Only show Admin Panel to admin/superadmin users */}
@@ -1057,7 +1082,7 @@ export default function Navbar({refresh}) {
                                                     strokeLinejoin="round"
                                                 />
                                             </svg>
-                                            <span>Home</span>
+                                            <span>{t('navigation.home')}</span>
                                         </NavLink>
 
                                         {/* Info Dropdown with Professional Styling */}
@@ -1126,7 +1151,7 @@ export default function Navbar({refresh}) {
                                                             strokeWidth="2"
                                                         />
                                                     </svg>
-                                                    <span>About</span>
+                                                    <span>{t('navigation.about')}</span>
                                                 </NavLink>
                                                 <NavLink 
                                                     to="/contact"
@@ -1157,7 +1182,7 @@ export default function Navbar({refresh}) {
                                                             strokeLinejoin="round"
                                                         />
                                                     </svg>
-                                                    <span>Contact</span>
+                                                    <span>{t('navigation.contact')}</span>
                                                 </NavLink>
                                                 <NavLink 
                                                     to="/citizens-charter"
@@ -1245,7 +1270,7 @@ export default function Navbar({refresh}) {
                                                             strokeLinejoin="round"
                                                         />
                                                     </svg>
-                                                    <span>Seminar Programs</span>
+                                                    <span>{t('navigation.seminar')}</span>
                                                 </NavLink>
                                                 <NavLink 
                                                     to="/eic"
@@ -1414,7 +1439,35 @@ export default function Navbar({refresh}) {
                                                             <circle cx="12" cy="7" r="4" />
                                                             <path d="M5.5 21a8.38 8.38 0 0113 0" />
                                                         </svg>
-                                                        <span>Profile Settings</span>
+                                                        <span>{t('navigation.profile_settings')}</span>
+                                                    </NavLink>
+                                                    
+                                                    {/* Settings Link */}
+                                                    <NavLink 
+                                                        to="/settings"
+                                                        className={({ isActive }) =>
+                                                            `mobile-menu-item flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
+                                                                isActive 
+                                                                    ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
+                                                                    : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
+                                                            }`
+                                                        }
+                                                        onClick={() => setOpen(false)}
+                                                    >
+                                                        <svg
+                                                            className="w-5 h-5 text-emerald-500"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                d="M12 15v-3m0 0V9m0 3h3m-3 0H9m6 3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            />
+                                                        </svg>
+                                                        <span>{t('navigation.settings')}</span>
                                                     </NavLink>
                                                     
                                                     {/* Admin Panel Link - Only show to admin/superadmin users */}

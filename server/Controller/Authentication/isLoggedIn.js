@@ -1,5 +1,5 @@
 import { isAuthenticated } from "../../Utils/jwt_token.js";
-import { PrismaClient } from "../../prisma/generated/client.js";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function isLoggedIn(req, res) {

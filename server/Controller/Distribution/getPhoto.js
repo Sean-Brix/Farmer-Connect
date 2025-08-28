@@ -1,6 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { PrismaClient } from '../../prisma/generated/client.js';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const __filename = fileURLToPath(import.meta.url);

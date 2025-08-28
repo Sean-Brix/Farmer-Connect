@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../prisma/generated/client.js'
+import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';

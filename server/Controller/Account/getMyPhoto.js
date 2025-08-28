@@ -1,6 +1,6 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { PrismaClient } from '../../prisma/generated/client.js'
+import { PrismaClient } from '@prisma/client'
 import { isAuthenticated } from '../../Utils/jwt_token.js'
 
 const prisma = new PrismaClient();

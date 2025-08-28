@@ -1,0 +1,41 @@
+{
+  "api": {
+    "error": {
+      "unauthorized": "Hindi awtorisadong pag-access",
+      "forbidden": "Bawal ang pag-access",
+      "not_found": "Hindi nahanap ang resource",
+      "validation_error": "May mali sa validation",
+      "server_error": "May problema sa server"
+    },
+    "success": {
+      "created": "Matagumpay na nagawa ang resource",
+      "updated": "Matagumpay na na-update ang resource",
+      "deleted": "Matagumpay na natanggal ang resource",
+      "retrieved": "Matagumpay na nakuha ang resource"
+    }
+  },
+  "auth": {
+    "login_successful": "Matagumpay ang pag-login",
+    "logout_successful": "Matagumpay ang pag-logout",
+    "invalid_credentials": "Mali ang username o password",
+    "account_locked": "Na-lock ang account",
+    "password_changed": "Matagumpay na nabago ang password"
+  },
+  "user": {
+    "profile_updated": "Matagumpay na na-update ang profile",
+    "preferences_saved": "Na-save na ang mga kagustuhan",
+    "notification_settings_updated": "Na-update na ang mga setting ng notification"
+  },
+  "seminar": {
+    "enrolled_successfully": "Matagumpay na nag-enroll sa seminar",
+    "enrollment_failed": "Hindi matagumpay ang pag-enroll",
+    "seminar_not_found": "Hindi nahanap ang seminar",
+    "seminar_full": "Puno na ang seminar"
+  },
+  "distribution": {
+    "request_submitted": "Naisumite na ang kahilingan sa pamamahagi",
+    "request_approved": "Naaprubahan ang kahilingan sa pamamahagi",
+    "request_denied": "Tinanggihan ang kahilingan sa pamamahagi",
+    "insufficient_stock": "Kulang ang stock"
+  }
+}

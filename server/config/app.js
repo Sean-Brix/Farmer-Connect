@@ -4,12 +4,17 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+// Temporarily disabled server-side i18n to fix startup issues
+// import { initI18n, middleware as i18nMiddleware } from '../i18n.js';
 
 // Configuration
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const viewPath = path.join(__dirname, '../View');
+
+// Initialize i18n - temporarily disabled
+// await initI18n();
 
 // Request Handler
 const app = express();
@@ -19,6 +24,9 @@ app.use(urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(viewPath));
+
+// i18n middleware - temporarily disabled
+// app.use(i18nMiddleware.handle);
 
 app.use(
     cors({
