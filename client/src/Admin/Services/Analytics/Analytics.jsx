@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTheme } from '../../../contexts/ThemeContext';
 import {
     Chart,
     LineController,
@@ -45,10 +46,13 @@ const OverviewCard = ({
     color,
     onClick,
     isActive,
+    isDark,
 }) => (
     <div
-        className={`bg-white rounded-xl shadow-md p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
-            isActive ? 'ring-2 ring-green-500 bg-green-50' : ''
+        className={`rounded-xl shadow-md p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
+            isDark 
+                ? `bg-gray-700 ${isActive ? 'ring-2 ring-green-400 bg-gray-600' : ''}` 
+                : `bg-white ${isActive ? 'ring-2 ring-green-500 bg-green-50' : ''}`
         }`}
         onClick={onClick}
     >
@@ -67,10 +71,14 @@ const OverviewCard = ({
                 {change}%
             </div>
         </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-1">
+        <h3 className={`text-2xl font-bold mb-1 ${
+            isDark ? 'text-white' : 'text-gray-900'
+        }`}>
             {value.toLocaleString()}
         </h3>
-        <p className="text-gray-600 text-sm">{title}</p>
+        <p className={`text-sm ${
+            isDark ? 'text-gray-300' : 'text-gray-600'
+        }`}>{title}</p>
     </div>
 );
 
@@ -82,10 +90,13 @@ const FeatureCard = ({
     onClick,
     isActive,
     stats,
+    isDark,
 }) => (
     <div
-        className={`bg-white rounded-xl shadow-md p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
-            isActive ? 'ring-2 ring-green-500 bg-green-50' : ''
+        className={`rounded-xl shadow-md p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 ${
+            isDark 
+                ? `bg-gray-700 ${isActive ? 'ring-2 ring-green-400 bg-gray-600' : ''}` 
+                : `bg-white ${isActive ? 'ring-2 ring-green-500 bg-green-50' : ''}`
         }`}
         onClick={onClick}
     >
@@ -94,31 +105,45 @@ const FeatureCard = ({
                 <div className="w-6 h-6 text-white">{icon}</div>
             </div>
             <div>
-                <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-                <p className="text-gray-600 text-sm">{description}</p>
+                <h3 className={`text-lg font-semibold ${
+                    isDark ? 'text-white' : 'text-gray-900'
+                }`}>{title}</h3>
+                <p className={`text-sm ${
+                    isDark ? 'text-gray-300' : 'text-gray-600'
+                }`}>{description}</p>
             </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
             {stats.map((stat, idx) => (
                 <div key={idx} className="text-center">
-                    <div className="text-xl font-bold text-gray-900">
+                    <div className={`text-xl font-bold ${
+                        isDark ? 'text-white' : 'text-gray-900'
+                    }`}>
                         {stat.value}
                     </div>
-                    <div className="text-xs text-gray-600">{stat.label}</div>
+                    <div className={`text-xs ${
+                        isDark ? 'text-gray-400' : 'text-gray-600'
+                    }`}>{stat.label}</div>
                 </div>
             ))}
         </div>
     </div>
 );
 
-const ChartContainer = ({ title, children, className = '' }) => (
-    <div className={`bg-white rounded-xl shadow-md p-6 ${className}`}>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
+const ChartContainer = ({ title, children, className = '', isDark }) => (
+    <div className={`rounded-xl shadow-md p-6 ${className} ${
+        isDark ? 'bg-gray-700' : 'bg-white'
+    }`}>
+        <h3 className={`text-lg font-semibold mb-4 ${
+            isDark ? 'text-white' : 'text-gray-900'
+        }`}>{title}</h3>
         {children}
     </div>
 );
 
 function Analytics() {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
     const [activeView, setActiveView] = useState('overview');
     const [timeRange, setTimeRange] = useState('7d');
     const [isLoading, setIsLoading] = useState(true);
@@ -712,16 +737,28 @@ function Analytics() {
     }, []);
 
     return (
-        <div className="min-h-screen  sm:mt-10 bg-gradient-to-br from-gray-50 via-white to-gray-100 flex justify-center items-start py-12 px-4 sm:px-8 md:px-12 lg:px-16">
-            <div className="w-full max-w-4xl xl:max-w-6xl 2xl:max-w-6xl mx-auto bg-white/80 rounded-2xl shadow-xl p-8 md:p-12 lg:p-14 border border-gray-200">
+        <div className={`min-h-screen sm:mt-10 flex justify-center items-start py-12 px-4 sm:px-8 md:px-12 lg:px-16 ${
+            isDark 
+                ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
+        }`}>
+            <div className={`w-full max-w-4xl xl:max-w-6xl 2xl:max-w-6xl mx-auto rounded-2xl shadow-xl p-8 md:p-12 lg:p-14 border ${
+                isDark 
+                    ? 'bg-gray-800/80 border-gray-600' 
+                    : 'bg-white/80 border-gray-200'
+            }`}>
                 {/* Header */}
                 <div className="mb-10">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
                         <div>
-                            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-1">
+                            <h1 className={`text-3xl md:text-4xl font-extrabold tracking-tight mb-1 ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>
                                 Analytics Dashboard
                             </h1>
-                            <p className="text-gray-600 text-base md:text-lg">
+                            <p className={`text-base md:text-lg ${
+                                isDark ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
                                 Comprehensive insights into your Farmer Connect platform
                             </p>
                         </div>
@@ -730,14 +767,20 @@ function Analytics() {
                                 <select
                                     value={timeRange}
                                     onChange={(e) => setTimeRange(e.target.value)}
-                                    className="appearance-none bg-white border border-gray-300 rounded-lg pl-4 pr-10 py-2 shadow-md text-gray-700 focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium"
+                                    className={`appearance-none border rounded-lg pl-4 pr-10 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 hover:border-green-400 outline-none cursor-pointer text-base font-medium ${
+                                        isDark 
+                                            ? 'bg-gray-700 border-gray-600 text-gray-200 hover:border-green-500' 
+                                            : 'bg-white border-gray-300 text-gray-700 hover:border-green-400'
+                                    }`}
                                 >
                                     <option value="7d">Last 7 days</option>
                                     <option value="30d">Last 30 days</option>
                                     <option value="90d">Last 90 days</option>
                                     <option value="1y">Last year</option>
                                 </select>
-                                <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                                <span className={`pointer-events-none absolute inset-y-0 right-3 flex items-center ${
+                                    isDark ? 'text-gray-400' : 'text-gray-400'
+                                }`}>
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                                     </svg>

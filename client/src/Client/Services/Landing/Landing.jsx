@@ -4,6 +4,7 @@
             <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
 // eslint-disable-next-line
 import React, { useEffect, useState, useRef } from 'react'
+import { useTheme } from '../../../contexts/ThemeContext'
 
 // NAVBAR
 import Navbar from '../../Components/Navbar'
@@ -29,6 +30,8 @@ import soil from './Assets/soil.jpg'
 import farm from './Assets/farm.jpg'
 
 export default function Landing() {
+    const { theme } = useTheme()
+    
     // Preload hero images to prevent white flash on transition
     useEffect(() => {
         const images = [
@@ -320,9 +323,9 @@ export default function Landing() {
     return (
         <>
             <Navbar />
-            <main className="min-h-screen" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <main className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`} style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {/* HERO SECTION - FLEX WITH VIDEO */}
-                <section className="relative mb-0 mt-0  min-h-[800px] flex items-center justify-center px-[8vw] bg-green-50 font-poppins">
+                <section className={`relative mb-0 mt-0 min-h-[800px] flex items-center justify-center px-[8vw] font-poppins ${theme === 'dark' ? 'bg-gray-900' : 'bg-green-50'}`}>
                 
                 <img
                     src={fits}
@@ -335,35 +338,35 @@ export default function Landing() {
                     {/* Left: Professional Headline and Description */}
                     <div className="flex-1 pr-[2vw] min-w-[320px] relative z-30 w-full md:w-auto">
                         {/* Premium badge */}
-                        <div className="inline-flex items-center gap-2 mt-[25%] sm:mt-0 bg-green-50 border border-green-200 rounded-full px-4 py-2 mb-6" data-aos="fade-right" data-aos-delay="100">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span className="text-green-700 font-semibold text-sm uppercase tracking-wide">
+                        <div className={`inline-flex items-center gap-2 mt-[25%] sm:mt-0 border rounded-full px-4 py-2 mb-6 ${theme === 'dark' ? 'bg-gray-800 border-green-400 text-green-400' : 'bg-green-50 border-green-200 text-green-700'}`} data-aos="fade-right" data-aos-delay="100">
+                            <div className={`w-2 h-2 rounded-full animate-pulse ${theme === 'dark' ? 'bg-green-400' : 'bg-green-500'}`}></div>
+                            <span className="font-semibold text-sm uppercase tracking-wide">
                                 Transforming Agriculture
                             </span>
                         </div>
                         
                         {/* Enhanced title with modern typography */}
-                        <h1 className="font-montserrat font-black text-[2.5rem] md:text-[4rem] lg:text-[4.5rem] text-gray-900 m-0 leading-[0.9] tracking-tight mb-6" data-aos="fade-up" data-aos-delay="200">
+                        <h1 className={`font-montserrat font-black text-[2.5rem] md:text-[4rem] lg:text-[4.5rem] m-0 leading-[0.9] tracking-tight mb-6 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`} data-aos="fade-up" data-aos-delay="200">
                             Empowering{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-700 to-green-800 animate-gradient-x">
+                            <span className={`text-transparent bg-clip-text animate-gradient-x ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 via-green-500 to-green-600' : 'bg-gradient-to-r from-green-600 via-green-700 to-green-800'}`}>
                                 Agriculture
                             </span>
                             <br />
-                            <span className="text-gray-700 text-[2rem] md:text-[3rem] lg:text-[3.5rem] font-bold">
+                            <span className={`text-[2rem] md:text-[3rem] lg:text-[3.5rem] font-bold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
                                 Enriching Lives
                             </span>
                         </h1>
                         
                         {/* Professional description */}
-                        <p className="font-poppins text-lg md:text-xl text-gray-600 mt-6 max-w-2xl font-medium leading-relaxed" data-aos="fade-up" data-aos-delay="300">
+                        <p className={`font-poppins text-lg md:text-xl mt-6 max-w-2xl font-medium leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} data-aos="fade-up" data-aos-delay="300">
                             Discover innovative agricultural solutions, connect with expert farmers, and access cutting-edge technology to{' '}
-                            <span className="text-green-700 font-semibold">transform your farming journey</span> today.
+                            <span className={`font-semibold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>transform your farming journey</span> today.
                         </p>
                         
                         {/* Professional CTA buttons */}
                         <div className="flex flex-col sm:flex-row gap-4 mt-10" data-aos="fade-up" data-aos-delay="400">
                             <button
-                                className="group relative overflow-hidden bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white border-none rounded-2xl px-8 py-4 font-bold text-lg cursor-pointer font-poppins shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 transform"
+                                className={`group relative overflow-hidden text-white border-none rounded-2xl px-8 py-4 font-bold text-lg cursor-pointer font-poppins shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 transform ${theme === 'dark' ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700' : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'}`}
                                 onClick={() => window.location = '/seminar'}
                             >
                                 <span className="relative z-10 flex items-center justify-center gap-3">
@@ -372,14 +375,14 @@ export default function Landing() {
                                     </svg>
                                     Explore Programs
                                 </span>
-                                <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-green-500' : 'bg-gradient-to-r from-green-500 to-green-600'}`}></div>
                             </button>
                             
                             <button
-                                className="group relative bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-300 hover:border-green-500 rounded-2xl px-8 py-4 font-semibold text-lg cursor-pointer font-poppins shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 transform"
+                                className={`group relative border-2 rounded-2xl px-8 py-4 font-semibold text-lg cursor-pointer font-poppins shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 transform ${theme === 'dark' ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600 hover:border-green-400' : 'bg-white hover:bg-gray-50 text-gray-800 border-gray-300 hover:border-green-500'}`}
                                 onClick={() => window.location = '/about'}
                             >
-                                <span className="flex items-center justify-center gap-3 group-hover:text-green-700 transition-colors duration-300">
+                                <span className={`flex items-center justify-center gap-3 transition-colors duration-300 ${theme === 'dark' ? 'group-hover:text-green-400' : 'group-hover:text-green-700'}`}>
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -393,10 +396,10 @@ export default function Landing() {
                     </div>
                     {/* Right: Enhanced Professional Slideshow */}
                     <div className="flex-1 flex items-center min-w-[320px] w-full md:w-auto mt-10 md:mt-0 justify-end relative z-40" data-aos="fade-left" data-aos-delay="500">
-                        <div className="relative w-full h-[260px] md:h-[650px] max-w-[720px] bg-white border border-gray-200 rounded-3xl shadow-2xl overflow-hidden flex items-center justify-center -mt-4 md:-mt-16 group z-50">
+                        <div className={`relative w-full h-[260px] md:h-[650px] max-w-[720px] border rounded-3xl shadow-2xl overflow-hidden flex items-center justify-center -mt-4 md:-mt-16 group z-50 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                             
                             {/* Professional slideshow with enhanced transitions */}
-                            <div className="relative w-full h-full overflow-hidden rounded-3xl bg-white z-50">
+                            <div className={`relative w-full h-full overflow-hidden rounded-3xl z-50 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
                                 {heroSlides.map((slide, idx) => (
                                     <div
                                         key={idx}
@@ -431,7 +434,7 @@ export default function Landing() {
                             {/* Professional navigation controls */}
                             <div className="absolute top-6 right-6 z-70 flex gap-3 translate-y-5">
                                 <button
-                                    className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl p-3 transition-all duration-300 hover:scale-110 shadow-lg border border-white/20"
+                                    className={`backdrop-blur-sm hover:bg-white/30 text-white rounded-xl p-3 transition-all duration-300 hover:scale-110 shadow-lg border ${theme === 'dark' ? 'bg-gray-900/40 border-gray-700' : 'bg-white/20 border-white/20'}`}
                                     onClick={handlePrevHero}
                                     aria-label="Previous Slide"
                                 >
@@ -440,7 +443,7 @@ export default function Landing() {
                                     </svg>
                                 </button>
                                 <button
-                                    className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-xl p-3 transition-all duration-300 hover:scale-110 shadow-lg border border-white/20"
+                                    className={`backdrop-blur-sm hover:bg-white/30 text-white rounded-xl p-3 transition-all duration-300 hover:scale-110 shadow-lg border ${theme === 'dark' ? 'bg-gray-900/40 border-gray-700' : 'bg-white/20 border-white/20'}`}
                                     onClick={handleNextHero}
                                     aria-label="Next Slide"
                                 >
@@ -454,12 +457,12 @@ export default function Landing() {
                             <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent px-8 py-8 text-white z-70">
                                 <div className="max-w-lg">
                                     <div className="flex items-center gap-2 mb-3">
-                                        <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-green-500' : 'bg-green-600'}`}>
                                             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                             </svg>
                                         </div>
-                                        <span className="text-green-400 font-semibold text-sm uppercase tracking-wide">
+                                        <span className={`font-semibold text-sm uppercase tracking-wide ${theme === 'dark' ? 'text-green-300' : 'text-green-400'}`}>
                                             Feature Highlight
                                         </span>
                                     </div>
@@ -486,8 +489,8 @@ export default function Landing() {
                             </div>
 
                             {/* Slide counter */}
-                            <div className="absolute top-6 left-6 z-70 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-2 text-white translate-y-5 text-sm font-medium">
-                                <span className="text-green-400">{heroIndex + 1}</span>
+                            <div className={`absolute top-6 left-6 z-70 backdrop-blur-sm rounded-lg px-3 py-2 text-white translate-y-5 text-sm font-medium ${theme === 'dark' ? 'bg-gray-900/50' : 'bg-black/30'}`}>
+                                <span className={theme === 'dark' ? 'text-green-300' : 'text-green-400'}>{heroIndex + 1}</span>
                                 <span className="text-white/70 mx-1">/</span>
                                 <span className="text-white/70">{heroSlides.length}</span>
                             </div>
@@ -502,21 +505,21 @@ export default function Landing() {
                 </section>
 
             {/* MISSION & VISION - Professional Redesign */}
-            <section className="py-12 mt-0 relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-green-50/30" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <section className={`py-12 mt-0 relative overflow-hidden ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-green-50/30'}`} style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {/* Premium background elements */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute top-10 left-10 w-48 h-48 bg-green-100/40 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-10 right-10 w-64 h-64 bg-emerald-100/30 rounded-full blur-3xl"></div>
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-green-50/20 to-emerald-50/20 rounded-full blur-3xl"></div>
+                    <div className={`absolute top-10 left-10 w-48 h-48 rounded-full blur-3xl ${theme === 'dark' ? 'bg-green-500/20' : 'bg-green-100/40'}`}></div>
+                    <div className={`absolute bottom-10 right-10 w-64 h-64 rounded-full blur-3xl ${theme === 'dark' ? 'bg-emerald-500/15' : 'bg-emerald-100/30'}`}></div>
+                    <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full blur-3xl ${theme === 'dark' ? 'bg-gradient-to-r from-green-500/10 to-emerald-500/10' : 'bg-gradient-to-r from-green-50/20 to-emerald-50/20'}`}></div>
                 </div>
 
                 {/* Section header */}
                 <div className="text-center mb-12 relative z-10 mt-6">
                 
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 mb-4 tracking-tight" data-aos="fade-up" data-aos-delay="200">
-                        Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Purpose</span> & Vision
+                    <h2 className={`text-2xl md:text-3xl lg:text-4xl font-black mb-4 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`} data-aos="fade-up" data-aos-delay="200">
+                        Our <span className={`text-transparent bg-clip-text ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-600 to-emerald-600'}`}>Purpose</span> & Vision
                     </h2>
-                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed" data-aos="fade-up" data-aos-delay="300">
+                    <p className={`text-base max-w-2xl mx-auto font-medium leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} data-aos="fade-up" data-aos-delay="300">
                         Driving agricultural innovation and community empowerment through sustainable solutions.
                     </p>
                 </div>
@@ -527,28 +530,28 @@ export default function Landing() {
                         {/* Mission Card - Enhanced */}
                         <div className="group relative h-full" data-aos="fade-right" data-aos-delay="400">
                             {/* Premium card container */}
-                            <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-200/50 hover:shadow-2xl transition-all duration-500 hover:scale-105 transform h-full flex flex-col">
+                            <div className={`relative backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-xl border hover:shadow-2xl transition-all duration-500 hover:scale-105 transform h-full flex flex-col ${theme === 'dark' ? 'bg-gray-800/80 border-gray-700/50' : 'bg-white/80 border-gray-200/50'}`}>
                                 
                                 {/* Premium icon container */}
                                 <div className="relative mb-6">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 rounded-xl shadow-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                                    <div className={`w-16 h-16 rounded-xl shadow-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ${theme === 'dark' ? 'bg-gradient-to-br from-green-400 via-green-500 to-emerald-500' : 'bg-gradient-to-br from-green-500 via-green-600 to-emerald-600'}`}>
                                         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                         </svg>
                                     </div>
                                     {/* Floating accent */}
-                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full opacity-80 group-hover:scale-125 transition-transform duration-300"></div>
+                                    <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full opacity-80 group-hover:scale-125 transition-transform duration-300 ${theme === 'dark' ? 'bg-gradient-to-br from-emerald-300 to-green-400' : 'bg-gradient-to-br from-emerald-400 to-green-500'}`}></div>
                                 </div>
                                 
                                 {/* Content */}
                                 <div className="space-y-4 flex-grow">
                                     <div>
-                                        <h3 className="text-xl lg:text-2xl font-black text-gray-900 mb-2 tracking-tight">Mission</h3>
-                                        <div className="w-12 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                                        <h3 className={`text-xl lg:text-2xl font-black mb-2 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Mission</h3>
+                                        <div className={`w-12 h-1 rounded-full ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}></div>
                                     </div>
                                     
-                                    <p className="text-sm lg:text-base text-gray-700 leading-relaxed font-medium min-h-[4rem]">
-                                        To drive <span className="text-green-700 font-bold">sustainable agricultural growth</span> and elevate community livelihoods through innovative solutions, transformative education, and <span className="text-emerald-700 font-bold">collaborative partnerships</span>.
+                                    <p className={`text-sm lg:text-base leading-relaxed font-medium min-h-[4rem] ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        To drive <span className={`font-bold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>sustainable agricultural growth</span> and elevate community livelihoods through innovative solutions, transformative education, and <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-700'}`}>collaborative partnerships</span>.
                                     </p>
                                     
                                     {/* Key points */}
@@ -559,44 +562,44 @@ export default function Landing() {
                                             'Innovation Excellence'
                                         ].map((point, idx) => (
                                             <div key={idx} className="flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
-                                                <span className="text-gray-600 font-semibold text-sm">{point}</span>
+                                                <div className={`w-1.5 h-1.5 rounded-full ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}></div>
+                                                <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{point}</span>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                                 
                                 {/* Hover overlay */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-emerald-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                                <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ${theme === 'dark' ? 'bg-gradient-to-br from-green-400/5 via-transparent to-emerald-400/5' : 'bg-gradient-to-br from-green-500/5 via-transparent to-emerald-500/5'}`}></div>
                             </div>
                         </div>
 
                         {/* Vision Card - Enhanced */}
                         <div className="group relative h-full" data-aos="fade-left" data-aos-delay="500">
                             {/* Premium card container */}
-                            <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-200/50 hover:shadow-2xl transition-all duration-500 hover:scale-105 transform h-full flex flex-col">
+                            <div className={`relative backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-xl border hover:shadow-2xl transition-all duration-500 hover:scale-105 transform h-full flex flex-col ${theme === 'dark' ? 'bg-gray-800/80 border-gray-700/50' : 'bg-white/80 border-gray-200/50'}`}>
                                 
                                 {/* Premium icon container */}
                                 <div className="relative mb-6">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 via-emerald-600 to-green-600 rounded-xl shadow-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                                    <div className={`w-16 h-16 rounded-xl shadow-xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ${theme === 'dark' ? 'bg-gradient-to-br from-emerald-400 via-emerald-500 to-green-500' : 'bg-gradient-to-br from-emerald-500 via-emerald-600 to-green-600'}`}>
                                         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                         </svg>
                                     </div>
                                     {/* Floating accent */}
-                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full opacity-80 group-hover:scale-125 transition-transform duration-300"></div>
+                                    <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full opacity-80 group-hover:scale-125 transition-transform duration-300 ${theme === 'dark' ? 'bg-gradient-to-br from-green-300 to-emerald-400' : 'bg-gradient-to-br from-green-400 to-emerald-500'}`}></div>
                                 </div>
                                 
                                 {/* Content */}
                                 <div className="space-y-4 flex-grow">
                                     <div>
-                                        <h3 className="text-xl lg:text-2xl font-black text-gray-900 mb-2 tracking-tight">Vision</h3>
-                                        <div className="w-12 h-1 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full"></div>
+                                        <h3 className={`text-xl lg:text-2xl font-black mb-2 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Vision</h3>
+                                        <div className={`w-12 h-1 rounded-full ${theme === 'dark' ? 'bg-gradient-to-r from-emerald-400 to-green-400' : 'bg-gradient-to-r from-emerald-500 to-green-500'}`}></div>
                                     </div>
                                     
-                                    <p className="text-sm lg:text-base text-gray-700 leading-relaxed font-medium min-h-[4rem]">
-                                        To be a <span className="text-emerald-700 font-bold">catalyst for agricultural transformation</span>, fostering innovation and building resilient, <span className="text-green-700 font-bold">thriving communities</span> for generations to come.
+                                    <p className={`text-sm lg:text-base leading-relaxed font-medium min-h-[4rem] ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        To be a <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-700'}`}>catalyst for agricultural transformation</span>, fostering innovation and building resilient, <span className={`font-bold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>thriving communities</span> for generations to come.
                                     </p>
                                     
                                     {/* Key points */}
@@ -607,15 +610,15 @@ export default function Landing() {
                                             'Community Resilience'
                                         ].map((point, idx) => (
                                             <div key={idx} className="flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full"></div>
-                                                <span className="text-gray-600 font-semibold text-sm">{point}</span>
+                                                <div className={`w-1.5 h-1.5 rounded-full ${theme === 'dark' ? 'bg-gradient-to-r from-emerald-400 to-green-400' : 'bg-gradient-to-r from-emerald-500 to-green-500'}`}></div>
+                                                <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{point}</span>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                                 
                                 {/* Hover overlay */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-green-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                                <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ${theme === 'dark' ? 'bg-gradient-to-br from-emerald-400/5 via-transparent to-green-400/5' : 'bg-gradient-to-br from-emerald-500/5 via-transparent to-green-500/5'}`}></div>
                             </div>
                         </div>
                     </div>
@@ -630,10 +633,10 @@ export default function Landing() {
                         ].map((stat, idx) => (
                             <div key={idx} className="group">
                                 <div className="text-2xl mb-2">{stat.icon}</div>
-                                <div className="text-xl lg:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600 mb-1">
+                                <div className={`text-xl lg:text-2xl font-black text-transparent bg-clip-text mb-1 ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-600 to-emerald-600'}`}>
                                     {stat.number}
                                 </div>
-                                <div className="text-gray-600 font-semibold text-sm">{stat.label}</div>
+                                <div className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{stat.label}</div>
                             </div>
                         ))}
                     </div>
@@ -641,21 +644,21 @@ export default function Landing() {
             </section>
 
             {/* PROGRAMS - Professional Design */}
-            <section id="programs" className="py-12 bg-gradient-to-br from-green-100/90 via-emerald-100/80 to-green-200/60 relative overflow-hidden" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <section id="programs" className={`py-12 relative overflow-hidden ${theme === 'dark' ? 'bg-gradient-to-br from-gray-800/90 via-gray-900/80 to-gray-800/60' : 'bg-gradient-to-br from-green-100/90 via-emerald-100/80 to-green-200/60'}`} style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {/* Premium background elements */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute top-10 left-10 w-48 h-48 bg-green-200/30 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-10 right-10 w-60 h-60 bg-emerald-200/25 rounded-full blur-3xl"></div>
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px] bg-gradient-to-r from-green-100/30 to-emerald-100/25 rounded-full blur-3xl"></div>
+                    <div className={`absolute top-10 left-10 w-48 h-48 rounded-full blur-3xl ${theme === 'dark' ? 'bg-green-500/20' : 'bg-green-200/30'}`}></div>
+                    <div className={`absolute bottom-10 right-10 w-60 h-60 rounded-full blur-3xl ${theme === 'dark' ? 'bg-emerald-500/15' : 'bg-emerald-200/25'}`}></div>
+                    <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px] rounded-full blur-3xl ${theme === 'dark' ? 'bg-gradient-to-r from-green-500/15 to-emerald-500/10' : 'bg-gradient-to-r from-green-100/30 to-emerald-100/25'}`}></div>
                 </div>
 
                 {/* Section header */}
                 <div className="text-center mt-6 mb-10 relative z-10">
                   
-                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 tracking-tight" data-aos="fade-up" data-aos-delay="200">
-                        Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Programs</span>
+                    <h2 className={`text-2xl md:text-3xl font-black mb-4 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`} data-aos="fade-up" data-aos-delay="200">
+                        Professional <span className={`text-transparent bg-clip-text ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-600 to-emerald-600'}`}>Programs</span>
                     </h2>
-                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed" data-aos="fade-up" data-aos-delay="300">
+                    <p className={`text-base max-w-2xl mx-auto font-medium leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} data-aos="fade-up" data-aos-delay="300">
                         Comprehensive training and development programs designed to elevate agricultural excellence.
                     </p>
                 </div>
@@ -669,7 +672,7 @@ export default function Landing() {
                                 const container = document.getElementById('programs-scroller');
                                 container.scrollBy({ left: -300, behavior: 'smooth' });
                             }}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/95 hover:bg-white text-green-600 hover:text-green-700 rounded-full w-12 h-12 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 border border-green-100"
+                            className={`absolute left-2 top-1/2 -translate-y-1/2 z-20 rounded-full w-12 h-12 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 border ${theme === 'dark' ? 'bg-gray-800/95 hover:bg-gray-700 text-green-400 hover:text-green-300 border-gray-600' : 'bg-white/95 hover:bg-white text-green-600 hover:text-green-700 border-green-100'}`}
                             aria-label="Scroll left"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -683,7 +686,7 @@ export default function Landing() {
                                 const container = document.getElementById('programs-scroller');
                                 container.scrollBy({ left: 300, behavior: 'smooth' });
                             }}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/95 hover:bg-white text-green-600 hover:text-green-700 rounded-full w-12 h-12 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 border border-green-100"
+                            className={`absolute right-2 top-1/2 -translate-y-1/2 z-20 rounded-full w-12 h-12 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 border ${theme === 'dark' ? 'bg-gray-800/95 hover:bg-gray-700 text-green-400 hover:text-green-300 border-gray-600' : 'bg-white/95 hover:bg-white text-green-600 hover:text-green-700 border-green-100'}`}
                             aria-label="Scroll right"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -746,7 +749,7 @@ export default function Landing() {
                             {programs.map((program, index) => (
                                 <div
                                     key={index}
-                                    className="group flex-shrink-0 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 w-80 hover:-translate-y-2"
+                                    className={`group flex-shrink-0 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border hover:-translate-y-2 w-80 ${theme === 'dark' ? 'bg-gray-800/90 border-gray-700/50 hover:border-green-400' : 'bg-white/90 border-white/50 hover:border-green-200'}`}
                                 >
                                     {/* Enhanced Image */}
                                     <div className="relative h-44 overflow-hidden">
@@ -759,17 +762,17 @@ export default function Landing() {
                                         
                                         {/* Status overlay badge */}
                                         <div className={`absolute top-3 left-3 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg ${
-                                            program.status === 'Ongoing' ? 'bg-blue-100/95 text-blue-700' :
-                                            program.status === 'Available' ? 'bg-green-100/95 text-green-700' :
-                                            program.status === 'Upcoming' ? 'bg-yellow-100/95 text-yellow-700' :
-                                            program.status === 'Completed' ? 'bg-gray-100/95 text-gray-700' :
-                                            'bg-white/95 text-green-600'
+                                            program.status === 'Ongoing' ? (theme === 'dark' ? 'bg-blue-900/95 text-blue-300' : 'bg-blue-100/95 text-blue-700') :
+                                            program.status === 'Available' ? (theme === 'dark' ? 'bg-green-900/95 text-green-300' : 'bg-green-100/95 text-green-700') :
+                                            program.status === 'Upcoming' ? (theme === 'dark' ? 'bg-yellow-900/95 text-yellow-300' : 'bg-yellow-100/95 text-yellow-700') :
+                                            program.status === 'Completed' ? (theme === 'dark' ? 'bg-gray-800/95 text-gray-300' : 'bg-gray-100/95 text-gray-700') :
+                                            (theme === 'dark' ? 'bg-gray-800/95 text-green-400' : 'bg-white/95 text-green-600')
                                         }`}>
                                             <span className="font-bold text-xs">{program.status || 'Available'}</span>
                                         </div>
                                         
                                         {/* Category tag */}
-                                        <div className="absolute bottom-3 left-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg">
+                                        <div className={`absolute bottom-3 left-3 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}>
                                             Training Program
                                         </div>
                                     </div>
@@ -777,11 +780,11 @@ export default function Landing() {
                                     {/* Enhanced Content */}
                                     <div className="p-6">
                                         <div className="mb-4">
-                                            <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors duration-300 leading-tight">
+                                            <h3 className={`text-lg font-bold mb-2 transition-colors duration-300 leading-tight ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
                                                 {program.title}
                                             </h3>
-                                            <div className="w-10 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mb-3"></div>
-                                            <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+                                            <div className={`w-10 h-0.5 rounded-full mb-3 ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}></div>
+                                            <p className={`text-sm leading-relaxed mb-4 line-clamp-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                                                 {program.desc}
                                             </p>
                                         </div>
@@ -789,7 +792,7 @@ export default function Landing() {
                                         {/* Enhanced CTA Button */}
                                         <a
                                             href="/seminar"
-                                            className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-300 hover:shadow-xl hover:scale-105 group/btn"
+                                            className={`inline-flex items-center gap-2 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-300 hover:shadow-xl hover:scale-105 group/btn ${theme === 'dark' ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600' : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'}`}
                                             onClick={e => { e.preventDefault(); window.location = '/seminar'; }}
                                         >
                                             Learn More
@@ -804,12 +807,12 @@ export default function Landing() {
 
                         {/* Professional Scroll indicator */}
                         <div className="flex justify-center mt-6">
-                            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg border border-green-100">
-                                <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                            <div className={`flex items-center gap-2 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg border ${theme === 'dark' ? 'bg-gray-800/80 border-gray-600' : 'bg-white/80 border-green-100'}`}>
+                                <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
                                 </svg>
-                                <span className="text-gray-700 font-semibold text-sm">Scroll or Drag explore programs</span>
-                                <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Scroll or Drag explore programs</span>
+                                <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                 </svg>
                             </div>
@@ -820,21 +823,21 @@ export default function Landing() {
 
 
             {/* LATEST NEWS & UPDATES - Professional Design */}
-            <section className="py-16 bg-gradient-to-br from-green-50 via-white to-emerald-50/30 relative overflow-hidden" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <section className={`py-16 relative overflow-hidden ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900/80' : 'bg-gradient-to-br from-green-50 via-white to-emerald-50/30'}`} style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {/* Premium background elements */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute top-20 left-10 w-64 h-64 bg-green-100/40 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-20 right-10 w-80 h-80 bg-emerald-100/30 rounded-full blur-3xl"></div>
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-green-50/20 to-emerald-50/20 rounded-full blur-3xl"></div>
+                    <div className={`absolute top-20 left-10 w-64 h-64 rounded-full blur-3xl ${theme === 'dark' ? 'bg-green-500/20' : 'bg-green-100/40'}`}></div>
+                    <div className={`absolute bottom-20 right-10 w-80 h-80 rounded-full blur-3xl ${theme === 'dark' ? 'bg-emerald-500/15' : 'bg-emerald-100/30'}`}></div>
+                    <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full blur-3xl ${theme === 'dark' ? 'bg-gradient-to-r from-green-500/10 to-emerald-500/10' : 'bg-gradient-to-r from-green-50/20 to-emerald-50/20'}`}></div>
                 </div>
 
                 {/* Section header */}
                 <div className="text-center mt-6 mb-12 relative z-10">
                     
-                    <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4 tracking-tight" data-aos="fade-up" data-aos-delay="200">
-                        News & <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Updates</span>
+                    <h2 className={`text-3xl md:text-4xl font-black mb-4 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`} data-aos="fade-up" data-aos-delay="200">
+                        News & <span className={`text-transparent bg-clip-text ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-600 to-emerald-600'}`}>Updates</span>
                     </h2>
-                    <p className="text-base text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed" data-aos="fade-up" data-aos-delay="300">
+                    <p className={`text-base max-w-2xl mx-auto font-medium leading-relaxed ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} data-aos="fade-up" data-aos-delay="300">
                         Stay informed with the latest developments, achievements, and upcoming initiatives in agricultural innovation.
                     </p>
                 </div>
@@ -842,29 +845,29 @@ export default function Landing() {
                 <div className="max-w-6xl mx-auto px-4 relative z-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {/* Enhanced News Card 1 */}
-                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="400">
+                        <div className={`group backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border hover:-translate-y-2 ${theme === 'dark' ? 'bg-gray-800/90 border-gray-700/50 hover:border-green-400' : 'bg-white/90 border-white/50 hover:border-green-200'}`} data-aos="zoom-in" data-aos-delay="400">
                             <div className="relative overflow-hidden">
                                 <img src={fits} alt="FITS Center" className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                                 
                                 {/* Status badge */}
-                                <div className="absolute top-4 left-4 bg-green-100/95 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg">
-                                    <span className="text-green-700 font-bold text-xs">New</span>
+                                <div className={`absolute top-4 left-4 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-green-900/95 text-green-300' : 'bg-green-100/95 text-green-700'}`}>
+                                    <span className="font-bold text-xs">New</span>
                                 </div>
                                 
                                 {/* Date badge */}
-                                <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
-                                    <span className="text-gray-700 font-semibold text-xs">June 2025</span>
+                                <div className={`absolute bottom-4 right-4 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-gray-800/95 text-gray-300' : 'bg-white/95 text-gray-700'}`}>
+                                    <span className="font-semibold text-xs">June 2025</span>
                                 </div>
                             </div>
                             
                             <div className="p-6">
                                 <div className="mb-4">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-300 leading-tight">
+                                    <h3 className={`text-xl font-bold mb-3 transition-colors duration-300 leading-tight ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
                                         FITS Center Launches New Farmer Training
                                     </h3>
-                                    <div className="w-12 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mb-4"></div>
-                                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                                    <div className={`w-12 h-1 rounded-full mb-4 ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}></div>
+                                    <p className={`text-sm leading-relaxed line-clamp-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                                         The FITS Center recently conducted a hands-on training session for local farmers, focusing on sustainable crop management and modern agricultural techniques.
                                     </p>
                                 </div>
@@ -873,7 +876,7 @@ export default function Landing() {
                                     href="https://ati.da.gov.ph/"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-sm transition-all duration-300 group/link"
+                                    className={`inline-flex items-center gap-2 font-semibold text-sm transition-all duration-300 group/link ${theme === 'dark' ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-700'}`}
                                 >
                                     Read More
                                     <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -884,29 +887,29 @@ export default function Landing() {
                         </div>
 
                         {/* Enhanced News Card 2 */}
-                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="500">
+                        <div className={`group backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border hover:-translate-y-2 ${theme === 'dark' ? 'bg-gray-800/90 border-gray-700/50 hover:border-green-400' : 'bg-white/90 border-white/50 hover:border-green-200'}`} data-aos="zoom-in" data-aos-delay="500">
                             <div className="relative overflow-hidden">
                                 <img src={img4} alt="Organic Farming" className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                                 
                                 {/* Status badge */}
-                                <div className="absolute top-4 left-4 bg-emerald-100/95 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg">
-                                    <span className="text-emerald-700 font-bold text-xs">Update</span>
+                                <div className={`absolute top-4 left-4 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-emerald-900/95 text-emerald-300' : 'bg-emerald-100/95 text-emerald-700'}`}>
+                                    <span className="font-bold text-xs">Update</span>
                                 </div>
                                 
                                 {/* Date badge */}
-                                <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
-                                    <span className="text-gray-700 font-semibold text-xs">May 2025</span>
+                                <div className={`absolute bottom-4 right-4 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-gray-800/95 text-gray-300' : 'bg-white/95 text-gray-700'}`}>
+                                    <span className="font-semibold text-xs">May 2025</span>
                                 </div>
                             </div>
                             
                             <div className="p-6">
                                 <div className="mb-4">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-300 leading-tight">
+                                    <h3 className={`text-xl font-bold mb-3 transition-colors duration-300 leading-tight ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
                                         Organic Farming Initiative Expands
                                     </h3>
-                                    <div className="w-12 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mb-4"></div>
-                                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                                    <div className={`w-12 h-1 rounded-full mb-4 ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}></div>
+                                    <p className={`text-sm leading-relaxed line-clamp-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                                         Our organic farming program has expanded to include more barangays, promoting healthier produce and eco-friendly practices across the region.
                                     </p>
                                 </div>
@@ -915,7 +918,7 @@ export default function Landing() {
                                     href="https://ati.da.gov.ph/"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-sm transition-all duration-300 group/link"
+                                    className={`inline-flex items-center gap-2 font-semibold text-sm transition-all duration-300 group/link ${theme === 'dark' ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-700'}`}
                                 >
                                     Read More
                                     <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -926,29 +929,29 @@ export default function Landing() {
                         </div>
 
                         {/* Enhanced News Card 3 */}
-                        <div className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-white/50 hover:border-green-200 hover:-translate-y-2" data-aos="zoom-in" data-aos-delay="600">
+                        <div className={`group backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border hover:-translate-y-2 ${theme === 'dark' ? 'bg-gray-800/90 border-gray-700/50 hover:border-green-400' : 'bg-white/90 border-white/50 hover:border-green-200'}`} data-aos="zoom-in" data-aos-delay="600">
                             <div className="relative overflow-hidden">
                                 <img src={img5} alt="Rabies Control" className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                                 
                                 {/* Status badge */}
-                                <div className="absolute top-4 left-4 bg-green-200/95 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg">
-                                    <span className="text-green-800 font-bold text-xs">Event</span>
+                                <div className={`absolute top-4 left-4 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-green-800/95 text-green-300' : 'bg-green-200/95 text-green-800'}`}>
+                                    <span className="font-bold text-xs">Event</span>
                                 </div>
                                 
                                 {/* Date badge */}
-                                <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
-                                    <span className="text-gray-700 font-semibold text-xs">April 2025</span>
+                                <div className={`absolute bottom-4 right-4 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg ${theme === 'dark' ? 'bg-gray-800/95 text-gray-300' : 'bg-white/95 text-gray-700'}`}>
+                                    <span className="font-semibold text-xs">April 2025</span>
                                 </div>
                             </div>
                             
                             <div className="p-6">
                                 <div className="mb-4">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-300 leading-tight">
+                                    <h3 className={`text-xl font-bold mb-3 transition-colors duration-300 leading-tight ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
                                         Rabies Awareness Campaign
                                     </h3>
-                                    <div className="w-12 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mb-4"></div>
-                                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                                    <div className={`w-12 h-1 rounded-full mb-4 ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`}></div>
+                                    <p className={`text-sm leading-relaxed line-clamp-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                                         The Rabies Control team held a successful awareness drive, educating pet owners and distributing free vaccines to ensure community safety.
                                     </p>
                                 </div>
@@ -957,7 +960,7 @@ export default function Landing() {
                                     href="https://ati.da.gov.ph/"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-sm transition-all duration-300 group/link"
+                                    className={`inline-flex items-center gap-2 font-semibold text-sm transition-all duration-300 group/link ${theme === 'dark' ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-700'}`}
                                 >
                                     Read More
                                     <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -972,14 +975,14 @@ export default function Landing() {
             
 
             {/* USEFUL EXTERNAL RESOURCES - Compact Design */}
-            <section className="py-12 bg-gradient-to-br from-green-900/20 via-emerald-50/60 to-green-900/25" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <section className={`py-12 ${theme === 'dark' ? 'bg-gradient-to-br from-gray-800/20 via-gray-900/60 to-gray-800/25' : 'bg-gradient-to-br from-green-900/20 via-emerald-50/60 to-green-900/25'}`} style={{ fontFamily: 'Poppins, sans-serif' }}>
                 <div className="max-w-6xl mx-auto px-6">
                     {/* Compact Header */}
                     <div className="text-center mb-10">
-                        <h2 className="text-3xl font-extrabold text-green-900 tracking-tight mb-2" data-aos="fade-up" data-aos-delay="100">
+                        <h2 className={`text-3xl font-extrabold tracking-tight mb-2 ${theme === 'dark' ? 'text-white' : 'text-green-900'}`} data-aos="fade-up" data-aos-delay="100">
                             External Resources
                         </h2>
-                        <div className="w-16 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto" data-aos="fade-up" data-aos-delay="200"></div>
+                        <div className={`w-16 h-1 rounded-full mx-auto ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 to-emerald-400' : 'bg-gradient-to-r from-green-500 to-emerald-500'}`} data-aos="fade-up" data-aos-delay="200"></div>
                     </div>
 
                     {/* Compact Resource Cards Grid */}
@@ -993,10 +996,10 @@ export default function Landing() {
                             data-aos="fade-up" 
                             data-aos-delay="300"
                         >
-                            <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/50 hover:border-green-200 hover:-translate-y-1">
+                            <div className={`backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border hover:-translate-y-1 ${theme === 'dark' ? 'bg-gray-800/90 border-gray-700/50 hover:border-green-400' : 'bg-white/90 border-white/50 hover:border-green-200'}`}>
                                 {/* Compact Icon */}
                                 <div className="flex justify-center mb-4">
-                                    <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 ${theme === 'dark' ? 'bg-gradient-to-br from-green-400 to-emerald-500' : 'bg-gradient-to-br from-green-500 to-emerald-600'}`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                         </svg>
@@ -1005,13 +1008,13 @@ export default function Landing() {
                                 
                                 {/* Compact Content */}
                                 <div className="text-center">
-                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-green-600 transition-colors duration-300 mb-2">
+                                    <h3 className={`text-lg font-bold transition-colors duration-300 mb-2 ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
                                         Department of Agriculture
                                     </h3>
-                                    <p className="text-gray-600 text-sm mb-3">
+                                    <p className={`text-sm mb-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                                         Government portal for agriculture programs and resources.
                                     </p>
-                                    <span className="inline-flex items-center gap-1 text-green-600 font-semibold text-sm">
+                                    <span className={`inline-flex items-center gap-1 font-semibold text-sm ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>
                                         Visit
                                         <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -1102,9 +1105,9 @@ export default function Landing() {
         </main>
         
         {/* Professional Footer */}
-        <footer className="relative bg-green-700 overflow-hidden" style={{ fontFamily: 'Poppins, sans-serif' }}>
+        <footer className={`relative overflow-hidden ${theme === 'dark' ? 'bg-gray-800' : 'bg-green-700'}`} style={{ fontFamily: 'Poppins, sans-serif' }}>
             {/* Top decorative bar */}
-            <div className="h-1 bg-white"></div>
+            <div className={`h-1 ${theme === 'dark' ? 'bg-gray-400' : 'bg-white'}`}></div>
             
             <div className="relative py-12 px-6">
                 <div className="max-w-7xl mx-auto">
@@ -1119,12 +1122,12 @@ export default function Landing() {
                                         <img src={logo} alt="FITS Logo" className="w-12 h-12 rounded-2xl border-2 border-white shadow-lg" />
                                     </div>
                                     <div>
-                                        <span className="text-2xl font-extrabold text-white tracking-wide">FITS-Tanza</span>
-                                        <p className="text-white text-sm font-medium">Farmers' Information & Technology Services</p>
+                                        <span className={`text-2xl font-extrabold tracking-wide ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>FITS-Tanza</span>
+                                        <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>Farmers' Information & Technology Services</p>
                                     </div>
                                 </div>
                                 
-                                <p className="text-white text-sm leading-relaxed mb-6 max-w-2xl">
+                                <p className={`text-sm leading-relaxed mb-6 max-w-2xl ${theme === 'dark' ? 'text-gray-300' : 'text-white'}`}>
                                     Empowering local farmers and communities through innovative agricultural programs, advanced training, 
                                     and comprehensive support services for sustainable farming practices.
                                 </p>
@@ -1133,40 +1136,40 @@ export default function Landing() {
                             {/* Enhanced Contact Information */}
                             <div className="space-y-3">
                                 <div className="flex items-start gap-3 group">
-                                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <svg className="w-4 h-4 text-green-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${theme === 'dark' ? 'bg-gray-600' : 'bg-white'}`}>
+                                        <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-200' : 'text-green-700'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 12.414a2 2 0 10-2.828 2.828l4.243 4.243a8 8 0 111.414-1.414z" />
                                         </svg>
                                     </div>
                                     <div>
-                                        <p className="text-white font-semibold text-sm">Address</p>
-                                        <p className="text-white text-sm">Municipal Cmpd., Municipality of Tanza, A. Soriano Hi-way, Daang Amaya I, Tanza, Philippines</p>
+                                        <p className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Address</p>
+                                        <p className={`text-sm ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>Municipal Cmpd., Municipality of Tanza, A. Soriano Hi-way, Daang Amaya I, Tanza, Philippines</p>
                                     </div>
                                 </div>
                                 
                                 <div className="flex items-start gap-3 group">
-                                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <svg className="w-4 h-4 text-green-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${theme === 'dark' ? 'bg-gray-600' : 'bg-white'}`}>
+                                        <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-200' : 'text-green-700'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                     </div>
                                     <div>
-                                        <p className="text-white font-semibold text-sm">Email</p>
-                                        <a href="mailto:fitstanza@gmail.com" className="text-white hover:text-gray-200 text-sm font-bold transition-colors duration-300">
+                                        <p className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Email</p>
+                                        <a href="mailto:fitstanza@gmail.com" className={`text-sm font-bold transition-colors duration-300 ${theme === 'dark' ? 'text-gray-200 hover:text-gray-100' : 'text-white hover:text-gray-200'}`}>
                                             fitstanza@gmail.com
                                         </a>
                                     </div>
                                 </div>
                                 
                                 <div className="flex items-start gap-3 group">
-                                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <svg className="w-4 h-4 text-green-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${theme === 'dark' ? 'bg-gray-600' : 'bg-white'}`}>
+                                        <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-200' : 'text-green-700'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3l2 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
                                         </svg>
                                     </div>
                                     <div>
-                                        <p className="text-white font-semibold text-sm">Phone</p>
-                                        <a href="tel:+63464123456" className="text-white hover:underline text-sm transition-colors duration-300">
+                                        <p className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Phone</p>
+                                        <a href="tel:+63464123456" className={`text-sm transition-colors duration-300 ${theme === 'dark' ? 'text-gray-200 hover:underline' : 'text-white hover:underline'}`}>
                                             (+63) 46 412 3456
                                         </a>
                                     </div>
@@ -1177,11 +1180,11 @@ export default function Landing() {
                         {/* Enhanced Quick Links */}
                         <div>
                             <div className="mb-6">
-                                <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                                    <div className="w-1 h-6 bg-white rounded-full"></div>
+                                <h4 className={`text-xl font-bold mb-4 flex items-center gap-2 ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>
+                                    <div className={`w-1 h-6 rounded-full ${theme === 'dark' ? 'bg-gray-400' : 'bg-white'}`}></div>
                                     Quick Links
                                 </h4>
-                                <div className="w-12 h-0.5 bg-white rounded-full"></div>
+                                <div className={`w-12 h-0.5 rounded-full ${theme === 'dark' ? 'bg-gray-400' : 'bg-white'}`}></div>
                             </div>
                             
                             <nav className="space-y-3">
@@ -1196,10 +1199,10 @@ export default function Landing() {
                                     <a
                                         key={index}
                                         href={link.href}
-                                        className="group flex items-center gap-2 text-white hover:font-bold transition-all duration-300"
+                                        className={`group flex items-center gap-2 transition-all duration-300 ${theme === 'dark' ? 'text-gray-200 hover:font-bold' : 'text-white hover:font-bold'}`}
                                         onClick={e => { e.preventDefault(); window.location = link.href; }}
                                     >
-                                        <div className="w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                        <div className={`w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${theme === 'dark' ? 'bg-gray-400' : 'bg-white'}`}></div>
                                         <span className="font-medium text-lg">{link.label}</span>
                                     </a>
                                 ))}
@@ -1209,50 +1212,50 @@ export default function Landing() {
                         {/* Enhanced Office Hours & Services */}
                         <div>
                             <div className="mb-4">
-                                <h4 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                                    <div className="w-1 h-5 bg-white rounded-full"></div>
+                                <h4 className={`text-lg font-bold mb-3 flex items-center gap-2 ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>
+                                    <div className={`w-1 h-5 rounded-full ${theme === 'dark' ? 'bg-gray-400' : 'bg-white'}`}></div>
                                     Office Hours
                                 </h4>
-                                <div className="w-10 h-0.5 bg-white rounded-full"></div>
+                                <div className={`w-10 h-0.5 rounded-full ${theme === 'dark' ? 'bg-gray-400' : 'bg-white'}`}></div>
                             </div>
                             
                             <div className="space-y-3 mb-6">
-                                <div className="bg-white/20 rounded-lg p-3 border border-white/30">
+                                <div className={`rounded-lg p-3 border ${theme === 'dark' ? 'bg-gray-700/50 border-gray-600' : 'bg-white/20 border-white/30'}`}>
                                     <div className="flex items-center gap-2 mb-2">
-                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                        <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <circle cx="12" cy="12" r="10"/>
                                             <polyline points="12,6 12,12 16,14"/>
                                         </svg>
-                                        <span className="text-white font-semibold text-sm">Working Days</span>
+                                        <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Working Days</span>
                                     </div>
-                                    <p className="text-white text-sm">Monday - Friday</p>
-                                    <p className="text-white font-semibold text-sm">8:00 AM - 5:00 PM</p>
+                                    <p className={`text-sm ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>Monday - Friday</p>
+                                    <p className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>8:00 AM - 5:00 PM</p>
                                 </div>
                                 
-                                <div className="bg-white/20 rounded-lg p-3 border border-white/30">
+                                <div className={`rounded-lg p-3 border ${theme === 'dark' ? 'bg-gray-700/50 border-gray-600' : 'bg-white/20 border-white/30'}`}>
                                     <div className="flex items-center gap-2 mb-2">
-                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                        <svg className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                         </svg>
-                                        <span className="text-white font-semibold text-sm">Message Us</span>
+                                        <span className={`font-semibold text-sm ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Message Us</span>
                                     </div>
-                                    <a href="https://m.me/fitstanza" target="_blank" rel="noopener noreferrer" className="text-white text-sm transition-colors duration-300 font-bold">
+                                    <a href="https://m.me/fitstanza" target="_blank" rel="noopener noreferrer" className={`text-sm transition-colors duration-300 font-bold ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>
                                         Facebook Messenger
                                     </a>
                                 </div>
                             </div>
                             
-                            <p className="text-white text-sm font-medium">
+                            <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>
                                 For urgent concerns, please call or visit our office during working hours.
                             </p>
                         </div>
                     </div>
                     
                     {/* Enhanced Social Media & Connect Section */}
-                    <div className="border-t border-white/30 pt-8 mb-8">
+                    <div className={`border-t pt-8 mb-8 ${theme === 'dark' ? 'border-gray-600' : 'border-white/30'}`}>
                         <div className="text-center mb-6">
-                            <h4 className="text-xl font-bold text-white mb-3">Stay Connected</h4>
-                            <p className="text-white text-base max-w-2xl mx-auto">
+                            <h4 className={`text-xl font-bold mb-3 ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>Stay Connected</h4>
+                            <p className={`text-base max-w-2xl mx-auto ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>
                                 Follow us on social media for the latest updates on agricultural programs, events, and farming innovations.
                             </p>
                         </div>
@@ -1283,8 +1286,14 @@ export default function Landing() {
                                     aria-label={social.label}
                                     className="group relative"
                                 >
-                                    <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center border border-white/70 group-hover:border-white transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                                        <svg fill="currentColor" viewBox="0 0 24 24" className="w-7 h-7 text-green-700 transition-colors duration-300">
+                                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${
+                                        theme === 'dark' 
+                                            ? 'bg-gray-600 border-gray-500 group-hover:border-gray-400' 
+                                            : 'bg-white border-white/70 group-hover:border-white'
+                                    }`}>
+                                        <svg fill="currentColor" viewBox="0 0 24 24" className={`w-7 h-7 transition-colors duration-300 ${
+                                            theme === 'dark' ? 'text-gray-200' : 'text-green-700'
+                                        }`}>
                                             <path d={social.icon} />
                                         </svg>
                                     </div>
@@ -1294,15 +1303,17 @@ export default function Landing() {
                     </div>
                     
                     {/* Enhanced Bottom Section */}
-                    <div className="border-t border-white/30 pt-8">
+                    <div className={`border-t pt-8 ${theme === 'dark' ? 'border-gray-600' : 'border-white/30'}`}>
                         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                             <div className="text-center md:text-left">
-                                <p className="text-white text-lg font-medium mb-1">
+                                <p className={`text-lg font-medium mb-1 ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>
                                     &copy; {new Date().getFullYear()} FITS-Tanza. All rights reserved.
                                 </p>
-                                <p className="text-white text-base">
+                                <p className={`text-base ${theme === 'dark' ? 'text-gray-200' : 'text-white'}`}>
                                     Developed by the FITS-Tanza IT Team. 
-                                    <a href="mailto:fitstanza@gmail.com" className="text-white hover:text-gray-200 font-bold ml-1 transition-colors duration-300 underline">
+                                    <a href="mailto:fitstanza@gmail.com" className={`font-bold ml-1 transition-colors duration-300 underline ${
+                                        theme === 'dark' ? 'text-gray-200 hover:text-gray-100' : 'text-white hover:text-gray-200'
+                                    }`}>
                                         Contact Webmaster
                                     </a>
                                 </p>
@@ -1317,7 +1328,7 @@ export default function Landing() {
                                     <a
                                         key={index}
                                         href={link.href}
-                                        className="text-white hover:font-bold transition-all duration-300"
+                                        className={`transition-all duration-300 ${theme === 'dark' ? 'text-gray-200 hover:font-bold' : 'text-white hover:font-bold'}`}
                                     >
                                         {link.label}
                                     </a>
@@ -1331,8 +1342,12 @@ export default function Landing() {
 
             {/* Back to Top Button */}
             <button
-                className={`fixed bottom-8 left-8 z-50 w-14 h-14 bg-white text-green-700 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center group ${
+                className={`fixed bottom-8 left-8 z-50 w-14 h-14 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center group ${
                     showBackToTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+                } ${
+                    theme === 'dark' 
+                        ? 'bg-gray-700 text-gray-100 hover:bg-gray-600' 
+                        : 'bg-white text-green-700 hover:bg-gray-50'
                 }`}
                 onClick={scrollToTop}
                 aria-label="Back to top"
@@ -1352,7 +1367,11 @@ export default function Landing() {
                 </svg>
                 
                 {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full blur opacity-0 group-hover:opacity-30 transition-opacity duration-300 -z-10"></div>
+                <div className={`absolute inset-0 rounded-full blur opacity-0 group-hover:opacity-30 transition-opacity duration-300 -z-10 ${
+                    theme === 'dark' 
+                        ? 'bg-gradient-to-r from-gray-500 to-gray-600' 
+                        : 'bg-gradient-to-r from-green-400 to-emerald-400'
+                }`}></div>
             </button>
 
             <style>{`
@@ -1394,17 +1413,17 @@ export default function Landing() {
                     height: 7px;
                 }
                 ::-webkit-scrollbar-thumb {
-                    background: #14532d;
+                    background: ${theme === 'dark' ? '#6b7280' : '#14532d'};
                     border-radius: 8px;
                 }
                 ::-webkit-scrollbar-track {
-                    background: #e5e7eb;
+                    background: ${theme === 'dark' ? '#374151' : '#e5e7eb'};
                     border-radius: 8px;
                 }
                 /* For Firefox */
                 html {
                     scrollbar-width: thin;
-                    scrollbar-color: #14532d #e5e7eb;
+                    scrollbar-color: ${theme === 'dark' ? '#6b7280 #374151' : '#14532d #e5e7eb'};
                 }
             `}</style>
         </>

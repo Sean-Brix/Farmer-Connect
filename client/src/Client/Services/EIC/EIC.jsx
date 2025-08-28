@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../../../contexts/ThemeContext.jsx';
 import Navbar from '../../Components/Navbar';
 
 // ASSETS
@@ -21,6 +22,7 @@ import { showSuccessAlert, showErrorAlert, showLoginPrompt } from './utils/alert
 const ITEMS_PER_PAGE = 8;
 
 export default function Eic() {
+    const { theme } = useTheme();
     const navigate = useNavigate();
     const [filter, setFilter] = useState('All');
     const [search, setSearch] = useState('');
@@ -384,19 +386,25 @@ export default function Eic() {
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-white relative"
+                className={`flex min-h-screen relative ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}
                 style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-[8vh]">
                         <header className="flex flex-col items-center mb-12 w-full">
-                            <span className="uppercase tracking-widest text-gray-600 text-xs font-semibold mb-1 letter-spacing-wide">
+                            <span className={`uppercase tracking-widest text-xs font-semibold mb-1 letter-spacing-wide ${
+                                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
                                 Welcome to
                             </span>
-                            <h1 className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title text-gray-800">
+                            <h1 className={`text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title ${
+                                theme === 'dark' ? 'text-gray-100' : 'text-gray-800'
+                            }`}>
                                 Equipment, Inputs & Commodities
                             </h1>
-                            <div className="mt-4 w-24 h-2 rounded-full bg-green-500 shadow-lg"></div>
+                            <div className={`mt-4 w-24 h-2 rounded-full shadow-lg ${
+                                theme === 'dark' ? 'bg-green-400' : 'bg-green-500'
+                            }`}></div>
                         </header>
 
                         <EICSearchAndFilters

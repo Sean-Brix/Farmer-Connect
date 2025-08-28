@@ -1,3 +1,46 @@
+@import "tailwindcss";
+
+/* Dark mode root styling */
+:root {
+  --color-bg-light: #ffffff;
+  --color-bg-dark: #111827;
+  --color-text-light: #111827;
+  --color-text-dark: #f9fafb;
+}
+
+html.dark,
+body.dark {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-dark);
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-light);
+  color-scheme: light;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode scrollbar */
+html.dark ::-webkit-scrollbar {
+  width: 8px;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 4px;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
 /* Hero Slide Animation */
 .hero-slide-img {
   transition: transform 0.6s cubic-bezier(0.77,0,0.175,1), opacity 0.6s;

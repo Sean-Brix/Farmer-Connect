@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTheme } from '../../contexts/ThemeContext.jsx';
 
 
 // COMPONENTS
@@ -12,6 +13,7 @@ import i2 from '../Assets/i2.jpg';
 import i3 from '../Assets/i3.jpg';
 
 export default function Login() {
+    const { theme } = useTheme();
     const navigate = useNavigate();
     const username = useRef(null);
     const password = useRef(null);
@@ -60,15 +62,21 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-2 py-6 sm:py-10" style={{
-            backgroundImage: `url(${ebg})`,
+        <div className={`min-h-screen flex items-center justify-center px-2 py-6 sm:py-10 ${theme === 'dark' ? 'bg-gray-900' : ''}`} style={{
+            backgroundImage: theme === 'dark' ? 'none' : `url(${ebg})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
         }}>
-            <div className="relative flex flex-col md:flex-row w-full max-w-5xl md:h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200">
+            <div className={`relative flex flex-col md:flex-row w-full max-w-5xl md:h-[600px] rounded-3xl shadow-2xl overflow-hidden border ${
+                theme === 'dark' 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-white border-gray-200'
+            }`}>
                 {/* Left: Form Section */}
-                <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 md:py-10 z-10 max-h-[90vh] md:max-h-[600px] overflow-y-auto custom-scrollbar">
+                <div className={`flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 md:py-10 z-10 max-h-[90vh] md:max-h-[600px] overflow-y-auto custom-scrollbar ${
+                    theme === 'dark' ? 'text-gray-100' : ''
+                }`}>
             {/* Custom Scrollbar Styles */}
             <style>{`
                 .custom-scrollbar::-webkit-scrollbar {
@@ -98,9 +106,15 @@ export default function Login() {
             `}</style>
                     <div className="flex flex-col items-center mb-8 ">
                         <img src={logo} alt="FITS Tanza Logo" className="h-12 w-12 rounded-full mb-3 shadow-xl  z-30 relative mt-5" />
-                        <h1 className="font-extrabold text-3xl md:text-4xl text-green-700 tracking-tight mb-1 text-center drop-shadow font-sans uppercase" style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
-                        <span className="text-sm md:text-sm font-semibold text-green-600 tracking-wide mb-2 text-center" style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
-                        <span className="text-gray-500 text-base md:text-lg text-center">Sign in to your account</span>
+                        <h1 className={`font-extrabold text-3xl md:text-4xl tracking-tight mb-1 text-center drop-shadow font-sans uppercase ${
+                            theme === 'dark' ? 'text-green-400' : 'text-green-700'
+                        }`} style={{letterSpacing: '0.04em'}}>FITS - Tanza</h1>
+                        <span className={`text-sm md:text-sm font-semibold tracking-wide mb-2 text-center ${
+                            theme === 'dark' ? 'text-green-300' : 'text-green-600'
+                        }`} style={{textShadow: '0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.07)'}}>Municipal Agriculture Office</span>
+                        <span className={`text-base md:text-lg text-center ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                        }`}>Sign in to your account</span>
                     </div>
                     <form
                         className="space-y-6 w-full max-w-md mx-auto"
@@ -166,7 +180,9 @@ export default function Login() {
                         autoComplete="on"
                     >
                         <div>
-                            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+                            <label htmlFor="username" className={`block text-sm font-medium ${
+                                theme === 'dark' ? 'text-gray-200' : 'text-gray-700'
+                            }`}>Username</label>
                             <input
                                 type="text"
                                 id="username"
@@ -174,11 +190,17 @@ export default function Login() {
                                 required
                                 ref={username}
                                 autoComplete="username"
-                                className="w-full px-4 py-2 mt-1 border rounded-md  = border-gray-300 bg-white"
+                                className={`w-full px-4 py-2 mt-1 border rounded-md ${
+                                    theme === 'dark' 
+                                        ? 'border-gray-600 bg-gray-700 text-gray-100 focus:border-green-400 focus:ring-green-400' 
+                                        : 'border-gray-300 bg-white focus:border-green-500 focus:ring-green-500'
+                                }`}
                             />
                         </div>
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                            <label htmlFor="password" className={`block text-sm font-medium ${
+                                theme === 'dark' ? 'text-gray-200' : 'text-gray-700'
+                            }`}>Password</label>
                             <div className="relative">
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -186,12 +208,20 @@ export default function Login() {
                                     name="password"
                                     required
                                     ref={password}
-                                    className="w-full px-4 py-2 pr-12 mt-1 border rounded-md border-gray-300 bg-white"
+                                    className={`w-full px-4 py-2 pr-12 mt-1 border rounded-md ${
+                                        theme === 'dark' 
+                                            ? 'border-gray-600 bg-gray-700 text-gray-100 focus:border-green-400 focus:ring-green-400' 
+                                            : 'border-gray-300 bg-white focus:border-green-500 focus:ring-green-500'
+                                    }`}
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 hover:text-gray-800 transition-colors"
+                                    className={`absolute inset-y-0 right-0 flex items-center px-3 transition-colors ${
+                                        theme === 'dark' 
+                                            ? 'text-gray-400 hover:text-gray-200' 
+                                            : 'text-gray-600 hover:text-gray-800'
+                                    }`}
                                 >
                                     {showPassword ? (
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

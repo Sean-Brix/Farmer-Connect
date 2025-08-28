@@ -73,6 +73,8 @@ export default function Sidebar({
     iconOnlyClass = '',
     currentPageKey,
     handleSetPage,
+    theme,
+    isDark,
 }) {
     const navigate = useNavigate();
 
@@ -94,12 +96,22 @@ export default function Sidebar({
             {/* Import Poppins font from Google Fonts */}
             <style>{`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');`}</style>
             <aside
-                className={`sidebar transition-all duration-300 w-64 bg-white backdrop-blur-xl border-r border-green-200 shadow-2xl hidden md:flex flex-col fixed left-0 top-0 z-30 h-screen max-h-screen ${iconOnlyClass}`}
+                className={`sidebar transition-all duration-300 w-64 backdrop-blur-xl border-r shadow-2xl hidden md:flex flex-col fixed left-0 top-0 z-30 h-screen max-h-screen ${iconOnlyClass} ${
+                    isDark 
+                        ? 'bg-gray-800 border-gray-700' 
+                        : 'bg-white border-green-200'
+                }`}
                 style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
             >
                 <div className="flex flex-col h-full max-h-screen">
-                    <div className="p-6 border-b border-green-200 bg-white flex items-center shadow-sm">
-                        <h1 className="text-2xl font-extrabold text-green-800 tracking-tight sidebar-label drop-shadow-sm" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>FITS - TANZA</h1>
+                    <div className={`p-6 border-b flex items-center shadow-sm ${
+                        isDark 
+                            ? 'border-gray-700 bg-gray-800' 
+                            : 'border-green-200 bg-white'
+                    }`}>
+                        <h1 className={`text-2xl font-extrabold tracking-tight sidebar-label drop-shadow-sm ${
+                            isDark ? 'text-green-400' : 'text-green-800'
+                        }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>FITS - TANZA</h1>
                     </div>
                     <nav className="mt-3 flex-1 overflow-y-auto minimalist-scrollbar">
                         <ul className="space-y-2 px-3">
@@ -109,42 +121,68 @@ export default function Sidebar({
                                     className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer sidebar-item shadow-sm
                                         ${
                                             currentPageKey === item.key
-                                                ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 text-green-800 ring-2 ring-green-400/30 shadow-lg'
-                                                : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
+                                                ? isDark 
+                                                    ? 'bg-gradient-to-r from-green-900/50 to-green-800/50 text-green-300 ring-2 ring-green-500/30 shadow-lg'
+                                                    : 'bg-gradient-to-r from-green-200/80 to-green-100/80 text-green-800 ring-2 ring-green-400/30 shadow-lg'
+                                                : isDark
+                                                    ? 'text-gray-300 hover:bg-green-900/30 hover:shadow-md'
+                                                    : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
                                         }
                                     `}
                                     style={{ minHeight: '3.2rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                     onClick={() => handleClick(item)}
                                 >
-                                    <span className="sidebar-icon text-green-700/90 text-xl drop-shadow-sm">{item.icon}</span>
+                                    <span className={`sidebar-icon text-xl drop-shadow-sm ${
+                                        currentPageKey === item.key 
+                                            ? isDark ? 'text-green-400' : 'text-green-700/90'
+                                            : isDark ? 'text-green-500' : 'text-green-700/90'
+                                    }`}>{item.icon}</span>
                                     <span className="sidebar-label font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>{item.label}</span>
                                 </li>
                             ))}
                         </ul>
                     </nav>
-                    <div className="p-6 border-t border-green-200 flex flex-col items-center mt-auto bg-white shadow-inner">
+                    <div className={`p-6 border-t flex flex-col items-center mt-auto shadow-inner ${
+                        isDark 
+                            ? 'border-gray-700 bg-gray-800' 
+                            : 'border-green-200 bg-white'
+                    }`}>
                         <div
-                            className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-green-100/60 rounded-xl p-3 transition shadow-sm"
+                            className={`flex items-center mb-5 w-full gap-4 cursor-pointer rounded-xl p-3 transition shadow-sm ${
+                                isDark 
+                                    ? 'hover:bg-green-900/30' 
+                                    : 'hover:bg-green-100/60'
+                            }`}
                             onClick={() => navigate('/settings/profile')}
                             style={{ minHeight: '4.2rem' }}
                         >
                             <img
                                 src={details.picture}
                                 alt="Profile"
-                                className="h-12 w-12 rounded-full object-cover border-2 border-green-300 shadow"
+                                className={`h-12 w-12 rounded-full object-cover border-2 shadow ${
+                                    isDark ? 'border-green-500' : 'border-green-300'
+                                }`}
                                 style={{ background: '#e0e7ef' }}
                             />
                             <div className="flex flex-col sidebar-profile-info">
-                                <span className="font-bold text-green-900 sidebar-username text-base tracking-tight drop-shadow-sm" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
+                                <span className={`font-bold sidebar-username text-base tracking-tight drop-shadow-sm ${
+                                    isDark ? 'text-green-300' : 'text-green-900'
+                                }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
                                     {details.username}
                                 </span>
-                                <span className="text-sm text-green-500 sidebar-position font-medium" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
+                                <span className={`text-sm sidebar-position font-medium ${
+                                    isDark ? 'text-green-400' : 'text-green-500'
+                                }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
                                     {details.position}
                                 </span>
                             </div>
                         </div>
                         <button
-                            className="flex items-center justify-center gap-3 px-6 py-3 bg-white hover:bg-green-200 rounded-xl transition text-green-800 w-full border border-green-200 font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn"
+                            className={`flex items-center justify-center gap-3 px-6 py-3 rounded-xl transition w-full border font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn ${
+                                isDark 
+                                    ? 'bg-gray-700 hover:bg-red-900 border-gray-600 text-red-400 hover:text-red-300' 
+                                    : 'bg-white hover:bg-red-50 border-red-200 text-red-700 hover:text-red-800'
+                            }`}
                             onClick={logging}
                             style={{ letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                         >

@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import Navbar from '../../Client/Components/Navbar.jsx'
 import botAvatar from '../../Assets/default_picture.png';
 import userAvatar from '../../Assets/eic_default.png';
+import { useTheme } from '../../contexts/ThemeContext';
 
 export default function ChatSupport() {
+    const { theme, isDark } = useTheme();
     const [currentView, setCurrentView] = useState('chat'); // 'chat', 'faq', 'inquiries'
     const [selectedInquiry, setSelectedInquiry] = useState(null);
     const [currentInquiry, setCurrentInquiry] = useState(null);
@@ -135,30 +137,30 @@ export default function ChatSupport() {
     // Helper functions for styling
     const getCategoryColor = (category) => {
         switch (category) {
-            case 'seminar': return 'bg-blue-100 text-blue-800';
-            case 'eic': return 'bg-green-100 text-green-800';
-            case 'distribution': return 'bg-purple-100 text-purple-800';
-            case 'account': return 'bg-orange-100 text-orange-800';
-            default: return 'bg-gray-100 text-gray-800';
+            case 'seminar': return isDark ? 'bg-blue-900 text-blue-300' : 'bg-blue-100 text-blue-800';
+            case 'eic': return isDark ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800';
+            case 'distribution': return isDark ? 'bg-purple-900 text-purple-300' : 'bg-purple-100 text-purple-800';
+            case 'account': return isDark ? 'bg-orange-900 text-orange-300' : 'bg-orange-100 text-orange-800';
+            default: return isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800';
         }
     };
 
     const getPriorityColor = (priority) => {
         switch (priority) {
-            case 'high': return 'bg-red-100 text-red-800';
-            case 'medium': return 'bg-yellow-100 text-yellow-800';
-            case 'low': return 'bg-green-100 text-green-800';
-            default: return 'bg-gray-100 text-gray-800';
+            case 'high': return isDark ? 'bg-red-900 text-red-300' : 'bg-red-100 text-red-800';
+            case 'medium': return isDark ? 'bg-yellow-900 text-yellow-300' : 'bg-yellow-100 text-yellow-800';
+            case 'low': return isDark ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800';
+            default: return isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800';
         }
     };
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'open': return 'bg-blue-100 text-blue-800';
-            case 'in-progress': return 'bg-yellow-100 text-yellow-800';
-            case 'resolved': return 'bg-green-100 text-green-800';
-            case 'closed': return 'bg-gray-100 text-gray-800';
-            default: return 'bg-gray-100 text-gray-800';
+            case 'open': return isDark ? 'bg-blue-900 text-blue-300' : 'bg-blue-100 text-blue-800';
+            case 'in-progress': return isDark ? 'bg-yellow-900 text-yellow-300' : 'bg-yellow-100 text-yellow-800';
+            case 'resolved': return isDark ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-800';
+            case 'closed': return isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800';
+            default: return isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800';
         }
     };
 
@@ -168,14 +170,22 @@ export default function ChatSupport() {
             <Navbar />
             
             {/* Main Chat Support Page - Professional Modal-like Layout */}
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50 to-gray-100 p-4 pt-[16vh]">
+            <div className={`min-h-screen p-4 pt-[16vh] ${
+                isDark 
+                    ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-black' 
+                    : 'bg-gradient-to-br from-slate-50 via-green-50 to-gray-100'
+            }`}>
                 <div className="container mx-auto max-w-5xl">
                     {/* Professional Page Header - EIC Style */}
                     <div className="text-center mb-12">
-                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
+                        <div className={`text-xs font-semibold uppercase tracking-wider mb-4 ${
+                            isDark ? 'text-gray-400' : 'text-gray-500'
+                        }`}>
                             Welcome to
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-6">
+                        <h1 className={`text-4xl md:text-5xl font-extrabold mb-6 ${
+                            isDark ? 'text-gray-100' : 'text-gray-800'
+                        }`}>
                             Professional Support Center
                         </h1>
                         <div className="w-24 h-1 bg-green-500 mx-auto rounded-full mb-6"></div>
@@ -184,9 +194,17 @@ export default function ChatSupport() {
                     </div>
 
                     {/* Professional Chat Interface */}
-                    <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden max-w-5xl mx-auto" style={{ height: '700px' }}>
+                    <div className={`rounded-3xl shadow-2xl border overflow-hidden max-w-5xl mx-auto ${
+                        isDark 
+                            ? 'bg-gray-800 border-gray-700' 
+                            : 'bg-white border-gray-100'
+                    }`} style={{ height: '700px' }}>
                         {/* Enhanced Professional Header */}
-                        <div className="bg-gradient-to-r from-green-600 via-green-700 to-green-800 text-white px-8 py-6 relative overflow-hidden">
+                        <div className={`text-white px-8 py-6 relative overflow-hidden ${
+                            isDark 
+                                ? 'bg-gradient-to-r from-green-700 via-green-800 to-green-900' 
+                                : 'bg-gradient-to-r from-green-600 via-green-700 to-green-800'
+                        }`}>
                             {/* Background Pattern */}
                             <div className="absolute inset-0 bg-white/5">
                                 <div className="absolute inset-0" style={{

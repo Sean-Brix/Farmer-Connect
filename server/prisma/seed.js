@@ -1544,6 +1544,90 @@ async function createSurveyStatistics() {
   console.log(`Created ${statisticsData.length} survey statistics.`);
 }
 
+//? ===================================== USER PREFERENCES ===================================== ?//
+
+async function createUserPreferences() {
+  const accounts = await prisma.account.findMany();
+
+  if (accounts.length === 0) {
+    console.log('No accounts found for creating user preferences.');
+    return;
+  }
+
+  // Default preferences that all users should have
+  const defaultPreferences = [
+    { key: 'theme', value: 'light' }, // Default to light mode
+    { key: 'language', value: 'en' },
+    { key: 'notification_email_seminar_updates', value: 'true' },
+    { key: 'notification_email_equipment_status', value: 'true' },
+    { key: 'notification_email_announcements', value: 'true' },
+    { key: 'notification_push_seminar_reminders', value: 'true' },
+    { key: 'notification_push_equipment_reminders', value: 'true' },
+    { key: 'privacy_profile_visibility', value: 'public' },
+    { key: 'dashboard_show_weather', value: 'true' },
+    { key: 'dashboard_show_tips', value: 'true' },
+    { key: 'auto_save_drafts', value: 'true' }
+  ];
+
+  // Some users will have different theme preferences for variety
+  const themeVariations = ['light', 'dark', 'auto'];
+  const languageVariations = ['en', 'tl']; // English and Tagalog
+
+  for (const account of accounts) {
+    for (const pref of defaultPreferences) {
+      let value = pref.value;
+
+      // Add some variety to certain preferences
+      if (pref.key === 'theme') {
+        // 70% light, 20% dark, 10% auto
+        const rand = Math.random();
+        if (rand < 0.7) {
+          value = 'light';
+        } else if (rand < 0.9) {
+          value = 'dark';
+        } else {
+          value = 'auto';
+        }
+      } else if (pref.key === 'language') {
+        // 80% English, 20% Tagalog
+        value = Math.random() < 0.8 ? 'en' : 'tl';
+      } else if (pref.key.includes('notification')) {
+        // 85% enable notifications, 15% disable
+        value = Math.random() < 0.85 ? 'true' : 'false';
+      }
+
+      // Check if preference already exists
+      const existingPref = await prisma.userPreference.findUnique({
+        where: {
+          userId_key: {
+            userId: account.id,
+            key: pref.key
+          }
+        }
+      });
+
+      if (!existingPref) {
+        await prisma.userPreference.create({
+          data: {
+            userId: account.id,
+            key: pref.key,
+            value: value,
+            createdAt: faker.date.between({
+              from: new Date(account.createdAt),
+              to: new Date()
+            })
+          }
+        });
+      }
+    }
+
+    // Add a small delay to avoid overwhelming the database
+    await wait(50);
+  }
+
+  console.log(`Created user preferences for ${accounts.length} accounts.`);
+}
+
 //? ====================================== EXECUTE SEEDS ====================================== ?//
 
 async function main() {
@@ -1593,6 +1677,9 @@ async function main() {
     
     await createSurveyStatistics();
     console.log('Survey Statistics created successfully.');
+
+    await createUserPreferences();
+    console.log('User Preferences created successfully.');
   } 
 
   catch (error) {

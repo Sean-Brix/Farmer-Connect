@@ -7,10 +7,12 @@ import Chat from '../../Components/Chats/Chat.jsx';
 import logo2 from '../Assets/farmerconnect.png'; 
 import { connectSocket } from '../../utils/socket.js';
 import { useCustomTranslation } from '../../hooks/useCustomTranslation.js';
+import { useTheme } from '../../contexts/ThemeContext.jsx';
 
 export default function Navbar({refresh}) {
     const location = useLocation();
     const { t } = useCustomTranslation();
+    const { theme } = useTheme();
     
     // Inject Google Fonts Poppins if not already present
     if (typeof document !== 'undefined' && !document.getElementById('poppins-font')) {
@@ -77,6 +79,9 @@ export default function Navbar({refresh}) {
     const refreshAuthData = () => {
         queryClient.invalidateQueries({ queryKey: ['auth-check'] });
         queryClient.invalidateQueries({ queryKey: ['account-details'] });
+        
+        // Dispatch auth change event for theme context
+        window.dispatchEvent(new CustomEvent('auth-changed'));
     };
 
     // Expose refresh function globally for other components to use
@@ -325,7 +330,7 @@ export default function Navbar({refresh}) {
                     .nav-link-animated {
                         position: relative;
                         font-size: 16px;
-                        color: rgba(255, 255, 255, 0.85);
+                        color: ${theme === 'dark' ? 'rgba(229, 231, 235, 0.85)' : 'rgba(255, 255, 255, 0.85)'};
                         font-weight: 500;
                         cursor: pointer;
                         text-transform: none;
@@ -339,7 +344,7 @@ export default function Navbar({refresh}) {
                     .nav-link-animated:focus,
                     .nav-link-animated:hover,
                     .nav-link-animated.active {
-                        color: #ffffff;
+                        color: ${theme === 'dark' ? '#f3f4f6' : '#ffffff'};
                         transform: translateY(-1px);
                     }
                     
@@ -364,12 +369,12 @@ export default function Navbar({refresh}) {
                         position: absolute;
                         width: 0%;
                         height: 3px;
-                        background: linear-gradient(90deg, #ffffff, #f0fdf4, #ffffff);
+                        background: ${theme === 'dark' ? 'linear-gradient(90deg, #e5e7eb, #d1d5db, #e5e7eb)' : 'linear-gradient(90deg, #ffffff, #f0fdf4, #ffffff)'};
                         border-radius: 2px;
                         transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
                         transition-duration: 400ms;
                         transition-property: width, left;
-                        box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+                        box-shadow: ${theme === 'dark' ? '0 2px 8px rgba(229, 231, 235, 0.3)' : '0 2px 8px rgba(255, 255, 255, 0.3)'};
                     }
                     
                     /* Enhanced dropdown animations */
@@ -434,16 +439,16 @@ export default function Navbar({refresh}) {
                     </div>
                 </div>
             )}
-            <nav className="bg-gradient-to-r from-green-700 via-green-800 to-emerald-800 shadow-xl fixed w-full z-[9999] top-0 left-0 backdrop-blur-md border-b border-white/10" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 py-2 text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <nav className={`shadow-xl fixed w-full z-[9999] top-0 left-0 backdrop-blur-md border-b ${theme === 'dark' ? 'bg-gradient-to-r from-gray-800 via-gray-900 to-black border-gray-700/30' : 'bg-gradient-to-r from-green-700 via-green-800 to-emerald-800 border-white/10'}`} style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <div className={`max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 py-2 ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`} style={{ fontFamily: 'Poppins, sans-serif' }}>
                     <img
                         src={logo2}
                         alt="FITS -Tanza Logo"
-                        className="w-12 h-12 object-contain ml-2 rounded-full shadow-lg ring-2 ring-white/30"
+                        className={`w-12 h-12 object-contain ml-2 rounded-full shadow-lg ring-2 ${theme === 'dark' ? 'ring-gray-600/50' : 'ring-white/30'}`}
                     />
                     <Link
                         to="/"
-                        className="flex items-center gap-3 font-bold text-xl px-3 text-white md:text-2xl hover:text-white/90 transition-colors duration-300"
+                        className={`flex items-center gap-3 font-bold text-xl px-3 md:text-2xl transition-colors duration-300 ${theme === 'dark' ? 'text-gray-100 hover:text-gray-200' : 'text-white hover:text-white/90'}`}
                     >
                         FITS -Tanza
                     </Link>
@@ -529,22 +534,25 @@ export default function Navbar({refresh}) {
                                     </svg>
                                 </button>
                                 <ul
-                                    className={`absolute left-0 mt-3 w-52 bg-white/98 backdrop-blur-xl rounded-2xl shadow-2xl py-2 z-[60] border border-white/30 transition-all duration-300 ${
+                                    className={`absolute left-0 mt-3 w-52 backdrop-blur-xl rounded-2xl shadow-2xl py-2 z-[60] border transition-all duration-300 ${
                                         infoOpen
                                             ? 'opacity-100 translate-y-0 pointer-events-auto dropdown-animate'
                                             : 'opacity-0 -translate-y-6 pointer-events-none'
-                                    }`}
+                                    } ${theme === 'dark' ? 'bg-gray-800/98 border-gray-700/30' : 'bg-white/98 border-white/30'}`}
                                     style={{ boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
                                 >
                                     <li>
                                         <NavLink
                                             to="/about"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-5 py-3 text-slate-700 hover:bg-green-50 hover:text-green-800 rounded-xl transition-all duration-200 font-medium mx-2 ${isActive ? 'bg-green-100 text-green-900' : ''}`
+                                                `flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-200 font-medium mx-2 ${isActive ? 
+                                                    (theme === 'dark' ? 'bg-green-900/50 text-green-300' : 'bg-green-100 text-green-900') : 
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-green-400' : 'text-slate-700 hover:bg-green-50 hover:text-green-800')
+                                                }`
                                             }
                                         >
                                             <svg
-                                                className="w-5 h-5 text-green-600"
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -570,11 +578,14 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/contact"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-5 py-3 text-slate-700 hover:bg-green-50 hover:text-green-800 rounded-xl transition-all duration-200 font-medium mx-2 ${isActive ? 'bg-green-100 text-green-900' : ''}`
+                                                `flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-200 font-medium mx-2 ${isActive ? 
+                                                    (theme === 'dark' ? 'bg-green-900/50 text-green-300' : 'bg-green-100 text-green-900') : 
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-green-400' : 'text-slate-700 hover:bg-green-50 hover:text-green-800')
+                                                }`
                                             }
                                         >
                                             <svg
-                                                className="w-5 h-5 text-green-600"
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -598,11 +609,14 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/citizens-charter"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-5 py-3 text-slate-700 hover:bg-green-50 hover:text-green-800 rounded-xl transition-all duration-200 font-medium mx-2 ${isActive ? 'bg-green-100 text-green-900' : ''}`
+                                                `flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-200 font-medium mx-2 ${isActive ? 
+                                                    (theme === 'dark' ? 'bg-green-900/50 text-green-300' : 'bg-green-100 text-green-900') : 
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-green-400' : 'text-slate-700 hover:bg-green-50 hover:text-green-800')
+                                                }`
                                             }
                                         >
                                             <svg
-                                                className="w-5 h-5 text-green-600"
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -667,21 +681,24 @@ export default function Navbar({refresh}) {
                                     </svg>
                                 </button>
                                 <ul
-                                    className={`absolute left-0 mt-2 w-60 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl py-4 z-[60] border border-white/20 transition-all duration-300 ${
+                                    className={`absolute left-0 mt-2 w-60 backdrop-blur-lg rounded-2xl shadow-2xl py-4 z-[60] border transition-all duration-300 ${
                                         servicesOpen
                                             ? 'opacity-100 translate-y-0 pointer-events-auto dropdown-animate'
                                             : 'opacity-0 -translate-y-6 pointer-events-none'
-                                    }`}
+                                    } ${theme === 'dark' ? 'bg-gray-800/95 border-gray-700/30' : 'bg-white/95 border-white/20'}`}
                                 >
                                     <li>
                                         <NavLink
                                             to="/seminar"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium ${isActive ? 'bg-emerald-100 text-emerald-900' : ''}`
+                                                `flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${isActive ? 
+                                                    (theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-100 text-emerald-900') : 
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-emerald-700 hover:bg-emerald-50')
+                                                }`
                                             }
                                         >
                                             <svg
-                                                className="w-5 h-5 text-emerald-500"
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-500'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -705,11 +722,14 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/eic"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium ${isActive ? 'bg-emerald-100 text-emerald-900' : ''}`
+                                                `flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${isActive ? 
+                                                    (theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-100 text-emerald-900') : 
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-emerald-700 hover:bg-emerald-50')
+                                                }`
                                             }
                                         >
                                             <svg
-                                                className="w-5 h-5 text-emerald-500"
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-500'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -737,11 +757,14 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/distribution"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium ${isActive ? 'bg-emerald-100 text-emerald-900' : ''}`
+                                                `flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${isActive ? 
+                                                    (theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-100 text-emerald-900') : 
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-emerald-700 hover:bg-emerald-50')
+                                                }`
                                             }
                                         >
                                             <svg
-                                                className="w-5 h-5 text-emerald-500"
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-500'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -766,11 +789,14 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/chat-support"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium ${isActive ? 'bg-emerald-100 text-emerald-900' : ''}`
+                                                `flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${isActive ? 
+                                                    (theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-100 text-emerald-900') : 
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-emerald-700 hover:bg-emerald-50')
+                                                }`
                                             }
                                         >
                                             <svg
-                                                className="w-5 h-5 text-emerald-500"
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-500'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -790,11 +816,14 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/report"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium ${isActive ? 'bg-emerald-100 text-emerald-900' : ''}`
+                                                `flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${isActive ? 
+                                                    (theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-100 text-emerald-900') : 
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-emerald-700 hover:bg-emerald-50')
+                                                }`
                                             }
                                         >
                                             <svg
-                                                className="w-5 h-5 text-emerald-500"
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-500'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"

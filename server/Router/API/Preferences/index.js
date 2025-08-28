@@ -9,4 +9,7 @@ router.use('/language', language);
 import notifications from './notifications.js';
 router.use('/notifications', notifications);
 
+import theme from './theme.js';
+router.use('/theme', theme);
+
 export default router;

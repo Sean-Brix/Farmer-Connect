@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SocketProvider } from './contexts/SocketContext.jsx';
+import { ThemeProvider } from './contexts/ThemeContext.jsx';
 
 
 // COMPONENTS
@@ -31,9 +32,10 @@ import Farmer_Report from './Client/Services/Report/Farmer_Report.jsx';
 
 function App() {
     return (
-        <SocketProvider>
-            <BrowserRouter>
-                <Routes>
+        <ThemeProvider>
+            <SocketProvider>
+                <BrowserRouter>
+                    <Routes>
                     {/* AUTHENTICATION */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -66,6 +68,7 @@ function App() {
                 </Routes>
             </BrowserRouter>
         </SocketProvider>
+        </ThemeProvider>
     );
 }
 

@@ -3,6 +3,7 @@ import logo from '../../../Assets/Logo.png';
 import { useNavigate } from 'react-router-dom';
 import default_picture from '../../../Assets/default_picture.png';
 import { connectSocket } from '../../../utils/socket.js';
+import { useTheme } from '../../../contexts/ThemeContext.jsx';
 
 // SERVICES
 import Analytics from '../../Services/Analytics/Analytics';
@@ -23,6 +24,7 @@ import Sidebar from './sub/Sidebar.jsx';
 import Audit from '../../Services/Logs/Audit.jsx';
 
 export default function Dashboard() {
+    const { theme, isDark } = useTheme();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [showAccountPanel, setShowAccountPanel] = useState(false);
     const navigate = useNavigate();
@@ -381,7 +383,9 @@ export default function Dashboard() {
         <>
             {/* Import Poppins font from Google Fonts */}
             <style>{`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');`}</style>
-            <div className="flex min-h-screen h-screen bg-gray-50" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
+            <div className={`flex min-h-screen h-screen ${
+                isDark ? 'bg-gray-900' : 'bg-gray-50'
+            }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
                 {/* DESKTOP SIDEBAR */}
                 <Sidebar
                     logging={logging}
@@ -391,14 +395,24 @@ export default function Dashboard() {
                     currentPageKey={currentPageKey}
                     handleSetPage={handleSetPage}
                     logo={logo}
+                    theme={theme}
+                    isDark={isDark}
                 />
 
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col min-h-screen h-screen ml-0 transition-all dashboard-main-content">
-                    <header className="bg-white/90 backdrop-blur-md shadow-lg px-8 py-3 flex items-center w-full fixed top-0 left-0 z-20 dashboard-header h-20 border-b border-green-100 professional-navbar" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
+                    <header className={`backdrop-blur-md shadow-lg px-8 py-3 flex items-center w-full fixed top-0 left-0 z-20 dashboard-header h-20 border-b professional-navbar ${
+                        isDark 
+                            ? 'bg-gray-800/90 border-gray-700' 
+                            : 'bg-white/90 border-green-100'
+                    }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
                         {/* Home button (left) */}
                         <button
-                            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 hover:bg-green-200 rounded-lg text-green-700 font-bold shadow transition mr-4"
+                            className={`flex items-center gap-2 px-4 py-2 border rounded-lg font-bold shadow transition mr-4 ${
+                                isDark 
+                                    ? 'bg-gray-700 border-gray-600 hover:bg-green-800 text-green-400' 
+                                    : 'bg-white border-gray-300 hover:bg-green-200 text-green-700'
+                            }`}
                             onClick={() => navigate('/')}
                             aria-label="Go to Landing Page"
                             style={{ letterSpacing: '0.01em' }}
@@ -413,7 +427,9 @@ export default function Dashboard() {
                                      {/* Logo on mobile sidebar */}
                             <img src={logo} alt="Logo" className="h-10 w-10 object-contain mr-2" />
                                 <h1
-                                    className="text-lg md:text-2xl font-bold text-green-900 tracking-tight professional-navbar-title"
+                                    className={`text-lg md:text-2xl font-bold tracking-tight professional-navbar-title ${
+                                        isDark ? 'text-green-400' : 'text-green-900'
+                                    }`}
                                     style={{ userSelect: 'none', letterSpacing: '-0.5px', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                 >
                                    DASHBOARD
@@ -423,7 +439,11 @@ export default function Dashboard() {
                         {/* Settings icon (right) and mobile menu */}
                         <div className="flex items-center gap-2 ml-4">
                             <button
-                                className="flex items-center justify-center p-3 bg-white border border-gray-300 hover:bg-green-200 rounded-full text-green-700 shadow transition"
+                                className={`flex items-center justify-center p-3 border rounded-full shadow transition ${
+                                    isDark 
+                                        ? 'bg-gray-700 border-gray-600 hover:bg-green-800 text-green-400' 
+                                        : 'bg-white border-gray-300 hover:bg-green-200 text-green-700'
+                                }`}
                                 onClick={() => handleSetPage('settings')}
                                 aria-label="Settings"
                             >

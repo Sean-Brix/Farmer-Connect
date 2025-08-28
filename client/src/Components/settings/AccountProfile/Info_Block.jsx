@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function Info_Block({ user, admin_navigate }) {
+export default function Info_Block({ user, admin_navigate, theme }) {
     const [edit, setEdit] = useState(false);
     const [editedUser, setEditedUser] = useState({ ...user });
     const [newPicture, setNewPicture] = useState(null);
@@ -79,22 +79,22 @@ export default function Info_Block({ user, admin_navigate }) {
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen bg-gradient-to-tr from-blue-100 via-white to-blue-50 px-2 sm:px-6 md:px-12 py-12 gap-12">
+        <div className="flex flex-col items-center min-h-screen bg-gradient-to-tr from-blue-100 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-2 sm:px-6 md:px-12 py-12 gap-12">
             {/* HEADER */}
-            <div className="border border-blue-200 rounded-3xl shadow-2xl p-6 sm:p-12 w-full max-w-5xl bg-white/95 backdrop-blur-lg">
+            <div className="border border-blue-200 dark:border-gray-600 rounded-3xl shadow-2xl p-6 sm:p-12 w-full max-w-5xl bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg">
                 <div className="flex items-center mb-8 mt-2">
-                    <span className="bg-white rounded-xl px-6 py-2 text-3xl font-extrabold text-blue-900 tracking-tight shadow-lg">
+                    <span className="bg-white dark:bg-gray-700 rounded-xl px-6 py-2 text-3xl font-extrabold text-blue-900 dark:text-blue-300 tracking-tight shadow-lg">
                         Profile Information
                     </span>
-                    <hr className="flex-1 border-blue-200 ml-6" />
+                    <hr className="flex-1 border-blue-200 dark:border-gray-600 ml-6" />
                 </div>
 
                 {/* USER DETAILS & CONTACTS */}
-                <div className="flex flex-col-reverse md:flex-row justify-center rounded-3xl overflow-hidden p-4 sm:p-8 md:p-14 w-full max-w-5xl min-h-[420px] md:min-h-[540px] bg-gradient-to-tr from-white via-blue-50 to-blue-100 shadow-inner gap-12">
-                    <form className="mt-4 md:mt-0 space-y-8 text-blue-900 p-2 sm:p-4 w-full md:w-1/2">
+                <div className="flex flex-col-reverse md:flex-row justify-center rounded-3xl overflow-hidden p-4 sm:p-8 md:p-14 w-full max-w-5xl min-h-[420px] md:min-h-[540px] bg-gradient-to-tr from-white via-blue-50 to-blue-100 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 shadow-inner gap-12">
+                    <form className="mt-4 md:mt-0 space-y-8 text-blue-900 dark:text-blue-300 p-2 sm:p-4 w-full md:w-1/2">
                         <div className="grid grid-cols-1 gap-6">
                             <div>
-                                <label className="text-blue-900 font-semibold text-sm mb-1 block">
+                                <label className="text-blue-900 dark:text-blue-300 font-semibold text-sm mb-1 block">
                                     🔑 User Access
                                 </label>
                                 {edit ? (
@@ -103,16 +103,16 @@ export default function Info_Block({ user, admin_navigate }) {
                                         name="access"
                                         value={editedUser.access}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-blue-200 rounded-lg p-2 bg-white focus:ring-2 focus:ring-blue-400 transition"
+                                        className="mt-1 block w-full border border-blue-200 dark:border-gray-500 rounded-lg p-2 bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
                                     />
                                 ) : (
-                                    <div className="mt-1 block w-full border border-blue-100 rounded-lg p-2 bg-blue-50">
+                                    <div className="mt-1 block w-full border border-blue-100 dark:border-gray-600 rounded-lg p-2 bg-blue-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200">
                                         {editedUser.access}
                                     </div>
                                 )}
                             </div>
                             <div>
-                                <label className="text-blue-900 font-semibold text-sm mb-1 block">
+                                <label className="text-blue-900 dark:text-blue-300 font-semibold text-sm mb-1 block">
                                     💼 Occupation
                                 </label>
                                 {edit ? (
@@ -121,16 +121,16 @@ export default function Info_Block({ user, admin_navigate }) {
                                         name="occupation"
                                         value={editedUser.occupation}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-blue-200 rounded-lg p-2 bg-white focus:ring-2 focus:ring-blue-400 transition"
+                                        className="mt-1 block w-full border border-blue-200 dark:border-gray-500 rounded-lg p-2 bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
                                     />
                                 ) : (
-                                    <div className="mt-1 block w-full border border-blue-100 rounded-lg p-2 bg-blue-50">
+                                    <div className="mt-1 block w-full border border-blue-100 dark:border-gray-600 rounded-lg p-2 bg-blue-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200">
                                         {editedUser.occupation}
                                     </div>
                                 )}
                             </div>
                             <div>
-                                <label className="text-blue-900 font-semibold text-sm mb-1 block">
+                                <label className="text-blue-900 dark:text-blue-300 font-semibold text-sm mb-1 block">
                                     📍 Address
                                 </label>
                                 {edit ? (
@@ -139,16 +139,16 @@ export default function Info_Block({ user, admin_navigate }) {
                                         name="address"
                                         value={editedUser.address}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-blue-200 rounded-lg p-2 bg-white focus:ring-2 focus:ring-blue-400 transition"
+                                        className="mt-1 block w-full border border-blue-200 dark:border-gray-500 rounded-lg p-2 bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
                                     />
                                 ) : (
-                                    <div className="mt-1 block w-full border border-blue-100 rounded-lg p-2 bg-blue-50">
+                                    <div className="mt-1 block w-full border border-blue-100 dark:border-gray-600 rounded-lg p-2 bg-blue-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200">
                                         {editedUser.address}
                                     </div>
                                 )}
                             </div>
                             <div>
-                                <label className="text-blue-900 font-semibold text-sm mb-1 block">
+                                <label className="text-blue-900 dark:text-blue-300 font-semibold text-sm mb-1 block">
                                     📞 Cellphone
                                 </label>
                                 {edit ? (
@@ -157,16 +157,16 @@ export default function Info_Block({ user, admin_navigate }) {
                                         name="cellphone_no"
                                         value={editedUser.cellphone_no}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-blue-200 rounded-lg p-2 bg-white focus:ring-2 focus:ring-blue-400 transition"
+                                        className="mt-1 block w-full border border-blue-200 dark:border-gray-500 rounded-lg p-2 bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
                                     />
                                 ) : (
-                                    <div className="mt-1 block w-full border border-blue-100 rounded-lg p-2 bg-blue-50">
+                                    <div className="mt-1 block w-full border border-blue-100 dark:border-gray-600 rounded-lg p-2 bg-blue-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200">
                                         {editedUser.cellphone_no}
                                     </div>
                                 )}
                             </div>
                             <div>
-                                <label className="text-blue-900 font-semibold text-sm mb-1 block">
+                                <label className="text-blue-900 dark:text-blue-300 font-semibold text-sm mb-1 block">
                                     🏢 Institution
                                 </label>
                                 {edit ? (
@@ -175,24 +175,24 @@ export default function Info_Block({ user, admin_navigate }) {
                                         name="institution"
                                         value={editedUser.institution}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-blue-200 rounded-lg p-2 bg-white focus:ring-2 focus:ring-blue-400 transition"
+                                        className="mt-1 block w-full border border-blue-200 dark:border-gray-500 rounded-lg p-2 bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
                                     />
                                 ) : (
-                                    <div className="mt-1 block w-full border border-blue-100 rounded-lg p-2 bg-blue-50">
+                                    <div className="mt-1 block w-full border border-blue-100 dark:border-gray-600 rounded-lg p-2 bg-blue-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200">
                                         {editedUser.institution}
                                     </div>
                                 )}
                             </div>
                             <div>
-                                <label className="text-blue-900 font-semibold text-sm mb-1 block">
+                                <label className="text-blue-900 dark:text-blue-300 font-semibold text-sm mb-1 block">
                                     🌾 Commodities
                                 </label>
-                                <div className="mt-1 block w-full border border-blue-100 rounded-lg p-2 bg-blue-50 text-gray-500 italic">
+                                <div className="mt-1 block w-full border border-blue-100 dark:border-gray-600 rounded-lg p-2 bg-blue-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 italic">
                                     None
                                 </div>
                             </div>
                             <div>
-                                <label className="text-blue-900 font-semibold text-sm mb-1 block">
+                                <label className="text-blue-900 dark:text-blue-300 font-semibold text-sm mb-1 block">
                                     👥 Client Profile
                                 </label>
                                 {edit ? (
@@ -201,10 +201,10 @@ export default function Info_Block({ user, admin_navigate }) {
                                         name="client_profile"
                                         value={editedUser.client_profile}
                                         onChange={handleChange}
-                                        className="mt-1 block w-full border border-blue-200 rounded-lg p-2 bg-white focus:ring-2 focus:ring-blue-400 transition"
+                                        className="mt-1 block w-full border border-blue-200 dark:border-gray-500 rounded-lg p-2 bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
                                     />
                                 ) : (
-                                    <div className="mt-1 block w-full border border-blue-100 rounded-lg p-2 bg-blue-50">
+                                    <div className="mt-1 block w-full border border-blue-100 dark:border-gray-600 rounded-lg p-2 bg-blue-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200">
                                         {editedUser.client_profile}
                                     </div>
                                 )}
@@ -213,14 +213,14 @@ export default function Info_Block({ user, admin_navigate }) {
                         {/* CONTACT INFORMATION */}
                         <div className="mt-10">
                             <div className="flex items-center mb-3">
-                                <span className="bg-white rounded-lg px-4 py-1 text-lg font-bold text-blue-900 shadow">
+                                <span className="bg-white dark:bg-gray-700 rounded-lg px-4 py-1 text-lg font-bold text-blue-900 dark:text-blue-300 shadow">
                                     Contacts Information
                                 </span>
-                                <hr className="flex-1 border-blue-200 ml-4" />
+                                <hr className="flex-1 border-blue-200 dark:border-gray-600 ml-4" />
                             </div>
                             <div className="flex flex-col w-full gap-3">
-                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-2 border-b border-blue-100 gap-1">
-                                    <span className="font-semibold text-blue-900">
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-2 border-b border-blue-100 dark:border-gray-600 gap-1">
+                                    <span className="font-semibold text-blue-900 dark:text-blue-300">
                                         Email
                                     </span>
                                     {edit ? (
@@ -229,17 +229,17 @@ export default function Info_Block({ user, admin_navigate }) {
                                             name="email_address"
                                             value={editedUser.email_address}
                                             onChange={handleChange}
-                                            className="border border-blue-200 rounded-lg p-1 px-2 ml-0 sm:ml-2 w-full sm:w-auto focus:ring-2 focus:ring-blue-400 transition"
+                                            className="border border-blue-200 dark:border-gray-500 rounded-lg p-1 px-2 ml-0 sm:ml-2 w-full sm:w-auto bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
                                             style={{ minWidth: 120 }}
                                         />
                                     ) : (
-                                        <span className="text-blue-700 break-all">
+                                        <span className="text-blue-700 dark:text-blue-400 break-all">
                                             {editedUser.email_address}
                                         </span>
                                     )}
                                 </div>
-                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-2 border-b border-blue-100 gap-1">
-                                    <span className="font-semibold text-blue-900">
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-2 border-b border-blue-100 dark:border-gray-600 gap-1">
+                                    <span className="font-semibold text-blue-900 dark:text-blue-300">
                                         Telephone Number
                                     </span>
                                     {edit ? (
@@ -248,17 +248,17 @@ export default function Info_Block({ user, admin_navigate }) {
                                             name="telephone_no"
                                             value={editedUser.telephone_no}
                                             onChange={handleChange}
-                                            className="border border-blue-200 rounded-lg p-1 px-2 ml-0 sm:ml-2 w-full sm:w-auto focus:ring-2 focus:ring-blue-400 transition"
+                                            className="border border-blue-200 dark:border-gray-500 rounded-lg p-1 px-2 ml-0 sm:ml-2 w-full sm:w-auto bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
                                             style={{ minWidth: 100 }}
                                         />
                                     ) : (
-                                        <span className="text-blue-700 break-all">
+                                        <span className="text-blue-700 dark:text-blue-400 break-all">
                                             {editedUser.telephone_no}
                                         </span>
                                     )}
                                 </div>
                                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-2 gap-1">
-                                    <span className="font-semibold text-blue-900">
+                                    <span className="font-semibold text-blue-900 dark:text-blue-300">
                                         Facebook
                                     </span>
                                     {edit ? (
@@ -267,11 +267,11 @@ export default function Info_Block({ user, admin_navigate }) {
                                             name="facebook"
                                             value={editedUser.facebook || ''}
                                             onChange={handleChange}
-                                            className="border border-blue-200 rounded-lg p-1 px-2 ml-0 sm:ml-2 w-full sm:w-auto focus:ring-2 focus:ring-blue-400 transition"
+                                            className="border border-blue-200 dark:border-gray-500 rounded-lg p-1 px-2 ml-0 sm:ml-2 w-full sm:w-auto bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
                                             style={{ minWidth: 100 }}
                                         />
                                     ) : (
-                                        <span className="text-blue-700 break-all">
+                                        <span className="text-blue-700 dark:text-blue-400 break-all">
                                             {editedUser.facebook || 'None'}
                                         </span>
                                     )}
@@ -283,7 +283,7 @@ export default function Info_Block({ user, admin_navigate }) {
                     {/* IMAGE */}
                     <div className="flex flex-col items-center space-y-6 mb-6 md:mb-0 p-2 sm:p-4 w-full md:w-1/2">
                         <div className="relative flex items-center justify-center mb-4">
-                            <div className="rounded-full border-4 border-blue-400 p-1 flex items-center justify-center w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 bg-white shadow-xl relative transition-all duration-300">
+                            <div className="rounded-full border-4 border-blue-400 dark:border-blue-500 p-1 flex items-center justify-center w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 bg-white dark:bg-gray-700 shadow-xl relative transition-all duration-300">
                                 <img
                                     src={newPicture || editedUser.picture}
                                     alt="Profile"
@@ -304,7 +304,7 @@ export default function Info_Block({ user, admin_navigate }) {
                                 {edit && (
                                     <button
                                         type="button"
-                                        className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 bg-blue-700 text-white rounded-full p-3 border-2 border-white shadow-lg focus:outline-none hover:bg-blue-800 transition"
+                                        className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 bg-blue-700 dark:bg-blue-600 text-white rounded-full p-3 border-2 border-white dark:border-gray-600 shadow-lg focus:outline-none hover:bg-blue-800 dark:hover:bg-blue-700 transition"
                                         onClick={() => {
                                             const parent =
                                                 document.activeElement
@@ -324,10 +324,10 @@ export default function Info_Block({ user, admin_navigate }) {
                             </div>
                         </div>
                         <div className="flex flex-col items-center space-y-2 w-full">
-                            <span className="border border-blue-300 rounded-xl px-6 py-2 text-xl font-semibold text-blue-900 bg-white/90 shadow w-fit">
+                            <span className="border border-blue-300 dark:border-blue-500 rounded-xl px-6 py-2 text-xl font-semibold text-blue-900 dark:text-blue-300 bg-white/90 dark:bg-gray-700/90 shadow w-fit">
                                 {editedUser.firstname + ' ' + editedUser.lastname}
                             </span>
-                            <span className="text-blue-700 text-base text-center w-full flex items-center justify-center gap-2">
+                            <span className="text-blue-700 dark:text-blue-400 text-base text-center w-full flex items-center justify-center gap-2">
                                 <i className="fa-solid fa-mars"></i>
                                 {edit ? (
                                     <input
@@ -335,7 +335,7 @@ export default function Info_Block({ user, admin_navigate }) {
                                         name="gender"
                                         value={editedUser.gender}
                                         onChange={handleChange}
-                                        className="border border-blue-200 rounded-lg p-1 px-2 ml-2 text-center focus:ring-2 focus:ring-blue-400 transition"
+                                        className="border border-blue-200 dark:border-gray-500 rounded-lg p-1 px-2 ml-2 text-center bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
                                         style={{ minWidth: 80 }}
                                     />
                                 ) : (
@@ -344,7 +344,7 @@ export default function Info_Block({ user, admin_navigate }) {
                                     </span>
                                 )}
                             </span>
-                            <span className="text-blue-700 text-base text-center w-full flex items-center justify-center gap-2">
+                            <span className="text-blue-700 dark:text-blue-400 text-base text-center w-full flex items-center justify-center gap-2">
                                 <i className="fa-solid fa-user-tie"></i>
                                 {edit ? (
                                     <input
@@ -352,7 +352,7 @@ export default function Info_Block({ user, admin_navigate }) {
                                         name="position"
                                         value={editedUser.position}
                                         onChange={handleChange}
-                                        className="border border-blue-200 rounded-lg p-1 px-2 ml-2 text-center focus:ring-2 focus:ring-blue-400 transition"
+                                        className="border border-blue-200 dark:border-gray-500 rounded-lg p-1 px-2 ml-2 text-center bg-white dark:bg-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-400 transition"
                                         style={{ minWidth: 80 }}
                                     />
                                 ) : (
@@ -364,7 +364,7 @@ export default function Info_Block({ user, admin_navigate }) {
                         </div>
                          {!edit && (
                             <button
-                                className="mt-6 px-6 py-2 bg-blue-700 text-white rounded-xl hover:bg-blue-800 transition text-base border-2 border-blue-700 flex items-center gap-2 shadow-lg font-semibold"
+                                className="mt-6 px-6 py-2 bg-blue-700 dark:bg-blue-600 text-white rounded-xl hover:bg-blue-800 dark:hover:bg-blue-700 transition text-base border-2 border-blue-700 dark:border-blue-600 flex items-center gap-2 shadow-lg font-semibold"
                                 onClick={() => setEdit(true)}
                             >
                                 <i className="fa-solid fa-pen"></i>
@@ -375,7 +375,7 @@ export default function Info_Block({ user, admin_navigate }) {
                             {edit && (
                                 <div className="flex gap-4 mt-4">
                                     <button
-                                        className="flex items-center gap-2 px-6 py-2 cursor-pointer bg-green-600 text-white rounded-xl hover:bg-green-700 transition text-base border-2 border-green-700 shadow-lg font-semibold"
+                                        className="flex items-center gap-2 px-6 py-2 cursor-pointer bg-green-600 dark:bg-green-700 text-white rounded-xl hover:bg-green-700 dark:hover:bg-green-800 transition text-base border-2 border-green-700 dark:border-green-700 shadow-lg font-semibold"
                                         onClick={handleSaveClick}
                                         type="button"
                                     >
@@ -383,7 +383,7 @@ export default function Info_Block({ user, admin_navigate }) {
                                         Save
                                     </button>
                                     <button
-                                        className="flex items-center gap-2 px-6 py-2 cursor-pointer bg-red-600 text-white rounded-xl hover:bg-red-700 transition text-base border-2 border-red-700 shadow-lg font-semibold"
+                                        className="flex items-center gap-2 px-6 py-2 cursor-pointer bg-red-600 dark:bg-red-700 text-white rounded-xl hover:bg-red-700 dark:hover:bg-red-800 transition text-base border-2 border-red-700 dark:border-red-700 shadow-lg font-semibold"
                                         onClick={handleCancelClick}
                                         type="button"
                                     >

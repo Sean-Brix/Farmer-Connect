@@ -79,6 +79,23 @@ router.post('/preferences/notifications', (req, res) => {
     });
 });
 
+// Theme preferences endpoints
+router.get('/preferences/theme', (req, res) => {
+    res.json({
+        success: true,
+        theme: 'auto', // Default theme
+        message: 'Theme preference retrieved successfully'
+    });
+});
+
+router.post('/preferences/theme', (req, res) => {
+    res.json({
+        success: true,
+        theme: req.body.theme || 'auto',
+        message: 'Theme preference saved successfully'
+    });
+});
+
 // Temporarily disabled preferences due to import issues
 // import preferences from './Preferences/index.js';
 // router.use('/preferences', preferences);

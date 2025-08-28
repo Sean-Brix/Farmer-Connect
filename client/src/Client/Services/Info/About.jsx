@@ -1,12 +1,22 @@
 import React from 'react'
+import { useTheme } from '../../../contexts/ThemeContext.jsx'
 import Navbar from '../../Components/Navbar'
 import farm from './Assets/farm.jpg'
+
 export default function About() {
+const { theme } = useTheme();
+
 return (
     <>
         <Navbar />
-        <section className="bg-white min-h-screen pt-24 sm:pt-20 md:pt-16 py-12 mt-15">
-            <div className="max-w-4xl mx-auto p-8 bg-white rounded-3xl shadow-2xl flex flex-col gap-10 border border-gray-200">
+        <section className={`min-h-screen pt-24 sm:pt-20 md:pt-16 py-12 mt-15 ${
+            theme === 'dark' ? 'bg-gray-900' : 'bg-white'
+        }`}>
+            <div className={`max-w-4xl mx-auto p-8 rounded-3xl shadow-2xl flex flex-col gap-10 border ${
+                theme === 'dark' 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-white border-gray-200'
+            }`}>
                 <div className="flex flex-col md:flex-row items-center gap-10">
                     <img
                         src={farm}
@@ -14,70 +24,136 @@ return (
                         className="w-48 h-48 rounded-full object-cover border-4 border-green-600 shadow-lg"
                     />
                     <div>
-                        <h1 className="text-4xl font-extrabold text-gray-900 mb-4">About FITS - Tanza</h1>
-                        <p className="text-lg text-gray-700 mb-4">
+                        <h1 className={`text-4xl font-extrabold mb-4 ${
+                            theme === 'dark' ? 'text-gray-100' : 'text-gray-900'
+                        }`}>About FITS - Tanza</h1>
+                        <p className={`text-lg mb-4 ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
                             At FITS - Tanza, we are a diverse team of technologists, agronomists, and innovators united by a shared vision: to revolutionize agriculture through technology. Our platform bridges the gap between farmers, suppliers, and consumers, making agriculture smarter, more sustainable, and accessible to all.
                         </p>
                         <div className="flex flex-wrap gap-4 mt-2">
-                            <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">🌱 Agri-Tech Innovation</span>
-                            <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">🤝 Community Driven</span>
-                            <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">💡 Sustainable Solutions</span>
+                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                                theme === 'dark' 
+                                    ? 'bg-green-900/30 text-green-400' 
+                                    : 'bg-green-100 text-green-700'
+                            }`}>🌱 Agri-Tech Innovation</span>
+                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                                theme === 'dark' 
+                                    ? 'bg-green-900/30 text-green-400' 
+                                    : 'bg-green-100 text-green-700'
+                            }`}>🤝 Community Driven</span>
+                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                                theme === 'dark' 
+                                    ? 'bg-green-900/30 text-green-400' 
+                                    : 'bg-green-100 text-green-700'
+                            }`}>💡 Sustainable Solutions</span>
                         </div>
                     </div>
                 </div>
                 <div className="grid md:grid-cols-2 gap-8">
                     <div>
-                        <h2 className="text-2xl font-semibold text-green-600 mb-3">Our Mission</h2>
-                        <p className="text-gray-700 mb-2">
+                        <h2 className={`text-2xl font-semibold mb-3 ${
+                            theme === 'dark' ? 'text-green-400' : 'text-green-600'
+                        }`}>Our Mission</h2>
+                        <p className={`mb-2 ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
                             To empower farmers and agri-businesses with cutting-edge digital tools, fostering growth, transparency, and sustainability in the agricultural sector.
                         </p>
-                        <ul className="list-disc list-inside text-gray-600 space-y-1">
+                        <ul className={`list-disc list-inside space-y-1 ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                        }`}>
                             <li>Connecting rural communities with modern technology</li>
                             <li>Promoting eco-friendly farming practices</li>
                             <li>Facilitating knowledge sharing and collaboration</li>
                         </ul>
                     </div>
                     <div>
-                        <h2 className="text-2xl font-semibold text-green-600 mb-3">Our Values</h2>
+                        <h2 className={`text-2xl font-semibold mb-3 ${
+                            theme === 'dark' ? 'text-green-400' : 'text-green-600'
+                        }`}>Our Values</h2>
                         <ul className="space-y-2">
                             <li className="flex items-start gap-2">
-                                <span className="text-green-600 mt-1">✔️</span>
-                                <span className="text-gray-700">Integrity & Transparency</span>
+                                <span className={`mt-1 ${
+                                    theme === 'dark' ? 'text-green-400' : 'text-green-600'
+                                }`}>✔️</span>
+                                <span className={`${
+                                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                                }`}>Integrity & Transparency</span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-green-600 mt-1">✔️</span>
-                                <span className="text-gray-700">Innovation & Excellence</span>
+                                <span className={`mt-1 ${
+                                    theme === 'dark' ? 'text-green-400' : 'text-green-600'
+                                }`}>✔️</span>
+                                <span className={`${
+                                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                                }`}>Innovation & Excellence</span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="text-green-600 mt-1">✔️</span>
-                                <span className="text-gray-700">Community Empowerment</span>
+                                <span className={`mt-1 ${
+                                    theme === 'dark' ? 'text-green-400' : 'text-green-600'
+                                }`}>✔️</span>
+                                <span className={`${
+                                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                                }`}>Community Empowerment</span>
                             </li>
                         </ul>
                     </div>
                 </div>
                 {/* More Details Section */}
                 <div className="mt-10">
-                    <h2 className="text-2xl font-semibold text-green-600 mb-3">What We Offer</h2>
+                    <h2 className={`text-2xl font-semibold mb-3 ${
+                        theme === 'dark' ? 'text-green-400' : 'text-green-600'
+                    }`}>What We Offer</h2>
                     <div className="grid md:grid-cols-2 gap-6">
-                        <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-200">
-                            <h3 className="text-lg font-bold text-green-600">Smart Farm Management</h3>
-                            <p className="text-gray-700 text-sm">
+                        <div className={`rounded-xl p-6 shadow flex flex-col gap-2 border ${
+                            theme === 'dark' 
+                                ? 'bg-gray-700 border-gray-600' 
+                                : 'bg-gray-50 border-gray-200'
+                        }`}>
+                            <h3 className={`text-lg font-bold ${
+                                theme === 'dark' ? 'text-green-400' : 'text-green-600'
+                            }`}>Smart Farm Management</h3>
+                            <p className={`text-sm ${
+                                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
                                 Our platform provides real-time analytics, crop monitoring, and resource management tools to help farmers maximize yield and minimize waste.
                             </p>
                         </div>
-                        <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-200">
-                            <h3 className="text-lg font-bold text-green-600">Marketplace Integration</h3>
-                            <p className="text-gray-700 text-sm">
+                        <div className={`rounded-xl p-6 shadow flex flex-col gap-2 border ${
+                            theme === 'dark' 
+                                ? 'bg-gray-700 border-gray-600' 
+                                : 'bg-gray-50 border-gray-200'
+                        }`}>
+                            <h3 className={`text-lg font-bold ${
+                                theme === 'dark' ? 'text-green-400' : 'text-green-600'
+                            }`}>Marketplace Integration</h3>
+                            <p className={`text-sm ${
+                                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
                                 We connect farmers directly with buyers and suppliers, ensuring fair prices and transparent transactions for all parties.
                             </p>
                         </div>
-                        <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-200">
-                            <h3 className="text-lg font-bold text-green-600">Educational Resources</h3>
-                            <p className="text-gray-700 text-sm">
+                        <div className={`rounded-xl p-6 shadow flex flex-col gap-2 border ${
+                            theme === 'dark' 
+                                ? 'bg-gray-700 border-gray-600' 
+                                : 'bg-gray-50 border-gray-200'
+                        }`}>
+                            <h3 className={`text-lg font-bold ${
+                                theme === 'dark' ? 'text-green-400' : 'text-green-600'
+                            }`}>Educational Resources</h3>
+                            <p className={`text-sm ${
+                                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
                                 Access a library of guides, tutorials, and expert advice to stay updated with the latest agricultural trends and best practices.
                             </p>
                         </div>
-                        <div className="bg-gray-50 rounded-xl p-6 shadow flex flex-col gap-2 border border-gray-200">
+                        <div className={`rounded-xl p-6 shadow flex flex-col gap-2 border ${
+                            theme === 'dark' 
+                                ? 'bg-gray-700 border-gray-600' 
+                                : 'bg-gray-50 border-gray-200'
+                        }`}>
                             <h3 className="text-lg font-bold text-green-600">Community Support</h3>
                             <p className="text-gray-700 text-sm">
                                 Join a vibrant community of farmers, experts, and enthusiasts ready to share knowledge, answer questions, and collaborate on projects.
