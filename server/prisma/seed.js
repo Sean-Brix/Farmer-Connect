@@ -1,4 +1,4 @@
-import { PrismaClient } from './generated/client.js'
+import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import fs from 'fs';
 import path from 'path';
@@ -1630,6 +1630,105 @@ async function createUserPreferences() {
 
 //? ====================================== EXECUTE SEEDS ====================================== ?//
 
+// Seed Tracking: Registered Crops and Monthly Reports
+async function createRegisteredCropsAndReports() {
+  const users = await prisma.account.findMany({ where: { access: 'User' } });
+  if (users.length === 0) {
+    console.log('No users found for seed tracking. Skipping crop/report seeds.');
+    return;
+  }
+
+  const cropTypes = [
+    { type: 'Rice', varieties: ['IR64', 'NSIC Rc222', 'PSB Rc18'] },
+    { type: 'Corn', varieties: ['Sweet Corn', 'Glutinous', 'Hybrid 888'] },
+    { type: 'Tomato', varieties: ['Roma', 'Celebrity', 'Cherokee Purple'] },
+    { type: 'Eggplant', varieties: ['Black Beauty', 'Long Purple', 'Lumina'] },
+  ];
+
+  // Create 1-3 crops per user
+  for (const user of users) {
+    const cropCount = faker.number.int({ min: 1, max: 3 });
+    for (let i = 0; i < cropCount; i++) {
+      const pick = faker.helpers.arrayElement(cropTypes);
+      const variety = faker.helpers.arrayElement(pick.varieties);
+      const plantingDate = faker.date.between({
+        from: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000),
+        to: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
+      });
+      const expectedHarvest = faker.date.between({
+        from: new Date(plantingDate.getTime() + 60 * 24 * 60 * 60 * 1000),
+        to: new Date(plantingDate.getTime() + 150 * 24 * 60 * 60 * 1000),
+      });
+      const area = faker.number.float({ min: 0.2, max: 3.0, fractionDigits: 1 });
+      const expectedYield = faker.number.int({ min: 1000, max: 15000 });
+
+      const createdCrop = await prisma.registeredCrop.create({
+        data: {
+          userId: user.id,
+          cropType: pick.type,
+          variety,
+          plantingDate,
+          expectedHarvest,
+          area,
+          expectedYield,
+          currentStage: faker.helpers.arrayElement(['Seedling','Vegetative','Flowering','Fruiting','Maturity']),
+          status: 'Active',
+          notes: faker.lorem.sentence(),
+        },
+      });
+
+      // Create 1-4 monthly reports per crop
+      const reportCount = faker.number.int({ min: 1, max: 4 });
+      for (let r = 0; r < reportCount; r++) {
+        const reportDate = faker.date.between({
+          from: plantingDate,
+          to: new Date(),
+        });
+        const growthStage = faker.helpers.arrayElement(['Seedling','Vegetative','Flowering','Fruiting','Maturity']);
+        await prisma.cropMonthlyReport.create({
+          data: {
+            cropId: createdCrop.id,
+            reportDate,
+            growthStage,
+            plantHeight: faker.number.float({ min: 5, max: 180, fractionDigits: 1 }),
+            healthStatus: faker.helpers.arrayElement(['Healthy','Good','Fair','Poor']),
+            estimatedYield: faker.number.int({ min: 500, max: 15000 }),
+            weatherImpact: faker.helpers.arrayElement(['Favorable','Neutral','Adverse']),
+            notes: faker.lorem.sentence(),
+            pestsObserved: faker.helpers.arrayElement(['None','Aphids','Armyworm','Fruit fly']),
+            diseasesObserved: faker.helpers.arrayElement(['None','Leaf spot','Blight','Wilt']),
+            fertilizersApplied: faker.helpers.arrayElement(['Urea','NPK 14-14-14','Organic compost']),
+            pesticideApplications: faker.helpers.arrayElement(['None','Neem oil','Carbaryl','Bacillus thuringiensis']),
+            irrigationFrequency: faker.helpers.arrayElement(['Daily','Every 3 days','Weekly']),
+            soilCondition: faker.helpers.arrayElement(['Moist','Dry','Water-logged','Well-drained']),
+            majorActivities: faker.helpers.arrayElement(['Weeding','Irrigation','Fertilizing','Harvest prep']),
+            challenges: faker.helpers.arrayElement(['None','Pest pressure','Drought','Heavy rain']),
+            plannedActions: faker.helpers.arrayElement(['Apply pesticide','Increase irrigation','Improve drainage']),
+            actualYield: faker.number.int({ min: 300, max: 16000 }),
+            costs: {
+              seeds: faker.number.int({ min: 100, max: 1000 }),
+              fertilizer: faker.number.int({ min: 200, max: 2000 }),
+              pesticides: faker.number.int({ min: 0, max: 1500 }),
+              labor: faker.number.int({ min: 500, max: 5000 }),
+              irrigation: faker.number.int({ min: 100, max: 1500 }),
+              equipment: faker.number.int({ min: 0, max: 3000 }),
+              others: faker.number.int({ min: 0, max: 1000 }),
+            },
+            weatherSnapshot: {
+              temperature: faker.number.int({ min: 20, max: 36 }),
+              humidity: faker.number.int({ min: 40, max: 95 }),
+              precipitation: faker.number.float({ min: 0, max: 20, fractionDigits: 1 }),
+              windSpeed: faker.number.int({ min: 0, max: 40 }),
+            },
+          },
+        });
+      }
+    }
+  }
+
+  console.log('Registered crops and monthly reports created successfully.');
+}
+
 async function main() {
   try {
     await createAccount();
@@ -1680,6 +1779,9 @@ async function main() {
 
     await createUserPreferences();
     console.log('User Preferences created successfully.');
+
+  await createRegisteredCropsAndReports();
+  console.log('Seed Tracking data created successfully.');
   } 
 
   catch (error) {

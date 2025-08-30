@@ -31,6 +31,10 @@ router.use('/inquiries', inquiry);
 import surveyForms from './Survey_Forms/index.js';
 router.use('/survey-forms', surveyForms);
 
+// Seed Tracking API
+import seedTrack from './SeedTrack/index.js';
+router.use('/seed-track', seedTrack);
+
 // Simple preferences endpoints (temporary)
 router.get('/preferences/language', (req, res) => {
     res.json({

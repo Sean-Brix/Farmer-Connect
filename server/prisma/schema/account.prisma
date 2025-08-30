@@ -114,6 +114,9 @@ model Account {
   // User Preferences Relations
   preferences         UserPreference[]
 
+  // Seed Tracking Relations
+  registeredCrops     RegisteredCrop[]
+
   @@map("accounts")
 }
 

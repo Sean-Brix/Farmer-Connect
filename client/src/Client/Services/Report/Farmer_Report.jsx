@@ -1,37 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Bar, Line, Doughnut, Pie } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  LineElement,
-  PointElement
-} from 'chart.js';
+import { useMyCrops, useCreateCrop, useCreateReport } from './hooks/useFarmerSeedTrack.js';
 import Navbar from '../../Components/Navbar.jsx';
 
 // Import data files
 import cropGuidelinesData from '../../../data/cropGuidelinesData.json';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  LineElement,
-  PointElement
-);
+// Charts removed for farmer simplicity
 
 export default function Farmer_Report() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('crops');
   const [showCropRegistrationModal, setShowCropRegistrationModal] = useState(false);
   const [showMonthlyReportModal, setShowMonthlyReportModal] = useState(false);
   const [selectedCropForReport, setSelectedCropForReport] = useState(null);
@@ -230,77 +208,21 @@ export default function Farmer_Report() {
     return () => clearInterval(interval);
   }, []);
 
-  // Sample farmer data
-  const [farmerProfile] = useState({
-    id: 1,
-    name: 'Juan Dela Cruz',
-    location: 'Tanza, Cavite',
+  // Derive farmer profile from account data (fallbacks provided)
+  const farmerProfile = useMemo(() => ({
+    id: accountData?.id || 1,
+    name: accountData?.firstName ? `${accountData.firstName} ${accountData.surname || ''}`.trim() : 'Juan Dela Cruz',
+    location: accountData?.address || 'Tanza, Cavite',
     farmSize: 3.1,
-    joinDate: '2024-01-15'
-  });
+    joinDate: accountData?.createdAt ? String(accountData.createdAt).slice(0,10) : '2024-01-15'
+  }), [accountData]);
 
-  // Farmer's registered crops state
-  const [registeredCrops, setRegisteredCrops] = useState([
-    {
-      id: 1,
-      cropType: 'Rice',
-      variety: 'IR64',
-      plantingDate: '2024-01-15',
-      expectedHarvest: '2024-05-15',
-      area: 1.5,
-      status: 'Active',
-      currentStage: 'Tillering',
-      expectedYield: 6750,
-      reports: [
-        {
-          id: 1,
-          reportDate: '2024-01-30',
-          growthStage: 'Germination',
-          plantHeight: 15,
-          healthStatus: 'Healthy',
-          estimatedYield: 6500,
-          weatherImpact: 'Favorable',
-          notes: 'Seeds germinating well, uniform growth'
-        }
-      ]
-    },
-    {
-      id: 2,
-      cropType: 'Tomato',
-      variety: 'Cherokee Purple',
-      plantingDate: '2024-02-01',
-      expectedHarvest: '2024-05-01',
-      area: 0.5,
-      status: 'Active',
-      currentStage: 'Flowering',
-      expectedYield: 12500,
-      reports: []
-    },
-    {
-      id: 3,
-      cropType: 'Corn',
-      variety: 'Sweet Corn',
-      plantingDate: '2024-02-15',
-      expectedHarvest: '2024-06-15',
-      area: 0.8,
-      status: 'Active',
-      currentStage: 'Vegetative',
-      expectedYield: 4200,
-      reports: []
-    },
-    {
-      id: 4,
-      cropType: 'Eggplant',
-      variety: 'Black Beauty',
-      plantingDate: '2024-03-01',
-      expectedHarvest: '2024-07-01',
-      area: 0.3,
-      status: 'Active',
-      currentStage: 'Seedling',
-      expectedYield: 2800,
-      reports: []
-    }
-  ]);
+  // Farmer's registered crops fetched from backend
+  const userId = accountData?.id;
+  const { data: crops = [], isLoading: cropsLoading, error: cropsError } = useMyCrops(userId, { includeReports: true });
+  const createCrop = useCreateCrop();
+  const createReport = useCreateReport();
+  const registeredCrops = crops || [];
 
   // Local helper functions
   const calculateProgress = (plantingDate, expectedHarvest) => {
@@ -339,20 +261,30 @@ export default function Farmer_Report() {
     return nextMonth.toISOString().split('T')[0];
   };
 
-  const handleAddCrop = () => {
+  const handleAddCrop = async () => {
     if (!newCrop.cropType || !newCrop.variety || !newCrop.plantingDate) {
       alert('Please fill in all required fields');
       return;
     }
 
-    const cropData = {
-      ...newCrop,
-      id: Date.now(),
-      status: 'Active',
-      reports: []
-    };
+    try {
+      await createCrop.mutateAsync({
+        userId,
+        cropType: newCrop.cropType,
+        variety: newCrop.variety,
+        plantingDate: newCrop.plantingDate,
+        expectedHarvest: null,
+        area: newCrop.area ? Number(newCrop.area) : null,
+        expectedYield: newCrop.expectedYield ? Number(newCrop.expectedYield) : null,
+        currentStage: newCrop.currentStage || 'Seedling',
+        notes: newCrop.notes || null,
+      });
+    } catch (e) {
+      console.error('Create crop failed:', e);
+      alert('Failed to register crop.');
+      return;
+    }
 
-    setRegisteredCrops(prev => [...prev, cropData]);
     setNewCrop({
       cropType: '',
       variety: '',
@@ -365,32 +297,46 @@ export default function Farmer_Report() {
     setShowCropRegistrationModal(false);
   };
 
-  const handleAddReport = () => {
+  const handleAddReport = async () => {
     if (!newReport.reportDate || !newReport.growthStage || !newReport.plantHeight) {
       alert('Please fill in all required fields');
       return;
     }
 
-    const reportData = {
-      ...newReport,
-      id: Date.now(),
-      cropId: selectedCropForReport.id,
-      cropType: selectedCropForReport.cropType,
-      variety: selectedCropForReport.variety,
-      submissionDate: new Date().toISOString(),
-      weatherConditions: weatherData?.current ? {
-        temperature: weatherData.current.temperature_2m,
-        humidity: weatherData.current.relative_humidity_2m,
-        precipitation: weatherData.current.precipitation,
-        windSpeed: weatherData.current.wind_speed_10m
-      } : null
-    };
-
-    setRegisteredCrops(prev => prev.map(crop => 
-      crop.id === selectedCropForReport.id 
-        ? { ...crop, reports: [...crop.reports, reportData], currentStage: newReport.growthStage }
-        : crop
-    ));
+    try {
+      await createReport.mutateAsync({
+        cropId: selectedCropForReport.id,
+        reportDate: newReport.reportDate,
+        growthStage: newReport.growthStage,
+        plantHeight: newReport.plantHeight ? Number(newReport.plantHeight) : null,
+        healthStatus: newReport.healthStatus || null,
+        estimatedYield: newReport.estimatedYield ? Number(newReport.estimatedYield) : null,
+        weatherImpact: newReport.weatherImpact || null,
+        notes: newReport.notes || null,
+        pestsObserved: newReport.pestsObserved || null,
+        diseasesObserved: newReport.diseasesObserved || null,
+        fertilizersApplied: newReport.fertilizersApplied || null,
+        pesticideApplications: newReport.pesticideApplications || null,
+        irrigationFrequency: newReport.irrigationFrequency || null,
+        soilCondition: newReport.soilCondition || null,
+        majorActivities: newReport.majorActivities || null,
+        challenges: newReport.challenges || null,
+        plannedActions: newReport.plannedActions || null,
+        actualYield: newReport.actualYield ? Number(newReport.actualYield) : null,
+        costs: newReport.costs || null,
+        weatherSnapshot: weatherData?.current ? {
+          temperature: weatherData.current.temperature_2m,
+          humidity: weatherData.current.relative_humidity_2m,
+          precipitation: weatherData.current.precipitation,
+          windSpeed: weatherData.current.wind_speed_10m,
+        } : null,
+        userId,
+      });
+    } catch (e) {
+      console.error('Create report failed:', e);
+      alert('Failed to add report.');
+      return;
+    }
 
     setNewReport({
       reportDate: new Date().toISOString().split('T')[0],
@@ -568,7 +514,6 @@ export default function Farmer_Report() {
           <div className="max-w-5xl mx-auto mb-8">
             <div className="flex flex-wrap gap-2 justify-center">
               {[
-                { id: 'overview', label: 'Overview', icon: '📊' },
                 { id: 'crops', label: 'My Crops', icon: '🌱' },
                 { id: 'reports', label: 'Reports', icon: '📋' },
                 { id: 'weather', label: 'Weather', icon: '🌤️' },
@@ -597,581 +542,7 @@ export default function Farmer_Report() {
             </div>
           </div>
 
-          {/* Overview Tab */}
-          {activeTab === 'overview' && (
-            <div className="space-y-8">
-              {/* Professional Quick Stats Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
-                      <span className="text-xl">🌱</span>
-                    </div>
-                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">ACTIVE</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Active Crops</p>
-                    <p className="text-3xl font-bold text-gray-800">{registeredCrops.filter(c => c.status === 'Active').length}</p>
-                  </div>
-                </div>
-                
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
-                      <span className="text-xl">📈</span>
-                    </div>
-                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">AVG</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Avg Progress</p>
-                    <p className="text-3xl font-bold text-gray-800">{cropRows.length > 0 ? Math.round(cropRows.reduce((a, b) => a + b.progress, 0) / cropRows.length) : 0}<span className="text-lg text-gray-500">%</span></p>
-                  </div>
-                </div>
-                
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
-                      <span className="text-xl">📋</span>
-                    </div>
-                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">TOTAL</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Reports Logged</p>
-                    <p className="text-3xl font-bold text-gray-800">{allReports.length}</p>
-                  </div>
-                </div>
-                
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
-                      <span className="text-xl">🏞️</span>
-                    </div>
-                    <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">AREA</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Total Area</p>
-                    <p className="text-3xl font-bold text-gray-800">{registeredCrops.reduce((sum, c) => sum + parseFloat(c.area || 0), 0).toFixed(1)}<span className="text-lg text-gray-500"> ha</span></p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Professional Charts Section */}
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                {/* Crop Progress Chart */}
-                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-sm">
-                      <span className="text-xl">🌱</span>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-800">Crop Progress Overview</h3>
-                      <p className="text-sm text-gray-500">Track the growth progress of your crops</p>
-                    </div>
-                  </div>
-                  {cropRows.length > 0 ? (
-                    <div className="h-80">
-                      <Bar
-                        data={{
-                          labels: cropRows.map(c => `${c.cropType}\n(${c.variety})`),
-                          datasets: [{
-                            label: 'Progress (%)',
-                            data: cropRows.map(c => c.progress),
-                            backgroundColor: cropRows.map((_, i) => {
-                              const colors = [
-                                'rgba(34, 197, 94, 0.8)',
-                                'rgba(22, 163, 74, 0.8)', 
-                                'rgba(21, 128, 61, 0.8)',
-                                'rgba(134, 239, 172, 0.8)',
-                                'rgba(187, 247, 208, 0.8)',
-                                'rgba(74, 222, 128, 0.8)'
-                              ];
-                              return colors[i % colors.length];
-                            }),
-                            borderColor: cropRows.map((_, i) => {
-                              const colors = [
-                                'rgba(34, 197, 94, 1)',
-                                'rgba(22, 163, 74, 1)', 
-                                'rgba(21, 128, 61, 1)',
-                                'rgba(134, 239, 172, 1)',
-                                'rgba(187, 247, 208, 1)',
-                                'rgba(74, 222, 128, 1)'
-                              ];
-                              return colors[i % colors.length];
-                            }),
-                            borderWidth: 2,
-                            borderRadius: 12,
-                            borderSkipped: false,
-                          }]
-                        }}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          plugins: {
-                            legend: {
-                              display: false
-                            },
-                            tooltip: {
-                              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                              titleColor: '#fff',
-                              bodyColor: '#fff',
-                              borderColor: 'rgba(34, 197, 94, 1)',
-                              borderWidth: 1,
-                              cornerRadius: 8,
-                              displayColors: false,
-                              callbacks: {
-                                title: function(context) {
-                                  return context[0].label.split('\n')[0];
-                                },
-                                label: function(context) {
-                                  return `Progress: ${context.parsed.y}%`;
-                                }
-                              }
-                            }
-                          },
-                          scales: {
-                            y: {
-                              beginAtZero: true,
-                              max: 100,
-                              grid: {
-                                color: 'rgba(0, 0, 0, 0.05)',
-                                borderColor: 'rgba(0, 0, 0, 0.1)'
-                              },
-                              ticks: {
-                                color: '#6b7280',
-                                font: {
-                                  size: 12,
-                                  weight: '500'
-                                },
-                                callback: function(value) {
-                                  return value + '%';
-                                }
-                              }
-                            },
-                            x: {
-                              grid: {
-                                display: false
-                              },
-                              ticks: {
-                                color: '#6b7280',
-                                font: {
-                                  size: 11,
-                                  weight: '500'
-                                },
-                                maxRotation: 45
-                              }
-                            }
-                          }
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg">
-                      <div className="text-center">
-                        <div className="text-6xl mb-4 opacity-30">📊</div>
-                        <p className="text-gray-500 font-medium">No crops data to display</p>
-                        <p className="text-sm text-gray-400 mt-1">Add some crops to see progress charts</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Area Distribution Chart */}
-                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-sm">
-                      <span className="text-xl">🏞️</span>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-800">Land Area Distribution</h3>
-                      <p className="text-sm text-gray-500">How your farmland is allocated</p>
-                    </div>
-                  </div>
-                  {registeredCrops.length > 0 ? (
-                    <div className="h-80">
-                      <Doughnut
-                        data={{
-                          labels: registeredCrops.map(c => c.cropType),
-                          datasets: [{
-                            data: registeredCrops.map(c => parseFloat(c.area || 0)),
-                            backgroundColor: [
-                              'rgba(34, 197, 94, 0.85)',
-                              'rgba(22, 163, 74, 0.85)',
-                              'rgba(21, 128, 61, 0.85)',
-                              'rgba(16, 185, 129, 0.85)',
-                              'rgba(134, 239, 172, 0.85)',
-                              'rgba(187, 247, 208, 0.85)'
-                            ],
-                            borderWidth: 4,
-                            borderColor: '#fff',
-                            hoverBorderWidth: 6,
-                            hoverBorderColor: '#fff',
-                            hoverBackgroundColor: [
-                              'rgba(34, 197, 94, 0.95)',
-                              'rgba(22, 163, 74, 0.95)',
-                              'rgba(21, 128, 61, 0.95)',
-                              'rgba(16, 185, 129, 0.95)',
-                              'rgba(134, 239, 172, 0.95)',
-                              'rgba(187, 247, 208, 0.95)'
-                            ]
-                          }]
-                        }}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          cutout: '60%',
-                          plugins: {
-                            legend: {
-                              position: 'bottom',
-                              labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                pointStyle: 'circle',
-                                font: {
-                                  size: 12,
-                                  weight: '500'
-                                },
-                                color: '#374151',
-                                generateLabels: function(chart) {
-                                  const data = chart.data;
-                                  if (data.labels.length && data.datasets.length) {
-                                    return data.labels.map((label, i) => {
-                                      const dataset = data.datasets[0];
-                                      const value = dataset.data[i];
-                                      const total = dataset.data.reduce((a, b) => a + b, 0);
-                                      const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                      return {
-                                        text: `${label}: ${value} ha (${percentage}%)`,
-                                        fillStyle: dataset.backgroundColor[i],
-                                        strokeStyle: dataset.borderColor,
-                                        lineWidth: dataset.borderWidth,
-                                        hidden: false,
-                                        index: i
-                                      };
-                                    });
-                                  }
-                                  return [];
-                                }
-                              }
-                            },
-                            tooltip: {
-                              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                              titleColor: '#fff',
-                              bodyColor: '#fff',
-                              borderColor: 'rgba(34, 197, 94, 1)',
-                              borderWidth: 1,
-                              cornerRadius: 8,
-                              displayColors: true,
-                              callbacks: {
-                                label: function(context) {
-                                  const label = context.label || '';
-                                  const value = context.parsed;
-                                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                  const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                  return `${label}: ${value} ha (${percentage}%)`;
-                                }
-                              }
-                            }
-                          }
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg">
-                      <div className="text-center">
-                        <div className="text-6xl mb-4 opacity-30">🏞️</div>
-                        <p className="text-gray-500 font-medium">No area data to display</p>
-                        <p className="text-sm text-gray-400 mt-1">Register crops to see area distribution</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Additional Professional Charts Row */}
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                {/* Expected Yield Chart */}
-                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-sm">
-                      <span className="text-xl">📈</span>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-800">Expected Yield Comparison</h3>
-                      <p className="text-sm text-gray-500">Projected harvest yields for your crops</p>
-                    </div>
-                  </div>
-                  {cropRows.length > 0 ? (
-                    <div className="h-80">
-                      <Line
-                        data={{
-                          labels: cropRows.map(c => c.cropType),
-                          datasets: [{
-                            label: 'Expected Yield (kg)',
-                            data: cropRows.map(c => parseFloat(c.expectedYield || 0)),
-                            borderColor: 'rgba(34, 197, 94, 1)',
-                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                            tension: 0.4,
-                            fill: true,
-                            pointBackgroundColor: 'rgba(34, 197, 94, 1)',
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 3,
-                            pointRadius: 8,
-                            pointHoverRadius: 10,
-                            pointHoverBorderWidth: 4,
-                            borderWidth: 3,
-                            pointStyle: 'circle'
-                          }]
-                        }}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          plugins: {
-                            legend: {
-                              display: false
-                            },
-                            tooltip: {
-                              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                              titleColor: '#fff',
-                              bodyColor: '#fff',
-                              borderColor: 'rgba(34, 197, 94, 1)',
-                              borderWidth: 1,
-                              cornerRadius: 8,
-                              displayColors: false,
-                              callbacks: {
-                                title: function(context) {
-                                  return context[0].label;
-                                },
-                                label: function(context) {
-                                  return `Expected Yield: ${context.parsed.y} kg`;
-                                }
-                              }
-                            }
-                          },
-                          scales: {
-                            y: {
-                              beginAtZero: true,
-                              grid: {
-                                color: 'rgba(0, 0, 0, 0.05)',
-                                borderColor: 'rgba(0, 0, 0, 0.1)'
-                              },
-                              ticks: {
-                                color: '#6b7280',
-                                font: {
-                                  size: 12,
-                                  weight: '500'
-                                },
-                                callback: function(value) {
-                                  return value + ' kg';
-                                }
-                              }
-                            },
-                            x: {
-                              grid: {
-                                display: false
-                              },
-                              ticks: {
-                                color: '#6b7280',
-                                font: {
-                                  size: 12,
-                                  weight: '500'
-                                }
-                              }
-                            }
-                          },
-                          interaction: {
-                            intersect: false,
-                            mode: 'index'
-                          }
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg">
-                      <div className="text-center">
-                        <div className="text-6xl mb-4 opacity-30">📈</div>
-                        <p className="text-gray-500 font-medium">No yield data to display</p>
-                        <p className="text-sm text-gray-400 mt-1">Add crop details to see yield projections</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Monthly Report Activity */}
-                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-sm">
-                      <span className="text-xl">📊</span>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-800">Monthly Report Activity</h3>
-                      <p className="text-sm text-gray-500">Track your reporting consistency</p>
-                    </div>
-                  </div>
-                  <div className="h-80">
-                    <Bar
-                      data={{
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                        datasets: [{
-                          label: 'Reports Submitted',
-                          data: [12, 8, 15, 10, 6, 9],
-                          backgroundColor: [
-                            'rgba(34, 197, 94, 0.8)',
-                            'rgba(22, 163, 74, 0.8)',
-                            'rgba(21, 128, 61, 0.8)',
-                            'rgba(16, 185, 129, 0.8)',
-                            'rgba(74, 222, 128, 0.8)',
-                            'rgba(134, 239, 172, 0.8)'
-                          ],
-                          borderColor: [
-                            'rgba(34, 197, 94, 1)',
-                            'rgba(22, 163, 74, 1)',
-                            'rgba(21, 128, 61, 1)',
-                            'rgba(16, 185, 129, 1)',
-                            'rgba(74, 222, 128, 1)',
-                            'rgba(134, 239, 172, 1)'
-                          ],
-                          borderWidth: 2,
-                          borderRadius: 12,
-                          borderSkipped: false,
-                        }]
-                      }}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                          legend: {
-                            display: false
-                          },
-                          tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: 'rgba(34, 197, 94, 1)',
-                            borderWidth: 1,
-                            cornerRadius: 8,
-                            displayColors: false,
-                            callbacks: {
-                              title: function(context) {
-                                return context[0].label;
-                              },
-                              label: function(context) {
-                                return `Reports: ${context.parsed.y}`;
-                              }
-                            }
-                          }
-                        },
-                        scales: {
-                          y: {
-                            beginAtZero: true,
-                            grid: {
-                              color: 'rgba(0, 0, 0, 0.05)',
-                              borderColor: 'rgba(0, 0, 0, 0.1)'
-                            },
-                            ticks: {
-                              color: '#6b7280',
-                              font: {
-                                size: 12,
-                                weight: '500'
-                              },
-                              stepSize: 5
-                            }
-                          },
-                          x: {
-                            grid: {
-                              display: false
-                            },
-                            ticks: {
-                              color: '#6b7280',
-                              font: {
-                                size: 12,
-                                weight: '500'
-                              }
-                            }
-                          }
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Professional Crop Overview Table */}
-              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-lg">
-                      <span className="text-sm">🌱</span>
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-800">Crop Overview</h3>
-                  </div>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crop</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Stage</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Area</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Yield</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {cropRows.map(row => (
-                        <tr key={row.id} className="hover:bg-gray-50 transition-colors duration-150">
-                          <td className="px-6 py-4">
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                <span className="text-sm">🌱</span>
-                              </div>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-800">{row.cropType}</div>
-                                <div className="text-xs text-gray-500">({row.variety})</div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            <span className="inline-flex px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">
-                              {row.currentStage}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            <div className="flex items-center justify-center">
-                              <div className="w-16 bg-gray-200 h-2 rounded-full mr-2">
-                                <div className="h-2 rounded-full bg-green-500" style={{ width: `${row.progress}%` }}></div>
-                              </div>
-                              <span className="text-sm text-gray-600">{row.progress}%</span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-center text-sm text-gray-800">{row.area} ha</td>
-                          <td className="px-6 py-4 text-center text-sm text-gray-800">{row.expectedYield} kg</td>
-                          <td className="px-6 py-4 text-center">
-                            <span className="inline-flex px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">
-                              Active
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  {cropRows.length === 0 && (
-                    <div className="text-center py-12">
-                      <div className="text-6xl mb-4 opacity-30">🌱</div>
-                      <h3 className="text-lg font-medium text-gray-800 mb-2">No crops registered</h3>
-                      <p className="text-gray-600 mb-6">Start by registering your first crop to see detailed overview</p>
-                      <button 
-                        onClick={() => setShowCropRegistrationModal(true)}
-                        className="w-full sm:w-auto px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-semibold shadow-md hover:shadow-lg"
-                      >
-                        🌱 Register First Crop
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Removed overview charts and table for simplicity */}
 
           {/* Crops Tab - Enhanced with Expandable Details */}
           {activeTab === 'crops' && (
@@ -1865,75 +1236,7 @@ export default function Farmer_Report() {
                 </div>
               </div>
 
-              {/* Report Analytics Charts */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Report Submission Trends */}
-                <div className="bg-white border rounded-lg shadow-sm p-4">
-                  <h3 className="font-semibold text-gray-800 mb-4">📊 Monthly Report Submission Trends</h3>
-                  <div className="h-64">
-                    <Line
-                      data={{
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                        datasets: [{
-                          label: 'Reports Submitted',
-                          data: [12, 8, 15, 10, 6, 9],
-                          borderColor: 'rgba(34, 197, 94, 1)',
-                          backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                          tension: 0.4,
-                          fill: true
-                        }, {
-                          label: 'Reports Due',
-                          data: [15, 12, 18, 14, 10, 12],
-                          borderColor: 'rgba(245, 158, 11, 1)',
-                          backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                          tension: 0.4,
-                          fill: true
-                        }]
-                      }}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                          y: {
-                            beginAtZero: true
-                          }
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Report Compliance Rate */}
-                <div className="bg-white border rounded-lg shadow-sm p-4">
-                  <h3 className="font-semibold text-gray-800 mb-4">📈 Report Compliance Rate</h3>
-                  <div className="h-64">
-                    <Doughnut
-                      data={{
-                        labels: ['Submitted On Time', 'Late Submissions', 'Pending'],
-                        datasets: [{
-                          data: [75, 15, 10],
-                          backgroundColor: [
-                            'rgba(34, 197, 94, 0.8)',
-                            'rgba(245, 158, 11, 0.8)',
-                            'rgba(239, 68, 68, 0.8)'
-                          ],
-                          borderWidth: 2,
-                          borderColor: '#fff'
-                        }]
-                      }}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                          legend: {
-                            position: 'bottom'
-                          }
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
+              {/* Report Analytics Charts removed for farmer simplicity */}
             </div>
           )}
 

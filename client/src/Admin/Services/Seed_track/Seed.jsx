@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
+import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,7 +12,7 @@ import {
   Legend,
   ArcElement,
 } from 'chart.js';
-import { Bar, Line, Doughnut } from 'react-chartjs-2';
+import { useAdminSeedTrack } from './hooks/useSeedTrackQueries';
 
 ChartJS.register(
   CategoryScale,
@@ -26,1093 +27,85 @@ ChartJS.register(
 );
 
 function Seed_Track() {
+  // Data from backend
+  const { farmers = [], reports: sampleSeedTrackingData = [], isLoading: seedLoading, error: seedError } = useAdminSeedTrack();
+
+  // UI state
   const [activeTab, setActiveTab] = useState('overview');
   const [openFarmerTabs, setOpenFarmerTabs] = useState([]);
   const [activeFarmerId, setActiveFarmerId] = useState(null);
   const [selectedFarmerTab, setSelectedFarmerTab] = useState('reports');
   const [showCropReportsModal, setShowCropReportsModal] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
-  const [expandedSections, setExpandedSections] = useState({
-    overview: true,
-    details: false,
-    timeline: false,
-    issues: false
-  });
 
-  // Pagination state
+  // Pagination and filters
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [filters, setFilters] = useState({ search: '', status: 'all', location: 'all' });
 
-  // Filter state
-  const [filters, setFilters] = useState({
-    search: '',
-    status: 'all',
-    location: 'all'
-  });
-
-  // Alert state
-  const [alert, setAlert] = useState({
-    show: false,
-    message: '',
-    type: 'success'
-  });
-
-  // Crop Guidelines state
-  const [cropGuidelines, setCropGuidelines] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showGuidelineModal, setShowGuidelineModal] = useState(false);
-  const [selectedGuideline, setSelectedGuideline] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [guidelineToDelete, setGuidelineToDelete] = useState(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [editingGuideline, setEditingGuideline] = useState(null);
-  const [newGuideline, setNewGuideline] = useState({
-    name: '',
-    category: 'cereals',
-    varieties: [''],
-    plantingSeasons: [''],
-    growingPeriod: '',
-    waterRequirements: '',
-    expectedYield: '',
-    soilType: '',
-    climate: '',
-    spacing: '',
-    fertilizer: '',
-    plantingTips: [''],
-    careInstructions: [''],
-    harvestingTips: [''],
-    keyTips: [''],
-    commonPests: [''],
-    diseases: [''],
-    fertilizers: [''],
-    stages: [{ stage: '', duration: '', description: '', activities: [''] }],
-    marketPrice: '',
-    profitability: 'Moderate',
-    difficulty: 'Easy'
-  });
-
-  // Load crop guidelines data on component mount
-  useEffect(() => {
-    // Sample crop guidelines data
-    setCropGuidelines([
-      {
-        id: 1,
-        name: 'Rice (Palay)',
-        category: 'cereals',
-        varieties: ['IR64', 'PSB Rc82', 'NSIC Rc222'],
-        plantingSeasons: ['Wet Season (Jun-Oct)', 'Dry Season (Nov-May)'],
-        growingPeriod: '120-150 days',
-        waterRequirements: 'High (flooded fields)',
-        expectedYield: '4-6 tons/hectare',
-        soilType: 'Clay loam, well-drained',
-        climate: 'Tropical, warm and humid',
-        spacing: '20cm x 20cm',
-        fertilizer: 'NPK 14-14-14 at planting, Urea for topdressing',
-        keyTips: [
-          'Maintain 2-5cm water level during vegetative stage',
-          'Transplant seedlings at 21-25 days old',
-          'Apply fertilizer in split applications'
-        ],
-        commonPests: ['Rice bug', 'Stem borer', 'Brown planthopper'],
-        diseases: ['Rice blast', 'Bacterial leaf blight', 'Sheath blight'],
-        stages: [
-          { stage: 'Land Preparation', duration: '2-3 weeks', description: 'Plow and harrow fields', activities: ['Plowing', 'Harrowing'] },
-          { stage: 'Seedling', duration: '21-25 days', description: 'Prepare seedbed', activities: ['Seed selection', 'Nursery care'] }
-        ],
-        marketPrice: '₱20-25 per kg',
-        profitability: 'High',
-        difficulty: 'Moderate',
-        createdAt: '2024-01-15',
-        updatedAt: '2024-02-01'
-      },
-      {
-        id: 2,
-        name: 'Corn',
-        category: 'cereals',
-        varieties: ['Pioneer 30G95', 'Dekalb 9108', 'NK 6410'],
-        plantingSeasons: ['Dry Season (Nov-Feb)', 'Wet Season (May-Aug)'],
-        growingPeriod: '90-120 days',
-        waterRequirements: 'Medium (600-800mm total)',
-        expectedYield: '3-5 tons/hectare',
-        soilType: 'Well-drained loam, pH 6.0-7.0',
-        climate: 'Warm, adequate rainfall or irrigation',
-        spacing: '75cm x 25cm',
-        fertilizer: 'Complete fertilizer 14-14-14, side-dress with Urea',
-        keyTips: [
-          'Plant 2-3 seeds per hill, thin to strongest seedling',
-          'Hill up soil around plants at 30-45 days',
-          'Side-dress with nitrogen at knee-high stage'
-        ],
-        commonPests: ['Corn borer', 'Fall armyworm', 'Corn rootworm'],
-        diseases: ['Corn rust', 'Leaf blight', 'Ear rot'],
-        stages: [
-          { stage: 'Land Preparation', duration: '1-2 weeks', description: 'Prepare well-drained fields', activities: ['Deep plowing', 'Harrowing'] },
-          { stage: 'Planting', duration: '1 week', description: 'Direct seeding', activities: ['Seed treatment', 'Planting'] }
-        ],
-        marketPrice: '₱15-20 per kg',
-        profitability: 'High',
-        difficulty: 'Easy',
-        createdAt: '2024-01-20',
-        updatedAt: '2024-02-05'
-      },
-      {
-        id: 3,
-        name: 'Tomato',
-        category: 'vegetables',
-        varieties: ['Cherokee Purple', 'Determinate hybrids', 'Cherry tomatoes'],
-        plantingSeasons: ['Cool Season (Oct-Mar)', 'Highland areas year-round'],
-        growingPeriod: '90-120 days',
-        waterRequirements: 'Medium-High (consistent moisture)',
-        expectedYield: '15-25 tons/hectare',
-        soilType: 'Well-drained, fertile loam, pH 6.0-6.8',
-        climate: 'Cool to warm, avoid extreme heat',
-        spacing: '60cm x 40cm',
-        fertilizer: 'High phosphorus at planting, regular NPK applications',
-        keyTips: [
-          'Start from healthy seedlings in nursery',
-          'Provide sturdy support systems',
-          'Prune suckers regularly for better fruit quality'
-        ],
-        commonPests: ['Fruit borer', 'Whitefly', 'Aphids'],
-        diseases: ['Early blight', 'Late blight', 'Bacterial wilt'],
-        stages: [
-          { stage: 'Nursery', duration: '25-30 days', description: 'Seedling production', activities: ['Seed sowing', 'Seedling care'] },
-          { stage: 'Transplanting', duration: '1 week', description: 'Moving to field', activities: ['Land preparation', 'Transplanting'] }
-        ],
-        marketPrice: '₱40-80 per kg',
-        profitability: 'Very High',
-        difficulty: 'Moderate-High',
-        createdAt: '2024-02-01',
-        updatedAt: '2024-02-10'
-      }
-    ]);
-  }, []);
-
-  // Export overview data function
-  const exportOverviewData = () => {
-    try {
-      const stats = getOverviewStatistics();
-      const exportData = {
-        exportInfo: {
-          title: 'Seed Track Overview Export',
-          exportDate: new Date().toISOString(),
-          exportedBy: 'Admin'
-        },
-        overviewStatistics: {
-          totalFarmers: stats.totalFarmers,
-          totalReports: stats.totalReports,
-          recentReports: stats.recentReports,
-          activeCrops: stats.activeCrops,
-          cropDistribution: stats.cropDistribution,
-          healthDistribution: stats.healthDistribution
-        },
-        farmersData: farmers.map(farmer => ({
-          id: farmer.id,
-          name: farmer.name,
-          email: farmer.email,
-          location: farmer.location,
-          farmSize: parseFloat(farmer.area || 0),
-          joinDate: farmer.joinDate,
-          cropTypes: farmer.cropTypes,
-          totalReports: farmer.totalReports,
-          status: farmer.status
-        })),
-        reportsData: sampleSeedTrackingData.map(report => ({
-          farmerId: report.farmerId,
-          crop: report.crop,
-          variety: report.variety,
-          plantingDate: report.plantingDate,
-          reportDate: report.reportDate,
-          growthStage: report.growthStage,
-          plantHeight: report.plantHeight,
-          healthStatus: report.healthStatus,
-          estimatedYield: report.estimatedYield,
-          area: report.area
-        })),
-        summary: {
-          generatedAt: new Date().toISOString(),
-          totalRecords: farmers.length + sampleSeedTrackingData.length,
-          dataIntegrity: 'Complete'
-        }
-      };
-
-      // Convert to JSON and download
-      const jsonString = JSON.stringify(exportData, null, 2);
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `seed_track_overview_${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-
-      showAlert('Overview data exported successfully!', 'success');
-    } catch (error) {
-      console.error('Export error:', error);
-      showAlert('Error exporting data. Please try again.', 'error');
-    }
-  };
-
-  // Crop Guidelines functions
-  const categoryOptions = [
-    { value: 'cereals', label: 'Cereals & Grains', icon: '🌾' },
-    { value: 'vegetables', label: 'Vegetables', icon: '🥬' },
-    { value: 'fruits', label: 'Fruits', icon: '🍎' },
-    { value: 'legumes', label: 'Legumes', icon: '🫘' },
-    { value: 'root_crops', label: 'Root Crops', icon: '🥔' },
-    { value: 'herbs_spices', label: 'Herbs & Spices', icon: '🌿' }
-  ];
-
-  const filteredGuidelines = cropGuidelines.filter(guideline => {
-    const matchesCategory = selectedCategory === 'all' || guideline.category === selectedCategory;
-    const matchesSearch = guideline.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         guideline.varieties.some(v => v.toLowerCase().includes(searchTerm.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
-
-  const handleAddGuideline = () => {
-    if (!newGuideline.name || !newGuideline.expectedYield) {
-      alert('Please fill in all required fields');
-      return;
-    }
-
-    const guideline = {
-      id: Date.now(),
-      ...newGuideline,
-      createdAt: new Date().toISOString().split('T')[0],
-      updatedAt: new Date().toISOString().split('T')[0]
-    };
-
-    setCropGuidelines(prev => [guideline, ...prev]);
-    resetGuidelineForm();
-    setShowCreateModal(false);
-    showAlert('Crop guideline added successfully!', 'success');
-  };
-
-  const handleEditGuideline = (guideline) => {
-    setNewGuideline({
-      name: guideline.name,
-      category: guideline.category,
-      varieties: [...guideline.varieties],
-      plantingSeasons: [...guideline.plantingSeasons],
-      growingPeriod: guideline.growingPeriod,
-      waterRequirements: guideline.waterRequirements,
-      expectedYield: guideline.expectedYield,
-      soilType: guideline.soilType,
-      climate: guideline.climate,
-      spacing: guideline.spacing,
-      fertilizer: guideline.fertilizer,
-      plantingTips: guideline.plantingTips ? [...guideline.plantingTips] : [''],
-      careInstructions: guideline.careInstructions ? [...guideline.careInstructions] : [''],
-      harvestingTips: guideline.harvestingTips ? [...guideline.harvestingTips] : [''],
-      keyTips: guideline.keyTips ? [...guideline.keyTips] : [''],
-      commonPests: guideline.commonPests ? [...guideline.commonPests] : [''],
-      diseases: guideline.diseases ? [...guideline.diseases] : [''],
-      fertilizers: guideline.fertilizers ? [...guideline.fertilizers] : [''],
-      stages: (guideline.stages || []).map(stage => ({
-        ...stage,
-        activities: [...(stage.activities || [])]
-      })),
-      marketPrice: guideline.marketPrice,
-      profitability: guideline.profitability,
-      difficulty: guideline.difficulty
-    });
-    setEditingGuideline(guideline);
-    setShowCreateModal(true);
-  };
-
-  const handleUpdateGuideline = () => {
-    if (!newGuideline.name || !newGuideline.expectedYield) {
-      alert('Please fill in all required fields');
-      return;
-    }
-
-    setCropGuidelines(prev => prev.map(g => 
-      g.id === editingGuideline.id 
-        ? { ...g, ...newGuideline, updatedAt: new Date().toISOString().split('T')[0] }
-        : g
-    ));
-
-    resetGuidelineForm();
-    setShowCreateModal(false);
-    setEditingGuideline(null);
-    showAlert('Crop guideline updated successfully!', 'success');
-  };
-
-  const handleDeleteGuideline = (id) => {
-    setCropGuidelines(prev => prev.filter(g => g.id !== id));
-    setShowDeleteModal(false);
-    setGuidelineToDelete(null);
-    showAlert('Crop guideline deleted successfully!', 'success');
-  };
-
-  const resetGuidelineForm = () => {
-    setNewGuideline({
-      name: '',
-      category: 'cereals',
-      varieties: [''],
-      plantingSeasons: [''],
-      growingPeriod: '',
-      waterRequirements: '',
-      expectedYield: '',
-      soilType: '',
-      climate: '',
-      spacing: '',
-      fertilizer: '',
-      plantingTips: [''],
-      careInstructions: [''],
-      harvestingTips: [''],
-      keyTips: [''],
-      commonPests: [''],
-      diseases: [''],
-      fertilizers: [''],
-      stages: [{ stage: '', duration: '', description: '', activities: [''] }],
-      marketPrice: '',
-      profitability: 'Moderate',
-      difficulty: 'Easy'
-    });
-  };
-
-  const addArrayField = (field, value = '') => {
-    setNewGuideline(prev => ({
-      ...prev,
-      [field]: [...prev[field], value]
-    }));
-  };
-
-  const updateArrayField = (field, index, value) => {
-    setNewGuideline(prev => ({
-      ...prev,
-      [field]: prev[field].map((item, i) => i === index ? value : item)
-    }));
-  };
-
-  const removeArrayField = (field, index) => {
-    setNewGuideline(prev => ({
-      ...prev,
-      [field]: prev[field].filter((_, i) => i !== index)
-    }));
-  };
-
-  const addStage = () => {
-    setNewGuideline(prev => ({
-      ...prev,
-      stages: [...prev.stages, { stage: '', duration: '', description: '', activities: [''] }]
-    }));
-  };
-
-  const updateStage = (index, field, value) => {
-    setNewGuideline(prev => ({
-      ...prev,
-      stages: prev.stages.map((stage, i) => 
-        i === index ? { ...stage, [field]: value } : stage
-      )
-    }));
-  };
-
-  const removeStage = (index) => {
-    setNewGuideline(prev => ({
-      ...prev,
-      stages: prev.stages.filter((_, i) => i !== index)
-    }));
-  };
-
-  const addStageActivity = (stageIndex) => {
-    setNewGuideline(prev => ({
-      ...prev,
-      stages: prev.stages.map((stage, i) => 
-        i === stageIndex ? { ...stage, activities: [...stage.activities, ''] } : stage
-      )
-    }));
-  };
-
-  const updateStageActivity = (stageIndex, activityIndex, value) => {
-    setNewGuideline(prev => ({
-      ...prev,
-      stages: prev.stages.map((stage, i) => 
-        i === stageIndex ? {
-          ...stage,
-          activities: stage.activities.map((activity, j) => 
-            j === activityIndex ? value : activity
-          )
-        } : stage
-      )
-    }));
-  };
-
-  const removeStageActivity = (stageIndex, activityIndex) => {
-    setNewGuideline(prev => ({
-      ...prev,
-      stages: prev.stages.map((stage, i) => 
-        i === stageIndex ? {
-          ...stage,
-          activities: stage.activities.filter((_, j) => j !== activityIndex)
-        } : stage
-      )
-    }));
-  };
-
-  // Helper to show alert
+  // Alerts
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'success' });
   const showAlert = (message, type = 'success') => {
     setAlert({ show: true, message, type });
     setTimeout(() => setAlert({ show: false, message: '', type: '' }), 3000);
   };
 
-  // Tab management functions
-  const openFarmerTab = (farmer) => {
-    // Check if farmer tab is already open
-    const existingTab = openFarmerTabs.find(tab => tab.farmerId === farmer.farmerId);
-    if (existingTab) {
-      setActiveFarmerId(farmer.farmerId);
-      setActiveTab('farmer');
-      return;
-    }
+  // Crop Guidelines state (local-only admin tool)
+  const [cropGuidelines, setCropGuidelines] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [guidelineToDelete, setGuidelineToDelete] = useState(null);
+  const [editingGuideline, setEditingGuideline] = useState(null);
+  const [newGuideline, setNewGuideline] = useState({
+    id: '',
+    cropName: '',
+    category: '',
+    description: '',
+    plantingTips: [''],
+    careInstructions: [''],
+    harvestingTips: [''],
+    commonPests: [''],
+    diseases: [''],
+    seasonality: '',
+    soilRequirements: '',
+    waterRequirements: '',
+    fertilizers: ['']
+  });
 
-    // Add new farmer tab
-    setOpenFarmerTabs(prev => [...prev, farmer]);
+  // Seed tracking helpers mapping to existing UI expectations
+  const getBBCHStages = (cropType) => {
+    const stages = {
+      'Rice': ['Germination','Seedling','Tillering','Stem elongation','Booting','Heading','Flowering','Milk development','Dough development','Ripening','Senescence','Dormancy','Harvest'],
+      'Corn': ['Germination','Seedling','Leaf development','Tillering','Stem elongation','Inflorescence emergence','Flowering','Development of fruit','Ripening','Senescence','Dormancy','Vegetative','Tasseling','Silking','Harvest'],
+      'Vegetables': ['Germination','Seedling','Leaf development','Formation of side shoots','Inflorescence emergence','Flowering','Development of fruit','Ripening','Senescence','Dormancy','Transplanting','Vegetative','Harvest']
+    };
+    return stages[cropType] || stages['Vegetables'];
+  };
+
+  // Farmers tabs helpers
+  const openFarmerTab = (farmer) => {
+    const exists = openFarmerTabs.some((t) => t.farmerId === farmer.farmerId);
+    if (!exists) setOpenFarmerTabs((prev) => [...prev, farmer]);
     setActiveFarmerId(farmer.farmerId);
     setActiveTab('farmer');
   };
 
   const closeFarmerTab = (farmerId, event) => {
-    event.stopPropagation();
-    const updatedTabs = openFarmerTabs.filter(tab => tab.farmerId !== farmerId);
-    setOpenFarmerTabs(updatedTabs);
-    
-    // If closing active tab, switch to overview or first available tab
+    if (event?.stopPropagation) event.stopPropagation();
+    const updated = openFarmerTabs.filter((t) => t.farmerId !== farmerId);
+    setOpenFarmerTabs(updated);
     if (activeFarmerId === farmerId) {
-      if (updatedTabs.length > 0) {
-        setActiveFarmerId(updatedTabs[0].farmerId);
-      } else {
+      if (updated.length > 0) setActiveFarmerId(updated[0].farmerId);
+      else {
         setActiveTab('overview');
         setActiveFarmerId(null);
       }
     }
   };
 
-  const getCurrentFarmer = () => {
-    return openFarmerTabs.find(tab => tab.farmerId === activeFarmerId);
-  };
-
-  // Calculate overview statistics
-  const getOverviewStatistics = () => {
-    const totalFarmers = farmers.length;
-    const totalReports = sampleSeedTrackingData.length;
-    
-    // Crop distribution
-    const cropCounts = sampleSeedTrackingData.reduce((acc, report) => {
-      acc[report.crop] = (acc[report.crop] || 0) + 1;
-      return acc;
-    }, {});
-    
-    // Health status distribution
-    const healthCounts = sampleSeedTrackingData.reduce((acc, report) => {
-      acc[report.healthStatus] = (acc[report.healthStatus] || 0) + 1;
-      return acc;
-    }, {});
-    
-    // Recent reports (last 30 days)
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    
-    const recentReports = sampleSeedTrackingData.filter(report => {
-      const reportDate = new Date(report.reportDate);
-      return reportDate >= thirtyDaysAgo;
-    });
-    
-    // Active crops count (unique crops per farmer)
-    const activeCrops = new Set();
-    sampleSeedTrackingData.forEach(report => {
-      const key = `${report.farmerId}-${report.crop}`;
-      activeCrops.add(key);
-    });
-    
-    return {
-      totalFarmers,
-      totalReports,
-      recentReports: recentReports.length,
-      activeCrops: activeCrops.size,
-      cropDistribution: cropCounts,
-      healthDistribution: healthCounts
-    };
-  };
-
-  // Sample data with fixed date structure
-  const [farmers, setFarmers] = useState([
-    {
-      id: 1,
-      farmerId: 1,
-      name: 'Juan Martinez',
-      email: 'juan.martinez@email.com',
-      phone: '+63 912 345 6789',
-      location: 'Laguna, Philippines',
-      joinDate: '2024-01-15',
-      cropTypes: ['Rice', 'Corn'],
-      totalReports: 3,
-      status: 'Active'
-    },
-    {
-      id: 2,
-      farmerId: 2,
-      name: 'Maria Santos',
-      email: 'maria.santos@email.com',
-      phone: '+63 923 456 7890',
-      location: 'Nueva Ecija, Philippines',
-      joinDate: '2024-02-01',
-      cropTypes: ['Rice', 'Vegetables'],
-      totalReports: 2,
-      status: 'Active'
-    },
-    {
-      id: 3,
-      farmerId: 3,
-      name: 'Pedro Dela Cruz',
-      email: 'pedro.delacruz@email.com',
-      phone: '+63 934 567 8901',
-      location: 'Bulacan, Philippines',
-      joinDate: '2024-01-20',
-      cropTypes: ['Corn', 'Vegetables'],
-      totalReports: 2,
-      status: 'Active'
-    },
-    {
-      id: 4,
-      farmerId: 4,
-      name: 'Rosa Fernandez',
-      email: 'rosa.fernandez@email.com',
-      phone: '+63 945 678 9012',
-      location: 'Bataan, Philippines',
-      joinDate: '2024-03-01',
-      cropTypes: ['Rice', 'Corn'],
-      totalReports: 8,
-      status: 'Active'
-    },
-    {
-      id: 5,
-      farmerId: 5,
-      name: 'Carlos Reyes',
-      email: 'carlos.reyes@email.com',
-      phone: '+63 956 789 0123',
-      location: 'Pampanga, Philippines',
-      joinDate: '2024-04-15',
-      cropTypes: ['Vegetables', 'Corn'],
-      totalReports: 7,
-      status: 'Active'
-    },
-    {
-      id: 6,
-      farmerId: 6,
-      name: 'Ana Gutierrez',
-      email: 'ana.gutierrez@email.com',
-      phone: '+63 967 890 1234',
-      location: 'Tarlac, Philippines',
-      joinDate: '2024-05-01',
-      cropTypes: ['Rice'],
-      totalReports: 4,
-      status: 'Active'
-    }
-  ]);
-
-  // Enhanced sample data with proper reportDate field and complete BBCH scale
-  const [sampleSeedTrackingData, setSampleSeedTrackingData] = useState([
-    // Juan Martinez (farmerId: 1) - Rice crops
-    {
-      id: 1,
-      farmerId: 1,
-      crop: 'Rice',
-      variety: 'IR64',
-      plantingDate: '2024-01-15',
-      expectedHarvest: '2024-05-15',
-      area: 2.5,
-      reportDate: '2024-01-30',
-      growthStage: 'Germination',
-      plantHeight: 15,
-      healthStatus: 'Healthy',
-      estimatedYield: 2500,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Favorable',
-      notes: 'Seeds germinating well'
-    },
-    {
-      id: 2,
-      farmerId: 1,
-      crop: 'Rice',
-      variety: 'IR64',
-      plantingDate: '2024-01-15',
-      expectedHarvest: '2024-05-15',
-      area: 2.5,
-      reportDate: '2024-02-15',
-      growthStage: 'Tillering',
-      plantHeight: 35,
-      healthStatus: 'Healthy',
-      estimatedYield: 3000,
-      pestsAndDiseases: 'Minor leaf spot',
-      weatherImpact: 'Good rainfall',
-      notes: 'Good tillering progress'
-    },
-    {
-      id: 3,
-      farmerId: 1,
-      crop: 'Rice',
-      variety: 'IR64',
-      plantingDate: '2024-01-15',
-      expectedHarvest: '2024-05-15',
-      area: 2.5,
-      reportDate: '2024-03-01',
-      growthStage: 'Panicle initiation',
-      plantHeight: 55,
-      healthStatus: 'Warning',
-      estimatedYield: 2800,
-      pestsAndDiseases: 'Brown planthopper',
-      weatherImpact: 'Drought stress',
-      notes: 'Applied pesticide treatment'
-    },
-    // Maria Santos (farmerId: 2) - Rice and Vegetables
-    {
-      id: 4,
-      farmerId: 2,
-      crop: 'Rice',
-      variety: 'PSB Rc82',
-      plantingDate: '2024-02-01',
-      expectedHarvest: '2024-06-01',
-      area: 1.8,
-      reportDate: '2024-02-15',
-      growthStage: 'Germination',
-      plantHeight: 12,
-      healthStatus: 'Healthy',
-      estimatedYield: 1800,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Good',
-      notes: 'Seeds planted successfully'
-    },
-    {
-      id: 5,
-      farmerId: 2,
-      crop: 'Vegetables',
-      variety: 'Tomato',
-      plantingDate: '2024-02-10',
-      expectedHarvest: '2024-05-10',
-      area: 0.5,
-      reportDate: '2024-02-25',
-      growthStage: 'Seedling',
-      plantHeight: 8,
-      healthStatus: 'Healthy',
-      estimatedYield: 500,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Favorable',
-      notes: 'Seedlings transplanted'
-    },
-    // Pedro Dela Cruz (farmerId: 3) - Corn
-    {
-      id: 6,
-      farmerId: 3,
-      crop: 'Corn',
-      variety: 'Pioneer 30G12',
-      plantingDate: '2024-01-20',
-      expectedHarvest: '2024-05-20',
-      area: 3.0,
-      reportDate: '2024-02-05',
-      growthStage: 'Vegetative',
-      plantHeight: 25,
-      healthStatus: 'Healthy',
-      estimatedYield: 3500,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Good',
-      notes: 'Strong vegetative growth'
-    },
-    {
-      id: 7,
-      farmerId: 3,
-      crop: 'Corn',
-      variety: 'Pioneer 30G12',
-      plantingDate: '2024-01-20',
-      expectedHarvest: '2024-05-20',
-      area: 3.0,
-      reportDate: '2024-02-20',
-      growthStage: 'Tasseling',
-      plantHeight: 85,
-      healthStatus: 'Healthy',
-      estimatedYield: 4000,
-      pestsAndDiseases: 'Corn borer',
-      weatherImpact: 'Adequate rainfall',
-      notes: 'Applied organic pesticide'
-    },
-
-    // Rosa Fernandez (farmerId: 4) - Rice with COMPLETE up-to-date reports
-    {
-      id: 8,
-      farmerId: 4,
-      crop: 'Rice',
-      variety: 'PSB Rc82',
-      plantingDate: '2024-03-01',
-      expectedHarvest: '2024-07-01',
-      area: 2.0,
-      reportDate: '2024-03-15',
-      growthStage: 'Germination',
-      plantHeight: 10,
-      healthStatus: 'Healthy',
-      estimatedYield: 2000,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Optimal',
-      notes: 'Perfect germination conditions'
-    },
-    {
-      id: 9,
-      farmerId: 4,
-      crop: 'Rice',
-      variety: 'PSB Rc82',
-      plantingDate: '2024-03-01',
-      expectedHarvest: '2024-07-01',
-      area: 2.0,
-      reportDate: '2024-04-01',
-      growthStage: 'Seedling',
-      plantHeight: 20,
-      healthStatus: 'Healthy',
-      estimatedYield: 2200,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Good rainfall',
-      notes: 'Strong seedling development'
-    },
-    {
-      id: 10,
-      farmerId: 4,
-      crop: 'Rice',
-      variety: 'PSB Rc82',
-      plantingDate: '2024-03-01',
-      expectedHarvest: '2024-07-01',
-      area: 2.0,
-      reportDate: '2024-05-01',
-      growthStage: 'Tillering',
-      plantHeight: 35,
-      healthStatus: 'Healthy',
-      estimatedYield: 2400,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Favorable',
-      notes: 'Excellent tillering stage'
-    },
-    {
-      id: 11,
-      farmerId: 4,
-      crop: 'Rice',
-      variety: 'PSB Rc82',
-      plantingDate: '2024-03-01',
-      expectedHarvest: '2024-07-01',
-      area: 2.0,
-      reportDate: '2024-06-01',
-      growthStage: 'Booting',
-      plantHeight: 65,
-      healthStatus: 'Healthy',
-      estimatedYield: 2600,
-      pestsAndDiseases: 'Minor aphids',
-      weatherImpact: 'Good',
-      notes: 'Entering reproductive stage'
-    },
-    {
-      id: 12,
-      farmerId: 4,
-      crop: 'Rice',
-      variety: 'PSB Rc82',
-      plantingDate: '2024-03-01',
-      expectedHarvest: '2024-07-01',
-      area: 2.0,
-      reportDate: '2024-07-01',
-      growthStage: 'Heading',
-      plantHeight: 85,
-      healthStatus: 'Healthy',
-      estimatedYield: 2800,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Perfect',
-      notes: 'Ready for harvest next month'
-    },
-
-    // Rosa Fernandez (farmerId: 4) - Corn ongoing (planted recently)
-    {
-      id: 13,
-      farmerId: 4,
-      crop: 'Corn',
-      variety: 'Pioneer 3155',
-      plantingDate: '2025-06-01',
-      expectedHarvest: '2025-10-01',
-      area: 1.5,
-      reportDate: '2025-06-15',
-      growthStage: 'Germination',
-      plantHeight: 8,
-      healthStatus: 'Healthy',
-      estimatedYield: 1800,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Good',
-      notes: 'Recently planted, good emergence'
-    },
-    {
-      id: 14,
-      farmerId: 4,
-      crop: 'Corn',
-      variety: 'Pioneer 3155',
-      plantingDate: '2025-06-01',
-      expectedHarvest: '2025-10-01',
-      area: 1.5,
-      reportDate: '2025-07-01',
-      growthStage: 'Seedling',
-      plantHeight: 18,
-      healthStatus: 'Healthy',
-      estimatedYield: 2000,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Favorable',
-      notes: 'Strong early growth'
-    },
-    {
-      id: 15,
-      farmerId: 4,
-      crop: 'Corn',
-      variety: 'Pioneer 3155',
-      plantingDate: '2025-06-01',
-      expectedHarvest: '2025-10-01',
-      area: 1.5,
-      reportDate: '2025-08-01',
-      growthStage: 'Leaf development',
-      plantHeight: 45,
-      healthStatus: 'Healthy',
-      estimatedYield: 2200,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Good',
-      notes: 'Developing well, 6 leaves visible'
-    },
-
-    // Carlos Reyes (farmerId: 5) - Vegetables ongoing with up-to-date reports
-    {
-      id: 16,
-      farmerId: 5,
-      crop: 'Vegetables',
-      variety: 'Tomato Cherokee Purple',
-      plantingDate: '2025-05-15',
-      expectedHarvest: '2025-09-15',
-      area: 0.8,
-      reportDate: '2025-06-01',
-      growthStage: 'Transplanting',
-      plantHeight: 12,
-      healthStatus: 'Healthy',
-      estimatedYield: 800,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Good',
-      notes: 'Seedlings successfully transplanted'
-    },
-    {
-      id: 17,
-      farmerId: 5,
-      crop: 'Vegetables',
-      variety: 'Tomato Cherokee Purple',
-      plantingDate: '2025-05-15',
-      expectedHarvest: '2025-09-15',
-      area: 0.8,
-      reportDate: '2025-07-01',
-      growthStage: 'Vegetative',
-      plantHeight: 35,
-      healthStatus: 'Healthy',
-      estimatedYield: 900,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Optimal',
-      notes: 'Strong vegetative growth, first flowers appearing'
-    },
-    {
-      id: 18,
-      farmerId: 5,
-      crop: 'Vegetables',
-      variety: 'Tomato Cherokee Purple',
-      plantingDate: '2025-05-15',
-      expectedHarvest: '2025-09-15',
-      area: 0.8,
-      reportDate: '2025-08-01',
-      growthStage: 'Flowering',
-      plantHeight: 55,
-      healthStatus: 'Healthy',
-      estimatedYield: 1000,
-      pestsAndDiseases: 'Minor whiteflies',
-      weatherImpact: 'Good',
-      notes: 'First fruit clusters forming'
-    },
-
-    // Carlos Reyes (farmerId: 5) - Corn ongoing
-    {
-      id: 19,
-      farmerId: 5,
-      crop: 'Corn',
-      variety: 'Sweet Corn Golden Bantam',
-      plantingDate: '2025-04-01',
-      expectedHarvest: '2025-08-01',
-      area: 1.2,
-      reportDate: '2025-04-15',
-      growthStage: 'Germination',
-      plantHeight: 6,
-      healthStatus: 'Healthy',
-      estimatedYield: 1500,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Good',
-      notes: 'Good germination rate'
-    },
-    {
-      id: 20,
-      farmerId: 5,
-      crop: 'Corn',
-      variety: 'Sweet Corn Golden Bantam',
-      plantingDate: '2025-04-01',
-      expectedHarvest: '2025-08-01',
-      area: 1.2,
-      reportDate: '2025-05-01',
-      growthStage: 'Seedling',
-      plantHeight: 25,
-      healthStatus: 'Healthy',
-      estimatedYield: 1600,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Favorable',
-      notes: 'Rapid early growth'
-    },
-    {
-      id: 21,
-      farmerId: 5,
-      crop: 'Corn',
-      variety: 'Sweet Corn Golden Bantam',
-      plantingDate: '2025-04-01',
-      expectedHarvest: '2025-08-01',
-      area: 1.2,
-      reportDate: '2025-06-01',
-      growthStage: 'Leaf development',
-      plantHeight: 60,
-      healthStatus: 'Healthy',
-      estimatedYield: 1700,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Good',
-      notes: 'Strong leaf development, 8 leaves'
-    },
-    {
-      id: 22,
-      farmerId: 5,
-      crop: 'Corn',
-      variety: 'Sweet Corn Golden Bantam',
-      plantingDate: '2025-04-01',
-      expectedHarvest: '2025-08-01',
-      area: 1.2,
-      reportDate: '2025-07-01',
-      growthStage: 'Stem elongation',
-      plantHeight: 120,
-      healthStatus: 'Healthy',
-      estimatedYield: 1800,
-      pestsAndDiseases: 'Minor corn borer',
-      weatherImpact: 'Adequate',
-      notes: 'Rapid stem elongation, tassels beginning to form'
-    },
-    {
-      id: 23,
-      farmerId: 5,
-      crop: 'Corn',
-      variety: 'Sweet Corn Golden Bantam',
-      plantingDate: '2025-04-01',
-      expectedHarvest: '2025-08-01',
-      area: 1.2,
-      reportDate: '2025-08-01',
-      growthStage: 'Tasseling',
-      plantHeight: 180,
-      healthStatus: 'Healthy',
-      estimatedYield: 1900,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Perfect',
-      notes: 'Tassels fully emerged, silks appearing'
-    },
-
-    // Ana Gutierrez (farmerId: 6) - Recently planted Rice, very up-to-date
-    {
-      id: 24,
-      farmerId: 6,
-      crop: 'Rice',
-      variety: 'NSIC Rc240',
-      plantingDate: '2025-05-01',
-      expectedHarvest: '2025-09-01',
-      area: 3.5,
-      reportDate: '2025-05-15',
-      growthStage: 'Germination',
-      plantHeight: 8,
-      healthStatus: 'Healthy',
-      estimatedYield: 3500,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Optimal',
-      notes: 'Excellent germination conditions with proper water management'
-    },
-    {
-      id: 25,
-      farmerId: 6,
-      crop: 'Rice',
-      variety: 'NSIC Rc240',
-      plantingDate: '2025-05-01',
-      expectedHarvest: '2025-09-01',
-      area: 3.5,
-      reportDate: '2025-06-01',
-      growthStage: 'Seedling',
-      plantHeight: 18,
-      healthStatus: 'Healthy',
-      estimatedYield: 3600,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Good',
-      notes: 'Strong seedling establishment, uniform growth'
-    },
-    {
-      id: 26,
-      farmerId: 6,
-      crop: 'Rice',
-      variety: 'NSIC Rc240',
-      plantingDate: '2025-05-01',
-      expectedHarvest: '2025-09-01',
-      area: 3.5,
-      reportDate: '2025-07-01',
-      growthStage: 'Tillering',
-      plantHeight: 32,
-      healthStatus: 'Healthy',
-      estimatedYield: 3800,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Favorable',
-      notes: 'Active tillering stage, 4-5 tillers per plant'
-    },
-    {
-      id: 27,
-      farmerId: 6,
-      crop: 'Rice',
-      variety: 'NSIC Rc240',
-      plantingDate: '2025-05-01',
-      expectedHarvest: '2025-09-01',
-      area: 3.5,
-      reportDate: '2025-08-01',
-      growthStage: 'Stem elongation',
-      plantHeight: 58,
-      healthStatus: 'Healthy',
-      estimatedYield: 4000,
-      pestsAndDiseases: 'None',
-      weatherImpact: 'Good',
-      notes: 'Stem elongation progressing well, preparing for reproductive stage'
-    }
-  ]);
-
-  // BBCH Scale Mappings for different crops
-  const getBBCHStages = (cropType) => {
-    const stages = {
-      'Rice': [
-        'Germination', 'Seedling', 'Tillering', 'Stem elongation', 'Booting',
-        'Heading', 'Flowering', 'Milk development', 'Dough development',
-        'Ripening', 'Senescence', 'Dormancy', 'Harvest'
-      ],
-      'Corn': [
-        'Germination', 'Seedling', 'Leaf development', 'Tillering', 'Stem elongation',
-        'Inflorescence emergence', 'Flowering', 'Development of fruit', 'Ripening',
-        'Senescence', 'Dormancy', 'Vegetative', 'Tasseling', 'Silking', 'Harvest'
-      ],
-      'Vegetables': [
-        'Germination', 'Seedling', 'Leaf development', 'Formation of side shoots',
-        'Inflorescence emergence', 'Flowering', 'Development of fruit', 'Ripening',
-        'Senescence', 'Dormancy', 'Transplanting', 'Vegetative', 'Harvest'
-      ]
-    };
-    return stages[cropType] || stages['Vegetables'];
-  };
+  const getCurrentFarmer = () => openFarmerTabs.find((t) => t.farmerId === activeFarmerId);
 
   // Helper function to get farmer's crops with reports
   const getFarmerCrops = (farmerId) => {
@@ -1198,16 +191,267 @@ function Seed_Track() {
     return Math.ceil(getFilteredFarmers().length / itemsPerPage);
   };
 
+  // Overview statistics for charts and KPIs
+  const getOverviewStatistics = () => {
+    const totalFarmers = farmers.length;
+    const totalReports = sampleSeedTrackingData.length;
+
+    const cropDistribution = sampleSeedTrackingData.reduce((acc, r) => {
+      acc[r.crop] = (acc[r.crop] || 0) + 1;
+      return acc;
+    }, {});
+
+    const healthDistribution = sampleSeedTrackingData.reduce((acc, r) => {
+      const key = r.healthStatus || 'Unknown';
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const recentReports = sampleSeedTrackingData.filter((r) => new Date(r.reportDate) >= thirtyDaysAgo);
+
+    const activeCropsSet = new Set();
+    sampleSeedTrackingData.forEach((r) => activeCropsSet.add(`${r.farmerId}-${r.crop}`));
+
+    return {
+      totalFarmers,
+      totalReports,
+      recentReports: recentReports.length,
+      activeCrops: activeCropsSet.size,
+      cropDistribution,
+      healthDistribution,
+    };
+  };
+
+  // Export overview data
+  const exportOverviewData = () => {
+    try {
+      const stats = getOverviewStatistics();
+      const exportData = {
+        exportInfo: {
+          title: 'Seed Track Overview Export',
+          exportDate: new Date().toISOString(),
+          exportedBy: 'Admin',
+        },
+        overviewStatistics: {
+          totalFarmers: stats.totalFarmers,
+          totalReports: stats.totalReports,
+          recentReports: stats.recentReports,
+          activeCrops: stats.activeCrops,
+          cropDistribution: stats.cropDistribution,
+          healthDistribution: stats.healthDistribution,
+        },
+        farmersData: farmers.map((f) => ({
+          id: f.id,
+          name: f.name,
+          email: f.email,
+          location: f.location,
+          joinDate: f.joinDate,
+          cropTypes: f.cropTypes,
+          totalReports: f.totalReports,
+          status: f.status,
+        })),
+        reportsData: sampleSeedTrackingData.map((r) => ({
+          farmerId: r.farmerId,
+          crop: r.crop,
+          variety: r.variety,
+          plantingDate: r.plantingDate,
+          reportDate: r.reportDate,
+          growthStage: r.growthStage,
+          plantHeight: r.plantHeight,
+          healthStatus: r.healthStatus,
+          estimatedYield: r.estimatedYield,
+          area: r.area,
+        })),
+        summary: {
+          generatedAt: new Date().toISOString(),
+          totalRecords: farmers.length + sampleSeedTrackingData.length,
+          dataIntegrity: 'Complete',
+        },
+      };
+
+      const jsonString = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `seed_track_overview_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      showAlert('Overview data exported successfully!', 'success');
+    } catch (err) {
+      console.error('Export error:', err);
+      showAlert('Error exporting data. Please try again.', 'error');
+    }
+  };
+
+  // Crop guidelines helpers
+  const categoryOptions = [
+    { value: 'cereals', label: 'Cereals & Grains', icon: '🌾' },
+    { value: 'vegetables', label: 'Vegetables', icon: '🥬' },
+    { value: 'fruits', label: 'Fruits', icon: '🍎' },
+    { value: 'legumes', label: 'Legumes', icon: '🫘' },
+    { value: 'root_crops', label: 'Root Crops', icon: '🥔' },
+    { value: 'herbs_spices', label: 'Herbs & Spices', icon: '🌿' },
+  ];
+
+  const filteredGuidelines = cropGuidelines.filter((g) => {
+    const matchesCategory = selectedCategory === 'all' || g.category === selectedCategory;
+    const name = (g.name || g.cropName || '').toLowerCase();
+    const term = searchTerm.toLowerCase();
+    const varieties = Array.isArray(g.varieties) ? g.varieties : [];
+    const matchesSearch = !term || name.includes(term) || varieties.some((v) => String(v).toLowerCase().includes(term));
+    return matchesCategory && matchesSearch;
+  });
+
+  const resetGuidelineForm = () => {
+    setNewGuideline({
+      id: '',
+      cropName: '',
+      category: '',
+      description: '',
+      plantingTips: [''],
+      careInstructions: [''],
+      harvestingTips: [''],
+      commonPests: [''],
+      diseases: [''],
+      seasonality: '',
+      soilRequirements: '',
+      waterRequirements: '',
+      fertilizers: [''],
+    });
+  };
+
+  const addArrayField = (field) => setNewGuideline((prev) => ({ ...prev, [field]: [...(prev[field] || []), ''] }));
+  const updateArrayField = (field, index, value) => setNewGuideline((prev) => ({ ...prev, [field]: (prev[field] || []).map((v, i) => (i === index ? value : v)) }));
+  const removeArrayField = (field, index) => setNewGuideline((prev) => ({ ...prev, [field]: (prev[field] || []).filter((_, i) => i !== index) }));
+
+  const handleAddGuideline = () => {
+    if (!newGuideline.cropName) {
+      showAlert('Please fill in required fields', 'error');
+      return;
+    }
+    const guideline = {
+      id: Date.now(),
+      name: newGuideline.cropName,
+      category: newGuideline.category,
+      varieties: [],
+      plantingSeasons: [],
+      growingPeriod: '',
+      waterRequirements: newGuideline.waterRequirements,
+      expectedYield: '',
+      soilType: newGuideline.soilRequirements,
+      climate: '',
+      spacing: '',
+      fertilizer: '',
+      plantingTips: newGuideline.plantingTips,
+      careInstructions: newGuideline.careInstructions,
+      harvestingTips: newGuideline.harvestingTips,
+      keyTips: [],
+      commonPests: newGuideline.commonPests,
+      diseases: newGuideline.diseases,
+      fertilizers: newGuideline.fertilizers,
+      stages: [],
+      marketPrice: '',
+      profitability: 'Moderate',
+      difficulty: 'Easy',
+      createdAt: new Date().toISOString().split('T')[0],
+      updatedAt: new Date().toISOString().split('T')[0],
+    };
+    setCropGuidelines((prev) => [guideline, ...prev]);
+    resetGuidelineForm();
+    setShowCreateModal(false);
+    setEditingGuideline(null);
+    showAlert('Crop guideline added successfully!', 'success');
+  };
+
+  const handleEditGuideline = (guideline) => {
+    setNewGuideline({
+      id: guideline.id,
+      cropName: guideline.name || '',
+      category: guideline.category || '',
+      description: '',
+      plantingTips: guideline.plantingTips || [''],
+      careInstructions: guideline.careInstructions || [''],
+      harvestingTips: guideline.harvestingTips || [''],
+      commonPests: guideline.commonPests || [''],
+      diseases: guideline.diseases || [''],
+      seasonality: '',
+      soilRequirements: guideline.soilType || '',
+      waterRequirements: guideline.waterRequirements || '',
+      fertilizers: guideline.fertilizers || [''],
+    });
+    setEditingGuideline(guideline);
+    setShowCreateModal(true);
+  };
+
+  const handleUpdateGuideline = () => {
+    if (!editingGuideline) return;
+    setCropGuidelines((prev) =>
+      prev.map((g) =>
+        g.id === editingGuideline.id
+          ? {
+              ...g,
+              name: newGuideline.cropName,
+              category: newGuideline.category,
+              plantingTips: newGuideline.plantingTips,
+              careInstructions: newGuideline.careInstructions,
+              harvestingTips: newGuideline.harvestingTips,
+              commonPests: newGuideline.commonPests,
+              diseases: newGuideline.diseases,
+              soilType: newGuideline.soilRequirements,
+              waterRequirements: newGuideline.waterRequirements,
+              fertilizers: newGuideline.fertilizers,
+              updatedAt: new Date().toISOString().split('T')[0],
+            }
+          : g
+      )
+    );
+    resetGuidelineForm();
+    setShowCreateModal(false);
+    setEditingGuideline(null);
+    showAlert('Crop guideline updated successfully!', 'success');
+  };
+
+  const handleDeleteGuideline = (id) => {
+    setCropGuidelines((prev) => prev.filter((g) => g.id !== id));
+    setShowDeleteModal(false);
+    setGuidelineToDelete(null);
+    showAlert('Crop guideline deleted successfully!', 'success');
+  };
+
+  // Confirm deletion from modal
+  const confirmDeleteGuideline = () => {
+    if (!guidelineToDelete) return setShowDeleteModal(false);
+    handleDeleteGuideline(guidelineToDelete.id);
+  };
+
+  // Loading and error states
+  if (seedLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-700">Loading seed tracking data…</div>
+      </div>
+    );
+  }
+  if (seedError) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-red-700">Failed to load data.</div>
+      </div>
+    );
+  }
+
+  // UI markup (preserved styling)
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Alert */}
-        {alert && alert.show && (
-          <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg border-l-4 max-w-sm ${
-            alert.type === 'success' 
-              ? 'bg-green-50 border-green-500 text-green-800' 
-              : 'bg-gray-50 border-gray-500 text-gray-800'
-          }`}>
+        {alert?.show && (
+          <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg border-l-4 max-w-sm ${alert.type === 'success' ? 'bg-green-50 border-green-500 text-green-800' : 'bg-gray-50 border-gray-500 text-gray-800'}`}>
             <span className="font-medium text-sm">{alert.message}</span>
           </div>
         )}
@@ -1665,7 +909,7 @@ function Seed_Track() {
               })()}
             </div>
 
-            {/* Filters Section - Clean Professional Design */}
+      {/* Filters Section - Clean Professional Design */}
             <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
               <div className="mb-4">
                 <h3 className="text-lg font-semibold text-black flex items-center gap-2">
@@ -1698,7 +942,7 @@ function Seed_Track() {
                 </div>
 
                 {/* Filters */}
-                <div>
+        <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
                   <select
                     value={filters.status}
@@ -1892,7 +1136,7 @@ function Seed_Track() {
           </div>
         )}
 
-        {/* Crop Guidelines Tab */}
+  {/* Crop Guidelines Tab */}
         {activeTab === 'guidelines' && (
           <div>
             {/* Guidelines Header */}
@@ -2115,7 +1359,7 @@ function Seed_Track() {
           </div>
         )}
 
-        {/* Enhanced Farmer Detail Tab - 60-30-10 color scheme */}
+  {/* Enhanced Farmer Detail Tab - 60-30-10 color scheme */}
         {activeTab === 'farmer' && activeFarmerId && (() => {
           const currentFarmer = getCurrentFarmer();
           if (!currentFarmer) return null;
@@ -2518,7 +1762,7 @@ function Seed_Track() {
           );
         })()}
 
-        {/* Professional Crop Reports Modal */}
+  {/* Professional Crop Reports Modal */}
         {showCropReportsModal && selectedCrop && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-xl border border-gray-300">
@@ -2734,8 +1978,8 @@ function Seed_Track() {
         )}
         </div>
         
-        {/* Crop Guidelines Modal */}
-    {showCreateModal && (
+    {/* Crop Guidelines Modal */}
+  {showCreateModal && (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
@@ -3069,8 +2313,8 @@ function Seed_Track() {
       </div>
     )}
 
-    {/* Delete Confirmation Modal */}
-    {showDeleteModal && (
+  {/* Delete Confirmation Modal */}
+  {showDeleteModal && (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg p-6 w-full max-w-md">
           <div className="flex items-center mb-4">
