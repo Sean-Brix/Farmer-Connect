@@ -37,7 +37,7 @@ const ChatWindow = ({ selectedChat, messagesEndRef, getUserName, onSendMessage }
             </div>
             <div>
               <h3 className="font-semibold">{getUserName(selectedChat)}</h3>
-              <p className="text-green-100 text-sm">{selectedChat.userEmail}</p>
+              <p className="text-green-100 text-sm">{selectedChat.user?.email || selectedChat.userEmail}</p>
             </div>
           </div>
           <div className="text-green-100 text-sm">
@@ -50,16 +50,18 @@ const ChatWindow = ({ selectedChat, messagesEndRef, getUserName, onSendMessage }
       <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
         <div className="space-y-4">
           {/* Initial inquiry message */}
-          <ChatMessage 
-            message={{
-              id: `initial-${selectedChat.id}`,
-              message: selectedChat.message,
-              createdAt: selectedChat.createdAt,
-              senderType: 'USER'
-            }}
-            getUserName={getUserName}
-            chat={selectedChat}
-          />
+          {selectedChat.message ? (
+            <ChatMessage 
+              message={{
+                id: `initial-${selectedChat.id}`,
+                message: selectedChat.message,
+                createdAt: selectedChat.createdAt,
+                senderType: 'USER'
+              }}
+              getUserName={getUserName}
+              chat={selectedChat}
+            />
+          ) : null}
           
           {/* Replies */}
           {selectedChat.replies && selectedChat.replies.map((reply) => (

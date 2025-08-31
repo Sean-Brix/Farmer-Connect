@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../prisma/generated/index.js';
+import socketLogoutService from '../../Services/socketLogoutService.js';
 
 const prisma = new PrismaClient();
 
@@ -32,6 +33,18 @@ export const resolveInquiry = async (req, res) => {
                 resolvedAt: new Date()
             }
         });
+
+        try {
+            // Broadcast to admins that inquiry is resolved
+            const io = socketLogoutService.getIO?.();
+            if (io) {
+                io.to('admin_room').emit('admin_inquiry:status_update', {
+                    inquiryId,
+                    status: 'RESOLVED',
+                    updatedAt: new Date().toISOString()
+                });
+            }
+        } catch {}
 
         res.status(200).json({
             success: true,

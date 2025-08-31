@@ -98,7 +98,7 @@ function admin_inquiry(io, socket) {
                 }
             });
 
-            // Update inquiry status if needed
+            // Update inquiry status: on first admin reply move from PENDING -> IN_PROGRESS
             if (inquiry.status === 'PENDING') {
                 await prisma.inquiry.update({
                     where: { id: inquiryId },

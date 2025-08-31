@@ -26,7 +26,7 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
           <p>{message.message}</p>
         </div>
         <span className="text-xs text-gray-500 mt-1 px-2">
-          {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          {new Date(message.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </span>
       </div>
       

@@ -7,7 +7,11 @@ import MessageInput from './components/MessageInput.jsx';
 import DashboardStats from './components/DashboardStats.jsx';
 
 function Chat_Module() {
-  const [activeChats, setActiveChats] = useState([]);
+  // Three-tab lists
+  const [pending, setPending] = useState([]);
+  const [inProgress, setInProgress] = useState([]);
+  const [resolved, setResolved] = useState([]);
+  const [activeTab, setActiveTab] = useState('PENDING'); // PENDING | IN_PROGRESS | RESOLVED
   const [selectedChat, setSelectedChat] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -21,157 +25,178 @@ function Chat_Module() {
     }
   }, [isConnected, connectSocket]);
 
-  // Load existing inquiries from database
+  // Load inquiries for tabs
   useEffect(() => {
     if (isConnected && socket) {
-      // Database is now ready - re-enabling database loading
-      loadExistingInquiries();
+      loadTabs();
     }
   }, [isConnected, socket]);
 
-  const loadExistingInquiries = async () => {
+  const fetchByStatus = async (status) => {
+    const res = await fetch(`/api/inquiries/by-status?status=${status}`, { credentials: 'include' });
+    if (!res.ok) return { items: [] };
+    return res.json();
+  };
+
+  const loadTabs = async () => {
     try {
       setLoading(true);
-      // Database is now ready - using cookie-based authentication
-      const response = await fetch('/api/inquiries/active', {
-        method: 'GET',
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        const inquiries = await response.json();
-        console.log('Loaded inquiries:', inquiries);
-        setActiveChats(inquiries);
-      } else {
-        console.error('Failed to load inquiries:', response.statusText);
-        setActiveChats([]);
-      }
-    } catch (error) {
-      console.error('Error loading inquiries:', error);
-      setActiveChats([]);
+      const [p, ip, r] = await Promise.all([
+        fetchByStatus('PENDING'),
+        fetchByStatus('IN_PROGRESS'),
+        fetchByStatus('RESOLVED'),
+      ]);
+      setPending(p.items || []);
+      setInProgress(ip.items || []);
+      setResolved(r.items || []);
+    } catch (e) {
+      console.error('Failed to load inquiry tabs', e);
+      setPending([]); setInProgress([]); setResolved([]);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Helpers
+  const upsert = (list, item) => {
+    const idx = list.findIndex(c => c.id === item.id);
+    if (idx >= 0) {
+      const copy = [...list];
+      copy[idx] = { ...copy[idx], ...item };
+      return copy;
+    }
+    return [item, ...list];
+  };
+  const removeFrom = (list, id) => list.filter(c => c.id !== id);
+  const moveInquiry = (inquiryId, toStatus, patch = {}) => {
+    const findIn = (list) => list.find(c => c.id === inquiryId || c.inquiryId === inquiryId);
+    const found = findIn(pending) || findIn(inProgress) || findIn(resolved);
+    if (!found) return;
+    const id = found.id || found.inquiryId || inquiryId;
+    const updated = { ...found, id, status: toStatus, ...patch };
+    const newPending = removeFrom(pending, id);
+    const newInProgress = removeFrom(inProgress, id);
+    const newResolved = removeFrom(resolved, id);
+    if (toStatus === 'PENDING') setPending(upsert(newPending, updated));
+    else if (toStatus === 'IN_PROGRESS') setInProgress(upsert(newInProgress, updated));
+    else setResolved(upsert(newResolved, updated));
+    // Keep selected chat's existing message thread/details when moving
+    setSelectedChat(prev => {
+      if (!prev) return prev;
+      const matches = prev.id === id || prev.inquiryId === id;
+      if (!matches) return prev;
+      return {
+        ...updated,
+        replies: prev.replies || updated.replies || [],
+        message: prev.message || updated.message,
+        createdAt: prev.createdAt || updated.createdAt,
+      };
+    });
   };
 
   // Socket event listeners
   useEffect(() => {
     if (!socket) return;
 
-    // Listen for new chat messages
+    // New user message
     socket.on('chat_message_received', (data) => {
-      console.log('New message received:', data);
-      console.log('Current socket ID:', socket.id);
-      console.log('Message socket ID:', data.socketId);
-      
-      // Don't process messages from the same socket (prevents self-messages)
-      if (data.socketId === socket.id) {
-        console.log('Skipping message from same socket');
-        return;
-      }
-      
-      // Find or create chat room using inquiry ID if available
-      setActiveChats(prev => {
-        const existingChatIndex = prev.findIndex(chat => 
-          chat.userId === data.userId || (data.inquiryId && chat.inquiryId === data.inquiryId)
-        );
-        
-        if (existingChatIndex >= 0) {
-          // Update existing chat
-          const updatedChats = [...prev];
-          const existingChat = updatedChats[existingChatIndex];
-          
-          // Check if this message already exists (prevent duplicates)
-          const messageExists = existingChat.replies && existingChat.replies.some(msg => 
-            (msg.message === data.message && 
-             msg.senderType === (data.mode === 'admin' ? 'ADMIN' : 'USER') &&
-             Math.abs(new Date(msg.createdAt) - new Date(data.timestamp)) < 10000) // Within 10 seconds
-          );
-          
-          console.log('Message exists check:', messageExists, 'for message:', data.message);
-          
-          if (!messageExists) {
-            const updatedChat = {
-              ...existingChat,
-              inquiryId: data.inquiryId || existingChat.inquiryId,
-              lastMessage: data.message,
-              lastMessageTime: data.timestamp,
-              replies: [
-                ...(existingChat.replies || []), 
-                {
-                  id: `${data.userId}-${data.timestamp}-${Math.random().toString(36).substr(2, 9)}`,
-                  message: data.message,
-                  createdAt: data.timestamp,
-                  senderType: data.mode === 'admin' ? 'ADMIN' : 'USER'
-                }
-              ],
-              isOnline: true
-            };
-            updatedChats[existingChatIndex] = updatedChat;
-            
-            // Update selectedChat if it's the same chat - but don't duplicate the message
-            setSelectedChat(currentSelected => {
-              if (currentSelected && (
-                currentSelected.userId === data.userId || 
-                (data.inquiryId && currentSelected.inquiryId === data.inquiryId)
-              )) {
-                console.log('Updating selectedChat with new message - avoiding duplication');
-                // Return the updated chat from updatedChats to avoid duplication
-                return updatedChat;
-              }
-              return currentSelected;
-            });
-          }
-          
-          // Move to top of list
-          const reorderedChats = [...updatedChats];
-          const chatToMove = reorderedChats.splice(existingChatIndex, 1)[0];
-          return [chatToMove, ...reorderedChats];
-        } else {
-          // Create new chat
-          const newChat = {
-            id: `chat-${data.userId}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            inquiryId: data.inquiryId,
-            userId: data.userId,
-            userName: data.userName || `User ${data.userId}`,
-            userEmail: data.userEmail || 'user@email.com',
-            status: 'active',
-            lastMessage: data.message,
-            lastMessageTime: data.timestamp,
-            isOnline: true,
-            message: data.message, // Initial message
-            replies: [] // Start with empty replies
-          };
-          return [newChat, ...prev];
-        }
+      const inquiryId = data.inquiryId;
+      const status = data.status || 'PENDING';
+      const item = {
+        id: inquiryId,
+        inquiryId,
+        userId: data.userId,
+        user: { firstName: (data.userName || 'User').split(' ')[0], surname: (data.userName || '').split(' ').slice(1).join(' ') },
+        userEmail: data.userEmail,
+        subject: data.subject,
+        message: data.message,
+        createdAt: data.timestamp || new Date().toISOString(),
+        lastMessage: data.message,
+        lastMessageTime: data.timestamp,
+        updatedAt: data.timestamp,
+        status,
+        isOnline: true,
+      };
+      if (status === 'IN_PROGRESS') setInProgress(prev => upsert(prev, item));
+      else setPending(prev => upsert(prev, item));
+      // If viewing the same inquiry, append incoming user message to the thread
+      setSelectedChat(prev => {
+        if (!prev) return prev;
+        const matches = prev.id === inquiryId || prev.inquiryId === inquiryId;
+        if (!matches) return prev;
+        const reply = {
+          id: `${data.userId}-${data.timestamp || Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          message: data.message,
+          createdAt: data.timestamp || new Date().toISOString(),
+          senderType: 'USER'
+        };
+        return {
+          ...prev,
+          lastMessage: data.message,
+          lastMessageTime: data.timestamp || new Date().toISOString(),
+          updatedAt: data.timestamp || new Date().toISOString(),
+          replies: [...(prev.replies || []), reply]
+        };
       });
+    });
+
+    // New support request (ensure it's visible in PENDING)
+    socket.on('admin_support_requested', (data) => {
+      const inquiryId = data.inquiryId;
+      const item = {
+        id: inquiryId,
+        inquiryId,
+        userId: data.userId,
+        user: { firstName: (data.userName || 'User').split(' ')[0], surname: (data.userName || '').split(' ').slice(1).join(' ') },
+        userEmail: data.userEmail,
+        subject: data.subject || `Support Request`,
+        message: data.message,
+        createdAt: data.timestamp || new Date().toISOString(),
+        lastMessage: data.message,
+        lastMessageTime: data.timestamp,
+        updatedAt: data.timestamp,
+        status: 'PENDING',
+        isOnline: true,
+      };
+      setPending(prev => upsert(prev, item));
+    });
+
+    // Status change (e.g., admin first reply -> IN_PROGRESS, user resolve -> RESOLVED)
+    socket.on('admin_inquiry:status_update', (payload) => {
+      const { inquiryId, status, updatedAt } = payload || {};
+      if (!inquiryId || !status) return;
+      moveInquiry(inquiryId, status, { updatedAt, status });
+    });
+
+    // Message preview update
+    socket.on('admin_inquiry:message_update', (payload) => {
+      const { inquiryId, lastMessage, timestamp } = payload || {};
+      if (!inquiryId) return;
+      // Only update existing items in-place to avoid moving items back to wrong tabs
+      setPending(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage, lastMessageTime: timestamp, updatedAt: timestamp } : c));
+      setInProgress(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage, lastMessageTime: timestamp, updatedAt: timestamp } : c));
+      setResolved(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage, lastMessageTime: timestamp, updatedAt: timestamp } : c));
+      setSelectedChat(prev => (prev && (prev.id === inquiryId || prev.inquiryId === inquiryId) ? { ...prev, lastMessage, lastMessageTime: timestamp } : prev));
     });
 
     // Listen for user connection status
     socket.on('user_connected', (data) => {
       console.log('User connected:', data);
-      setActiveChats(prev => 
-        prev.map(chat => 
-          chat.userId === data.userId 
-            ? { ...chat, isOnline: true }
-            : chat
-        )
-      );
+      setPending(prev => prev.map(chat => chat.userId === data.userId ? { ...chat, isOnline: true } : chat));
+      setInProgress(prev => prev.map(chat => chat.userId === data.userId ? { ...chat, isOnline: true } : chat));
     });
 
     socket.on('user_disconnected', (data) => {
       console.log('User disconnected:', data);
-      setActiveChats(prev => 
-        prev.map(chat => 
-          chat.userId === data.userId 
-            ? { ...chat, isOnline: false }
-            : chat
-        )
-      );
+      setPending(prev => prev.map(chat => chat.userId === data.userId ? { ...chat, isOnline: false } : chat));
+      setInProgress(prev => prev.map(chat => chat.userId === data.userId ? { ...chat, isOnline: false } : chat));
     });
 
     return () => {
       socket.off('chat_message_received');
+      socket.off('admin_support_requested');
+      socket.off('admin_inquiry:status_update');
+      socket.off('admin_inquiry:message_update');
       socket.off('user_connected');
       socket.off('user_disconnected');
     };
@@ -184,16 +209,30 @@ function Chat_Module() {
     }
   }, [selectedChat?.replies]);
 
-  // Sync selectedChat with activeChats to prevent state inconsistencies
+  // Sync selectedChat with any list to prevent state inconsistencies
   useEffect(() => {
-    if (selectedChat && activeChats.length > 0) {
-      const syncedChat = syncSelectedChatWithActiveChats(activeChats, selectedChat);
-      if (syncedChat !== selectedChat) {
-        console.log('Syncing selectedChat with activeChats to prevent duplication');
-        setSelectedChat(syncedChat);
-      }
+    if (!selectedChat) return;
+    const lists = [...pending, ...inProgress, ...resolved];
+    const match = lists.find(chat => chat.id === selectedChat.id || (chat.inquiryId && selectedChat.inquiryId && chat.inquiryId === selectedChat.inquiryId));
+    if (match) {
+      setSelectedChat(prev => {
+        if (!prev) return match;
+        // Prefer whichever side has more replies; default to keeping existing if match has none
+        const prevRepliesLen = Array.isArray(prev.replies) ? prev.replies.length : 0;
+        const matchRepliesLen = Array.isArray(match.replies) ? match.replies.length : 0;
+        const replies = matchRepliesLen >= prevRepliesLen ? (match.replies || prev.replies) : prev.replies;
+
+        return {
+          ...prev,
+          ...match,
+          // Preserve/merge thread and base details
+          replies,
+          message: prev.message || match.message,
+          createdAt: prev.createdAt || match.createdAt,
+        };
+      });
     }
-  }, [activeChats]);
+  }, [pending, inProgress, resolved]);
 
   // Handle sending message
   const handleSendMessage = (messageText) => {
@@ -207,46 +246,24 @@ function Chat_Module() {
       timestamp: new Date()
     });
 
-    // Update local state
-    setActiveChats(prev => 
-      prev.map(chat => 
-        chat.id === selectedChat.id
-          ? {
-              ...chat,
-              lastMessage: messageText,
-              lastMessageTime: new Date(),
-              replies: [
-                ...(chat.replies || []), 
-                {
-                  id: `admin-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-                  message: messageText,
-                  createdAt: new Date().toISOString(),
-                  senderType: 'ADMIN'
-                }
-              ]
-            }
-          : chat
-      )
-    );
-
-    // Update selectedChat to match the activeChats update - avoid duplication
-    setSelectedChat(prev => {
-      const updatedChat = {
-        ...prev,
-        lastMessage: messageText,
-        lastMessageTime: new Date(),
-        replies: [
-          ...(prev.replies || []), 
-          {
-            id: `admin-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-            message: messageText,
-            createdAt: new Date().toISOString(),
-            senderType: 'ADMIN'
-          }
-        ]
-      };
-      return updatedChat;
-    });
+    // Optimistic preview + move to IN_PROGRESS and append to replies locally
+    const id = selectedChat.id || selectedChat.inquiryId;
+    const reply = {
+      id: `admin-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      message: messageText,
+      createdAt: new Date().toISOString(),
+      senderType: 'ADMIN'
+    };
+    // Update selectedChat replies immediately
+    setSelectedChat(prev => ({
+      ...prev,
+      replies: [...(prev.replies || []), reply],
+      lastMessage: messageText,
+      lastMessageTime: new Date().toISOString(),
+      status: 'IN_PROGRESS'
+    }));
+    // Reflect into list state and move to IN_PROGRESS
+    moveInquiry(id, 'IN_PROGRESS', { lastMessage: messageText, lastMessageTime: new Date().toISOString() });
   };
 
   // Helper function to get user name from chat data
@@ -270,13 +287,13 @@ function Chat_Module() {
 
   // Helper function to get last message from chat data
   const getLastMessage = (chat) => {
-    return chat.replies && chat.replies.length > 0 
-      ? chat.replies[chat.replies.length - 1].message 
-      : chat.message || '';
+    if (chat.replies && chat.replies.length > 0) return chat.replies[chat.replies.length - 1].message;
+    return chat.lastMessage || chat.message || '';
   };
 
   // Filter chats based on search
-  const filteredChats = activeChats.filter(chat => {
+  const currentList = activeTab === 'PENDING' ? pending : activeTab === 'IN_PROGRESS' ? inProgress : resolved;
+  const filteredChats = currentList.filter(chat => {
     const userName = getUserName(chat);
     const lastMessage = getLastMessage(chat);
     
@@ -305,14 +322,31 @@ function Chat_Module() {
           </span>
         </div>
 
-        {/* Dashboard Stats */}
-        <DashboardStats activeChats={activeChats} />
+  {/* Dashboard Stats */}
+  <DashboardStats activeChats={[...pending, ...inProgress]} />
 
         {/* Main Chat Interface */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Chat List */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-lg border border-gray-200">
+              {/* Tabs */}
+              <div className="px-4 pt-4">
+                <div className="grid grid-cols-3 gap-2">
+                  {['PENDING','IN_PROGRESS','RESOLVED'].map(tab => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`text-xs px-3 py-2 rounded-lg font-semibold border transition-colors ${activeTab===tab ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}
+                    >
+                      {tab.replace('_',' ')}
+                      <span className="ml-2 inline-flex items-center justify-center min-w-5 px-2 h-5 rounded-full text-[10px] bg-gray-100 text-gray-700">
+                        {tab==='PENDING'? pending.length : tab==='IN_PROGRESS'? inProgress.length : resolved.length}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
               {/* Search Bar */}
               <div className="p-4 border-b border-gray-100">
                 <div className="relative">

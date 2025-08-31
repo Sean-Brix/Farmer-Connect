@@ -71,7 +71,7 @@ async function saveAdminSupportRequest(requestData) {
             }
         });
 
-        if (!inquiry) {
+    if (!inquiry) {
             inquiry = await prisma.inquiry.create({
                 data: {
                     subject: `Admin Support Request - ${new Date().toLocaleDateString()}`,
@@ -80,13 +80,7 @@ async function saveAdminSupportRequest(requestData) {
                     status: 'PENDING'
                 }
             });
-        } else {
-            // Update status to show admin was requested
-            inquiry = await prisma.inquiry.update({
-                where: { id: inquiry.id },
-                data: { status: 'IN_PROGRESS' }
-            });
-        }
+    } // keep existing inquiry status as-is (remain PENDING until admin replies)
 
         return inquiry;
     } catch (error) {
@@ -126,7 +120,7 @@ async function saveAdminReply(replyData, adminId) {
         }
 
         // Save admin reply
-        const reply = await prisma.inquiryReply.create({
+    const reply = await prisma.inquiryReply.create({
             data: {
                 message: replyData.message,
                 senderId: adminId,
@@ -135,11 +129,11 @@ async function saveAdminReply(replyData, adminId) {
             }
         });
 
-        // Update inquiry status
+    // Update inquiry status: move to IN_PROGRESS on first admin reply, keep assignedTo
         await prisma.inquiry.update({
             where: { id: inquiry.id },
             data: { 
-                status: 'WAITING_USER',
+        status: 'IN_PROGRESS',
                 assignedToId: adminId,
                 updatedAt: new Date()
             }
@@ -183,7 +177,7 @@ function setup_socket(io){
             io.to('admin_room').emit('user_connected', { userId: socket.user.id, ts: new Date().toISOString() });
         }
         
-        // Handle real-time chat messages
+    // Handle real-time chat messages
         socket.on('chat_message', async (data) => {
             console.log('[io] chat_message', {
                 fromUserId: socket.user?.id,
@@ -203,10 +197,13 @@ function setup_socket(io){
                     socketId: socket.id
                 };
                 
-                if (data.mode === 'user') {
+        if (data.mode === 'user') {
                     // User message - save to database and forward to ALL admins
                     try {
-                        await saveUserMessage(messageData);
+                        const inquiry = await saveUserMessage(messageData);
+                        // include inquiry id and status for admin side threading
+                        messageData.inquiryId = inquiry?.id;
+                        messageData.status = inquiry?.status;
                         // Broadcast to all admins (user messages should go to all admins)
             io.to('admin_room').emit('chat_message_received', messageData);
                     } catch (error) {
@@ -222,7 +219,7 @@ function setup_socket(io){
             }
         });
 
-        // Handle admin support requests
+    // Handle admin support requests
         socket.on('request_admin_support', async (data) => {
             console.log('[io] request_admin_support', { userId: socket.user?.id, ts: new Date().toISOString() });
             
@@ -237,7 +234,9 @@ function setup_socket(io){
                 
                 // Save support request to database and notify admins
                 try {
-                    await saveAdminSupportRequest(supportRequest);
+                    const inquiry = await saveAdminSupportRequest(supportRequest);
+                    supportRequest.inquiryId = inquiry?.id;
+                    supportRequest.status = inquiry?.status;
                     io.to('admin_room').emit('admin_support_requested', supportRequest);
                 } catch (error) {
                     console.error('[io] saveAdminSupportRequest failed; notifying anyway', { message: error?.message });
@@ -255,8 +254,11 @@ function setup_socket(io){
             
             try {
                 // Save admin reply to database and forward to user
+                let reply;
+                let inquiryId;
                 try {
-                    await saveAdminReply(data, socket.user.id);
+                    reply = await saveAdminReply(data, socket.user.id);
+                    inquiryId = reply?.inquiryId || data?.inquiryId;
                 } catch (error) {
                     console.error('[io] saveAdminReply failed; forwarding anyway', { message: error?.message });
                 }
@@ -267,6 +269,21 @@ function setup_socket(io){
                     timestamp: data.timestamp,
                     adminName: socket.user.firstName + ' ' + socket.user.surname
                 });
+
+                // Notify admins to update lists/status to IN_PROGRESS
+                if (inquiryId) {
+                    io.to('admin_room').emit('admin_inquiry:status_update', {
+                        inquiryId,
+                        status: 'IN_PROGRESS',
+                        updatedAt: new Date().toISOString()
+                    });
+                    io.to('admin_room').emit('admin_inquiry:message_update', {
+                        inquiryId,
+                        lastMessage: data.message,
+                        timestamp: data.timestamp,
+                        sender: 'ADMIN'
+                    });
+                }
             } catch (error) {
                 console.error('[io] admin_reply handler error', { message: error?.message, stack: error?.stack });
                 socket.emit('error', { message: 'Failed to send reply' });

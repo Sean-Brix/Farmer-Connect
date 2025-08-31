@@ -7,12 +7,11 @@ import { useSocket } from '../../contexts/SocketContext.jsx';
 export default function Chat() {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
-    
+    const [activeTab, setActiveTab] = useState('active'); // 'active' | 'history'
     const [chatMode, setChatMode] = useState('admin'); // Direct to live agent
     const [adminRequested, setAdminRequested] = useState(true);
-    const [showHistory, setShowHistory] = useState(false);
     const [pastInquiries, setPastInquiries] = useState([]);
-    const [selectedInquiry, setSelectedInquiry] = useState(null);
+    const [activeInquiry, setActiveInquiry] = useState(null);
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [messages, setMessages] = useState([
@@ -60,15 +59,35 @@ export default function Chat() {
         }
     }, [open, isConnected, socket]);
 
-    // Auto-show history when past inquiries are loaded - Messaging App Style
+    // On open: auto-load active inquiry if one exists; otherwise start blank
     useEffect(() => {
-        // Always show sidebar for messaging app experience
-        setShowHistory(true);
-    }, []);
+        if (!open) return;
+        // fetch active inquiry (if any)
+    (async () => {
+            try {
+        const res = await fetch('/api/inquiries/active/me', { credentials: 'include' });
+                if (res.ok) {
+                    const data = await res.json();
+                    // expecting either null or an inquiry object
+                    if (data && data.id) {
+                        setActiveInquiry(data);
+                        setActiveTab('active');
+                        loadInquiryConversation(data);
+                    } else {
+                        setActiveInquiry(null);
+                        setActiveTab('active');
+                        // keep default system message and wait for user input
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load active inquiry', e);
+            }
+        })();
+    }, [open]);
 
     // Listen for admin replies
     useEffect(() => {
-        if (!socket) return;
+    if (!socket) return;
 
         socket.on('admin_reply_received', (data) => {
             console.debug('[chat] on admin_reply_received', { message: data?.message, ts: data?.timestamp });
@@ -149,12 +168,7 @@ export default function Chat() {
         }
     }, [messages]);
 
-    // Auto-show history sidebar when past inquiries are loaded
-    useEffect(() => {
-        if (pastInquiries.length > 0 && !selectedInquiry && !showHistory) {
-            setShowHistory(true);
-        }
-    }, [pastInquiries]);
+    // (Removed) legacy sidebar toggling effect; tabs handle visibility now
 
     // Fetch past inquiries when chat opens
     const fetchPastInquiries = async () => {
@@ -179,7 +193,7 @@ export default function Chat() {
 
     // Load inquiry conversation
     const loadInquiryConversation = (inquiry) => {
-        setSelectedInquiry(inquiry);
+        setActiveInquiry(inquiry);
         setSearchQuery(''); // Clear search when loading a conversation
         
         // Set messages to show the inquiry conversation
@@ -204,10 +218,9 @@ export default function Chat() {
 
     setMessages(inquiryMessages);
     setChatMode('admin'); // Switch to admin mode for historical inquiries
-        setShowHistory(false);
 
         // If the inquiry is still in progress, reconnect to that specific conversation
-        if (inquiry.status === 'IN_PROGRESS' || inquiry.status === 'WAITING_USER') {
+    if (inquiry.status === 'IN_PROGRESS' || inquiry.status === 'PENDING') {
             if (socket && isConnected) {
                 console.debug('[chat] joining inquiry room', { inquiryId: inquiry.id });
                 socket.emit('join_inquiry', { inquiryId: inquiry.id });
@@ -230,7 +243,7 @@ export default function Chat() {
                 // Refresh the inquiries list
                 await fetchPastInquiries();
                 // If current conversation was resolved, go to new conversation
-                if (selectedInquiry === inquiryId) {
+                if (activeInquiry?.id === inquiryId) {
                     startNewConversation();
                 }
             }
@@ -241,7 +254,7 @@ export default function Chat() {
 
     // Reset to new conversation
     const startNewConversation = () => {
-        setSelectedInquiry(null);
+    setActiveInquiry(null);
         setSearchQuery('');
         setMessages([
             { 
@@ -251,8 +264,8 @@ export default function Chat() {
             }
         ]);
         setChatMode('admin');
-        setShowHistory(false);
-        requestAdmin();
+    setActiveTab('active');
+    requestAdmin();
     };
 
     // Filter inquiries based on search query
@@ -296,30 +309,38 @@ export default function Chat() {
                         className={`relative bg-white rounded-none shadow-none flex w-full h-full max-w-none max-h-none sm:rounded-3xl sm:shadow-2xl sm:w-[98vw] sm:h-[96vh] md:w-[80vw] md:h-[85vh] lg:w-[1200px] lg:h-[800px] xl:w-[1400px] xl:h-[900px] md:max-w-[98vw] md:max-h-[98vh] transition-all duration-300`}
                         onClick={e => e.stopPropagation()}
                     >
-                        {/* History Sidebar - Always Visible */}
+                        {/* Left Panel: Tabs with Inquiry History */}
                         <div className="w-96 bg-gradient-to-b from-slate-50 to-slate-100 border-r border-slate-200 rounded-l-3xl flex flex-col">
                                 {/* Sidebar Header */}
                                 <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white px-6 py-5 rounded-tl-3xl">
                                     <div className="flex items-center">
                                         <div>
-                                            <h3 className="text-lg font-bold">Your Conversations</h3>
+                                            <h3 className="text-lg font-bold">Inquiries</h3>
                                             <p className="text-indigo-100 text-sm mt-1">
-                                                {searchQuery.trim() 
-                                                    ? `${filteredInquiries.length} of ${pastInquiries.length} conversations`
-                                                    : `${pastInquiries.length} ${pastInquiries.length === 1 ? 'conversation' : 'conversations'}`
+                                                {activeTab === 'history' ?
+                                                    (searchQuery.trim() 
+                                                        ? `${filteredInquiries.length} of ${pastInquiries.length} past`
+                                                        : `${pastInquiries.length} ${pastInquiries.length === 1 ? 'past inquiry' : 'past inquiries'}`
+                                                    )
+                                                    : (activeInquiry ? 'Active inquiry' : 'No active inquiry')
                                                 }
                                             </p>
                                         </div>
                                     </div>
-                                    <button
-                                        onClick={startNewConversation}
-                                        className="mt-3 w-full bg-white hover:bg-indigo-50 text-indigo-600 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 border border-white/30 shadow-sm"
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                        </svg>
-                                        New Message
-                                    </button>
+                                    <div className="mt-3 grid grid-cols-2 gap-2">
+                                        <button
+                                            onClick={() => setActiveTab('active')}
+                                            className={`w-full ${activeTab==='active' ? 'bg-white text-indigo-600' : 'bg-white/20 text-white'} hover:bg-white hover:text-indigo-600 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 border border-white/30 shadow-sm`}
+                                        >
+                                            Active
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveTab('history')}
+                                            className={`w-full ${activeTab==='history' ? 'bg-white text-indigo-600' : 'bg-white/20 text-white'} hover:bg-white hover:text-indigo-600 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 border border-white/30 shadow-sm`}
+                                        >
+                                            History
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* Search Bar for Inquiries */}
@@ -340,9 +361,46 @@ export default function Chat() {
                                     </div>
                                 </div>
 
-                                {/* Inquiries List */}
+                                {/* Active or History List */}
                                 <div className="flex-1 overflow-y-auto p-4 bg-gradient-to-b from-white to-slate-50">
-                                    {isLoadingHistory ? (
+                                    {activeTab === 'active' ? (
+                                        <div className="space-y-3">
+                                            {activeInquiry ? (
+                                                <div className="p-4 bg-white border border-slate-200 rounded-xl">
+                                                    <div className="flex items-center justify-between">
+                                                        <div>
+                                                            <div className="text-sm text-slate-500">Active Inquiry</div>
+                                                            <div className="font-semibold text-slate-900">{activeInquiry.subject || 'General Inquiry'}</div>
+                                                        </div>
+                                                        <span className="text-xs px-2 py-1 rounded-full bg-indigo-100 text-indigo-700">{activeInquiry.status}</span>
+                                                    </div>
+                                                    <div className="mt-2 text-sm text-slate-600 line-clamp-3">{activeInquiry.message}</div>
+                                                    <div className="mt-3 flex gap-2">
+                                                        <button
+                                                            onClick={() => loadInquiryConversation(activeInquiry)}
+                                                            className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 shadow-sm"
+                                                        >
+                                                            Open
+                                                        </button>
+                                                        {activeInquiry.status !== 'RESOLVED' && (
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); markAsResolved(activeInquiry.id); }}
+                                                                className="px-3 py-1.5 border border-emerald-300 text-emerald-600 hover:bg-emerald-50 rounded-lg text-xs font-medium transition-colors duration-200"
+                                                            >
+                                                                Mark Resolved
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="p-6 bg-white border border-slate-200 rounded-xl text-center">
+                                                    <div className="text-slate-700 font-medium">No active inquiry</div>
+                                                    <div className="text-slate-500 text-sm mt-1">Start a new message to create one</div>
+                                                    <button onClick={startNewConversation} className="mt-3 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">Start New Message</button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : isLoadingHistory ? (
                                         <div className="flex flex-col items-center justify-center py-12">
                                             <div className="w-8 h-8 border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin mb-3"></div>
                                             <span className="text-gray-600 text-sm">Loading conversations...</span>
@@ -372,13 +430,13 @@ export default function Chat() {
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                                         </svg>
                                                     </div>
-                                                    <h4 className="text-gray-700 font-medium mb-2">No conversations yet</h4>
-                                                    <p className="text-gray-500 text-sm mb-4">Start a conversation with our AI assistant or live agents</p>
+                                                    <h4 className="text-gray-700 font-medium mb-2">No past inquiries</h4>
+                                                    <p className="text-gray-500 text-sm mb-4">Your previous inquiries will appear here</p>
                                                     <button
                                                         onClick={startNewConversation}
                                                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
                                                     >
-                                                        Start Your First Chat
+                                                        Start New Message
                                                     </button>
                                                 </>
                                             )}
@@ -389,7 +447,7 @@ export default function Chat() {
                                                 <div
                                                     key={inquiry.id}
                                                     className={`w-full text-left p-4 rounded-xl border transition-all duration-200 shadow-sm hover:shadow-md ${
-                                                        selectedInquiry?.id === inquiry.id
+                                                        activeInquiry?.id === inquiry.id
                                                             ? 'bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-300 shadow-md'
                                                             : 'bg-white border-slate-200 hover:border-indigo-200'
                                                     }`}
@@ -471,7 +529,7 @@ export default function Chat() {
                                     )}
                                 </div>
 
-                                {/* Refresh Button */}
+                {/* Refresh Button */}
                                 <div className="p-4 border-t border-slate-200 bg-white">
                                     <button
                                         onClick={fetchPastInquiries}
@@ -481,7 +539,7 @@ export default function Chat() {
                                         <svg className={`w-4 h-4 ${isLoadingHistory ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                         </svg>
-                                        {isLoadingHistory ? 'Refreshing...' : 'Refresh Conversations'}
+                    {isLoadingHistory ? 'Refreshing...' : 'Refresh History'}
                                     </button>
                                 </div>
                             </div>
