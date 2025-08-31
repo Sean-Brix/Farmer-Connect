@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSocket } from '../../../contexts/SocketContext.jsx';
-import ChatMessage from './components/ChatMessage.jsx';
 import ChatWindow from './components/ChatWindow.jsx';
 import InquiryListItem from './components/InquiryListItem.jsx';
-import MessageInput from './components/MessageInput.jsx';
 import DashboardStats from './components/DashboardStats.jsx';
 
 function Chat_Module() {
@@ -15,21 +13,26 @@ function Chat_Module() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+
+  // Refs
   const messagesEndRef = useRef(null);
+  const selectedChatRef = useRef(null);
+  const activeTabRef = useRef(activeTab);
+
   const { socket, isConnected, connectSocket } = useSocket();
 
   // Connect socket as admin when component mounts
   useEffect(() => {
-    if (!isConnected) {
-      connectSocket('Admin');
-    }
+    if (!isConnected) connectSocket('Admin');
   }, [isConnected, connectSocket]);
+
+  // Keep refs in sync
+  useEffect(() => { selectedChatRef.current = selectedChat; }, [selectedChat]);
+  useEffect(() => { activeTabRef.current = activeTab; }, [activeTab]);
 
   // Load inquiries for tabs
   useEffect(() => {
-    if (isConnected && socket) {
-      loadTabs();
-    }
+    if (isConnected && socket) loadTabs();
   }, [isConnected, socket]);
 
   const fetchByStatus = async (status) => {
@@ -68,19 +71,28 @@ function Chat_Module() {
     return [item, ...list];
   };
   const removeFrom = (list, id) => list.filter(c => c.id !== id);
+
   const moveInquiry = (inquiryId, toStatus, patch = {}) => {
     const findIn = (list) => list.find(c => c.id === inquiryId || c.inquiryId === inquiryId);
     const found = findIn(pending) || findIn(inProgress) || findIn(resolved);
     if (!found) return;
     const id = found.id || found.inquiryId || inquiryId;
     const updated = { ...found, id, status: toStatus, ...patch };
+
+    // Remove from all tabs first
     const newPending = removeFrom(pending, id);
     const newInProgress = removeFrom(inProgress, id);
     const newResolved = removeFrom(resolved, id);
-    if (toStatus === 'PENDING') setPending(upsert(newPending, updated));
-    else if (toStatus === 'IN_PROGRESS') setInProgress(upsert(newInProgress, updated));
-    else setResolved(upsert(newResolved, updated));
-    // Keep selected chat's existing message thread/details when moving
+    setPending(newPending);
+    setInProgress(newInProgress);
+    setResolved(newResolved);
+
+    // Insert into the target tab
+    if (toStatus === 'PENDING') setPending(prev => upsert(prev, updated));
+    else if (toStatus === 'IN_PROGRESS') setInProgress(prev => upsert(prev, updated));
+    else setResolved(prev => upsert(prev, updated));
+
+    // Keep selected chat's message thread/details
     setSelectedChat(prev => {
       if (!prev) return prev;
       const matches = prev.id === id || prev.inquiryId === id;
@@ -119,6 +131,7 @@ function Chat_Module() {
       };
       if (status === 'IN_PROGRESS') setInProgress(prev => upsert(prev, item));
       else setPending(prev => upsert(prev, item));
+
       // If viewing the same inquiry, append incoming user message to the thread
       setSelectedChat(prev => {
         if (!prev) return prev;
@@ -166,6 +179,11 @@ function Chat_Module() {
       const { inquiryId, status, updatedAt } = payload || {};
       if (!inquiryId || !status) return;
       moveInquiry(inquiryId, status, { updatedAt, status });
+      // If we're following this conversation, switch to its new status tab for continuity
+      const current = selectedChatRef.current;
+      if (current && (current.id === inquiryId || current.inquiryId === inquiryId)) {
+        if (activeTabRef.current !== status) setActiveTab(status);
+      }
     });
 
     // Message preview update
@@ -202,7 +220,7 @@ function Chat_Module() {
     };
   }, [socket]);
 
-  // Auto-scroll to bottom
+  // Auto-scroll to bottom when replies change
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -217,15 +235,13 @@ function Chat_Module() {
     if (match) {
       setSelectedChat(prev => {
         if (!prev) return match;
-        // Prefer whichever side has more replies; default to keeping existing if match has none
+        // Prefer list with more replies
         const prevRepliesLen = Array.isArray(prev.replies) ? prev.replies.length : 0;
         const matchRepliesLen = Array.isArray(match.replies) ? match.replies.length : 0;
         const replies = matchRepliesLen >= prevRepliesLen ? (match.replies || prev.replies) : prev.replies;
-
         return {
           ...prev,
           ...match,
-          // Preserve/merge thread and base details
           replies,
           message: prev.message || match.message,
           createdAt: prev.createdAt || match.createdAt,
@@ -246,24 +262,28 @@ function Chat_Module() {
       timestamp: new Date()
     });
 
-    // Optimistic preview + move to IN_PROGRESS and append to replies locally
+    // Optimistic preview + move to IN_PROGRESS and append replies locally
     const id = selectedChat.id || selectedChat.inquiryId;
+    const nowIso = new Date().toISOString();
     const reply = {
       id: `admin-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       message: messageText,
-      createdAt: new Date().toISOString(),
+      createdAt: nowIso,
       senderType: 'ADMIN'
     };
-    // Update selectedChat replies immediately
+
     setSelectedChat(prev => ({
       ...prev,
-      replies: [...(prev.replies || []), reply],
+      replies: [...(prev?.replies || []), reply],
       lastMessage: messageText,
-      lastMessageTime: new Date().toISOString(),
+      lastMessageTime: nowIso,
       status: 'IN_PROGRESS'
     }));
-    // Reflect into list state and move to IN_PROGRESS
-    moveInquiry(id, 'IN_PROGRESS', { lastMessage: messageText, lastMessageTime: new Date().toISOString() });
+
+    moveInquiry(id, 'IN_PROGRESS', { lastMessage: messageText, lastMessageTime: nowIso, updatedAt: nowIso });
+
+    // Follow the conversation into In Progress
+    if (activeTabRef.current !== 'IN_PROGRESS') setActiveTab('IN_PROGRESS');
   };
 
   // Helper function to get user name from chat data
@@ -271,35 +291,22 @@ function Chat_Module() {
     return chat.user ? `${chat.user.firstName} ${chat.user.surname}` : (chat.guestName || 'Unknown User');
   };
 
-  // Helper function to sync selectedChat with activeChats to prevent duplication
-  const syncSelectedChatWithActiveChats = (activeChats, currentSelectedChat) => {
-    if (!currentSelectedChat) return null;
-    
-    // Find the matching chat in activeChats
-    const matchingChat = activeChats.find(chat => 
-      chat.id === currentSelectedChat.id || 
-      chat.userId === currentSelectedChat.userId ||
-      (chat.inquiryId && currentSelectedChat.inquiryId && chat.inquiryId === currentSelectedChat.inquiryId)
-    );
-    
-    return matchingChat || currentSelectedChat;
-  };
-
   // Helper function to get last message from chat data
   const getLastMessage = (chat) => {
-    if (chat.replies && chat.replies.length > 0) return chat.replies[chat.replies.length - 1].message;
+    if (chat && Array.isArray(chat.replies) && chat.replies.length > 0) {
+      return chat.replies[chat.replies.length - 1].message || '';
+    }
     return chat.lastMessage || chat.message || '';
   };
 
-  // Filter chats based on search
+  // Derived lists
   const currentList = activeTab === 'PENDING' ? pending : activeTab === 'IN_PROGRESS' ? inProgress : resolved;
   const filteredChats = currentList.filter(chat => {
     const userName = getUserName(chat);
     const lastMessage = getLastMessage(chat);
-    
-    return userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           lastMessage.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           (chat.subject && chat.subject.toLowerCase().includes(searchTerm.toLowerCase()));
+    const subject = (chat.subject || '').toLowerCase();
+    const term = searchTerm.toLowerCase();
+    return userName.toLowerCase().includes(term) || lastMessage.toLowerCase().includes(term) || subject.includes(term);
   });
 
   return (
@@ -313,17 +320,15 @@ function Chat_Module() {
                 <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
-            <span className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">
-              Customer Support Chat
-            </span>
+            <span className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">Customer Support Chat</span>
           </span>
           <span className="block text-sm md:text-base text-gray-600 font-medium mt-1">
             Real-time messaging with customers • {isConnected ? 'Connected' : 'Disconnected'}
           </span>
         </div>
 
-  {/* Dashboard Stats */}
-  <DashboardStats activeChats={[...pending, ...inProgress]} />
+        {/* Dashboard Stats */}
+        <DashboardStats activeChats={[...pending, ...inProgress]} />
 
         {/* Main Chat Interface */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -347,6 +352,7 @@ function Chat_Module() {
                   ))}
                 </div>
               </div>
+
               {/* Search Bar */}
               <div className="p-4 border-b border-gray-100">
                 <div className="relative">
@@ -375,27 +381,29 @@ function Chat_Module() {
                     <p className="text-lg font-medium text-gray-600 mb-1">Loading inquiries...</p>
                     <p className="text-sm text-gray-400">Please wait while we fetch your chat history</p>
                   </div>
-                ) : filteredChats.length === 0 ? (
-                  <div className="p-8 text-center text-gray-500">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                    <p className="text-lg font-medium text-gray-600 mb-1">No active chats</p>
-                    <p className="text-sm text-gray-400">Waiting for customer messages...</p>
-                  </div>
                 ) : (
-                  filteredChats.map((chat) => (
-                    <InquiryListItem 
-                      key={chat.id}
-                      chat={chat}
-                      isSelected={selectedChat?.id === chat.id}
-                      onClick={() => setSelectedChat(chat)}
-                      getUserName={getUserName}
-                      getLastMessage={getLastMessage}
-                    />
-                  ))
+                  filteredChats.length === 0 ? (
+                    <div className="p-8 text-center text-gray-500">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      <p className="text-lg font-medium text-gray-600 mb-1">No active chats</p>
+                      <p className="text-sm text-gray-400">Waiting for customer messages...</p>
+                    </div>
+                  ) : (
+                    filteredChats.map((chat) => (
+                      <InquiryListItem
+                        key={chat.id}
+                        chat={chat}
+                        isSelected={selectedChat?.id === chat.id}
+                        onClick={() => setSelectedChat(chat)}
+                        getUserName={getUserName}
+                        getLastMessage={getLastMessage}
+                      />
+                    ))
+                  )
                 )}
               </div>
             </div>
@@ -403,7 +411,7 @@ function Chat_Module() {
 
           {/* Chat Window */}
           <div className="lg:col-span-2">
-            <ChatWindow 
+            <ChatWindow
               selectedChat={selectedChat}
               getUserName={getUserName}
               messagesEndRef={messagesEndRef}
