@@ -18,17 +18,22 @@ export const SocketProvider = ({ children }) => {
     useEffect(() => {
         // Socket event listeners
         const handleConnect = () => {
-            console.log('Socket connected');
+            console.info('[socket] connected', { id: socket.id, ts: new Date().toISOString() });
             setIsConnected(true);
         };
 
         const handleDisconnect = () => {
-            console.log('Socket disconnected');
+            console.warn('[socket] disconnected', { ts: new Date().toISOString() });
             setIsConnected(false);
         };
 
         const handleConnectError = (error) => {
-            console.error('Socket connection error:', error);
+            console.error('[socket] connect_error', {
+                message: error?.message,
+                description: error?.description,
+                stack: error?.stack,
+                ts: new Date().toISOString()
+            });
             setIsConnected(false);
         };
 
@@ -48,9 +53,10 @@ export const SocketProvider = ({ children }) => {
     const connectSocket = (role) => {
         try {
             socket.auth = { role: role || 'Guest' };
+            console.debug('[socket] connecting', { role: socket.auth.role, url: socket.io.opts.hostname || 'current-origin' });
             socket.connect();
         } catch (error) {
-            console.error('Error connecting socket:', error);
+            console.error('[socket] connect() threw', { message: error?.message, stack: error?.stack });
         }
     };
 

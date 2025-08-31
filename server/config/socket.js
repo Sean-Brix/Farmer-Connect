@@ -164,16 +164,34 @@ function setup_socket(io){
 
     // Connection event
     io.on('connection', (socket) => {
+        try {
+            console.info('[io] connection', {
+                id: socket.id,
+                userId: socket.user?.id,
+                role: socket.user?.role,
+                ts: new Date().toISOString()
+            });
+        } catch {}
         
         // Register socket connection for session management
         socketSessionManager.addSocket(socket.user.id, socket.id);
         
         // Join user-specific room for targeted messaging
         socket.join(`user_${socket.user.id}`);
+        // Notify admins that a user connected (presence)
+        if (socket.user?.role === 'User') {
+            io.to('admin_room').emit('user_connected', { userId: socket.user.id, ts: new Date().toISOString() });
+        }
         
         // Handle real-time chat messages
         socket.on('chat_message', async (data) => {
-            console.log('Chat message received:', data);
+            console.log('[io] chat_message', {
+                fromUserId: socket.user?.id,
+                role: socket.user?.role,
+                len: (data?.message || '').length,
+                mode: data?.mode,
+                ts: new Date().toISOString()
+            });
             
             try {
                 // Store user info for the message
@@ -190,23 +208,23 @@ function setup_socket(io){
                     try {
                         await saveUserMessage(messageData);
                         // Broadcast to all admins (user messages should go to all admins)
-                        io.to('admin_room').emit('chat_message_received', messageData);
+            io.to('admin_room').emit('chat_message_received', messageData);
                     } catch (error) {
-                        console.error('Database save failed, but still forwarding message:', error);
+            console.error('[io] saveUserMessage failed; forwarding anyway', { message: error?.message });
                         // Broadcast to all admins (user messages should go to all admins)
                         io.to('admin_room').emit('chat_message_received', messageData);
                     }
                 }
                 // Bot mode messages are handled locally on the client side
             } catch (error) {
-                console.error('Error handling chat message:', error);
+        console.error('[io] chat_message handler error', { message: error?.message, stack: error?.stack });
                 socket.emit('error', { message: 'Failed to process message' });
             }
         });
 
         // Handle admin support requests
         socket.on('request_admin_support', async (data) => {
-            console.log('Admin support requested by:', socket.user.firstName + ' ' + socket.user.surname);
+            console.log('[io] request_admin_support', { userId: socket.user?.id, ts: new Date().toISOString() });
             
             try {
                 const supportRequest = {
@@ -222,25 +240,25 @@ function setup_socket(io){
                     await saveAdminSupportRequest(supportRequest);
                     io.to('admin_room').emit('admin_support_requested', supportRequest);
                 } catch (error) {
-                    console.error('Database save failed, but still notifying admins:', error);
+                    console.error('[io] saveAdminSupportRequest failed; notifying anyway', { message: error?.message });
                     io.to('admin_room').emit('admin_support_requested', supportRequest);
                 }
             } catch (error) {
-                console.error('Error handling admin support request:', error);
+                console.error('[io] request_admin_support handler error', { message: error?.message, stack: error?.stack });
                 socket.emit('error', { message: 'Failed to request admin support' });
             }
         });
 
         // Handle admin replies
         socket.on('admin_reply', async (data) => {
-            console.log('Admin reply:', data);
+            console.log('[io] admin_reply', { adminId: socket.user?.id, toUserId: data?.userId, len: (data?.message||'').length });
             
             try {
                 // Save admin reply to database and forward to user
                 try {
                     await saveAdminReply(data, socket.user.id);
                 } catch (error) {
-                    console.error('Database save failed, but still forwarding reply:', error);
+                    console.error('[io] saveAdminReply failed; forwarding anyway', { message: error?.message });
                 }
                 
                 // Forward reply to specific user
@@ -250,7 +268,7 @@ function setup_socket(io){
                     adminName: socket.user.firstName + ' ' + socket.user.surname
                 });
             } catch (error) {
-                console.error('Error handling admin reply:', error);
+                console.error('[io] admin_reply handler error', { message: error?.message, stack: error?.stack });
                 socket.emit('error', { message: 'Failed to send reply' });
             }
         });
@@ -275,12 +293,18 @@ function setup_socket(io){
 
         // Handle disconnection
         socket.on('disconnect', (reason) => {
+            try {
+                console.warn('[io] disconnect', { id: socket.id, userId: socket.user?.id, reason });
+            } catch {}
             socketSessionManager.removeSocket(socket.id);
+            if (socket.user?.role === 'User') {
+                io.to('admin_room').emit('user_disconnected', { userId: socket.user.id, ts: new Date().toISOString(), reason });
+            }
         });
 
         // Global error handler
         socket.on('error', (error) => {
-            console.error(`Socket error for ${socket.user?.username}:`, error);
+            console.error('[io] socket error', { userId: socket.user?.id, message: error?.message, stack: error?.stack });
         });
 
     });}

@@ -8,34 +8,24 @@ export default function Chat() {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
     
-    const [chatMode, setChatMode] = useState('bot'); // Always starts with bot
-    const [adminRequested, setAdminRequested] = useState(false);
-    const [showQuickQuestions, setShowQuickQuestions] = useState(true);
+    const [chatMode, setChatMode] = useState('admin'); // Direct to live agent
+    const [adminRequested, setAdminRequested] = useState(true);
     const [showHistory, setShowHistory] = useState(false);
     const [pastInquiries, setPastInquiries] = useState([]);
     const [selectedInquiry, setSelectedInquiry] = useState(null);
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [messages, setMessages] = useState([
-        { 
-            from: 'bot', 
-            text: 'Welcome to FITS-Tanza Support! 🌟 I\'m here to help you. Choose from the questions below or ask me anything!', 
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+        {
+            from: 'system',
+            text: 'You\'re connected to a live support agent. We\'ll respond shortly. Please describe your concern.',
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
     ]);
-    const [isBotTyping, setIsBotTyping] = useState(false);
     const messagesEndRef = useRef(null);
     const { socket, isConnected, connectSocket } = useSocket();
 
-    // Quick questions that users can click
-    const quickQuestions = [
-        { id: 1, text: "📚 How do I register for seminars?", category: "seminars" },
-        { id: 2, text: "🚜 What equipment is available?", category: "equipment" },
-        { id: 3, text: "🔑 I forgot my password", category: "account" },
-        { id: 4, text: "📞 How can I contact support?", category: "contact" },
-        { id: 5, text: "💰 What are the seminar fees?", category: "fees" },
-        { id: 6, text: "📅 When are seminars held?", category: "schedule" }
-    ];
+    // Bot and quick questions removed: direct-to-agent experience
 
     // Handle body scroll when modal opens/closes
     useEffect(() => {
@@ -50,17 +40,25 @@ export default function Chat() {
         };
     }, [open]);
 
-    // Connect socket when chat opens
+    // Connect socket and notify admins when chat opens
     useEffect(() => {
         if (open) {
             if (!isConnected) {
                 connectSocket('User'); // Connect as User role
             }
-            
+            // Immediately request admin support
+            if (socket) {
+                console.debug('[chat] emit request_admin_support');
+                socket.emit('request_admin_support', {
+                    message: 'User opened chat and requested live support',
+                    timestamp: new Date()
+                });
+            }
+
             // Fetch past inquiries immediately when chat opens
             fetchPastInquiries();
         }
-    }, [open, isConnected]);
+    }, [open, isConnected, socket]);
 
     // Auto-show history when past inquiries are loaded - Messaging App Style
     useEffect(() => {
@@ -68,11 +66,12 @@ export default function Chat() {
         setShowHistory(true);
     }, []);
 
-    // Listen for admin replies when in admin mode
+    // Listen for admin replies
     useEffect(() => {
-        if (!socket || chatMode !== 'admin') return;
+        if (!socket) return;
 
         socket.on('admin_reply_received', (data) => {
+            console.debug('[chat] on admin_reply_received', { message: data?.message, ts: data?.timestamp });
             const adminMsg = { 
                 from: 'admin', 
                 text: data.message, 
@@ -87,156 +86,34 @@ export default function Chat() {
         return () => {
             socket.off('admin_reply_received');
         };
-    }, [socket, chatMode]);
+    }, [socket]);
 
-    // Handle clicking quick questions
-    const handleQuickQuestion = (question) => {
-        setShowQuickQuestions(false);
-        
-        const userMsg = { 
-            from: 'user', 
-            text: question.text, 
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-        };
-        
-        setMessages(prev => [...prev, userMsg]);
-        
-        // Emit message to server if connected
-        if (isConnected && socket && chatMode === 'admin') {
-            socket.emit('chat_message', {
-                message: question.text,
-                timestamp: new Date(),
-                mode: 'user'  // Always 'user' since this is a user sending a message
-            });
-            
-            // Refresh conversation history after sending message
-            setTimeout(() => {
-                fetchPastInquiries();
-            }, 1000);
-        }
-        
-        // Show bot typing and provide answer
-        if (chatMode === 'bot') {
-            setIsBotTyping(true);
-            
-            setTimeout(() => {
-                const botReply = getQuickAnswer(question.category);
-                const botMsg = { 
-                    from: 'bot', 
-                    text: botReply, 
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-                };
-                setMessages(prev => [...prev, botMsg]);
-                setIsBotTyping(false);
-            }, 1200);
-        }
-    };
-
-    // Get predefined answers for quick questions
-    function getQuickAnswer(category) {
-        const answers = {
-            seminars: `📚 **How to Register for Seminars:**
-
-1. 🔐 Log into your account
-2. 📋 Navigate to the "Seminars" section
-3. 📖 Browse available seminars
-4. ✅ Click "Register" on your preferred seminar
-5. 💳 Complete the payment process
-
-**Need help with registration?** Our team is ready to assist you!`,
-
-            equipment: `🚜 **Available Equipment:**
-
-• 🚜 **Tractors** - Various models for different farm sizes
-• 💧 **Irrigation Systems** - Drip and sprinkler systems
-• 🌾 **Harvesting Equipment** - Combines and threshers  
-• 🔧 **Hand Tools** - Complete farming tool sets
-• 📦 **Storage Solutions** - Silos and storage facilities
-
-**To check availability or reserve equipment, visit the Equipment section in your dashboard!**`,
-
-            account: `🔑 **Password Reset Steps:**
-
-1. 🌐 Go to the login page
-2. 🔗 Click "Forgot Password?"
-3. 📧 Enter your registered email
-4. 📩 Check your email for reset link
-5. 🔄 Follow the instructions to create a new password
-
-**Still having trouble?** Our support team can help you regain access!`,
-
-            contact: `📞 **Contact Information:**
-
-📧 **Email:** fits-tanza@email.com
-📱 **Phone:** 123-456-7890
-🕐 **Hours:** Monday-Friday, 8:00 AM - 5:00 PM
-📍 **Office:** FITS-Tanza Main Office
-
-**For immediate assistance, you can also chat with our live agents by clicking "Chat with Admin" below!**`,
-
-            fees: `💰 **Seminar Fees:**
-
-• 🎓 **Basic Seminars:** ₱500 - ₱1,000
-• 📈 **Advanced Training:** ₱1,500 - ₱3,000
-• 🏆 **Certification Programs:** ₱2,500 - ₱5,000
-• 👥 **Group Discounts:** 10% off for 5+ participants
-
-**Payment methods:** Cash, Bank Transfer, GCash
-**Note:** Some seminars may have additional material fees.`,
-
-            schedule: `📅 **Seminar Schedule:**
-
-• 🌅 **Morning Sessions:** 8:00 AM - 12:00 PM
-• 🌇 **Afternoon Sessions:** 1:00 PM - 5:00 PM
-• 📆 **Frequency:** Weekly seminars available
-• 📋 **Duration:** Usually 1-3 days depending on topic
-
-**To see specific dates and topics, check the Seminars section in your dashboard!**`
-        };
-
-        return answers[category] || "I'd be happy to help you with that! Could you provide more details about what you need?";
-    }
+    // Quick questions and bot answers removed
 
     // Handle switching to admin mode
     const requestAdmin = () => {
         setChatMode('admin');
         setAdminRequested(true);
-        setShowQuickQuestions(false);
         const adminRequestMsg = { 
             from: 'system', 
-            text: '🔄 Connecting you with a live agent... Please wait a moment.', 
+            text: '🔵 Live support engaged. An agent will assist you shortly.', 
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
         };
         setMessages(prev => [...prev, adminRequestMsg]);
-        
-        // Emit request for admin support
         if (socket && isConnected) {
             socket.emit('request_admin_support', {
-                message: 'User has requested to speak with an admin',
+                message: 'User requested live support',
                 timestamp: new Date()
             });
         }
     };
 
-    // Handle switching back to bot mode
-    const switchToBot = () => {
-        setChatMode('bot');
-        setAdminRequested(false);
-        setShowQuickQuestions(true);
-        const botMsg = { 
-            from: 'bot', 
-            text: '🤖 You\'re now chatting with our AI assistant. How can I help you? You can use the quick questions below or type your own message!', 
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-        };
-        setMessages(prev => [...prev, botMsg]);
-    };
+    // Bot mode is removed
 
     // Handle sending a message
     const handleSend = (e) => {
         e.preventDefault();
         if (!message.trim()) return;
-        
-        setShowQuickQuestions(false);
         
         const userMsg = { 
             from: 'user', 
@@ -248,98 +125,29 @@ export default function Chat() {
         
         // Emit message to server if connected
         if (isConnected && socket) {
-            if (chatMode === 'admin') {
-                socket.emit('chat_message', {
-                    message: message,
-                    timestamp: new Date(),
-                    mode: 'user'  // Always 'user' since this is a user sending a message
-                });
-                
-                // Refresh conversation history after sending message
-                setTimeout(() => {
-                    fetchPastInquiries();
-                }, 1000); // Small delay to ensure message is processed
-            } else {
-                socket.emit('chat_message', {
-                    message: message,
-                    timestamp: new Date(),
-                    mode: 'bot'
-                });
-            }
+            console.debug('[chat] emit chat_message', { len: message.length });
+            socket.emit('chat_message', {
+                message: message,
+                timestamp: new Date(),
+                mode: 'user'  // Always 'user' since this is a user sending a message
+            });
+
+            // Refresh conversation history after sending message
+            setTimeout(() => {
+                fetchPastInquiries();
+            }, 1000); // Small delay to ensure message is processed
         }
         
         setMessage('');
-        
-        // Only show bot typing and reply in bot mode
-        if (chatMode === 'bot') {
-            setIsBotTyping(true);
-            
-            // Simple bot reply
-            setTimeout(() => {
-                const botReply = getBotReply(message);
-                const botMsg = { 
-                    from: 'bot', 
-                    text: botReply, 
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-                };
-                setMessages(prev => [...prev, botMsg]);
-                setIsBotTyping(false);
-            }, 1200);
-        }
     };
-
-    // Simple bot reply logic
-    function getBotReply(userMsg) {
-        const lower = userMsg.toLowerCase();
-        
-        if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
-            return `Hi there! 😊 Great to meet you! I'm your AI assistant. You can ask me about seminars, equipment, account help, or anything else. Need quick help? Check out the suggested questions below!`;
-        }
-        if (lower.includes('help')) {
-            return `I'm here to help! You can ask me about:
-                   - Seminars and registration
-                   - Account and profile issues  
-                   - Equipment availability
-                   - General inquiries`;
-        }
-        if (lower.includes('seminar')) {
-            return `🎓 For seminar information, you can visit the Seminar section in your dashboard to see available seminars and register.`;
-        }
-        if (lower.includes('contact')) {
-            return `📞 You can reach us at:
-                   Email: fits-tanza@email.com
-                   Phone: 123-456-7890`;
-        }
-        if (lower.includes('thank')) {
-            return `🙏 You're welcome! Feel free to ask if you need more help.`;
-        }
-        if (lower.includes('password')) {
-            return `� To reset your password, click 'Forgot Password' on the login page and follow the email instructions.`;
-        }
-        if (lower.includes('equipment') || lower.includes('tractor')) {
-            return `🚜 We have various farming equipment available including tractors and irrigation systems. Check the Equipment section for availability.`;
-        }
-        if (lower.includes('admin') || lower.includes('human') || lower.includes('agent') || lower.includes('person')) {
-            return `👨‍💼 Would you like to speak with a human agent? You can switch to live chat using the toggle above! Our agents can provide personalized assistance.`;
-        }
-        
-        return `Thanks for your message! 💭 I want to make sure I give you the best help possible. Could you tell me more about what you're looking for? 
-
-You can ask about:
-• 📚 Seminars and training
-• 🚜 Equipment and tools
-• 👤 Account and login issues
-• 📞 Contact information
-
-Or feel free to **chat with a live agent** for personalized help! 🤝`;
-    }
+    // Bot reply logic removed
 
     // Auto-scroll to bottom on new message
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-    }, [messages, isBotTyping]);
+    }, [messages]);
 
     // Auto-show history sidebar when past inquiries are loaded
     useEffect(() => {
@@ -394,14 +202,14 @@ Or feel free to **chat with a live agent** for personalized help! 🤝`;
             });
         }
 
-        setMessages(inquiryMessages);
-        setChatMode('admin'); // Switch to admin mode for historical inquiries
-        setShowQuickQuestions(false);
+    setMessages(inquiryMessages);
+    setChatMode('admin'); // Switch to admin mode for historical inquiries
         setShowHistory(false);
-        
+
         // If the inquiry is still in progress, reconnect to that specific conversation
         if (inquiry.status === 'IN_PROGRESS' || inquiry.status === 'WAITING_USER') {
             if (socket && isConnected) {
+                console.debug('[chat] joining inquiry room', { inquiryId: inquiry.id });
                 socket.emit('join_inquiry', { inquiryId: inquiry.id });
             }
         }
@@ -437,14 +245,14 @@ Or feel free to **chat with a live agent** for personalized help! 🤝`;
         setSearchQuery('');
         setMessages([
             { 
-                from: 'bot', 
-                text: 'Welcome to FITS-Tanza Support! 🌟 I\'m here to help you. Choose from the questions below or ask me anything!', 
+                from: 'system', 
+                text: 'New conversation started. You\'re connected to a live support agent.', 
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
             }
         ]);
-        setChatMode('bot');
-        setShowQuickQuestions(true);
+        setChatMode('admin');
         setShowHistory(false);
+        requestAdmin();
     };
 
     // Filter inquiries based on search query
@@ -686,28 +494,17 @@ Or feel free to **chat with a live agent** for personalized help! 🤝`;
                                 <div className="flex items-center gap-4">
                                     <div className="relative group">
                                         <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/30 flex items-center justify-center">
-                                            {chatMode === 'admin' ? (
-                                                <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-semibold text-lg">
-                                                    A
-                                                </div>
-                                            ) : (
-                                                <img src={botAvatar} alt="Support Assistant" className="w-10 h-10 rounded-full" />
-                                            )}
+                                            <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-semibold text-lg">
+                                                A
+                                            </div>
                                             <div className={`absolute -bottom-1 -right-1 w-5 h-5 border-3 border-white rounded-full ${isConnected ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`}></div>
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold tracking-tight">
-                                            Support Assistant
-                                        </h3>
+                                        <h3 className="text-xl font-bold tracking-tight">Live Support</h3>
                                         <div className="flex items-center gap-2 text-indigo-100 mt-1">
                                             <div className={`w-2.5 h-2.5 rounded-full ${isConnected ? 'bg-green-300 animate-pulse' : 'bg-gray-300'}`}></div>
-                                            <span className="text-sm font-medium">
-                                                {chatMode === 'admin' 
-                                                    ? 'Connected to live agent' 
-                                                    : 'AI Assistant • Ready to help'
-                                                }
-                                            </span>
+                                            <span className="text-sm font-medium">Connected to live agent</span>
                                         </div>
                                     </div>
                                 </div>
@@ -733,25 +530,21 @@ Or feel free to **chat with a live agent** for personalized help! 🤝`;
                                     key={idx}
                                     className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'} items-end gap-2`}
                                 >
-                                    {(msg.from === 'bot' || msg.from === 'admin' || msg.from === 'system') && (
+                                    {(msg.from === 'admin' || msg.from === 'system') && (
                                         <div className="flex-shrink-0">
                                             <div className={`w-8 h-8 rounded-full p-0.5 ${
                                                 msg.from === 'admin' 
                                                     ? 'bg-gradient-to-br from-blue-400 to-blue-600' 
-                                                    : msg.from === 'system'
-                                                    ? 'bg-gradient-to-br from-gray-400 to-gray-600'
-                                                    : 'bg-gradient-to-br from-green-400 to-green-600'
+                                                    : 'bg-gradient-to-br from-gray-400 to-gray-600'
                                             }`}>
                                                 {msg.from === 'admin' ? (
                                                     <div className="w-full h-full rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-semibold">
                                                         A
                                                     </div>
-                                                ) : msg.from === 'system' ? (
+                                                ) : (
                                                     <div className="w-full h-full rounded-full bg-gray-500 flex items-center justify-center text-white text-xs">
                                                         ⚙️
                                                     </div>
-                                                ) : (
-                                                    <img src={botAvatar} alt="Support Assistant" className="w-full h-full rounded-full object-cover" />
                                                 )}
                                             </div>
                                         </div>
@@ -763,9 +556,7 @@ Or feel free to **chat with a live agent** for personalized help! 🤝`;
                                                     ? 'bg-gradient-to-r from-green-600 to-green-700 text-white rounded-br-md'
                                                     : msg.from === 'admin'
                                                     ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-blue-900 border border-blue-200 rounded-bl-md'
-                                                    : msg.from === 'system'
-                                                    ? 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 border border-gray-200 rounded-bl-md'
-                                                    : 'bg-white text-gray-800 border border-gray-200 rounded-bl-md'
+                                                    : 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-800 border border-gray-200 rounded-bl-md'
                                                 }`}
                                             style={{ wordBreak: 'break-word' }}
                                         >
@@ -790,74 +581,15 @@ Or feel free to **chat with a live agent** for personalized help! 🤝`;
                                     )}
                                 </div>
                             ))}
+                            {/* Bot typing and quick questions removed */}
                             
-                            {/* Typing Indicator - Only show in bot mode */}
-                            {isBotTyping && chatMode === 'bot' && (
-                                <div className="flex justify-start items-end gap-2">
-                                    <div className="flex-shrink-0">
-                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 p-0.5">
-                                            <img src={botAvatar} alt="Support Assistant" className="w-full h-full rounded-full object-cover" />
-                                        </div>
-                                    </div>
-                                    <div className="px-4 py-3 rounded-2xl rounded-bl-md bg-white border border-gray-200 shadow-sm">
-                                        <div className="flex items-center gap-2">
-                                            <div className="flex gap-1">
-                                                <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                                <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                                <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                                            </div>
-                                            <span className="text-sm text-gray-600">AI Assistant is typing...</span>
-                                        </div>
-                                    </div>
+                            {/* Live agent indicator */}
+                            <div className="flex justify-center">
+                                <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-center max-w-xs">
+                                    <div className="text-blue-600 text-sm font-medium mb-1">🔵 Live Support</div>
+                                    <div className="text-blue-700 text-xs">Your messages are sent directly to our support team</div>
                                 </div>
-                            )}
-                            
-                            {/* Quick Questions - Always show when enabled and not in admin mode */}
-                            {showQuickQuestions && chatMode === 'bot' && (
-                                <div className="flex justify-start">
-                                    <div className="max-w-md">
-                                            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-200 rounded-2xl p-4 shadow-sm">
-                                                <div className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
-                                                    <span>💡</span>
-                                                    <span>Quick Help - Choose a topic:</span>
-                                                </div>
-                                                <div className="space-y-2">
-                                                    {quickQuestions.map((question) => (
-                                                        <button
-                                                            key={question.id}
-                                                            onClick={() => handleQuickQuestion(question)}
-                                                            className="w-full text-left px-3 py-2 rounded-xl bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-300 transition-all duration-200 text-sm text-slate-700 hover:text-indigo-700 shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
-                                                        >
-                                                            {question.text}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                                <div className="mt-4 pt-4 border-t border-slate-200">
-                                                    <button
-                                                        onClick={requestAdmin}
-                                                        className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
-                                                    >
-                                                        <span>👨‍�</span>
-                                                        <span>Connect with Live Agent</span>
-                                                    </button>
-                                                    <p className="text-xs text-slate-500 text-center mt-2">
-                                                        Need human help? Start an inquiry with our support team
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                            )}
-                            
-                            {/* Admin mode indicator */}
-                            {chatMode === 'admin' && !adminRequested && (
-                                <div className="flex justify-center">
-                                    <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-center max-w-xs">
-                                        <div className="text-blue-600 text-sm font-medium mb-1">🔵 Live Agent Mode</div>
-                                        <div className="text-blue-700 text-xs">Your messages will be sent directly to our support team</div>
-                                    </div>
-                                </div>
-                            )}
+                            </div>
                             <div ref={messagesEndRef} />
                         </div>
                         
@@ -871,13 +603,13 @@ Or feel free to **chat with a live agent** for personalized help! 🤝`;
                                 <div className="flex-1 relative">
                                     <input
                                         type="text"
-                                        placeholder={chatMode === 'admin' ? 'Message live agent...' : 'Type your message here...'}
+                                        placeholder={'Message live agent...'}
                                         className="w-full rounded-2xl px-5 py-3 pr-12 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 bg-slate-50 focus:bg-white text-sm transition-all duration-200 placeholder-slate-500"
                                         value={message}
                                         onChange={e => setMessage(e.target.value)}
                                         autoFocus
                                         maxLength={500}
-                                        disabled={isBotTyping}
+                                        disabled={false}
                                     />
                                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-slate-400">
                                         {message.length}/500
@@ -886,25 +618,16 @@ Or feel free to **chat with a live agent** for personalized help! 🤝`;
                                 <button
                                     type="submit"
                                     className={`text-white rounded-2xl px-6 py-3 transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center gap-2 ${
-                                        chatMode === 'admin' 
-                                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700' 
-                                            : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700'
+                                        'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700'
                                     }`}
-                                    disabled={isBotTyping || !message.trim()}
+                                    disabled={!message.trim()}
                                 >
-                                    {isBotTyping ? (
-                                        <>
-                                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                            <span>Sending...</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span>Send</span>
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                            </svg>
-                                        </>
-                                    )}
+                                    <>
+                                        <span>Send</span>
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                        </svg>
+                                    </>
                                 </button>
                             </form>
                         </div>
