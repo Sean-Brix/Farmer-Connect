@@ -28,6 +28,7 @@ import Survey from './Components/Survey/Survey.jsx';
 import Settings from './Components/Settings/Settings.jsx';
 import My_Profile from './Admin/Components/Profile/My_Profile.jsx';
 import ForgotPassword from './Authentication/Components/ForgotPassword';
+import ResetPassword from './Authentication/Components/ResetPassword.jsx';
 import Farmer_Report from './Client/Services/Report/Farmer_Report.jsx';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
                     {/* AUTHENTICATION */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
 
                     {/* CLIENT ROUTES */}
                     <Route path="/" element={<Landing />} />

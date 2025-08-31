@@ -78,6 +78,10 @@ model Account {
   // Profile Photo
   picture        Bytes?
   mimeType       String?
+  
+  // Password Reset
+  resetTokenHash   String?
+  resetTokenExpiry DateTime?
 
   // Legacy fields (kept for compatibility)
   client_profile client_profile     @default(Other)

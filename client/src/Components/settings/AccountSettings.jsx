@@ -73,13 +73,20 @@ const AccountSettings = () => {
     setIsLoading(true);
     
     try {
-      // Simulate API call to change password
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const resp = await fetch('/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ currentPassword: passwords.current, newPassword: passwords.new }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.message || 'Failed to change password');
       setPasswords({ current: '', new: '', confirm: '' });
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error('Error changing password:', error);
+      alert(error.message || 'Error changing password');
     } finally {
       setIsLoading(false);
     }
