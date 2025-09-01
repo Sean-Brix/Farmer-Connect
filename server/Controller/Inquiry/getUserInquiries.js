@@ -29,6 +29,17 @@ const getUserInquiries = async (req, res) => {
             createdAt: true
           }
         },
+    attachments: {
+          orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            filename: true,
+            mimetype: true,
+            filesize: true,
+      uploadedById: true,
+            createdAt: true,
+          }
+        },
         assignedTo: {
           select: {
             firstName: true,
@@ -52,7 +63,11 @@ const getUserInquiries = async (req, res) => {
         ? inquiry.replies[inquiry.replies.length - 1].createdAt 
         : inquiry.createdAt,
       messageCount: inquiry.replies.length + 1, // +1 for initial inquiry
-      isRead: inquiry.status !== 'PENDING' // Consider non-pending as read
+      isRead: inquiry.status !== 'PENDING', // Consider non-pending as read
+      attachments: (inquiry.attachments || []).map(a => ({
+        ...a,
+        streamUrl: `/api/inquiries/attachments/${a.id}`
+      }))
     }));
 
     res.status(200).json({

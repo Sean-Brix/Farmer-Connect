@@ -22,6 +22,17 @@ export const getActiveInquiryForUser = async (req, res) => {
             sender: { select: { firstName: true, surname: true } }
           }
         },
+        attachments: {
+          orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            filename: true,
+            mimetype: true,
+            filesize: true,
+            uploadedById: true,
+            createdAt: true,
+          }
+        },
         assignedTo: { select: { firstName: true, surname: true } }
       },
       orderBy: { updatedAt: 'desc' }
@@ -45,7 +56,16 @@ export const getActiveInquiryForUser = async (req, res) => {
         senderType: r.senderType,
         senderName: r.senderName || (r.sender ? `${r.sender.firstName} ${r.sender.surname}` : 'Unknown'),
         createdAt: r.createdAt
-      }))
+      })),
+      attachments: inquiry.attachments?.map(a => ({
+        id: a.id,
+        filename: a.filename,
+        mimetype: a.mimetype,
+        filesize: a.filesize,
+        uploadedById: a.uploadedById,
+        createdAt: a.createdAt,
+        streamUrl: `/api/inquiries/attachments/${a.id}`
+      })) || []
     };
 
     res.status(200).json(formatted);
