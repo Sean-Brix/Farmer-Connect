@@ -26,6 +26,11 @@ const ChatWindow = ({ selectedChat, messagesEndRef, getUserName, onSendMessage }
   const timeline = useMemo(() => {
     if (!selectedChat) return [];
     const items = [];
+    const attachmentUrls = new Set(
+      (selectedChat.attachments || [])
+        .map(a => a?.streamUrl || a?.filepath)
+        .filter(Boolean)
+    );
     if (selectedChat.message) {
       items.push({
         key: `inquiry:${selectedChat.id}`,
@@ -39,6 +44,9 @@ const ChatWindow = ({ selectedChat, messagesEndRef, getUserName, onSendMessage }
       });
     }
     (selectedChat.replies || []).forEach(r => {
+      const msg = typeof r.message === 'string' ? r.message : '';
+      // If this reply is just an attachment URL that we also have in attachments, skip it to avoid duplicates
+      if (attachmentUrls.has(msg)) return;
       items.push({ key: `reply:${r.id}` , type: 'text', data: r });
     });
     (selectedChat.attachments || []).forEach(a => {
@@ -60,8 +68,19 @@ const ChatWindow = ({ selectedChat, messagesEndRef, getUserName, onSendMessage }
         items.push({ key: `att:${a.id}`, type: 'file', data: a });
       }
     });
-    items.sort((a,b) => new Date((a.data.createdAt)) - new Date((b.data.createdAt)));
-    return items;
+    // Deduplicate potential duplicates if a reply text equals the attachment URL
+    const seen = new Set();
+    const deduped = [];
+    for (const it of items) {
+      const sig = it.type === 'image' || it.type === 'file'
+        ? `${it.type}:${it.data.message || it.data.streamUrl || it.data.filename}`
+        : `${it.type}:${it.data.id || it.data.message}`;
+      if (seen.has(sig)) continue;
+      seen.add(sig);
+      deduped.push(it);
+    }
+    deduped.sort((a,b) => new Date((a.data.createdAt)) - new Date((b.data.createdAt)));
+    return deduped;
   }, [selectedChat]);
 
   return (

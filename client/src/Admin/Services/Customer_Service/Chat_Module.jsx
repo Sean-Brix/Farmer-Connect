@@ -20,6 +20,7 @@ function Chat_Module() {
   const activeTabRef = useRef(activeTab);
 
   const { socket, isConnected, connectSocket } = useSocket();
+  const [toast, setToast] = useState(null); // {type,title,message,action}
 
   // Connect socket as admin when component mounts
   useEffect(() => {
@@ -29,6 +30,13 @@ function Chat_Module() {
   // Keep refs in sync
   useEffect(() => { selectedChatRef.current = selectedChat; }, [selectedChat]);
   useEffect(() => { activeTabRef.current = activeTab; }, [activeTab]);
+
+  // Auto-hide toast after 4s
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 4000);
+    return () => clearTimeout(t);
+  }, [toast]);
 
   // Load inquiries for tabs
   useEffect(() => {
@@ -190,6 +198,8 @@ function Chat_Module() {
       const current = selectedChatRef.current;
       if (current && (current.id === inquiryId || current.inquiryId === inquiryId)) {
         if (activeTabRef.current !== status) setActiveTab(status);
+  // also update selectedChat status immediately
+  setSelectedChat(prev => prev ? { ...prev, status, updatedAt } : prev);
       }
     });
 
@@ -215,19 +225,41 @@ function Chat_Module() {
       setResolved(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage: preview, lastMessageTime: ts, updatedAt: ts } : c));
 
       // If the chat is open, append a reply-like item that contains a direct link
-  setSelectedChat(prev => {
+      setSelectedChat(prev => {
         if (!prev) return prev;
         const matches = prev.id === inquiryId || prev.inquiryId === inquiryId;
         if (!matches) return prev;
-        const msg = {
-          id: `att-${Date.now()}`,
-          message: streamUrl || filepath, // prefer stream URL
-          mime: mimetype,
+        const att = {
+          id: `temp-${Date.now()}`,
           filename,
+          mimetype,
+          streamUrl: streamUrl || filepath,
+          filesize,
+          uploadedById: prev.userId,
           createdAt: ts,
-          senderType: 'USER',
         };
-        return { ...prev, replies: [...(prev.replies || []), msg], lastMessage: preview, lastMessageTime: ts, updatedAt: ts };
+        const prevAtts = Array.isArray(prev.attachments) ? prev.attachments : [];
+        // Dedupe by streamUrl+filename
+        const exists = prevAtts.some(a => (a.streamUrl || a.filepath) === att.streamUrl && (a.filename || '') === (filename || ''));
+        const nextAtts = exists ? prevAtts : [...prevAtts, att];
+        return { ...prev, attachments: nextAtts, lastMessage: preview, lastMessageTime: ts, updatedAt: ts };
+      });
+    });
+
+    // User requested to resolve
+    socket.on('admin_inquiry:resolve_request', (payload) => {
+      const { inquiryId, userName } = payload || {};
+      if (!inquiryId) return;
+      const chat = [
+        ...pending,
+        ...inProgress,
+        ...resolved
+      ].find(c => c.id === inquiryId || c.inquiryId === inquiryId);
+      const label = chat ? (chat.subject || 'Inquiry') : `Inquiry ${inquiryId}`;
+      setToast({
+        type: 'info',
+        title: 'User marked conversation as resolved',
+        message: `${userName || 'User'} wants to resolve: ${label}`,
       });
     });
 
@@ -250,6 +282,7 @@ function Chat_Module() {
       socket.off('admin_inquiry:status_update');
       socket.off('admin_inquiry:message_update');
   socket.off('admin_inquiry:attachment');
+  socket.off('admin_inquiry:resolve_request');
       socket.off('user_connected');
       socket.off('user_disconnected');
     };
@@ -346,6 +379,20 @@ function Chat_Module() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-4 sm:mt-12 px-2 md:px-6">
+      {toast && (
+        <div className={`fixed top-4 right-4 z-[100000] px-4 py-3 rounded-lg shadow-lg border ${toast.type==='info' ? 'bg-blue-50 border-blue-200 text-blue-800' : 'bg-gray-50 border-gray-200 text-gray-800'}`}>
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
+            </div>
+            <div>
+              <div className="font-semibold text-sm">{toast.title}</div>
+              {toast.message && <div className="text-xs mt-0.5 opacity-90 max-w-xs">{toast.message}</div>}
+            </div>
+            <button className="ml-2 text-xs opacity-70 hover:opacity-100" onClick={() => setToast(null)}>Dismiss</button>
+          </div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="relative mb-4 mt-2 sm:mt-8 p-4 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">

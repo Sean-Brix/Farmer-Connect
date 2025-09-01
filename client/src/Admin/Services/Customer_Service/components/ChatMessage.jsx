@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ImageViewer from '../../../../Components/Common/ImageViewer.jsx';
 
 const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = false }) => {
   const isAdmin = message.senderType === 'ADMIN';
@@ -12,6 +13,8 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
   const isImage = (url, mime) => (mime?.startsWith?.('image/')) || (typeof url === 'string' && /\.(png|jpe?g|webp|gif)$/i.test(url));
   const isVideo = (url, mime) => (mime?.startsWith?.('video/')) || (typeof url === 'string' && /\.(mp4|webm)$/i.test(url));
 
+  const [viewer, setViewer] = useState({ open: false, src: '', filename: '' });
+
   const renderBody = () => {
     // When using InquiryReply, we only have message text. If we enhance it to carry attachments, support arrays.
     const text = message.message;
@@ -20,7 +23,9 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
     // Preview for /public or streamed /api attachments
     if (typeof text === 'string' && (text.startsWith('/public/') || text.startsWith('/api/inquiries/attachments/'))) {
       const url = text;
-      if (isImage(url, mime)) return <img src={url} alt="attachment" className="max-w-xs rounded-lg border" />;
+      if (isImage(url, mime)) return <>
+        <img src={url} alt="attachment" className="max-w-xs rounded-lg border cursor-zoom-in" onClick={() => setViewer({ open: true, src: url, filename: name || 'image' })} />
+      </>;
       if (isVideo(url, mime)) return (
         <video className="max-w-xs rounded-lg border" controls>
           <source src={url} />
@@ -36,7 +41,7 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
   };
 
   return (
-    <div className={`flex ${isAdmin ? 'justify-end' : 'justify-start'} items-end gap-2`}>
+  <div className={`flex ${isAdmin ? 'justify-end' : 'justify-start'} items-end gap-2`}>
       {isUser && (
         <div className="flex-shrink-0">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-sm font-semibold">
@@ -64,6 +69,9 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
             A
           </div>
         </div>
+      )}
+      {viewer.open && (
+        <ImageViewer open={viewer.open} src={viewer.src} filename={viewer.filename} onClose={() => setViewer({ open: false, src: '', filename: '' })} />
       )}
     </div>
   );

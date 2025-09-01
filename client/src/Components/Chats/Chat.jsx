@@ -4,6 +4,7 @@ import botAvatar from '../../Assets/default_picture.png';
 import userAvatar from '../../Assets/eic_default.png';
 import appLogo from '../../Assets/Logo.png';
 import { useSocket } from '../../contexts/SocketContext.jsx';
+import ImageViewer from '../Common/ImageViewer.jsx';
 
 export default function Chat() {
     const [open, setOpen] = useState(false);
@@ -27,6 +28,7 @@ export default function Chat() {
     const [attachments, setAttachments] = useState([]); // File[] queued like Messenger
     const messagesEndRef = useRef(null);
     const { socket, isConnected, connectSocket } = useSocket();
+    const [viewer, setViewer] = useState({ open: false, src: '', filename: '' });
 
     // Bot and quick questions removed: direct-to-agent experience
 
@@ -343,6 +345,12 @@ export default function Chat() {
     // Mark conversation as resolved
     const markAsResolved = async (inquiryId) => {
         try {
+            // Notify admins via socket before resolving
+            if (socket && isConnected && inquiryId) {
+                try {
+                    socket.emit('user_inquiry:resolve_request', { inquiryId });
+                } catch {}
+            }
             const response = await fetch(`/api/inquiries/${inquiryId}/resolve`, {
                 method: 'PATCH',
                 headers: {
@@ -691,13 +699,16 @@ export default function Chat() {
                                 </div>
                                 
                                 <div className="flex items-center gap-2">
-                                    {/* Call controls */}
-                                    <button type="button" className="p-2.5 hover:bg-white/20 rounded-full transition-all duration-200" title="Start video call" aria-label="Start video call" onClick={() => alert('Video call coming soon') }>
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14m0 0H6a2 2 0 01-2-2V9a2 2 0 012-2h9a2 2 0 012 2v3z"/></svg>
-                                    </button>
-                                    <button type="button" className="p-2.5 hover:bg-white/20 rounded-full transition-all duration-200" title="Start call" aria-label="Start call" onClick={() => alert('Call feature coming soon') }>
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6v1a11 11 0 0011 11h1v-3a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-1C9.163 26 2 18.837 2 9V8a3 3 0 011-2.236V5z"/></svg>
-                                    </button>
+                                    {activeInquiry?.id && activeInquiry?.status !== 'RESOLVED' && (
+                                        <button
+                                            type="button"
+                                            onClick={() => markAsResolved(activeInquiry.id)}
+                                            className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>
+                                            Mark as Resolved
+                                        </button>
+                                    )}
                                     <button
                                         onClick={() => setOpen(false)}
                                         className="p-2.5 hover:bg-white/20 rounded-full transition-all duration-200 hover:rotate-90 group"
@@ -763,22 +774,37 @@ export default function Chat() {
                                                 const isMedia = isPublic || isStream;
                                                 const isImg = (mime?.startsWith?.('image/')) || (isPublic && /\.(png|jpe?g|webp|gif)$/i.test(text));
                                                 const isVid = (mime?.startsWith?.('video/')) || (isPublic && /\.(mp4|webm)$/i.test(text));
-                                                if (isMedia && isImg) return <img src={text} alt="attachment" className="max-w-xs rounded-lg border" />;
+                                                if (isMedia && isImg) return <img src={text} alt="attachment" className="max-w-xs rounded-lg border cursor-zoom-in" onClick={() => setViewer({ open: true, src: text, filename: name || 'image' })} />;
                                                 if (isMedia && isVid) return (
                                                     <video className="max-w-xs rounded-lg border" controls>
                                                         <source src={text} />
                                                     </video>
                                                 );
-                                                if (isMedia) return (
-                                                    <a href={text} target="_blank" rel="noreferrer" className="group w-64 border rounded-xl p-3 flex items-center gap-3 hover:shadow-sm transition bg-white border-gray-200">
-                                                        <div className="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center text-xs font-bold">FILE</div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="text-sm font-medium truncate" title={name || 'Attachment'}>{name || 'Attachment'}</div>
-                                                            <div className="text-xs opacity-70">{mime}</div>
-                                                        </div>
-                                                        <svg className="w-4 h-4 opacity-60 group-hover:opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12"/></svg>
-                                                    </a>
-                                                );
+                                                if (isMedia) {
+                                                    const n = (name || '').toLowerCase();
+                                                    const bg =
+                                                        mime === 'application/pdf' || n.endsWith('.pdf') ? 'bg-red-50 text-red-600' :
+                                                        (n.endsWith('.doc') || n.endsWith('.docx') || (mime || '').includes('word')) ? 'bg-blue-50 text-blue-700' :
+                                                        (n.endsWith('.xls') || n.endsWith('.xlsx') || (mime || '').includes('sheet')) ? 'bg-green-50 text-green-700' :
+                                                        (n.endsWith('.ppt') || n.endsWith('.pptx') || (mime || '').includes('presentation')) ? 'bg-orange-50 text-orange-700' :
+                                                        (n.endsWith('.txt')) ? 'bg-gray-50 text-gray-700' : 'bg-slate-50 text-slate-700';
+                                                    const label =
+                                                        mime === 'application/pdf' || n.endsWith('.pdf') ? 'PDF' :
+                                                        (n.endsWith('.doc') || n.endsWith('.docx') || (mime || '').includes('word')) ? 'DOC' :
+                                                        (n.endsWith('.xls') || n.endsWith('.xlsx') || (mime || '').includes('sheet')) ? 'XLS' :
+                                                        (n.endsWith('.ppt') || n.endsWith('.pptx') || (mime || '').includes('presentation')) ? 'PPT' :
+                                                        (n.endsWith('.txt')) ? 'TXT' : 'FILE';
+                                                    return (
+                                                        <a href={text} target="_blank" rel="noreferrer" className={`group w-64 border rounded-xl p-3 flex items-center gap-3 hover:shadow-sm transition ${msg.from==='user' ? 'bg-white border-gray-200' : 'bg-green-50 border-green-200'}`}>
+                                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs font-bold ${bg}`}>{label}</div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <div className="text-sm font-medium truncate" title={name || 'Attachment'}>{name || 'Attachment'}</div>
+                                                                <div className="text-xs opacity-70">{mime}</div>
+                                                            </div>
+                                                            <svg className="w-4 h-4 opacity-60 group-hover:opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12"/></svg>
+                                                        </a>
+                                                    );
+                                                }
                                                 return text;
                                             })()}
                                         </div>
@@ -883,6 +909,9 @@ export default function Chat() {
                         </div>
                     </div>
                 </div>
+            )}
+            {viewer.open && (
+                <ImageViewer open={viewer.open} src={viewer.src} filename={viewer.filename} onClose={() => setViewer({ open: false, src: '', filename: '' })} />
             )}
         </>
     );

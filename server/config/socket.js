@@ -267,6 +267,23 @@ function setup_socket(io){
             }
         });
 
+        // Inform admins before user resolves an inquiry
+        socket.on('user_inquiry:resolve_request', (payload = {}) => {
+            try {
+                const { inquiryId } = payload;
+                if (!inquiryId) return;
+                const ts = new Date().toISOString();
+                io.to('admin_room').emit('admin_inquiry:resolve_request', {
+                    inquiryId,
+                    userId: socket.user?.id,
+                    userName: `${socket.user?.firstName || ''} ${socket.user?.surname || ''}`.trim() || socket.user?.username || 'User',
+                    timestamp: ts,
+                });
+            } catch (e) {
+                console.error('[io] user_inquiry:resolve_request error', e?.message);
+            }
+        });
+
         // Handle admin replies
         socket.on('admin_reply', async (data) => {
             console.log('[io] admin_reply', { adminId: socket.user?.id, toUserId: data?.userId, len: (data?.message||'').length });
