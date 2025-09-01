@@ -112,6 +112,10 @@ function Chat_Module() {
 
     // New user message
     socket.on('chat_message_received', (data) => {
+      // Prevent echoes from the same socket if server broadcasts to all
+      if (data?.socketId && socket?.id && data.socketId === socket.id) {
+        return; // skip self-emitted broadcast
+      }
       const inquiryId = data.inquiryId;
       const status = data.status || 'PENDING';
       const item = {
@@ -137,6 +141,9 @@ function Chat_Module() {
         if (!prev) return prev;
         const matches = prev.id === inquiryId || prev.inquiryId === inquiryId;
         if (!matches) return prev;
+        // Deduplicate by approximate time + same sender + same message
+        const exists = (prev.replies || []).some(r => r.senderType === 'USER' && r.message === data.message && Math.abs(new Date(r.createdAt) - new Date(data.timestamp || Date.now())) < 5000);
+        if (exists) return prev;
         const reply = {
           id: `${data.userId}-${data.timestamp || Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           message: data.message,
@@ -197,6 +204,32 @@ function Chat_Module() {
       setSelectedChat(prev => (prev && (prev.id === inquiryId || prev.inquiryId === inquiryId) ? { ...prev, lastMessage, lastMessageTime: timestamp } : prev));
     });
 
+    // Attachment uploaded by user
+    socket.on('admin_inquiry:attachment', (payload) => {
+      const { inquiryId, filename, filepath, streamUrl, filesize, mimetype } = payload || {};
+      if (!inquiryId) return;
+      const ts = new Date().toISOString();
+      const preview = `📎 ${filename}`;
+      setPending(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage: preview, lastMessageTime: ts, updatedAt: ts } : c));
+      setInProgress(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage: preview, lastMessageTime: ts, updatedAt: ts } : c));
+      setResolved(prev => prev.map(c => (c.id === inquiryId || c.inquiryId === inquiryId) ? { ...c, lastMessage: preview, lastMessageTime: ts, updatedAt: ts } : c));
+
+      // If the chat is open, append a reply-like item that contains a direct link
+  setSelectedChat(prev => {
+        if (!prev) return prev;
+        const matches = prev.id === inquiryId || prev.inquiryId === inquiryId;
+        if (!matches) return prev;
+        const msg = {
+          id: `att-${Date.now()}`,
+      message: streamUrl || filepath, // prefer stream URL
+          mime: mimetype,
+          createdAt: ts,
+          senderType: 'USER',
+        };
+        return { ...prev, replies: [...(prev.replies || []), msg], lastMessage: preview, lastMessageTime: ts, updatedAt: ts };
+      });
+    });
+
     // Listen for user connection status
     socket.on('user_connected', (data) => {
       console.log('User connected:', data);
@@ -215,6 +248,7 @@ function Chat_Module() {
       socket.off('admin_support_requested');
       socket.off('admin_inquiry:status_update');
       socket.off('admin_inquiry:message_update');
+  socket.off('admin_inquiry:attachment');
       socket.off('user_connected');
       socket.off('user_disconnected');
     };

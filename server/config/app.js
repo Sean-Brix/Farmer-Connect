@@ -12,6 +12,7 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const viewPath = path.join(__dirname, '../View');
+const publicPath = path.join(__dirname, '../public');
 
 // Initialize i18n - temporarily disabled
 // await initI18n();
@@ -24,6 +25,7 @@ app.use(urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(viewPath));
+app.use('/public', express.static(publicPath));
 
 // i18n middleware - temporarily disabled
 // app.use(i18nMiddleware.handle);

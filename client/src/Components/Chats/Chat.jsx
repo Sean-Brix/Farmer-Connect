@@ -9,7 +9,7 @@ export default function Chat() {
     const [message, setMessage] = useState('');
     const [activeTab, setActiveTab] = useState('active'); // 'active' | 'history'
     const [chatMode, setChatMode] = useState('admin'); // Direct to live agent
-    const [adminRequested, setAdminRequested] = useState(true);
+    const [adminRequested, setAdminRequested] = useState(false);
     const [pastInquiries, setPastInquiries] = useState([]);
     const [activeInquiry, setActiveInquiry] = useState(null);
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
@@ -21,6 +21,8 @@ export default function Chat() {
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
     ]);
+    const [sending, setSending] = useState(false);
+    const [attachments, setAttachments] = useState([]); // File[] queued like Messenger
     const messagesEndRef = useRef(null);
     const { socket, isConnected, connectSocket } = useSocket();
 
@@ -45,17 +47,9 @@ export default function Chat() {
             if (!isConnected) {
                 connectSocket('User'); // Connect as User role
             }
-            // Immediately request admin support
-            if (socket) {
-                console.debug('[chat] emit request_admin_support');
-                socket.emit('request_admin_support', {
-                    message: 'User opened chat and requested live support',
-                    timestamp: new Date()
-                });
-            }
-
-            // Fetch past inquiries immediately when chat opens
+            // Fetch past inquiries and active inquiry on open
             fetchPastInquiries();
+            refreshActiveInquiry();
         }
     }, [open, isConnected, socket]);
 
@@ -109,55 +103,153 @@ export default function Chat() {
 
     // Quick questions and bot answers removed
 
-    // Handle switching to admin mode
-    const requestAdmin = () => {
-        setChatMode('admin');
-        setAdminRequested(true);
-        const adminRequestMsg = { 
-            from: 'system', 
-            text: '🔵 Live support engaged. An agent will assist you shortly.', 
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-        };
-        setMessages(prev => [...prev, adminRequestMsg]);
-        if (socket && isConnected) {
-            socket.emit('request_admin_support', {
-                message: 'User requested live support',
-                timestamp: new Date()
-            });
-        }
-    };
+    // Removed automatic admin support request; new inquiry will be created on first user message
 
     // Bot mode is removed
 
     // Handle sending a message
-    const handleSend = (e) => {
+    const handleSend = async (e) => {
         e.preventDefault();
-        if (!message.trim()) return;
-        
-        const userMsg = { 
-            from: 'user', 
-            text: message, 
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-        };
-        
-        setMessages(prev => [...prev, userMsg]);
-        
-        // Emit message to server if connected
-        if (isConnected && socket) {
-            console.debug('[chat] emit chat_message', { len: message.length });
-            socket.emit('chat_message', {
-                message: message,
-                timestamp: new Date(),
-                mode: 'user'  // Always 'user' since this is a user sending a message
-            });
+        if (!message.trim() && attachments.length === 0) return;
 
-            // Refresh conversation history after sending message
-            setTimeout(() => {
-                fetchPastInquiries();
-            }, 1000); // Small delay to ensure message is processed
+        setSending(true);
+
+        // 1) If there's text, optimistically append and emit it (creates inquiry if needed)
+        if (message.trim()) {
+            const userMsg = {
+                from: 'user',
+                text: message,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            setMessages(prev => [...prev, userMsg]);
+
+            if (isConnected && socket) {
+                console.debug('[chat] emit chat_message', { len: message.length });
+                socket.emit('chat_message', {
+                    message: message,
+                    timestamp: new Date(),
+                    mode: 'user'
+                });
+            }
         }
-        
+
+        // 2) Ensure we have an active inquiry id (poll briefly if it was just created by message)
+        const wait = (ms) => new Promise(res => setTimeout(res, ms));
+        let inquiry = activeInquiry;
+        if (!inquiry?.id) {
+            // try a few times to wait for server to create the inquiry after first message
+            for (let i = 0; i < 5 && !inquiry?.id; i++) {
+                // eslint-disable-next-line no-await-in-loop
+                inquiry = await refreshActiveInquiry();
+                if (inquiry?.id) break;
+                // eslint-disable-next-line no-await-in-loop
+                await wait(300);
+            }
+        }
+
+        // 3) Upload queued attachments sequentially once we have an inquiry
+        if (attachments.length > 0) {
+            if (!inquiry?.id) {
+                // If still no inquiry and no message was sent, ask user to type a message
+                if (!message.trim()) {
+                    alert('Please enter a message before sending attachments.');
+                    setSending(false);
+                    return;
+                }
+            } else {
+                for (let i = 0; i < attachments.length; i++) {
+                    const file = attachments[i];
+                    try {
+                        const form = new FormData();
+                        form.append('file', file);
+                        // eslint-disable-next-line no-await-in-loop
+                        const res = await fetch(`/api/inquiries/${inquiry.id}/attachments`, {
+                            method: 'POST',
+                            body: form,
+                            credentials: 'include',
+                        });
+                        if (!res.ok) {
+                            // eslint-disable-next-line no-await-in-loop
+                            const text = await res.text();
+                            throw new Error(text || 'Upload failed');
+                        }
+                        // eslint-disable-next-line no-await-in-loop
+                        const { data } = await res.json();
+                        const bubbleUrl = data.streamUrl || data.filepath;
+                        setMessages(prev => [
+                            ...prev,
+                            { from: 'user', text: bubbleUrl, mime: data.mimetype, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+                        ]);
+
+                        if (socket && isConnected) {
+                            socket.emit('inquiry_attachment_uploaded', {
+                                inquiryId: inquiry.id,
+                                filename: data.filename,
+                                streamUrl: bubbleUrl,
+                                filesize: data.filesize,
+                                mimetype: data.mimetype,
+                            });
+                        }
+                    } catch (err) {
+                        console.error('Attachment upload failed:', err);
+                        alert(err?.message || 'Attachment upload failed');
+                        // continue with next file
+                    }
+                }
+            }
+        }
+
+        // 4) Cleanup and refresh
         setMessage('');
+        setAttachments([]);
+        fetchPastInquiries();
+        setSending(false);
+    };
+    // Helper: refresh active inquiry
+    const refreshActiveInquiry = async () => {
+        try {
+            const res = await fetch('/api/inquiries/active/me', { credentials: 'include' });
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.id) {
+                    setActiveInquiry(data);
+                    return data;
+                }
+            }
+        } catch (e) {
+            console.error('refreshActiveInquiry failed', e);
+        }
+        setActiveInquiry(null);
+        return null;
+    };
+
+
+    const onPickFile = (e) => {
+        const list = Array.from(e.target.files || []);
+        if (list.length === 0) return;
+        const allowed = ['image/jpeg','image/png','image/webp','image/gif','application/pdf'];
+        const maxBytes = 3 * 1024 * 1024; // align with server limit
+        const next = [];
+        let rejected = 0;
+        for (const f of list) {
+            if (!allowed.includes(f.type)) { rejected++; continue; }
+            if (f.size > maxBytes) { rejected++; continue; }
+            next.push(f);
+        }
+        if (rejected > 0) {
+            alert(`${rejected} file(s) were skipped due to type/size limits (images/PDF up to 3MB).`);
+        }
+        // Merge with existing; optional cap of 10 files
+        setAttachments(prev => {
+            const merged = [...prev, ...next];
+            return merged.slice(0, 10);
+        });
+        // reset input so same files can be picked again if removed
+        e.target.value = '';
+    };
+
+    const removeAttachment = (index) => {
+        setAttachments(prev => prev.filter((_, i) => i !== index));
     };
     // Bot reply logic removed
 
@@ -219,7 +311,7 @@ export default function Chat() {
     setMessages(inquiryMessages);
     setChatMode('admin'); // Switch to admin mode for historical inquiries
 
-        // If the inquiry is still in progress, reconnect to that specific conversation
+    // If the inquiry is still in progress, reconnect to that specific conversation
     if (inquiry.status === 'IN_PROGRESS' || inquiry.status === 'PENDING') {
             if (socket && isConnected) {
                 console.debug('[chat] joining inquiry room', { inquiryId: inquiry.id });
@@ -242,9 +334,16 @@ export default function Chat() {
             if (response.ok) {
                 // Refresh the inquiries list
                 await fetchPastInquiries();
-                // If current conversation was resolved, go to new conversation
+                // If current conversation was resolved, clear active state (do not auto-start a new inquiry)
                 if (activeInquiry?.id === inquiryId) {
-                    startNewConversation();
+                    setActiveInquiry(null);
+                    setMessages([
+                        { 
+                            from: 'system', 
+                            text: 'Conversation resolved. Send a message to start a new inquiry.', 
+                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+                        }
+                    ]);
                 }
             }
         } catch (error) {
@@ -254,18 +353,17 @@ export default function Chat() {
 
     // Reset to new conversation
     const startNewConversation = () => {
-    setActiveInquiry(null);
+        setActiveInquiry(null);
         setSearchQuery('');
         setMessages([
             { 
                 from: 'system', 
-                text: 'New conversation started. You\'re connected to a live support agent.', 
+                text: 'New message draft started. Send your message to open a new inquiry.', 
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
             }
         ]);
         setChatMode('admin');
-    setActiveTab('active');
-    requestAdmin();
+        setActiveTab('active');
     };
 
     // Filter inquiries based on search query
@@ -624,7 +722,23 @@ export default function Chat() {
                                             {msg.from === 'system' && (
                                                 <div className="text-xs text-gray-600 font-semibold mb-1">System</div>
                                             )}
-                                            {msg.text}
+                                            {(() => {
+                                                const text = msg.text;
+                                                const mime = msg.mime;
+                                                const isPublic = typeof text === 'string' && text.startsWith('/public/');
+                                                const isStream = typeof text === 'string' && text.startsWith('/api/inquiries/attachments/');
+                                                const isMedia = isPublic || isStream;
+                                                const isImg = (mime?.startsWith?.('image/')) || (isPublic && /\.(png|jpe?g|webp|gif)$/i.test(text));
+                                                const isVid = (mime?.startsWith?.('video/')) || (isPublic && /\.(mp4|webm)$/i.test(text));
+                                                if (isMedia && isImg) return <img src={text} alt="attachment" className="max-w-xs rounded-lg border" />;
+                                                if (isMedia && isVid) return (
+                                                    <video className="max-w-xs rounded-lg border" controls>
+                                                        <source src={text} />
+                                                    </video>
+                                                );
+                                                if (isMedia) return <a href={text} target="_blank" rel="noreferrer" className="underline">Download file</a>;
+                                                return text;
+                                            })()}
                                         </div>
                                         <span className={`text-xs mt-1.5 px-2 ${msg.from === 'user' ? 'text-gray-500' : 'text-gray-400'}`}>
                                             {msg.time}
@@ -658,30 +772,65 @@ export default function Chat() {
                                 onSubmit={handleSend}
                                 autoComplete="off"
                             >
-                                <div className="flex-1 relative">
-                                    <input
-                                        type="text"
-                                        placeholder={'Message live agent...'}
-                                        className="w-full rounded-2xl px-5 py-3 pr-12 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 bg-slate-50 focus:bg-white text-sm transition-all duration-200 placeholder-slate-500"
-                                        value={message}
-                                        onChange={e => setMessage(e.target.value)}
-                                        autoFocus
-                                        maxLength={500}
-                                        disabled={false}
-                                    />
-                                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-slate-400">
-                                        {message.length}/500
+                                <div className="flex-1">
+                                    {/* Attachment previews inside the input area */}
+                                    {attachments.length > 0 && (
+                                        <div className="mb-2 flex flex-wrap gap-2">
+                                            {attachments.map((f, idx) => {
+                                                const isImg = f.type.startsWith('image/');
+                                                const url = isImg ? URL.createObjectURL(f) : null;
+                                                return (
+                                                    <div key={idx} className="relative group border border-slate-200 rounded-xl p-1 bg-slate-50">
+                                                        <div className="w-16 h-16 rounded-lg overflow-hidden flex items-center justify-center bg-white">
+                                                            {isImg ? (
+                                                                <img src={url} alt={f.name} className="object-cover w-full h-full" onLoad={() => url && URL.revokeObjectURL(url)} />
+                                                            ) : (
+                                                                <div className="text-xs text-slate-600 p-2 text-center">
+                                                                    <div className="font-medium truncate w-14" title={f.name}>{f.name}</div>
+                                                                    <div className="text-[10px] mt-1">{Math.ceil(f.size/1024)} KB</div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <button type="button" onClick={() => removeAttachment(idx)} className="absolute -top-2 -right-2 bg-white border border-slate-300 rounded-full w-6 h-6 shadow-sm hidden group-hover:flex items-center justify-center text-slate-700">
+                                                            ×
+                                                        </button>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            placeholder={'Message live agent...'}
+                                            className="w-full rounded-2xl px-5 py-3 pr-12 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 bg-slate-50 focus:bg-white text-sm transition-all duration-200 placeholder-slate-500"
+                                            value={message}
+                                            onChange={e => setMessage(e.target.value)}
+                                            autoFocus
+                                            maxLength={500}
+                                            disabled={sending}
+                                        />
+                                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-slate-400">
+                                            {message.length}/500
+                                        </div>
                                     </div>
+                                </div>
+                                <div className="relative">
+                                    <input id="chat_file" type="file" className="hidden" onChange={onPickFile} multiple />
+                                    <label htmlFor="chat_file" className="cursor-pointer p-3 rounded-2xl border border-slate-300 hover:bg-slate-50 text-slate-600 text-sm flex items-center gap-2">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9"/></svg>
+                                        {attachments.length > 0 ? `${attachments.length} file${attachments.length>1?'s':''}` : 'Attach'}
+                                    </label>
                                 </div>
                                 <button
                                     type="submit"
                                     className={`text-white rounded-2xl px-6 py-3 transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center gap-2 ${
                                         'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700'
                                     }`}
-                                    disabled={!message.trim()}
+                                    disabled={sending || (!message.trim() && attachments.length === 0)}
                                 >
                                     <>
-                                        <span>Send</span>
+                                        <span>{sending ? 'Sending…' : 'Send'}</span>
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                         </svg>

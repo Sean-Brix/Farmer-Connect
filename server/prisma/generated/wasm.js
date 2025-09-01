@@ -172,6 +172,8 @@ exports.Prisma.AccountScalarFieldEnum = {
   incomeSource: 'incomeSource',
   picture: 'picture',
   mimeType: 'mimeType',
+  resetTokenHash: 'resetTokenHash',
+  resetTokenExpiry: 'resetTokenExpiry',
   client_profile: 'client_profile',
   address: 'address',
   createdAt: 'createdAt',
@@ -281,6 +283,7 @@ exports.Prisma.InquiryAttachmentScalarFieldEnum = {
   filepath: 'filepath',
   filesize: 'filesize',
   mimetype: 'mimetype',
+  fileData: 'fileData',
   inquiryId: 'inquiryId',
   uploadedById: 'uploadedById',
   createdAt: 'createdAt'
@@ -338,6 +341,49 @@ exports.Prisma.UserPreferenceScalarFieldEnum = {
   userId: 'userId',
   key: 'key',
   value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RegisteredCropScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  cropType: 'cropType',
+  variety: 'variety',
+  plantingDate: 'plantingDate',
+  expectedHarvest: 'expectedHarvest',
+  area: 'area',
+  status: 'status',
+  currentStage: 'currentStage',
+  expectedYield: 'expectedYield',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CropMonthlyReportScalarFieldEnum = {
+  id: 'id',
+  cropId: 'cropId',
+  reportDate: 'reportDate',
+  growthStage: 'growthStage',
+  plantHeight: 'plantHeight',
+  healthStatus: 'healthStatus',
+  estimatedYield: 'estimatedYield',
+  weatherImpact: 'weatherImpact',
+  notes: 'notes',
+  pestsObserved: 'pestsObserved',
+  diseasesObserved: 'diseasesObserved',
+  fertilizersApplied: 'fertilizersApplied',
+  pesticideApplications: 'pesticideApplications',
+  irrigationFrequency: 'irrigationFrequency',
+  soilCondition: 'soilCondition',
+  majorActivities: 'majorActivities',
+  challenges: 'challenges',
+  plannedActions: 'plannedActions',
+  actualYield: 'actualYield',
+  costs: 'costs',
+  submissionDate: 'submissionDate',
+  weatherSnapshot: 'weatherSnapshot',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -489,6 +535,7 @@ exports.Prisma.AccountOrderByRelevanceFieldEnum = {
   youthOthersSpecify: 'youthOthersSpecify',
   grossAnnualIncome: 'grossAnnualIncome',
   mimeType: 'mimeType',
+  resetTokenHash: 'resetTokenHash',
   address: 'address'
 };
 
@@ -596,6 +643,31 @@ exports.Prisma.UserPreferenceOrderByRelevanceFieldEnum = {
   userId: 'userId',
   key: 'key',
   value: 'value'
+};
+
+exports.Prisma.RegisteredCropOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  cropType: 'cropType',
+  variety: 'variety',
+  notes: 'notes'
+};
+
+exports.Prisma.CropMonthlyReportOrderByRelevanceFieldEnum = {
+  id: 'id',
+  cropId: 'cropId',
+  healthStatus: 'healthStatus',
+  weatherImpact: 'weatherImpact',
+  notes: 'notes',
+  pestsObserved: 'pestsObserved',
+  diseasesObserved: 'diseasesObserved',
+  fertilizersApplied: 'fertilizersApplied',
+  pesticideApplications: 'pesticideApplications',
+  irrigationFrequency: 'irrigationFrequency',
+  soilCondition: 'soilCondition',
+  majorActivities: 'majorActivities',
+  challenges: 'challenges',
+  plannedActions: 'plannedActions'
 };
 
 exports.Prisma.SeminarOrderByRelevanceFieldEnum = {
@@ -832,6 +904,22 @@ exports.transaction_status = exports.$Enums.transaction_status = {
   Cancelled: 'Cancelled'
 };
 
+exports.CropStatus = exports.$Enums.CropStatus = {
+  Active: 'Active',
+  Inactive: 'Inactive',
+  Completed: 'Completed',
+  Archived: 'Archived'
+};
+
+exports.GrowthStage = exports.$Enums.GrowthStage = {
+  Seedling: 'Seedling',
+  Vegetative: 'Vegetative',
+  Flowering: 'Flowering',
+  Fruiting: 'Fruiting',
+  Maturity: 'Maturity',
+  Harvested: 'Harvested'
+};
+
 exports.seminar_status = exports.$Enums.seminar_status = {
   Upcoming: 'Upcoming',
   Ongoing: 'Ongoing',
@@ -891,6 +979,8 @@ exports.Prisma.ModelName = {
   ItemStack: 'ItemStack',
   ItemTransaction: 'ItemTransaction',
   UserPreference: 'UserPreference',
+  RegisteredCrop: 'RegisteredCrop',
+  CropMonthlyReport: 'CropMonthlyReport',
   Seminar: 'Seminar',
   SeminarParticipant: 'SeminarParticipant',
   SurveyForm: 'SurveyForm',

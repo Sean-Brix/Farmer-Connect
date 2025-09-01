@@ -248,6 +248,25 @@ function setup_socket(io){
             }
         });
 
+        // For future: attachment notifications (users may upload via REST)
+        socket.on('inquiry_attachment_uploaded', (payload) => {
+            // payload: { inquiryId, filename, streamUrl, filesize, mimetype } (or legacy: filepath)
+            try {
+                if (payload?.inquiryId) {
+                    io.to('admin_room').emit('admin_inquiry:attachment', payload);
+                    const ts = new Date().toISOString();
+                    io.to('admin_room').emit('admin_inquiry:message_update', {
+                        inquiryId: payload.inquiryId,
+                        lastMessage: `📎 ${payload.filename}`,
+                        timestamp: ts,
+                        sender: 'USER',
+                    });
+                }
+            } catch (e) {
+                console.error('[io] inquiry_attachment_uploaded error', e?.message);
+            }
+        });
+
         // Handle admin replies
         socket.on('admin_reply', async (data) => {
             console.log('[io] admin_reply', { adminId: socket.user?.id, toUserId: data?.userId, len: (data?.message||'').length });

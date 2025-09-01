@@ -893,13 +893,15 @@ async function createInquiries() {
     const randomAdmin = adminAccounts[Math.floor(Math.random() * adminAccounts.length)];
 
     // Create the inquiry
-    const createdInquiry = await prisma.inquiry.create({
+  const lifecycleStatus = mapStatus(inquiryItem.status);
+  const shouldAssign = lifecycleStatus === 'IN_PROGRESS' || lifecycleStatus === 'WAITING_USER' || lifecycleStatus === 'RESOLVED';
+  const createdInquiry = await prisma.inquiry.create({
       data: {
-        subject: inquiryItem.title || inquiryItem.subject || 'Chat Inquiry',
-        message: inquiryItem.description || inquiryItem.message || 'Initial inquiry message',
-        status: mapStatus(inquiryItem.status),
+    subject: inquiryItem.title || inquiryItem.subject || 'Chat Inquiry',
+    message: inquiryItem.description || inquiryItem.message || 'Initial inquiry message',
+    status: lifecycleStatus,
         userId: randomUser.id,
-        assignedToId: inquiryItem.status !== 'PENDING' ? randomAdmin.id : null,
+    assignedToId: shouldAssign ? randomAdmin.id : null,
         createdAt: new Date(inquiryItem.createdAt),
       }
     });
@@ -925,9 +927,39 @@ async function createInquiries() {
       where: { id: createdInquiry.id },
       data: {
         updatedAt: new Date(inquiryItem.updatedAt),
-        resolvedAt: inquiryItem.resolvedAt ? new Date(inquiryItem.resolvedAt) : null
+        resolvedAt: lifecycleStatus === 'RESOLVED' && inquiryItem.resolvedAt ? new Date(inquiryItem.resolvedAt) : null
       }
     });
+
+    // Optionally add 0-2 attachments to some inquiries
+    const attachCount = Math.random() < 0.3 ? Math.floor(Math.random() * 3) : 0;
+    for (let k = 0; k < attachCount; k++) {
+        const fakeName = `sample_${k + 1}.jpg`;
+        try {
+          await prisma.inquiryAttachment.create({
+            data: {
+              inquiryId: createdInquiry.id,
+              filename: fakeName,
+              filepath: null,
+              filesize: 123456,
+              mimetype: 'image/jpeg',
+              uploadedById: randomUser.id,
+              fileData: Buffer.from([137,80,78,71]), // PNG header bytes as placeholder
+            },
+          });
+        } catch (e) {
+          await prisma.inquiryAttachment.create({
+            data: {
+              inquiryId: createdInquiry.id,
+              filename: fakeName,
+              filepath: null,
+              filesize: 123456,
+              mimetype: 'image/jpeg',
+              uploadedById: randomUser.id,
+            },
+          });
+        }
+    }
   }
 
   console.log(`Created ${inquiryData.inquiries.length} inquiries with their replies.`);

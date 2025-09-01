@@ -79,6 +79,10 @@ model Account {
   picture  Bytes?
   mimeType String?
 
+  // Password Reset
+  resetTokenHash   String?
+  resetTokenExpiry DateTime?
+
   // Legacy fields (kept for compatibility)
   client_profile client_profile @default(Other)
   address        String? // Legacy address field
@@ -113,6 +117,9 @@ model Account {
 
   // User Preferences Relations
   preferences UserPreference[]
+
+  // Seed Tracking Relations
+  registeredCrops RegisteredCrop[]
 
   @@map("accounts")
 }
@@ -524,9 +531,10 @@ model InquiryAttachment {
 
   // File Information
   filename String // Original filename
-  filepath String // Stored file path
+  filepath String? // Stored file path (optional; legacy)
   filesize Int // File size in bytes
   mimetype String // MIME type
+  fileData Bytes? // Binary data (for inline serving like user profile photos)
 
   // Relations
   inquiryId String // Parent inquiry
@@ -708,6 +716,80 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+//? ===================================== SEED TRACKING SCHEMA ===================================== ?//
+
+enum CropStatus {
+  Active
+  Inactive
+  Completed
+  Archived
+}
+
+enum GrowthStage {
+  Seedling
+  Vegetative
+  Flowering
+  Fruiting
+  Maturity
+  Harvested
+}
+
+model RegisteredCrop {
+  id              String      @id @default(cuid())
+  userId          String
+  cropType        String
+  variety         String
+  plantingDate    DateTime
+  expectedHarvest DateTime?
+  area            Float?
+  status          CropStatus  @default(Active)
+  currentStage    GrowthStage @default(Seedling)
+  expectedYield   Float?
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Relations
+  user    Account             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reports CropMonthlyReport[]
+
+  @@index([userId, cropType, status])
+  @@map("registered_crops")
+}
+
+model CropMonthlyReport {
+  id                    String      @id @default(cuid())
+  cropId                String
+  reportDate            DateTime
+  growthStage           GrowthStage
+  plantHeight           Float?
+  healthStatus          String?
+  estimatedYield        Float?
+  weatherImpact         String?
+  notes                 String?
+  pestsObserved         String?
+  diseasesObserved      String?
+  fertilizersApplied    String?
+  pesticideApplications String?
+  irrigationFrequency   String?
+  soilCondition         String?
+  majorActivities       String?
+  challenges            String?
+  plannedActions        String?
+  actualYield           Float?
+  costs                 Json?
+  submissionDate        DateTime    @default(now())
+  weatherSnapshot       Json?
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  // Relations
+  crop RegisteredCrop @relation(fields: [cropId], references: [id], onDelete: Cascade)
+
+  @@index([cropId, reportDate])
+  @@map("crop_monthly_reports")
 }
 
 //? ===================================== SEMINARS SCHEMA ===================================== ?//

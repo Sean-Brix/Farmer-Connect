@@ -86,9 +86,10 @@ model InquiryAttachment {
   
   // File Information
   filename    String      // Original filename
-  filepath    String      // Stored file path
+  filepath    String?     // Stored file path (optional; legacy)
   filesize    Int         // File size in bytes
   mimetype    String      // MIME type
+  fileData    Bytes?      // Binary data (for inline serving like user profile photos)
   
   // Relations
   inquiryId   String      // Parent inquiry

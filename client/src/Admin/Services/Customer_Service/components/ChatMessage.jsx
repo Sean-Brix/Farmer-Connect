@@ -7,6 +7,33 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
   // Get the user name from either userName prop or getUserName function
   const displayName = userName || (getUserName && chat ? getUserName(chat) : 'Unknown User');
 
+  // Detect attachment-like content if backend enriches messages later
+  const isMediaUrl = (url) => typeof url === 'string' && (/\.(png|jpe?g|webp|gif|mp4|webm)$/i.test(url) || url.startsWith('/api/inquiries/attachments/'));
+  const isImage = (url, mime) => (mime?.startsWith?.('image/')) || (typeof url === 'string' && /\.(png|jpe?g|webp|gif)$/i.test(url));
+  const isVideo = (url, mime) => (mime?.startsWith?.('video/')) || (typeof url === 'string' && /\.(mp4|webm)$/i.test(url));
+
+  const renderBody = () => {
+    // When using InquiryReply, we only have message text. If we enhance it to carry attachments, support arrays.
+    const text = message.message;
+    const mime = message.attachmentMime || message.mime;
+    // Preview for /public or streamed /api attachments
+    if (typeof text === 'string' && (text.startsWith('/public/') || text.startsWith('/api/inquiries/attachments/'))) {
+      const url = text;
+      if (isImage(url, mime)) return <img src={url} alt="attachment" className="max-w-xs rounded-lg border" />;
+      if (isVideo(url, mime)) return (
+        <video className="max-w-xs rounded-lg border" controls>
+          <source src={url} />
+        </video>
+      );
+      return (
+        <a href={url} target="_blank" rel="noreferrer" className="underline">
+          Download file
+        </a>
+      );
+    }
+    return <p>{text}</p>;
+  };
+
   return (
     <div className={`flex ${isAdmin ? 'justify-end' : 'justify-start'} items-end gap-2`}>
       {isUser && (
@@ -23,7 +50,7 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
             ? 'bg-green-600 text-white rounded-br-md'
             : 'bg-white text-gray-800 border border-gray-200 rounded-bl-md'
         }`}>
-          <p>{message.message}</p>
+          {renderBody()}
         </div>
         <span className="text-xs text-gray-500 mt-1 px-2">
           {new Date(message.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

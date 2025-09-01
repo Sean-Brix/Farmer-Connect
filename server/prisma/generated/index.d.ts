@@ -89,6 +89,16 @@ export type ItemTransaction = $Result.DefaultSelection<Prisma.$ItemTransactionPa
  */
 export type UserPreference = $Result.DefaultSelection<Prisma.$UserPreferencePayload>
 /**
+ * Model RegisteredCrop
+ * 
+ */
+export type RegisteredCrop = $Result.DefaultSelection<Prisma.$RegisteredCropPayload>
+/**
+ * Model CropMonthlyReport
+ * 
+ */
+export type CropMonthlyReport = $Result.DefaultSelection<Prisma.$CropMonthlyReportPayload>
+/**
  * Model Seminar
  * 
  */
@@ -358,6 +368,28 @@ export const item_category: {
 export type item_category = (typeof item_category)[keyof typeof item_category]
 
 
+export const CropStatus: {
+  Active: 'Active',
+  Inactive: 'Inactive',
+  Completed: 'Completed',
+  Archived: 'Archived'
+};
+
+export type CropStatus = (typeof CropStatus)[keyof typeof CropStatus]
+
+
+export const GrowthStage: {
+  Seedling: 'Seedling',
+  Vegetative: 'Vegetative',
+  Flowering: 'Flowering',
+  Fruiting: 'Fruiting',
+  Maturity: 'Maturity',
+  Harvested: 'Harvested'
+};
+
+export type GrowthStage = (typeof GrowthStage)[keyof typeof GrowthStage]
+
+
 export const seminar_status: {
   Upcoming: 'Upcoming',
   Ongoing: 'Ongoing',
@@ -480,6 +512,14 @@ export const item_status: typeof $Enums.item_status
 export type item_category = $Enums.item_category
 
 export const item_category: typeof $Enums.item_category
+
+export type CropStatus = $Enums.CropStatus
+
+export const CropStatus: typeof $Enums.CropStatus
+
+export type GrowthStage = $Enums.GrowthStage
+
+export const GrowthStage: typeof $Enums.GrowthStage
 
 export type seminar_status = $Enums.seminar_status
 
@@ -768,6 +808,26 @@ export class PrismaClient<
     * ```
     */
   get userPreference(): Prisma.UserPreferenceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.registeredCrop`: Exposes CRUD operations for the **RegisteredCrop** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RegisteredCrops
+    * const registeredCrops = await prisma.registeredCrop.findMany()
+    * ```
+    */
+  get registeredCrop(): Prisma.RegisteredCropDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.cropMonthlyReport`: Exposes CRUD operations for the **CropMonthlyReport** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CropMonthlyReports
+    * const cropMonthlyReports = await prisma.cropMonthlyReport.findMany()
+    * ```
+    */
+  get cropMonthlyReport(): Prisma.CropMonthlyReportDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.seminar`: Exposes CRUD operations for the **Seminar** model.
@@ -1293,6 +1353,8 @@ export namespace Prisma {
     ItemStack: 'ItemStack',
     ItemTransaction: 'ItemTransaction',
     UserPreference: 'UserPreference',
+    RegisteredCrop: 'RegisteredCrop',
+    CropMonthlyReport: 'CropMonthlyReport',
     Seminar: 'Seminar',
     SeminarParticipant: 'SeminarParticipant',
     SurveyForm: 'SurveyForm',
@@ -1318,7 +1380,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "auditLog" | "chatRoom" | "chatParticipant" | "chatMessage" | "chatAttachment" | "chatReadReceipt" | "inquiry" | "inquiryReply" | "inquiryAttachment" | "fAQ" | "inventoryItem" | "itemStack" | "itemTransaction" | "userPreference" | "seminar" | "seminarParticipant" | "surveyForm" | "surveyField" | "surveyResponse" | "surveyAnswer" | "surveyStatistic"
+      modelProps: "account" | "auditLog" | "chatRoom" | "chatParticipant" | "chatMessage" | "chatAttachment" | "chatReadReceipt" | "inquiry" | "inquiryReply" | "inquiryAttachment" | "fAQ" | "inventoryItem" | "itemStack" | "itemTransaction" | "userPreference" | "registeredCrop" | "cropMonthlyReport" | "seminar" | "seminarParticipant" | "surveyForm" | "surveyField" | "surveyResponse" | "surveyAnswer" | "surveyStatistic"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2312,6 +2374,138 @@ export namespace Prisma {
           }
         }
       }
+      RegisteredCrop: {
+        payload: Prisma.$RegisteredCropPayload<ExtArgs>
+        fields: Prisma.RegisteredCropFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RegisteredCropFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegisteredCropPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RegisteredCropFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegisteredCropPayload>
+          }
+          findFirst: {
+            args: Prisma.RegisteredCropFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegisteredCropPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RegisteredCropFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegisteredCropPayload>
+          }
+          findMany: {
+            args: Prisma.RegisteredCropFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegisteredCropPayload>[]
+          }
+          create: {
+            args: Prisma.RegisteredCropCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegisteredCropPayload>
+          }
+          createMany: {
+            args: Prisma.RegisteredCropCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.RegisteredCropDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegisteredCropPayload>
+          }
+          update: {
+            args: Prisma.RegisteredCropUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegisteredCropPayload>
+          }
+          deleteMany: {
+            args: Prisma.RegisteredCropDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RegisteredCropUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.RegisteredCropUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegisteredCropPayload>
+          }
+          aggregate: {
+            args: Prisma.RegisteredCropAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRegisteredCrop>
+          }
+          groupBy: {
+            args: Prisma.RegisteredCropGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RegisteredCropGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RegisteredCropCountArgs<ExtArgs>
+            result: $Utils.Optional<RegisteredCropCountAggregateOutputType> | number
+          }
+        }
+      }
+      CropMonthlyReport: {
+        payload: Prisma.$CropMonthlyReportPayload<ExtArgs>
+        fields: Prisma.CropMonthlyReportFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CropMonthlyReportFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CropMonthlyReportPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CropMonthlyReportFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CropMonthlyReportPayload>
+          }
+          findFirst: {
+            args: Prisma.CropMonthlyReportFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CropMonthlyReportPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CropMonthlyReportFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CropMonthlyReportPayload>
+          }
+          findMany: {
+            args: Prisma.CropMonthlyReportFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CropMonthlyReportPayload>[]
+          }
+          create: {
+            args: Prisma.CropMonthlyReportCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CropMonthlyReportPayload>
+          }
+          createMany: {
+            args: Prisma.CropMonthlyReportCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.CropMonthlyReportDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CropMonthlyReportPayload>
+          }
+          update: {
+            args: Prisma.CropMonthlyReportUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CropMonthlyReportPayload>
+          }
+          deleteMany: {
+            args: Prisma.CropMonthlyReportDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CropMonthlyReportUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CropMonthlyReportUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CropMonthlyReportPayload>
+          }
+          aggregate: {
+            args: Prisma.CropMonthlyReportAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCropMonthlyReport>
+          }
+          groupBy: {
+            args: Prisma.CropMonthlyReportGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CropMonthlyReportGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CropMonthlyReportCountArgs<ExtArgs>
+            result: $Utils.Optional<CropMonthlyReportCountAggregateOutputType> | number
+          }
+        }
+      }
       Seminar: {
         payload: Prisma.$SeminarPayload<ExtArgs>
         fields: Prisma.SeminarFieldRefs
@@ -2881,6 +3075,8 @@ export namespace Prisma {
     itemStack?: ItemStackOmit
     itemTransaction?: ItemTransactionOmit
     userPreference?: UserPreferenceOmit
+    registeredCrop?: RegisteredCropOmit
+    cropMonthlyReport?: CropMonthlyReportOmit
     seminar?: SeminarOmit
     seminarParticipant?: SeminarParticipantOmit
     surveyForm?: SurveyFormOmit
@@ -2987,6 +3183,7 @@ export namespace Prisma {
     surveyResponses: number
     surveyStatisticsCreated: number
     preferences: number
+    registeredCrops: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3009,6 +3206,7 @@ export namespace Prisma {
     surveyResponses?: boolean | AccountCountOutputTypeCountSurveyResponsesArgs
     surveyStatisticsCreated?: boolean | AccountCountOutputTypeCountSurveyStatisticsCreatedArgs
     preferences?: boolean | AccountCountOutputTypeCountPreferencesArgs
+    registeredCrops?: boolean | AccountCountOutputTypeCountRegisteredCropsArgs
   }
 
   // Custom InputTypes
@@ -3153,6 +3351,13 @@ export namespace Prisma {
    */
   export type AccountCountOutputTypeCountPreferencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserPreferenceWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountRegisteredCropsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RegisteredCropWhereInput
   }
 
 
@@ -3379,6 +3584,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type RegisteredCropCountOutputType
+   */
+
+  export type RegisteredCropCountOutputType = {
+    reports: number
+  }
+
+  export type RegisteredCropCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    reports?: boolean | RegisteredCropCountOutputTypeCountReportsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * RegisteredCropCountOutputType without action
+   */
+  export type RegisteredCropCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCropCountOutputType
+     */
+    select?: RegisteredCropCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * RegisteredCropCountOutputType without action
+   */
+  export type RegisteredCropCountOutputTypeCountReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CropMonthlyReportWhereInput
+  }
+
+
+  /**
    * Count Type SeminarCountOutputType
    */
 
@@ -3581,6 +3817,8 @@ export namespace Prisma {
     incomeSource: $Enums.IncomeSource | null
     picture: Uint8Array | null
     mimeType: string | null
+    resetTokenHash: string | null
+    resetTokenExpiry: Date | null
     client_profile: $Enums.client_profile | null
     address: string | null
     createdAt: Date | null
@@ -3634,6 +3872,8 @@ export namespace Prisma {
     incomeSource: $Enums.IncomeSource | null
     picture: Uint8Array | null
     mimeType: string | null
+    resetTokenHash: string | null
+    resetTokenExpiry: Date | null
     client_profile: $Enums.client_profile | null
     address: string | null
     createdAt: Date | null
@@ -3692,6 +3932,8 @@ export namespace Prisma {
     incomeSource: number
     picture: number
     mimeType: number
+    resetTokenHash: number
+    resetTokenExpiry: number
     client_profile: number
     address: number
     createdAt: number
@@ -3747,6 +3989,8 @@ export namespace Prisma {
     incomeSource?: true
     picture?: true
     mimeType?: true
+    resetTokenHash?: true
+    resetTokenExpiry?: true
     client_profile?: true
     address?: true
     createdAt?: true
@@ -3800,6 +4044,8 @@ export namespace Prisma {
     incomeSource?: true
     picture?: true
     mimeType?: true
+    resetTokenHash?: true
+    resetTokenExpiry?: true
     client_profile?: true
     address?: true
     createdAt?: true
@@ -3858,6 +4104,8 @@ export namespace Prisma {
     incomeSource?: true
     picture?: true
     mimeType?: true
+    resetTokenHash?: true
+    resetTokenExpiry?: true
     client_profile?: true
     address?: true
     createdAt?: true
@@ -3989,6 +4237,8 @@ export namespace Prisma {
     incomeSource: $Enums.IncomeSource | null
     picture: Uint8Array | null
     mimeType: string | null
+    resetTokenHash: string | null
+    resetTokenExpiry: Date | null
     client_profile: $Enums.client_profile
     address: string | null
     createdAt: Date
@@ -4064,6 +4314,8 @@ export namespace Prisma {
     incomeSource?: boolean
     picture?: boolean
     mimeType?: boolean
+    resetTokenHash?: boolean
+    resetTokenExpiry?: boolean
     client_profile?: boolean
     address?: boolean
     createdAt?: boolean
@@ -4087,6 +4339,7 @@ export namespace Prisma {
     surveyResponses?: boolean | Account$surveyResponsesArgs<ExtArgs>
     surveyStatisticsCreated?: boolean | Account$surveyStatisticsCreatedArgs<ExtArgs>
     preferences?: boolean | Account$preferencesArgs<ExtArgs>
+    registeredCrops?: boolean | Account$registeredCropsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -4144,13 +4397,15 @@ export namespace Prisma {
     incomeSource?: boolean
     picture?: boolean
     mimeType?: boolean
+    resetTokenHash?: boolean
+    resetTokenExpiry?: boolean
     client_profile?: boolean
     address?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "access" | "username" | "email" | "password" | "firstName" | "middleName" | "surname" | "extensionName" | "sex" | "street" | "barangay" | "municipality" | "province" | "region" | "houseNumber" | "mobileNumber" | "landlineNumber" | "birthMunicipality" | "birthProvince" | "birthCountry" | "dateOfBirth" | "religion" | "otherReligionSpecify" | "civilStatus" | "spouseName" | "femaleHouseholdMembers" | "maleHouseholdMembers" | "isHouseholdHead" | "householdHeadName" | "relationshipToHead" | "hasGovId" | "govIdType" | "govIdNumber" | "education" | "isPWD" | "disabilityType" | "livelihoodProfile" | "farmingActivities" | "fishingActivities" | "farmworkActivities" | "youthActivities" | "otherCropsSpecify" | "livestockSpecify" | "fishingOthersSpecify" | "farmworkOthersSpecify" | "youthOthersSpecify" | "grossAnnualIncome" | "incomeSource" | "picture" | "mimeType" | "client_profile" | "address" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
+  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "access" | "username" | "email" | "password" | "firstName" | "middleName" | "surname" | "extensionName" | "sex" | "street" | "barangay" | "municipality" | "province" | "region" | "houseNumber" | "mobileNumber" | "landlineNumber" | "birthMunicipality" | "birthProvince" | "birthCountry" | "dateOfBirth" | "religion" | "otherReligionSpecify" | "civilStatus" | "spouseName" | "femaleHouseholdMembers" | "maleHouseholdMembers" | "isHouseholdHead" | "householdHeadName" | "relationshipToHead" | "hasGovId" | "govIdType" | "govIdNumber" | "education" | "isPWD" | "disabilityType" | "livelihoodProfile" | "farmingActivities" | "fishingActivities" | "farmworkActivities" | "youthActivities" | "otherCropsSpecify" | "livestockSpecify" | "fishingOthersSpecify" | "farmworkOthersSpecify" | "youthOthersSpecify" | "grossAnnualIncome" | "incomeSource" | "picture" | "mimeType" | "resetTokenHash" | "resetTokenExpiry" | "client_profile" | "address" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     seminars?: boolean | Account$seminarsArgs<ExtArgs>
     itemTransactions?: boolean | Account$itemTransactionsArgs<ExtArgs>
@@ -4171,6 +4426,7 @@ export namespace Prisma {
     surveyResponses?: boolean | Account$surveyResponsesArgs<ExtArgs>
     surveyStatisticsCreated?: boolean | Account$surveyStatisticsCreatedArgs<ExtArgs>
     preferences?: boolean | Account$preferencesArgs<ExtArgs>
+    registeredCrops?: boolean | Account$registeredCropsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -4196,6 +4452,7 @@ export namespace Prisma {
       surveyResponses: Prisma.$SurveyResponsePayload<ExtArgs>[]
       surveyStatisticsCreated: Prisma.$SurveyStatisticPayload<ExtArgs>[]
       preferences: Prisma.$UserPreferencePayload<ExtArgs>[]
+      registeredCrops: Prisma.$RegisteredCropPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4249,6 +4506,8 @@ export namespace Prisma {
       incomeSource: $Enums.IncomeSource | null
       picture: Uint8Array | null
       mimeType: string | null
+      resetTokenHash: string | null
+      resetTokenExpiry: Date | null
       client_profile: $Enums.client_profile
       address: string | null
       createdAt: Date
@@ -4612,6 +4871,7 @@ export namespace Prisma {
     surveyResponses<T extends Account$surveyResponsesArgs<ExtArgs> = {}>(args?: Subset<T, Account$surveyResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     surveyStatisticsCreated<T extends Account$surveyStatisticsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, Account$surveyStatisticsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyStatisticPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     preferences<T extends Account$preferencesArgs<ExtArgs> = {}>(args?: Subset<T, Account$preferencesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    registeredCrops<T extends Account$registeredCropsArgs<ExtArgs> = {}>(args?: Subset<T, Account$registeredCropsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegisteredCropPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4692,6 +4952,8 @@ export namespace Prisma {
     readonly incomeSource: FieldRef<"Account", 'IncomeSource'>
     readonly picture: FieldRef<"Account", 'Bytes'>
     readonly mimeType: FieldRef<"Account", 'String'>
+    readonly resetTokenHash: FieldRef<"Account", 'String'>
+    readonly resetTokenExpiry: FieldRef<"Account", 'DateTime'>
     readonly client_profile: FieldRef<"Account", 'client_profile'>
     readonly address: FieldRef<"Account", 'String'>
     readonly createdAt: FieldRef<"Account", 'DateTime'>
@@ -5492,6 +5754,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserPreferenceScalarFieldEnum | UserPreferenceScalarFieldEnum[]
+  }
+
+  /**
+   * Account.registeredCrops
+   */
+  export type Account$registeredCropsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCrop
+     */
+    select?: RegisteredCropSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegisteredCrop
+     */
+    omit?: RegisteredCropOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegisteredCropInclude<ExtArgs> | null
+    where?: RegisteredCropWhereInput
+    orderBy?: RegisteredCropOrderByWithRelationInput | RegisteredCropOrderByWithRelationInput[]
+    cursor?: RegisteredCropWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RegisteredCropScalarFieldEnum | RegisteredCropScalarFieldEnum[]
   }
 
   /**
@@ -13776,6 +14062,7 @@ export namespace Prisma {
     filepath: string | null
     filesize: number | null
     mimetype: string | null
+    fileData: Uint8Array | null
     inquiryId: string | null
     uploadedById: string | null
     createdAt: Date | null
@@ -13787,6 +14074,7 @@ export namespace Prisma {
     filepath: string | null
     filesize: number | null
     mimetype: string | null
+    fileData: Uint8Array | null
     inquiryId: string | null
     uploadedById: string | null
     createdAt: Date | null
@@ -13798,6 +14086,7 @@ export namespace Prisma {
     filepath: number
     filesize: number
     mimetype: number
+    fileData: number
     inquiryId: number
     uploadedById: number
     createdAt: number
@@ -13819,6 +14108,7 @@ export namespace Prisma {
     filepath?: true
     filesize?: true
     mimetype?: true
+    fileData?: true
     inquiryId?: true
     uploadedById?: true
     createdAt?: true
@@ -13830,6 +14120,7 @@ export namespace Prisma {
     filepath?: true
     filesize?: true
     mimetype?: true
+    fileData?: true
     inquiryId?: true
     uploadedById?: true
     createdAt?: true
@@ -13841,6 +14132,7 @@ export namespace Prisma {
     filepath?: true
     filesize?: true
     mimetype?: true
+    fileData?: true
     inquiryId?: true
     uploadedById?: true
     createdAt?: true
@@ -13936,9 +14228,10 @@ export namespace Prisma {
   export type InquiryAttachmentGroupByOutputType = {
     id: string
     filename: string
-    filepath: string
+    filepath: string | null
     filesize: number
     mimetype: string
+    fileData: Uint8Array | null
     inquiryId: string
     uploadedById: string | null
     createdAt: Date
@@ -13969,6 +14262,7 @@ export namespace Prisma {
     filepath?: boolean
     filesize?: boolean
     mimetype?: boolean
+    fileData?: boolean
     inquiryId?: boolean
     uploadedById?: boolean
     createdAt?: boolean
@@ -13984,12 +14278,13 @@ export namespace Prisma {
     filepath?: boolean
     filesize?: boolean
     mimetype?: boolean
+    fileData?: boolean
     inquiryId?: boolean
     uploadedById?: boolean
     createdAt?: boolean
   }
 
-  export type InquiryAttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "filename" | "filepath" | "filesize" | "mimetype" | "inquiryId" | "uploadedById" | "createdAt", ExtArgs["result"]["inquiryAttachment"]>
+  export type InquiryAttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "filename" | "filepath" | "filesize" | "mimetype" | "fileData" | "inquiryId" | "uploadedById" | "createdAt", ExtArgs["result"]["inquiryAttachment"]>
   export type InquiryAttachmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     inquiry?: boolean | InquiryDefaultArgs<ExtArgs>
     uploadedBy?: boolean | InquiryAttachment$uploadedByArgs<ExtArgs>
@@ -14004,9 +14299,10 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       filename: string
-      filepath: string
+      filepath: string | null
       filesize: number
       mimetype: string
+      fileData: Uint8Array | null
       inquiryId: string
       uploadedById: string | null
       createdAt: Date
@@ -14386,6 +14682,7 @@ export namespace Prisma {
     readonly filepath: FieldRef<"InquiryAttachment", 'String'>
     readonly filesize: FieldRef<"InquiryAttachment", 'Int'>
     readonly mimetype: FieldRef<"InquiryAttachment", 'String'>
+    readonly fileData: FieldRef<"InquiryAttachment", 'Bytes'>
     readonly inquiryId: FieldRef<"InquiryAttachment", 'String'>
     readonly uploadedById: FieldRef<"InquiryAttachment", 'String'>
     readonly createdAt: FieldRef<"InquiryAttachment", 'DateTime'>
@@ -19837,6 +20134,2263 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserPreferenceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RegisteredCrop
+   */
+
+  export type AggregateRegisteredCrop = {
+    _count: RegisteredCropCountAggregateOutputType | null
+    _avg: RegisteredCropAvgAggregateOutputType | null
+    _sum: RegisteredCropSumAggregateOutputType | null
+    _min: RegisteredCropMinAggregateOutputType | null
+    _max: RegisteredCropMaxAggregateOutputType | null
+  }
+
+  export type RegisteredCropAvgAggregateOutputType = {
+    area: number | null
+    expectedYield: number | null
+  }
+
+  export type RegisteredCropSumAggregateOutputType = {
+    area: number | null
+    expectedYield: number | null
+  }
+
+  export type RegisteredCropMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    cropType: string | null
+    variety: string | null
+    plantingDate: Date | null
+    expectedHarvest: Date | null
+    area: number | null
+    status: $Enums.CropStatus | null
+    currentStage: $Enums.GrowthStage | null
+    expectedYield: number | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RegisteredCropMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    cropType: string | null
+    variety: string | null
+    plantingDate: Date | null
+    expectedHarvest: Date | null
+    area: number | null
+    status: $Enums.CropStatus | null
+    currentStage: $Enums.GrowthStage | null
+    expectedYield: number | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RegisteredCropCountAggregateOutputType = {
+    id: number
+    userId: number
+    cropType: number
+    variety: number
+    plantingDate: number
+    expectedHarvest: number
+    area: number
+    status: number
+    currentStage: number
+    expectedYield: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type RegisteredCropAvgAggregateInputType = {
+    area?: true
+    expectedYield?: true
+  }
+
+  export type RegisteredCropSumAggregateInputType = {
+    area?: true
+    expectedYield?: true
+  }
+
+  export type RegisteredCropMinAggregateInputType = {
+    id?: true
+    userId?: true
+    cropType?: true
+    variety?: true
+    plantingDate?: true
+    expectedHarvest?: true
+    area?: true
+    status?: true
+    currentStage?: true
+    expectedYield?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RegisteredCropMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    cropType?: true
+    variety?: true
+    plantingDate?: true
+    expectedHarvest?: true
+    area?: true
+    status?: true
+    currentStage?: true
+    expectedYield?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RegisteredCropCountAggregateInputType = {
+    id?: true
+    userId?: true
+    cropType?: true
+    variety?: true
+    plantingDate?: true
+    expectedHarvest?: true
+    area?: true
+    status?: true
+    currentStage?: true
+    expectedYield?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type RegisteredCropAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RegisteredCrop to aggregate.
+     */
+    where?: RegisteredCropWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RegisteredCrops to fetch.
+     */
+    orderBy?: RegisteredCropOrderByWithRelationInput | RegisteredCropOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RegisteredCropWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RegisteredCrops from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RegisteredCrops.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RegisteredCrops
+    **/
+    _count?: true | RegisteredCropCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RegisteredCropAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RegisteredCropSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RegisteredCropMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RegisteredCropMaxAggregateInputType
+  }
+
+  export type GetRegisteredCropAggregateType<T extends RegisteredCropAggregateArgs> = {
+        [P in keyof T & keyof AggregateRegisteredCrop]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRegisteredCrop[P]>
+      : GetScalarType<T[P], AggregateRegisteredCrop[P]>
+  }
+
+
+
+
+  export type RegisteredCropGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RegisteredCropWhereInput
+    orderBy?: RegisteredCropOrderByWithAggregationInput | RegisteredCropOrderByWithAggregationInput[]
+    by: RegisteredCropScalarFieldEnum[] | RegisteredCropScalarFieldEnum
+    having?: RegisteredCropScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RegisteredCropCountAggregateInputType | true
+    _avg?: RegisteredCropAvgAggregateInputType
+    _sum?: RegisteredCropSumAggregateInputType
+    _min?: RegisteredCropMinAggregateInputType
+    _max?: RegisteredCropMaxAggregateInputType
+  }
+
+  export type RegisteredCropGroupByOutputType = {
+    id: string
+    userId: string
+    cropType: string
+    variety: string
+    plantingDate: Date
+    expectedHarvest: Date | null
+    area: number | null
+    status: $Enums.CropStatus
+    currentStage: $Enums.GrowthStage
+    expectedYield: number | null
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: RegisteredCropCountAggregateOutputType | null
+    _avg: RegisteredCropAvgAggregateOutputType | null
+    _sum: RegisteredCropSumAggregateOutputType | null
+    _min: RegisteredCropMinAggregateOutputType | null
+    _max: RegisteredCropMaxAggregateOutputType | null
+  }
+
+  type GetRegisteredCropGroupByPayload<T extends RegisteredCropGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RegisteredCropGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RegisteredCropGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RegisteredCropGroupByOutputType[P]>
+            : GetScalarType<T[P], RegisteredCropGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RegisteredCropSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    cropType?: boolean
+    variety?: boolean
+    plantingDate?: boolean
+    expectedHarvest?: boolean
+    area?: boolean
+    status?: boolean
+    currentStage?: boolean
+    expectedYield?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | AccountDefaultArgs<ExtArgs>
+    reports?: boolean | RegisteredCrop$reportsArgs<ExtArgs>
+    _count?: boolean | RegisteredCropCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["registeredCrop"]>
+
+
+
+  export type RegisteredCropSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    cropType?: boolean
+    variety?: boolean
+    plantingDate?: boolean
+    expectedHarvest?: boolean
+    area?: boolean
+    status?: boolean
+    currentStage?: boolean
+    expectedYield?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type RegisteredCropOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "cropType" | "variety" | "plantingDate" | "expectedHarvest" | "area" | "status" | "currentStage" | "expectedYield" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["registeredCrop"]>
+  export type RegisteredCropInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | AccountDefaultArgs<ExtArgs>
+    reports?: boolean | RegisteredCrop$reportsArgs<ExtArgs>
+    _count?: boolean | RegisteredCropCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $RegisteredCropPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RegisteredCrop"
+    objects: {
+      user: Prisma.$AccountPayload<ExtArgs>
+      reports: Prisma.$CropMonthlyReportPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      cropType: string
+      variety: string
+      plantingDate: Date
+      expectedHarvest: Date | null
+      area: number | null
+      status: $Enums.CropStatus
+      currentStage: $Enums.GrowthStage
+      expectedYield: number | null
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["registeredCrop"]>
+    composites: {}
+  }
+
+  type RegisteredCropGetPayload<S extends boolean | null | undefined | RegisteredCropDefaultArgs> = $Result.GetResult<Prisma.$RegisteredCropPayload, S>
+
+  type RegisteredCropCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RegisteredCropFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RegisteredCropCountAggregateInputType | true
+    }
+
+  export interface RegisteredCropDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RegisteredCrop'], meta: { name: 'RegisteredCrop' } }
+    /**
+     * Find zero or one RegisteredCrop that matches the filter.
+     * @param {RegisteredCropFindUniqueArgs} args - Arguments to find a RegisteredCrop
+     * @example
+     * // Get one RegisteredCrop
+     * const registeredCrop = await prisma.registeredCrop.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RegisteredCropFindUniqueArgs>(args: SelectSubset<T, RegisteredCropFindUniqueArgs<ExtArgs>>): Prisma__RegisteredCropClient<$Result.GetResult<Prisma.$RegisteredCropPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RegisteredCrop that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RegisteredCropFindUniqueOrThrowArgs} args - Arguments to find a RegisteredCrop
+     * @example
+     * // Get one RegisteredCrop
+     * const registeredCrop = await prisma.registeredCrop.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RegisteredCropFindUniqueOrThrowArgs>(args: SelectSubset<T, RegisteredCropFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RegisteredCropClient<$Result.GetResult<Prisma.$RegisteredCropPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RegisteredCrop that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegisteredCropFindFirstArgs} args - Arguments to find a RegisteredCrop
+     * @example
+     * // Get one RegisteredCrop
+     * const registeredCrop = await prisma.registeredCrop.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RegisteredCropFindFirstArgs>(args?: SelectSubset<T, RegisteredCropFindFirstArgs<ExtArgs>>): Prisma__RegisteredCropClient<$Result.GetResult<Prisma.$RegisteredCropPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RegisteredCrop that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegisteredCropFindFirstOrThrowArgs} args - Arguments to find a RegisteredCrop
+     * @example
+     * // Get one RegisteredCrop
+     * const registeredCrop = await prisma.registeredCrop.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RegisteredCropFindFirstOrThrowArgs>(args?: SelectSubset<T, RegisteredCropFindFirstOrThrowArgs<ExtArgs>>): Prisma__RegisteredCropClient<$Result.GetResult<Prisma.$RegisteredCropPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RegisteredCrops that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegisteredCropFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RegisteredCrops
+     * const registeredCrops = await prisma.registeredCrop.findMany()
+     * 
+     * // Get first 10 RegisteredCrops
+     * const registeredCrops = await prisma.registeredCrop.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const registeredCropWithIdOnly = await prisma.registeredCrop.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RegisteredCropFindManyArgs>(args?: SelectSubset<T, RegisteredCropFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegisteredCropPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RegisteredCrop.
+     * @param {RegisteredCropCreateArgs} args - Arguments to create a RegisteredCrop.
+     * @example
+     * // Create one RegisteredCrop
+     * const RegisteredCrop = await prisma.registeredCrop.create({
+     *   data: {
+     *     // ... data to create a RegisteredCrop
+     *   }
+     * })
+     * 
+     */
+    create<T extends RegisteredCropCreateArgs>(args: SelectSubset<T, RegisteredCropCreateArgs<ExtArgs>>): Prisma__RegisteredCropClient<$Result.GetResult<Prisma.$RegisteredCropPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RegisteredCrops.
+     * @param {RegisteredCropCreateManyArgs} args - Arguments to create many RegisteredCrops.
+     * @example
+     * // Create many RegisteredCrops
+     * const registeredCrop = await prisma.registeredCrop.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RegisteredCropCreateManyArgs>(args?: SelectSubset<T, RegisteredCropCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a RegisteredCrop.
+     * @param {RegisteredCropDeleteArgs} args - Arguments to delete one RegisteredCrop.
+     * @example
+     * // Delete one RegisteredCrop
+     * const RegisteredCrop = await prisma.registeredCrop.delete({
+     *   where: {
+     *     // ... filter to delete one RegisteredCrop
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RegisteredCropDeleteArgs>(args: SelectSubset<T, RegisteredCropDeleteArgs<ExtArgs>>): Prisma__RegisteredCropClient<$Result.GetResult<Prisma.$RegisteredCropPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RegisteredCrop.
+     * @param {RegisteredCropUpdateArgs} args - Arguments to update one RegisteredCrop.
+     * @example
+     * // Update one RegisteredCrop
+     * const registeredCrop = await prisma.registeredCrop.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RegisteredCropUpdateArgs>(args: SelectSubset<T, RegisteredCropUpdateArgs<ExtArgs>>): Prisma__RegisteredCropClient<$Result.GetResult<Prisma.$RegisteredCropPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RegisteredCrops.
+     * @param {RegisteredCropDeleteManyArgs} args - Arguments to filter RegisteredCrops to delete.
+     * @example
+     * // Delete a few RegisteredCrops
+     * const { count } = await prisma.registeredCrop.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RegisteredCropDeleteManyArgs>(args?: SelectSubset<T, RegisteredCropDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RegisteredCrops.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegisteredCropUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RegisteredCrops
+     * const registeredCrop = await prisma.registeredCrop.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RegisteredCropUpdateManyArgs>(args: SelectSubset<T, RegisteredCropUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one RegisteredCrop.
+     * @param {RegisteredCropUpsertArgs} args - Arguments to update or create a RegisteredCrop.
+     * @example
+     * // Update or create a RegisteredCrop
+     * const registeredCrop = await prisma.registeredCrop.upsert({
+     *   create: {
+     *     // ... data to create a RegisteredCrop
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RegisteredCrop we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RegisteredCropUpsertArgs>(args: SelectSubset<T, RegisteredCropUpsertArgs<ExtArgs>>): Prisma__RegisteredCropClient<$Result.GetResult<Prisma.$RegisteredCropPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RegisteredCrops.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegisteredCropCountArgs} args - Arguments to filter RegisteredCrops to count.
+     * @example
+     * // Count the number of RegisteredCrops
+     * const count = await prisma.registeredCrop.count({
+     *   where: {
+     *     // ... the filter for the RegisteredCrops we want to count
+     *   }
+     * })
+    **/
+    count<T extends RegisteredCropCountArgs>(
+      args?: Subset<T, RegisteredCropCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RegisteredCropCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RegisteredCrop.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegisteredCropAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RegisteredCropAggregateArgs>(args: Subset<T, RegisteredCropAggregateArgs>): Prisma.PrismaPromise<GetRegisteredCropAggregateType<T>>
+
+    /**
+     * Group by RegisteredCrop.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegisteredCropGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RegisteredCropGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RegisteredCropGroupByArgs['orderBy'] }
+        : { orderBy?: RegisteredCropGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RegisteredCropGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRegisteredCropGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RegisteredCrop model
+   */
+  readonly fields: RegisteredCropFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RegisteredCrop.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RegisteredCropClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    reports<T extends RegisteredCrop$reportsArgs<ExtArgs> = {}>(args?: Subset<T, RegisteredCrop$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CropMonthlyReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RegisteredCrop model
+   */
+  interface RegisteredCropFieldRefs {
+    readonly id: FieldRef<"RegisteredCrop", 'String'>
+    readonly userId: FieldRef<"RegisteredCrop", 'String'>
+    readonly cropType: FieldRef<"RegisteredCrop", 'String'>
+    readonly variety: FieldRef<"RegisteredCrop", 'String'>
+    readonly plantingDate: FieldRef<"RegisteredCrop", 'DateTime'>
+    readonly expectedHarvest: FieldRef<"RegisteredCrop", 'DateTime'>
+    readonly area: FieldRef<"RegisteredCrop", 'Float'>
+    readonly status: FieldRef<"RegisteredCrop", 'CropStatus'>
+    readonly currentStage: FieldRef<"RegisteredCrop", 'GrowthStage'>
+    readonly expectedYield: FieldRef<"RegisteredCrop", 'Float'>
+    readonly notes: FieldRef<"RegisteredCrop", 'String'>
+    readonly createdAt: FieldRef<"RegisteredCrop", 'DateTime'>
+    readonly updatedAt: FieldRef<"RegisteredCrop", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RegisteredCrop findUnique
+   */
+  export type RegisteredCropFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCrop
+     */
+    select?: RegisteredCropSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegisteredCrop
+     */
+    omit?: RegisteredCropOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegisteredCropInclude<ExtArgs> | null
+    /**
+     * Filter, which RegisteredCrop to fetch.
+     */
+    where: RegisteredCropWhereUniqueInput
+  }
+
+  /**
+   * RegisteredCrop findUniqueOrThrow
+   */
+  export type RegisteredCropFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCrop
+     */
+    select?: RegisteredCropSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegisteredCrop
+     */
+    omit?: RegisteredCropOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegisteredCropInclude<ExtArgs> | null
+    /**
+     * Filter, which RegisteredCrop to fetch.
+     */
+    where: RegisteredCropWhereUniqueInput
+  }
+
+  /**
+   * RegisteredCrop findFirst
+   */
+  export type RegisteredCropFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCrop
+     */
+    select?: RegisteredCropSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegisteredCrop
+     */
+    omit?: RegisteredCropOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegisteredCropInclude<ExtArgs> | null
+    /**
+     * Filter, which RegisteredCrop to fetch.
+     */
+    where?: RegisteredCropWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RegisteredCrops to fetch.
+     */
+    orderBy?: RegisteredCropOrderByWithRelationInput | RegisteredCropOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RegisteredCrops.
+     */
+    cursor?: RegisteredCropWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RegisteredCrops from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RegisteredCrops.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RegisteredCrops.
+     */
+    distinct?: RegisteredCropScalarFieldEnum | RegisteredCropScalarFieldEnum[]
+  }
+
+  /**
+   * RegisteredCrop findFirstOrThrow
+   */
+  export type RegisteredCropFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCrop
+     */
+    select?: RegisteredCropSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegisteredCrop
+     */
+    omit?: RegisteredCropOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegisteredCropInclude<ExtArgs> | null
+    /**
+     * Filter, which RegisteredCrop to fetch.
+     */
+    where?: RegisteredCropWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RegisteredCrops to fetch.
+     */
+    orderBy?: RegisteredCropOrderByWithRelationInput | RegisteredCropOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RegisteredCrops.
+     */
+    cursor?: RegisteredCropWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RegisteredCrops from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RegisteredCrops.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RegisteredCrops.
+     */
+    distinct?: RegisteredCropScalarFieldEnum | RegisteredCropScalarFieldEnum[]
+  }
+
+  /**
+   * RegisteredCrop findMany
+   */
+  export type RegisteredCropFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCrop
+     */
+    select?: RegisteredCropSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegisteredCrop
+     */
+    omit?: RegisteredCropOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegisteredCropInclude<ExtArgs> | null
+    /**
+     * Filter, which RegisteredCrops to fetch.
+     */
+    where?: RegisteredCropWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RegisteredCrops to fetch.
+     */
+    orderBy?: RegisteredCropOrderByWithRelationInput | RegisteredCropOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RegisteredCrops.
+     */
+    cursor?: RegisteredCropWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RegisteredCrops from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RegisteredCrops.
+     */
+    skip?: number
+    distinct?: RegisteredCropScalarFieldEnum | RegisteredCropScalarFieldEnum[]
+  }
+
+  /**
+   * RegisteredCrop create
+   */
+  export type RegisteredCropCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCrop
+     */
+    select?: RegisteredCropSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegisteredCrop
+     */
+    omit?: RegisteredCropOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegisteredCropInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RegisteredCrop.
+     */
+    data: XOR<RegisteredCropCreateInput, RegisteredCropUncheckedCreateInput>
+  }
+
+  /**
+   * RegisteredCrop createMany
+   */
+  export type RegisteredCropCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RegisteredCrops.
+     */
+    data: RegisteredCropCreateManyInput | RegisteredCropCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RegisteredCrop update
+   */
+  export type RegisteredCropUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCrop
+     */
+    select?: RegisteredCropSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegisteredCrop
+     */
+    omit?: RegisteredCropOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegisteredCropInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RegisteredCrop.
+     */
+    data: XOR<RegisteredCropUpdateInput, RegisteredCropUncheckedUpdateInput>
+    /**
+     * Choose, which RegisteredCrop to update.
+     */
+    where: RegisteredCropWhereUniqueInput
+  }
+
+  /**
+   * RegisteredCrop updateMany
+   */
+  export type RegisteredCropUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RegisteredCrops.
+     */
+    data: XOR<RegisteredCropUpdateManyMutationInput, RegisteredCropUncheckedUpdateManyInput>
+    /**
+     * Filter which RegisteredCrops to update
+     */
+    where?: RegisteredCropWhereInput
+    /**
+     * Limit how many RegisteredCrops to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RegisteredCrop upsert
+   */
+  export type RegisteredCropUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCrop
+     */
+    select?: RegisteredCropSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegisteredCrop
+     */
+    omit?: RegisteredCropOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegisteredCropInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RegisteredCrop to update in case it exists.
+     */
+    where: RegisteredCropWhereUniqueInput
+    /**
+     * In case the RegisteredCrop found by the `where` argument doesn't exist, create a new RegisteredCrop with this data.
+     */
+    create: XOR<RegisteredCropCreateInput, RegisteredCropUncheckedCreateInput>
+    /**
+     * In case the RegisteredCrop was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RegisteredCropUpdateInput, RegisteredCropUncheckedUpdateInput>
+  }
+
+  /**
+   * RegisteredCrop delete
+   */
+  export type RegisteredCropDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCrop
+     */
+    select?: RegisteredCropSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegisteredCrop
+     */
+    omit?: RegisteredCropOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegisteredCropInclude<ExtArgs> | null
+    /**
+     * Filter which RegisteredCrop to delete.
+     */
+    where: RegisteredCropWhereUniqueInput
+  }
+
+  /**
+   * RegisteredCrop deleteMany
+   */
+  export type RegisteredCropDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RegisteredCrops to delete
+     */
+    where?: RegisteredCropWhereInput
+    /**
+     * Limit how many RegisteredCrops to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RegisteredCrop.reports
+   */
+  export type RegisteredCrop$reportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropMonthlyReport
+     */
+    select?: CropMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropMonthlyReport
+     */
+    omit?: CropMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropMonthlyReportInclude<ExtArgs> | null
+    where?: CropMonthlyReportWhereInput
+    orderBy?: CropMonthlyReportOrderByWithRelationInput | CropMonthlyReportOrderByWithRelationInput[]
+    cursor?: CropMonthlyReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CropMonthlyReportScalarFieldEnum | CropMonthlyReportScalarFieldEnum[]
+  }
+
+  /**
+   * RegisteredCrop without action
+   */
+  export type RegisteredCropDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegisteredCrop
+     */
+    select?: RegisteredCropSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegisteredCrop
+     */
+    omit?: RegisteredCropOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegisteredCropInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CropMonthlyReport
+   */
+
+  export type AggregateCropMonthlyReport = {
+    _count: CropMonthlyReportCountAggregateOutputType | null
+    _avg: CropMonthlyReportAvgAggregateOutputType | null
+    _sum: CropMonthlyReportSumAggregateOutputType | null
+    _min: CropMonthlyReportMinAggregateOutputType | null
+    _max: CropMonthlyReportMaxAggregateOutputType | null
+  }
+
+  export type CropMonthlyReportAvgAggregateOutputType = {
+    plantHeight: number | null
+    estimatedYield: number | null
+    actualYield: number | null
+  }
+
+  export type CropMonthlyReportSumAggregateOutputType = {
+    plantHeight: number | null
+    estimatedYield: number | null
+    actualYield: number | null
+  }
+
+  export type CropMonthlyReportMinAggregateOutputType = {
+    id: string | null
+    cropId: string | null
+    reportDate: Date | null
+    growthStage: $Enums.GrowthStage | null
+    plantHeight: number | null
+    healthStatus: string | null
+    estimatedYield: number | null
+    weatherImpact: string | null
+    notes: string | null
+    pestsObserved: string | null
+    diseasesObserved: string | null
+    fertilizersApplied: string | null
+    pesticideApplications: string | null
+    irrigationFrequency: string | null
+    soilCondition: string | null
+    majorActivities: string | null
+    challenges: string | null
+    plannedActions: string | null
+    actualYield: number | null
+    submissionDate: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CropMonthlyReportMaxAggregateOutputType = {
+    id: string | null
+    cropId: string | null
+    reportDate: Date | null
+    growthStage: $Enums.GrowthStage | null
+    plantHeight: number | null
+    healthStatus: string | null
+    estimatedYield: number | null
+    weatherImpact: string | null
+    notes: string | null
+    pestsObserved: string | null
+    diseasesObserved: string | null
+    fertilizersApplied: string | null
+    pesticideApplications: string | null
+    irrigationFrequency: string | null
+    soilCondition: string | null
+    majorActivities: string | null
+    challenges: string | null
+    plannedActions: string | null
+    actualYield: number | null
+    submissionDate: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CropMonthlyReportCountAggregateOutputType = {
+    id: number
+    cropId: number
+    reportDate: number
+    growthStage: number
+    plantHeight: number
+    healthStatus: number
+    estimatedYield: number
+    weatherImpact: number
+    notes: number
+    pestsObserved: number
+    diseasesObserved: number
+    fertilizersApplied: number
+    pesticideApplications: number
+    irrigationFrequency: number
+    soilCondition: number
+    majorActivities: number
+    challenges: number
+    plannedActions: number
+    actualYield: number
+    costs: number
+    submissionDate: number
+    weatherSnapshot: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CropMonthlyReportAvgAggregateInputType = {
+    plantHeight?: true
+    estimatedYield?: true
+    actualYield?: true
+  }
+
+  export type CropMonthlyReportSumAggregateInputType = {
+    plantHeight?: true
+    estimatedYield?: true
+    actualYield?: true
+  }
+
+  export type CropMonthlyReportMinAggregateInputType = {
+    id?: true
+    cropId?: true
+    reportDate?: true
+    growthStage?: true
+    plantHeight?: true
+    healthStatus?: true
+    estimatedYield?: true
+    weatherImpact?: true
+    notes?: true
+    pestsObserved?: true
+    diseasesObserved?: true
+    fertilizersApplied?: true
+    pesticideApplications?: true
+    irrigationFrequency?: true
+    soilCondition?: true
+    majorActivities?: true
+    challenges?: true
+    plannedActions?: true
+    actualYield?: true
+    submissionDate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CropMonthlyReportMaxAggregateInputType = {
+    id?: true
+    cropId?: true
+    reportDate?: true
+    growthStage?: true
+    plantHeight?: true
+    healthStatus?: true
+    estimatedYield?: true
+    weatherImpact?: true
+    notes?: true
+    pestsObserved?: true
+    diseasesObserved?: true
+    fertilizersApplied?: true
+    pesticideApplications?: true
+    irrigationFrequency?: true
+    soilCondition?: true
+    majorActivities?: true
+    challenges?: true
+    plannedActions?: true
+    actualYield?: true
+    submissionDate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CropMonthlyReportCountAggregateInputType = {
+    id?: true
+    cropId?: true
+    reportDate?: true
+    growthStage?: true
+    plantHeight?: true
+    healthStatus?: true
+    estimatedYield?: true
+    weatherImpact?: true
+    notes?: true
+    pestsObserved?: true
+    diseasesObserved?: true
+    fertilizersApplied?: true
+    pesticideApplications?: true
+    irrigationFrequency?: true
+    soilCondition?: true
+    majorActivities?: true
+    challenges?: true
+    plannedActions?: true
+    actualYield?: true
+    costs?: true
+    submissionDate?: true
+    weatherSnapshot?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CropMonthlyReportAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CropMonthlyReport to aggregate.
+     */
+    where?: CropMonthlyReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CropMonthlyReports to fetch.
+     */
+    orderBy?: CropMonthlyReportOrderByWithRelationInput | CropMonthlyReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CropMonthlyReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CropMonthlyReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CropMonthlyReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CropMonthlyReports
+    **/
+    _count?: true | CropMonthlyReportCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CropMonthlyReportAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CropMonthlyReportSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CropMonthlyReportMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CropMonthlyReportMaxAggregateInputType
+  }
+
+  export type GetCropMonthlyReportAggregateType<T extends CropMonthlyReportAggregateArgs> = {
+        [P in keyof T & keyof AggregateCropMonthlyReport]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCropMonthlyReport[P]>
+      : GetScalarType<T[P], AggregateCropMonthlyReport[P]>
+  }
+
+
+
+
+  export type CropMonthlyReportGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CropMonthlyReportWhereInput
+    orderBy?: CropMonthlyReportOrderByWithAggregationInput | CropMonthlyReportOrderByWithAggregationInput[]
+    by: CropMonthlyReportScalarFieldEnum[] | CropMonthlyReportScalarFieldEnum
+    having?: CropMonthlyReportScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CropMonthlyReportCountAggregateInputType | true
+    _avg?: CropMonthlyReportAvgAggregateInputType
+    _sum?: CropMonthlyReportSumAggregateInputType
+    _min?: CropMonthlyReportMinAggregateInputType
+    _max?: CropMonthlyReportMaxAggregateInputType
+  }
+
+  export type CropMonthlyReportGroupByOutputType = {
+    id: string
+    cropId: string
+    reportDate: Date
+    growthStage: $Enums.GrowthStage
+    plantHeight: number | null
+    healthStatus: string | null
+    estimatedYield: number | null
+    weatherImpact: string | null
+    notes: string | null
+    pestsObserved: string | null
+    diseasesObserved: string | null
+    fertilizersApplied: string | null
+    pesticideApplications: string | null
+    irrigationFrequency: string | null
+    soilCondition: string | null
+    majorActivities: string | null
+    challenges: string | null
+    plannedActions: string | null
+    actualYield: number | null
+    costs: JsonValue | null
+    submissionDate: Date
+    weatherSnapshot: JsonValue | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CropMonthlyReportCountAggregateOutputType | null
+    _avg: CropMonthlyReportAvgAggregateOutputType | null
+    _sum: CropMonthlyReportSumAggregateOutputType | null
+    _min: CropMonthlyReportMinAggregateOutputType | null
+    _max: CropMonthlyReportMaxAggregateOutputType | null
+  }
+
+  type GetCropMonthlyReportGroupByPayload<T extends CropMonthlyReportGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CropMonthlyReportGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CropMonthlyReportGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CropMonthlyReportGroupByOutputType[P]>
+            : GetScalarType<T[P], CropMonthlyReportGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CropMonthlyReportSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cropId?: boolean
+    reportDate?: boolean
+    growthStage?: boolean
+    plantHeight?: boolean
+    healthStatus?: boolean
+    estimatedYield?: boolean
+    weatherImpact?: boolean
+    notes?: boolean
+    pestsObserved?: boolean
+    diseasesObserved?: boolean
+    fertilizersApplied?: boolean
+    pesticideApplications?: boolean
+    irrigationFrequency?: boolean
+    soilCondition?: boolean
+    majorActivities?: boolean
+    challenges?: boolean
+    plannedActions?: boolean
+    actualYield?: boolean
+    costs?: boolean
+    submissionDate?: boolean
+    weatherSnapshot?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    crop?: boolean | RegisteredCropDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["cropMonthlyReport"]>
+
+
+
+  export type CropMonthlyReportSelectScalar = {
+    id?: boolean
+    cropId?: boolean
+    reportDate?: boolean
+    growthStage?: boolean
+    plantHeight?: boolean
+    healthStatus?: boolean
+    estimatedYield?: boolean
+    weatherImpact?: boolean
+    notes?: boolean
+    pestsObserved?: boolean
+    diseasesObserved?: boolean
+    fertilizersApplied?: boolean
+    pesticideApplications?: boolean
+    irrigationFrequency?: boolean
+    soilCondition?: boolean
+    majorActivities?: boolean
+    challenges?: boolean
+    plannedActions?: boolean
+    actualYield?: boolean
+    costs?: boolean
+    submissionDate?: boolean
+    weatherSnapshot?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CropMonthlyReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cropId" | "reportDate" | "growthStage" | "plantHeight" | "healthStatus" | "estimatedYield" | "weatherImpact" | "notes" | "pestsObserved" | "diseasesObserved" | "fertilizersApplied" | "pesticideApplications" | "irrigationFrequency" | "soilCondition" | "majorActivities" | "challenges" | "plannedActions" | "actualYield" | "costs" | "submissionDate" | "weatherSnapshot" | "createdAt" | "updatedAt", ExtArgs["result"]["cropMonthlyReport"]>
+  export type CropMonthlyReportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    crop?: boolean | RegisteredCropDefaultArgs<ExtArgs>
+  }
+
+  export type $CropMonthlyReportPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CropMonthlyReport"
+    objects: {
+      crop: Prisma.$RegisteredCropPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      cropId: string
+      reportDate: Date
+      growthStage: $Enums.GrowthStage
+      plantHeight: number | null
+      healthStatus: string | null
+      estimatedYield: number | null
+      weatherImpact: string | null
+      notes: string | null
+      pestsObserved: string | null
+      diseasesObserved: string | null
+      fertilizersApplied: string | null
+      pesticideApplications: string | null
+      irrigationFrequency: string | null
+      soilCondition: string | null
+      majorActivities: string | null
+      challenges: string | null
+      plannedActions: string | null
+      actualYield: number | null
+      costs: Prisma.JsonValue | null
+      submissionDate: Date
+      weatherSnapshot: Prisma.JsonValue | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["cropMonthlyReport"]>
+    composites: {}
+  }
+
+  type CropMonthlyReportGetPayload<S extends boolean | null | undefined | CropMonthlyReportDefaultArgs> = $Result.GetResult<Prisma.$CropMonthlyReportPayload, S>
+
+  type CropMonthlyReportCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CropMonthlyReportFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CropMonthlyReportCountAggregateInputType | true
+    }
+
+  export interface CropMonthlyReportDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CropMonthlyReport'], meta: { name: 'CropMonthlyReport' } }
+    /**
+     * Find zero or one CropMonthlyReport that matches the filter.
+     * @param {CropMonthlyReportFindUniqueArgs} args - Arguments to find a CropMonthlyReport
+     * @example
+     * // Get one CropMonthlyReport
+     * const cropMonthlyReport = await prisma.cropMonthlyReport.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CropMonthlyReportFindUniqueArgs>(args: SelectSubset<T, CropMonthlyReportFindUniqueArgs<ExtArgs>>): Prisma__CropMonthlyReportClient<$Result.GetResult<Prisma.$CropMonthlyReportPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CropMonthlyReport that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CropMonthlyReportFindUniqueOrThrowArgs} args - Arguments to find a CropMonthlyReport
+     * @example
+     * // Get one CropMonthlyReport
+     * const cropMonthlyReport = await prisma.cropMonthlyReport.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CropMonthlyReportFindUniqueOrThrowArgs>(args: SelectSubset<T, CropMonthlyReportFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CropMonthlyReportClient<$Result.GetResult<Prisma.$CropMonthlyReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CropMonthlyReport that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CropMonthlyReportFindFirstArgs} args - Arguments to find a CropMonthlyReport
+     * @example
+     * // Get one CropMonthlyReport
+     * const cropMonthlyReport = await prisma.cropMonthlyReport.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CropMonthlyReportFindFirstArgs>(args?: SelectSubset<T, CropMonthlyReportFindFirstArgs<ExtArgs>>): Prisma__CropMonthlyReportClient<$Result.GetResult<Prisma.$CropMonthlyReportPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CropMonthlyReport that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CropMonthlyReportFindFirstOrThrowArgs} args - Arguments to find a CropMonthlyReport
+     * @example
+     * // Get one CropMonthlyReport
+     * const cropMonthlyReport = await prisma.cropMonthlyReport.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CropMonthlyReportFindFirstOrThrowArgs>(args?: SelectSubset<T, CropMonthlyReportFindFirstOrThrowArgs<ExtArgs>>): Prisma__CropMonthlyReportClient<$Result.GetResult<Prisma.$CropMonthlyReportPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CropMonthlyReports that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CropMonthlyReportFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CropMonthlyReports
+     * const cropMonthlyReports = await prisma.cropMonthlyReport.findMany()
+     * 
+     * // Get first 10 CropMonthlyReports
+     * const cropMonthlyReports = await prisma.cropMonthlyReport.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cropMonthlyReportWithIdOnly = await prisma.cropMonthlyReport.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CropMonthlyReportFindManyArgs>(args?: SelectSubset<T, CropMonthlyReportFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CropMonthlyReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CropMonthlyReport.
+     * @param {CropMonthlyReportCreateArgs} args - Arguments to create a CropMonthlyReport.
+     * @example
+     * // Create one CropMonthlyReport
+     * const CropMonthlyReport = await prisma.cropMonthlyReport.create({
+     *   data: {
+     *     // ... data to create a CropMonthlyReport
+     *   }
+     * })
+     * 
+     */
+    create<T extends CropMonthlyReportCreateArgs>(args: SelectSubset<T, CropMonthlyReportCreateArgs<ExtArgs>>): Prisma__CropMonthlyReportClient<$Result.GetResult<Prisma.$CropMonthlyReportPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CropMonthlyReports.
+     * @param {CropMonthlyReportCreateManyArgs} args - Arguments to create many CropMonthlyReports.
+     * @example
+     * // Create many CropMonthlyReports
+     * const cropMonthlyReport = await prisma.cropMonthlyReport.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CropMonthlyReportCreateManyArgs>(args?: SelectSubset<T, CropMonthlyReportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a CropMonthlyReport.
+     * @param {CropMonthlyReportDeleteArgs} args - Arguments to delete one CropMonthlyReport.
+     * @example
+     * // Delete one CropMonthlyReport
+     * const CropMonthlyReport = await prisma.cropMonthlyReport.delete({
+     *   where: {
+     *     // ... filter to delete one CropMonthlyReport
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CropMonthlyReportDeleteArgs>(args: SelectSubset<T, CropMonthlyReportDeleteArgs<ExtArgs>>): Prisma__CropMonthlyReportClient<$Result.GetResult<Prisma.$CropMonthlyReportPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CropMonthlyReport.
+     * @param {CropMonthlyReportUpdateArgs} args - Arguments to update one CropMonthlyReport.
+     * @example
+     * // Update one CropMonthlyReport
+     * const cropMonthlyReport = await prisma.cropMonthlyReport.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CropMonthlyReportUpdateArgs>(args: SelectSubset<T, CropMonthlyReportUpdateArgs<ExtArgs>>): Prisma__CropMonthlyReportClient<$Result.GetResult<Prisma.$CropMonthlyReportPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CropMonthlyReports.
+     * @param {CropMonthlyReportDeleteManyArgs} args - Arguments to filter CropMonthlyReports to delete.
+     * @example
+     * // Delete a few CropMonthlyReports
+     * const { count } = await prisma.cropMonthlyReport.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CropMonthlyReportDeleteManyArgs>(args?: SelectSubset<T, CropMonthlyReportDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CropMonthlyReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CropMonthlyReportUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CropMonthlyReports
+     * const cropMonthlyReport = await prisma.cropMonthlyReport.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CropMonthlyReportUpdateManyArgs>(args: SelectSubset<T, CropMonthlyReportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CropMonthlyReport.
+     * @param {CropMonthlyReportUpsertArgs} args - Arguments to update or create a CropMonthlyReport.
+     * @example
+     * // Update or create a CropMonthlyReport
+     * const cropMonthlyReport = await prisma.cropMonthlyReport.upsert({
+     *   create: {
+     *     // ... data to create a CropMonthlyReport
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CropMonthlyReport we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CropMonthlyReportUpsertArgs>(args: SelectSubset<T, CropMonthlyReportUpsertArgs<ExtArgs>>): Prisma__CropMonthlyReportClient<$Result.GetResult<Prisma.$CropMonthlyReportPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CropMonthlyReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CropMonthlyReportCountArgs} args - Arguments to filter CropMonthlyReports to count.
+     * @example
+     * // Count the number of CropMonthlyReports
+     * const count = await prisma.cropMonthlyReport.count({
+     *   where: {
+     *     // ... the filter for the CropMonthlyReports we want to count
+     *   }
+     * })
+    **/
+    count<T extends CropMonthlyReportCountArgs>(
+      args?: Subset<T, CropMonthlyReportCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CropMonthlyReportCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CropMonthlyReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CropMonthlyReportAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CropMonthlyReportAggregateArgs>(args: Subset<T, CropMonthlyReportAggregateArgs>): Prisma.PrismaPromise<GetCropMonthlyReportAggregateType<T>>
+
+    /**
+     * Group by CropMonthlyReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CropMonthlyReportGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CropMonthlyReportGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CropMonthlyReportGroupByArgs['orderBy'] }
+        : { orderBy?: CropMonthlyReportGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CropMonthlyReportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCropMonthlyReportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CropMonthlyReport model
+   */
+  readonly fields: CropMonthlyReportFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CropMonthlyReport.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CropMonthlyReportClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    crop<T extends RegisteredCropDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RegisteredCropDefaultArgs<ExtArgs>>): Prisma__RegisteredCropClient<$Result.GetResult<Prisma.$RegisteredCropPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CropMonthlyReport model
+   */
+  interface CropMonthlyReportFieldRefs {
+    readonly id: FieldRef<"CropMonthlyReport", 'String'>
+    readonly cropId: FieldRef<"CropMonthlyReport", 'String'>
+    readonly reportDate: FieldRef<"CropMonthlyReport", 'DateTime'>
+    readonly growthStage: FieldRef<"CropMonthlyReport", 'GrowthStage'>
+    readonly plantHeight: FieldRef<"CropMonthlyReport", 'Float'>
+    readonly healthStatus: FieldRef<"CropMonthlyReport", 'String'>
+    readonly estimatedYield: FieldRef<"CropMonthlyReport", 'Float'>
+    readonly weatherImpact: FieldRef<"CropMonthlyReport", 'String'>
+    readonly notes: FieldRef<"CropMonthlyReport", 'String'>
+    readonly pestsObserved: FieldRef<"CropMonthlyReport", 'String'>
+    readonly diseasesObserved: FieldRef<"CropMonthlyReport", 'String'>
+    readonly fertilizersApplied: FieldRef<"CropMonthlyReport", 'String'>
+    readonly pesticideApplications: FieldRef<"CropMonthlyReport", 'String'>
+    readonly irrigationFrequency: FieldRef<"CropMonthlyReport", 'String'>
+    readonly soilCondition: FieldRef<"CropMonthlyReport", 'String'>
+    readonly majorActivities: FieldRef<"CropMonthlyReport", 'String'>
+    readonly challenges: FieldRef<"CropMonthlyReport", 'String'>
+    readonly plannedActions: FieldRef<"CropMonthlyReport", 'String'>
+    readonly actualYield: FieldRef<"CropMonthlyReport", 'Float'>
+    readonly costs: FieldRef<"CropMonthlyReport", 'Json'>
+    readonly submissionDate: FieldRef<"CropMonthlyReport", 'DateTime'>
+    readonly weatherSnapshot: FieldRef<"CropMonthlyReport", 'Json'>
+    readonly createdAt: FieldRef<"CropMonthlyReport", 'DateTime'>
+    readonly updatedAt: FieldRef<"CropMonthlyReport", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CropMonthlyReport findUnique
+   */
+  export type CropMonthlyReportFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropMonthlyReport
+     */
+    select?: CropMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropMonthlyReport
+     */
+    omit?: CropMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CropMonthlyReport to fetch.
+     */
+    where: CropMonthlyReportWhereUniqueInput
+  }
+
+  /**
+   * CropMonthlyReport findUniqueOrThrow
+   */
+  export type CropMonthlyReportFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropMonthlyReport
+     */
+    select?: CropMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropMonthlyReport
+     */
+    omit?: CropMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CropMonthlyReport to fetch.
+     */
+    where: CropMonthlyReportWhereUniqueInput
+  }
+
+  /**
+   * CropMonthlyReport findFirst
+   */
+  export type CropMonthlyReportFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropMonthlyReport
+     */
+    select?: CropMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropMonthlyReport
+     */
+    omit?: CropMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CropMonthlyReport to fetch.
+     */
+    where?: CropMonthlyReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CropMonthlyReports to fetch.
+     */
+    orderBy?: CropMonthlyReportOrderByWithRelationInput | CropMonthlyReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CropMonthlyReports.
+     */
+    cursor?: CropMonthlyReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CropMonthlyReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CropMonthlyReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CropMonthlyReports.
+     */
+    distinct?: CropMonthlyReportScalarFieldEnum | CropMonthlyReportScalarFieldEnum[]
+  }
+
+  /**
+   * CropMonthlyReport findFirstOrThrow
+   */
+  export type CropMonthlyReportFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropMonthlyReport
+     */
+    select?: CropMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropMonthlyReport
+     */
+    omit?: CropMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CropMonthlyReport to fetch.
+     */
+    where?: CropMonthlyReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CropMonthlyReports to fetch.
+     */
+    orderBy?: CropMonthlyReportOrderByWithRelationInput | CropMonthlyReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CropMonthlyReports.
+     */
+    cursor?: CropMonthlyReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CropMonthlyReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CropMonthlyReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CropMonthlyReports.
+     */
+    distinct?: CropMonthlyReportScalarFieldEnum | CropMonthlyReportScalarFieldEnum[]
+  }
+
+  /**
+   * CropMonthlyReport findMany
+   */
+  export type CropMonthlyReportFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropMonthlyReport
+     */
+    select?: CropMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropMonthlyReport
+     */
+    omit?: CropMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CropMonthlyReports to fetch.
+     */
+    where?: CropMonthlyReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CropMonthlyReports to fetch.
+     */
+    orderBy?: CropMonthlyReportOrderByWithRelationInput | CropMonthlyReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CropMonthlyReports.
+     */
+    cursor?: CropMonthlyReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CropMonthlyReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CropMonthlyReports.
+     */
+    skip?: number
+    distinct?: CropMonthlyReportScalarFieldEnum | CropMonthlyReportScalarFieldEnum[]
+  }
+
+  /**
+   * CropMonthlyReport create
+   */
+  export type CropMonthlyReportCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropMonthlyReport
+     */
+    select?: CropMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropMonthlyReport
+     */
+    omit?: CropMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropMonthlyReportInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CropMonthlyReport.
+     */
+    data: XOR<CropMonthlyReportCreateInput, CropMonthlyReportUncheckedCreateInput>
+  }
+
+  /**
+   * CropMonthlyReport createMany
+   */
+  export type CropMonthlyReportCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CropMonthlyReports.
+     */
+    data: CropMonthlyReportCreateManyInput | CropMonthlyReportCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CropMonthlyReport update
+   */
+  export type CropMonthlyReportUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropMonthlyReport
+     */
+    select?: CropMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropMonthlyReport
+     */
+    omit?: CropMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropMonthlyReportInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CropMonthlyReport.
+     */
+    data: XOR<CropMonthlyReportUpdateInput, CropMonthlyReportUncheckedUpdateInput>
+    /**
+     * Choose, which CropMonthlyReport to update.
+     */
+    where: CropMonthlyReportWhereUniqueInput
+  }
+
+  /**
+   * CropMonthlyReport updateMany
+   */
+  export type CropMonthlyReportUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CropMonthlyReports.
+     */
+    data: XOR<CropMonthlyReportUpdateManyMutationInput, CropMonthlyReportUncheckedUpdateManyInput>
+    /**
+     * Filter which CropMonthlyReports to update
+     */
+    where?: CropMonthlyReportWhereInput
+    /**
+     * Limit how many CropMonthlyReports to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CropMonthlyReport upsert
+   */
+  export type CropMonthlyReportUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropMonthlyReport
+     */
+    select?: CropMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropMonthlyReport
+     */
+    omit?: CropMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropMonthlyReportInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CropMonthlyReport to update in case it exists.
+     */
+    where: CropMonthlyReportWhereUniqueInput
+    /**
+     * In case the CropMonthlyReport found by the `where` argument doesn't exist, create a new CropMonthlyReport with this data.
+     */
+    create: XOR<CropMonthlyReportCreateInput, CropMonthlyReportUncheckedCreateInput>
+    /**
+     * In case the CropMonthlyReport was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CropMonthlyReportUpdateInput, CropMonthlyReportUncheckedUpdateInput>
+  }
+
+  /**
+   * CropMonthlyReport delete
+   */
+  export type CropMonthlyReportDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropMonthlyReport
+     */
+    select?: CropMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropMonthlyReport
+     */
+    omit?: CropMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropMonthlyReportInclude<ExtArgs> | null
+    /**
+     * Filter which CropMonthlyReport to delete.
+     */
+    where: CropMonthlyReportWhereUniqueInput
+  }
+
+  /**
+   * CropMonthlyReport deleteMany
+   */
+  export type CropMonthlyReportDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CropMonthlyReports to delete
+     */
+    where?: CropMonthlyReportWhereInput
+    /**
+     * Limit how many CropMonthlyReports to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CropMonthlyReport without action
+   */
+  export type CropMonthlyReportDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropMonthlyReport
+     */
+    select?: CropMonthlyReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropMonthlyReport
+     */
+    omit?: CropMonthlyReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropMonthlyReportInclude<ExtArgs> | null
   }
 
 
@@ -26947,6 +29501,8 @@ export namespace Prisma {
     incomeSource: 'incomeSource',
     picture: 'picture',
     mimeType: 'mimeType',
+    resetTokenHash: 'resetTokenHash',
+    resetTokenExpiry: 'resetTokenExpiry',
     client_profile: 'client_profile',
     address: 'address',
     createdAt: 'createdAt',
@@ -27083,6 +29639,7 @@ export namespace Prisma {
     filepath: 'filepath',
     filesize: 'filesize',
     mimetype: 'mimetype',
+    fileData: 'fileData',
     inquiryId: 'inquiryId',
     uploadedById: 'uploadedById',
     createdAt: 'createdAt'
@@ -27160,6 +29717,55 @@ export namespace Prisma {
   };
 
   export type UserPreferenceScalarFieldEnum = (typeof UserPreferenceScalarFieldEnum)[keyof typeof UserPreferenceScalarFieldEnum]
+
+
+  export const RegisteredCropScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    cropType: 'cropType',
+    variety: 'variety',
+    plantingDate: 'plantingDate',
+    expectedHarvest: 'expectedHarvest',
+    area: 'area',
+    status: 'status',
+    currentStage: 'currentStage',
+    expectedYield: 'expectedYield',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type RegisteredCropScalarFieldEnum = (typeof RegisteredCropScalarFieldEnum)[keyof typeof RegisteredCropScalarFieldEnum]
+
+
+  export const CropMonthlyReportScalarFieldEnum: {
+    id: 'id',
+    cropId: 'cropId',
+    reportDate: 'reportDate',
+    growthStage: 'growthStage',
+    plantHeight: 'plantHeight',
+    healthStatus: 'healthStatus',
+    estimatedYield: 'estimatedYield',
+    weatherImpact: 'weatherImpact',
+    notes: 'notes',
+    pestsObserved: 'pestsObserved',
+    diseasesObserved: 'diseasesObserved',
+    fertilizersApplied: 'fertilizersApplied',
+    pesticideApplications: 'pesticideApplications',
+    irrigationFrequency: 'irrigationFrequency',
+    soilCondition: 'soilCondition',
+    majorActivities: 'majorActivities',
+    challenges: 'challenges',
+    plannedActions: 'plannedActions',
+    actualYield: 'actualYield',
+    costs: 'costs',
+    submissionDate: 'submissionDate',
+    weatherSnapshot: 'weatherSnapshot',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CropMonthlyReportScalarFieldEnum = (typeof CropMonthlyReportScalarFieldEnum)[keyof typeof CropMonthlyReportScalarFieldEnum]
 
 
   export const SeminarScalarFieldEnum: {
@@ -27348,6 +29954,7 @@ export namespace Prisma {
     youthOthersSpecify: 'youthOthersSpecify',
     grossAnnualIncome: 'grossAnnualIncome',
     mimeType: 'mimeType',
+    resetTokenHash: 'resetTokenHash',
     address: 'address'
   };
 
@@ -27500,6 +30107,37 @@ export namespace Prisma {
   };
 
   export type UserPreferenceOrderByRelevanceFieldEnum = (typeof UserPreferenceOrderByRelevanceFieldEnum)[keyof typeof UserPreferenceOrderByRelevanceFieldEnum]
+
+
+  export const RegisteredCropOrderByRelevanceFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    cropType: 'cropType',
+    variety: 'variety',
+    notes: 'notes'
+  };
+
+  export type RegisteredCropOrderByRelevanceFieldEnum = (typeof RegisteredCropOrderByRelevanceFieldEnum)[keyof typeof RegisteredCropOrderByRelevanceFieldEnum]
+
+
+  export const CropMonthlyReportOrderByRelevanceFieldEnum: {
+    id: 'id',
+    cropId: 'cropId',
+    healthStatus: 'healthStatus',
+    weatherImpact: 'weatherImpact',
+    notes: 'notes',
+    pestsObserved: 'pestsObserved',
+    diseasesObserved: 'diseasesObserved',
+    fertilizersApplied: 'fertilizersApplied',
+    pesticideApplications: 'pesticideApplications',
+    irrigationFrequency: 'irrigationFrequency',
+    soilCondition: 'soilCondition',
+    majorActivities: 'majorActivities',
+    challenges: 'challenges',
+    plannedActions: 'plannedActions'
+  };
+
+  export type CropMonthlyReportOrderByRelevanceFieldEnum = (typeof CropMonthlyReportOrderByRelevanceFieldEnum)[keyof typeof CropMonthlyReportOrderByRelevanceFieldEnum]
 
 
   export const SeminarOrderByRelevanceFieldEnum: {
@@ -27743,6 +30381,27 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'CropStatus'
+   */
+  export type EnumCropStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CropStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'GrowthStage'
+   */
+  export type EnumGrowthStageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GrowthStage'>
+    
+
+
+  /**
    * Reference to a field of type 'seminar_status'
    */
   export type Enumseminar_statusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'seminar_status'>
@@ -27774,13 +30433,6 @@ export namespace Prisma {
    * Reference to a field of type 'chart_type'
    */
   export type Enumchart_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'chart_type'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
   /**
    * Deep Input Types
@@ -27842,6 +30494,8 @@ export namespace Prisma {
     incomeSource?: EnumIncomeSourceNullableFilter<"Account"> | $Enums.IncomeSource | null
     picture?: BytesNullableFilter<"Account"> | Uint8Array | null
     mimeType?: StringNullableFilter<"Account"> | string | null
+    resetTokenHash?: StringNullableFilter<"Account"> | string | null
+    resetTokenExpiry?: DateTimeNullableFilter<"Account"> | Date | string | null
     client_profile?: Enumclient_profileFilter<"Account"> | $Enums.client_profile
     address?: StringNullableFilter<"Account"> | string | null
     createdAt?: DateTimeFilter<"Account"> | Date | string
@@ -27865,6 +30519,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseListRelationFilter
     surveyStatisticsCreated?: SurveyStatisticListRelationFilter
     preferences?: UserPreferenceListRelationFilter
+    registeredCrops?: RegisteredCropListRelationFilter
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -27919,6 +30574,8 @@ export namespace Prisma {
     incomeSource?: SortOrderInput | SortOrder
     picture?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
+    resetTokenHash?: SortOrderInput | SortOrder
+    resetTokenExpiry?: SortOrderInput | SortOrder
     client_profile?: SortOrder
     address?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -27942,6 +30599,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseOrderByRelationAggregateInput
     surveyStatisticsCreated?: SurveyStatisticOrderByRelationAggregateInput
     preferences?: UserPreferenceOrderByRelationAggregateInput
+    registeredCrops?: RegisteredCropOrderByRelationAggregateInput
     _relevance?: AccountOrderByRelevanceInput
   }
 
@@ -28000,6 +30658,8 @@ export namespace Prisma {
     incomeSource?: EnumIncomeSourceNullableFilter<"Account"> | $Enums.IncomeSource | null
     picture?: BytesNullableFilter<"Account"> | Uint8Array | null
     mimeType?: StringNullableFilter<"Account"> | string | null
+    resetTokenHash?: StringNullableFilter<"Account"> | string | null
+    resetTokenExpiry?: DateTimeNullableFilter<"Account"> | Date | string | null
     client_profile?: Enumclient_profileFilter<"Account"> | $Enums.client_profile
     address?: StringNullableFilter<"Account"> | string | null
     createdAt?: DateTimeFilter<"Account"> | Date | string
@@ -28023,6 +30683,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseListRelationFilter
     surveyStatisticsCreated?: SurveyStatisticListRelationFilter
     preferences?: UserPreferenceListRelationFilter
+    registeredCrops?: RegisteredCropListRelationFilter
   }, "id" | "username" | "email">
 
   export type AccountOrderByWithAggregationInput = {
@@ -28077,6 +30738,8 @@ export namespace Prisma {
     incomeSource?: SortOrderInput | SortOrder
     picture?: SortOrderInput | SortOrder
     mimeType?: SortOrderInput | SortOrder
+    resetTokenHash?: SortOrderInput | SortOrder
+    resetTokenExpiry?: SortOrderInput | SortOrder
     client_profile?: SortOrder
     address?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -28141,6 +30804,8 @@ export namespace Prisma {
     incomeSource?: EnumIncomeSourceNullableWithAggregatesFilter<"Account"> | $Enums.IncomeSource | null
     picture?: BytesNullableWithAggregatesFilter<"Account"> | Uint8Array | null
     mimeType?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    resetTokenHash?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    resetTokenExpiry?: DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
     client_profile?: Enumclient_profileWithAggregatesFilter<"Account"> | $Enums.client_profile
     address?: StringNullableWithAggregatesFilter<"Account"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Account"> | Date | string
@@ -28820,9 +31485,10 @@ export namespace Prisma {
     NOT?: InquiryAttachmentWhereInput | InquiryAttachmentWhereInput[]
     id?: StringFilter<"InquiryAttachment"> | string
     filename?: StringFilter<"InquiryAttachment"> | string
-    filepath?: StringFilter<"InquiryAttachment"> | string
+    filepath?: StringNullableFilter<"InquiryAttachment"> | string | null
     filesize?: IntFilter<"InquiryAttachment"> | number
     mimetype?: StringFilter<"InquiryAttachment"> | string
+    fileData?: BytesNullableFilter<"InquiryAttachment"> | Uint8Array | null
     inquiryId?: StringFilter<"InquiryAttachment"> | string
     uploadedById?: StringNullableFilter<"InquiryAttachment"> | string | null
     createdAt?: DateTimeFilter<"InquiryAttachment"> | Date | string
@@ -28833,9 +31499,10 @@ export namespace Prisma {
   export type InquiryAttachmentOrderByWithRelationInput = {
     id?: SortOrder
     filename?: SortOrder
-    filepath?: SortOrder
+    filepath?: SortOrderInput | SortOrder
     filesize?: SortOrder
     mimetype?: SortOrder
+    fileData?: SortOrderInput | SortOrder
     inquiryId?: SortOrder
     uploadedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -28850,9 +31517,10 @@ export namespace Prisma {
     OR?: InquiryAttachmentWhereInput[]
     NOT?: InquiryAttachmentWhereInput | InquiryAttachmentWhereInput[]
     filename?: StringFilter<"InquiryAttachment"> | string
-    filepath?: StringFilter<"InquiryAttachment"> | string
+    filepath?: StringNullableFilter<"InquiryAttachment"> | string | null
     filesize?: IntFilter<"InquiryAttachment"> | number
     mimetype?: StringFilter<"InquiryAttachment"> | string
+    fileData?: BytesNullableFilter<"InquiryAttachment"> | Uint8Array | null
     inquiryId?: StringFilter<"InquiryAttachment"> | string
     uploadedById?: StringNullableFilter<"InquiryAttachment"> | string | null
     createdAt?: DateTimeFilter<"InquiryAttachment"> | Date | string
@@ -28863,9 +31531,10 @@ export namespace Prisma {
   export type InquiryAttachmentOrderByWithAggregationInput = {
     id?: SortOrder
     filename?: SortOrder
-    filepath?: SortOrder
+    filepath?: SortOrderInput | SortOrder
     filesize?: SortOrder
     mimetype?: SortOrder
+    fileData?: SortOrderInput | SortOrder
     inquiryId?: SortOrder
     uploadedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -28882,9 +31551,10 @@ export namespace Prisma {
     NOT?: InquiryAttachmentScalarWhereWithAggregatesInput | InquiryAttachmentScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"InquiryAttachment"> | string
     filename?: StringWithAggregatesFilter<"InquiryAttachment"> | string
-    filepath?: StringWithAggregatesFilter<"InquiryAttachment"> | string
+    filepath?: StringNullableWithAggregatesFilter<"InquiryAttachment"> | string | null
     filesize?: IntWithAggregatesFilter<"InquiryAttachment"> | number
     mimetype?: StringWithAggregatesFilter<"InquiryAttachment"> | string
+    fileData?: BytesNullableWithAggregatesFilter<"InquiryAttachment"> | Uint8Array | null
     inquiryId?: StringWithAggregatesFilter<"InquiryAttachment"> | string
     uploadedById?: StringNullableWithAggregatesFilter<"InquiryAttachment"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"InquiryAttachment"> | Date | string
@@ -29266,6 +31936,260 @@ export namespace Prisma {
     value?: StringWithAggregatesFilter<"UserPreference"> | string
     createdAt?: DateTimeWithAggregatesFilter<"UserPreference"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"UserPreference"> | Date | string
+  }
+
+  export type RegisteredCropWhereInput = {
+    AND?: RegisteredCropWhereInput | RegisteredCropWhereInput[]
+    OR?: RegisteredCropWhereInput[]
+    NOT?: RegisteredCropWhereInput | RegisteredCropWhereInput[]
+    id?: StringFilter<"RegisteredCrop"> | string
+    userId?: StringFilter<"RegisteredCrop"> | string
+    cropType?: StringFilter<"RegisteredCrop"> | string
+    variety?: StringFilter<"RegisteredCrop"> | string
+    plantingDate?: DateTimeFilter<"RegisteredCrop"> | Date | string
+    expectedHarvest?: DateTimeNullableFilter<"RegisteredCrop"> | Date | string | null
+    area?: FloatNullableFilter<"RegisteredCrop"> | number | null
+    status?: EnumCropStatusFilter<"RegisteredCrop"> | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFilter<"RegisteredCrop"> | $Enums.GrowthStage
+    expectedYield?: FloatNullableFilter<"RegisteredCrop"> | number | null
+    notes?: StringNullableFilter<"RegisteredCrop"> | string | null
+    createdAt?: DateTimeFilter<"RegisteredCrop"> | Date | string
+    updatedAt?: DateTimeFilter<"RegisteredCrop"> | Date | string
+    user?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+    reports?: CropMonthlyReportListRelationFilter
+  }
+
+  export type RegisteredCropOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cropType?: SortOrder
+    variety?: SortOrder
+    plantingDate?: SortOrder
+    expectedHarvest?: SortOrderInput | SortOrder
+    area?: SortOrderInput | SortOrder
+    status?: SortOrder
+    currentStage?: SortOrder
+    expectedYield?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: AccountOrderByWithRelationInput
+    reports?: CropMonthlyReportOrderByRelationAggregateInput
+    _relevance?: RegisteredCropOrderByRelevanceInput
+  }
+
+  export type RegisteredCropWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: RegisteredCropWhereInput | RegisteredCropWhereInput[]
+    OR?: RegisteredCropWhereInput[]
+    NOT?: RegisteredCropWhereInput | RegisteredCropWhereInput[]
+    userId?: StringFilter<"RegisteredCrop"> | string
+    cropType?: StringFilter<"RegisteredCrop"> | string
+    variety?: StringFilter<"RegisteredCrop"> | string
+    plantingDate?: DateTimeFilter<"RegisteredCrop"> | Date | string
+    expectedHarvest?: DateTimeNullableFilter<"RegisteredCrop"> | Date | string | null
+    area?: FloatNullableFilter<"RegisteredCrop"> | number | null
+    status?: EnumCropStatusFilter<"RegisteredCrop"> | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFilter<"RegisteredCrop"> | $Enums.GrowthStage
+    expectedYield?: FloatNullableFilter<"RegisteredCrop"> | number | null
+    notes?: StringNullableFilter<"RegisteredCrop"> | string | null
+    createdAt?: DateTimeFilter<"RegisteredCrop"> | Date | string
+    updatedAt?: DateTimeFilter<"RegisteredCrop"> | Date | string
+    user?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+    reports?: CropMonthlyReportListRelationFilter
+  }, "id">
+
+  export type RegisteredCropOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cropType?: SortOrder
+    variety?: SortOrder
+    plantingDate?: SortOrder
+    expectedHarvest?: SortOrderInput | SortOrder
+    area?: SortOrderInput | SortOrder
+    status?: SortOrder
+    currentStage?: SortOrder
+    expectedYield?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: RegisteredCropCountOrderByAggregateInput
+    _avg?: RegisteredCropAvgOrderByAggregateInput
+    _max?: RegisteredCropMaxOrderByAggregateInput
+    _min?: RegisteredCropMinOrderByAggregateInput
+    _sum?: RegisteredCropSumOrderByAggregateInput
+  }
+
+  export type RegisteredCropScalarWhereWithAggregatesInput = {
+    AND?: RegisteredCropScalarWhereWithAggregatesInput | RegisteredCropScalarWhereWithAggregatesInput[]
+    OR?: RegisteredCropScalarWhereWithAggregatesInput[]
+    NOT?: RegisteredCropScalarWhereWithAggregatesInput | RegisteredCropScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RegisteredCrop"> | string
+    userId?: StringWithAggregatesFilter<"RegisteredCrop"> | string
+    cropType?: StringWithAggregatesFilter<"RegisteredCrop"> | string
+    variety?: StringWithAggregatesFilter<"RegisteredCrop"> | string
+    plantingDate?: DateTimeWithAggregatesFilter<"RegisteredCrop"> | Date | string
+    expectedHarvest?: DateTimeNullableWithAggregatesFilter<"RegisteredCrop"> | Date | string | null
+    area?: FloatNullableWithAggregatesFilter<"RegisteredCrop"> | number | null
+    status?: EnumCropStatusWithAggregatesFilter<"RegisteredCrop"> | $Enums.CropStatus
+    currentStage?: EnumGrowthStageWithAggregatesFilter<"RegisteredCrop"> | $Enums.GrowthStage
+    expectedYield?: FloatNullableWithAggregatesFilter<"RegisteredCrop"> | number | null
+    notes?: StringNullableWithAggregatesFilter<"RegisteredCrop"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"RegisteredCrop"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"RegisteredCrop"> | Date | string
+  }
+
+  export type CropMonthlyReportWhereInput = {
+    AND?: CropMonthlyReportWhereInput | CropMonthlyReportWhereInput[]
+    OR?: CropMonthlyReportWhereInput[]
+    NOT?: CropMonthlyReportWhereInput | CropMonthlyReportWhereInput[]
+    id?: StringFilter<"CropMonthlyReport"> | string
+    cropId?: StringFilter<"CropMonthlyReport"> | string
+    reportDate?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+    growthStage?: EnumGrowthStageFilter<"CropMonthlyReport"> | $Enums.GrowthStage
+    plantHeight?: FloatNullableFilter<"CropMonthlyReport"> | number | null
+    healthStatus?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    estimatedYield?: FloatNullableFilter<"CropMonthlyReport"> | number | null
+    weatherImpact?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    notes?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    pestsObserved?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    diseasesObserved?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    fertilizersApplied?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    pesticideApplications?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    irrigationFrequency?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    soilCondition?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    majorActivities?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    challenges?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    plannedActions?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    actualYield?: FloatNullableFilter<"CropMonthlyReport"> | number | null
+    costs?: JsonNullableFilter<"CropMonthlyReport">
+    submissionDate?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+    weatherSnapshot?: JsonNullableFilter<"CropMonthlyReport">
+    createdAt?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+    updatedAt?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+    crop?: XOR<RegisteredCropScalarRelationFilter, RegisteredCropWhereInput>
+  }
+
+  export type CropMonthlyReportOrderByWithRelationInput = {
+    id?: SortOrder
+    cropId?: SortOrder
+    reportDate?: SortOrder
+    growthStage?: SortOrder
+    plantHeight?: SortOrderInput | SortOrder
+    healthStatus?: SortOrderInput | SortOrder
+    estimatedYield?: SortOrderInput | SortOrder
+    weatherImpact?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    pestsObserved?: SortOrderInput | SortOrder
+    diseasesObserved?: SortOrderInput | SortOrder
+    fertilizersApplied?: SortOrderInput | SortOrder
+    pesticideApplications?: SortOrderInput | SortOrder
+    irrigationFrequency?: SortOrderInput | SortOrder
+    soilCondition?: SortOrderInput | SortOrder
+    majorActivities?: SortOrderInput | SortOrder
+    challenges?: SortOrderInput | SortOrder
+    plannedActions?: SortOrderInput | SortOrder
+    actualYield?: SortOrderInput | SortOrder
+    costs?: SortOrderInput | SortOrder
+    submissionDate?: SortOrder
+    weatherSnapshot?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    crop?: RegisteredCropOrderByWithRelationInput
+    _relevance?: CropMonthlyReportOrderByRelevanceInput
+  }
+
+  export type CropMonthlyReportWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CropMonthlyReportWhereInput | CropMonthlyReportWhereInput[]
+    OR?: CropMonthlyReportWhereInput[]
+    NOT?: CropMonthlyReportWhereInput | CropMonthlyReportWhereInput[]
+    cropId?: StringFilter<"CropMonthlyReport"> | string
+    reportDate?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+    growthStage?: EnumGrowthStageFilter<"CropMonthlyReport"> | $Enums.GrowthStage
+    plantHeight?: FloatNullableFilter<"CropMonthlyReport"> | number | null
+    healthStatus?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    estimatedYield?: FloatNullableFilter<"CropMonthlyReport"> | number | null
+    weatherImpact?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    notes?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    pestsObserved?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    diseasesObserved?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    fertilizersApplied?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    pesticideApplications?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    irrigationFrequency?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    soilCondition?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    majorActivities?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    challenges?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    plannedActions?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    actualYield?: FloatNullableFilter<"CropMonthlyReport"> | number | null
+    costs?: JsonNullableFilter<"CropMonthlyReport">
+    submissionDate?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+    weatherSnapshot?: JsonNullableFilter<"CropMonthlyReport">
+    createdAt?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+    updatedAt?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+    crop?: XOR<RegisteredCropScalarRelationFilter, RegisteredCropWhereInput>
+  }, "id">
+
+  export type CropMonthlyReportOrderByWithAggregationInput = {
+    id?: SortOrder
+    cropId?: SortOrder
+    reportDate?: SortOrder
+    growthStage?: SortOrder
+    plantHeight?: SortOrderInput | SortOrder
+    healthStatus?: SortOrderInput | SortOrder
+    estimatedYield?: SortOrderInput | SortOrder
+    weatherImpact?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    pestsObserved?: SortOrderInput | SortOrder
+    diseasesObserved?: SortOrderInput | SortOrder
+    fertilizersApplied?: SortOrderInput | SortOrder
+    pesticideApplications?: SortOrderInput | SortOrder
+    irrigationFrequency?: SortOrderInput | SortOrder
+    soilCondition?: SortOrderInput | SortOrder
+    majorActivities?: SortOrderInput | SortOrder
+    challenges?: SortOrderInput | SortOrder
+    plannedActions?: SortOrderInput | SortOrder
+    actualYield?: SortOrderInput | SortOrder
+    costs?: SortOrderInput | SortOrder
+    submissionDate?: SortOrder
+    weatherSnapshot?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CropMonthlyReportCountOrderByAggregateInput
+    _avg?: CropMonthlyReportAvgOrderByAggregateInput
+    _max?: CropMonthlyReportMaxOrderByAggregateInput
+    _min?: CropMonthlyReportMinOrderByAggregateInput
+    _sum?: CropMonthlyReportSumOrderByAggregateInput
+  }
+
+  export type CropMonthlyReportScalarWhereWithAggregatesInput = {
+    AND?: CropMonthlyReportScalarWhereWithAggregatesInput | CropMonthlyReportScalarWhereWithAggregatesInput[]
+    OR?: CropMonthlyReportScalarWhereWithAggregatesInput[]
+    NOT?: CropMonthlyReportScalarWhereWithAggregatesInput | CropMonthlyReportScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CropMonthlyReport"> | string
+    cropId?: StringWithAggregatesFilter<"CropMonthlyReport"> | string
+    reportDate?: DateTimeWithAggregatesFilter<"CropMonthlyReport"> | Date | string
+    growthStage?: EnumGrowthStageWithAggregatesFilter<"CropMonthlyReport"> | $Enums.GrowthStage
+    plantHeight?: FloatNullableWithAggregatesFilter<"CropMonthlyReport"> | number | null
+    healthStatus?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    estimatedYield?: FloatNullableWithAggregatesFilter<"CropMonthlyReport"> | number | null
+    weatherImpact?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    pestsObserved?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    diseasesObserved?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    fertilizersApplied?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    pesticideApplications?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    irrigationFrequency?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    soilCondition?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    majorActivities?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    challenges?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    plannedActions?: StringNullableWithAggregatesFilter<"CropMonthlyReport"> | string | null
+    actualYield?: FloatNullableWithAggregatesFilter<"CropMonthlyReport"> | number | null
+    costs?: JsonNullableWithAggregatesFilter<"CropMonthlyReport">
+    submissionDate?: DateTimeWithAggregatesFilter<"CropMonthlyReport"> | Date | string
+    weatherSnapshot?: JsonNullableWithAggregatesFilter<"CropMonthlyReport">
+    createdAt?: DateTimeWithAggregatesFilter<"CropMonthlyReport"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CropMonthlyReport"> | Date | string
   }
 
   export type SeminarWhereInput = {
@@ -29873,6 +32797,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -29896,6 +32822,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateInput = {
@@ -29950,6 +32877,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -29973,6 +32902,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountUpdateInput = {
@@ -30027,6 +32957,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30050,6 +32982,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateInput = {
@@ -30104,6 +33037,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30127,6 +33062,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateManyInput = {
@@ -30181,6 +33117,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -30239,6 +33177,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30297,6 +33237,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31001,9 +33943,10 @@ export namespace Prisma {
   export type InquiryAttachmentCreateInput = {
     id?: string
     filename: string
-    filepath: string
+    filepath?: string | null
     filesize: number
     mimetype: string
+    fileData?: Uint8Array | null
     createdAt?: Date | string
     inquiry: InquiryCreateNestedOneWithoutAttachmentsInput
     uploadedBy?: AccountCreateNestedOneWithoutInquiryAttachmentsInput
@@ -31012,9 +33955,10 @@ export namespace Prisma {
   export type InquiryAttachmentUncheckedCreateInput = {
     id?: string
     filename: string
-    filepath: string
+    filepath?: string | null
     filesize: number
     mimetype: string
+    fileData?: Uint8Array | null
     inquiryId: string
     uploadedById?: string | null
     createdAt?: Date | string
@@ -31023,9 +33967,10 @@ export namespace Prisma {
   export type InquiryAttachmentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     filename?: StringFieldUpdateOperationsInput | string
-    filepath?: StringFieldUpdateOperationsInput | string
+    filepath?: NullableStringFieldUpdateOperationsInput | string | null
     filesize?: IntFieldUpdateOperationsInput | number
     mimetype?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inquiry?: InquiryUpdateOneRequiredWithoutAttachmentsNestedInput
     uploadedBy?: AccountUpdateOneWithoutInquiryAttachmentsNestedInput
@@ -31034,9 +33979,10 @@ export namespace Prisma {
   export type InquiryAttachmentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     filename?: StringFieldUpdateOperationsInput | string
-    filepath?: StringFieldUpdateOperationsInput | string
+    filepath?: NullableStringFieldUpdateOperationsInput | string | null
     filesize?: IntFieldUpdateOperationsInput | number
     mimetype?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     inquiryId?: StringFieldUpdateOperationsInput | string
     uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31045,9 +33991,10 @@ export namespace Prisma {
   export type InquiryAttachmentCreateManyInput = {
     id?: string
     filename: string
-    filepath: string
+    filepath?: string | null
     filesize: number
     mimetype: string
+    fileData?: Uint8Array | null
     inquiryId: string
     uploadedById?: string | null
     createdAt?: Date | string
@@ -31056,18 +34003,20 @@ export namespace Prisma {
   export type InquiryAttachmentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     filename?: StringFieldUpdateOperationsInput | string
-    filepath?: StringFieldUpdateOperationsInput | string
+    filepath?: NullableStringFieldUpdateOperationsInput | string | null
     filesize?: IntFieldUpdateOperationsInput | number
     mimetype?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InquiryAttachmentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     filename?: StringFieldUpdateOperationsInput | string
-    filepath?: StringFieldUpdateOperationsInput | string
+    filepath?: NullableStringFieldUpdateOperationsInput | string | null
     filesize?: IntFieldUpdateOperationsInput | number
     mimetype?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     inquiryId?: StringFieldUpdateOperationsInput | string
     uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31460,6 +34409,309 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     key?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RegisteredCropCreateInput = {
+    id?: string
+    cropType: string
+    variety: string
+    plantingDate: Date | string
+    expectedHarvest?: Date | string | null
+    area?: number | null
+    status?: $Enums.CropStatus
+    currentStage?: $Enums.GrowthStage
+    expectedYield?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: AccountCreateNestedOneWithoutRegisteredCropsInput
+    reports?: CropMonthlyReportCreateNestedManyWithoutCropInput
+  }
+
+  export type RegisteredCropUncheckedCreateInput = {
+    id?: string
+    userId: string
+    cropType: string
+    variety: string
+    plantingDate: Date | string
+    expectedHarvest?: Date | string | null
+    area?: number | null
+    status?: $Enums.CropStatus
+    currentStage?: $Enums.GrowthStage
+    expectedYield?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reports?: CropMonthlyReportUncheckedCreateNestedManyWithoutCropInput
+  }
+
+  export type RegisteredCropUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cropType?: StringFieldUpdateOperationsInput | string
+    variety?: StringFieldUpdateOperationsInput | string
+    plantingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedHarvest?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    area?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumCropStatusFieldUpdateOperationsInput | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    expectedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: AccountUpdateOneRequiredWithoutRegisteredCropsNestedInput
+    reports?: CropMonthlyReportUpdateManyWithoutCropNestedInput
+  }
+
+  export type RegisteredCropUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    cropType?: StringFieldUpdateOperationsInput | string
+    variety?: StringFieldUpdateOperationsInput | string
+    plantingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedHarvest?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    area?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumCropStatusFieldUpdateOperationsInput | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    expectedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reports?: CropMonthlyReportUncheckedUpdateManyWithoutCropNestedInput
+  }
+
+  export type RegisteredCropCreateManyInput = {
+    id?: string
+    userId: string
+    cropType: string
+    variety: string
+    plantingDate: Date | string
+    expectedHarvest?: Date | string | null
+    area?: number | null
+    status?: $Enums.CropStatus
+    currentStage?: $Enums.GrowthStage
+    expectedYield?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RegisteredCropUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cropType?: StringFieldUpdateOperationsInput | string
+    variety?: StringFieldUpdateOperationsInput | string
+    plantingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedHarvest?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    area?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumCropStatusFieldUpdateOperationsInput | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    expectedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RegisteredCropUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    cropType?: StringFieldUpdateOperationsInput | string
+    variety?: StringFieldUpdateOperationsInput | string
+    plantingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedHarvest?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    area?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumCropStatusFieldUpdateOperationsInput | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    expectedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CropMonthlyReportCreateInput = {
+    id?: string
+    reportDate: Date | string
+    growthStage: $Enums.GrowthStage
+    plantHeight?: number | null
+    healthStatus?: string | null
+    estimatedYield?: number | null
+    weatherImpact?: string | null
+    notes?: string | null
+    pestsObserved?: string | null
+    diseasesObserved?: string | null
+    fertilizersApplied?: string | null
+    pesticideApplications?: string | null
+    irrigationFrequency?: string | null
+    soilCondition?: string | null
+    majorActivities?: string | null
+    challenges?: string | null
+    plannedActions?: string | null
+    actualYield?: number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    crop: RegisteredCropCreateNestedOneWithoutReportsInput
+  }
+
+  export type CropMonthlyReportUncheckedCreateInput = {
+    id?: string
+    cropId: string
+    reportDate: Date | string
+    growthStage: $Enums.GrowthStage
+    plantHeight?: number | null
+    healthStatus?: string | null
+    estimatedYield?: number | null
+    weatherImpact?: string | null
+    notes?: string | null
+    pestsObserved?: string | null
+    diseasesObserved?: string | null
+    fertilizersApplied?: string | null
+    pesticideApplications?: string | null
+    irrigationFrequency?: string | null
+    soilCondition?: string | null
+    majorActivities?: string | null
+    challenges?: string | null
+    plannedActions?: string | null
+    actualYield?: number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CropMonthlyReportUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    growthStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    plantHeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    healthStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    weatherImpact?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    pestsObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    diseasesObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    fertilizersApplied?: NullableStringFieldUpdateOperationsInput | string | null
+    pesticideApplications?: NullableStringFieldUpdateOperationsInput | string | null
+    irrigationFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    soilCondition?: NullableStringFieldUpdateOperationsInput | string | null
+    majorActivities?: NullableStringFieldUpdateOperationsInput | string | null
+    challenges?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedActions?: NullableStringFieldUpdateOperationsInput | string | null
+    actualYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crop?: RegisteredCropUpdateOneRequiredWithoutReportsNestedInput
+  }
+
+  export type CropMonthlyReportUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cropId?: StringFieldUpdateOperationsInput | string
+    reportDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    growthStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    plantHeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    healthStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    weatherImpact?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    pestsObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    diseasesObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    fertilizersApplied?: NullableStringFieldUpdateOperationsInput | string | null
+    pesticideApplications?: NullableStringFieldUpdateOperationsInput | string | null
+    irrigationFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    soilCondition?: NullableStringFieldUpdateOperationsInput | string | null
+    majorActivities?: NullableStringFieldUpdateOperationsInput | string | null
+    challenges?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedActions?: NullableStringFieldUpdateOperationsInput | string | null
+    actualYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CropMonthlyReportCreateManyInput = {
+    id?: string
+    cropId: string
+    reportDate: Date | string
+    growthStage: $Enums.GrowthStage
+    plantHeight?: number | null
+    healthStatus?: string | null
+    estimatedYield?: number | null
+    weatherImpact?: string | null
+    notes?: string | null
+    pestsObserved?: string | null
+    diseasesObserved?: string | null
+    fertilizersApplied?: string | null
+    pesticideApplications?: string | null
+    irrigationFrequency?: string | null
+    soilCondition?: string | null
+    majorActivities?: string | null
+    challenges?: string | null
+    plannedActions?: string | null
+    actualYield?: number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CropMonthlyReportUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    growthStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    plantHeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    healthStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    weatherImpact?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    pestsObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    diseasesObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    fertilizersApplied?: NullableStringFieldUpdateOperationsInput | string | null
+    pesticideApplications?: NullableStringFieldUpdateOperationsInput | string | null
+    irrigationFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    soilCondition?: NullableStringFieldUpdateOperationsInput | string | null
+    majorActivities?: NullableStringFieldUpdateOperationsInput | string | null
+    challenges?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedActions?: NullableStringFieldUpdateOperationsInput | string | null
+    actualYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CropMonthlyReportUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cropId?: StringFieldUpdateOperationsInput | string
+    reportDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    growthStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    plantHeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    healthStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    weatherImpact?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    pestsObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    diseasesObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    fertilizersApplied?: NullableStringFieldUpdateOperationsInput | string | null
+    pesticideApplications?: NullableStringFieldUpdateOperationsInput | string | null
+    irrigationFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    soilCondition?: NullableStringFieldUpdateOperationsInput | string | null
+    majorActivities?: NullableStringFieldUpdateOperationsInput | string | null
+    challenges?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedActions?: NullableStringFieldUpdateOperationsInput | string | null
+    actualYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32276,6 +35528,12 @@ export namespace Prisma {
     none?: UserPreferenceWhereInput
   }
 
+  export type RegisteredCropListRelationFilter = {
+    every?: RegisteredCropWhereInput
+    some?: RegisteredCropWhereInput
+    none?: RegisteredCropWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -32345,6 +35603,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type RegisteredCropOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type AccountOrderByRelevanceInput = {
     fields: AccountOrderByRelevanceFieldEnum | AccountOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -32403,6 +35665,8 @@ export namespace Prisma {
     incomeSource?: SortOrder
     picture?: SortOrder
     mimeType?: SortOrder
+    resetTokenHash?: SortOrder
+    resetTokenExpiry?: SortOrder
     client_profile?: SortOrder
     address?: SortOrder
     createdAt?: SortOrder
@@ -32456,6 +35720,8 @@ export namespace Prisma {
     incomeSource?: SortOrder
     picture?: SortOrder
     mimeType?: SortOrder
+    resetTokenHash?: SortOrder
+    resetTokenExpiry?: SortOrder
     client_profile?: SortOrder
     address?: SortOrder
     createdAt?: SortOrder
@@ -32509,6 +35775,8 @@ export namespace Prisma {
     incomeSource?: SortOrder
     picture?: SortOrder
     mimeType?: SortOrder
+    resetTokenHash?: SortOrder
+    resetTokenExpiry?: SortOrder
     client_profile?: SortOrder
     address?: SortOrder
     createdAt?: SortOrder
@@ -33245,6 +36513,7 @@ export namespace Prisma {
     filepath?: SortOrder
     filesize?: SortOrder
     mimetype?: SortOrder
+    fileData?: SortOrder
     inquiryId?: SortOrder
     uploadedById?: SortOrder
     createdAt?: SortOrder
@@ -33260,6 +36529,7 @@ export namespace Prisma {
     filepath?: SortOrder
     filesize?: SortOrder
     mimetype?: SortOrder
+    fileData?: SortOrder
     inquiryId?: SortOrder
     uploadedById?: SortOrder
     createdAt?: SortOrder
@@ -33271,6 +36541,7 @@ export namespace Prisma {
     filepath?: SortOrder
     filesize?: SortOrder
     mimetype?: SortOrder
+    fileData?: SortOrder
     inquiryId?: SortOrder
     uploadedById?: SortOrder
     createdAt?: SortOrder
@@ -33617,6 +36888,241 @@ export namespace Prisma {
 
   export type UserPreferenceSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type EnumCropStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CropStatus | EnumCropStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CropStatus[]
+    notIn?: $Enums.CropStatus[]
+    not?: NestedEnumCropStatusFilter<$PrismaModel> | $Enums.CropStatus
+  }
+
+  export type EnumGrowthStageFilter<$PrismaModel = never> = {
+    equals?: $Enums.GrowthStage | EnumGrowthStageFieldRefInput<$PrismaModel>
+    in?: $Enums.GrowthStage[]
+    notIn?: $Enums.GrowthStage[]
+    not?: NestedEnumGrowthStageFilter<$PrismaModel> | $Enums.GrowthStage
+  }
+
+  export type CropMonthlyReportListRelationFilter = {
+    every?: CropMonthlyReportWhereInput
+    some?: CropMonthlyReportWhereInput
+    none?: CropMonthlyReportWhereInput
+  }
+
+  export type CropMonthlyReportOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RegisteredCropOrderByRelevanceInput = {
+    fields: RegisteredCropOrderByRelevanceFieldEnum | RegisteredCropOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type RegisteredCropCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cropType?: SortOrder
+    variety?: SortOrder
+    plantingDate?: SortOrder
+    expectedHarvest?: SortOrder
+    area?: SortOrder
+    status?: SortOrder
+    currentStage?: SortOrder
+    expectedYield?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RegisteredCropAvgOrderByAggregateInput = {
+    area?: SortOrder
+    expectedYield?: SortOrder
+  }
+
+  export type RegisteredCropMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cropType?: SortOrder
+    variety?: SortOrder
+    plantingDate?: SortOrder
+    expectedHarvest?: SortOrder
+    area?: SortOrder
+    status?: SortOrder
+    currentStage?: SortOrder
+    expectedYield?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RegisteredCropMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    cropType?: SortOrder
+    variety?: SortOrder
+    plantingDate?: SortOrder
+    expectedHarvest?: SortOrder
+    area?: SortOrder
+    status?: SortOrder
+    currentStage?: SortOrder
+    expectedYield?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RegisteredCropSumOrderByAggregateInput = {
+    area?: SortOrder
+    expectedYield?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type EnumCropStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CropStatus | EnumCropStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CropStatus[]
+    notIn?: $Enums.CropStatus[]
+    not?: NestedEnumCropStatusWithAggregatesFilter<$PrismaModel> | $Enums.CropStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCropStatusFilter<$PrismaModel>
+    _max?: NestedEnumCropStatusFilter<$PrismaModel>
+  }
+
+  export type EnumGrowthStageWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GrowthStage | EnumGrowthStageFieldRefInput<$PrismaModel>
+    in?: $Enums.GrowthStage[]
+    notIn?: $Enums.GrowthStage[]
+    not?: NestedEnumGrowthStageWithAggregatesFilter<$PrismaModel> | $Enums.GrowthStage
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGrowthStageFilter<$PrismaModel>
+    _max?: NestedEnumGrowthStageFilter<$PrismaModel>
+  }
+
+  export type RegisteredCropScalarRelationFilter = {
+    is?: RegisteredCropWhereInput
+    isNot?: RegisteredCropWhereInput
+  }
+
+  export type CropMonthlyReportOrderByRelevanceInput = {
+    fields: CropMonthlyReportOrderByRelevanceFieldEnum | CropMonthlyReportOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type CropMonthlyReportCountOrderByAggregateInput = {
+    id?: SortOrder
+    cropId?: SortOrder
+    reportDate?: SortOrder
+    growthStage?: SortOrder
+    plantHeight?: SortOrder
+    healthStatus?: SortOrder
+    estimatedYield?: SortOrder
+    weatherImpact?: SortOrder
+    notes?: SortOrder
+    pestsObserved?: SortOrder
+    diseasesObserved?: SortOrder
+    fertilizersApplied?: SortOrder
+    pesticideApplications?: SortOrder
+    irrigationFrequency?: SortOrder
+    soilCondition?: SortOrder
+    majorActivities?: SortOrder
+    challenges?: SortOrder
+    plannedActions?: SortOrder
+    actualYield?: SortOrder
+    costs?: SortOrder
+    submissionDate?: SortOrder
+    weatherSnapshot?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CropMonthlyReportAvgOrderByAggregateInput = {
+    plantHeight?: SortOrder
+    estimatedYield?: SortOrder
+    actualYield?: SortOrder
+  }
+
+  export type CropMonthlyReportMaxOrderByAggregateInput = {
+    id?: SortOrder
+    cropId?: SortOrder
+    reportDate?: SortOrder
+    growthStage?: SortOrder
+    plantHeight?: SortOrder
+    healthStatus?: SortOrder
+    estimatedYield?: SortOrder
+    weatherImpact?: SortOrder
+    notes?: SortOrder
+    pestsObserved?: SortOrder
+    diseasesObserved?: SortOrder
+    fertilizersApplied?: SortOrder
+    pesticideApplications?: SortOrder
+    irrigationFrequency?: SortOrder
+    soilCondition?: SortOrder
+    majorActivities?: SortOrder
+    challenges?: SortOrder
+    plannedActions?: SortOrder
+    actualYield?: SortOrder
+    submissionDate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CropMonthlyReportMinOrderByAggregateInput = {
+    id?: SortOrder
+    cropId?: SortOrder
+    reportDate?: SortOrder
+    growthStage?: SortOrder
+    plantHeight?: SortOrder
+    healthStatus?: SortOrder
+    estimatedYield?: SortOrder
+    weatherImpact?: SortOrder
+    notes?: SortOrder
+    pestsObserved?: SortOrder
+    diseasesObserved?: SortOrder
+    fertilizersApplied?: SortOrder
+    pesticideApplications?: SortOrder
+    irrigationFrequency?: SortOrder
+    soilCondition?: SortOrder
+    majorActivities?: SortOrder
+    challenges?: SortOrder
+    plannedActions?: SortOrder
+    actualYield?: SortOrder
+    submissionDate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CropMonthlyReportSumOrderByAggregateInput = {
+    plantHeight?: SortOrder
+    estimatedYield?: SortOrder
+    actualYield?: SortOrder
   }
 
   export type Enumseminar_statusFilter<$PrismaModel = never> = {
@@ -34229,6 +37735,13 @@ export namespace Prisma {
     connect?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
   }
 
+  export type RegisteredCropCreateNestedManyWithoutUserInput = {
+    create?: XOR<RegisteredCropCreateWithoutUserInput, RegisteredCropUncheckedCreateWithoutUserInput> | RegisteredCropCreateWithoutUserInput[] | RegisteredCropUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RegisteredCropCreateOrConnectWithoutUserInput | RegisteredCropCreateOrConnectWithoutUserInput[]
+    createMany?: RegisteredCropCreateManyUserInputEnvelope
+    connect?: RegisteredCropWhereUniqueInput | RegisteredCropWhereUniqueInput[]
+  }
+
   export type SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -34360,6 +37873,13 @@ export namespace Prisma {
     connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput | UserPreferenceCreateOrConnectWithoutUserInput[]
     createMany?: UserPreferenceCreateManyUserInputEnvelope
     connect?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+  }
+
+  export type RegisteredCropUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<RegisteredCropCreateWithoutUserInput, RegisteredCropUncheckedCreateWithoutUserInput> | RegisteredCropCreateWithoutUserInput[] | RegisteredCropUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RegisteredCropCreateOrConnectWithoutUserInput | RegisteredCropCreateOrConnectWithoutUserInput[]
+    createMany?: RegisteredCropCreateManyUserInputEnvelope
+    connect?: RegisteredCropWhereUniqueInput | RegisteredCropWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -34680,6 +38200,20 @@ export namespace Prisma {
     deleteMany?: UserPreferenceScalarWhereInput | UserPreferenceScalarWhereInput[]
   }
 
+  export type RegisteredCropUpdateManyWithoutUserNestedInput = {
+    create?: XOR<RegisteredCropCreateWithoutUserInput, RegisteredCropUncheckedCreateWithoutUserInput> | RegisteredCropCreateWithoutUserInput[] | RegisteredCropUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RegisteredCropCreateOrConnectWithoutUserInput | RegisteredCropCreateOrConnectWithoutUserInput[]
+    upsert?: RegisteredCropUpsertWithWhereUniqueWithoutUserInput | RegisteredCropUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: RegisteredCropCreateManyUserInputEnvelope
+    set?: RegisteredCropWhereUniqueInput | RegisteredCropWhereUniqueInput[]
+    disconnect?: RegisteredCropWhereUniqueInput | RegisteredCropWhereUniqueInput[]
+    delete?: RegisteredCropWhereUniqueInput | RegisteredCropWhereUniqueInput[]
+    connect?: RegisteredCropWhereUniqueInput | RegisteredCropWhereUniqueInput[]
+    update?: RegisteredCropUpdateWithWhereUniqueWithoutUserInput | RegisteredCropUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: RegisteredCropUpdateManyWithWhereWithoutUserInput | RegisteredCropUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: RegisteredCropScalarWhereInput | RegisteredCropScalarWhereInput[]
+  }
+
   export type SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<SeminarParticipantCreateWithoutAccountInput, SeminarParticipantUncheckedCreateWithoutAccountInput> | SeminarParticipantCreateWithoutAccountInput[] | SeminarParticipantUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: SeminarParticipantCreateOrConnectWithoutAccountInput | SeminarParticipantCreateOrConnectWithoutAccountInput[]
@@ -34944,6 +38478,20 @@ export namespace Prisma {
     update?: UserPreferenceUpdateWithWhereUniqueWithoutUserInput | UserPreferenceUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserPreferenceUpdateManyWithWhereWithoutUserInput | UserPreferenceUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserPreferenceScalarWhereInput | UserPreferenceScalarWhereInput[]
+  }
+
+  export type RegisteredCropUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<RegisteredCropCreateWithoutUserInput, RegisteredCropUncheckedCreateWithoutUserInput> | RegisteredCropCreateWithoutUserInput[] | RegisteredCropUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RegisteredCropCreateOrConnectWithoutUserInput | RegisteredCropCreateOrConnectWithoutUserInput[]
+    upsert?: RegisteredCropUpsertWithWhereUniqueWithoutUserInput | RegisteredCropUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: RegisteredCropCreateManyUserInputEnvelope
+    set?: RegisteredCropWhereUniqueInput | RegisteredCropWhereUniqueInput[]
+    disconnect?: RegisteredCropWhereUniqueInput | RegisteredCropWhereUniqueInput[]
+    delete?: RegisteredCropWhereUniqueInput | RegisteredCropWhereUniqueInput[]
+    connect?: RegisteredCropWhereUniqueInput | RegisteredCropWhereUniqueInput[]
+    update?: RegisteredCropUpdateWithWhereUniqueWithoutUserInput | RegisteredCropUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: RegisteredCropUpdateManyWithWhereWithoutUserInput | RegisteredCropUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: RegisteredCropScalarWhereInput | RegisteredCropScalarWhereInput[]
   }
 
   export type AccountCreateNestedOneWithoutAuditLogsInput = {
@@ -35774,6 +39322,92 @@ export namespace Prisma {
     upsert?: AccountUpsertWithoutPreferencesInput
     connect?: AccountWhereUniqueInput
     update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutPreferencesInput, AccountUpdateWithoutPreferencesInput>, AccountUncheckedUpdateWithoutPreferencesInput>
+  }
+
+  export type AccountCreateNestedOneWithoutRegisteredCropsInput = {
+    create?: XOR<AccountCreateWithoutRegisteredCropsInput, AccountUncheckedCreateWithoutRegisteredCropsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutRegisteredCropsInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type CropMonthlyReportCreateNestedManyWithoutCropInput = {
+    create?: XOR<CropMonthlyReportCreateWithoutCropInput, CropMonthlyReportUncheckedCreateWithoutCropInput> | CropMonthlyReportCreateWithoutCropInput[] | CropMonthlyReportUncheckedCreateWithoutCropInput[]
+    connectOrCreate?: CropMonthlyReportCreateOrConnectWithoutCropInput | CropMonthlyReportCreateOrConnectWithoutCropInput[]
+    createMany?: CropMonthlyReportCreateManyCropInputEnvelope
+    connect?: CropMonthlyReportWhereUniqueInput | CropMonthlyReportWhereUniqueInput[]
+  }
+
+  export type CropMonthlyReportUncheckedCreateNestedManyWithoutCropInput = {
+    create?: XOR<CropMonthlyReportCreateWithoutCropInput, CropMonthlyReportUncheckedCreateWithoutCropInput> | CropMonthlyReportCreateWithoutCropInput[] | CropMonthlyReportUncheckedCreateWithoutCropInput[]
+    connectOrCreate?: CropMonthlyReportCreateOrConnectWithoutCropInput | CropMonthlyReportCreateOrConnectWithoutCropInput[]
+    createMany?: CropMonthlyReportCreateManyCropInputEnvelope
+    connect?: CropMonthlyReportWhereUniqueInput | CropMonthlyReportWhereUniqueInput[]
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type EnumCropStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CropStatus
+  }
+
+  export type EnumGrowthStageFieldUpdateOperationsInput = {
+    set?: $Enums.GrowthStage
+  }
+
+  export type AccountUpdateOneRequiredWithoutRegisteredCropsNestedInput = {
+    create?: XOR<AccountCreateWithoutRegisteredCropsInput, AccountUncheckedCreateWithoutRegisteredCropsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutRegisteredCropsInput
+    upsert?: AccountUpsertWithoutRegisteredCropsInput
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutRegisteredCropsInput, AccountUpdateWithoutRegisteredCropsInput>, AccountUncheckedUpdateWithoutRegisteredCropsInput>
+  }
+
+  export type CropMonthlyReportUpdateManyWithoutCropNestedInput = {
+    create?: XOR<CropMonthlyReportCreateWithoutCropInput, CropMonthlyReportUncheckedCreateWithoutCropInput> | CropMonthlyReportCreateWithoutCropInput[] | CropMonthlyReportUncheckedCreateWithoutCropInput[]
+    connectOrCreate?: CropMonthlyReportCreateOrConnectWithoutCropInput | CropMonthlyReportCreateOrConnectWithoutCropInput[]
+    upsert?: CropMonthlyReportUpsertWithWhereUniqueWithoutCropInput | CropMonthlyReportUpsertWithWhereUniqueWithoutCropInput[]
+    createMany?: CropMonthlyReportCreateManyCropInputEnvelope
+    set?: CropMonthlyReportWhereUniqueInput | CropMonthlyReportWhereUniqueInput[]
+    disconnect?: CropMonthlyReportWhereUniqueInput | CropMonthlyReportWhereUniqueInput[]
+    delete?: CropMonthlyReportWhereUniqueInput | CropMonthlyReportWhereUniqueInput[]
+    connect?: CropMonthlyReportWhereUniqueInput | CropMonthlyReportWhereUniqueInput[]
+    update?: CropMonthlyReportUpdateWithWhereUniqueWithoutCropInput | CropMonthlyReportUpdateWithWhereUniqueWithoutCropInput[]
+    updateMany?: CropMonthlyReportUpdateManyWithWhereWithoutCropInput | CropMonthlyReportUpdateManyWithWhereWithoutCropInput[]
+    deleteMany?: CropMonthlyReportScalarWhereInput | CropMonthlyReportScalarWhereInput[]
+  }
+
+  export type CropMonthlyReportUncheckedUpdateManyWithoutCropNestedInput = {
+    create?: XOR<CropMonthlyReportCreateWithoutCropInput, CropMonthlyReportUncheckedCreateWithoutCropInput> | CropMonthlyReportCreateWithoutCropInput[] | CropMonthlyReportUncheckedCreateWithoutCropInput[]
+    connectOrCreate?: CropMonthlyReportCreateOrConnectWithoutCropInput | CropMonthlyReportCreateOrConnectWithoutCropInput[]
+    upsert?: CropMonthlyReportUpsertWithWhereUniqueWithoutCropInput | CropMonthlyReportUpsertWithWhereUniqueWithoutCropInput[]
+    createMany?: CropMonthlyReportCreateManyCropInputEnvelope
+    set?: CropMonthlyReportWhereUniqueInput | CropMonthlyReportWhereUniqueInput[]
+    disconnect?: CropMonthlyReportWhereUniqueInput | CropMonthlyReportWhereUniqueInput[]
+    delete?: CropMonthlyReportWhereUniqueInput | CropMonthlyReportWhereUniqueInput[]
+    connect?: CropMonthlyReportWhereUniqueInput | CropMonthlyReportWhereUniqueInput[]
+    update?: CropMonthlyReportUpdateWithWhereUniqueWithoutCropInput | CropMonthlyReportUpdateWithWhereUniqueWithoutCropInput[]
+    updateMany?: CropMonthlyReportUpdateManyWithWhereWithoutCropInput | CropMonthlyReportUpdateManyWithWhereWithoutCropInput[]
+    deleteMany?: CropMonthlyReportScalarWhereInput | CropMonthlyReportScalarWhereInput[]
+  }
+
+  export type RegisteredCropCreateNestedOneWithoutReportsInput = {
+    create?: XOR<RegisteredCropCreateWithoutReportsInput, RegisteredCropUncheckedCreateWithoutReportsInput>
+    connectOrCreate?: RegisteredCropCreateOrConnectWithoutReportsInput
+    connect?: RegisteredCropWhereUniqueInput
+  }
+
+  export type RegisteredCropUpdateOneRequiredWithoutReportsNestedInput = {
+    create?: XOR<RegisteredCropCreateWithoutReportsInput, RegisteredCropUncheckedCreateWithoutReportsInput>
+    connectOrCreate?: RegisteredCropCreateOrConnectWithoutReportsInput
+    upsert?: RegisteredCropUpsertWithoutReportsInput
+    connect?: RegisteredCropWhereUniqueInput
+    update?: XOR<XOR<RegisteredCropUpdateToOneWithWhereWithoutReportsInput, RegisteredCropUpdateWithoutReportsInput>, RegisteredCropUncheckedUpdateWithoutReportsInput>
   }
 
   export type SeminarParticipantCreateNestedManyWithoutSeminarInput = {
@@ -36734,6 +40368,56 @@ export namespace Prisma {
     _max?: NestedEnumtransaction_statusFilter<$PrismaModel>
   }
 
+  export type NestedEnumCropStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CropStatus | EnumCropStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CropStatus[]
+    notIn?: $Enums.CropStatus[]
+    not?: NestedEnumCropStatusFilter<$PrismaModel> | $Enums.CropStatus
+  }
+
+  export type NestedEnumGrowthStageFilter<$PrismaModel = never> = {
+    equals?: $Enums.GrowthStage | EnumGrowthStageFieldRefInput<$PrismaModel>
+    in?: $Enums.GrowthStage[]
+    notIn?: $Enums.GrowthStage[]
+    not?: NestedEnumGrowthStageFilter<$PrismaModel> | $Enums.GrowthStage
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCropStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CropStatus | EnumCropStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CropStatus[]
+    notIn?: $Enums.CropStatus[]
+    not?: NestedEnumCropStatusWithAggregatesFilter<$PrismaModel> | $Enums.CropStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCropStatusFilter<$PrismaModel>
+    _max?: NestedEnumCropStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumGrowthStageWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GrowthStage | EnumGrowthStageFieldRefInput<$PrismaModel>
+    in?: $Enums.GrowthStage[]
+    notIn?: $Enums.GrowthStage[]
+    not?: NestedEnumGrowthStageWithAggregatesFilter<$PrismaModel> | $Enums.GrowthStage
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGrowthStageFilter<$PrismaModel>
+    _max?: NestedEnumGrowthStageFilter<$PrismaModel>
+  }
+
   export type NestedEnumseminar_statusFilter<$PrismaModel = never> = {
     equals?: $Enums.seminar_status | Enumseminar_statusFieldRefInput<$PrismaModel>
     in?: $Enums.seminar_status[]
@@ -37195,9 +40879,10 @@ export namespace Prisma {
   export type InquiryAttachmentCreateWithoutUploadedByInput = {
     id?: string
     filename: string
-    filepath: string
+    filepath?: string | null
     filesize: number
     mimetype: string
+    fileData?: Uint8Array | null
     createdAt?: Date | string
     inquiry: InquiryCreateNestedOneWithoutAttachmentsInput
   }
@@ -37205,9 +40890,10 @@ export namespace Prisma {
   export type InquiryAttachmentUncheckedCreateWithoutUploadedByInput = {
     id?: string
     filename: string
-    filepath: string
+    filepath?: string | null
     filesize: number
     mimetype: string
+    fileData?: Uint8Array | null
     inquiryId: string
     createdAt?: Date | string
   }
@@ -37497,6 +41183,48 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type RegisteredCropCreateWithoutUserInput = {
+    id?: string
+    cropType: string
+    variety: string
+    plantingDate: Date | string
+    expectedHarvest?: Date | string | null
+    area?: number | null
+    status?: $Enums.CropStatus
+    currentStage?: $Enums.GrowthStage
+    expectedYield?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reports?: CropMonthlyReportCreateNestedManyWithoutCropInput
+  }
+
+  export type RegisteredCropUncheckedCreateWithoutUserInput = {
+    id?: string
+    cropType: string
+    variety: string
+    plantingDate: Date | string
+    expectedHarvest?: Date | string | null
+    area?: number | null
+    status?: $Enums.CropStatus
+    currentStage?: $Enums.GrowthStage
+    expectedYield?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reports?: CropMonthlyReportUncheckedCreateNestedManyWithoutCropInput
+  }
+
+  export type RegisteredCropCreateOrConnectWithoutUserInput = {
+    where: RegisteredCropWhereUniqueInput
+    create: XOR<RegisteredCropCreateWithoutUserInput, RegisteredCropUncheckedCreateWithoutUserInput>
+  }
+
+  export type RegisteredCropCreateManyUserInputEnvelope = {
+    data: RegisteredCropCreateManyUserInput | RegisteredCropCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SeminarParticipantUpsertWithWhereUniqueWithoutAccountInput = {
     where: SeminarParticipantWhereUniqueInput
     update: XOR<SeminarParticipantUpdateWithoutAccountInput, SeminarParticipantUncheckedUpdateWithoutAccountInput>
@@ -37768,9 +41496,10 @@ export namespace Prisma {
     NOT?: InquiryAttachmentScalarWhereInput | InquiryAttachmentScalarWhereInput[]
     id?: StringFilter<"InquiryAttachment"> | string
     filename?: StringFilter<"InquiryAttachment"> | string
-    filepath?: StringFilter<"InquiryAttachment"> | string
+    filepath?: StringNullableFilter<"InquiryAttachment"> | string | null
     filesize?: IntFilter<"InquiryAttachment"> | number
     mimetype?: StringFilter<"InquiryAttachment"> | string
+    fileData?: BytesNullableFilter<"InquiryAttachment"> | Uint8Array | null
     inquiryId?: StringFilter<"InquiryAttachment"> | string
     uploadedById?: StringNullableFilter<"InquiryAttachment"> | string | null
     createdAt?: DateTimeFilter<"InquiryAttachment"> | Date | string
@@ -38042,6 +41771,41 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"UserPreference"> | Date | string
   }
 
+  export type RegisteredCropUpsertWithWhereUniqueWithoutUserInput = {
+    where: RegisteredCropWhereUniqueInput
+    update: XOR<RegisteredCropUpdateWithoutUserInput, RegisteredCropUncheckedUpdateWithoutUserInput>
+    create: XOR<RegisteredCropCreateWithoutUserInput, RegisteredCropUncheckedCreateWithoutUserInput>
+  }
+
+  export type RegisteredCropUpdateWithWhereUniqueWithoutUserInput = {
+    where: RegisteredCropWhereUniqueInput
+    data: XOR<RegisteredCropUpdateWithoutUserInput, RegisteredCropUncheckedUpdateWithoutUserInput>
+  }
+
+  export type RegisteredCropUpdateManyWithWhereWithoutUserInput = {
+    where: RegisteredCropScalarWhereInput
+    data: XOR<RegisteredCropUpdateManyMutationInput, RegisteredCropUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type RegisteredCropScalarWhereInput = {
+    AND?: RegisteredCropScalarWhereInput | RegisteredCropScalarWhereInput[]
+    OR?: RegisteredCropScalarWhereInput[]
+    NOT?: RegisteredCropScalarWhereInput | RegisteredCropScalarWhereInput[]
+    id?: StringFilter<"RegisteredCrop"> | string
+    userId?: StringFilter<"RegisteredCrop"> | string
+    cropType?: StringFilter<"RegisteredCrop"> | string
+    variety?: StringFilter<"RegisteredCrop"> | string
+    plantingDate?: DateTimeFilter<"RegisteredCrop"> | Date | string
+    expectedHarvest?: DateTimeNullableFilter<"RegisteredCrop"> | Date | string | null
+    area?: FloatNullableFilter<"RegisteredCrop"> | number | null
+    status?: EnumCropStatusFilter<"RegisteredCrop"> | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFilter<"RegisteredCrop"> | $Enums.GrowthStage
+    expectedYield?: FloatNullableFilter<"RegisteredCrop"> | number | null
+    notes?: StringNullableFilter<"RegisteredCrop"> | string | null
+    createdAt?: DateTimeFilter<"RegisteredCrop"> | Date | string
+    updatedAt?: DateTimeFilter<"RegisteredCrop"> | Date | string
+  }
+
   export type AccountCreateWithoutAuditLogsInput = {
     id?: string
     access?: $Enums.access
@@ -38094,6 +41858,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -38116,6 +41882,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutAuditLogsInput = {
@@ -38170,6 +41937,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -38192,6 +41961,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutAuditLogsInput = {
@@ -38262,6 +42032,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38284,6 +42056,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAuditLogsInput = {
@@ -38338,6 +42111,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38360,6 +42135,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ChatParticipantCreateWithoutRoomInput = {
@@ -38516,6 +42292,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -38538,6 +42316,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutChatParticipantsInput = {
@@ -38592,6 +42371,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -38614,6 +42395,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutChatParticipantsInput = {
@@ -38713,6 +42495,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38735,6 +42519,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatParticipantsInput = {
@@ -38789,6 +42574,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38811,6 +42598,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ChatRoomUpsertWithoutParticipantsInput = {
@@ -38900,6 +42688,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -38922,6 +42712,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutChatMessagesInput = {
@@ -38976,6 +42767,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -38998,6 +42791,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutChatMessagesInput = {
@@ -39224,6 +43018,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39246,6 +43042,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatMessagesInput = {
@@ -39300,6 +43097,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39322,6 +43121,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ChatRoomUpsertWithoutMessagesInput = {
@@ -39535,6 +43335,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -39557,6 +43359,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutChatAttachmentsInput = {
@@ -39611,6 +43414,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -39633,6 +43438,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutChatAttachmentsInput = {
@@ -39744,6 +43550,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39766,6 +43574,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatAttachmentsInput = {
@@ -39820,6 +43629,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39842,6 +43653,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ChatMessageCreateWithoutReadReceiptsInput = {
@@ -39931,6 +43743,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -39953,6 +43767,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutChatReadReceiptsInput = {
@@ -40007,6 +43822,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -40029,6 +43846,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutChatReadReceiptsInput = {
@@ -40140,6 +43958,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40162,6 +43982,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatReadReceiptsInput = {
@@ -40216,6 +44037,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40238,6 +44061,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutInquiriesInput = {
@@ -40292,6 +44116,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -40314,6 +44140,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutInquiriesInput = {
@@ -40368,6 +44195,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -40390,6 +44219,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutInquiriesInput = {
@@ -40449,6 +44279,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -40471,6 +44303,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutAssignedInquiriesInput = {
@@ -40525,6 +44358,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -40547,6 +44382,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutAssignedInquiriesInput = {
@@ -40606,6 +44442,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -40628,6 +44466,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutResolvedInquiriesInput = {
@@ -40682,6 +44521,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -40704,6 +44545,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutResolvedInquiriesInput = {
@@ -40754,9 +44596,10 @@ export namespace Prisma {
   export type InquiryAttachmentCreateWithoutInquiryInput = {
     id?: string
     filename: string
-    filepath: string
+    filepath?: string | null
     filesize: number
     mimetype: string
+    fileData?: Uint8Array | null
     createdAt?: Date | string
     uploadedBy?: AccountCreateNestedOneWithoutInquiryAttachmentsInput
   }
@@ -40764,9 +44607,10 @@ export namespace Prisma {
   export type InquiryAttachmentUncheckedCreateWithoutInquiryInput = {
     id?: string
     filename: string
-    filepath: string
+    filepath?: string | null
     filesize: number
     mimetype: string
+    fileData?: Uint8Array | null
     uploadedById?: string | null
     createdAt?: Date | string
   }
@@ -40844,6 +44688,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40866,6 +44712,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiriesInput = {
@@ -40920,6 +44767,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40942,6 +44791,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUpsertWithoutAssignedInquiriesInput = {
@@ -41007,6 +44857,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41029,6 +44881,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAssignedInquiriesInput = {
@@ -41083,6 +44936,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41105,6 +44960,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUpsertWithoutResolvedInquiriesInput = {
@@ -41170,6 +45026,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41192,6 +45050,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutResolvedInquiriesInput = {
@@ -41246,6 +45105,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41268,6 +45129,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type InquiryReplyUpsertWithWhereUniqueWithoutInquiryInput = {
@@ -41354,6 +45216,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -41376,6 +45240,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutInquiryRepliesInput = {
@@ -41430,6 +45295,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -41452,6 +45319,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutInquiryRepliesInput = {
@@ -41634,6 +45502,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41656,6 +45526,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiryRepliesInput = {
@@ -41710,6 +45581,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41732,6 +45605,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type InquiryUpsertWithoutRepliesInput = {
@@ -41923,6 +45797,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -41945,6 +45821,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutInquiryAttachmentsInput = {
@@ -41999,6 +45876,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -42021,6 +45900,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutInquiryAttachmentsInput = {
@@ -42134,6 +46014,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42156,6 +46038,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutInquiryAttachmentsInput = {
@@ -42210,6 +46093,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42232,6 +46117,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutCreatedFAQsInput = {
@@ -42286,6 +46172,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -42308,6 +46196,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutCreatedFAQsInput = {
@@ -42362,6 +46251,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -42384,6 +46275,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutCreatedFAQsInput = {
@@ -42454,6 +46346,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42476,6 +46370,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutCreatedFAQsInput = {
@@ -42530,6 +46425,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42552,6 +46449,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ItemStackCreateWithoutItemInput = {
@@ -42798,6 +46696,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -42820,6 +46720,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutItemTransactionsInput = {
@@ -42874,6 +46775,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -42896,6 +46799,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutItemTransactionsInput = {
@@ -42955,6 +46859,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -42977,6 +46883,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutAdminTransactionsInput = {
@@ -43031,6 +46938,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -43053,6 +46962,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutAdminTransactionsInput = {
@@ -43154,6 +47064,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43176,6 +47088,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutItemTransactionsInput = {
@@ -43230,6 +47143,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43252,6 +47167,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUpsertWithoutAdminTransactionsInput = {
@@ -43317,6 +47233,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43339,6 +47257,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutAdminTransactionsInput = {
@@ -43393,6 +47312,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43415,6 +47336,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutPreferencesInput = {
@@ -43469,6 +47391,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -43491,6 +47415,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutPreferencesInput = {
@@ -43545,6 +47470,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -43567,6 +47494,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutPreferencesInput = {
@@ -43637,6 +47565,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43659,6 +47589,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutPreferencesInput = {
@@ -43713,6 +47644,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43735,6 +47668,527 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type AccountCreateWithoutRegisteredCropsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQCreateNestedManyWithoutCreatedByInput
+    chatParticipants?: ChatParticipantCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessageCreateNestedManyWithoutSenderInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUploadedByInput
+    chatReadReceipts?: ChatReadReceiptCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+  }
+
+  export type AccountUncheckedCreateWithoutRegisteredCropsInput = {
+    id?: string
+    access?: $Enums.access
+    username: string
+    email: string
+    password: string
+    firstName: string
+    middleName?: string | null
+    surname: string
+    extensionName?: string | null
+    sex?: $Enums.gender
+    street?: string | null
+    barangay?: string | null
+    municipality?: string | null
+    province?: string | null
+    region?: string | null
+    houseNumber?: string | null
+    mobileNumber?: string | null
+    landlineNumber?: string | null
+    birthMunicipality?: string | null
+    birthProvince?: string | null
+    birthCountry?: string | null
+    dateOfBirth?: Date | string | null
+    religion?: string | null
+    otherReligionSpecify?: string | null
+    civilStatus?: string | null
+    spouseName?: string | null
+    femaleHouseholdMembers?: string | null
+    maleHouseholdMembers?: string | null
+    isHouseholdHead?: boolean | null
+    householdHeadName?: string | null
+    relationshipToHead?: $Enums.RelationshipToHead | null
+    hasGovId?: boolean | null
+    govIdType?: $Enums.GovIdType | null
+    govIdNumber?: string | null
+    education?: $Enums.EducationLevel | null
+    isPWD?: boolean | null
+    disabilityType?: string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: string | null
+    livestockSpecify?: string | null
+    fishingOthersSpecify?: string | null
+    farmworkOthersSpecify?: string | null
+    youthOthersSpecify?: string | null
+    grossAnnualIncome?: string | null
+    incomeSource?: $Enums.IncomeSource | null
+    picture?: Uint8Array | null
+    mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
+    client_profile?: $Enums.client_profile
+    address?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    seminars?: SeminarParticipantUncheckedCreateNestedManyWithoutAccountInput
+    itemTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAccountInput
+    adminTransactions?: ItemTransactionUncheckedCreateNestedManyWithoutAdminInput
+    seminarsCreated?: SeminarUncheckedCreateNestedManyWithoutCreatorInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutAdminInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutUserInput
+    assignedInquiries?: InquiryUncheckedCreateNestedManyWithoutAssignedToInput
+    resolvedInquiries?: InquiryUncheckedCreateNestedManyWithoutResolvedByInput
+    inquiryReplies?: InquiryReplyUncheckedCreateNestedManyWithoutSenderInput
+    inquiryAttachments?: InquiryAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    createdFAQs?: FAQUncheckedCreateNestedManyWithoutCreatedByInput
+    chatParticipants?: ChatParticipantUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: ChatMessageUncheckedCreateNestedManyWithoutSenderInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    chatReadReceipts?: ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+    surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
+    preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type AccountCreateOrConnectWithoutRegisteredCropsInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutRegisteredCropsInput, AccountUncheckedCreateWithoutRegisteredCropsInput>
+  }
+
+  export type CropMonthlyReportCreateWithoutCropInput = {
+    id?: string
+    reportDate: Date | string
+    growthStage: $Enums.GrowthStage
+    plantHeight?: number | null
+    healthStatus?: string | null
+    estimatedYield?: number | null
+    weatherImpact?: string | null
+    notes?: string | null
+    pestsObserved?: string | null
+    diseasesObserved?: string | null
+    fertilizersApplied?: string | null
+    pesticideApplications?: string | null
+    irrigationFrequency?: string | null
+    soilCondition?: string | null
+    majorActivities?: string | null
+    challenges?: string | null
+    plannedActions?: string | null
+    actualYield?: number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CropMonthlyReportUncheckedCreateWithoutCropInput = {
+    id?: string
+    reportDate: Date | string
+    growthStage: $Enums.GrowthStage
+    plantHeight?: number | null
+    healthStatus?: string | null
+    estimatedYield?: number | null
+    weatherImpact?: string | null
+    notes?: string | null
+    pestsObserved?: string | null
+    diseasesObserved?: string | null
+    fertilizersApplied?: string | null
+    pesticideApplications?: string | null
+    irrigationFrequency?: string | null
+    soilCondition?: string | null
+    majorActivities?: string | null
+    challenges?: string | null
+    plannedActions?: string | null
+    actualYield?: number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CropMonthlyReportCreateOrConnectWithoutCropInput = {
+    where: CropMonthlyReportWhereUniqueInput
+    create: XOR<CropMonthlyReportCreateWithoutCropInput, CropMonthlyReportUncheckedCreateWithoutCropInput>
+  }
+
+  export type CropMonthlyReportCreateManyCropInputEnvelope = {
+    data: CropMonthlyReportCreateManyCropInput | CropMonthlyReportCreateManyCropInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AccountUpsertWithoutRegisteredCropsInput = {
+    update: XOR<AccountUpdateWithoutRegisteredCropsInput, AccountUncheckedUpdateWithoutRegisteredCropsInput>
+    create: XOR<AccountCreateWithoutRegisteredCropsInput, AccountUncheckedCreateWithoutRegisteredCropsInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutRegisteredCropsInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutRegisteredCropsInput, AccountUncheckedUpdateWithoutRegisteredCropsInput>
+  }
+
+  export type AccountUpdateWithoutRegisteredCropsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUpdateManyWithoutCreatedByNestedInput
+    chatParticipants?: ChatParticipantUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessageUpdateManyWithoutSenderNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUploadedByNestedInput
+    chatReadReceipts?: ChatReadReceiptUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutRegisteredCropsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    access?: EnumaccessFieldUpdateOperationsInput | $Enums.access
+    username?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    surname?: StringFieldUpdateOperationsInput | string
+    extensionName?: NullableStringFieldUpdateOperationsInput | string | null
+    sex?: EnumgenderFieldUpdateOperationsInput | $Enums.gender
+    street?: NullableStringFieldUpdateOperationsInput | string | null
+    barangay?: NullableStringFieldUpdateOperationsInput | string | null
+    municipality?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    houseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    landlineNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    birthMunicipality?: NullableStringFieldUpdateOperationsInput | string | null
+    birthProvince?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    religion?: NullableStringFieldUpdateOperationsInput | string | null
+    otherReligionSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    civilStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    spouseName?: NullableStringFieldUpdateOperationsInput | string | null
+    femaleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    maleHouseholdMembers?: NullableStringFieldUpdateOperationsInput | string | null
+    isHouseholdHead?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    householdHeadName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationshipToHead?: NullableEnumRelationshipToHeadFieldUpdateOperationsInput | $Enums.RelationshipToHead | null
+    hasGovId?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    govIdType?: NullableEnumGovIdTypeFieldUpdateOperationsInput | $Enums.GovIdType | null
+    govIdNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    education?: NullableEnumEducationLevelFieldUpdateOperationsInput | $Enums.EducationLevel | null
+    isPWD?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    disabilityType?: NullableStringFieldUpdateOperationsInput | string | null
+    livelihoodProfile?: NullableJsonNullValueInput | InputJsonValue
+    farmingActivities?: NullableJsonNullValueInput | InputJsonValue
+    fishingActivities?: NullableJsonNullValueInput | InputJsonValue
+    farmworkActivities?: NullableJsonNullValueInput | InputJsonValue
+    youthActivities?: NullableJsonNullValueInput | InputJsonValue
+    otherCropsSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    livestockSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    fishingOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    farmworkOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    youthOthersSpecify?: NullableStringFieldUpdateOperationsInput | string | null
+    grossAnnualIncome?: NullableStringFieldUpdateOperationsInput | string | null
+    incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
+    picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    seminars?: SeminarParticipantUncheckedUpdateManyWithoutAccountNestedInput
+    itemTransactions?: ItemTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    adminTransactions?: ItemTransactionUncheckedUpdateManyWithoutAdminNestedInput
+    seminarsCreated?: SeminarUncheckedUpdateManyWithoutCreatorNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutUserNestedInput
+    assignedInquiries?: InquiryUncheckedUpdateManyWithoutAssignedToNestedInput
+    resolvedInquiries?: InquiryUncheckedUpdateManyWithoutResolvedByNestedInput
+    inquiryReplies?: InquiryReplyUncheckedUpdateManyWithoutSenderNestedInput
+    inquiryAttachments?: InquiryAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    createdFAQs?: FAQUncheckedUpdateManyWithoutCreatedByNestedInput
+    chatParticipants?: ChatParticipantUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: ChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    chatReadReceipts?: ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+    surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
+    surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
+    preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type CropMonthlyReportUpsertWithWhereUniqueWithoutCropInput = {
+    where: CropMonthlyReportWhereUniqueInput
+    update: XOR<CropMonthlyReportUpdateWithoutCropInput, CropMonthlyReportUncheckedUpdateWithoutCropInput>
+    create: XOR<CropMonthlyReportCreateWithoutCropInput, CropMonthlyReportUncheckedCreateWithoutCropInput>
+  }
+
+  export type CropMonthlyReportUpdateWithWhereUniqueWithoutCropInput = {
+    where: CropMonthlyReportWhereUniqueInput
+    data: XOR<CropMonthlyReportUpdateWithoutCropInput, CropMonthlyReportUncheckedUpdateWithoutCropInput>
+  }
+
+  export type CropMonthlyReportUpdateManyWithWhereWithoutCropInput = {
+    where: CropMonthlyReportScalarWhereInput
+    data: XOR<CropMonthlyReportUpdateManyMutationInput, CropMonthlyReportUncheckedUpdateManyWithoutCropInput>
+  }
+
+  export type CropMonthlyReportScalarWhereInput = {
+    AND?: CropMonthlyReportScalarWhereInput | CropMonthlyReportScalarWhereInput[]
+    OR?: CropMonthlyReportScalarWhereInput[]
+    NOT?: CropMonthlyReportScalarWhereInput | CropMonthlyReportScalarWhereInput[]
+    id?: StringFilter<"CropMonthlyReport"> | string
+    cropId?: StringFilter<"CropMonthlyReport"> | string
+    reportDate?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+    growthStage?: EnumGrowthStageFilter<"CropMonthlyReport"> | $Enums.GrowthStage
+    plantHeight?: FloatNullableFilter<"CropMonthlyReport"> | number | null
+    healthStatus?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    estimatedYield?: FloatNullableFilter<"CropMonthlyReport"> | number | null
+    weatherImpact?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    notes?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    pestsObserved?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    diseasesObserved?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    fertilizersApplied?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    pesticideApplications?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    irrigationFrequency?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    soilCondition?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    majorActivities?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    challenges?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    plannedActions?: StringNullableFilter<"CropMonthlyReport"> | string | null
+    actualYield?: FloatNullableFilter<"CropMonthlyReport"> | number | null
+    costs?: JsonNullableFilter<"CropMonthlyReport">
+    submissionDate?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+    weatherSnapshot?: JsonNullableFilter<"CropMonthlyReport">
+    createdAt?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+    updatedAt?: DateTimeFilter<"CropMonthlyReport"> | Date | string
+  }
+
+  export type RegisteredCropCreateWithoutReportsInput = {
+    id?: string
+    cropType: string
+    variety: string
+    plantingDate: Date | string
+    expectedHarvest?: Date | string | null
+    area?: number | null
+    status?: $Enums.CropStatus
+    currentStage?: $Enums.GrowthStage
+    expectedYield?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: AccountCreateNestedOneWithoutRegisteredCropsInput
+  }
+
+  export type RegisteredCropUncheckedCreateWithoutReportsInput = {
+    id?: string
+    userId: string
+    cropType: string
+    variety: string
+    plantingDate: Date | string
+    expectedHarvest?: Date | string | null
+    area?: number | null
+    status?: $Enums.CropStatus
+    currentStage?: $Enums.GrowthStage
+    expectedYield?: number | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RegisteredCropCreateOrConnectWithoutReportsInput = {
+    where: RegisteredCropWhereUniqueInput
+    create: XOR<RegisteredCropCreateWithoutReportsInput, RegisteredCropUncheckedCreateWithoutReportsInput>
+  }
+
+  export type RegisteredCropUpsertWithoutReportsInput = {
+    update: XOR<RegisteredCropUpdateWithoutReportsInput, RegisteredCropUncheckedUpdateWithoutReportsInput>
+    create: XOR<RegisteredCropCreateWithoutReportsInput, RegisteredCropUncheckedCreateWithoutReportsInput>
+    where?: RegisteredCropWhereInput
+  }
+
+  export type RegisteredCropUpdateToOneWithWhereWithoutReportsInput = {
+    where?: RegisteredCropWhereInput
+    data: XOR<RegisteredCropUpdateWithoutReportsInput, RegisteredCropUncheckedUpdateWithoutReportsInput>
+  }
+
+  export type RegisteredCropUpdateWithoutReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cropType?: StringFieldUpdateOperationsInput | string
+    variety?: StringFieldUpdateOperationsInput | string
+    plantingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedHarvest?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    area?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumCropStatusFieldUpdateOperationsInput | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    expectedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: AccountUpdateOneRequiredWithoutRegisteredCropsNestedInput
+  }
+
+  export type RegisteredCropUncheckedUpdateWithoutReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    cropType?: StringFieldUpdateOperationsInput | string
+    variety?: StringFieldUpdateOperationsInput | string
+    plantingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedHarvest?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    area?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumCropStatusFieldUpdateOperationsInput | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    expectedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SeminarParticipantCreateWithoutSeminarInput = {
@@ -43815,6 +48269,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -43837,6 +48293,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsCreatedInput = {
@@ -43891,6 +48348,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -43913,6 +48372,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsCreatedInput = {
@@ -43999,6 +48459,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44021,6 +48483,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsCreatedInput = {
@@ -44075,6 +48538,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44097,6 +48562,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SeminarCreateWithoutParticipantsInput = {
@@ -44196,6 +48662,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -44218,6 +48686,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutSeminarsInput = {
@@ -44272,6 +48741,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -44294,6 +48765,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutSeminarsInput = {
@@ -44415,6 +48887,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44437,6 +48911,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSeminarsInput = {
@@ -44491,6 +48966,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44513,6 +48990,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutSurveyFormsCreatedInput = {
@@ -44567,6 +49045,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -44589,6 +49069,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutSurveyFormsCreatedInput = {
@@ -44643,6 +49124,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -44665,6 +49148,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutSurveyFormsCreatedInput = {
@@ -44829,6 +49313,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44851,6 +49337,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSurveyFormsCreatedInput = {
@@ -44905,6 +49392,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44927,6 +49416,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SurveyFieldUpsertWithWhereUniqueWithoutSurveyFormInput = {
@@ -45195,6 +49685,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -45217,6 +49709,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyStatisticsCreated?: SurveyStatisticCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutSurveyResponsesInput = {
@@ -45271,6 +49764,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -45293,6 +49788,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedCreateNestedManyWithoutCreatorInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutSurveyResponsesInput = {
@@ -45424,6 +49920,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45446,6 +49944,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyStatisticsCreated?: SurveyStatisticUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSurveyResponsesInput = {
@@ -45500,6 +49999,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45522,6 +50023,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyStatisticsCreated?: SurveyStatisticUncheckedUpdateManyWithoutCreatorNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SurveyAnswerUpsertWithWhereUniqueWithoutResponseInput = {
@@ -45739,6 +50241,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -45761,6 +50265,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutUserInput
     preferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropCreateNestedManyWithoutUserInput
   }
 
   export type AccountUncheckedCreateWithoutSurveyStatisticsCreatedInput = {
@@ -45815,6 +50320,8 @@ export namespace Prisma {
     incomeSource?: $Enums.IncomeSource | null
     picture?: Uint8Array | null
     mimeType?: string | null
+    resetTokenHash?: string | null
+    resetTokenExpiry?: Date | string | null
     client_profile?: $Enums.client_profile
     address?: string | null
     createdAt?: Date | string
@@ -45837,6 +50344,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedCreateNestedManyWithoutCreatorInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutUserInput
     preferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    registeredCrops?: RegisteredCropUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type AccountCreateOrConnectWithoutSurveyStatisticsCreatedInput = {
@@ -45944,6 +50452,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45966,6 +50476,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutUserNestedInput
     preferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutSurveyStatisticsCreatedInput = {
@@ -46020,6 +50531,8 @@ export namespace Prisma {
     incomeSource?: NullableEnumIncomeSourceFieldUpdateOperationsInput | $Enums.IncomeSource | null
     picture?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client_profile?: Enumclient_profileFieldUpdateOperationsInput | $Enums.client_profile
     address?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46042,6 +50555,7 @@ export namespace Prisma {
     surveyFormsCreated?: SurveyFormUncheckedUpdateManyWithoutCreatorNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutUserNestedInput
     preferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    registeredCrops?: RegisteredCropUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SeminarParticipantCreateManyAccountInput = {
@@ -46169,9 +50683,10 @@ export namespace Prisma {
   export type InquiryAttachmentCreateManyUploadedByInput = {
     id?: string
     filename: string
-    filepath: string
+    filepath?: string | null
     filesize: number
     mimetype: string
+    fileData?: Uint8Array | null
     inquiryId: string
     createdAt?: Date | string
   }
@@ -46258,6 +50773,21 @@ export namespace Prisma {
     id?: number
     key: string
     value: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RegisteredCropCreateManyUserInput = {
+    id?: string
+    cropType: string
+    variety: string
+    plantingDate: Date | string
+    expectedHarvest?: Date | string | null
+    area?: number | null
+    status?: $Enums.CropStatus
+    currentStage?: $Enums.GrowthStage
+    expectedYield?: number | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -46647,9 +51177,10 @@ export namespace Prisma {
   export type InquiryAttachmentUpdateWithoutUploadedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     filename?: StringFieldUpdateOperationsInput | string
-    filepath?: StringFieldUpdateOperationsInput | string
+    filepath?: NullableStringFieldUpdateOperationsInput | string | null
     filesize?: IntFieldUpdateOperationsInput | number
     mimetype?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inquiry?: InquiryUpdateOneRequiredWithoutAttachmentsNestedInput
   }
@@ -46657,9 +51188,10 @@ export namespace Prisma {
   export type InquiryAttachmentUncheckedUpdateWithoutUploadedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     filename?: StringFieldUpdateOperationsInput | string
-    filepath?: StringFieldUpdateOperationsInput | string
+    filepath?: NullableStringFieldUpdateOperationsInput | string | null
     filesize?: IntFieldUpdateOperationsInput | number
     mimetype?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     inquiryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -46667,9 +51199,10 @@ export namespace Prisma {
   export type InquiryAttachmentUncheckedUpdateManyWithoutUploadedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     filename?: StringFieldUpdateOperationsInput | string
-    filepath?: StringFieldUpdateOperationsInput | string
+    filepath?: NullableStringFieldUpdateOperationsInput | string | null
     filesize?: IntFieldUpdateOperationsInput | number
     mimetype?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     inquiryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -46945,6 +51478,53 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type RegisteredCropUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cropType?: StringFieldUpdateOperationsInput | string
+    variety?: StringFieldUpdateOperationsInput | string
+    plantingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedHarvest?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    area?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumCropStatusFieldUpdateOperationsInput | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    expectedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reports?: CropMonthlyReportUpdateManyWithoutCropNestedInput
+  }
+
+  export type RegisteredCropUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cropType?: StringFieldUpdateOperationsInput | string
+    variety?: StringFieldUpdateOperationsInput | string
+    plantingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedHarvest?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    area?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumCropStatusFieldUpdateOperationsInput | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    expectedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reports?: CropMonthlyReportUncheckedUpdateManyWithoutCropNestedInput
+  }
+
+  export type RegisteredCropUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cropType?: StringFieldUpdateOperationsInput | string
+    variety?: StringFieldUpdateOperationsInput | string
+    plantingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedHarvest?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    area?: NullableFloatFieldUpdateOperationsInput | number | null
+    status?: EnumCropStatusFieldUpdateOperationsInput | $Enums.CropStatus
+    currentStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    expectedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ChatParticipantCreateManyRoomInput = {
     id?: string
     userId: string
@@ -47174,9 +51754,10 @@ export namespace Prisma {
   export type InquiryAttachmentCreateManyInquiryInput = {
     id?: string
     filename: string
-    filepath: string
+    filepath?: string | null
     filesize: number
     mimetype: string
+    fileData?: Uint8Array | null
     uploadedById?: string | null
     createdAt?: Date | string
   }
@@ -47228,9 +51809,10 @@ export namespace Prisma {
   export type InquiryAttachmentUpdateWithoutInquiryInput = {
     id?: StringFieldUpdateOperationsInput | string
     filename?: StringFieldUpdateOperationsInput | string
-    filepath?: StringFieldUpdateOperationsInput | string
+    filepath?: NullableStringFieldUpdateOperationsInput | string | null
     filesize?: IntFieldUpdateOperationsInput | number
     mimetype?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     uploadedBy?: AccountUpdateOneWithoutInquiryAttachmentsNestedInput
   }
@@ -47238,9 +51820,10 @@ export namespace Prisma {
   export type InquiryAttachmentUncheckedUpdateWithoutInquiryInput = {
     id?: StringFieldUpdateOperationsInput | string
     filename?: StringFieldUpdateOperationsInput | string
-    filepath?: StringFieldUpdateOperationsInput | string
+    filepath?: NullableStringFieldUpdateOperationsInput | string | null
     filesize?: IntFieldUpdateOperationsInput | number
     mimetype?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47248,9 +51831,10 @@ export namespace Prisma {
   export type InquiryAttachmentUncheckedUpdateManyWithoutInquiryInput = {
     id?: StringFieldUpdateOperationsInput | string
     filename?: StringFieldUpdateOperationsInput | string
-    filepath?: StringFieldUpdateOperationsInput | string
+    filepath?: NullableStringFieldUpdateOperationsInput | string | null
     filesize?: IntFieldUpdateOperationsInput | number
     mimetype?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47399,6 +51983,110 @@ export namespace Prisma {
     pickupDate?: DateTimeFieldUpdateOperationsInput | Date | string
     returnDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     requestNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CropMonthlyReportCreateManyCropInput = {
+    id?: string
+    reportDate: Date | string
+    growthStage: $Enums.GrowthStage
+    plantHeight?: number | null
+    healthStatus?: string | null
+    estimatedYield?: number | null
+    weatherImpact?: string | null
+    notes?: string | null
+    pestsObserved?: string | null
+    diseasesObserved?: string | null
+    fertilizersApplied?: string | null
+    pesticideApplications?: string | null
+    irrigationFrequency?: string | null
+    soilCondition?: string | null
+    majorActivities?: string | null
+    challenges?: string | null
+    plannedActions?: string | null
+    actualYield?: number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CropMonthlyReportUpdateWithoutCropInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    growthStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    plantHeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    healthStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    weatherImpact?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    pestsObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    diseasesObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    fertilizersApplied?: NullableStringFieldUpdateOperationsInput | string | null
+    pesticideApplications?: NullableStringFieldUpdateOperationsInput | string | null
+    irrigationFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    soilCondition?: NullableStringFieldUpdateOperationsInput | string | null
+    majorActivities?: NullableStringFieldUpdateOperationsInput | string | null
+    challenges?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedActions?: NullableStringFieldUpdateOperationsInput | string | null
+    actualYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CropMonthlyReportUncheckedUpdateWithoutCropInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    growthStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    plantHeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    healthStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    weatherImpact?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    pestsObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    diseasesObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    fertilizersApplied?: NullableStringFieldUpdateOperationsInput | string | null
+    pesticideApplications?: NullableStringFieldUpdateOperationsInput | string | null
+    irrigationFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    soilCondition?: NullableStringFieldUpdateOperationsInput | string | null
+    majorActivities?: NullableStringFieldUpdateOperationsInput | string | null
+    challenges?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedActions?: NullableStringFieldUpdateOperationsInput | string | null
+    actualYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CropMonthlyReportUncheckedUpdateManyWithoutCropInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    growthStage?: EnumGrowthStageFieldUpdateOperationsInput | $Enums.GrowthStage
+    plantHeight?: NullableFloatFieldUpdateOperationsInput | number | null
+    healthStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    weatherImpact?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    pestsObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    diseasesObserved?: NullableStringFieldUpdateOperationsInput | string | null
+    fertilizersApplied?: NullableStringFieldUpdateOperationsInput | string | null
+    pesticideApplications?: NullableStringFieldUpdateOperationsInput | string | null
+    irrigationFrequency?: NullableStringFieldUpdateOperationsInput | string | null
+    soilCondition?: NullableStringFieldUpdateOperationsInput | string | null
+    majorActivities?: NullableStringFieldUpdateOperationsInput | string | null
+    challenges?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedActions?: NullableStringFieldUpdateOperationsInput | string | null
+    actualYield?: NullableFloatFieldUpdateOperationsInput | number | null
+    costs?: NullableJsonNullValueInput | InputJsonValue
+    submissionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    weatherSnapshot?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

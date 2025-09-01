@@ -213,6 +213,7 @@ CREATE TABLE `inquiry_attachments` (
     `filepath` VARCHAR(191) NOT NULL,
     `filesize` INTEGER NOT NULL,
     `mimetype` VARCHAR(191) NOT NULL,
+    `fileData` LONGBLOB NULL,
     `inquiryId` VARCHAR(191) NOT NULL,
     `uploadedById` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
