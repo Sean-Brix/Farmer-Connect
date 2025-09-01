@@ -38,6 +38,10 @@ export const getActiveInquiries = async (req, res) => {
                         }
                     }
                 },
+                attachments: {
+                    orderBy: { createdAt: 'asc' },
+                    select: { id: true, filename: true, mimetype: true, filesize: true, uploadedById: true, createdAt: true }
+                },
                 assignedTo: {
                     select: {
                         firstName: true,
@@ -69,7 +73,11 @@ export const getActiveInquiries = async (req, res) => {
                 senderType: reply.senderType,
                 senderName: reply.senderName || (reply.sender ? `${reply.sender.firstName} ${reply.sender.surname}` : 'Unknown'),
                 createdAt: reply.createdAt
-            }))
+            })),
+            attachments: (inquiry.attachments || []).map(a => ({
+                ...a,
+                streamUrl: `/api/inquiries/attachments/${a.id}`
+            })),
         }));
 
         res.status(200).json(formattedInquiries);

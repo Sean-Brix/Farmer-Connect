@@ -180,7 +180,7 @@ export default function Chat() {
                         const bubbleUrl = data.streamUrl || data.filepath;
                         setMessages(prev => [
                             ...prev,
-                            { from: 'user', text: bubbleUrl, mime: data.mimetype, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+                            { from: 'user', text: bubbleUrl, mime: data.mimetype, filename: data.filename, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
                         ]);
 
                         if (socket && isConnected) {
@@ -757,6 +757,7 @@ export default function Chat() {
                                             {(() => {
                                                 const text = msg.text;
                                                 const mime = msg.mime;
+                                                const name = msg.filename;
                                                 const isPublic = typeof text === 'string' && text.startsWith('/public/');
                                                 const isStream = typeof text === 'string' && text.startsWith('/api/inquiries/attachments/');
                                                 const isMedia = isPublic || isStream;
@@ -768,7 +769,16 @@ export default function Chat() {
                                                         <source src={text} />
                                                     </video>
                                                 );
-                                                if (isMedia) return <a href={text} target="_blank" rel="noreferrer" className="underline">Download file</a>;
+                                                if (isMedia) return (
+                                                    <a href={text} target="_blank" rel="noreferrer" className="group w-64 border rounded-xl p-3 flex items-center gap-3 hover:shadow-sm transition bg-white border-gray-200">
+                                                        <div className="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center text-xs font-bold">FILE</div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="text-sm font-medium truncate" title={name || 'Attachment'}>{name || 'Attachment'}</div>
+                                                            <div className="text-xs opacity-70">{mime}</div>
+                                                        </div>
+                                                        <svg className="w-4 h-4 opacity-60 group-hover:opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12"/></svg>
+                                                    </a>
+                                                );
                                                 return text;
                                             })()}
                                         </div>

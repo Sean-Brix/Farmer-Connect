@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import ChatMessage from './ChatMessage.jsx';
 import MessageInput from './MessageInput.jsx';
+import FileAttachment from './FileAttachment.jsx';
 
 const ChatWindow = ({ selectedChat, messagesEndRef, getUserName, onSendMessage }) => {
   if (!selectedChat) {
@@ -20,6 +21,48 @@ const ChatWindow = ({ selectedChat, messagesEndRef, getUserName, onSendMessage }
       </div>
     );
   }
+
+  // Build a combined timeline: initial message, replies, and attachments
+  const timeline = useMemo(() => {
+    if (!selectedChat) return [];
+    const items = [];
+    if (selectedChat.message) {
+      items.push({
+        key: `inquiry:${selectedChat.id}`,
+        type: 'text',
+        data: {
+          id: `initial-${selectedChat.id}`,
+          message: selectedChat.message,
+          createdAt: selectedChat.createdAt,
+          senderType: 'USER'
+        }
+      });
+    }
+    (selectedChat.replies || []).forEach(r => {
+      items.push({ key: `reply:${r.id}` , type: 'text', data: r });
+    });
+    (selectedChat.attachments || []).forEach(a => {
+      const isImg = (a.mimetype || '').startsWith('image/') || /\.(png|jpe?g|webp|gif)$/i.test(a.filename || '');
+  if (isImg) {
+        items.push({
+          key: `att:${a.id}`,
+          type: 'image',
+          data: {
+            id: `att-${a.id}`,
+            message: a.streamUrl,
+    mime: a.mimetype,
+    filename: a.filename,
+            createdAt: a.createdAt,
+            senderType: a.uploadedById === selectedChat.userId ? 'USER' : 'ADMIN'
+          }
+        });
+      } else {
+        items.push({ key: `att:${a.id}`, type: 'file', data: a });
+      }
+    });
+    items.sort((a,b) => new Date((a.data.createdAt)) - new Date((b.data.createdAt)));
+    return items;
+  }, [selectedChat]);
 
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 h-[700px] flex flex-col">
@@ -49,27 +92,19 @@ const ChatWindow = ({ selectedChat, messagesEndRef, getUserName, onSendMessage }
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
         <div className="space-y-4">
-          {/* Initial inquiry message */}
-          {selectedChat.message ? (
-            <ChatMessage 
-              message={{
-                id: `initial-${selectedChat.id}`,
-                message: selectedChat.message,
-                createdAt: selectedChat.createdAt,
-                senderType: 'USER'
-              }}
+          {timeline.map(item => (item.type === 'text' || item.type === 'image') ? (
+            <ChatMessage
+              key={item.key}
+              message={item.data}
               getUserName={getUserName}
               chat={selectedChat}
             />
-          ) : null}
-          
-          {/* Replies */}
-          {selectedChat.replies && selectedChat.replies.map((reply) => (
-            <ChatMessage 
-              key={reply.id}
-              message={reply}
-              getUserName={getUserName}
-              chat={selectedChat}
+          ) : (
+            <FileAttachment
+              key={item.key}
+              attachment={item.data}
+              isFromUser={item.data.uploadedById === selectedChat.userId}
+              createdAt={item.data.createdAt}
             />
           ))}
           <div ref={messagesEndRef} />

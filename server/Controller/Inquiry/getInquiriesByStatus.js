@@ -23,6 +23,10 @@ export const getInquiriesByStatus = async (req, res) => {
           replies: {
             orderBy: { createdAt: 'asc' },
             select: { id: true, message: true, senderType: true, createdAt: true }
+          },
+          attachments: {
+            orderBy: { createdAt: 'asc' },
+            select: { id: true, filename: true, mimetype: true, filesize: true, uploadedById: true, createdAt: true }
           }
         },
         orderBy: { updatedAt: 'desc' },
@@ -43,6 +47,10 @@ export const getInquiriesByStatus = async (req, res) => {
       createdAt: inquiry.createdAt,
       updatedAt: inquiry.updatedAt,
       replies: inquiry.replies,
+      attachments: (inquiry.attachments || []).map(a => ({
+        ...a,
+        streamUrl: `/api/inquiries/attachments/${a.id}`
+      })),
       lastMessage: inquiry.replies.length > 0 ? inquiry.replies[inquiry.replies.length - 1].message : inquiry.message,
       lastMessageTime: inquiry.replies.length > 0 ? inquiry.replies[inquiry.replies.length - 1].createdAt : inquiry.createdAt
     }));

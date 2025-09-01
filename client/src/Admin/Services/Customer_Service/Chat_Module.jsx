@@ -221,8 +221,9 @@ function Chat_Module() {
         if (!matches) return prev;
         const msg = {
           id: `att-${Date.now()}`,
-      message: streamUrl || filepath, // prefer stream URL
+          message: streamUrl || filepath, // prefer stream URL
           mime: mimetype,
+          filename,
           createdAt: ts,
           senderType: 'USER',
         };

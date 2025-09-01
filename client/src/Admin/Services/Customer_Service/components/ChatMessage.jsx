@@ -16,6 +16,7 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
     // When using InquiryReply, we only have message text. If we enhance it to carry attachments, support arrays.
     const text = message.message;
     const mime = message.attachmentMime || message.mime;
+    const name = message.filename || message.attachmentName;
     // Preview for /public or streamed /api attachments
     if (typeof text === 'string' && (text.startsWith('/public/') || text.startsWith('/api/inquiries/attachments/'))) {
       const url = text;
@@ -27,7 +28,7 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
       );
       return (
         <a href={url} target="_blank" rel="noreferrer" className="underline">
-          Download file
+          {name || 'Download file'}
         </a>
       );
     }
