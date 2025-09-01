@@ -33,7 +33,9 @@
         "dev": "prisma migrate deploy && nodemon server.js",
         "setup": "prisma migrate deploy && node prisma/seed.js",
         "fill": "node prisma/seed.js",
-        "reset": "npx prisma migrate reset --force && (prisma generate || echo 'Nothing to generate')",
+    "reset": "npx prisma migrate reset --force && (prisma generate || echo 'Nothing to generate')",
+    "seed:accounts": "node prisma/seed-accounts-only.js",
+    "reset:accounts": "npx prisma migrate reset --force --skip-seed && node prisma/seed-accounts-only.js",
         "generate": "npx prisma generate --schema=prisma/schema/schema.prisma"
     },
     "prisma": {

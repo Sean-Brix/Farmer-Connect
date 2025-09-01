@@ -33,6 +33,25 @@ const AnswerView = ({ answers }) => {
   );
 };
 
+// Date formatting helpers with month names (e.g., January 23, 2025 1:05 PM)
+const formatDate = (dateLike) => {
+  if (!dateLike) return '—';
+  const d = new Date(dateLike);
+  if (isNaN(d.getTime())) return '—';
+  return new Intl.DateTimeFormat(undefined, {
+    year: 'numeric', month: 'long', day: 'numeric'
+  }).format(d);
+};
+
+const formatDateTime = (dateLike) => {
+  if (!dateLike) return '—';
+  const d = new Date(dateLike);
+  if (isNaN(d.getTime())) return '—';
+  return new Intl.DateTimeFormat(undefined, {
+    year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit'
+  }).format(d);
+};
+
 const ResponsesModal = ({ isOpen, onClose, survey }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -42,6 +61,8 @@ const ResponsesModal = ({ isOpen, onClose, survey }) => {
   const [pagination, setPagination] = useState(null);
   const [selectedGroupKey, setSelectedGroupKey] = useState(null);
   const [expandedItems, setExpandedItems] = useState(() => new Set());
+  const [userSearch, setUserSearch] = useState('');
+  const [userSort, setUserSort] = useState('recent'); // 'recent' | 'name'
 
   useEffect(() => {
     if (!isOpen || !survey?.id) return;
@@ -64,6 +85,19 @@ const ResponsesModal = ({ isOpen, onClose, survey }) => {
 
   const groups = useMemo(() => groupByUser(data.responses || []), [data.responses]);
 
+  const filteredGroups = useMemo(() => {
+    const term = userSearch.trim().toLowerCase();
+    let arr = groups;
+    if (term) {
+      arr = groups.filter(g => `${g.label} ${g.email}`.toLowerCase().includes(term));
+    }
+    if (userSort === 'name') {
+      return [...arr].sort((a,b) => (a.label || '').localeCompare(b.label || ''));
+    }
+    // default: recent (already sorted by last submission desc in groupByUser)
+    return arr;
+  }, [groups, userSearch, userSort]);
+
   // Overall stats
   const stats = useMemo(() => {
     const totalResponses = data.responses?.length || 0;
@@ -76,14 +110,14 @@ const ResponsesModal = ({ isOpen, onClose, survey }) => {
     return { totalResponses, uniqueUsers, totalAnswers, lastSubmittedAt };
   }, [data.responses, groups.length]);
 
-  // Select first group by default when data changes
+  // Select first group by default when data or filter changes
   useEffect(() => {
-    if (!selectedGroupKey && groups.length > 0) {
-      setSelectedGroupKey(groups[0].key);
-    } else if (selectedGroupKey && !groups.find(g => g.key === selectedGroupKey)) {
-      setSelectedGroupKey(groups[0]?.key || null);
+    if (!selectedGroupKey && filteredGroups.length > 0) {
+      setSelectedGroupKey(filteredGroups[0].key);
+    } else if (selectedGroupKey && !filteredGroups.find(g => g.key === selectedGroupKey)) {
+      setSelectedGroupKey(filteredGroups[0]?.key || null);
     }
-  }, [groups, selectedGroupKey]);
+  }, [filteredGroups, selectedGroupKey]);
 
   const toggleItem = (id) => {
     setExpandedItems(prev => {
@@ -100,11 +134,14 @@ const ResponsesModal = ({ isOpen, onClose, survey }) => {
       <div className="bg-white rounded-xl max-w-5xl w-full max-h-[90vh] overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">Responses — {survey?.title}</h3>
-            <p className="text-xs text-gray-600">Grouped by user</p>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span aria-hidden="true">🧾</span>
+              <h3 className="text-lg font-semibold text-gray-900 truncate" title={survey?.title}>Responses — {survey?.title}</h3>
+            </div>
+            <p className="text-xs text-gray-600">View submissions per user</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+          <button aria-label="Close responses" onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl leading-none" title="Close">×</button>
         </div>
 
         {/* Body */}
@@ -117,53 +154,82 @@ const ResponsesModal = ({ isOpen, onClose, survey }) => {
             <div className="py-10 text-center text-gray-500">No responses yet</div>
           ) : (
             <div className="h-full flex gap-4">
-              {/* Sidebar: Users */}
-              <div className="w-72 flex-shrink-0 border border-gray-200 rounded-lg overflow-hidden flex flex-col">
-                <div className="px-3 py-2 bg-gray-50 border-b border-gray-200 text-xs text-gray-600">
-                  {groups.length} user{groups.length>1?'s':''}
+      {/* Sidebar: Users */}
+              <div className="w-80 flex-shrink-0 border border-gray-200 rounded-lg overflow-hidden flex flex-col">
+                <div className="p-3 bg-gray-50 border-b border-gray-200">
+                  <div className="text-[11px] text-gray-600 mb-2">Users</div>
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex-1">
+                      <input
+                        aria-label="Search users"
+                        value={userSearch}
+                        onChange={(e)=>setUserSearch(e.target.value)}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="Search name or email"
+                      />
+                    </div>
+                    <select
+                      aria-label="Sort users"
+                      value={userSort}
+                      onChange={(e)=>setUserSort(e.target.value)}
+                      className="px-2 py-2 text-sm border border-gray-300 rounded-lg bg-white"
+                      title="Sort users"
+                    >
+                      <option value="recent">Recent</option>
+                      <option value="name">Name</option>
+                    </select>
+                  </div>
+                  <div className="mt-2 text-[11px] text-gray-500">{filteredGroups.length} user{filteredGroups.length!==1?'s':''}</div>
                 </div>
                 <div className="overflow-y-auto">
-                  {groups.map(g => {
+                  {filteredGroups.map(g => {
                     const isActive = g.key === selectedGroupKey;
-                    const last = g.items[0]?.submittedAt ? new Date(g.items[0].submittedAt).toLocaleString() : '';
+        const last = g.items[0]?.submittedAt ? formatDateTime(g.items[0].submittedAt) : '';
                     const initials = (g.label || 'A').split(' ').map(s=>s[0]).join('').slice(0,2).toUpperCase();
                     return (
                       <button
                         key={g.key}
                         onClick={() => { setSelectedGroupKey(g.key); setExpandedItems(new Set()); }}
-                        className={`w-full flex items-center gap-3 p-3 border-b border-gray-100 text-left hover:bg-gray-50 ${isActive ? 'bg-indigo-50' : ''}`}
+                        className={`w-full flex items-center gap-3 p-3 border-b border-gray-100 text-left hover:bg-gray-50 ${isActive ? 'bg-indigo-50/70' : ''}`}
+                        aria-current={isActive ? 'true' : 'false'}
                       >
-                        <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold ${isActive ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'}`}>{initials}</div>
+                        <div className={`h-9 w-9 rounded-full flex items-center justify-center text-xs font-bold ${isActive ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'}`}>{initials}</div>
                         <div className="min-w-0 flex-1">
-                          <div className="font-medium text-sm text-gray-900 truncate">{g.label}{g.email ? ` (${g.email})` : ''}</div>
+                          <div className="font-medium text-sm text-gray-900 truncate">{g.label}</div>
+                          <div className="text-[11px] text-gray-500 truncate">{g.email || '—'}</div>
                           <div className="text-[11px] text-gray-500 truncate">{g.items.length} response{g.items.length>1?'s':''}{last ? ` • ${last}` : ''}</div>
                         </div>
-                        <span className={`text-[11px] px-2 py-0.5 rounded-full border ${isActive ? 'bg-white text-indigo-700 border-indigo-200' : 'bg-gray-100 text-gray-700 border-gray-200'}`}>{g.items.length}</span>
+                        <span className={`text-[11px] px-2 py-0.5 rounded-full border ${isActive ? 'bg-white text-indigo-700 border-indigo-200' : 'bg-gray-100 text-gray-700 border-gray-200'}`} aria-label={`${g.items.length} responses`}>{g.items.length}</span>
                       </button>
                     );
                   })}
+                  {filteredGroups.length === 0 && (
+                    <div className="p-6 text-center text-sm text-gray-500">No users match your search</div>
+                  )}
                 </div>
               </div>
 
               {/* Main content: Selected user's responses */}
               <div className="flex-1 min-w-0 border border-gray-200 rounded-lg overflow-hidden flex flex-col">
                 {/* Overall stats */}
-                <div className="p-3 bg-gray-50 border-b border-gray-200 grid grid-cols-2 md:grid-cols-4 gap-2">
-                  <div className="bg-white border border-gray-200 rounded-lg p-3">
-                    <div className="text-[11px] text-gray-500">Total Responses</div>
-                    <div className="text-lg font-semibold text-gray-900">{stats.totalResponses}</div>
-                  </div>
-                  <div className="bg-white border border-gray-200 rounded-lg p-3">
-                    <div className="text-[11px] text-gray-500">Unique Users</div>
-                    <div className="text-lg font-semibold text-gray-900">{stats.uniqueUsers}</div>
-                  </div>
-                  <div className="bg-white border border-gray-200 rounded-lg p-3">
-                    <div className="text-[11px] text-gray-500">Total Answers</div>
-                    <div className="text-lg font-semibold text-gray-900">{stats.totalAnswers}</div>
-                  </div>
-                  <div className="bg-white border border-gray-200 rounded-lg p-3">
-                    <div className="text-[11px] text-gray-500">Last Submitted</div>
-                    <div className="text-sm font-medium text-gray-900">{stats.lastSubmittedAt ? new Date(stats.lastSubmittedAt).toLocaleString() : '—'}</div>
+                <div className="p-3 bg-gray-50 border-b border-gray-200">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <div className="bg-white border border-gray-200 rounded-lg p-3">
+                      <div className="text-[11px] text-gray-500">Total Responses</div>
+                      <div className="text-lg font-semibold text-gray-900">{stats.totalResponses}</div>
+                    </div>
+                    <div className="bg-white border border-gray-200 rounded-lg p-3">
+                      <div className="text-[11px] text-gray-500">Unique Users</div>
+                      <div className="text-lg font-semibold text-gray-900">{stats.uniqueUsers}</div>
+                    </div>
+                    <div className="bg-white border border-gray-200 rounded-lg p-3">
+                      <div className="text-[11px] text-gray-500">Total Answers</div>
+                      <div className="text-lg font-semibold text-gray-900">{stats.totalAnswers}</div>
+                    </div>
+                    <div className="bg-white border border-gray-200 rounded-lg p-3">
+                      <div className="text-[11px] text-gray-500">Last Submitted</div>
+                      <div className="text-sm font-medium text-gray-900">{formatDateTime(stats.lastSubmittedAt)}</div>
+                    </div>
                   </div>
                 </div>
 
@@ -172,30 +238,67 @@ const ResponsesModal = ({ isOpen, onClose, survey }) => {
                   {(() => {
                     const sel = groups.find(g => g.key === selectedGroupKey);
                     if (!sel) return <div className="py-10 text-center text-gray-500">Select a user to view responses</div>;
+                    const userResponses = sel.items.length;
+                    const userAnswers = sel.items.reduce((sum, r) => sum + (r.answers?.length || 0), 0);
+                    const ts = sel.items.map(r => new Date(r.submittedAt).getTime()).filter(Boolean).sort((a,b)=>a-b);
+                    const userFirst = ts[0];
+                    const userLast = ts[ts.length-1];
                     return (
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                          <div>
-                            <div className="text-sm font-semibold text-gray-900">{sel.label}{sel.email ? ` (${sel.email})` : ''}</div>
-                            <div className="text-xs text-gray-500">{sel.items.length} submission{sel.items.length>1?'s':''}</div>
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="h-10 w-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                              {(sel.label || 'A').split(' ').map(s=>s[0]).join('').slice(0,2).toUpperCase()}
+                            </div>
+                            <div className="min-w-0">
+                              <div className="text-sm font-semibold text-gray-900 truncate">{sel.label}</div>
+                              <div className="text-xs text-gray-500 truncate">{sel.email || '—'}</div>
+                            </div>
+                          </div>
+                          <div className="text-xs text-gray-500">{sel.items.length} submission{sel.items.length>1?'s':''}</div>
+                        </div>
+                        {/* Selected user stats */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                          <div className="bg-white border border-gray-200 rounded-lg p-3">
+                            <div className="text-[11px] text-gray-500">User Responses</div>
+                            <div className="text-lg font-semibold text-gray-900">{userResponses}</div>
+                          </div>
+                          <div className="bg-white border border-gray-200 rounded-lg p-3">
+                            <div className="text-[11px] text-gray-500">Answers by User</div>
+                            <div className="text-lg font-semibold text-gray-900">{userAnswers}</div>
+                          </div>
+                          <div className="bg-white border border-gray-200 rounded-lg p-3">
+                            <div className="text-[11px] text-gray-500">First Submitted</div>
+                            <div className="text-sm font-medium text-gray-900">{formatDateTime(userFirst)}</div>
+                          </div>
+                          <div className="bg-white border border-gray-200 rounded-lg p-3">
+                            <div className="text-[11px] text-gray-500">Last Submitted</div>
+                            <div className="text-sm font-medium text-gray-900">{formatDateTime(userLast)}</div>
                           </div>
                         </div>
-                        {sel.items.map((r) => (
-                          <div key={r.id} className="border border-gray-200 rounded-lg overflow-hidden">
-                            <button onClick={() => toggleItem(r.id)} className="w-full flex items-center justify-between p-3 bg-white hover:bg-gray-50">
-                              <div className="text-left">
-                                <div className="font-medium text-gray-900">Submitted {new Date(r.submittedAt).toLocaleString()}</div>
-                                <div className="text-xs text-gray-500">{(r.answers||[]).length} answers</div>
-                              </div>
-                              <span className="text-gray-500">{expandedItems.has(r.id) ? '▾' : '▸'}</span>
-                            </button>
-                            {expandedItems.has(r.id) && (
-                              <div className="p-3">
-                                <AnswerView answers={r.answers || []} />
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                        <div className="space-y-3">
+                          {sel.items.map((r) => (
+                            <div key={r.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                              <button
+                                onClick={() => toggleItem(r.id)}
+                                className="w-full flex items-center justify-between p-3 bg-white hover:bg-gray-50"
+                                aria-expanded={expandedItems.has(r.id)}
+                                aria-controls={`resp-${r.id}`}
+                              >
+                                <div className="text-left">
+                                  <div className="font-medium text-gray-900">Submitted {formatDateTime(r.submittedAt)}</div>
+                                  <div className="text-xs text-gray-500">{(r.answers||[]).length} answers</div>
+                                </div>
+                                <span className="text-gray-500" aria-hidden="true">{expandedItems.has(r.id) ? '▾' : '▸'}</span>
+                              </button>
+                              {expandedItems.has(r.id) && (
+                                <div id={`resp-${r.id}`} className="p-3">
+                                  <AnswerView answers={r.answers || []} />
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     );
                   })()}
