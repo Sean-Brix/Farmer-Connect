@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { surveyFormsAPI } from './surveyFormsAPI';
 import StatisticsModal from './StatisticsModal';
+import ResponsesModal from './ResponsesModal';
 
 function Survey() {
   const [activeTab, setActiveTab] = useState('list'); // 'list', 'create', 'edit'
@@ -12,6 +13,8 @@ function Survey() {
   const [previewSurvey, setPreviewSurvey] = useState(null);
   const [showStatisticsModal, setShowStatisticsModal] = useState(false);
   const [statisticsSurvey, setStatisticsSurvey] = useState(null);
+  const [showResponsesModal, setShowResponsesModal] = useState(false);
+  const [responsesSurvey, setResponsesSurvey] = useState(null);
 
   // Loading and error states
   const [loading, setLoading] = useState(false);
@@ -527,6 +530,13 @@ function Survey() {
                                   >
                                     <span>📊</span>
                                     View Statistics
+                                  </button>
+                                  <button
+                                    onClick={() => { setResponsesSurvey(survey); setShowResponsesModal(true); }}
+                                    className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 rounded-lg transition-all duration-200 flex items-center gap-2"
+                                  >
+                                    <span>🧾</span>
+                                    Responses
                                   </button>
                                   <button
                                     onClick={() => editSurvey(survey)}
@@ -1113,6 +1123,15 @@ function Survey() {
           onClose={() => {
             setShowStatisticsModal(false);
             setStatisticsSurvey(null);
+          }}
+        />
+
+        <ResponsesModal
+          survey={responsesSurvey}
+          isOpen={showResponsesModal}
+          onClose={() => {
+            setShowResponsesModal(false);
+            setResponsesSurvey(null);
           }}
         />
       </div>

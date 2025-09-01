@@ -210,7 +210,7 @@ CREATE TABLE `inquiry_replies` (
 CREATE TABLE `inquiry_attachments` (
     `id` VARCHAR(191) NOT NULL,
     `filename` VARCHAR(191) NOT NULL,
-    `filepath` VARCHAR(191) NOT NULL,
+    `filepath` VARCHAR(191) NULL,
     `filesize` INTEGER NOT NULL,
     `mimetype` VARCHAR(191) NOT NULL,
     `fileData` LONGBLOB NULL,

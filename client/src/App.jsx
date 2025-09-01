@@ -30,6 +30,7 @@ import My_Profile from './Admin/Components/Profile/My_Profile.jsx';
 import ForgotPassword from './Authentication/Components/ForgotPassword';
 import ResetPassword from './Authentication/Components/ResetPassword.jsx';
 import Farmer_Report from './Client/Services/Report/Farmer_Report.jsx';
+import FillSurvey from './Components/Survey/FillSurvey.jsx';
 
 function App() {
     return (
@@ -55,6 +56,7 @@ function App() {
                     <Route path="/citizens-charter" element={<CitizensCharter />} />
                     <Route path="/distribution" element={<Distribution />} />
                     <Route path="/survey" element={<Survey />} />
+                    <Route path="/survey/fill/:surveyId" element={<FillSurvey />} />
                     <Route path="/chat" element={<Chat />} />
                     <Route path="/chat-support" element={<ChatSupport />} />
                     <Route path="/report" element={<Farmer_Report />} />

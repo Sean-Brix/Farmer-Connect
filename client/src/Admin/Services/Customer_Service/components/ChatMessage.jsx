@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ImageViewer from '../../../../Components/Common/ImageViewer.jsx';
+import FillSurveyModal from '../../../../Components/Survey/FillSurveyModal.jsx';
 
 const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = false }) => {
   const isAdmin = message.senderType === 'ADMIN';
@@ -20,6 +21,15 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
     const text = message.message;
     const mime = message.attachmentMime || message.mime;
     const name = message.filename || message.attachmentName;
+    // Detect special form message
+    if (typeof text === 'string' && text.startsWith('__FC_FORM__')) {
+      try {
+        const payload = JSON.parse(text.replace('__FC_FORM__', ''));
+        return (
+          <FormOpenButton title={payload.title} surveyId={payload.id} />
+        );
+      } catch {}
+    }
     // Preview for /public or streamed /api attachments
     if (typeof text === 'string' && (text.startsWith('/public/') || text.startsWith('/api/inquiries/attachments/'))) {
       const url = text;
@@ -35,6 +45,23 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
         <a href={url} target="_blank" rel="noreferrer" className="underline">
           {name || 'Download file'}
         </a>
+      );
+    }
+    // Linkify plain URLs for usability
+    const splitRegex = /(https?:\/\/[^\s]+)/g;
+    const isUrl = (s) => /^https?:\/\/[^\s]+$/i.test(s);
+    if (typeof text === 'string' && splitRegex.test(text)) {
+      const parts = text.split(splitRegex);
+      return (
+        <p>
+          {parts.map((part, i) => (
+            isUrl(part) ? (
+              <a key={i} href={part} target="_blank" rel="noreferrer" className="underline text-blue-700">{part}</a>
+            ) : (
+              <span key={i}>{part}</span>
+            )
+          ))}
+        </p>
       );
     }
     return <p>{text}</p>;
@@ -78,3 +105,21 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
 };
 
 export default ChatMessage;
+
+// Inline helper component to open the survey modal
+const FormOpenButton = ({ title, surveyId }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-green-300 text-green-800 bg-green-50 hover:bg-green-100"
+      >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        {title || 'Open Form'}
+      </button>
+      <FillSurveyModal isOpen={open} onClose={() => setOpen(false)} surveyId={surveyId} title={title} />
+    </>
+  );
+};

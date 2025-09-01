@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { surveyFormsAPI } from './surveyFormsAPI';
 import StatisticsModal from './StatisticsModal';
+import ResponsesModal from './ResponsesModal.jsx';
 
 function Survey() {
   const [activeTab, setActiveTab] = useState('list'); // 'list', 'create', 'edit'
@@ -12,6 +13,8 @@ function Survey() {
   const [previewSurvey, setPreviewSurvey] = useState(null);
   const [showStatisticsModal, setShowStatisticsModal] = useState(false);
   const [statisticsSurvey, setStatisticsSurvey] = useState(null);
+  const [showResponsesModal, setShowResponsesModal] = useState(false);
+  const [responsesSurvey, setResponsesSurvey] = useState(null);
 
   // Loading and error states
   const [loading, setLoading] = useState(false);
@@ -468,6 +471,13 @@ function Survey() {
                             >
                               <span>📊</span>
                               Statistics
+                            </button>
+                            <button
+                              onClick={() => { setResponsesSurvey(survey); setShowResponsesModal(true); }}
+                              className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 transition-all duration-200 font-medium flex items-center gap-2 hover:shadow-md"
+                            >
+                              <span>🧾</span>
+                              Responses
                             </button>
                             <button
                               onClick={() => downloadSurveyForm(survey)}
@@ -1050,6 +1060,11 @@ function Survey() {
             setShowStatisticsModal(false);
             setStatisticsSurvey(null);
           }}
+        />
+        <ResponsesModal
+          survey={responsesSurvey}
+          isOpen={showResponsesModal}
+          onClose={() => { setShowResponsesModal(false); setResponsesSurvey(null); }}
         />
       </div>
     </div>
