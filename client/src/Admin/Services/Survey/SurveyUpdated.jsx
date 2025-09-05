@@ -284,48 +284,48 @@ function Survey() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 p-4">
+    <div className="min-h-screen bg-white p-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {/* Header - Professional Seed Track Style */}
         <div className="text-center mb-8">
-          <span className="inline-flex items-center gap-3 mb-4">
-            <span className="flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl border-2 border-green-200 shadow-lg">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl border-2 border-green-200 shadow-lg">
               <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </span>
-            <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold text-green-700">
               Survey Forms Management
-            </span>
-          </span>
-          <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
-            Create and manage survey forms for various purposes and data collection.
-          </span>
+            </h1>
+          </div>
+          <p className="text-gray-500 text-base md:text-lg font-medium">
+            Create and manage survey forms for data collection and feedback
+          </p>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="bg-white rounded-xl shadow-lg p-4 mb-6 max-w-5xl mx-auto">
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 max-w-2xl mx-auto">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => { resetForm(); setActiveTab('list'); }}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
+              className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3 ${
                 activeTab === 'list' 
-                  ? 'bg-green-600 text-white shadow-md transform scale-105' 
+                  ? 'bg-green-600 text-white shadow-lg transform scale-105' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md'
               }`}
             >
-              <span className="text-lg">📋</span>
+              <span className="text-xl">📋</span>
               <span>Survey Forms List</span>
             </button>
             <button
               onClick={() => { resetForm(); setActiveTab('create'); }}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
+              className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3 ${
                 activeTab === 'create' 
-                  ? 'bg-green-600 text-white shadow-md transform scale-105' 
+                  ? 'bg-green-600 text-white shadow-lg transform scale-105' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md'
               }`}
             >
-              <span className="text-lg">✨</span>
+              <span className="text-xl">✨</span>
               <span>Create Survey Form</span>
             </button>
           </div>
@@ -333,258 +333,261 @@ function Survey() {
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 max-w-5xl mx-auto">
-            <div className="flex items-center gap-2">
-              <span className="text-red-600">⚠️</span>
-              <span className="text-red-800 font-medium">Error</span>
+          <div className="max-w-4xl mx-auto mb-6">
+            <div className="bg-red-50 border-l-4 border-red-400 rounded-lg p-4">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <span className="text-red-400 text-xl">⚠️</span>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-red-700 font-medium">{error}</p>
+                </div>
+              </div>
             </div>
-            <p className="text-red-700 mt-1">{error}</p>
           </div>
         )}
 
         {/* Survey List */}
         {activeTab === 'list' && (
-          <div className="bg-white rounded-xl shadow-lg p-6 max-w-5xl mx-auto">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
-              <h2 className="text-xl font-semibold text-gray-900">All Survey Forms</h2>
-              <div className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full border self-start lg:self-center">
-                {totalItems} survey forms
-              </div>
-            </div>
-
-            {/* Search and Filters */}
-            <div className="mb-6 space-y-4">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                    placeholder="Search by title, description, or category..."
-                  />
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
+                <h2 className="text-2xl font-bold text-gray-900">All Survey Forms</h2>
+                <div className="text-sm text-gray-500 bg-gray-50 px-4 py-2 rounded-full border">
+                  {totalItems} survey forms
                 </div>
               </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="min-w-[150px]">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                  <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                  >
-                    <option value="all">All Status</option>
-                    {uniqueStatuses.map(status => (
-                      <option key={status} value={status}>
-                        {status.charAt(0).toUpperCase() + status.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
 
-                <div className="min-w-[150px]">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                  <select
-                    value={categoryFilter}
-                    onChange={(e) => setCategoryFilter(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                  >
-                    <option value="all">All Categories</option>
-                    {uniqueCategories.map(category => (
-                      <option key={category} value={category}>
-                        {category.charAt(0).toUpperCase() + category.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* Loading State */}
-            {loading && (
-              <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-                <span className="ml-3 text-gray-600">Loading surveys...</span>
-              </div>
-            )}
-
-            {/* Survey List Content */}
-            {!loading && (
-              <div>
-                {surveys.length === 0 ? (
-                  <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-lg bg-gray-50">
-                    <div className="text-gray-300 text-4xl mb-3">📝</div>
-                    <p className="text-gray-500 mb-2">No survey forms found</p>
-                    <p className="text-sm text-gray-400">
-                      {searchTerm || statusFilter !== 'all' || categoryFilter !== 'all' 
-                        ? 'Try adjusting your search criteria' 
-                        : 'Create your first survey form to get started'}
-                    </p>
+              {/* Search and Filters */}
+              <div className="mb-8 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="md:col-span-1">
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">Search</label>
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                      placeholder="Search by title, description..."
+                    />
                   </div>
-                ) : (
-                  <div className="grid gap-6">
-                    {surveys.map((survey) => (
-                      <div key={survey.id} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 hover:border-green-200">
-                        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex flex-wrap items-center gap-3 mb-3">
-                              <h3 className="text-xl font-semibold text-gray-900">{survey.title}</h3>
-                              <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(survey.status)}`}>
-                                {survey.status.toUpperCase()}
-                              </span>
-                              <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium border border-green-200">
-                                {survey.category}
-                              </span>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">Status</label>
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                    >
+                      <option value="all">All Status</option>
+                      {uniqueStatuses.map(status => (
+                        <option key={status} value={status}>
+                          {status.charAt(0).toUpperCase() + status.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">Category</label>
+                    <select
+                      value={categoryFilter}
+                      onChange={(e) => setCategoryFilter(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                    >
+                      <option value="all">All Categories</option>
+                      {uniqueCategories.map(category => (
+                        <option key={category} value={category}>
+                          {category.charAt(0).toUpperCase() + category.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Loading State */}
+              {loading && (
+                <div className="flex items-center justify-center py-16">
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600"></div>
+                  <span className="ml-4 text-gray-600 font-medium">Loading surveys...</span>
+                </div>
+              )}
+
+              {/* Survey List Content */}
+              {!loading && (
+                <div>
+                  {surveys.length === 0 ? (
+                    <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50">
+                      <div className="text-gray-300 text-6xl mb-4">📝</div>
+                      <h3 className="text-xl font-medium text-gray-500 mb-2">No survey forms found</h3>
+                      <p className="text-gray-400">
+                        {searchTerm || statusFilter !== 'all' || categoryFilter !== 'all' 
+                          ? 'Try adjusting your search criteria' 
+                          : 'Create your first survey form to get started'}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-6">
+                      {surveys.map((survey) => (
+                        <div key={survey.id} className="bg-white border-2 border-gray-100 rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:border-green-200">
+                          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                            <div className="flex-1">
+                              <div className="flex flex-wrap items-center gap-4 mb-4">
+                                <h3 className="text-2xl font-bold text-gray-900">{survey.title}</h3>
+                                <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(survey.status)}`}>
+                                  {survey.status.toUpperCase()}
+                                </span>
+                                <span className="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-semibold border border-green-200">
+                                  {survey.category}
+                                </span>
+                              </div>
+                              <p className="text-gray-600 mb-6 leading-relaxed text-lg">{survey.description}</p>
+                              <div className="flex flex-wrap gap-8 text-sm text-gray-500">
+                                <span className="flex items-center gap-2">
+                                  <span className="text-green-600 text-lg">📝</span>
+                                  <span className="font-medium">{survey.fieldsCount || 0} fields</span>
+                                </span>
+                                <span className="flex items-center gap-2">
+                                  <span className="text-blue-600 text-lg">📊</span>
+                                  <span className="font-medium">{survey.responsesCount || 0} responses</span>
+                                </span>
+                                <span className="flex items-center gap-2">
+                                  <span className="text-gray-600 text-lg">📅</span>
+                                  <span className="font-medium">Created: {new Date(survey.createdAt).toLocaleDateString()}</span>
+                                </span>
+                              </div>
                             </div>
-                            <p className="text-gray-600 mb-4 leading-relaxed">{survey.description}</p>
-                            <div className="flex flex-wrap gap-6 text-sm text-gray-500">
-                              <span className="flex items-center gap-1">
-                                <span className="text-green-600">📝</span>
-                                {survey.fieldsCount || 0} fields
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <span className="text-blue-600">📊</span>
-                                {survey.responsesCount || 0} responses
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <span className="text-gray-600">📅</span>
-                                Created: {new Date(survey.createdAt).toLocaleDateString()}
-                              </span>
+                            <div className="flex flex-wrap gap-3 lg:flex-col lg:min-w-fit">
+                              <button
+                                onClick={() => {
+                                  setPreviewSurvey(survey);
+                                  setShowPreviewModal(true);
+                                }}
+                                className="bg-gray-100 text-gray-700 px-4 py-3 rounded-xl text-sm hover:bg-gray-200 transition-all duration-200 font-semibold flex items-center gap-2 hover:shadow-md"
+                              >
+                                <span>👁️</span>
+                                Preview
+                              </button>
+                              <button
+                                onClick={() => openStatistics(survey)}
+                                className="bg-blue-600 text-white px-4 py-3 rounded-xl text-sm hover:bg-blue-700 transition-all duration-200 font-semibold flex items-center gap-2 hover:shadow-md"
+                              >
+                                <span>📊</span>
+                                Statistics
+                              </button>
+                              <button
+                                onClick={() => { setResponsesSurvey(survey); setShowResponsesModal(true); }}
+                                className="bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm hover:bg-indigo-700 transition-all duration-200 font-semibold flex items-center gap-2 hover:shadow-md"
+                              >
+                                <span>🧾</span>
+                                Responses
+                              </button>
+                              <button
+                                onClick={() => downloadSurveyForm(survey)}
+                                className="bg-purple-600 text-white px-4 py-3 rounded-xl text-sm hover:bg-purple-700 transition-all duration-200 font-semibold flex items-center gap-2 hover:shadow-md"
+                              >
+                                <span>📥</span>
+                                Download
+                              </button>
+                              <button
+                                onClick={() => editSurvey(survey)}
+                                className="bg-green-600 text-white px-4 py-3 rounded-xl text-sm hover:bg-green-700 transition-all duration-200 font-semibold flex items-center gap-2 hover:shadow-md"
+                              >
+                                <span>✏️</span>
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setSurveyToDelete(survey);
+                                  setShowDeleteModal(true);
+                                }}
+                                className="bg-red-600 text-white px-4 py-3 rounded-xl text-sm hover:bg-red-700 transition-all duration-200 font-semibold flex items-center gap-2 hover:shadow-md"
+                              >
+                                <span>🗑️</span>
+                                Delete
+                              </button>
                             </div>
-                          </div>
-                          <div className="flex flex-wrap gap-2 lg:flex-col lg:min-w-fit">
-                            <button
-                              onClick={() => {
-                                setPreviewSurvey(survey);
-                                setShowPreviewModal(true);
-                              }}
-                              className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-200 transition-all duration-200 font-medium flex items-center gap-2 hover:shadow-md"
-                            >
-                              <span>👁️</span>
-                              Preview
-                            </button>
-                            <button
-                              onClick={() => openStatistics(survey)}
-                              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-all duration-200 font-medium flex items-center gap-2 hover:shadow-md"
-                            >
-                              <span>📊</span>
-                              Statistics
-                            </button>
-                            <button
-                              onClick={() => { setResponsesSurvey(survey); setShowResponsesModal(true); }}
-                              className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 transition-all duration-200 font-medium flex items-center gap-2 hover:shadow-md"
-                            >
-                              <span>🧾</span>
-                              Responses
-                            </button>
-                            <button
-                              onClick={() => downloadSurveyForm(survey)}
-                              className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition-all duration-200 font-medium flex items-center gap-2 hover:shadow-md"
-                            >
-                              <span>📥</span>
-                              Download
-                            </button>
-                            <button
-                              onClick={() => editSurvey(survey)}
-                              className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-all duration-200 font-medium flex items-center gap-2 hover:shadow-md"
-                            >
-                              <span>✏️</span>
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => {
-                                setSurveyToDelete(survey);
-                                setShowDeleteModal(true);
-                              }}
-                              className="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700 transition-all duration-200 font-medium flex items-center gap-2 hover:shadow-md"
-                            >
-                              <span>🗑️</span>
-                              Delete
-                            </button>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 mt-8">
-                    <button
-                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                      disabled={currentPage === 1}
-                      className="px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Previous
-                    </button>
-                    
-                    <div className="flex gap-1">
-                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                        let pageNum;
-                        if (totalPages <= 5) {
-                          pageNum = i + 1;
-                        } else if (currentPage <= 3) {
-                          pageNum = i + 1;
-                        } else if (currentPage >= totalPages - 2) {
-                          pageNum = totalPages - 4 + i;
-                        } else {
-                          pageNum = currentPage - 2 + i;
-                        }
-                        
-                        return (
-                          <button
-                            key={pageNum}
-                            onClick={() => setCurrentPage(pageNum)}
-                            className={`px-3 py-2 text-sm rounded-lg transition-all duration-200 ${
-                              currentPage === pageNum
-                                ? 'bg-green-600 text-white'
-                                : 'border border-gray-300 hover:bg-gray-50'
-                            }`}
-                          >
-                            {pageNum}
-                          </button>
-                        );
-                      })}
+                      ))}
                     </div>
-                    
-                    <button
-                      onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                      disabled={currentPage === totalPages}
-                      className="px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Next
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="flex items-center justify-center gap-3 mt-10">
+                      <button
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                        disabled={currentPage === 1}
+                        className="px-6 py-3 border-2 border-gray-300 rounded-xl text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                      >
+                        Previous
+                      </button>
+                      
+                      <div className="flex gap-2">
+                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                          let pageNum;
+                          if (totalPages <= 5) {
+                            pageNum = i + 1;
+                          } else if (currentPage <= 3) {
+                            pageNum = i + 1;
+                          } else if (currentPage >= totalPages - 2) {
+                            pageNum = totalPages - 4 + i;
+                          } else {
+                            pageNum = currentPage - 2 + i;
+                          }
+                          
+                          return (
+                            <button
+                              key={pageNum}
+                              onClick={() => setCurrentPage(pageNum)}
+                              className={`px-4 py-3 text-sm rounded-xl transition-all duration-200 font-semibold ${
+                                currentPage === pageNum
+                                  ? 'bg-green-600 text-white shadow-lg'
+                                  : 'border-2 border-gray-300 hover:bg-gray-50'
+                              }`}
+                            >
+                              {pageNum}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      
+                      <button
+                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                        disabled={currentPage === totalPages}
+                        className="px-6 py-3 border-2 border-gray-300 rounded-xl text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
         {/* Create/Edit Survey */}
         {activeTab === 'create' && (
-          <div className="flex flex-col xl:flex-row gap-6 max-w-7xl mx-auto">
+          <div className="flex flex-col xl:flex-row gap-8 max-w-7xl mx-auto">
             {/* Main Content */}
-            <div className="flex-1 bg-white rounded-xl shadow-lg p-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
-                <h2 className="text-xl font-semibold text-gray-900">
+            <div className="flex-1 bg-white rounded-2xl shadow-lg p-8">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+                <h2 className="text-2xl font-bold text-gray-900">
                   {selectedSurvey ? 'Edit Survey Form' : 'Create New Survey Form'}
                 </h2>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <button
                     onClick={handleSubmit}
                     disabled={saving}
-                    className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 font-medium flex items-center gap-2 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-green-600 text-white px-8 py-4 rounded-xl hover:bg-green-700 transition-all duration-200 font-semibold flex items-center gap-3 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <span>{saving ? '💾' : '✅'}</span>
                     {saving ? 'Saving...' : (selectedSurvey ? 'Update Survey' : 'Create Survey')}
                   </button>
                   <button
                     onClick={() => setActiveTab('list')}
-                    className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-all duration-200 font-medium flex items-center gap-2"
+                    className="bg-gray-600 text-white px-8 py-4 rounded-xl hover:bg-gray-700 transition-all duration-200 font-semibold flex items-center gap-3"
                   >
                     <span>↩️</span>
                     Back to List
@@ -593,25 +596,25 @@ function Survey() {
               </div>
 
               {/* Basic Information */}
-              <div className="mb-8">
-                <h3 className="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">Basic Information</h3>
+              <div className="mb-10">
+                <h3 className="text-xl font-semibold text-gray-900 mb-6 border-b-2 border-gray-200 pb-3">Basic Information</h3>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="lg:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Survey Title *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">Survey Title *</label>
                     <input
                       type="text"
                       value={formData.title}
                       onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                       placeholder="Enter survey form title"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">Category</label>
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                     >
                       <option value="general">General</option>
                       <option value="feedback">Feedback</option>
@@ -621,11 +624,11 @@ function Survey() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">Status</label>
                     <select
                       value={formData.status}
                       onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                     >
                       <option value="DRAFT">Draft</option>
                       <option value="ACTIVE">Active</option>
@@ -633,12 +636,12 @@ function Survey() {
                     </select>
                   </div>
                   <div className="lg:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">Description</label>
                     <textarea
                       value={formData.description}
                       onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                      rows={3}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 resize-none"
+                      rows={4}
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 resize-none"
                       placeholder="Enter survey form description"
                     />
                   </div>
@@ -646,107 +649,107 @@ function Survey() {
               </div>
 
               {/* Form Fields */}
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">Form Fields</h3>
-                  <div className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full border">
+              <div className="mb-10">
+                <div className="flex items-center justify-between mb-8">
+                  <h3 className="text-xl font-semibold text-gray-900 border-b-2 border-gray-200 pb-3">Form Fields</h3>
+                  <div className="text-sm text-gray-500 bg-gray-50 px-4 py-2 rounded-full border-2 border-gray-200">
                     {formData.fields.length} fields
                   </div>
                 </div>
 
                 {/* Fields List */}
                 {formData.fields.length === 0 ? (
-                  <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-lg bg-gray-50">
-                    <div className="text-gray-300 text-4xl mb-3">📝</div>
-                    <p className="text-gray-500 mb-2">No fields added yet</p>
-                    <p className="text-sm text-gray-400">Use the sidebar to add fields to your survey</p>
+                  <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50">
+                    <div className="text-gray-300 text-6xl mb-4">📝</div>
+                    <h3 className="text-xl font-medium text-gray-500 mb-2">No fields added yet</h3>
+                    <p className="text-gray-400">Use the sidebar to add fields to your survey</p>
                   </div>
                 ) : (
-                  <div className="space-y-6">
+                  <div className="space-y-8">
                     {formData.fields.map((field, index) => (
-                      <div key={field.id} className="border border-gray-200 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition-all duration-200">
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                      <div key={field.id} className="border-2 border-gray-200 rounded-xl p-8 bg-white shadow-sm hover:shadow-lg transition-all duration-200">
+                        <div className="flex items-center justify-between mb-6">
+                          <div className="flex items-center gap-4">
+                            <span className="text-sm font-semibold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
                               #{index + 1}
                             </span>
-                            <span className="text-lg">
+                            <span className="text-2xl">
                               {fieldTypes.find(type => type.value === field.type)?.icon || '📝'}
                             </span>
-                            <span className="text-sm font-medium text-gray-700">
+                            <span className="text-lg font-semibold text-gray-700">
                               {fieldTypes.find(type => type.value === field.type)?.label || field.type}
                             </span>
                           </div>
                           <button
                             onClick={() => removeField(field.id)}
-                            className="text-red-600 hover:text-red-700 p-2 hover:bg-red-50 rounded-lg transition-all duration-200"
+                            className="text-red-600 hover:text-red-700 p-3 hover:bg-red-50 rounded-xl transition-all duration-200"
                             title="Remove field"
                           >
                             🗑️
                           </button>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Label *</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-3">Label *</label>
                             <input
                               type="text"
                               value={field.label}
                               onChange={(e) => updateField(field.id, { label: e.target.value })}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                              className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                               placeholder="Enter field label"
                             />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Placeholder</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-3">Placeholder</label>
                             <input
                               type="text"
                               value={field.placeholder}
                               onChange={(e) => updateField(field.id, { placeholder: e.target.value })}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                              className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                               placeholder="Enter placeholder text"
                             />
                           </div>
                         </div>
 
-                        <div className="mt-4">
-                          <label className="flex items-center gap-2">
+                        <div className="mt-6">
+                          <label className="flex items-center gap-3">
                             <input
                               type="checkbox"
                               checked={field.required}
                               onChange={(e) => updateField(field.id, { required: e.target.checked })}
-                              className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                              className="rounded border-gray-300 text-green-600 focus:ring-green-500 w-5 h-5"
                             />
-                            <span className="text-sm font-medium text-gray-700">Required field</span>
+                            <span className="text-sm font-semibold text-gray-700">Required field</span>
                           </label>
                         </div>
 
                         {/* Options for select, radio, checkbox fields */}
                         {(field.type === 'SELECT' || field.type === 'RADIO' || field.type === 'CHECKBOX') && (
-                          <div className="mt-4">
-                            <div className="flex items-center justify-between mb-3">
-                              <label className="block text-sm font-medium text-gray-700">Options</label>
+                          <div className="mt-6">
+                            <div className="flex items-center justify-between mb-4">
+                              <label className="block text-sm font-semibold text-gray-700">Options</label>
                               <button
                                 onClick={() => addOption(field.id)}
-                                className="text-green-600 hover:text-green-700 text-sm font-medium"
+                                className="text-green-600 hover:text-green-700 text-sm font-semibold hover:bg-green-50 px-3 py-1 rounded-lg transition-all duration-200"
                               >
                                 + Add Option
                               </button>
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                               {field.options?.map((option, optionIndex) => (
-                                <div key={optionIndex} className="flex items-center gap-2">
+                                <div key={optionIndex} className="flex items-center gap-3">
                                   <input
                                     type="text"
                                     value={option}
                                     onChange={(e) => updateOption(field.id, optionIndex, e.target.value)}
-                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                                    className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                                     placeholder={`Option ${optionIndex + 1}`}
                                   />
                                   {field.options.length > 1 && (
                                     <button
                                       onClick={() => removeOption(field.id, optionIndex)}
-                                      className="text-red-600 hover:text-red-700 p-2 hover:bg-red-50 rounded-lg transition-all duration-200"
+                                      className="text-red-600 hover:text-red-700 p-3 hover:bg-red-50 rounded-xl transition-all duration-200"
                                     >
                                       ×
                                     </button>
@@ -765,21 +768,21 @@ function Survey() {
 
             {/* Sidebar */}
             <div className="w-full xl:w-80">
-              <div className="bg-white rounded-xl shadow-lg p-6 sticky top-4">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Field Types</h3>
-                <div className="space-y-3">
+              <div className="bg-white rounded-2xl shadow-lg p-8 sticky top-4">
+                <h3 className="text-xl font-bold text-gray-900 mb-6">Field Types</h3>
+                <div className="space-y-4">
                   {fieldTypes.map((type) => (
                     <button
                       key={type.value}
                       onClick={() => addField(type.value)}
-                      className="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-300 transition-all duration-200 group"
+                      className="w-full text-left p-6 border-2 border-gray-200 rounded-xl hover:bg-green-50 hover:border-green-300 transition-all duration-200 group"
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
+                      <div className="flex items-center gap-4">
+                        <span className="text-3xl group-hover:scale-110 transition-transform duration-200">
                           {type.icon}
                         </span>
                         <div>
-                          <div className="font-medium text-gray-900">{type.label}</div>
+                          <div className="font-semibold text-gray-900">{type.label}</div>
                           <div className="text-sm text-gray-500">
                             {type.value === 'TEXT' && 'Single line text input'}
                             {type.value === 'TEXTAREA' && 'Multi-line text input'}
@@ -797,12 +800,12 @@ function Survey() {
                   ))}
                 </div>
                 
-                <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
-                  <h4 className="font-medium text-green-800 mb-3 flex items-center gap-2">
+                <div className="mt-8 p-6 bg-green-50 rounded-xl border-2 border-green-200">
+                  <h4 className="font-semibold text-green-800 mb-4 flex items-center gap-2">
                     <span>💡</span>
                     Pro Tips
                   </h4>
-                  <ul className="text-sm text-green-700 space-y-2">
+                  <ul className="text-sm text-green-700 space-y-3">
                     <li className="flex items-start gap-2">
                       <span className="text-green-500 mt-0.5">•</span>
                       <span>Add fields in logical order</span>
@@ -829,28 +832,28 @@ function Survey() {
         {/* Delete Confirmation Modal */}
         {showDeleteModal && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
                 <span>⚠️</span>
                 Delete Survey Form
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 mb-8 text-lg">
                 Are you sure you want to delete "<strong>{surveyToDelete?.title}</strong>"? 
                 This action cannot be undone.
               </p>
-              <div className="flex gap-3 justify-end">
+              <div className="flex gap-4 justify-end">
                 <button
                   onClick={() => {
                     setShowDeleteModal(false);
                     setSurveyToDelete(null);
                   }}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-all duration-200 font-medium"
+                  className="px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-all duration-200 font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={deleteSurvey}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-200 font-medium"
+                  className="px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-200 font-semibold"
                 >
                   Delete
                 </button>
@@ -862,22 +865,22 @@ function Survey() {
         {/* Preview Modal */}
         {showPreviewModal && previewSurvey && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+            <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between p-8 border-b-2 border-gray-200">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                  <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
                     <span>👁️</span>
                     Preview - {previewSurvey.title}
                   </h3>
-                  <p className="text-sm text-gray-600">How this survey will appear to users</p>
+                  <p className="text-gray-600">How this survey will appear to users</p>
                 </div>
                 <button
                   onClick={() => {
                     setShowPreviewModal(false);
                     setPreviewSurvey(null);
                   }}
-                  className="text-gray-400 hover:text-gray-600 text-2xl p-2 hover:bg-gray-100 rounded-lg transition-all duration-200"
+                  className="text-gray-400 hover:text-gray-600 text-3xl p-3 hover:bg-gray-100 rounded-xl transition-all duration-200"
                   title="Close preview"
                 >
                   ×
@@ -885,32 +888,32 @@ function Survey() {
               </div>
 
               {/* Survey Form Preview Content */}
-              <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+              <div className="p-8 overflow-y-auto max-h-[calc(90vh-200px)]">
                 {/* Survey Header */}
-                <div className="mb-8">
-                  <div className="flex flex-wrap items-center gap-3 mb-4">
-                    <h1 className="text-2xl font-bold text-gray-900">{previewSurvey.title}</h1>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(previewSurvey.status)}`}>
+                <div className="mb-10">
+                  <div className="flex flex-wrap items-center gap-4 mb-6">
+                    <h1 className="text-3xl font-bold text-gray-900">{previewSurvey.title}</h1>
+                    <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(previewSurvey.status)}`}>
                       {previewSurvey.status.toUpperCase()}
                     </span>
-                    <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium border border-green-200">
+                    <span className="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-semibold border-2 border-green-200">
                       {previewSurvey.category}
                     </span>
                   </div>
                   {previewSurvey.description && (
-                    <p className="text-gray-600 text-lg leading-relaxed">{previewSurvey.description}</p>
+                    <p className="text-gray-600 text-xl leading-relaxed">{previewSurvey.description}</p>
                   )}
-                  <div className="mt-4 text-sm text-gray-500 bg-gray-50 inline-block px-3 py-1 rounded-full">
+                  <div className="mt-6 text-sm text-gray-500 bg-gray-50 inline-block px-4 py-2 rounded-full">
                     {previewSurvey.fields?.length || 0} fields • Created: {new Date(previewSurvey.createdAt).toLocaleDateString()}
                   </div>
                 </div>
 
                 {/* Survey Form Preview */}
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <form className="space-y-6">
+                <div className="bg-gray-50 rounded-2xl p-8">
+                  <form className="space-y-8">
                     {previewSurvey.fields?.map((field, index) => (
-                      <div key={field.id} className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                      <div key={field.id} className="bg-white rounded-xl p-8 border-2 border-gray-200 shadow-sm">
+                        <label className="block text-lg font-semibold text-gray-700 mb-4">
                           {field.label}
                           {field.required && <span className="text-red-500 ml-1">*</span>}
                         </label>
@@ -919,7 +922,7 @@ function Survey() {
                           <input
                             type="text"
                             placeholder={field.placeholder}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                             disabled
                           />
                         )}
@@ -928,7 +931,7 @@ function Survey() {
                           <textarea
                             placeholder={field.placeholder}
                             rows={4}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 resize-none"
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 resize-none"
                             disabled
                           />
                         )}
@@ -937,7 +940,7 @@ function Survey() {
                           <input
                             type="email"
                             placeholder={field.placeholder}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                             disabled
                           />
                         )}
@@ -946,7 +949,7 @@ function Survey() {
                           <input
                             type="number"
                             placeholder={field.placeholder}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                             disabled
                           />
                         )}
@@ -954,14 +957,14 @@ function Survey() {
                         {field.type === 'DATE' && (
                           <input
                             type="date"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                             disabled
                           />
                         )}
 
                         {field.type === 'SELECT' && (
                           <select
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                             disabled
                           >
                             <option value="">Choose an option...</option>
@@ -974,51 +977,51 @@ function Survey() {
                         )}
 
                         {field.type === 'RADIO' && (
-                          <div className="space-y-3">
+                          <div className="space-y-4">
                             {field.options?.map((option, optionIndex) => (
-                              <label key={optionIndex} className="flex items-center gap-3 cursor-pointer">
+                              <label key={optionIndex} className="flex items-center gap-4 cursor-pointer">
                                 <input
                                   type="radio"
                                   name={`field-${field.id}`}
                                   value={option}
-                                  className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
+                                  className="h-5 w-5 text-green-600 border-gray-300 focus:ring-green-500"
                                   disabled
                                 />
-                                <span className="text-gray-700">{option}</span>
+                                <span className="text-gray-700 text-lg">{option}</span>
                               </label>
                             ))}
                           </div>
                         )}
 
                         {field.type === 'CHECKBOX' && (
-                          <div className="space-y-3">
+                          <div className="space-y-4">
                             {field.options?.map((option, optionIndex) => (
-                              <label key={optionIndex} className="flex items-center gap-3 cursor-pointer">
+                              <label key={optionIndex} className="flex items-center gap-4 cursor-pointer">
                                 <input
                                   type="checkbox"
                                   value={option}
-                                  className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                                  className="h-5 w-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
                                   disabled
                                 />
-                                <span className="text-gray-700">{option}</span>
+                                <span className="text-gray-700 text-lg">{option}</span>
                               </label>
                             ))}
                           </div>
                         )}
 
                         {field.type === 'FILE' && (
-                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                            <div className="text-gray-400 mb-2">📎</div>
-                            <p className="text-sm text-gray-500">Click to upload or drag and drop</p>
+                          <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+                            <div className="text-gray-400 mb-3 text-2xl">📎</div>
+                            <p className="text-gray-500">Click to upload or drag and drop</p>
                           </div>
                         )}
                       </div>
                     ))}
 
                     {previewSurvey.fields?.length === 0 && (
-                      <div className="text-center py-8 text-gray-500">
-                        <div className="text-4xl mb-2">📝</div>
-                        <p>No fields in this survey</p>
+                      <div className="text-center py-12 text-gray-500">
+                        <div className="text-6xl mb-4">📝</div>
+                        <h3 className="text-xl font-medium">No fields in this survey</h3>
                       </div>
                     )}
                   </form>
@@ -1026,14 +1029,14 @@ function Survey() {
               </div>
 
               {/* Preview Actions */}
-              <div className="flex gap-3 p-6 border-t border-gray-200">
+              <div className="flex gap-4 p-8 border-t-2 border-gray-200">
                 <button
                   onClick={() => {
                     setShowPreviewModal(false);
                     setPreviewSurvey(null);
                     editSurvey(previewSurvey);
                   }}
-                  className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 font-medium flex items-center gap-2"
+                  className="bg-green-600 text-white px-8 py-4 rounded-xl hover:bg-green-700 transition-all duration-200 font-semibold flex items-center gap-3"
                 >
                   <span>✏️</span>
                   Edit Survey
@@ -1043,7 +1046,7 @@ function Survey() {
                     setShowPreviewModal(false);
                     setPreviewSurvey(null);
                   }}
-                  className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-all duration-200 font-medium"
+                  className="bg-gray-600 text-white px-8 py-4 rounded-xl hover:bg-gray-700 transition-all duration-200 font-semibold"
                 >
                   Close
                 </button>

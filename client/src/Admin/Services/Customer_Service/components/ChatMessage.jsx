@@ -68,31 +68,31 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
   };
 
   return (
-  <div className={`flex ${isAdmin ? 'justify-end' : 'justify-start'} items-end gap-2`}>
+  <div className={`flex ${isAdmin ? 'justify-end' : 'justify-start'} items-end gap-3`}>
       {isUser && (
         <div className="flex-shrink-0">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-sm font-semibold">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center text-white text-sm font-bold shadow-md">
             {displayName && displayName.charAt(0).toUpperCase()}
           </div>
         </div>
       )}
       
       <div className={`flex flex-col ${isAdmin ? 'items-end' : 'items-start'} max-w-[80%]`}>
-        <div className={`px-4 py-3 rounded-2xl text-sm shadow-sm ${
+        <div className={`px-5 py-3 rounded-2xl text-sm shadow-md ${
           isAdmin
-            ? 'bg-green-600 text-white rounded-br-md'
-            : 'bg-white text-gray-800 border border-gray-200 rounded-bl-md'
+            ? 'bg-green-600 text-white rounded-br-md border border-green-700'
+            : 'bg-white text-gray-900 border-2 border-gray-200 rounded-bl-md'
         }`}>
           {renderBody()}
         </div>
-        <span className="text-xs text-gray-500 mt-1 px-2">
+        <span className="text-xs text-gray-500 mt-1.5 px-2 font-medium">
           {new Date(message.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </span>
       </div>
       
       {isAdmin && (
         <div className="flex-shrink-0">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-sm">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center text-white text-sm font-bold shadow-md">
             A
           </div>
         </div>
@@ -114,7 +114,7 @@ const FormOpenButton = ({ title, surveyId }) => {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold border border-green-300 text-green-800 bg-green-50 hover:bg-green-100"
+        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border-2 border-green-600 text-green-800 bg-green-50 hover:bg-green-100 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
         {title || 'Open Form'}

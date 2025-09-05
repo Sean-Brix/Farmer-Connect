@@ -12,29 +12,29 @@ const MessageInput = ({ onSendMessage, selectedChat }) => {
   };
 
   return (
-    <div className="bg-white border-t border-gray-200 px-6 py-4 rounded-b-xl">
-      <form onSubmit={handleSendMessage} className="flex items-center gap-3">
+    <div className="bg-white border-t-2 border-gray-200 px-6 py-5 rounded-b-2xl">
+      <form onSubmit={handleSendMessage} className="flex items-center gap-4">
         <div className="flex-1 relative">
           <input
             type="text"
             placeholder="Type your reply..."
-            className="w-full rounded-2xl px-5 py-3 pr-12 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 bg-gray-50 focus:bg-white text-sm transition-all duration-200 placeholder-gray-500"
+            className="w-full rounded-2xl px-6 py-4 pr-16 border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-green-600 bg-gray-50 focus:bg-white text-sm font-medium transition-all duration-200 placeholder-gray-500 text-gray-900"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             maxLength={500}
             disabled={!selectedChat}
           />
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400">
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-xs text-gray-500 font-medium bg-white px-2 py-1 rounded-full">
             {(message || '').length}/500
           </div>
         </div>
         <button
           type="submit"
-          className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-2xl px-6 py-3 transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center gap-2"
+          className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-2xl px-8 py-4 transition-all duration-200 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center gap-3"
           disabled={!message?.trim() || !selectedChat}
         >
           <span>Send</span>
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
           </svg>
         </button>
