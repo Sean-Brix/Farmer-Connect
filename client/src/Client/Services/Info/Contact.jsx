@@ -211,62 +211,88 @@ export default function contact() {
                 name="firstName"
                 required
                 autoComplete="given-name"
-                className="border border-gray-300 bg-white text-gray-900 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                className={`border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+                  theme === 'dark' 
+                    ? 'border-gray-600 bg-gray-700 text-gray-100' 
+                    : 'border-gray-300 bg-white text-gray-900'
+                }`}
               />
             </label>
             <label className="flex flex-col gap-1">
-              <span className="font-medium text-gray-900">Last Name</span>
+              <span className={`font-medium ${
+                theme === 'dark' ? 'text-gray-200' : 'text-gray-900'
+              }`}>Last Name</span>
               <input
                 type="text"
                 name="lastName"
                 required
                 autoComplete="family-name"
-                className="border border-gray-300 bg-white text-gray-900 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                className={`border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+                  theme === 'dark' 
+                    ? 'border-gray-600 bg-gray-700 text-gray-100' 
+                    : 'border-gray-300 bg-white text-gray-900'
+                }`}
               />
             </label>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label className="flex flex-col gap-1">
-              <span className="font-medium text-gray-900">Email</span>
+              <span className={`font-medium ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}>Email</span>
               <input
                 type="email"
                 name="email"
                 required
                 autoComplete="email"
-                className="border border-gray-300 bg-white text-gray-900 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                className={`border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+                  theme === 'dark' 
+                    ? 'border-gray-600 bg-gray-700 text-gray-100' 
+                    : 'border-gray-300 bg-white text-gray-900'
+                }`}
               />
             </label>
             <label className="flex flex-col gap-1">
-              <span className="font-medium text-gray-900">Phone (optional)</span>
+              <span className={`font-medium ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}>Phone (optional)</span>
               <input
                 type="tel"
                 name="phone"
                 autoComplete="tel"
-                className="border border-gray-300 bg-white text-gray-900 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                className={`border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+                  theme === 'dark' 
+                    ? 'border-gray-600 bg-gray-700 text-gray-100' 
+                    : 'border-gray-300 bg-white text-gray-900'
+                }`}
               />
             </label>
           </div>
           <label className="flex flex-col gap-1">
-            <span className="font-medium text-gray-900">Subject</span>
+            <span className={`font-medium ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}>Subject</span>
             <input
               type="text"
               name="subject"
               required
-              className="border border-gray-300 bg-white text-gray-900 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+              className={`border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition ${
+                theme === 'dark' 
+                  ? 'border-gray-600 bg-gray-700 text-gray-100' 
+                  : 'border-gray-300 bg-white text-gray-900'
+              }`}
             />
           </label>
           <label className="flex flex-col gap-1">
-            <span className="font-medium text-gray-900">Message</span>
+            <span className={`font-medium ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}>Message</span>
             <textarea
               name="message"
               rows="5"
               required
-              className="border border-gray-300 bg-white text-gray-900 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none transition"
+              className={`border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none transition ${
+                theme === 'dark' 
+                  ? 'border-gray-600 bg-gray-700 text-gray-100' 
+                  : 'border-gray-300 bg-white text-gray-900'
+              }`}
             />
           </label>
           <div className="flex items-center gap-3">
             <input type="checkbox" id="privacy" required className="accent-green-600" />
-            <label htmlFor="privacy" className="text-sm text-gray-700">
+            <label htmlFor="privacy" className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
               I agree to the <a href="/privacy" className="text-green-600 hover:underline">Privacy Policy</a>
             </label>
           </div>
