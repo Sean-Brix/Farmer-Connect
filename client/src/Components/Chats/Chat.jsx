@@ -4,10 +4,12 @@ import botAvatar from '../../Assets/default_picture.png';
 import userAvatar from '../../Assets/eic_default.png';
 import appLogo from '../../Assets/Logo.png';
 import { useSocket } from '../../contexts/SocketContext.jsx';
+import { useTheme } from '../../contexts/ThemeContext.jsx';
 import ImageViewer from '../Common/ImageViewer.jsx';
 import FillSurveyModal from '../Survey/FillSurveyModal.jsx';
 
 export default function Chat() {
+    const { theme } = useTheme();
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
     const [activeTab, setActiveTab] = useState('active'); // 'active' | 'history'
@@ -410,78 +412,186 @@ export default function Chat() {
 
     return (
         <>
-            {/* Professional Chat Trigger Button */}
-            <div className="fixed bottom-8 right-8 z-[999999] group">
+            {/* Modern Professional Chat Trigger Button */}
+            <div className="fixed bottom-6 right-6 z-[999999] group">
+                {/* Pulse animation rings */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-600 to-green-700 opacity-30 animate-ping"></div>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-600 to-green-700 opacity-20 animate-pulse"></div>
+                
                 <button
                     onClick={() => setOpen(true)}
-                    className="relative w-16 h-16 rounded-full bg-gradient-to-r from-green-600 to-green-700 text-white shadow-2xl flex items-center justify-center cursor-pointer hover:from-green-700 hover:to-green-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-300/50 transform hover:scale-105"
+                    className={`relative w-14 h-14 rounded-full text-white shadow-xl hover:shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 focus:outline-none focus:ring-4 transform hover:scale-110 active:scale-95 ${
+                        theme === 'dark' 
+                            ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:ring-green-400/50' 
+                            : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:ring-green-300/50'
+                    }`}
                     aria-label="Open Support Chat"
                 >
-                    <svg className="w-7 h-7 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    <svg className="w-6 h-6 transition-transform duration-300 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                     
-                    {/* Connection indicator */}
-                    <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${isConnected ? 'bg-green-400' : 'bg-gray-400'}`}></div>
+                    {/* Enhanced connection indicator with pulse */}
+                    <div className={`absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 transition-all duration-300 ${
+                        theme === 'dark' ? 'border-gray-800' : 'border-white'
+                    } ${
+                        isConnected 
+                            ? 'bg-green-400 animate-pulse' 
+                            : 'bg-red-400'
+                    }`}></div>
                 </button>
+                
+                {/* Tooltip */}
+                <div className={`absolute bottom-full right-0 mb-3 px-3 py-2 rounded-lg shadow-lg text-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none ${
+                    theme === 'dark' 
+                        ? 'bg-gray-800 text-gray-100 border border-gray-700' 
+                        : 'bg-gray-900 text-white'
+                }`}>
+                    Need help? Chat with us
+                    <div className={`absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent ${
+                        theme === 'dark' ? 'border-t-gray-800' : 'border-t-gray-900'
+                    }`}></div>
+                </div>
             </div>
 
-            {/* Simple Facebook Messenger-style Chat Modal */}
+            {/* Modern Chat Modal with Enhanced Design */}
             {open && (
                 <div
-                    className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999999] transition-all p-4"
+                    className={`fixed inset-0 backdrop-blur-md flex items-center justify-center z-[9999999] transition-all p-2 sm:p-4 ${
+                        theme === 'dark' 
+                            ? 'bg-black/80' 
+                            : 'bg-black/60'
+                    }`}
                     onClick={() => setOpen(false)}
                 >
-                    {/* Toast */}
+                    {/* Enhanced Toast Notifications */}
                     {toast && (
-                        <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-[10000000] shadow-xl rounded-xl border px-5 py-3 min-w-[280px] max-w-[90vw] ${toast.type==='error' ? 'bg-red-50 border-red-200 text-red-800' : 'bg-indigo-50 border-indigo-200 text-indigo-800'}`}>
-                            <div className="font-semibold text-sm">{toast.title}</div>
-                            {toast.message && <div className="text-xs mt-1 opacity-90">{toast.message}</div>}
+                        <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[10000000] shadow-2xl rounded-2xl border backdrop-blur-md px-6 py-4 min-w-[300px] max-w-[90vw] transition-all duration-300 ${
+                            toast.type === 'error' 
+                                ? theme === 'dark'
+                                    ? 'bg-red-900/90 border-red-700 text-red-100' 
+                                    : 'bg-red-50/95 border-red-200 text-red-800'
+                                : theme === 'dark'
+                                    ? 'bg-blue-900/90 border-blue-700 text-blue-100'
+                                    : 'bg-blue-50/95 border-blue-200 text-blue-800'
+                        }`}>
+                            <div className="font-semibold text-sm flex items-center gap-2">
+                                {toast.type === 'error' ? (
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                    </svg>
+                                ) : (
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                )}
+                                {toast.title}
+                            </div>
+                            {toast.message && <div className="text-xs mt-2 opacity-90">{toast.message}</div>}
                         </div>
                     )}
+                    
                     <div
-                        className={`relative bg-white rounded-none shadow-none flex w-full h-full max-w-none max-h-none sm:rounded-3xl sm:shadow-2xl sm:w-[98vw] sm:h-[96vh] md:w-[80vw] md:h-[85vh] lg:w-[1200px] lg:h-[800px] xl:w-[1400px] xl:h-[900px] md:max-w-[98vw] md:max-h-[98vh] transition-all duration-300`}
+                        className={`relative rounded-none shadow-none flex w-full h-full max-w-none max-h-none sm:rounded-3xl sm:shadow-2xl sm:w-[98vw] sm:h-[96vh] md:w-[85vw] md:h-[90vh] lg:w-[1200px] lg:h-[800px] xl:w-[1400px] xl:h-[900px] md:max-w-[95vw] md:max-h-[95vh] transition-all duration-500 transform hover:shadow-3xl ${
+                            theme === 'dark' 
+                                ? 'bg-gray-900 border border-gray-700' 
+                                : 'bg-white border border-gray-200'
+                        }`}
                         onClick={e => e.stopPropagation()}
                     >
-                        {/* Left Panel: Tabs with Inquiry History */}
-                        <div className="w-96 bg-gradient-to-b from-slate-50 to-slate-100 border-r border-slate-200 rounded-l-3xl flex flex-col">
-                                {/* Sidebar Header */}
-                                <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white px-6 py-5 rounded-tl-3xl">
-                                    <div className="flex items-center">
-                                        <div>
-                                            <h3 className="text-lg font-bold">Inquiries</h3>
-                                            <p className="text-indigo-100 text-sm mt-1">
-                                                {activeTab === 'history' ?
-                                                    (searchQuery.trim() 
-                                                        ? `${filteredInquiries.length} of ${pastInquiries.length} past`
-                                                        : `${pastInquiries.length} ${pastInquiries.length === 1 ? 'past inquiry' : 'past inquiries'}`
-                                                    )
-                                                    : (activeInquiry ? 'Active inquiry' : 'No active inquiry')
-                                                }
-                                            </p>
+                        {/* Enhanced Left Panel: Tabs with Inquiry History */}
+                        <div className={`w-80 lg:w-96 flex flex-col transition-all duration-300 ${
+                            theme === 'dark' 
+                                ? 'bg-gradient-to-b from-gray-800 to-gray-900 border-r border-gray-700' 
+                                : 'bg-gradient-to-b from-gray-50 to-gray-100 border-r border-gray-200'
+                        } rounded-l-3xl overflow-hidden`}>
+                                {/* Enhanced Modern Sidebar Header */}
+                                <div className={`p-6 border-b ${
+                                    theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+                                }`}>
+                                    <div className={`px-6 py-5 rounded-2xl shadow-lg ${
+                                        theme === 'dark' 
+                                            ? 'bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 text-white' 
+                                            : 'bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white'
+                                    }`}>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                                                    theme === 'dark' ? 'bg-white/20' : 'bg-white/20'
+                                                }`}>
+                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-lg font-bold">Support Hub</h3>
+                                                    <p className={`text-sm mt-0.5 ${
+                                                        theme === 'dark' ? 'text-emerald-100' : 'text-indigo-100'
+                                                    }`}>
+                                                        {activeTab === 'history' ?
+                                                            (searchQuery.trim() 
+                                                                ? `${filteredInquiries.length} of ${pastInquiries.length} found`
+                                                                : `${pastInquiries.length} ${pastInquiries.length === 1 ? 'conversation' : 'conversations'}`
+                                                            )
+                                                            : (activeInquiry ? 'Active inquiry' : 'Ready to help')
+                                                        }
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                isConnected 
+                                                    ? 'bg-green-400/20 text-green-100' 
+                                                    : 'bg-red-400/20 text-red-100'
+                                            }`}>
+                                                {isConnected ? 'Online' : 'Offline'}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="mt-3 grid grid-cols-2 gap-2">
-                                        <button
-                                            onClick={() => setActiveTab('active')}
-                                            className={`w-full ${activeTab==='active' ? 'bg-white text-indigo-600' : 'bg-white/20 text-white'} hover:bg-white hover:text-indigo-600 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 border border-white/30 shadow-sm`}
-                                        >
-                                            Active
-                                        </button>
-                                        <button
-                                            onClick={() => setActiveTab('history')}
-                                            className={`w-full ${activeTab==='history' ? 'bg-white text-indigo-600' : 'bg-white/20 text-white'} hover:bg-white hover:text-indigo-600 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 border border-white/30 shadow-sm`}
-                                        >
-                                            History
-                                        </button>
+                                        <div className="mt-4 grid grid-cols-2 gap-3">
+                                            <button
+                                                onClick={() => setActiveTab('active')}
+                                                className={`w-full px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 border shadow-sm ${
+                                                    activeTab === 'active' 
+                                                        ? 'bg-white text-gray-800 border-white/30 shadow-md' 
+                                                        : 'bg-white/20 text-white border-white/30 hover:bg-white/30'
+                                                }`}
+                                            >
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+                                                    </svg>
+                                                    Active
+                                                </div>
+                                            </button>
+                                            <button
+                                                onClick={() => setActiveTab('history')}
+                                                className={`w-full px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 border shadow-sm ${
+                                                    activeTab === 'history' 
+                                                        ? 'bg-white text-gray-800 border-white/30 shadow-md' 
+                                                        : 'bg-white/20 text-white border-white/30 hover:bg-white/30'
+                                                }`}
+                                            >
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                                                    </svg>
+                                                    History
+                                                </div>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
-                                {/* Search Bar for Inquiries */}
-                                <div className="p-4 border-b border-slate-200 bg-white">
+                                {/* Enhanced Search Bar */}
+                                <div className={`p-4 border-b ${
+                                    theme === 'dark' 
+                                        ? 'border-gray-700 bg-gray-800' 
+                                        : 'border-gray-200 bg-white'
+                                }`}>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg className={`w-4 h-4 ${
+                                                theme === 'dark' ? 'text-gray-400' : 'text-gray-400'
+                                            }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                             </svg>
                                         </div>
@@ -490,13 +600,35 @@ export default function Chat() {
                                             placeholder="Search conversations..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
-                                            className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-slate-50 focus:bg-white transition-colors"
+                                            className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:outline-none text-sm transition-all duration-200 ${
+                                                theme === 'dark'
+                                                    ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-400 focus:ring-green-500/50 focus:border-green-500'
+                                                    : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-500 focus:ring-indigo-500/50 focus:border-indigo-500 focus:bg-white'
+                                            }`}
                                         />
+                                        {searchQuery && (
+                                            <button
+                                                onClick={() => setSearchQuery('')}
+                                                className={`absolute inset-y-0 right-0 pr-3 flex items-center ${
+                                                    theme === 'dark' 
+                                                        ? 'text-gray-400 hover:text-gray-200' 
+                                                        : 'text-gray-400 hover:text-gray-600'
+                                                }`}
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
 
-                                {/* Active or History List */}
-                                <div className="flex-1 overflow-y-auto p-4 bg-gradient-to-b from-white to-slate-50">
+                                {/* Enhanced Active or History List */}
+                                <div className={`flex-1 overflow-y-auto p-4 ${
+                                    theme === 'dark' 
+                                        ? 'bg-gradient-to-b from-gray-800 to-gray-900' 
+                                        : 'bg-gradient-to-b from-white to-gray-50'
+                                }`}>
                                     {activeTab === 'active' ? (
                                         <div className="space-y-3">
                                             {activeInquiry ? (
@@ -933,9 +1065,9 @@ export default function Chat() {
                                 </button>
                             </form>
                         </div>
-                        </div>
                     </div>
                 </div>
+            </div>
             )}
             {viewer.open && (
                 <ImageViewer open={viewer.open} src={viewer.src} filename={viewer.filename} onClose={() => setViewer({ open: false, src: '', filename: '' })} />

@@ -439,10 +439,10 @@ export default function Navbar({refresh}) {
                     </div>
                 </div>
             )}
-            <nav className={`shadow-xl fixed w-full z-[9999] top-0 left-0 backdrop-blur-md border-b ${theme === 'dark' ? 'bg-gradient-to-r from-gray-800 via-gray-800 to-gray-900 border-gray-700/30' : 'bg-gradient-to-r from-green-700 via-green-800 to-emerald-800 border-white/10'}`} style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <nav className={`shadow-xl fixed w-full z-[9999] top-0 left-0 backdrop-blur-md border-b ${theme === 'dark' ? 'bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-gray-700/30' : 'bg-gradient-to-r from-green-600 via-green-700 to-green-800 border-white/20'}`} style={{ fontFamily: 'Poppins, sans-serif' }}>
                 <div className={`max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 py-2 ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`} style={{ fontFamily: 'Poppins, sans-serif' }}>
                     <img
-                        src={logo2}
+                        src={logo}
                         alt="FITS -Tanza Logo"
                         className={`w-12 h-12 object-contain ml-2 rounded-full shadow-lg ring-2 ${theme === 'dark' ? 'ring-gray-600/50' : 'ring-white/30'}`}
                     />

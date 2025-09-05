@@ -1119,7 +1119,7 @@ export default function Landing() {
                             <div className="mb-6">
                                 <div className="flex items-center gap-4 mb-4">
                                     <div className="relative">
-                                        <img src={logo} alt="FITS Logo" className="w-12 h-12 rounded-2xl border-2 border-white shadow-lg" />
+                                        <img src={logo} alt="FITS Logo" className="w-12 h-12 rounded-full border-2 border-white shadow-lg" />
                                     </div>
                                     <div>
                                         <span className={`text-2xl font-extrabold tracking-wide ${theme === 'dark' ? 'text-gray-100' : 'text-white'}`}>FITS-Tanza</span>
