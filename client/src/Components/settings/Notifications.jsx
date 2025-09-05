@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useCustomTranslation } from '../../hooks/useCustomTranslation';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const Notifications = () => {
   const { t } = useCustomTranslation();
+  const { isDark } = useTheme();
   
   const [notifications, setNotifications] = useState({
     email: {
@@ -144,41 +146,102 @@ const Notifications = () => {
 
   return (
     <div className="space-y-8">
-      {/* Success Message */}
+      {/* Success Message - Centered Popup */}
       {showSuccess && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center space-x-3">
-          <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
-            <i className="fas fa-check text-emerald-600"></i>
+        <div className="fixed inset-0 h-full z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div 
+            className="border border-emerald-200 dark:border-emerald-700 rounded-xl p-6 flex items-center space-x-4 shadow-2xl max-w-md mx-4"
+            style={{ backgroundColor: isDark ? '#065f46' : '#ecfdf5' }}
+          >
+            <div 
+              className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: isDark ? '#047857' : '#d1fae5' }}
+            >
+              <i 
+                className="fas fa-check text-xl"
+                style={{ color: isDark ? '#a7f3d0' : '#047857' }}
+              ></i>
+            </div>
+            <div>
+              <span 
+                className="font-medium text-lg block"
+                style={{ color: isDark ? '#a7f3d0' : '#047857' }}
+              >
+                {t('settings.settings_saved')}
+              </span>
+              <p 
+                className="text-sm mt-1 opacity-80"
+                style={{ color: isDark ? '#a7f3d0' : '#047857' }}
+              >
+                Your notification preferences have been updated
+              </p>
+            </div>
           </div>
-          <span className="text-emerald-800 font-medium">{t('settings.settings_saved')}</span>
         </div>
       )}
 
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('settings.notifications')}</h2>
-        <p className="text-gray-600">Manage how you receive notifications and updates</p>
+        <h2 
+          className="text-2xl font-bold mb-2"
+          style={{ color: isDark ? '#ffffff' : '#111827' }}
+        >
+          {t('settings.notifications')}
+        </h2>
+        <p 
+          style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+        >
+          Manage how you receive notifications and updates
+        </p>
       </div>
 
       {/* Notification Type Cards */}
       {notificationTypes.map((type) => (
-        <div key={type.key} className="bg-white border border-gray-200 rounded-xl p-6">
+        <div 
+          key={type.key} 
+          className="border border-gray-200 dark:border-gray-600 rounded-xl p-6"
+          style={{ backgroundColor: isDark ? '#1f2937' : '#ffffff' }}
+        >
           <div className="flex items-center space-x-3 mb-6">
             <div className={`w-10 h-10 bg-${type.color}-100 rounded-lg flex items-center justify-center`}>
               <i className={`${type.icon} text-${type.color}-600 text-lg`}></i>
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-gray-900">{type.title}</h3>
-              <p className="text-gray-600 text-sm">{type.description}</p>
+              <h3 
+                className="text-xl font-semibold"
+                style={{ color: isDark ? '#ffffff' : '#111827' }}
+              >
+                {type.title}
+              </h3>
+              <p 
+                className="text-sm"
+                style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+              >
+                {type.description}
+              </p>
             </div>
           </div>
 
           <div className="space-y-4">
             {notificationSettings.map((setting) => (
-              <div key={setting.key} className="flex items-start justify-between p-4 bg-gray-50 rounded-lg">
+              <div 
+                key={setting.key} 
+                className="flex items-start justify-between p-4 rounded-lg"
+                style={{ backgroundColor: isDark ? '#374151' : '#f9fafb' }}
+              >
                 <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">{setting.title}</h4>
-                  <p className="text-sm text-gray-600 mt-1">{setting.description}</p>
+                  <h4 
+                    className="font-medium"
+                    style={{ color: isDark ? '#ffffff' : '#111827' }}
+                  >
+                    {setting.title}
+                  </h4>
+                  <p 
+                    className="text-sm mt-1"
+                    style={{ color: isDark ? '#d1d5db' : '#6b7280' }}
+                  >
+                    {setting.description}
+                  </p>
                 </div>
                 <div className="ml-4">
                   <label className="relative inline-flex items-center cursor-pointer">

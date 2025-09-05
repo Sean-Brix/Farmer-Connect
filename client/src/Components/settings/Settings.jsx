@@ -8,8 +8,15 @@ import AccountSettings from './AccountSettings';
 
 const Settings = () => {
   const { t } = useCustomTranslation();
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const [activeTab, setActiveTab] = useState('preferences');
+  
+  // Updated layout - Version 2.0 - Force refresh
+  
+  // Debug: Log the theme values
+  console.log('Current theme:', theme);
+  console.log('Is dark mode:', isDark);
+  console.log('Document has dark class:', document.documentElement.classList.contains('dark'));
 
   const tabs = [
     { 
@@ -37,57 +44,162 @@ const Settings = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 pt-20">
-      {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-lg border-b border-emerald-100 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-emerald-600 dark:bg-emerald-500 rounded-xl flex items-center justify-center">
-                <i className="fas fa-cog text-white text-lg"></i>
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('settings.title')}</h1>
-                <p className="text-gray-600 dark:text-gray-300 mt-1">Manage your preferences and account settings</p>
+      <div 
+        className="min-h-screen transition-colors duration-200 pt-16 sm:pt-20"
+        style={{ 
+          backgroundColor: isDark ? '#111827' : '#ffffff' 
+        }}
+      >
+        
+        {/* Header Section */}
+        <div 
+          className="border-b border-gray-100 dark:border-gray-800 shadow-sm"
+          style={{ 
+            backgroundColor: isDark ? '#111827' : '#ffffff' 
+          }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="py-6 sm:py-8">
+              <div className="flex items-center space-x-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <i className="fas fa-cog text-white text-xl sm:text-2xl"></i>
+                  </div>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h1 
+                    className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight"
+                    style={{ 
+                      color: isDark ? '#ffffff' : '#111827' 
+                    }}
+                  >
+                    {t('settings.title')}
+                  </h1>
+                  <p 
+                    className="mt-1 sm:mt-2 text-sm sm:text-base max-w-2xl"
+                    style={{ 
+                      color: isDark ? '#9ca3af' : '#6b7280' 
+                    }}
+                  >
+                    Manage your preferences and account settings
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
-          <div className="flex flex-col lg:flex-row">
-            {/* Sidebar Navigation */}
-            <div className="lg:w-1/4 bg-gray-50 dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600">
-              <nav className="p-6">
-                <ul className="space-y-2">
-                  {tabs.map((tab) => (
-                    <li key={tab.id}>
+        {/* Main Content Container */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div 
+            className="rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden"
+            style={{ 
+              backgroundColor: isDark ? '#1f2937' : '#ffffff' 
+            }}
+          >
+            
+            {/* Mobile Tab Navigation */}
+            <div 
+              className="lg:hidden border-b border-gray-200 dark:border-gray-600 px-4 py-4"
+              style={{ 
+                backgroundColor: isDark ? '#374151' : '#ffffff' 
+              }}
+            >
+              <div className="flex space-x-1 overflow-x-auto scrollbar-hide">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex-shrink-0 flex items-center space-x-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                      activeTab === tab.id
+                        ? 'bg-emerald-100 shadow-md border border-emerald-200'
+                        : 'hover:shadow-sm'
+                    }`}
+                    style={{
+                      backgroundColor: activeTab === tab.id 
+                        ? (isDark ? '#065f46' : '#d1fae5') 
+                        : 'transparent',
+                      color: activeTab === tab.id
+                        ? (isDark ? '#a7f3d0' : '#047857')
+                        : (isDark ? '#d1d5db' : '#374151'),
+                      borderColor: activeTab === tab.id 
+                        ? (isDark ? '#047857' : '#a7f3d0') 
+                        : 'transparent'
+                    }}
+                  >
+                    <i className={`${tab.icon} text-sm`}></i>
+                    <span className="whitespace-nowrap">{tab.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex">
+              {/* Desktop Sidebar Navigation */}
+              <div 
+                className="hidden lg:flex lg:flex-col lg:w-80 xl:w-96 border-r border-gray-200 dark:border-gray-600"
+                style={{ 
+                  backgroundColor: isDark ? '#374151' : '#ffffff' 
+                }}
+              >
+                <div className="flex-1 py-8 px-6">
+                  <nav className="space-y-2">
+                    {tabs.map((tab) => (
                       <button
+                        key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
-                          activeTab === tab.id
-                            ? 'bg-emerald-100 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-100 font-medium shadow-sm'
-                            : 'text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white hover:shadow-sm'
-                        }`}
+                        className="w-full flex items-center space-x-4 px-4 py-4 rounded-2xl text-left transition-all duration-300 group hover:shadow-md hover:scale-[1.01] shadow-lg border scale-[1.02]"
+                        style={{
+                          backgroundColor: activeTab === tab.id 
+                            ? (isDark ? '#065f46' : '#ecfdf5') 
+                            : 'transparent',
+                          color: activeTab === tab.id
+                            ? (isDark ? '#a7f3d0' : '#047857')
+                            : (isDark ? '#d1d5db' : '#374151'),
+                          borderColor: activeTab === tab.id 
+                            ? (isDark ? '#047857' : '#a7f3d0') 
+                            : 'transparent'
+                        }}
                       >
-                        <i className={`${tab.icon} text-lg`}></i>
-                        <span>{tab.label}</span>
+                        <div 
+                          className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300"
+                          style={{
+                            backgroundColor: activeTab === tab.id
+                              ? (isDark ? '#047857' : '#d1fae5')
+                              : (isDark ? '#4b5563' : '#f9fafb'),
+                            color: activeTab === tab.id
+                              ? (isDark ? '#a7f3d0' : '#047857')
+                              : (isDark ? '#9ca3af' : '#6b7280')
+                          }}
+                        >
+                          <i className={`${tab.icon} text-lg`}></i>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-base font-medium block truncate">{tab.label}</span>
+                        </div>
+                        {activeTab === tab.id && (
+                          <div className="flex-shrink-0 w-2 h-2 bg-emerald-500 rounded-full"></div>
+                        )}
                       </button>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
+                    ))}
+                  </nav>
+                </div>
+              </div>
 
-            {/* Main Content */}
-            <div className="lg:w-3/4 p-6 lg:p-8">
-              {ActiveComponent && <ActiveComponent />}
+              {/* Main Content Area */}
+              <div className="flex-1 min-w-0">
+                <div className="p-6 sm:p-8 lg:p-10">
+                  <div className="max-w-4xl">
+                    {ActiveComponent && <ActiveComponent />}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        
+        {/* Bottom Spacing */}
+        <div className="h-8 sm:h-16"></div>
       </div>
     </>
   );

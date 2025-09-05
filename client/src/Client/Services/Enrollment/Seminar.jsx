@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 // SUB COMPONENT
 import Navbar from '../../Components/Navbar';
@@ -108,6 +109,7 @@ const cancelSeminar = async (seminarId) => {
 };
 
 export default function Seminar() {
+    const { theme } = useTheme();
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
     const [filterBy, setFilterBy] = useState('Title');
@@ -260,23 +262,23 @@ export default function Seminar() {
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-white relative"
+                className={`flex min-h-screen relative ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}
                 style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30 ">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-[8vh] ">
                         {/* Header */}
                         <header className="flex flex-col items-center mb-12 w-full">
-                            <span className="uppercase tracking-widest text-gray-600 text-xs font-semibold mb-1 letter-spacing-wide">
+                            <span className={`uppercase tracking-widest text-xs font-semibold mb-1 letter-spacing-wide ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
                                 Welcome to
                             </span>
                             <h1
-                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title text-gray-800"
+                                className={`text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}
                                 
                             >
                                 Seminar Enrollment
                             </h1>
-                            <div className="mt-4 w-24 h-2 rounded-full bg-green-500 shadow-lg"></div>
+                            <div className={`mt-4 w-24 h-2 rounded-full shadow-lg ${theme === 'dark' ? 'bg-green-400' : 'bg-green-500'}`}></div>
                         </header>
                         {/* Modernized: My Registered Seminars Button & Search/Filter Bar */}
                         <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
@@ -294,7 +296,7 @@ export default function Seminar() {
                                 <div className="relative w-full sm:w-auto flex justify-center">
                                     <input
                                         type="text"
-                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border-2 border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 text-gray-800 bg-white shadow-sm transition placeholder:text-gray-500 font-medium"
+                                        className={`w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border-2 focus:ring-2 focus:ring-green-200 shadow-sm transition placeholder:text-gray-500 font-medium ${theme === 'dark' ? 'border-gray-600 focus:border-green-400 text-white bg-gray-800 placeholder:text-gray-400' : 'border-gray-300 focus:border-green-500 text-gray-800 bg-white'}`}
                                         placeholder={`Search by ${filterBy.toLowerCase()}...`}
                                         value={search}
                                         onChange={(e) => {

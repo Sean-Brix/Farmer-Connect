@@ -1033,10 +1033,10 @@ export default function Landing() {
                             data-aos="fade-up" 
                             data-aos-delay="400"
                         >
-                            <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/50 hover:border-green-200 hover:-translate-y-1">
+                            <div className={`backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border hover:-translate-y-1 ${theme === 'dark' ? 'bg-gray-800/90 border-gray-700/50 hover:border-green-400' : 'bg-white/90 border-white/50 hover:border-green-200'}`}>
                                 {/* Compact Icon */}
                                 <div className="flex justify-center mb-4">
-                                    <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 ${theme === 'dark' ? 'bg-gradient-to-br from-green-400 to-emerald-500' : 'bg-gradient-to-br from-emerald-500 to-green-600'}`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                         </svg>
@@ -1045,13 +1045,13 @@ export default function Landing() {
                                 
                                 {/* Compact Content */}
                                 <div className="text-center">
-                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-green-600 transition-colors duration-300 mb-2">
+                                    <h3 className={`text-lg font-bold transition-colors duration-300 mb-2 ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
                                         Agricultural Training Institute
                                     </h3>
-                                    <p className="text-gray-600 text-sm mb-3">
+                                    <p className={`text-sm mb-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                                         Training and e-learning for farmers and agri-entrepreneurs.
                                     </p>
-                                    <span className="inline-flex items-center gap-1 text-green-600 font-semibold text-sm">
+                                    <span className={`inline-flex items-center gap-1 font-semibold text-sm ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>
                                         Visit
                                         <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -1070,10 +1070,10 @@ export default function Landing() {
                             data-aos="fade-up" 
                             data-aos-delay="500"
                         >
-                            <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-white/50 hover:border-green-200 hover:-translate-y-1">
+                            <div className={`backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border hover:-translate-y-1 ${theme === 'dark' ? 'bg-gray-800/90 border-gray-700/50 hover:border-green-400' : 'bg-white/90 border-white/50 hover:border-green-200'}`}>
                                 {/* Compact Icon */}
                                 <div className="flex justify-center mb-4">
-                                    <div className="w-14 h-14 bg-gradient-to-br from-green-600 to-emerald-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 ${theme === 'dark' ? 'bg-gradient-to-br from-green-400 to-emerald-500' : 'bg-gradient-to-br from-green-600 to-emerald-500'}`}>
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                                         </svg>
@@ -1082,13 +1082,13 @@ export default function Landing() {
                                 
                                 {/* Compact Content */}
                                 <div className="text-center">
-                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-green-600 transition-colors duration-300 mb-2">
+                                    <h3 className={`text-lg font-bold transition-colors duration-300 mb-2 ${theme === 'dark' ? 'text-white group-hover:text-green-400' : 'text-gray-900 group-hover:text-green-600'}`}>
                                         PhilRice
                                     </h3>
-                                    <p className="text-gray-600 text-sm mb-3">
+                                    <p className={`text-sm mb-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                                         Research and innovations for rice farmers and industry.
                                     </p>
-                                    <span className="inline-flex items-center gap-1 text-green-600 font-semibold text-sm">
+                                    <span className={`inline-flex items-center gap-1 font-semibold text-sm ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>
                                         Visit
                                         <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

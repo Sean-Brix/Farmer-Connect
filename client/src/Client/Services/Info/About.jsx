@@ -3,7 +3,9 @@ import { useTheme } from '../../../contexts/ThemeContext.jsx'
 import Navbar from '../../Components/Navbar'
 import farm from './Assets/farm.jpg'
 
-export default function About() {
+export default func                        <p className={`text-center text-sm ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                        }`}>KC Sean builds and maintains the robust backend systems that power our platform's features and security.</p>ion About() {
 const { theme } = useTheme();
 
 return (
@@ -155,7 +157,9 @@ return (
                                 : 'bg-gray-50 border-gray-200'
                         }`}>
                             <h3 className="text-lg font-bold text-green-600">Community Support</h3>
-                            <p className="text-gray-700 text-sm">
+                            <p className={`text-sm ${
+                                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
                                 Join a vibrant community of farmers, experts, and enthusiasts ready to share knowledge, answer questions, and collaborate on projects.
                             </p>
                         </div>
@@ -167,7 +171,9 @@ return (
         
         <section className="bg-green-100 py-16">
             <div className="max-w-5xl mx-auto px-6">
-                <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Meet Our Team</h2>
+                <h2 className={`text-3xl font-bold mb-8 text-center ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                }`}>Meet Our Team</h2>
                 <div className="grid md:grid-cols-3 gap-10">
                     <div className="flex flex-col items-center bg-white rounded-xl p-6 shadow border border-green-200">
                         <div className="w-24 h-24 rounded-full mb-4 border-2 border-green-400 bg-green-50 flex items-center justify-center">
@@ -177,7 +183,9 @@ return (
                         </div>
                         <h3 className="text-xl font-semibold text-green-600">Rhenzy Cruzat</h3>
                         <p className="text-green-700 mb-2">Front End Developer</p>
-                        <p className="text-gray-600 text-center text-sm">Rhenzy crafts intuitive and modern user interfaces, ensuring a seamless experience for all platform users.</p>
+                        <p className={`text-center text-sm ${
+                            theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                        }`}>Rhenzy crafts intuitive and modern user interfaces, ensuring a seamless experience for all platform users.</p>
                     </div>
                     <div className="flex flex-col items-center bg-white rounded-xl p-6 shadow border border-green-200">
                         <div className="w-24 h-24 rounded-full mb-4 border-2 border-green-400 bg-green-50 flex items-center justify-center">

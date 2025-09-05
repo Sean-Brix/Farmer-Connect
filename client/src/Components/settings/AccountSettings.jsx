@@ -4,7 +4,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 
 const AccountSettings = () => {
   const { t } = useCustomTranslation();
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   
   const [userInfo, setUserInfo] = useState({
     username: '',
@@ -112,33 +112,77 @@ const AccountSettings = () => {
 
   return (
     <div className="space-y-8">
-      {/* Success Message */}
+      {/* Success Message - Centered Popup */}
       {showSuccess && (
-        <div className="bg-emerald-50 dark:bg-emerald-900 border border-emerald-200 dark:border-emerald-700 rounded-xl p-4 flex items-center space-x-3">
-          <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-800 rounded-full flex items-center justify-center">
-            <i className="fas fa-check text-emerald-600 dark:text-emerald-300"></i>
+        <div className="fixed inset-0 h-full z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div 
+            className="border border-emerald-200 dark:border-emerald-700 rounded-xl p-6 flex items-center space-x-4 shadow-2xl max-w-md mx-4"
+            style={{ backgroundColor: isDark ? '#065f46' : '#ecfdf5' }}
+          >
+            <div 
+              className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: isDark ? '#047857' : '#d1fae5' }}
+            >
+              <i 
+                className="fas fa-check text-xl"
+                style={{ color: isDark ? '#a7f3d0' : '#047857' }}
+              ></i>
+            </div>
+            <div>
+              <span 
+                className="font-medium text-lg block"
+                style={{ color: isDark ? '#a7f3d0' : '#047857' }}
+              >
+                {t('settings.settings_saved')}
+              </span>
+              <p 
+                className="text-sm mt-1 opacity-80"
+                style={{ color: isDark ? '#a7f3d0' : '#047857' }}
+              >
+                Your account settings have been updated
+              </p>
+            </div>
           </div>
-          <span className="text-emerald-800 dark:text-emerald-200 font-medium">{t('settings.settings_saved')}</span>
         </div>
       )}
 
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t('settings.account_settings')}</h2>
-        <p className="text-gray-600 dark:text-gray-300">Manage your account information and security settings</p>
+        <h2 
+          className="text-2xl font-bold mb-2"
+          style={{ color: isDark ? '#ffffff' : '#111827' }}
+        >
+          {t('settings.account_settings')}
+        </h2>
+        <p 
+          style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
+        >
+          Manage your account information and security settings
+        </p>
       </div>
 
       {/* Section Navigation */}
-      <div className="flex space-x-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-xl">
+      <div 
+        className="flex space-x-1 p-1 rounded-xl"
+        style={{ backgroundColor: isDark ? '#374151' : '#f3f4f6' }}
+      >
         {sections.map((section) => (
           <button
             key={section.id}
             onClick={() => setActiveSection(section.id)}
             className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
               activeSection === section.id
-                ? 'bg-white dark:bg-gray-600 text-emerald-700 dark:text-emerald-300 shadow-sm'
-                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                ? 'shadow-sm'
+                : ''
             }`}
+            style={{
+              backgroundColor: activeSection === section.id
+                ? (isDark ? '#4b5563' : '#ffffff')
+                : 'transparent',
+              color: activeSection === section.id
+                ? (isDark ? '#a7f3d0' : '#047857')
+                : (isDark ? '#9ca3af' : '#6b7280')
+            }}
           >
             <i className={`${section.icon} text-sm`}></i>
             <span className="hidden sm:inline">{section.title}</span>
@@ -148,11 +192,17 @@ const AccountSettings = () => {
 
       {/* Profile Information Section */}
       {activeSection === 'profile' && (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl p-6">
+        <div 
+          className="border border-gray-200 dark:border-gray-600 rounded-xl p-6"
+          style={{ backgroundColor: isDark ? '#1f2937' : '#ffffff' }}
+        >
           <form onSubmit={handleProfileUpdate} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label 
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: isDark ? '#d1d5db' : '#374151' }}
+                >
                   Username
                 </label>
                 <input
@@ -165,7 +215,10 @@ const AccountSettings = () => {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label 
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: isDark ? '#d1d5db' : '#374151' }}
+                >
                   Email
                 </label>
                 <input

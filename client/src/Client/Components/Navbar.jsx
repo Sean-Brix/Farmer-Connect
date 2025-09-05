@@ -12,7 +12,7 @@ import { useTheme } from '../../contexts/ThemeContext.jsx';
 export default function Navbar({refresh}) {
     const location = useLocation();
     const { t } = useCustomTranslation();
-    const { theme } = useTheme();
+    const { theme, isDark } = useTheme();
     
     // Inject Google Fonts Poppins if not already present
     if (typeof document !== 'undefined' && !document.getElementById('poppins-font')) {
@@ -681,7 +681,7 @@ export default function Navbar({refresh}) {
                                     </svg>
                                 </button>
                                 <ul
-                                    className={`absolute left-0 mt-2 w-60 backdrop-blur-lg rounded-2xl shadow-2xl py-4 z-[60] border transition-all duration-300 ${
+                                    className={`absolute left-0 mt-2 w-60 backdrop-blur-lg rounded-2xl shadow-2xl py-4  z-[60] border transition-all duration-300 ${
                                         servicesOpen
                                             ? 'opacity-100 translate-y-0 pointer-events-auto dropdown-animate'
                                             : 'opacity-0 -translate-y-6 pointer-events-none'
@@ -691,14 +691,14 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/seminar"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${isActive ? 
+                                                `flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium ${isActive ? 
                                                     (theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-100 text-emerald-900') : 
-                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-emerald-700 hover:bg-emerald-50')
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-gray-700 hover:bg-emerald-50')
                                                 }`
                                             }
                                         >
                                             <svg
-                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-500'}`}
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -722,14 +722,14 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/eic"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${isActive ? 
+                                                `flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium ${isActive ? 
                                                     (theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-100 text-emerald-900') : 
-                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-emerald-700 hover:bg-emerald-50')
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-gray-700 hover:bg-emerald-50')
                                                 }`
                                             }
                                         >
                                             <svg
-                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-500'}`}
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -757,14 +757,14 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/distribution"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${isActive ? 
+                                                `flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium ${isActive ? 
                                                     (theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-100 text-emerald-900') : 
-                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-emerald-700 hover:bg-emerald-50')
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-gray-700 hover:bg-emerald-50')
                                                 }`
                                             }
                                         >
                                             <svg
-                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-500'}`}
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -789,14 +789,14 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/chat-support"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${isActive ? 
+                                                `flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium ${isActive ? 
                                                     (theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-100 text-emerald-900') : 
-                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-emerald-700 hover:bg-emerald-50')
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-gray-700 hover:bg-emerald-50')
                                                 }`
                                             }
                                         >
                                             <svg
-                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-500'}`}
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -816,14 +816,14 @@ export default function Navbar({refresh}) {
                                         <NavLink
                                             to="/report"
                                             className={({ isActive }) =>
-                                                `flex items-center gap-3 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${isActive ? 
+                                                `flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium ${isActive ? 
                                                     (theme === 'dark' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-emerald-100 text-emerald-900') : 
-                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-emerald-700 hover:bg-emerald-50')
+                                                    (theme === 'dark' ? 'text-gray-300 hover:bg-gray-700/50 hover:text-emerald-400' : 'text-gray-700 hover:bg-emerald-50')
                                                 }`
                                             }
                                         >
                                             <svg
-                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-500'}`}
+                                                className={`w-5 h-5 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 strokeWidth="2"
@@ -874,16 +874,37 @@ export default function Navbar({refresh}) {
                                 </button>
                                 {open && (
                                     <ul
-                                        className={"absolute right-0 mt-3 w-48 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl py-3 z-[70] border border-white/30 transition-all duration-300 ease-out transform " + (open ? 'opacity-100 translate-y-0 pointer-events-auto dropdown-animate' : 'opacity-0 -translate-y-6 pointer-events-none')}
+                                        className={"absolute right-0 mt-3 w-48 rounded-2xl shadow-2xl py-4 z-[70] border transition-all duration-300 ease-out transform " + (open ? 'opacity-100 translate-y-0 pointer-events-auto dropdown-animate' : 'opacity-0 -translate-y-6 pointer-events-none')}
+                                        style={{
+                                            backgroundColor: isDark ? 'rgba(31, 41, 55, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                                            borderColor: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(255, 255, 255, 0.3)'
+                                        }}
+                                        onMouseEnter={() => {
+                                            if (closeProfileTimeout.current) clearTimeout(closeProfileTimeout.current);
+                                        }}
+                                        onMouseLeave={() => {
+                                            closeProfileTimeout.current = setTimeout(() => setOpen(false), 250);
+                                        }}
                                     >
                                         <li>
                                             <Link
                                                 to="/settings/profile"
-                                                className="flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium"
+                                                className="flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium"
+                                                style={{
+                                                    color: isDark ? '#ffffff' : '#374151',
+                                                    backgroundColor: 'transparent'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.backgroundColor = isDark ? 'rgba(16, 185, 129, 0.1)' : 'rgba(16, 185, 129, 0.05)';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                                }}
                                                 onClick={() => setOpen(false)}
                                             >
                                                 <svg
-                                                    className="w-5 h-5 text-emerald-500"
+                                                    className="w-5 h-5"
+                                                    style={{ color: isDark ? '#4ade80' : '#16a34a' }}
                                                     fill="none"
                                                     stroke="currentColor"
                                                     strokeWidth="2"
@@ -898,11 +919,22 @@ export default function Navbar({refresh}) {
                                         <li>
                                             <Link
                                                 to="/settings"
-                                                className="flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium"
+                                                className="flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium"
+                                                style={{
+                                                    color: isDark ? '#ffffff' : '#374151',
+                                                    backgroundColor: 'transparent'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.backgroundColor = isDark ? 'rgba(16, 185, 129, 0.1)' : 'rgba(16, 185, 129, 0.05)';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                                }}
                                                 onClick={() => setOpen(false)}
                                             >
                                                 <svg
-                                                    className="w-5 h-5 text-emerald-500"
+                                                    className="w-5 h-5"
+                                                    style={{ color: isDark ? '#4ade80' : '#16a34a' }}
                                                     fill="none"
                                                     stroke="currentColor"
                                                     strokeWidth="2"
@@ -922,13 +954,24 @@ export default function Navbar({refresh}) {
                                             <li>
                                                 <Link
                                                     to="/admin"
-                                                    className="flex items-center gap-3 px-6 py-3 text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all duration-200 font-medium"
+                                                    className="flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium"
+                                                    style={{
+                                                        color: isDark ? '#ffffff' : '#374151',
+                                                        backgroundColor: 'transparent'
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.backgroundColor = isDark ? 'rgba(16, 185, 129, 0.1)' : 'rgba(16, 185, 129, 0.05)';
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.backgroundColor = 'transparent';
+                                                    }}
                                                     onClick={() => {
                                                         setOpen(false);
                                                     }}
                                                 >
                                                     <svg
-                                                        className="w-5 h-5 text-emerald-500"
+                                                        className="w-5 h-5"
+                                                        style={{ color: isDark ? '#4ade80' : '#16a34a' }}
                                                         fill="none"
                                                         stroke="currentColor"
                                                         strokeWidth="2"
@@ -946,14 +989,25 @@ export default function Navbar({refresh}) {
                                         )}
                                         <li>
                                             <button
-                                                className="w-full text-left flex items-center gap-3 px-6 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-medium"
+                                                className="w-full text-left flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium"
+                                                style={{
+                                                    color: isDark ? '#ef4444' : '#dc2626',
+                                                    backgroundColor: 'transparent'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.backgroundColor = isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                                }}
                                                 onClick={() => {
                                                     setShowAlert(true);
                                                     setOpen(false);
                                                 }}
                                             >
                                                 <svg
-                                                    className="w-5 h-5 text-red-500"
+                                                    className="w-5 h-5"
+                                                    style={{ color: isDark ? '#ef4444' : '#dc2626' }}
                                                     fill="none"
                                                     stroke="currentColor"
                                                     strokeWidth="2"

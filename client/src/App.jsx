@@ -25,7 +25,7 @@ import About from './Client/Services/Info/About.jsx';
 import CitizensCharter from './Client/Components/CitizensCharter.jsx';
 import Distribution from './Client/Services/Distributions/Distribution.jsx';
 import Survey from './Components/Survey/Survey.jsx';
-import Settings from './Components/Settings/Settings.jsx';
+import Settings from './Components/settings/Settings.jsx';
 import My_Profile from './Admin/Components/Profile/My_Profile.jsx';
 import ForgotPassword from './Authentication/Components/ForgotPassword';
 import ResetPassword from './Authentication/Components/ResetPassword.jsx';

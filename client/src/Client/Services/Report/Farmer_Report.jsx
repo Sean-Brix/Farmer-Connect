@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useTheme } from '../../../contexts/ThemeContext';
 import { useMyCrops, useCreateCrop, useCreateReport } from './hooks/useFarmerSeedTrack.js';
 import Navbar from '../../Components/Navbar.jsx';
 
@@ -9,6 +10,7 @@ import cropGuidelinesData from '../../../data/cropGuidelinesData.json';
 // Charts removed for farmer simplicity
 
 export default function Farmer_Report() {
+  const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState('crops');
   const [showCropRegistrationModal, setShowCropRegistrationModal] = useState(false);
   const [showMonthlyReportModal, setShowMonthlyReportModal] = useState(false);
@@ -404,7 +406,7 @@ export default function Farmer_Report() {
         <div className="pt-[14vh] min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
-            <p className="text-gray-600 font-medium">Verifying access permissions...</p>
+            <p className={`font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Verifying access permissions...</p>
           </div>
         </div>
       )}
@@ -418,8 +420,8 @@ export default function Farmer_Report() {
                 <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Error</h2>
-            <p className="text-gray-600 mb-6">{accessError.message || 'Unable to verify user access'}</p>
+            <h2 className={`text-2xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Access Error</h2>
+            <p className={`mb-6 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{accessError.message || 'Unable to verify user access'}</p>
             <button 
               onClick={() => window.location.reload()}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
@@ -439,8 +441,8 @@ export default function Farmer_Report() {
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Access Restricted</h2>
-            <p className="text-gray-600 mb-2 text-lg">This Farmer Report module is exclusively designed for farmers.</p>
+            <h2 className={`text-3xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Access Restricted</h2>
+            <p className={`mb-2 text-lg ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>This Farmer Report module is exclusively designed for farmers.</p>
 
             <div className="space-y-4">
               <a 
@@ -456,15 +458,15 @@ export default function Farmer_Report() {
               <div className="flex justify-center gap-4">
                 <a 
                   href="/" 
-                  className="text-gray-600 hover:text-gray-800 font-medium underline transition-colors duration-200"
+                  className={`font-medium underline transition-colors duration-200 ${theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'}`}
                 >
                   Return to Home
                 </a>
-                <span className="text-gray-400">•</span>
+                <span className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-400'}`}>•</span>
                 {userAccess !== 'User' && 
                   <a 
                   href="/admin" 
-                  className="text-blue-600 hover:text-blue-800 font-medium underline transition-colors duration-200"
+                  className={`font-medium underline transition-colors duration-200 ${theme === 'dark' ? 'text-blue-300 hover:text-blue-200' : 'text-blue-600 hover:text-blue-800'}`}
                   >
                     Admin Panel
                   </a>
@@ -477,29 +479,29 @@ export default function Farmer_Report() {
 
       {/* Farmer Dashboard Content - Only show for User access */}
       {userAccess === 'User' && !accessLoading && !accessError && (
-      <div className="pt-[14vh] min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50">
+      <div className={`pt-[14vh] min-h-screen ${theme === 'dark' ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-green-50'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           {/* Professional Header - EIC Style */}
           <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
             <span className="inline-flex items-center justify-center gap-3 w-full">
-              <span className="rounded-full bg-green-100 p-2">
-                <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <span className={`rounded-full p-2 ${theme === 'dark' ? 'bg-green-900' : 'bg-green-100'}`}>
+                <svg className={`w-9 h-9 ${theme === 'dark' ? 'text-green-400' : 'text-green-500'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
-              <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
+              <span className={`text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                 Farmer Dashboard
               </span>
             </span>
-            <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
+            <span className={`block text-base md:text-lg font-medium mt-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>
               Monitor your crops and farming activities - {farmerProfile.name}
             </span>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-gray-600 mt-2">
+            <div className={`flex flex-col sm:flex-row items-center justify-center gap-2 mt-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
               <div className="flex items-center gap-1">
                 <span className="text-sm">📍</span>
                 <span className="font-medium">{farmerProfile.location}</span>
               </div>
-              <span className="hidden sm:inline text-gray-400">•</span>
+              <span className={`hidden sm:inline ${theme === 'dark' ? 'text-gray-400' : 'text-gray-400'}`}>•</span>
               <div className="flex items-center gap-1">
                 <span className="text-sm">🏞️</span>
                 <span className="font-medium">{farmerProfile.farmSize} hectares</span>
@@ -525,7 +527,7 @@ export default function Farmer_Report() {
                   className={`flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
                     activeTab === t.id
                       ? 'bg-green-600 text-white shadow-lg scale-105'
-                      : 'bg-white text-gray-700 border border-gray-200 hover:bg-green-50 hover:border-green-200 hover:text-green-700 shadow-sm'
+                      : `border border-gray-200 shadow-sm transition-all duration-200 ${theme === 'dark' ? 'bg-gray-800 text-gray-300 border-gray-600 hover:bg-gray-700 hover:border-green-400 hover:text-green-400' : 'bg-white text-gray-700 hover:bg-green-50 hover:border-green-200 hover:text-green-700'}`
                   }`}
                 >
                   <span className="text-base">{t.icon}</span>
@@ -549,7 +551,7 @@ export default function Farmer_Report() {
             <div className="space-y-8">
               {/* Professional Crops Overview Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
+                <div className={`rounded-xl shadow-lg border p-6 hover:shadow-xl transition-shadow duration-200 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
                       <span className="text-xl">🌱</span>
@@ -557,12 +559,12 @@ export default function Farmer_Report() {
                     <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">ACTIVE</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Active Crops</p>
-                    <p className="text-3xl font-bold text-gray-800">{registeredCrops.filter(c => c.status === 'Active').length}</p>
+                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Active Crops</p>
+                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{registeredCrops.filter(c => c.status === 'Active').length}</p>
                   </div>
                 </div>
                 
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
+                <div className={`rounded-xl shadow-lg border p-6 hover:shadow-xl transition-shadow duration-200 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
                       <span className="text-xl">🏞️</span>
@@ -570,12 +572,12 @@ export default function Farmer_Report() {
                     <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">TOTAL</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Total Area</p>
-                    <p className="text-3xl font-bold text-gray-800">{registeredCrops.reduce((sum, c) => sum + parseFloat(c.area || 0), 0).toFixed(1)}<span className="text-lg text-gray-500"> ha</span></p>
+                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Total Area</p>
+                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{registeredCrops.reduce((sum, c) => sum + parseFloat(c.area || 0), 0).toFixed(1)}<span className={`text-lg ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}> ha</span></p>
                   </div>
                 </div>
                 
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200">
+                <div className={`rounded-xl shadow-lg border p-6 hover:shadow-xl transition-shadow duration-200 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
                       <span className="text-xl">🌤️</span>
@@ -583,8 +585,8 @@ export default function Farmer_Report() {
                     <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">LIVE</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Weather Status</p>
-                    <p className="text-3xl font-bold text-gray-800">
+                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Weather Status</p>
+                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                       {weatherData?.current ? `${Math.round(weatherData.current.temperature_2m)}°C` : 'Loading...'}
                     </p>
                   </div>
@@ -592,30 +594,30 @@ export default function Farmer_Report() {
               </div>
 
               {/* Professional Detailed Crops Table */}
-              <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+              <div className={`rounded-xl shadow-lg border overflow-hidden ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <div className={`px-6 py-4 border-b ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-lg">
                       <span className="text-sm">🌱</span>
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-gray-800">Detailed Crop Management</h3>
-                      <p className="text-sm text-gray-500">Monitor your crops with integrated weather data and reporting tools</p>
+                      <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Detailed Crop Management</h3>
+                      <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Monitor your crops with integrated weather data and reporting tools</p>
                     </div>
                   </div>
                 </div>
                 
                 <div className="overflow-x-auto">
                   <table className="min-w-full">
-                    <thead className="bg-gray-50">
+                    <thead className={theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}>
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crop Details</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Planting Info</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Yield</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Report Status</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        <th className="px-4 py-3 text-center font-medium text-gray-600">Actions</th>
+                        <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Crop Details</th>
+                        <th className={`px-6 py-3 text-center text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Planting Info</th>
+                        <th className={`px-6 py-3 text-center text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Progress</th>
+                        <th className={`px-6 py-3 text-center text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Expected Yield</th>
+                        <th className={`px-6 py-3 text-center text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Report Status</th>
+                        <th className={`px-6 py-3 text-center text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Actions</th>
+                        <th className={`px-4 py-3 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -628,19 +630,19 @@ export default function Farmer_Report() {
                                 onClick={() => setExpandedCrop(isExpanded ? null : crop.id)}>
                               <td className="px-4 py-3">
                                 <div className="flex items-center gap-3">
-                                  <button className="text-gray-400 hover:text-gray-600">
+                                  <button className={`transition-colors duration-200 ${theme === 'dark' ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'}`}>
                                     {isExpanded ? '▼' : '▶'}
                                   </button>
                                   <div>
-                                    <div className="font-medium text-gray-800">{crop.cropType}</div>
-                                    <div className="text-xs text-gray-500">{crop.variety} • {crop.area} ha</div>
+                                    <div className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{crop.cropType}</div>
+                                    <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{crop.variety} • {crop.area} ha</div>
                                   </div>
                                 </div>
                               </td>
                               <td className="px-4 py-3 text-center">
                                 <div className="text-sm">
                                   <div>Planted: {crop.plantingDate}</div>
-                                  <div className="text-xs text-gray-500">Expected: {crop.expectedHarvest}</div>
+                                  <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Expected: {crop.expectedHarvest}</div>
                                 </div>
                               </td>
                               <td className="px-4 py-3 text-center">
@@ -650,11 +652,11 @@ export default function Farmer_Report() {
                                   </div>
                                   <span className="text-xs font-semibold">{crop.progress}%</span>
                                 </div>
-                                <div className="text-xs text-gray-500 mt-1">{crop.currentStage}</div>
+                                <div className={`text-xs mt-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{crop.currentStage}</div>
                               </td>
                               <td className="px-4 py-3 text-center">
                                 <div className="font-semibold text-green-700">{crop.expectedYield} kg</div>
-                                <div className="text-xs text-gray-500">
+                                <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                                   {(crop.expectedYield / parseFloat(crop.area)).toFixed(0)} kg/ha
                                 </div>
                               </td>
@@ -663,7 +665,7 @@ export default function Farmer_Report() {
                                   reportStatus === 'submitted' ? 'bg-green-100 text-green-700' :
                                   reportStatus === 'pending' ? 'bg-yellow-100 text-yellow-700' :
                                   reportStatus === 'overdue' ? 'bg-red-100 text-red-700' :
-                                  'bg-gray-100 text-gray-700'
+                                  `${theme === 'dark' ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`
                                 }`}>
                                   {reportStatus === 'submitted' ? '✅ Current' :
                                    reportStatus === 'pending' ? '⏰ Due Soon' :
@@ -680,10 +682,10 @@ export default function Farmer_Report() {
                                         ? '🟡 Too Hot' 
                                         : '🔵 Cool'}
                                     </div>
-                                    <div className="text-gray-500">{Math.round(weatherData.current.temperature_2m)}°C</div>
+                                    <div className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{Math.round(weatherData.current.temperature_2m)}°C</div>
                                   </div>
                                 ) : (
-                                  <div className="text-xs text-gray-500">Loading...</div>
+                                  <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Loading...</div>
                                 )}
                               </td>
                               <td className="px-4 py-3">
@@ -719,28 +721,28 @@ export default function Farmer_Report() {
                                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                     {/* Crop Details */}
                                     <div className="space-y-4">
-                                      <h4 className="font-semibold text-gray-800 border-b pb-2">📋 Crop Information</h4>
+                                      <h4 className={`font-semibold border-b pb-2 ${theme === 'dark' ? 'text-white border-gray-600' : 'text-gray-800 border-gray-200'}`}>📋 Crop Information</h4>
                                       <div className="space-y-2 text-sm">
                                         <div className="grid grid-cols-2 gap-2">
-                                          <span className="text-gray-600">Days Planted:</span>
+                                          <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Days Planted:</span>
                                           <span className="font-semibold">{crop.daysFromPlanting} days</span>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2">
-                                          <span className="text-gray-600">Current Stage:</span>
+                                          <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Current Stage:</span>
                                           <span className="font-semibold">{crop.currentStage}</span>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2">
-                                          <span className="text-gray-600">Latest Height:</span>
+                                          <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Latest Height:</span>
                                           <span className="font-semibold">{crop.latestHeight} cm</span>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2">
-                                          <span className="text-gray-600">Status:</span>
-                                          <span className={`font-semibold ${crop.status === 'Active' ? 'text-green-600' : 'text-gray-600'}`}>
+                                          <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Status:</span>
+                                          <span className={`font-semibold ${crop.status === 'Active' ? 'text-green-600' : (theme === 'dark' ? 'text-gray-300' : 'text-gray-600')}`}>
                                             {crop.status}
                                           </span>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2">
-                                          <span className="text-gray-600">Yield per Ha:</span>
+                                          <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Yield per Ha:</span>
                                           <span className="font-semibold text-green-700">
                                             {(crop.expectedYield / parseFloat(crop.area)).toFixed(0)} kg/ha
                                           </span>
@@ -750,28 +752,28 @@ export default function Farmer_Report() {
 
                                     {/* Weather Integration */}
                                     <div className="space-y-4">
-                                      <h4 className="font-semibold text-gray-800 border-b pb-2">🌤️ Weather Analysis</h4>
+                                      <h4 className={`font-semibold border-b pb-2 ${theme === 'dark' ? 'text-white border-gray-600' : 'text-gray-800 border-gray-200'}`}>🌤️ Weather Analysis</h4>
                                       {weatherData?.current ? (
                                         <div className="space-y-2 text-sm">
                                           <div className="grid grid-cols-2 gap-2">
-                                            <span className="text-gray-600">Temperature:</span>
+                                            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Temperature:</span>
                                             <span className="font-semibold">{Math.round(weatherData.current.temperature_2m)}°C</span>
                                           </div>
                                           <div className="grid grid-cols-2 gap-2">
-                                            <span className="text-gray-600">Humidity:</span>
+                                            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Humidity:</span>
                                             <span className="font-semibold">{weatherData.current.relative_humidity_2m}%</span>
                                           </div>
                                           <div className="grid grid-cols-2 gap-2">
-                                            <span className="text-gray-600">Wind Speed:</span>
+                                            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>Wind Speed:</span>
                                             <span className="font-semibold">{Math.round(weatherData.current.wind_speed_10m)} km/h</span>
                                           </div>
                                           <div className="grid grid-cols-2 gap-2">
-                                            <span className="text-gray-600">Precipitation:</span>
+                                            <span className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Precipitation:</span>
                                             <span className="font-semibold">{weatherData.current.precipitation} mm</span>
                                           </div>
                                           <div className="mt-3 p-2 bg-blue-50 rounded-lg">
-                                            <div className="text-xs font-semibold text-blue-800">Weather Recommendation:</div>
-                                            <div className="text-xs text-blue-700 mt-1">
+                                            <div className={`text-xs font-semibold ${theme === 'dark' ? 'text-blue-300' : 'text-blue-800'}`}>Weather Recommendation:</div>
+                                            <div className={`text-xs mt-1 ${theme === 'dark' ? 'text-blue-200' : 'text-blue-700'}`}>
                                               {weatherData.current.temperature_2m > 35 ? 'Consider additional irrigation due to high temperature' :
                                                weatherData.current.precipitation > 5 ? 'Monitor for water-logging and fungal diseases' :
                                                weatherData.current.relative_humidity_2m > 80 ? 'High humidity - watch for pest activity' :
@@ -780,23 +782,23 @@ export default function Farmer_Report() {
                                           </div>
                                         </div>
                                       ) : (
-                                        <div className="text-sm text-gray-500">Loading weather data...</div>
+                                        <div className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Loading weather data...</div>
                                       )}
                                       
                                       {/* Soil conditions if available */}
                                       {weatherData?.hourly && (
                                         <div className="mt-4">
-                                          <div className="text-xs font-semibold text-gray-700 mb-2">Soil Conditions:</div>
+                                          <div className={`text-xs font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Soil Conditions:</div>
                                           <div className="space-y-1 text-xs">
                                             <div className="grid grid-cols-2 gap-2">
-                                              <span className="text-gray-600">Surface Moisture:</span>
+                                              <span className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Surface Moisture:</span>
                                               <span className="font-semibold">
                                                 {weatherData.hourly.soil_moisture_0_to_1cm?.[0] ? 
                                                   `${(weatherData.hourly.soil_moisture_0_to_1cm[0] * 100).toFixed(1)}%` : 'N/A'}
                                               </span>
                                             </div>
                                             <div className="grid grid-cols-2 gap-2">
-                                              <span className="text-gray-600">Soil Temp:</span>
+                                              <span className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Soil Temp:</span>
                                               <span className="font-semibold">
                                                 {weatherData.hourly.soil_temperature_0cm?.[0] ? 
                                                   `${Math.round(weatherData.hourly.soil_temperature_0cm[0])}°C` : 'N/A'}
@@ -809,35 +811,35 @@ export default function Farmer_Report() {
 
                                     {/* Recent Reports */}
                                     <div className="space-y-4">
-                                      <h4 className="font-semibold text-gray-800 border-b pb-2">📊 Recent Reports</h4>
+                                      <h4 className={`font-semibold border-b pb-2 ${theme === 'dark' ? 'text-white border-gray-600' : 'text-gray-800 border-gray-200'}`}>📊 Recent Reports</h4>
                                       {crop.reports && crop.reports.length > 0 ? (
                                         <div className="space-y-2">
                                           {crop.reports.slice(-3).reverse().map((report, idx) => (
                                             <div key={idx} className="bg-white p-3 rounded-lg border text-sm">
                                               <div className="flex justify-between items-start mb-2">
-                                                <span className="font-semibold text-gray-800">{report.reportDate}</span>
+                                                <span className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{report.reportDate}</span>
                                                 <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
                                                   {report.growthStage}
                                                 </span>
                                               </div>
-                                              <div className="text-xs text-gray-600">
+                                              <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
                                                 Height: {report.plantHeight}cm • Status: {report.healthStatus}
                                               </div>
                                               {report.notes && (
-                                                <div className="text-xs text-gray-500 mt-1 truncate">
+                                                <div className={`text-xs mt-1 truncate ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                                                   {report.notes}
                                                 </div>
                                               )}
                                             </div>
                                           ))}
                                           {crop.reports.length > 3 && (
-                                            <div className="text-xs text-gray-500 text-center">
+                                            <div className={`text-xs text-center ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                                               +{crop.reports.length - 3} more reports
                                             </div>
                                           )}
                                         </div>
                                       ) : (
-                                        <div className="text-sm text-gray-500 text-center py-4">
+                                        <div className={`text-sm text-center py-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                                           No reports submitted yet
                                         </div>
                                       )}
@@ -864,9 +866,9 @@ export default function Farmer_Report() {
                   
                   {cropRows.length === 0 && (
                     <div className="text-center py-12">
-                      <div className="text-gray-400 text-4xl mb-4">🌱</div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">No crops registered</h3>
-                      <p className="text-gray-600 mb-4">Start by registering your first crop</p>
+                      <div className={`text-4xl mb-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-400'}`}>🌱</div>
+                      <h3 className={`text-lg font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>No crops registered</h3>
+                      <p className={`mb-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Start by registering your first crop</p>
                       <button onClick={() => setShowCropRegistrationModal(true)}
                         className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold">
                         Register First Crop
@@ -878,12 +880,12 @@ export default function Farmer_Report() {
 
               {/* Weather-Based Crop Recommendations */}
               {weatherData?.current && (
-                <div className="bg-white border rounded-lg shadow-sm p-4">
-                  <h3 className="font-semibold text-gray-800 mb-4">🌤️ Weather-Based Recommendations</h3>
+                <div className={`border rounded-lg shadow-sm p-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <h3 className={`font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🌤️ Weather-Based Recommendations</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-blue-800 mb-2">Current Conditions Impact</h4>
-                      <div className="text-sm text-blue-700 space-y-1">
+                    <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-50'}`}>
+                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-blue-300' : 'text-blue-800'}`}>Current Conditions Impact</h4>
+                      <div className={`text-sm space-y-1 ${theme === 'dark' ? 'text-blue-200' : 'text-blue-700'}`}>
                         <div>Temperature: {Math.round(weatherData.current.temperature_2m)}°C</div>
                         <div>Humidity: {weatherData.current.relative_humidity_2m}%</div>
                         <div className="text-xs mt-2">
@@ -896,9 +898,9 @@ export default function Farmer_Report() {
                       </div>
                     </div>
                     
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-green-800 mb-2">Action Items</h4>
-                      <div className="text-sm text-green-700 space-y-1">
+                    <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-green-900/30' : 'bg-green-50'}`}>
+                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-green-300' : 'text-green-800'}`}>Action Items</h4>
+                      <div className={`text-sm space-y-1 ${theme === 'dark' ? 'text-green-200' : 'text-green-700'}`}>
                         {weatherData.current.precipitation > 0 && <div>• Check drainage systems</div>}
                         {weatherData.current.relative_humidity_2m > 80 && <div>• Monitor for fungal diseases</div>}
                         {weatherData.current.wind_speed_10m > 20 && <div>• Secure tall plants and supports</div>}
@@ -917,7 +919,7 @@ export default function Farmer_Report() {
             <div className="space-y-8">
               {/* Professional Reports Overview Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                <div className={`rounded-xl shadow-xl border p-6 hover:shadow-2xl transition-shadow duration-300 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl shadow-sm">
                       <span className="text-xl">⏰</span>
@@ -925,14 +927,14 @@ export default function Farmer_Report() {
                     <span className="text-xs font-semibold text-orange-600 bg-orange-100 px-2 py-1 rounded-full">PENDING</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Pending Reports</p>
-                    <p className="text-3xl font-bold text-gray-800">
+                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Pending Reports</p>
+                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                       {registeredCrops.filter(crop => getReportStatus(crop) === 'pending').length}
                     </p>
                   </div>
                 </div>
                 
-                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                <div className={`rounded-xl shadow-xl border p-6 hover:shadow-2xl transition-shadow duration-300 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-red-100 to-red-200 rounded-xl shadow-sm">
                       <span className="text-xl">🚨</span>
@@ -940,14 +942,14 @@ export default function Farmer_Report() {
                     <span className="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded-full">OVERDUE</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Overdue Reports</p>
-                    <p className="text-3xl font-bold text-gray-800">
+                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Overdue Reports</p>
+                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                       {registeredCrops.filter(crop => getReportStatus(crop) === 'overdue').length}
                     </p>
                   </div>
                 </div>
                 
-                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                <div className={`rounded-xl shadow-xl border p-6 hover:shadow-2xl transition-shadow duration-300 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-sm">
                       <span className="text-xl">✅</span>
@@ -955,14 +957,14 @@ export default function Farmer_Report() {
                     <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">COMPLETED</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Submitted This Month</p>
-                    <p className="text-3xl font-bold text-gray-800">
+                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Submitted This Month</p>
+                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                       {registeredCrops.filter(crop => getReportStatus(crop) === 'submitted').length}
                     </p>
                   </div>
                 </div>
                 
-                <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
+                <div className={`rounded-xl shadow-xl border p-6 hover:shadow-2xl transition-shadow duration-300 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl shadow-sm">
                       <span className="text-xl">📋</span>
@@ -970,39 +972,39 @@ export default function Farmer_Report() {
                     <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">TOTAL</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-1">Total Reports</p>
-                    <p className="text-3xl font-bold text-gray-800">{allReports.length}</p>
+                    <p className={`text-sm font-medium uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Total Reports</p>
+                    <p className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{allReports.length}</p>
                   </div>
                 </div>
               </div>
 
               {/* Professional Monthly Reporting Requirements */}
-              <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
-                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+              <div className={`rounded-xl shadow-xl border overflow-hidden ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <div className={`px-6 py-4 border-b ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-lg">
                       <span className="text-sm">📋</span>
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-gray-800">Monthly Reporting Status</h3>
-                      <p className="text-sm text-gray-500">Reports are due by the 25th of each month for all active crops</p>
+                      <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Monthly Reporting Status</h3>
+                      <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Reports are due by the 25th of each month for all active crops</p>
                     </div>
                   </div>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="min-w-full">
-                    <thead className="bg-gray-50">
+                    <thead className={theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}>
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crop Details</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Current Stage</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Report Status</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Last Report</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Next Due</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Weather Info</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Crop Details</th>
+                        <th className={`px-6 py-3 text-center text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Current Stage</th>
+                        <th className={`px-6 py-3 text-center text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Report Status</th>
+                        <th className={`px-6 py-3 text-center text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Last Report</th>
+                        <th className={`px-6 py-3 text-center text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Next Due</th>
+                        <th className={`px-6 py-3 text-center text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Weather Info</th>
+                        <th className={`px-6 py-3 text-center text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className={`divide-y ${theme === 'dark' ? 'bg-gray-800 divide-gray-700' : 'bg-white divide-gray-200'}`}>
                       {registeredCrops.map(crop => {
                         const status = getReportStatus(crop);
                         const lastReport = crop.reports && crop.reports.length > 0 
@@ -1016,8 +1018,8 @@ export default function Farmer_Report() {
                                   <span className="text-sm">🌱</span>
                                 </div>
                                 <div className="ml-4">
-                                  <div className="text-sm font-medium text-gray-800">{crop.cropType}</div>
-                                  <div className="text-xs text-gray-500">{crop.variety} • {crop.area} ha</div>
+                                  <div className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{crop.cropType}</div>
+                                  <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{crop.variety} • {crop.area} ha</div>
                                 </div>
                               </div>
                             </td>
@@ -1038,20 +1040,20 @@ export default function Farmer_Report() {
                                  status === 'overdue' ? '🚨 Overdue' : 'Not Required'}
                               </span>
                             </td>
-                            <td className="px-6 py-4 text-center text-sm text-gray-800">
+                            <td className={`px-6 py-4 text-center text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-800'}`}>
                               {lastReport ? lastReport.reportDate : 'None'}
                             </td>
-                            <td className="px-6 py-4 text-center text-sm text-gray-800">
+                            <td className={`px-6 py-4 text-center text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-800'}`}>
                               {status !== 'not-required' ? getNextReportDue(crop) : '—'}
                             </td>
                             <td className="px-6 py-4 text-center">
                               {weatherData?.current ? (
                                 <div className="text-xs">
-                                  <div className="font-medium text-gray-800">{Math.round(weatherData.current.temperature_2m)}°C</div>
-                                  <div className="text-gray-500">{weatherData.current.relative_humidity_2m}% RH</div>
+                                  <div className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{Math.round(weatherData.current.temperature_2m)}°C</div>
+                                  <div className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{weatherData.current.relative_humidity_2m}% RH</div>
                                 </div>
                               ) : (
-                                <span className="text-xs text-gray-500">Loading...</span>
+                                <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Loading...</span>
                               )}
                             </td>
                             <td className="px-6 py-4 text-center">
@@ -1075,7 +1077,7 @@ export default function Farmer_Report() {
                                     Complete
                                   </span>
                                 ) : (
-                                  <span className="text-xs text-gray-500">—</span>
+                                  <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>—</span>
                                 )}
                               </div>
                             </td>
@@ -1088,15 +1090,15 @@ export default function Farmer_Report() {
               </div>
 
               {/* Professional Calendar View */}
-              <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
-                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div className={`rounded-xl shadow-xl border overflow-hidden ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <div className={`px-6 py-4 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-lg">
                       <span className="text-sm">📅</span>
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-gray-800">Monthly Report Calendar</h3>
-                      <p className="text-sm text-gray-500">Track reporting deadlines and activities</p>
+                      <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Monthly Report Calendar</h3>
+                      <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Track reporting deadlines and activities</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -1107,11 +1109,11 @@ export default function Farmer_Report() {
                         setCurrentMonth(newMonth);
                         setCurrentYear(newYear);
                       }}
-                      className="flex items-center justify-center w-10 h-10 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
+                      className={`flex items-center justify-center w-10 h-10 rounded-lg transition-colors duration-200 font-medium ${theme === 'dark' ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                     >
                       ‹
                     </button>
-                    <span className="text-lg font-semibold text-gray-800 min-w-[140px] text-center">
+                    <span className={`text-lg font-semibold min-w-[140px] text-center ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                       {new Date(currentYear, currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                     </span>
                     <button
@@ -1121,7 +1123,7 @@ export default function Farmer_Report() {
                         setCurrentMonth(newMonth);
                         setCurrentYear(newYear);
                       }}
-                      className="flex items-center justify-center w-10 h-10 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
+                      className={`flex items-center justify-center w-10 h-10 rounded-lg transition-colors duration-200 font-medium ${theme === 'dark' ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                     >
                       ›
                     </button>
@@ -1133,7 +1135,7 @@ export default function Farmer_Report() {
                   <div className="grid grid-cols-7 gap-2">
                     {/* Day Headers */}
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="p-3 text-center text-sm font-semibold text-gray-600 bg-gray-50 rounded-lg">
+                      <div key={day} className={`p-3 text-center text-sm font-semibold rounded-lg ${theme === 'dark' ? 'text-gray-300 bg-gray-700' : 'text-gray-600 bg-gray-50'}`}>
                         {day}
                       </div>
                     ))}
@@ -1244,9 +1246,9 @@ export default function Farmer_Report() {
           {activeTab === 'weather' && (
             <div className="space-y-6">
               {/* Current Weather */}
-              <div className="bg-white border rounded-lg shadow-sm">
-                <div className="px-4 py-3 border-b bg-gray-50">
-                  <h3 className="font-semibold text-gray-800 flex items-center gap-2">
+              <div className={`border rounded-lg shadow-sm ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <div className={`px-4 py-3 border-b ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
+                  <h3 className={`font-semibold flex items-center gap-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                     🌤️ Current Weather - {LOCATION.name}
                     <button onClick={fetchWeatherData} 
                       className="ml-2 px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors">
@@ -1283,10 +1285,10 @@ export default function Farmer_Report() {
                       <table className="min-w-full text-sm">
                         <thead className="bg-gray-50">
                           <tr>
-                            <th className="px-3 py-2 text-left font-medium text-gray-600">Metric</th>
-                            <th className="px-3 py-2 text-center font-medium text-gray-600">Current Value</th>
-                            <th className="px-3 py-2 text-center font-medium text-gray-600">Unit</th>
-                            <th className="px-3 py-2 text-left font-medium text-gray-600">Status</th>
+                            <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Metric</th>
+                            <th className={`px-3 py-2 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Current Value</th>
+                            <th className={`px-3 py-2 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Unit</th>
+                            <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Status</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1294,13 +1296,13 @@ export default function Farmer_Report() {
                             <td className="px-3 py-2 font-medium">Temperature</td>
                             <td className="px-3 py-2 text-center text-lg font-semibold">{Math.round(weatherData.current.temperature_2m)}</td>
                             <td className="px-3 py-2 text-center">°C</td>
-                            <td className="px-3 py-2 text-sm text-gray-600">{getWeatherDescription(weatherData.current.weather_code)}</td>
+                            <td className={`px-3 py-2 text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{getWeatherDescription(weatherData.current.weather_code)}</td>
                           </tr>
                           <tr className="border-b">
                             <td className="px-3 py-2 font-medium">Humidity</td>
                             <td className="px-3 py-2 text-center text-lg font-semibold">{weatherData.current.relative_humidity_2m}</td>
                             <td className="px-3 py-2 text-center">%</td>
-                            <td className="px-3 py-2 text-sm text-gray-600">
+                            <td className={`px-3 py-2 text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                               {weatherData.current.relative_humidity_2m > 80 ? 'High humidity' : 
                                weatherData.current.relative_humidity_2m < 40 ? 'Low humidity' : 'Optimal humidity'}
                             </td>
@@ -1309,7 +1311,7 @@ export default function Farmer_Report() {
                             <td className="px-3 py-2 font-medium">Wind Speed</td>
                             <td className="px-3 py-2 text-center text-lg font-semibold">{Math.round(weatherData.current.wind_speed_10m)}</td>
                             <td className="px-3 py-2 text-center">km/h</td>
-                            <td className="px-3 py-2 text-sm text-gray-600">
+                            <td className={`px-3 py-2 text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                               {weatherData.current.wind_speed_10m > 25 ? 'Strong winds' : 
                                weatherData.current.wind_speed_10m < 5 ? 'Calm' : 'Light breeze'}
                             </td>
@@ -1318,7 +1320,7 @@ export default function Farmer_Report() {
                             <td className="px-3 py-2 font-medium">Precipitation</td>
                             <td className="px-3 py-2 text-center text-lg font-semibold">{weatherData.current.precipitation}</td>
                             <td className="px-3 py-2 text-center">mm</td>
-                            <td className="px-3 py-2 text-sm text-gray-600">
+                            <td className={`px-3 py-2 text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                               {weatherData.current.precipitation > 0 ? 'Currently raining' : 'No rain'}
                             </td>
                           </tr>
@@ -1330,7 +1332,7 @@ export default function Farmer_Report() {
                   {weatherLoading && (
                     <div className="text-center py-8">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                      <p className="text-gray-600 mt-2">Loading weather data...</p>
+                      <p className={`mt-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>Loading weather data...</p>
                     </div>
                   )}
                 </div>
@@ -1340,18 +1342,18 @@ export default function Farmer_Report() {
               {weatherData?.daily && weatherData.daily.time && (
                 <div className="bg-white border rounded-lg shadow-sm">
                   <div className="px-4 py-3 border-b bg-gray-50">
-                    <h3 className="font-semibold text-gray-800">📅 7-Day Forecast</h3>
+                    <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>📅 7-Day Forecast</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
                       <thead className="bg-gray-50">
                         <tr>
-                          <th className="px-3 py-2 text-left font-medium text-gray-600">Date</th>
-                          <th className="px-3 py-2 text-center font-medium text-gray-600">Weather</th>
-                          <th className="px-3 py-2 text-center font-medium text-gray-600">Max Temp</th>
-                          <th className="px-3 py-2 text-center font-medium text-gray-600">Min Temp</th>
-                          <th className="px-3 py-2 text-center font-medium text-gray-600">Rain</th>
-                          <th className="px-3 py-2 text-left font-medium text-gray-600">Farming Notes</th>
+                          <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Date</th>
+                          <th className={`px-3 py-2 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Weather</th>
+                          <th className={`px-3 py-2 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Max Temp</th>
+                          <th className={`px-3 py-2 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Min Temp</th>
+                          <th className={`px-3 py-2 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Rain</th>
+                          <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Farming Notes</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1360,14 +1362,14 @@ export default function Farmer_Report() {
                             <td className="px-3 py-2 font-medium">{new Date(date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</td>
                             <td className="px-3 py-2 text-center">
                               <span className="text-lg">{getWeatherIcon(weatherData.daily.weather_code[i])}</span>
-                              <div className="text-xs text-gray-600">{getWeatherDescription(weatherData.daily.weather_code[i])}</div>
+                              <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{getWeatherDescription(weatherData.daily.weather_code[i])}</div>
                             </td>
                             <td className="px-3 py-2 text-center font-semibold text-red-600">{Math.round(weatherData.daily.temperature_2m_max[i])}°</td>
                             <td className="px-3 py-2 text-center font-semibold text-blue-600">{Math.round(weatherData.daily.temperature_2m_min[i])}°</td>
                             <td className="px-3 py-2 text-center">
                               <span className="font-semibold">{weatherData.daily.precipitation_sum[i]} mm</span>
                             </td>
-                            <td className="px-3 py-2 text-xs text-gray-600">
+                            <td className={`px-3 py-2 text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
                               {weatherData.daily.precipitation_sum[i] > 10 ? 'Heavy rain - ensure drainage' :
                                weatherData.daily.temperature_2m_max[i] > 35 ? 'Hot weather - increase irrigation' :
                                'Good conditions for farming'}
@@ -1384,16 +1386,16 @@ export default function Farmer_Report() {
               {weatherData?.hourly && (
                 <div className="bg-white border rounded-lg shadow-sm">
                   <div className="px-4 py-3 border-b bg-gray-50">
-                    <h3 className="font-semibold text-gray-800">🌱 Soil Conditions (Current)</h3>
+                    <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🌱 Soil Conditions (Current)</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
                       <thead className="bg-gray-50">
                         <tr>
-                          <th className="px-3 py-2 text-left font-medium text-gray-600">Soil Layer</th>
-                          <th className="px-3 py-2 text-center font-medium text-gray-600">Moisture (%)</th>
-                          <th className="px-3 py-2 text-center font-medium text-gray-600">Temperature (°C)</th>
-                          <th className="px-3 py-2 text-left font-medium text-gray-600">Status</th>
+                          <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Soil Layer</th>
+                          <th className={`px-3 py-2 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Moisture (%)</th>
+                          <th className={`px-3 py-2 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Temperature (°C)</th>
+                          <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Status</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1406,7 +1408,7 @@ export default function Farmer_Report() {
                           <td className="px-3 py-2 text-center font-semibold">
                             {weatherData.hourly.soil_temperature_0cm && weatherData.hourly.soil_temperature_0cm[0] || '—'}
                           </td>
-                          <td className="px-3 py-2 text-sm text-gray-600">
+                          <td className={`px-3 py-2 text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                             {weatherData.hourly.soil_moisture_0_to_1cm && weatherData.hourly.soil_moisture_0_to_1cm[0] > 0.3 ? 'Well hydrated' : 'Needs watering'}
                           </td>
                         </tr>
@@ -1419,7 +1421,7 @@ export default function Farmer_Report() {
                           <td className="px-3 py-2 text-center font-semibold">
                             {weatherData.hourly.soil_temperature_6cm && weatherData.hourly.soil_temperature_6cm[0] || '—'}
                           </td>
-                          <td className="px-3 py-2 text-sm text-gray-600">
+                          <td className={`px-3 py-2 text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                             {weatherData.hourly.soil_moisture_1_to_3cm && weatherData.hourly.soil_moisture_1_to_3cm[0] > 0.25 ? 'Good for seeds' : 'Too dry for planting'}
                           </td>
                         </tr>
@@ -1432,7 +1434,7 @@ export default function Farmer_Report() {
                           <td className="px-3 py-2 text-center font-semibold">
                             {weatherData.hourly.soil_temperature_18cm && weatherData.hourly.soil_temperature_18cm[0] || '—'}
                           </td>
-                          <td className="px-3 py-2 text-sm text-gray-600">
+                          <td className={`px-3 py-2 text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                             {weatherData.hourly.soil_moisture_3_to_9cm && weatherData.hourly.soil_moisture_3_to_9cm[0] > 0.2 ? 'Optimal for roots' : 'Deep watering needed'}
                           </td>
                         </tr>
@@ -1448,7 +1450,7 @@ export default function Farmer_Report() {
           {activeTab === 'guidelines' && (
             <div className="space-y-6">
               {/* Search and Filter Controls */}
-              <div className="bg-white border rounded-lg shadow-sm p-4">
+              <div className={`border rounded-lg shadow-sm p-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                 <div className="flex flex-col md:flex-row gap-4 mb-4">
                   <div className="flex-1">
                     <input
@@ -1456,13 +1458,13 @@ export default function Farmer_Report() {
                       placeholder="Search crops, varieties, or techniques..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900'}`}
                     />
                   </div>
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className={`px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300 bg-white text-gray-900'}`}
                   >
                     <option value="all">All Categories</option>
                     {Object.entries(cropGuidelinesData.cropCategories).map(([key, category]) => (
@@ -1620,16 +1622,16 @@ export default function Farmer_Report() {
         {/* Professional Modals */}
         {showCropRegistrationModal && (
           <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8 overflow-y-auto">
-            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto">
+            <div className={`rounded-xl shadow-2xl max-w-2xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
               {/* Modal Header */}
-              <div className="px-4 sm:px-6 py-4 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
+              <div className={`px-4 sm:px-6 py-4 border-b ${theme === 'dark' ? 'bg-gradient-to-r from-green-900/50 to-green-800/50 border-gray-600' : 'bg-gradient-to-r from-green-50 to-green-100 border-gray-200'}`}>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-10 h-10 bg-green-600 rounded-lg">
                     <span className="text-white text-lg">🌱</span>
                   </div>
                   <div>
-                    <h3 className="text-lg sm:text-xl font-bold text-gray-800">Register New Crop</h3>
-                    <p className="text-xs sm:text-sm text-gray-600">Add a new crop to your farming portfolio</p>
+                    <h3 className={`text-lg sm:text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Register New Crop</h3>
+                    <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Add a new crop to your farming portfolio</p>
                   </div>
                 </div>
               </div>
@@ -1639,7 +1641,7 @@ export default function Farmer_Report() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Crop Type *</label>
+                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Crop Type *</label>
                       <select 
                         value={newCrop.cropType} 
                         onChange={(e) => setNewCrop({...newCrop, cropType: e.target.value})}
@@ -1653,7 +1655,7 @@ export default function Farmer_Report() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Variety *</label>
+                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Variety *</label>
                       <input 
                         type="text" 
                         value={newCrop.variety} 
@@ -1666,7 +1668,7 @@ export default function Farmer_Report() {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Planting Date *</label>
+                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Planting Date *</label>
                       <input 
                         type="date" 
                         value={newCrop.plantingDate} 
@@ -1675,7 +1677,7 @@ export default function Farmer_Report() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Area (hectares) *</label>
+                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Area (hectares) *</label>
                       <input 
                         type="number" 
                         step="0.1" 
@@ -1689,7 +1691,7 @@ export default function Farmer_Report() {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Expected Yield (kg)</label>
+                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Expected Yield (kg)</label>
                       <input 
                         type="number" 
                         value={newCrop.expectedYield} 
@@ -1728,10 +1730,10 @@ export default function Farmer_Report() {
               </div>
               
               {/* Modal Footer */}
-              <div className="px-4 sm:px-6 py-3 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row justify-end gap-2">
+              <div className={`px-4 sm:px-6 py-3 border-t flex flex-col sm:flex-row justify-end gap-2 ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                 <button 
                   onClick={() => setShowCropRegistrationModal(false)}
-                  className="w-full sm:w-auto px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+                  className={`w-full sm:w-auto px-4 py-2 text-sm border rounded-lg transition-colors duration-200 font-medium ${theme === 'dark' ? 'text-gray-300 bg-gray-800 border-gray-600 hover:bg-gray-700' : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'}`}
                 >
                   Cancel
                 </button>

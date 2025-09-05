@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../../../contexts/ThemeContext';
 import Navbar from '../../Components/Navbar';
 
 // ASSETS
@@ -8,6 +9,7 @@ import default_image from './Assets/default_image.jpg';
 const ITEMS_PER_PAGE = 8;
 
 export default function Distribution() {
+    const { theme } = useTheme();
     const navigate = useNavigate();
     const [distributionItems, setDistributionItems] = useState([]);
     const [filter, setFilter] = useState('All');
@@ -1119,22 +1121,22 @@ export default function Distribution() {
         <>
             <Navbar />
             <div
-                className="flex min-h-screen bg-white relative"
+                className={`flex min-h-screen relative ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}
                 style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-[8vh]">
                         <header className="flex flex-col items-center mb-12 w-full">
-                            <span className="uppercase tracking-widest text-gray-500 text-xs font-semibold mb-1 letter-spacing-wide">
+                            <span className={`uppercase tracking-widest text-xs font-semibold mb-1 letter-spacing-wide ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                                 Welcome to
                             </span>
                             <h1
-                                className="text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center text-gray-900 "
+                                className={`text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
                                 
                             >
                                 Distribution Center
                             </h1>
-                            <div className="mt-4 w-24 h-2 rounded-full bg-gradient-to-r from-green-600 via-green-500 to-green-400 opacity-90 shadow-lg"></div>
+                            <div className={`mt-4 w-24 h-2 rounded-full opacity-90 shadow-lg ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 via-green-400 to-green-300' : 'bg-gradient-to-r from-green-600 via-green-500 to-green-400'}`}></div>
                         </header>
 
                         <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">

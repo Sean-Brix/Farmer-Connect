@@ -166,28 +166,46 @@ export default function contact() {
               <div className="flex items-center gap-4">
                 <img src="https://ui-avatars.com/api/?name=Maphil+Grace+Alquizola&background=1d4ed8&color=fff" alt="Maphil Grace Alquizola" className="w-12 h-12 rounded-full shadow" />
                 <div>
-                  <span className="font-semibold text-lg text-gray-900">Maphil Grace Alquizola</span>
+                  <span className={`font-semibold text-lg ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}>Maphil Grace Alquizola</span>
                   <div className="text-green-600 text-sm font-medium">Documentation & Papers</div>
-                  <div className="text-gray-500 text-xs">{'maphil.alquizola@FITS-Tanza.com'}</div>
+                  <div className={`text-xs ${
+                    theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                  }`}>{'maphil.alquizola@FITS-Tanza.com'}</div>
                 </div>
               </div>
               
               <div className="flex items-center gap-4 mt-2">
-                <span className="material-icons text-gray-600">support_agent</span>
+                <span className={`material-icons ${
+                  theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                }`}>support_agent</span>
                 <div>
-                  <span className="font-semibold text-base text-gray-900">Support Hotline</span>
-                  <div className="text-gray-500 text-xs sm:text-sm">+1 (555) 987-6543</div>
+                  <span className={`font-semibold text-base ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}>Support Hotline</span>
+                  <div className={`text-xs sm:text-sm ${
+                    theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                  }`}>+1 (555) 987-6543</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
         {/* Contact Form */}
-        <form className="flex flex-col gap-6 bg-gray-50 p-6 sm:p-10 rounded-3xl shadow-2xl border border-gray-200">
-          <h2 className="text-2xl font-bold mb-2 text-gray-900">Send Us a Message</h2>
+        <form className={`flex flex-col gap-6 p-6 sm:p-10 rounded-3xl shadow-2xl border ${
+          theme === 'dark' 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-gray-50 border-gray-200'
+        }`}>
+          <h2 className={`text-2xl font-bold mb-2 ${
+            theme === 'dark' ? 'text-white' : 'text-gray-900'
+          }`}>Send Us a Message</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label className="flex flex-col gap-1">
-              <span className="font-medium text-gray-900">First Name</span>
+              <span className={`font-medium ${
+                theme === 'dark' ? 'text-gray-200' : 'text-gray-900'
+              }`}>First Name</span>
               <input
                 type="text"
                 name="firstName"
