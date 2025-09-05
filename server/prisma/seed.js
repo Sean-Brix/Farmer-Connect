@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import sharp from 'sharp';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const wait = (ms) => new Promise((res) => setTimeout(res, ms));
