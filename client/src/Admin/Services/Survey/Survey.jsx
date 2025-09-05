@@ -925,189 +925,272 @@ function Survey() {
 
         {/* Preview Modal */}
         {showPreviewModal && previewSurvey && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-2 sm:p-4" onClick={() => { setShowPreviewModal(false); setPreviewSurvey(null); }}>
+            <div className="bg-white rounded-xl max-w-6xl w-full h-[95vh] sm:h-[90vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                    <span>👁️</span>
-                    Preview - {previewSurvey.title}
-                  </h3>
-                  <p className="text-sm text-gray-600">How this survey will appear to users</p>
+              <div className="flex items-center justify-between rounded-3xl p-3 sm:p-6 border-b border-gray-200 bg-green-50 flex-shrink-0">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-green-600 rounded-lg flex items-center justify-center shadow-md">
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+                      Survey Preview
+                    </h3>
+                    <p className="text-sm text-gray-600 truncate" title={previewSurvey.title}>
+                      {previewSurvey.title}
+                    </p>
+                  </div>
                 </div>
                 <button
                   onClick={() => {
                     setShowPreviewModal(false);
                     setPreviewSurvey(null);
                   }}
-                  className="text-gray-400 hover:text-gray-600 text-2xl p-2 hover:bg-gray-100 rounded-lg transition-all duration-200"
+                  className="flex-shrink-0 ml-2 p-2 text-gray-500 hover:text-gray-700 hover:bg-white/50 rounded-lg transition-colors"
                   title="Close preview"
                 >
-                  ×
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
               </div>
 
               {/* Survey Form Preview Content */}
-              <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+              <div className="flex-1 overflow-y-auto p-3 sm:p-6 min-h-0 bg-gray-50">
                 {/* Survey Header */}
-                <div className="mb-8">
-                  <div className="flex flex-wrap items-center gap-3 mb-4">
-                    <h1 className="text-2xl font-bold text-gray-900">{previewSurvey.title}</h1>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(previewSurvey.status)}`}>
-                      {previewSurvey.status.toUpperCase()}
-                    </span>
-                    <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium border border-green-200">
-                      {previewSurvey.category}
-                    </span>
+                <div className="mb-6 bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
+                        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 break-words">{previewSurvey.title}</h1>
+                      </div>
+                      {previewSurvey.description && (
+                        <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-4">{previewSurvey.description}</p>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-2 flex-shrink-0">
+                      <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${getStatusColor(previewSurvey.status)}`}>
+                        {previewSurvey.status.toUpperCase()}
+                      </span>
+                      <span className="bg-green-100 text-green-700 px-3 py-1.5 rounded-full text-sm font-medium border border-green-200">
+                        {previewSurvey.category}
+                      </span>
+                    </div>
                   </div>
-                  {previewSurvey.description && (
-                    <p className="text-gray-600 text-lg leading-relaxed">{previewSurvey.description}</p>
-                  )}
-                  <div className="mt-4 text-sm text-gray-500 bg-gray-50 inline-block px-3 py-1 rounded-full">
-                    {previewSurvey.fields?.length || 0} fields • Created: {new Date(previewSurvey.createdAt).toLocaleDateString()}
+                  <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-500">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      {previewSurvey.fields?.length || 0} fields
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a4 4 0 118 0v4m-4 8h0m-8 0h16a2 2 0 002-2V9a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      Created: {new Date(previewSurvey.createdAt).toLocaleDateString()}
+                    </div>
                   </div>
                 </div>
 
-                {/* Survey Form Preview */}
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <form className="space-y-6">
-                    {previewSurvey.fields?.map((field, index) => (
-                      <div key={field.id} className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                        <label className="block text-sm font-medium text-gray-700 mb-3">
-                          {field.label}
-                          {field.required && <span className="text-red-500 ml-1">*</span>}
-                        </label>
-
-                        {field.type === 'TEXT' && (
-                          <input
-                            type="text"
-                            placeholder={field.placeholder}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                            disabled
-                          />
-                        )}
-
-                        {field.type === 'TEXTAREA' && (
-                          <textarea
-                            placeholder={field.placeholder}
-                            rows={4}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 resize-none"
-                            disabled
-                          />
-                        )}
-
-                        {field.type === 'EMAIL' && (
-                          <input
-                            type="email"
-                            placeholder={field.placeholder}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                            disabled
-                          />
-                        )}
-
-                        {field.type === 'NUMBER' && (
-                          <input
-                            type="number"
-                            placeholder={field.placeholder}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                            disabled
-                          />
-                        )}
-
-                        {field.type === 'DATE' && (
-                          <input
-                            type="date"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                            disabled
-                          />
-                        )}
-
-                        {field.type === 'SELECT' && (
-                          <select
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                            disabled
-                          >
-                            <option value="">Choose an option...</option>
-                            {field.options?.map((option, optionIndex) => (
-                              <option key={optionIndex} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                        )}
-
-                        {field.type === 'RADIO' && (
-                          <div className="space-y-3">
-                            {field.options?.map((option, optionIndex) => (
-                              <label key={optionIndex} className="flex items-center gap-3 cursor-pointer">
-                                <input
-                                  type="radio"
-                                  name={`field-${field.id}`}
-                                  value={option}
-                                  className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
-                                  disabled
-                                />
-                                <span className="text-gray-700">{option}</span>
-                              </label>
-                            ))}
+                {/* Survey Form Fields */}
+                <div className="space-y-4 sm:space-y-6">
+                  {previewSurvey.fields?.map((field, index) => (
+                    <div key={field.id} className="bg-white rounded-xl p-4 sm:p-6 border border-gray-200 shadow-sm">
+                      <div className="flex items-start gap-3 mb-4">
+                        <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                          <span className="text-green-600 text-sm font-bold">{index + 1}</span>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <label className="block text-sm sm:text-base font-semibold text-gray-900 mb-2">
+                            {field.label}
+                            {field.required && <span className="text-red-500 ml-1">*</span>}
+                          </label>
+                          <div className="text-xs text-gray-500 mb-3 flex items-center gap-2">
+                            <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full font-medium">
+                              {fieldTypes.find(ft => ft.value === field.type)?.label || field.type}
+                            </span>
+                            {field.placeholder && (
+                              <span className="text-gray-400">• Placeholder: "{field.placeholder}"</span>
+                            )}
                           </div>
-                        )}
-
-                        {field.type === 'CHECKBOX' && (
-                          <div className="space-y-3">
-                            {field.options?.map((option, optionIndex) => (
-                              <label key={optionIndex} className="flex items-center gap-3 cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  value={option}
-                                  className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                                  disabled
-                                />
-                                <span className="text-gray-700">{option}</span>
-                              </label>
-                            ))}
-                          </div>
-                        )}
-
-                        {field.type === 'FILE' && (
-                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                            <div className="text-gray-400 mb-2">📎</div>
-                            <p className="text-sm text-gray-500">Click to upload or drag and drop</p>
-                          </div>
-                        )}
+                        </div>
                       </div>
-                    ))}
 
-                    {previewSurvey.fields?.length === 0 && (
-                      <div className="text-center py-8 text-gray-500">
-                        <div className="text-4xl mb-2">📝</div>
-                        <p>No fields in this survey</p>
-                      </div>
-                    )}
-                  </form>
+                      {/* Field Inputs */}
+                      {field.type === 'TEXT' && (
+                        <input
+                          type="text"
+                          placeholder={field.placeholder || "Enter text..."}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50"
+                          disabled
+                        />
+                      )}
+
+                      {field.type === 'TEXTAREA' && (
+                        <textarea
+                          placeholder={field.placeholder || "Enter your response..."}
+                          rows={4}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none bg-gray-50"
+                          disabled
+                        />
+                      )}
+
+                      {field.type === 'EMAIL' && (
+                        <input
+                          type="email"
+                          placeholder={field.placeholder || "Enter email address..."}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50"
+                          disabled
+                        />
+                      )}
+
+                      {field.type === 'NUMBER' && (
+                        <input
+                          type="number"
+                          placeholder={field.placeholder || "Enter number..."}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50"
+                          disabled
+                        />
+                      )}
+
+                      {field.type === 'DATE' && (
+                        <input
+                          type="date"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50"
+                          disabled
+                        />
+                      )}
+
+                      {field.type === 'SELECT' && (
+                        <select
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50"
+                          disabled
+                        >
+                          <option value="">{field.placeholder || "Choose an option..."}</option>
+                          {field.options?.map((option, optionIndex) => (
+                            <option key={optionIndex} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+
+                      {field.type === 'RADIO' && (
+                        <div className="space-y-3">
+                          {field.options?.map((option, optionIndex) => (
+                            <label key={optionIndex} className="flex items-center gap-3 cursor-pointer p-3 bg-gray-50 rounded-lg border border-gray-200">
+                              <input
+                                type="radio"
+                                name={`field-${field.id}`}
+                                value={option}
+                                className="h-4 w-4 text-green-600 border-gray-300"
+                                disabled
+                              />
+                              <span className="text-gray-700 font-medium">{option}</span>
+                            </label>
+                          ))}
+                          {(!field.options || field.options.length === 0) && (
+                            <div className="text-gray-400 italic text-sm p-3 bg-gray-50 rounded-lg border border-gray-200">
+                              No options configured
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {field.type === 'CHECKBOX' && (
+                        <div className="space-y-3">
+                          {field.options?.map((option, optionIndex) => (
+                            <label key={optionIndex} className="flex items-center gap-3 cursor-pointer p-3 bg-gray-50 rounded-lg border border-gray-200">
+                              <input
+                                type="checkbox"
+                                value={option}
+                                className="h-4 w-4 text-green-600 border-gray-300 rounded"
+                                disabled
+                              />
+                              <span className="text-gray-700 font-medium">{option}</span>
+                            </label>
+                          ))}
+                          {(!field.options || field.options.length === 0) && (
+                            <div className="text-gray-400 italic text-sm p-3 bg-gray-50 rounded-lg border border-gray-200">
+                              No options configured
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {field.type === 'FILE' && (
+                        <div className="border-2 border-dashed border-green-300 rounded-lg p-8 text-center bg-green-50">
+                          <div className="text-green-500 mb-3">
+                            <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                          </div>
+                          <p className="text-sm text-gray-600 font-medium">Click to upload or drag and drop</p>
+                          <p className="text-xs text-gray-400 mt-1">Files will be uploaded here</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {previewSurvey.fields?.length === 0 && (
+                    <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
+                      <div className="text-6xl mb-4">📝</div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">No fields in this survey</h3>
+                      <p className="text-gray-500">Add some fields to see the preview</p>
+                    </div>
+                  )}
+
+                  {/* Demo Submit Button */}
+                  {previewSurvey.fields?.length > 0 && (
+                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+                      <button
+                        type="button"
+                        disabled
+                        className="w-full bg-green-600 text-white px-6 py-4 rounded-lg font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                      >
+                        Submit Survey (Preview Mode)
+                      </button>
+                      <p className="text-xs text-gray-500 text-center mt-2">This is a preview - submissions are disabled</p>
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Preview Actions */}
-              <div className="flex gap-3 p-6 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row gap-3 p-4 sm:p-6 border-t border-gray-200 bg-gray-50 flex-shrink-0">
                 <button
                   onClick={() => {
                     setShowPreviewModal(false);
                     setPreviewSurvey(null);
                     editSurvey(previewSurvey);
                   }}
-                  className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 font-medium flex items-center gap-2"
+                  className="flex-1 sm:flex-initial bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 font-semibold flex items-center justify-center gap-2 shadow-sm"
                 >
-                  <span>✏️</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
                   Edit Survey
+                </button>
+                <button
+                  onClick={() => downloadSurveyForm(previewSurvey)}
+                  className="flex-1 sm:flex-initial bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-all duration-200 font-semibold flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Download
                 </button>
                 <button
                   onClick={() => {
                     setShowPreviewModal(false);
                     setPreviewSurvey(null);
                   }}
-                  className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-all duration-200 font-medium"
+                  className="flex-1 sm:flex-initial bg-white text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-100 border border-gray-300 transition-all duration-200 font-semibold"
                 >
                   Close
                 </button>

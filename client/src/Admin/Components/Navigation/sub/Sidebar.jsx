@@ -1,69 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const menuItems = [
-    {
-        key: 'home',
-        label: 'Home',
-        icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sidebar-icon" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M10.707 2.293a1 1 0 0 1 1.414 0l8 8A1 1 0 0 1 19.707 11H19v8a2 2 0 0 1-2 2h-2a1 1 0 0 1-1-1v-4h-2v4a1 1 0 0 1-1 1h-2a2 2 0 0 1-2-2v-8h-.707a1 1 0 0 1-.707-1.707l8-8z"/>
-            </svg>
-        ),
-        to: '/',
-    },
-    {
-        key: 'analytics',
-        label: 'Analytics',
-        icon: <i className="fas fa-chart-line h-5 w-5 sidebar-icon"></i>,
-    },
-    {
-        key: 'profiles',
-        label: 'User Profiles',
-        icon: <i className="fas fa-user-circle h-5 w-5 sidebar-icon"></i>,
-    },
-    {
-        key: 'enrollment',
-        label: 'Seminars',
-        icon: <i className="fas fa-user-plus h-5 w-5 sidebar-icon"></i>,
-    },
-    {
-        key: 'eic',
-        label: 'EIC - Item Panel',
-        icon: <i className="fas fa-id-card h-5 w-5 sidebar-icon"></i>,
-    },
-    {
-        key: 'distribution',
-        label: 'Distributions',
-        icon: <i className="fas fa-box-open h-5 w-5 sidebar-icon"></i>,
-    },
-    {
-        key: 'content',
-        label: 'Inventory',
-        icon: <i className="fas fa-archive h-5 w-5 sidebar-icon"></i>,
-    },
-    {
-        key: 'audit',
-        label: 'Logs / Audit Trail',
-        icon: <i className="fas fa-clipboard-list h-5 w-5 sidebar-icon"></i>,
-    },
-    {
-        key: 'chat',
-        label: 'Inquiries',
-        icon: <i className="fas fa-comments h-5 w-5 sidebar-icon"></i>,
-    },
-    {
-        key: 'seed',
-        label: 'Seed Growth Tracking',
-        icon: <i className="fas fa-seedling h-5 w-5 sidebar-icon"></i>,
-    },
-    {
-        key: 'survey',
-        label: 'Survey Forms',
-        icon: <i className="fas fa-poll h-5 w-5 sidebar-icon"></i>,
-    },
-];
-
+import { menuItems } from './menuItems.jsx';
 
 export default function Sidebar({
     setPage,
@@ -94,7 +31,9 @@ export default function Sidebar({
     return (
         <>
             {/* Import Poppins font from Google Fonts */}
-            <style>{`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');`}</style>
+            <style>{`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');`}</style>
+            {/* Import Font Awesome for icons */}
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
             <aside
                 className={`sidebar transition-all duration-300 w-64 backdrop-blur-xl border-r shadow-2xl hidden md:flex flex-col fixed left-0 top-0 z-30 h-screen max-h-screen ${iconOnlyClass} ${
                     isDark 
@@ -114,11 +53,11 @@ export default function Sidebar({
                         }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>FITS - TANZA</h1>
                     </div>
                     <nav className="mt-3 flex-1 overflow-y-auto minimalist-scrollbar">
-                        <ul className="space-y-2 px-3">
+                        <ul className="space-y-2 px-4 py-4">
                             {filteredMenuItems.map((item) => (
                                 <li
                                     key={item.key}
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer sidebar-item shadow-sm
+                                    className={`flex items-center gap-4 px-6 py-4 text-lg rounded-xl transition cursor-pointer shadow-sm
                                         ${
                                             currentPageKey === item.key
                                                 ? isDark 
@@ -129,15 +68,17 @@ export default function Sidebar({
                                                     : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
                                         }
                                     `}
-                                    style={{ minHeight: '3.2rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
+                                    style={{ minHeight: '3.5rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                                     onClick={() => handleClick(item)}
                                 >
-                                    <span className={`sidebar-icon text-xl drop-shadow-sm ${
+                                    <div className={`sidebar-icon flex items-center justify-center drop-shadow-sm ${
                                         currentPageKey === item.key 
-                                            ? isDark ? 'text-green-400' : 'text-green-700/90'
-                                            : isDark ? 'text-green-500' : 'text-green-700/90'
-                                    }`}>{item.icon}</span>
-                                    <span className="sidebar-label font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>{item.label}</span>
+                                            ? isDark ? 'text-green-400' : 'text-green-700'
+                                            : isDark ? 'text-green-500' : 'text-green-600'
+                                    }`} style={{ fontSize: '1.25rem', width: '1.25rem', height: '1.25rem', minWidth: '1.25rem', minHeight: '1.25rem' }}>
+                                        {item.icon}
+                                    </div>
+                                    <span className="sidebar-label font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '500' }}>{item.label}</span>
                                 </li>
                             ))}
                         </ul>
@@ -167,12 +108,12 @@ export default function Sidebar({
                             <div className="flex flex-col sidebar-profile-info">
                                 <span className={`font-bold sidebar-username text-base tracking-tight drop-shadow-sm ${
                                     isDark ? 'text-green-300' : 'text-green-900'
-                                }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
+                                }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '600' }}>
                                     {details.username}
                                 </span>
                                 <span className={`text-sm sidebar-position font-medium ${
                                     isDark ? 'text-green-400' : 'text-green-500'
-                                }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>
+                                }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '500' }}>
                                     {details.position}
                                 </span>
                             </div>
@@ -189,20 +130,89 @@ export default function Sidebar({
                             <span>
                                 <i className="fas fa-sign-out-alt h-5 w-5"></i>
                             </span>
-                            <span className="sidebar-logout-text">Logout</span>
+                            <span className="sidebar-logout-text" style={{ fontWeight: '600' }}>Logout</span>
                         </button>
                     </div>
                 </div>
                 {/* Minimalist scrollbar and icon-only mode styles */}
                 <style>{`
-                    /* Use Poppins font for sidebar */
-                    .sidebar, .sidebar-label, .sidebar-username, .sidebar-position, .sidebar-logout-text {
+                    /* Use Poppins font for sidebar with specific font weights */
+                    .sidebar, .sidebar * {
                         font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
                     }
-            /* Use Poppins font for sidebar */
-            .sidebar, .sidebar-label, .sidebar-username, .sidebar-position, .sidebar-logout-text {
-                font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
-            }
+                    
+                    /* Override all font-weight inheritance for sidebar labels */
+                    .sidebar-label {
+                        font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
+                        font-weight: 500 !important;
+                    }
+                    
+                    /* Ensure navigation links don't inherit bold font weight */
+                    .sidebar-item .sidebar-label {
+                        font-weight: 500 !important;
+                    }
+                    
+                    /* Profile info specific font weights */
+                    .sidebar-username {
+                        font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
+                        font-weight: 600 !important;
+                    }
+                    
+                    .sidebar-position {
+                        font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
+                        font-weight: 500 !important;
+                    }
+                    
+                    .sidebar-logout-text {
+                        font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
+                        font-weight: 600 !important;
+                    }
+                    
+                    /* Header title font weight */
+                    .sidebar h1 {
+                        font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
+                        font-weight: 700 !important;
+                    }
+                    
+                    /* Sidebar icon styling to match mobile */
+                    .sidebar-icon {
+                        width: 1.25rem !important;
+                        height: 1.25rem !important;
+                        min-width: 1.25rem !important;
+                        min-height: 1.25rem !important;
+                        display: inline-flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        font-size: 1.25rem !important;
+                    }
+                    .sidebar-icon svg {
+                        width: 1.25rem !important;
+                        height: 1.25rem !important;
+                        display: block !important;
+                    }
+                    .sidebar-icon i {
+                        width: 1.25rem !important;
+                        height: 1.25rem !important;
+                        font-size: 1.25rem !important;
+                        display: inline-flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        line-height: 1 !important;
+                    }
+                    /* Ensure Font Awesome icons are visible */
+                    .sidebar-icon .fas,
+                    .sidebar-icon .fab,
+                    .sidebar-icon .far,
+                    .sidebar-icon .fal {
+                        font-family: "Font Awesome 6 Free" !important;
+                        font-weight: 900 !important;
+                        display: inline-block !important;
+                        font-style: normal !important;
+                        font-variant: normal !important;
+                        text-rendering: auto !important;
+                        line-height: 1 !important;
+                    }
+                    
                 .minimalist-scrollbar::-webkit-scrollbar {
                     width: 8px;
                     background: transparent;
@@ -233,19 +243,6 @@ export default function Sidebar({
                     .sidebar-icon-only .sidebar-icon {
                         justify-content: center !important;
                     }
-                }
-                .sidebar-icon {
-                    width: 1.7rem !important;
-                    height: 1.7rem !important;
-                    min-width: 1.7rem !important;
-                    min-height: 1.7rem !important;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                .sidebar-icon svg {
-                    width: 100% !important;
-                    height: 100% !important;
                 }
                 .sidebar-item {
                     box-shadow: 0 1px 4px 0 rgba(30,41,59,0.04);

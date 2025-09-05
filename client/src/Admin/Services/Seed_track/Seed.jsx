@@ -1980,304 +1980,27 @@ function Seed_Track() {
         
     {/* Crop Guidelines Modal */}
   {showCreateModal && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-bold text-gray-800">
-              {editingGuideline ? 'Edit Crop Guideline' : 'Add New Crop Guideline'}
-            </h3>
-            <button
-              onClick={() => {
-                setShowCreateModal(false);
-                setEditingGuideline(null);
-                setNewGuideline({
-                  id: '',
-                  cropName: '',
-                  category: '',
-                  description: '',
-                  plantingTips: [''],
-                  careInstructions: [''],
-                  harvestingTips: [''],
-                  commonPests: [''],
-                  diseases: [''],
-                  seasonality: '',
-                  soilRequirements: '',
-                  waterRequirements: '',
-                  fertilizers: ['']
-                });
-              }}
-              className="text-gray-400 hover:text-gray-600"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-          
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            editingGuideline ? handleUpdateGuideline() : handleAddGuideline();
-          }} className="space-y-4">
-            {/* Basic Information */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Crop Name *</label>
-              <input
-                type="text"
-                required
-                value={newGuideline.cropName}
-                onChange={(e) => setNewGuideline({...newGuideline, cropName: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Enter crop name"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
-              <select
-                required
-                value={newGuideline.category}
-                onChange={(e) => setNewGuideline({...newGuideline, category: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                <option value="">Select Category</option>
-                <option value="Vegetables">Vegetables</option>
-                <option value="Fruits">Fruits</option>
-                <option value="Grains">Grains</option>
-                <option value="Legumes">Legumes</option>
-                <option value="Herbs">Herbs</option>
-                <option value="Root Crops">Root Crops</option>
-                <option value="Leafy Greens">Leafy Greens</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-              <textarea
-                value={newGuideline.description}
-                onChange={(e) => setNewGuideline({...newGuideline, description: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                rows="3"
-                placeholder="Brief description of the crop"
-              />
-            </div>
-
-            {/* Planting Tips */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Planting Tips</label>
-              {(newGuideline.plantingTips || []).map((tip, index) => (
-                <div key={index} className="flex mb-2">
-                  <input
-                    type="text"
-                    value={tip}
-                    onChange={(e) => updateArrayField('plantingTips', index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter planting tip"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeArrayField('plantingTips', index)}
-                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
-                  >
-                    ×
-                  </button>
+      <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
+        <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[95vh] overflow-y-auto border border-gray-200 my-4">
+          {/* Modal Header */}
+          <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => addArrayField('plantingTips')}
-                className="text-green-600 hover:text-green-800 text-sm"
-              >
-                + Add Planting Tip
-              </button>
-            </div>
-
-            {/* Care Instructions */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Care Instructions</label>
-              {(newGuideline.careInstructions || []).map((instruction, index) => (
-                <div key={index} className="flex mb-2">
-                  <input
-                    type="text"
-                    value={instruction}
-                    onChange={(e) => updateArrayField('careInstructions', index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter care instruction"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeArrayField('careInstructions', index)}
-                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
-                  >
-                    ×
-                  </button>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {editingGuideline ? 'Edit Crop Guideline' : 'Add New Crop Guideline'}
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {editingGuideline ? 'Update the crop growing information' : 'Create a comprehensive guide for farmers'}
+                  </p>
                 </div>
-              ))}
+              </div>
               <button
-                type="button"
-                onClick={() => addArrayField('careInstructions')}
-                className="text-green-600 hover:text-green-800 text-sm"
-              >
-                + Add Care Instruction
-              </button>
-            </div>
-
-            {/* Harvesting Tips */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Harvesting Tips</label>
-              {(newGuideline.harvestingTips || []).map((tip, index) => (
-                <div key={index} className="flex mb-2">
-                  <input
-                    type="text"
-                    value={tip}
-                    onChange={(e) => updateArrayField('harvestingTips', index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter harvesting tip"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeArrayField('harvestingTips', index)}
-                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => addArrayField('harvestingTips')}
-                className="text-green-600 hover:text-green-800 text-sm"
-              >
-                + Add Harvesting Tip
-              </button>
-            </div>
-
-            {/* Common Pests */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Common Pests</label>
-              {(newGuideline.commonPests || []).map((pest, index) => (
-                <div key={index} className="flex mb-2">
-                  <input
-                    type="text"
-                    value={pest}
-                    onChange={(e) => updateArrayField('commonPests', index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter common pest"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeArrayField('commonPests', index)}
-                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => addArrayField('commonPests')}
-                className="text-green-600 hover:text-green-800 text-sm"
-              >
-                + Add Common Pest
-              </button>
-            </div>
-
-            {/* Diseases */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Common Diseases</label>
-              {(newGuideline.diseases || []).map((disease, index) => (
-                <div key={index} className="flex mb-2">
-                  <input
-                    type="text"
-                    value={disease}
-                    onChange={(e) => updateArrayField('diseases', index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter common disease"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeArrayField('diseases', index)}
-                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => addArrayField('diseases')}
-                className="text-green-600 hover:text-green-800 text-sm"
-              >
-                + Add Common Disease
-              </button>
-            </div>
-
-            {/* Environmental Requirements */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Seasonality</label>
-              <input
-                type="text"
-                value={newGuideline.seasonality}
-                onChange={(e) => setNewGuideline({...newGuideline, seasonality: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Best planting season (e.g., Spring, Summer)"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Soil Requirements</label>
-              <input
-                type="text"
-                value={newGuideline.soilRequirements}
-                onChange={(e) => setNewGuideline({...newGuideline, soilRequirements: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Soil type and pH requirements"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Water Requirements</label>
-              <input
-                type="text"
-                value={newGuideline.waterRequirements}
-                onChange={(e) => setNewGuideline({...newGuideline, waterRequirements: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Watering frequency and amount"
-              />
-            </div>
-
-            {/* Fertilizers */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Recommended Fertilizers</label>
-              {(newGuideline.fertilizers || []).map((fertilizer, index) => (
-                <div key={index} className="flex mb-2">
-                  <input
-                    type="text"
-                    value={fertilizer}
-                    onChange={(e) => updateArrayField('fertilizers', index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter fertilizer recommendation"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeArrayField('fertilizers', index)}
-                    className="ml-2 px-3 py-2 text-red-600 hover:text-red-800"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => addArrayField('fertilizers')}
-                className="text-green-600 hover:text-green-800 text-sm"
-              >
-                + Add Fertilizer
-              </button>
-            </div>
-
-            <div className="flex justify-end space-x-3 pt-4">
-              <button
-                type="button"
                 onClick={() => {
                   setShowCreateModal(false);
                   setEditingGuideline(null);
@@ -2297,18 +2020,431 @@ function Seed_Track() {
                     fertilizers: ['']
                   });
                 }}
-                className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-              >
-                {editingGuideline ? 'Update Guideline' : 'Add Guideline'}
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
-          </form>
+          </div>
+          
+          {/* Modal Body */}
+          <div className="px-6 py-4">
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              editingGuideline ? handleUpdateGuideline() : handleAddGuideline();
+            }} className="space-y-8">
+              
+              {/* Basic Information Section */}
+              <div className="bg-gray-50 rounded-lg p-6">
+                <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Basic Information
+                </h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Crop Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={newGuideline.cropName}
+                      onChange={(e) => setNewGuideline({...newGuideline, cropName: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                      placeholder="Enter crop name"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      required
+                      value={newGuideline.category}
+                      onChange={(e) => setNewGuideline({...newGuideline, category: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                    >
+                      <option value="">Select Category</option>
+                      <option value="Vegetables">Vegetables</option>
+                      <option value="Fruits">Fruits</option>
+                      <option value="Grains">Grains</option>
+                      <option value="Legumes">Legumes</option>
+                      <option value="Herbs">Herbs</option>
+                      <option value="Root Crops">Root Crops</option>
+                      <option value="Leafy Greens">Leafy Greens</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                  <textarea
+                    value={newGuideline.description}
+                    onChange={(e) => setNewGuideline({...newGuideline, description: e.target.value})}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                    rows="3"
+                    placeholder="Brief description of the crop and its characteristics"
+                  />
+                </div>
+              </div>
+
+              {/* Growing Instructions Section */}
+              <div className="bg-green-50 rounded-lg p-6">
+                <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  Growing Instructions
+                </h4>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Planting Tips */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">Planting Tips</label>
+                    <div className="space-y-2">
+                      {(newGuideline.plantingTips || []).map((tip, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <div className="flex-1 relative">
+                            <input
+                              type="text"
+                              value={tip}
+                              onChange={(e) => updateArrayField('plantingTips', index, e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
+                              placeholder="Enter planting tip"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeArrayField('plantingTips', index)}
+                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Remove tip"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => addArrayField('plantingTips')}
+                        className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
+                      >
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Add Planting Tip
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Care Instructions */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">Care Instructions</label>
+                    <div className="space-y-2">
+                      {(newGuideline.careInstructions || []).map((instruction, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <div className="flex-1 relative">
+                            <input
+                              type="text"
+                              value={instruction}
+                              onChange={(e) => updateArrayField('careInstructions', index, e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
+                              placeholder="Enter care instruction"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeArrayField('careInstructions', index)}
+                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Remove instruction"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => addArrayField('careInstructions')}
+                        className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
+                      >
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Add Care Instruction
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-3">Harvesting Tips</label>
+                  <div className="space-y-2">
+                    {(newGuideline.harvestingTips || []).map((tip, index) => (
+                      <div key={index} className="flex items-center space-x-2">
+                        <div className="flex-1 relative">
+                          <input
+                            type="text"
+                            value={tip}
+                            onChange={(e) => updateArrayField('harvestingTips', index, e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
+                            placeholder="Enter harvesting tip"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeArrayField('harvestingTips', index)}
+                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Remove tip"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => addArrayField('harvestingTips')}
+                      className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
+                    >
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      Add Harvesting Tip
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Health & Protection Section */}
+              <div className="bg-amber-50 rounded-lg p-6">
+                <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <svg className="w-5 h-5 text-amber-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                  Health & Protection
+                </h4>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Common Pests */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">Common Pests</label>
+                    <div className="space-y-2">
+                      {(newGuideline.commonPests || []).map((pest, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <div className="flex-1 relative">
+                            <input
+                              type="text"
+                              value={pest}
+                              onChange={(e) => updateArrayField('commonPests', index, e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
+                              placeholder="Enter common pest"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeArrayField('commonPests', index)}
+                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Remove pest"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => addArrayField('commonPests')}
+                        className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
+                      >
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Add Common Pest
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Diseases */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">Common Diseases</label>
+                    <div className="space-y-2">
+                      {(newGuideline.diseases || []).map((disease, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <div className="flex-1 relative">
+                            <input
+                              type="text"
+                              value={disease}
+                              onChange={(e) => updateArrayField('diseases', index, e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
+                              placeholder="Enter common disease"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeArrayField('diseases', index)}
+                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Remove disease"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => addArrayField('diseases')}
+                        className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
+                      >
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Add Common Disease
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Environmental Requirements Section */}
+              <div className="bg-blue-50 rounded-lg p-6">
+                <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                  </svg>
+                  Environmental Requirements
+                </h4>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Seasonality</label>
+                    <input
+                      type="text"
+                      value={newGuideline.seasonality}
+                      onChange={(e) => setNewGuideline({...newGuideline, seasonality: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                      placeholder="e.g., Spring, Summer"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Soil Requirements</label>
+                    <input
+                      type="text"
+                      value={newGuideline.soilRequirements}
+                      onChange={(e) => setNewGuideline({...newGuideline, soilRequirements: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                      placeholder="Soil type and pH"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Water Requirements</label>
+                    <input
+                      type="text"
+                      value={newGuideline.waterRequirements}
+                      onChange={(e) => setNewGuideline({...newGuideline, waterRequirements: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                      placeholder="Frequency and amount"
+                    />
+                  </div>
+                </div>
+
+                {/* Fertilizers */}
+                <div className="mt-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-3">Recommended Fertilizers</label>
+                  <div className="space-y-2">
+                    {(newGuideline.fertilizers || []).map((fertilizer, index) => (
+                      <div key={index} className="flex items-center space-x-2">
+                        <div className="flex-1 relative">
+                          <input
+                            type="text"
+                            value={fertilizer}
+                            onChange={(e) => updateArrayField('fertilizers', index, e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all pr-10"
+                            placeholder="Enter fertilizer recommendation"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeArrayField('fertilizers', index)}
+                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Remove fertilizer"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => addArrayField('fertilizers')}
+                      className="flex items-center text-green-600 hover:text-green-700 text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-50 transition-colors"
+                    >
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      Add Fertilizer
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="sticky bottom-0 bg-white border-t border-gray-200 px-6 py-4 -mx-6 -mb-4 rounded-b-xl">
+                <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCreateModal(false);
+                      setEditingGuideline(null);
+                      setNewGuideline({
+                        id: '',
+                        cropName: '',
+                        category: '',
+                        description: '',
+                        plantingTips: [''],
+                        careInstructions: [''],
+                        harvestingTips: [''],
+                        commonPests: [''],
+                        diseases: [''],
+                        seasonality: '',
+                        soilRequirements: '',
+                        waterRequirements: '',
+                        fertilizers: ['']
+                      });
+                    }}
+                    className="w-full sm:w-auto px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all font-medium"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all font-medium shadow-md hover:shadow-lg"
+                  >
+                    <span className="flex items-center justify-center">
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      {editingGuideline ? 'Update Guideline' : 'Create Guideline'}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     )}

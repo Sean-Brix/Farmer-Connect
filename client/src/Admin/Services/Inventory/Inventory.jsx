@@ -140,7 +140,7 @@ function Content() {
         setEditForm({
             name: item.name,
             description: item.description,
-            category: item.category,
+            category: item.category?.name || item.category || '',
         });
     };
 
@@ -206,7 +206,8 @@ function Content() {
                     .toLowerCase()
                     .includes((search || '').toLowerCase());
             const matchesCategoryFilter =
-                categoryFilter === 'All' || item.category === categoryFilter;
+                categoryFilter === 'All' || 
+                (item.category?.name || item.category) === categoryFilter;
             const matchesStatusFilter =
                 statusFilter === 'All' ||
                 (item.stacks &&
@@ -233,6 +234,13 @@ function Content() {
     useEffect(() => {
         setCurrentPage(1);
     }, [search, categoryFilter, statusFilter]);
+
+    // Reset to first page when items per page changes or exceeds total items
+    useEffect(() => {
+        if (totalPages > 0 && currentPage > totalPages) {
+            setCurrentPage(1);
+        }
+    }, [itemsPerPage, totalPages, currentPage]);
 
     const truncate = (str, n = 24) =>
         str && str.length > n ? str.slice(0, n) + '...' : str;
@@ -834,115 +842,142 @@ function Content() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 overflow-x-hidden">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50 overflow-x-hidden">
             {/* Modern Alert */}
             {alert.show && (
                 <div
-                    className={`fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2 ${
+                    className={`fixed top-4 right-4 px-6 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-3 transition-all duration-300 ${
                         alert.type === 'success'
-                            ? 'bg-green-500 text-white'
+                            ? 'bg-green-600 text-white border-l-4 border-green-400'
                             : alert.type === 'error'
-                            ? 'bg-red-500 text-white'
-                            : 'bg-gray-500 text-white'
+                            ? 'bg-gray-800 text-white border-l-4 border-red-500'
+                            : 'bg-gray-700 text-white border-l-4 border-gray-400'
                     }`}
                 >
                     {alert.type === 'success' && (
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
+                        <div className="bg-green-500 rounded-full p-1">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                        </div>
                     )}
                     {alert.type === 'error' && (
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                        </svg>
+                        <div className="bg-red-500 rounded-full p-1">
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                        </div>
                     )}
-                    <span className="font-medium">{alert.message}</span>
+                    <span className="font-semibold">{alert.message}</span>
                 </div>
             )}
 
             {/* Professional Header Section */}
-            <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ${sizeClasses[uiSize].container}`}>
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4 mt-15">
-                        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+            <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 ${sizeClasses[uiSize].container}`}>
+                <div className="text-center mb-6 mt-20 sm:mb-8">
+                    <div className="flex items-center justify-center gap-3 mb-4">
+                        <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl shadow-lg">
+                            <svg className="w-6 h-6 sm:w-8 sm:h-8 text-green-700" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">Inventory Management</h1>
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2 ">Inventory Management</h1>
-                    <p className="text-gray-600 max-w-2xl mx-auto">
+                    <p className="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
                         Manage and monitor all inventory items and their stacks with complete control over stock levels and distribution.
                     </p>
                 </div>
 
                 {/* Professional Controls Section */}
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 items-end">
+                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6 mb-6 sm:mb-8 backdrop-blur-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 items-end">
                         {/* Search Input */}
                         <div className="xl:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Search Items</label>
-                            <input
-                                type="text"
-                                placeholder="Search by name, description..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
-                            />
+                            <label className="block text-sm font-semibold text-gray-800 mb-2">Search Items</label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search by name, description..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                                />
+                            </div>
                         </div>
 
                         {/* Category Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                            <select
-                                value={categoryFilter}
-                                onChange={(e) => setCategoryFilter(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
-                            >
-                                <option value="All">All Categories</option>
-                                {categories.map((cat) => (
-                                    <option key={cat} value={cat}>
-                                        {cat}
-                                    </option>
-                                ))}
-                            </select>
+                            <label className="block text-sm font-semibold text-gray-800 mb-2">Category</label>
+                            <div className="relative z-10">
+                                <select
+                                    value={categoryFilter}
+                                    onChange={(e) => setCategoryFilter(e.target.value)}
+                                    className="w-full px-4 py-3 pr-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none relative z-20"
+                                >
+                                    <option value="All">All Categories</option>
+                                    {categories.map((cat) => (
+                                        <option key={cat} value={cat}>
+                                            {cat}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none z-30">
+                                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Status Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                            <select
-                                value={statusFilter}
-                                onChange={(e) => setStatusFilter(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
-                            >
-                                <option value="All">All Statuses</option>
-                                {statuses.map((status) => (
-                                    <option key={status} value={status}>
-                                        {status}
-                                    </option>
-                                ))}
-                            </select>
+                            <label className="block text-sm font-semibold text-gray-800 mb-2">Status</label>
+                            <div className="relative z-10">
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="w-full px-4 py-3 pr-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none relative z-20"
+                                >
+                                    <option value="All">All Statuses</option>
+                                    {statuses.map((status) => (
+                                        <option key={status} value={status}>
+                                            {status}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none z-30">
+                                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Action Buttons */}
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setShowModal(true)}
-                                className="flex-1 bg-green-600 text-white font-medium px-2 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                                className="flex-1 bg-gradient-to-r from-green-600 to-green-700  text-white font-semibold px-4 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                             >
-                               
+                                
                                 Add Item
                             </button>
                             {!showDelete ? (
                                 <button
                                     onClick={() => setShowDelete(true)}
-                                    className="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                                    className="px-4 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
                                 >
                                     Manage
                                 </button>
                             ) : (
                                 <button
                                     onClick={() => setShowDelete(false)}
-                                    className="px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                                    className="px-4 py-3 bg-gray-200 text-gray-800 font-semibold rounded-xl hover:bg-gray-300 transition-all duration-200"
                                 >
                                     Cancel
                                 </button>
@@ -954,22 +989,22 @@ function Content() {
                     {showDelete && (
                         <div className="mt-6 pt-6 border-t border-gray-200">
                             <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-                                <div className="text-sm text-gray-600">
+                                <div className="text-sm text-gray-700">
                                     {selectedItems.length > 0 ? (
-                                        <span className="font-medium text-gray-900">
+                                        <span className="font-semibold text-gray-900 bg-green-100 px-3 py-1 rounded-full">
                                             {selectedItems.length} item{selectedItems.length !== 1 ? 's' : ''} selected
                                         </span>
                                     ) : (
-                                        <span>Select items to delete or manage</span>
+                                        <span className="text-gray-600">Select items to delete or manage</span>
                                     )}
                                 </div>
-                                <div className="flex gap-2">
+                                <div className="flex flex-wrap gap-2">
                                     <button
                                         onClick={() => {
                                             setSelectAll(true);
                                             setSelectedItems(filteredItems.map((item) => item.id));
                                         }}
-                                        className="px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                        className="px-4 py-2 text-sm border-2 border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
                                     >
                                         Select All
                                     </button>
@@ -978,14 +1013,18 @@ function Content() {
                                             setSelectAll(false);
                                             setSelectedItems([]);
                                         }}
-                                        className="px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                        className="px-4 py-2 text-sm border-2 border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
                                     >
                                         Clear All
                                     </button>
                                     <button
                                         onClick={handleRemoveSelected}
                                         disabled={selectedItems.length === 0}
-                                        className="px-4 py-2 text-sm bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                                        className={`px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none ${
+                                            selectedItems.length > 0
+                                                ? 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800'
+                                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        }`}
                                     >
                                         Delete Selected
                                     </button>
@@ -998,30 +1037,37 @@ function Content() {
                     {!showDelete && (
                         <div className="mt-4 pt-4 border-t border-gray-200">
                             <p className="text-sm text-gray-500 flex items-center gap-2">
-                                <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
-                                Click the arrow icons to view and manage item stacks
+                                Click the expand buttons to view and manage item stacks in detail
                             </p>
                         </div>
                     )}
                 </div>
 
                 {/* Professional Table Container */}
-                <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-                    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-semibold text-gray-900">Inventory Items</h3>
-                            <div className="flex items-center gap-4">
-                                <span className="text-sm text-gray-600">
+                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden backdrop-blur-sm">
+                    <div className="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-green-600 rounded-lg p-2">
+                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-lg sm:text-xl font-bold text-gray-900">Inventory Items</h3>
+                            </div>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                                <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full font-medium">
                                     Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} item{totalItems !== 1 ? 's' : ''}
                                 </span>
                                 <button
                                     onClick={handleSortToggle}
-                                    className="flex items-center gap-2 px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                    className="flex items-center gap-2 px-4 py-2 text-sm border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium"
                                 >
                                     <span>Sort {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}</span>
-                                    <svg className={`w-4 h-4 transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <svg className={`w-4 h-4 transform transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                         <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 </button>
@@ -1032,116 +1078,141 @@ function Content() {
                         <div className="overflow-x-auto">
                             <table className={`w-full table-auto ${sizeClasses[uiSize].table}`} style={{tableLayout: 'auto', wordWrap: 'break-word'}}>
                             <thead>
-                                <tr className="border-b border-gray-200">
+                                <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
                                     {showDelete && (
                                         <th className={`${sizeClasses[uiSize].padding} text-left`}>
                                             <input
                                                 type="checkbox"
                                                 checked={paginatedItems.length > 0 && paginatedItems.every(item => selectedItems.includes(item.id))}
                                                 onChange={handleSelectAll}
-                                                className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                                                className="w-5 h-5 text-green-600 bg-white border-2 border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                                                 aria-label="Select all on this page"
                                             />
                                         </th>
                                     )}
-                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-semibold text-gray-500 uppercase tracking-wider`}>
+                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-bold text-gray-800 uppercase tracking-wider`}>
                                         Item Details
                                     </th>
-                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell`}>
+                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-bold text-gray-800 uppercase tracking-wider hidden sm:table-cell`}>
                                         Category
                                     </th>
-                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-semibold text-gray-500 uppercase tracking-wider`}>
+                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-bold text-gray-800 uppercase tracking-wider`}>
                                         Stock
                                     </th>
-                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell`}>
+                                    <th className={`${sizeClasses[uiSize].padding} text-left ${sizeClasses[uiSize].text} font-bold text-gray-800 uppercase tracking-wider hidden lg:table-cell`}>
                                         Status Breakdown
                                     </th>
-                                    <th className={`${sizeClasses[uiSize].padding} text-right ${sizeClasses[uiSize].text} font-semibold text-gray-500 uppercase tracking-wider`}>
+                                    <th className={`${sizeClasses[uiSize].padding} text-right ${sizeClasses[uiSize].text} font-bold text-gray-800 uppercase tracking-wider`}>
                                         Actions
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-200">
+                            <tbody className="divide-y divide-gray-200 bg-white">
                                 {paginatedItems.length === 0 ? (
                                     <tr>
-                                        <td colSpan={showDelete ? "6" : "5"} className="px-6 py-12 text-center">
+                                        <td colSpan={showDelete ? "6" : "5"} className="px-6 py-16 text-center">
                                             <div className="flex flex-col items-center justify-center text-gray-400">
-                                                <svg className="w-12 h-12 mb-4" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
-                                                    <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
-                                                </svg>
-                                                <p className="text-lg font-medium mb-1">No items found</p>
-                                                <p className="text-sm">Try adjusting your search or filters</p>
+                                                <div className="bg-gray-100 rounded-full p-4 mb-4">
+                                                    <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                                                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
+                                                    </svg>
+                                                </div>
+                                                <p className="text-xl font-semibold mb-2 text-gray-600">No items found</p>
+                                                <p className="text-sm text-gray-500">Try adjusting your search criteria or filters</p>
                                             </div>
                                         </td>
                                     </tr>
                                 ) : (
-                                    paginatedItems.map((item) => (
+                                    paginatedItems.map((item, index) => (
                                         <React.Fragment key={item.id}>
                                             {editItemId === item.id ? (
                                                 // Edit Form Row
-                                                <tr className="bg-blue-50 border-l-4 border-blue-400">
+                                                <tr className="bg-gradient-to-r from-green-50 to-white border-l-4 border-green-400 shadow-sm">
                                                     {showDelete && <td className={sizeClasses[uiSize].padding}></td>}
                                                     <td className={sizeClasses[uiSize].padding} colSpan={showDelete ? "5" : "4"}>
-                                                        <div className="space-y-3">
-                                                            <div className="flex items-center gap-2 mb-3">
-                                                                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                                    <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
-                                                                </svg>
-                                                                <h4 className={`font-semibold text-gray-800 ${sizeClasses[uiSize].text}`}>Edit Item</h4>
-                                                            </div>
-                                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                                <div>
-                                                                    <label className={`block font-medium text-gray-700 mb-1 ${sizeClasses[uiSize].text}`}>Name</label>
-                                                                    <input
-                                                                        type="text"
-                                                                        name="name"
-                                                                        value={editForm.name || ''}
-                                                                        onChange={handleEditFormChange}
-                                                                        onKeyDown={handleKeyPress}
-                                                                        className={`w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${sizeClasses[uiSize].text}`}
-                                                                        autoFocus
-                                                                    />
+                                                        <div className="space-y-2">
+                                                            <div className="flex items-center gap-2 mb-2">
+                                                                <div className="bg-green-600 rounded p-1">
+                                                                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                        <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
+                                                                    </svg>
                                                                 </div>
-                                                                <div>
-                                                                    <label className={`block font-medium text-gray-700 mb-1 ${sizeClasses[uiSize].text}`}>Category</label>
-                                                                    <select
-                                                                        name="category"
-                                                                        value={editForm.category || ''}
-                                                                        onChange={handleEditFormChange}
-                                                                        className={`w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${sizeClasses[uiSize].text}`}
+                                                                <h4 className={`font-semibold text-gray-800 ${sizeClasses[uiSize].text}`}>Quick Edit</h4>
+                                                            </div>
+                                                            <div className="flex items-end gap-4">
+                                                                {/* Form Fields */}
+                                                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 flex-1">
+                                                                    <div>
+                                                                        <label className={`block font-medium text-gray-700 mb-1 text-xs`}>Name</label>
+                                                                        <input
+                                                                            type="text"
+                                                                            name="name"
+                                                                            value={editForm.name || ''}
+                                                                            onChange={handleEditFormChange}
+                                                                            onKeyDown={handleKeyPress}
+                                                                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400"
+                                                                            autoFocus
+                                                                        />
+                                                                    </div>
+                                                                    <div>
+                                                                        <label className={`block font-medium text-gray-700 mb-1 text-xs`}>Category</label>
+                                                                        <select
+                                                                            name="category"
+                                                                            value={editForm.category || ''}
+                                                                            onChange={handleEditFormChange}
+                                                                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400"
+                                                                        >
+                                                                            <option value="">Select Category</option>
+                                                                            {categories.map((category) => (
+                                                                                <option key={category} value={category}>
+                                                                                    {category}
+                                                                                </option>
+                                                                            ))}
+                                                                        </select>
+                                                                    </div>
+                                                                    <div>
+                                                                        <label className={`block font-medium text-gray-700 mb-1 text-xs`}>Description</label>
+                                                                        <input
+                                                                            type="text"
+                                                                            name="description"
+                                                                            value={editForm.description || ''}
+                                                                            onChange={handleEditFormChange}
+                                                                            onKeyDown={handleKeyPress}
+                                                                            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                {/* Action Buttons - Right Side */}
+                                                                <div className="hidden sm:flex gap-2 ml-auto">
+                                                                    <button
+                                                                        onClick={handleCancelEdit}
+                                                                        className="px-3 py-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white font-medium rounded-md hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-1 focus:ring-red-400 transition-all duration-200 text-sm whitespace-nowrap"
                                                                     >
-                                                                        <option value="">Select Category</option>
-                                                                        {categories.map((category) => (
-                                                                            <option key={category.id} value={category.id}>
-                                                                                {category.name}
-                                                                            </option>
-                                                                        ))}
-                                                                    </select>
-                                                                </div>
-                                                                <div>
-                                                                    <label className={`block font-medium text-gray-700 mb-1 ${sizeClasses[uiSize].text}`}>Description</label>
-                                                                    <input
-                                                                        type="text"
-                                                                        name="description"
-                                                                        value={editForm.description || ''}
-                                                                        onChange={handleEditFormChange}
-                                                                        onKeyDown={handleKeyPress}
-                                                                        className={`w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${sizeClasses[uiSize].text}`}
-                                                                    />
+                                                                        Cancel
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={handleSaveEdit}
+                                                                        className="px-3 py-1.5 bg-gradient-to-r from-green-600 to-green-700 text-white font-medium rounded-md hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-1 focus:ring-green-400 transition-all duration-200 text-sm whitespace-nowrap"
+                                                                    >
+                                                                        Save
+                                                                    </button>
                                                                 </div>
                                                             </div>
-                                                            <div className="flex justify-end gap-2 pt-2">
+                                                            
+                                                            {/* Mobile Buttons */}
+                                                            <div className="flex justify-end gap-2 pt-1 sm:hidden">
                                                                 <button
                                                                     onClick={handleCancelEdit}
-                                                                    className={`px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 ${sizeClasses[uiSize].text}`}
+                                                                    className="px-3 py-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white font-medium rounded-md hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-1 focus:ring-red-400 transition-all duration-200 text-sm"
                                                                 >
                                                                     Cancel
                                                                 </button>
                                                                 <button
                                                                     onClick={handleSaveEdit}
-                                                                    className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${sizeClasses[uiSize].text}`}
+                                                                    className="px-3 py-1.5 bg-gradient-to-r from-green-600 to-green-700 text-white font-medium rounded-md hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-1 focus:ring-green-400 transition-all duration-200 text-sm"
                                                                 >
-                                                                    Save Changes
+                                                                    Save
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -1149,33 +1220,33 @@ function Content() {
                                                 </tr>
                                             ) : (
                                                 // Normal Item Row
-                                                <tr className="hover:bg-gray-50 transition-colors">
+                                                <tr className={`hover:bg-gray-50 transition-all duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}`}>
                                                     {showDelete && (
                                                         <td className={sizeClasses[uiSize].padding}>
                                                             <input
                                                                 type="checkbox"
                                                                 checked={selectedItems.includes(item.id)}
                                                                 onChange={() => handleSelectItem(item.id)}
-                                                                className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                                                                className="w-5 h-5 text-green-600 bg-white border-2 border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                                                             />
                                                         </td>
                                                     )}
                                                     <td className={sizeClasses[uiSize].padding}>
                                                         <div className="flex flex-col">
-                                                            <div className={`font-medium text-gray-900 ${sizeClasses[uiSize].text}`}>{item.name}</div>
-                                                            <div className={`text-gray-500 sm:hidden ${sizeClasses[uiSize].text}`}>{item.category?.name || 'Uncategorized'}</div>
+                                                            <div className={`font-bold text-gray-900 ${sizeClasses[uiSize].text}`}>{item.name}</div>
+                                                            <div className={`text-gray-600 sm:hidden ${sizeClasses[uiSize].text}`}>{item.category?.name || 'Uncategorized'}</div>
                                                             {item.description && (
-                                                                <div className={`text-gray-400 mt-1 ${sizeClasses[uiSize].text === 'text-xs' ? 'text-xs' : sizeClasses[uiSize].text === 'text-sm' ? 'text-xs' : 'text-sm'}`}>{truncate(item.description, 40)}</div>
+                                                                <div className={`text-gray-500 mt-1 ${sizeClasses[uiSize].text === 'text-xs' ? 'text-xs' : sizeClasses[uiSize].text === 'text-sm' ? 'text-xs' : 'text-sm'}`}>{truncate(item.description, 40)}</div>
                                                             )}
                                                         </div>
                                                     </td>
                                                     <td className={`${sizeClasses[uiSize].padding} hidden sm:table-cell`}>
-                                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-gray-100 text-gray-800 ${sizeClasses[uiSize].text}`}>
+                                                        <span className={`inline-flex items-center px-3 py-1 rounded-full font-semibold bg-gray-100 text-gray-800 border border-gray-200 ${sizeClasses[uiSize].text}`}>
                                                             {item.category?.name || 'Uncategorized'}
                                                         </span>
                                                     </td>
                                                     <td className={sizeClasses[uiSize].padding}>
-                                                        <div className={`font-medium text-gray-900 ${sizeClasses[uiSize].text}`}>
+                                                        <div className={`font-bold text-gray-900 bg-green-100 px-3 py-1 rounded-full text-center inline-block ${sizeClasses[uiSize].text}`}>
                                                             {item.totalQuantity || 0}
                                                         </div>
                                                     </td>
@@ -1185,28 +1256,41 @@ function Content() {
                                                                 const quantity = item.stacks?.filter(stack => stack.status === status)
                                                                     .reduce((sum, stack) => sum + (stack.quantity || 0), 0) || 0;
                                                                 if (quantity === 0) return null;
+                                                                
+                                                                // Get colors based on status
+                                                                const getStatusColor = (status) => {
+                                                                    switch (status) {
+                                                                        case 'Available':
+                                                                            return 'bg-green-100 text-green-800 border-green-200';
+                                                                        case 'Unavailable':
+                                                                            return 'bg-red-100 text-red-800 border-red-200';
+                                                                        case 'Damaged':
+                                                                            return 'bg-orange-100 text-orange-800 border-orange-200';
+                                                                        case 'EIC':
+                                                                            return 'bg-purple-100 text-purple-800 border-purple-200';
+                                                                        case 'Distributed':
+                                                                            return 'bg-blue-100 text-blue-800 border-blue-200';
+                                                                        default:
+                                                                            return 'bg-gray-100 text-gray-800 border-gray-200';
+                                                                    }
+                                                                };
+                                                                
                                                                 return (
                                                                     <span
                                                                         key={status}
-                                                                        className={`inline-flex items-center px-2 py-1 rounded-full font-medium ${sizeClasses[uiSize].text} ${
-                                                                            status === 'Available' ? 'bg-green-100 text-green-800' :
-                                                                            status === 'EIC' ? 'bg-blue-100 text-blue-800' :
-                                                                            status === 'Distributed' ? 'bg-purple-100 text-purple-800' :
-                                                                            status === 'Damaged' ? 'bg-red-100 text-red-800' :
-                                                                            'bg-gray-100 text-gray-800'
-                                                                        }`}
+                                                                        className={`inline-flex items-center px-2 py-1 rounded-full font-semibold border ${sizeClasses[uiSize].text} ${getStatusColor(status)}`}
                                                                     >
                                                                         {status}: {quantity}
-                                                                </span>
-                                                            );
-                                                        })}
-                                                    </div>
+                                                                    </span>
+                                                                );
+                                                            })}
+                                                        </div>
                                                 </td>
                                                 <td className={`${sizeClasses[uiSize].padding} text-right`}>
                                                     <div className="flex items-center justify-end gap-2">
                                                         <button
                                                             onClick={() => handleViewStacks(item)}
-                                                            className={`inline-flex items-center px-3 py-1 border border-blue-300 shadow-sm font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${sizeClasses[uiSize].text}`}
+                                                            className={`inline-flex items-center px-3 py-2 border-2 border-green-300 shadow-sm font-semibold rounded-xl text-green-700 bg-green-50 hover:bg-green-100 hover:border-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 ${sizeClasses[uiSize].text}`}
                                                             title={expandedStacks.has(item.id) ? 'Collapse Stacks' : 'Expand Stacks'}
                                                         >
                                                             {expandedStacks.has(item.id) ? (
@@ -1227,7 +1311,7 @@ function Content() {
                                                         </button>
                                                         <button
                                                             onClick={() => handleEdit(item)}
-                                                            className={`inline-flex items-center px-3 py-1 border border-transparent font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${sizeClasses[uiSize].text}`}
+                                                            className={`inline-flex items-center px-3 py-2 border-2 border-transparent font-semibold rounded-xl text-white bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 ${sizeClasses[uiSize].text}`}
                                                         >
                                                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                                 <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
@@ -1241,15 +1325,17 @@ function Content() {
                                             {/* Expanded Stack Details Row */}
                                             {expandedStacks.has(item.id) && selectedItemStacks && selectedItemStacks.id === item.id && (
                                                 <tr>
-                                                    <td colSpan={showDelete ? "6" : "5"} className="px-6 py-4 bg-gradient-to-r from-blue-50 to-green-50 border-l-4 border-blue-200">
+                                                    <td colSpan={showDelete ? "6" : "5"} className="px-4 sm:px-6 py-4 bg-gradient-to-r from-green-50 to-gray-50 border-l-4 border-green-400">
                                                         <div className="space-y-4">
                                                             <div className="flex items-center gap-2 mb-4">
-                                                                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                                    <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
-                                                                </svg>
+                                                                <div className="bg-green-600 rounded p-1.5">
+                                                                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
+                                                                    </svg>
+                                                                </div>
                                                                 <h4 className="text-lg font-semibold text-gray-800">Inventory Stacks for {item.name}</h4>
                                                             </div>
-                                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                                                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
                                                                 {(() => {
                                                                     // Group existing stacks by status
                                                                     const groupedStacks = selectedItemStacks.stacks.reduce((acc, stack) => {
@@ -1303,10 +1389,10 @@ function Content() {
                                                                                     };
                                                                                 case 'Distributed':
                                                                                     return {
-                                                                                        bg: 'bg-gradient-to-br from-green-50 to-cyan-100',
-                                                                                        border: 'border-green-200',
-                                                                                        badge: 'bg-green-500 text-white',
-                                                                                        icon: 'text-green-600',
+                                                                                        bg: 'bg-gradient-to-br from-blue-50 to-cyan-100',
+                                                                                        border: 'border-blue-200',
+                                                                                        badge: 'bg-blue-500 text-white',
+                                                                                        icon: 'text-blue-600',
                                                                                     };
                                                                                 default:
                                                                                     return {
@@ -1325,43 +1411,43 @@ function Content() {
                                                                         return (
                                                                             <div
                                                                                 key={status}
-                                                                                className={`${styles.bg} ${styles.border} border-2 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 transform hover:-translate-y-1`}
+                                                                                className={`${styles.bg} ${styles.border} border rounded-md p-3 shadow-sm hover:shadow-md transition-all duration-200`}
                                                                             >
-                                                                                <div className="flex items-center justify-between mb-3">
-                                                                                    <span className={`${styles.badge} px-2 py-1 rounded-full text-xs font-semibold tracking-wide`}>
+                                                                                <div className="flex items-center justify-between mb-2">
+                                                                                    <span className={`${styles.badge} px-2 py-0.5 rounded-full text-xs font-semibold`}>
                                                                                         {status}
                                                                                     </span>
-                                                                                    <div className={`${styles.icon} p-1`}>
+                                                                                    <div className={`${styles.icon} p-0.5`}>
                                                                                         {status === 'Available' && (
-                                                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                                                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                                                                             </svg>
                                                                                         )}
                                                                                         {status === 'Unavailable' && (
-                                                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                                                                 <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                                                                                             </svg>
                                                                                         )}
                                                                                         {status === 'Damaged' && (
-                                                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                                                                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                                                                                             </svg>
                                                                                         )}
                                                                                         {status === 'EIC' && (
-                                                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                                                                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                                                             </svg>
                                                                                         )}
                                                                                         {status === 'Distributed' && (
-                                                                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                                                                 <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
                                                                                             </svg>
                                                                                         )}
                                                                                     </div>
                                                                                 </div>
 
-                                                                                <div className="text-center mb-3">
-                                                                                    <div className="text-2xl font-bold text-gray-800 mb-1">
+                                                                                <div className="text-center mb-2">
+                                                                                    <div className="text-lg font-bold text-gray-800 mb-0.5">
                                                                                         {statusData.totalQuantity}
                                                                                     </div>
                                                                                     <div className="text-xs text-gray-600 font-medium">
@@ -1437,22 +1523,24 @@ function Content() {
                     </div>
 
                     {/* Pagination Controls */}
-                    {totalPages > 1 && (
-                        <div className={`border-t border-gray-200 bg-gray-50 ${sizeClasses[uiSize].padding}`}>
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <span className={`text-gray-700 ${sizeClasses[uiSize].text}`}>
-                                        Page {currentPage} of {totalPages}
-                                    </span>
+                    {totalItems > 0 && (
+                        <div className={`border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white ${sizeClasses[uiSize].padding}`}>
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div className="flex flex-col sm:flex-row items-center gap-4">
+                                    {totalPages > 1 && (
+                                        <span className={`font-semibold text-gray-800 bg-green-100 px-3 py-1 rounded-full ${sizeClasses[uiSize].text}`}>
+                                            Page {currentPage} of {totalPages}
+                                        </span>
+                                    )}
                                     <div className="flex items-center gap-2">
-                                        <span className={`text-gray-600 ${sizeClasses[uiSize].text}`}>Items per page:</span>
+                                        <span className={`font-medium text-gray-700 ${sizeClasses[uiSize].text}`}>Items per page:</span>
                                         <select
                                             value={itemsPerPage}
                                             onChange={(e) => {
                                                 setItemsPerPage(Number(e.target.value));
                                                 setCurrentPage(1);
                                             }}
-                                            className={`border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${sizeClasses[uiSize].text}`}
+                                            className={`border-2 border-gray-300 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 font-medium ${sizeClasses[uiSize].text}`}
                                         >
                                             <option value={5}>5</option>
                                             <option value={10}>10</option>
@@ -1462,69 +1550,71 @@ function Content() {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => setCurrentPage(1)}
-                                        disabled={currentPage === 1}
-                                        className={`px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 ${sizeClasses[uiSize].text}`}
-                                    >
-                                        First
-                                    </button>
-                                    <button
-                                        onClick={() => setCurrentPage(currentPage - 1)}
-                                        disabled={currentPage === 1}
-                                        className={`px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 ${sizeClasses[uiSize].text}`}
-                                    >
-                                        Previous
-                                    </button>
-                                    
-                                    {/* Page numbers */}
-                                    <div className="flex items-center gap-1">
-                                        {(() => {
-                                            const pages = [];
-                                            const showPages = 5; // Show 5 page numbers at most
-                                            let start = Math.max(1, currentPage - Math.floor(showPages / 2));
-                                            let end = Math.min(totalPages, start + showPages - 1);
-                                            
-                                            // Adjust start if we're near the end
-                                            if (end - start + 1 < showPages) {
-                                                start = Math.max(1, end - showPages + 1);
-                                            }
+                                {totalPages > 1 && (
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => setCurrentPage(1)}
+                                            disabled={currentPage === 1}
+                                            className={`px-4 py-2 border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text}`}
+                                        >
+                                            First
+                                        </button>
+                                        <button
+                                            onClick={() => setCurrentPage(currentPage - 1)}
+                                            disabled={currentPage === 1}
+                                            className={`px-4 py-2 border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text}`}
+                                        >
+                                            Previous
+                                        </button>
+                                        
+                                        {/* Page numbers */}
+                                        <div className="flex items-center gap-1">
+                                            {(() => {
+                                                const pages = [];
+                                                const showPages = 5; // Show 5 page numbers at most
+                                                let start = Math.max(1, currentPage - Math.floor(showPages / 2));
+                                                let end = Math.min(totalPages, start + showPages - 1);
+                                                
+                                                // Adjust start if we're near the end
+                                                if (end - start + 1 < showPages) {
+                                                    start = Math.max(1, end - showPages + 1);
+                                                }
 
-                                            for (let i = start; i <= end; i++) {
-                                                pages.push(
-                                                    <button
-                                                        key={i}
-                                                        onClick={() => setCurrentPage(i)}
-                                                        className={`px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${sizeClasses[uiSize].text} ${
-                                                            i === currentPage
-                                                                ? 'bg-green-600 text-white border-green-600'
-                                                                : 'border-gray-300 hover:bg-gray-50'
-                                                        }`}
-                                                    >
-                                                        {i}
-                                                    </button>
-                                                );
-                                            }
-                                            return pages;
-                                        })()}
+                                                for (let i = start; i <= end; i++) {
+                                                    pages.push(
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => setCurrentPage(i)}
+                                                            className={`px-4 py-2 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 font-semibold transition-all duration-200 ${sizeClasses[uiSize].text} ${
+                                                                i === currentPage
+                                                                    ? 'bg-gradient-to-r from-green-600 to-green-700 text-white border-green-600 shadow-lg'
+                                                                    : 'border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-700'
+                                                            }`}
+                                                        >
+                                                            {i}
+                                                        </button>
+                                                    );
+                                                }
+                                                return pages;
+                                            })()}
+                                        </div>
+
+                                        <button
+                                            onClick={() => setCurrentPage(currentPage + 1)}
+                                            disabled={currentPage === totalPages}
+                                            className={`px-4 py-2 border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text}`}
+                                        >
+                                            Next
+                                        </button>
+                                        <button
+                                            onClick={() => setCurrentPage(totalPages)}
+                                            disabled={currentPage === totalPages}
+                                            className={`px-4 py-2 border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 ${sizeClasses[uiSize].text}`}
+                                        >
+                                            Last
+                                        </button>
                                     </div>
-
-                                    <button
-                                        onClick={() => setCurrentPage(currentPage + 1)}
-                                        disabled={currentPage === totalPages}
-                                        className={`px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 ${sizeClasses[uiSize].text}`}
-                                    >
-                                        Next
-                                    </button>
-                                    <button
-                                        onClick={() => setCurrentPage(totalPages)}
-                                        disabled={currentPage === totalPages}
-                                        className={`px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-500 ${sizeClasses[uiSize].text}`}
-                                    >
-                                        Last
-                                    </button>
-                                </div>
+                                )}
                             </div>
                         </div>
                     )}
@@ -1539,44 +1629,49 @@ function Content() {
             />
                 {/* Delete Confirmation Modal */}
                 {showDeleteModal && (
-                    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-xl shadow p-6 w-full max-w-md relative border border-red-100 mx-2">
+                    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative border border-gray-200 mx-4">
                             <button
-                                className="absolute top-2 right-2 text-red-400 hover:text-red-700 text-xl transition"
+                                className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl transition-colors"
                                 onClick={() => setShowDeleteModal(false)}
                                 aria-label="Close"
                             >
                                 ×
                             </button>
                             <div className="text-center">
-                                <h2 className="text-lg font-bold mb-4 text-red-800">
+                                <div className="bg-gray-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                                    <svg className="w-8 h-8 text-gray-600 mx-auto" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </div>
+                                <h2 className="text-2xl font-bold mb-4 text-gray-900">
                                     Confirm Deletion
                                 </h2>
-                                <div className="mb-6">
-                                    <p className="text-gray-700 mb-2">
+                                <div className="mb-8">
+                                    <p className="text-gray-600 mb-3 text-lg">
                                         Are you sure you want to delete{' '}
-                                        <span className="font-semibold text-red-600">
+                                        <span className="font-bold text-gray-900 bg-gray-100 px-2 py-1 rounded">
                                             {selectedItems.length}
                                         </span>{' '}
                                         selected item
                                         {selectedItems.length > 1 ? 's' : ''}?
                                     </p>
-                                    <p className="text-sm text-red-600 font-medium">
+                                    <p className="text-sm text-gray-500 font-medium bg-gray-50 p-3 rounded-lg">
                                         This action cannot be undone.
                                     </p>
                                 </div>
-                                <div className="flex gap-3 justify-center">
+                                <div className="flex gap-4 justify-center">
                                     <button
                                         onClick={() =>
                                             setShowDeleteModal(false)
                                         }
-                                        className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                                        className="px-8 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={handleConfirmDelete}
-                                        className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-medium"
+                                        className="px-8 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                                     >
                                         Delete
                                     </button>
@@ -1587,10 +1682,10 @@ function Content() {
                 )}
                 {/* Delete Stack Confirmation Modal */}
                 {showDeleteStackModal && stackToDelete && (
-                    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-xl shadow p-6 w-full max-w-md relative border border-red-100 mx-2">
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative border border-gray-200 mx-4">
                             <button
-                                className="absolute top-2 right-2 text-red-400 hover:text-red-700 text-xl transition"
+                                className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl transition-colors"
                                 onClick={() => {
                                     setShowDeleteStackModal(false);
                                     setStackToDelete(null);
@@ -1600,39 +1695,43 @@ function Content() {
                                 ×
                             </button>
                             <div className="text-center">
-                                <h2 className="text-lg font-bold mb-4 text-red-800">
+                                <div className="bg-gray-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                                    <svg className="w-8 h-8 text-gray-600 mx-auto" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                    </svg>
+                                </div>
+                                <h2 className="text-2xl font-bold mb-4 text-gray-900">
                                     Confirm Stack Deletion
                                 </h2>
-                                <div className="mb-6">
-                                    <p className="text-gray-700 mb-2">
+                                <div className="mb-8">
+                                    <p className="text-gray-600 mb-3 text-lg">
                                         Are you sure you want to delete{' '}
-                                        <span className="font-semibold text-red-600">
-                                            Stack #
-                                            {stackToDelete.stackInfo.index + 1}
+                                        <span className="font-bold text-gray-900 bg-gray-100 px-2 py-1 rounded">
+                                            Stack #{stackToDelete.stackInfo.index + 1}
                                         </span>{' '}
                                         with quantity{' '}
-                                        <span className="font-semibold text-red-600">
+                                        <span className="font-bold text-gray-900 bg-green-100 px-2 py-1 rounded">
                                             {stackToDelete.stackInfo.quantity}
                                         </span>
                                         ?
                                     </p>
-                                    <p className="text-sm text-red-600 font-medium">
+                                    <p className="text-sm text-gray-500 font-medium bg-gray-50 p-3 rounded-lg">
                                         This action cannot be undone.
                                     </p>
                                 </div>
-                                <div className="flex gap-3 justify-center">
+                                <div className="flex gap-4 justify-center">
                                     <button
                                         onClick={() => {
                                             setShowDeleteStackModal(false);
                                             setStackToDelete(null);
                                         }}
-                                        className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                                        className="px-8 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={handleConfirmDeleteStack}
-                                        className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-medium"
+                                        className="px-8 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                                     >
                                         Delete Stack
                                     </button>
@@ -1898,14 +1997,14 @@ function Content() {
                     )} */}
 
             {/* UI Size Control */}
-            <div className="w-full flex flex-col sm:flex-row justify-end items-center mt-8 mr-8 mb-2 gap-2">
-                <label className="font-semibold text-gray-700">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-end items-center mt-8 mb-6 gap-3">
+                <label className="font-bold text-gray-800 text-lg">
                     UI Size:
                 </label>
                 <select
                     value={uiSize}
                     onChange={(e) => setUiSize(e.target.value)}
-                    className="border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-900 w-full sm:w-auto focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="border-2 border-gray-300 rounded-xl px-4 py-3 bg-white text-gray-900 font-semibold w-full sm:w-auto focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                     <option value="sm">Small</option>
                     <option value="md">Medium</option>

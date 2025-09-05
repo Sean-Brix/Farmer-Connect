@@ -61,42 +61,41 @@ export default function Profiles({ details }) {
     return (
         <div className="min-h-screen bg-white pt-6 px-2 sm:px-4 md:px-6 lg:px-0" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
             <div className="w-full max-w-4xl mx-auto">
-                {/* HEADER - Inventory/EIC style */}
-                <div className="relative mb-6 sm:mt-20 mt-5 p-5 flex flex-col items-center justify-center max-w-4xl mx-auto gap-2 text-center">
-                    <span className="inline-flex items-center justify-center gap-3 w-full">
-                        <span className="rounded-full bg-green-100 p-2">
-                            <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" fill="#fff"/>
+                {/* HEADER - Clean and simple */}
+                <div className="relative mb-8 sm:mt-20 mt-5 flex flex-col items-center justify-center max-w-4xl mx-auto gap-3 text-center">
+                    <span className="inline-flex items-center justify-center gap-4 w-full">
+                        <span className="rounded-full bg-gradient-to-br from-green-200 to-green-300 p-3 shadow-lg">
+                            <svg className="w-10 h-10 text-green-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" fill="none"/>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 20v-1a7 7 0 0 1 14 0v1" stroke="currentColor" strokeWidth="2" fill="none"/>
                             </svg>
                         </span>
-                        <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
+                        <span className="text-3xl md:text-4xl font-bold text-gray-800 tracking-tight">
                             Account Management
                         </span>
                     </span>
-                    <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
-                        Manage and oversee all user accounts and profiles.
+                    <span className="block text-base md:text-lg text-gray-600 font-medium mt-1">
+                        Manage and oversee all user accounts and profiles
                     </span>
                 </div>
-                <hr className="border-t border-gray-300 mb-4 md:mb-8 mt-0.5 md:mt-2 w-full max-w-4xl mx-auto" />
-                {/* FILTERS - professional search bar and filters */}
-                <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 md:gap-6 items-stretch w-full mb-6 md:mb-8 px-1 sm:px-2">
-                    {/* Responsive: stack filters vertically on xs, wrap on small, horizontal on md+ */}
-                    <div className="flex flex-col xs:flex-row sm:flex-row flex-1 gap-2 sm:gap-3 md:gap-3 items-stretch w-full sm:w-auto">
-                <div className="relative flex-grow min-w-[100px] sm:min-w-[120px] md:w-54 flex-shrink-0 w-full sm:w-auto">
-                    <input
-                        type="text"
-                        placeholder="Search profiles..."
-                        className="modern-search-input text-black"
-                        style={{ maxWidth: '260px' }}
-                        onChange={(e) => setFilter({ ...filter, search: e.target.value })}
-                    />
-                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                        <svg className="w-4 h-4 text-black opacity-80 -translate-y-1" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </div>
-                </div>
+                {/* FILTERS - Clean layout with consistent design */}
+                <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-stretch w-full mb-8">
+                    {/* Search and filter controls */}
+                    <div className="flex flex-col xs:flex-row sm:flex-row flex-1 gap-4 items-stretch w-full sm:w-auto">
+                        <div className="relative flex-grow min-w-[100px] sm:min-w-[120px] md:w-54 flex-shrink-0 w-full sm:w-auto">
+                            <input
+                                type="text"
+                                placeholder="Search profiles..."
+                                className="modern-search-input text-gray-700"
+                                style={{ maxWidth: '280px' }}
+                                onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+                            />
+                            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                                <svg className="w-4 h-4 text-green-500 opacity-70" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
+                        </div>
                         <select
                             className="custom-select w-full sm:w-auto"
                             onChange={(e) => setFilter({ ...filter, roles: e.target.value })}
@@ -123,12 +122,12 @@ export default function Profiles({ details }) {
                             <option value="Indigenous People">Indigenous People</option>
                         </select>
                     </div>
-                    <div className="flex-none ml-auto min-w-[110px] w-full  sm:w-auto mt-2 sm:mt-0">
+                    <div className="flex-none ml-auto min-w-[110px] w-full sm:w-auto mt-2 sm:mt-0">
                         <select
-                            className="sortby-select w-full sm:w-auto "
+                            className="custom-select w-full sm:w-auto"
                             onChange={(e) => setFilter({ ...filter, order: e.target.value })}
                         >
-                            <option value="none" >Sort by</option>
+                            <option value="none">Sort by</option>
                             <option value="username">Username</option>
                             <option value="firstname">Firstname</option>
                             <option value="lastname">Lastname</option>
@@ -138,11 +137,11 @@ export default function Profiles({ details }) {
                     </div>
                 </div>
 
-                {/* Register New User Button */}
-                <div className="flex justify-end mb-6">
+                {/* Register New User Button - Enhanced with green theme */}
+                <div className="flex justify-end mb-8">
                     <button
                         onClick={() => setShowRegisterModal(true)}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-lg hover:bg-green-700 hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                        className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl shadow-lg hover:from-green-700 hover:to-green-800 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-green-500"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
@@ -151,88 +150,115 @@ export default function Profiles({ details }) {
                     </button>
                 </div>
 
-                {/* LIST - tabular layout */}
-                <div className="overflow-x-auto" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
+                {/* LIST - Clean table design */}
+                <div className="bg-white rounded-xl shadow-lg border border-green-100 overflow-hidden" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
                     {isLoading ? (
-                        <div className="text-center text-gray-400 py-8 font-medium text-base">
-                            Loading profiles...
+                        <div className="text-center text-gray-500 py-12 font-medium text-base bg-green-50">
+                            <div className="inline-flex items-center gap-3">
+                                <div className="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                                Loading profiles...
+                            </div>
                         </div>
                     ) : error ? (
-                        <div className="text-center text-red-400 py-8 font-medium text-base">
-                            {error.message}
+                        <div className="text-center text-red-500 py-12 font-medium text-base bg-red-50">
+                            <div className="inline-flex items-center gap-3">
+                                <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                </svg>
+                                {error.message}
+                            </div>
                         </div>
                     ) : !Array.isArray(userList) || userList.length === 0 ? (
-                        <div className="text-center text-gray-400 py-8 font-medium text-base">
-                            No profiles found.
+                        <div className="text-center text-gray-500 py-12 font-medium text-base bg-gray-50">
+                            <div className="inline-flex items-center gap-3">
+                                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                </svg>
+                                No profiles found
+                            </div>
                         </div>
                     ) : (
                         <>
-                            <table className="min-w-full bg-white rounded-2xl shadow-xl border border-green-200 overflow-hidden text-sm">
-                                <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200">
-                                    <tr>
-                                        <th className="px-4 py-3 text-left font-extrabold text-green-800 uppercase tracking-wider whitespace-nowrap">Username</th>
-                                        <th className="px-4 py-3 text-left font-extrabold text-green-800 uppercase tracking-wider whitespace-nowrap">Name</th>
-                                        <th className="px-4 py-3 text-left font-extrabold text-green-800 uppercase tracking-wider whitespace-nowrap">Role</th>
-                                        <th className="px-4 py-3 text-left font-extrabold text-green-800 uppercase tracking-wider whitespace-nowrap">Client Profile</th>
-                                        <th className="px-4 py-3 text-left font-extrabold text-green-800 uppercase tracking-wider whitespace-nowrap">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {paginatedList.map((user, idx) => (
-                                        <tr
-                                            key={user.id}
-                                            className={`transition ${(idx % 2 === 0 ? 'bg-white' : 'bg-green-50')} hover:bg-green-100`} 
-                                            style={{ lineHeight: '1.25' }}
-                                        >
-                                            <User
-                                                user={user}
-                                                details={details}
-                                                refetchRow={() => setRefreshToken(Date.now())}
-                                                tabular={true}
-                                            />
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full text-sm">
+                                    <thead className="bg-gradient-to-r from-green-600 to-green-700 text-white">
+                                        <tr>
+                                            <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Username</th>
+                                            <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Name</th>
+                                            <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Role</th>
+                                            <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Client Profile</th>
+                                            <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                            {/* Pagination Controls */}
-                            <div className="flex justify-center items-center gap-2 mt-6">
-                                <button
-                                    className="px-3 py-1 rounded-lg border border-green-200 bg-white text-green-700 font-semibold shadow-sm hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                                    disabled={page === 1}
-                                >
-                                    Previous
-                                </button>
-                                <span className="text-green-800 font-semibold text-base mx-2">
-                                    Page {page} of {totalPages}
-                                </span>
-                                <button
-                                    className="px-3 py-1 rounded-lg border border-green-200 bg-white text-green-700 font-semibold shadow-sm hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                                    disabled={page === totalPages || totalPages === 0}
-                                >
-                                    Next
-                                </button>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-green-100">
+                                        {paginatedList.map((user, idx) => (
+                                            <tr
+                                                key={user.id}
+                                                className={`transition-colors duration-200 ${(idx % 2 === 0 ? 'bg-white hover:bg-green-50' : 'bg-green-25 hover:bg-green-75')} hover:shadow-sm`} 
+                                                style={{ lineHeight: '1.25' }}
+                                            >
+                                                <User
+                                                    user={user}
+                                                    details={details}
+                                                    refetchRow={() => setRefreshToken(Date.now())}
+                                                    tabular={true}
+                                                />
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
                         </>
                     )}
                 </div>
+                
+                {/* Pagination Controls - Fixed professional layout */}
+                {!isLoading && !error && Array.isArray(userList) && userList.length > 0 && (
+                    <div className="flex justify-center items-center gap-4 py-8">
+                        <button
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-green-300 bg-white text-green-700 font-medium shadow-sm hover:bg-green-50 hover:border-green-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                            onClick={() => setPage((p) => Math.max(1, p - 1))}
+                            disabled={page === 1}
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Previous
+                        </button>
+                        
+                        <div className="px-4 py-2 bg-green-100 text-green-800 font-semibold rounded-lg border border-green-200">
+                            Page {page} of {totalPages}
+                        </div>
+                        
+                        <button
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-green-300 bg-white text-green-700 font-medium shadow-sm hover:bg-green-50 hover:border-green-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                            disabled={page === totalPages || totalPages === 0}
+                        >
+                            Next
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                )}
             </div>
             {/* Import Poppins font from Google Fonts */}
             <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
             <style>{`
+                /* Clean white background */
                 html, body, .min-h-screen {
-                    
+                    background: #ffffff;
                 }
                 @media (max-width: 640px) {
                     .flex-col, .flex-col > * {
                         width: 100% !important;
                         min-width: 0 !important;
                     }
-                    .custom-select, .sortby-select, .modern-search-input {
+                    .custom-select, .modern-search-input {
                         width: 100% !important;
                         min-width: 0 !important;
-                        margin-bottom: 0.4rem;
+                        margin-bottom: 0.5rem;
                     }
                     .ml-auto {
                         margin-left: 0 !important;
@@ -250,137 +276,116 @@ export default function Profiles({ details }) {
                         width: 100% !important;
                         min-width: 0 !important;
                     }
-                    .custom-select, .sortby-select, .modern-search-input {
+                    .custom-select, .modern-search-input {
                         width: 100% !important;
                         min-width: 0 !important;
-                        margin-bottom: 0.4rem;
+                        margin-bottom: 0.5rem;
                     }
                     .ml-auto {
                         margin-left: 0 !important;
                     }
                 }
-                .modern-search-input {
-                    background: rgba(255, 255, 255, 0.55);
-                    border: 1.5px solid #e0e7ef;
-                    color: green;
-                    font-size: 0.93rem;
-                    border-radius: 0.85rem;
-                    padding: 0.55rem 0.9rem 0.55rem 2.1rem;
+
+                /* Consistent form element design */
+                .modern-search-input, .custom-select {
+                    background: rgba(255, 255, 255, 0.95);
+                    border: 2px solid #16a34a;
+                    color: #374151;
+                    font-size: 0.95rem;
+                    border-radius: 0.875rem;
+                    padding: 0.75rem 1rem;
                     width: 100%;
-                    box-shadow: 0 2px 12px 0 rgba(30,41,59,0.08), 0 1px 4px 0 rgba(59,130,246,0.05);
+                    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.1), 0 2px 6px rgba(34, 197, 94, 0.05);
                     outline: none;
-                    transition: border 0.18s, box-shadow 0.18s, transform 0.13s;
+                    transition: all 0.3s ease;
                     appearance: none;
                     margin-bottom: 0.5rem;
                     box-sizing: border-box;
-                    backdrop-filter: blur(7px) saturate(1.1);
-                    -webkit-backdrop-filter: blur(7px) saturate(1.1);
-                }
-                .modern-search-input:focus {
-                    border-color: green;
-                    box-shadow: 0 0 0 2px green;
-                    transform: scale(1.025);
-                }
-                .modern-search-input:hover {
-                    border-color: green;
-                    background: rgba(255,255,255,0.75);
-                    box-shadow: 0 4px 16px 0 rgba(59,130,246,0.10);
-                    transform: scale(1.015);
-                }
-                .modern-search-input::placeholder {
-                    color: green;
-                    opacity: 0.85;
+                    font-weight: 500;
                 }
 
-                .sortby-select {
-                    background: #fff;
-                    border: 1px solid #e0e7ef;
-                    color: green;
-                    font-size: 0.91rem;
-                    border-radius: .38rem;
-                    padding: 0.48rem 2.1rem 0.48rem 0.8rem;
-                    min-width: 100px;
-                    box-shadow: 0 2px 12px 0 rgba(30,41,59,0.08), 0 1px 4px 0 rgba(59,130,246,0.05);
-                    outline: none;
-                    transition: border 0.18s, box-shadow 0.18s, transform 0.13s;
-                    appearance: none;
-                    /* Green arrow */
-                    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%2300a651" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>');
-                    background-repeat: no-repeat;
-                    background-position: right 0.7rem center;
-                    background-size: 1.1em;
-                    margin-right: 0;
-                    margin-bottom: 0.5rem;
-                    box-sizing: border-box;
-                }
-                .sortby-select:focus {
-                    border-color: green;
-                    box-shadow: 0 0 0 1.5px green;
-                    transform: scale(1.015);
-                }
-                .sortby-select:hover {
-                    border-color: green;
-                    background: #fff;
-                    box-shadow: 0 4px 16px 0 rgba(56,189,248,0.13), 0 1px 6px 0 rgba(59,130,246,0.08);
-                    transform: scale(1.01);
-                }
-                .sortby-select option {
-                    background: #fff;
-                    color: green;
-                }
-                .sortby-select::-ms-expand {
-                    display: none;
+                /* Search input specific styling */
+                .modern-search-input {
+                    padding-left: 2.5rem;
                 }
 
+                /* Select specific styling */
                 .custom-select {
-                    background: rgba(255, 255, 255, 0.55);
-                    border: 1.5px solid green;
-                    color: green;
-                    font-size: 0.93rem;
-                    border-radius: 0.85rem;
-                    padding: 0.55rem 2.1rem 0.55rem 0.9rem;
-                    min-width: 120px;
-                    box-shadow: 0 2px 12px 0 rgba(30,41,59,0.08), 0 1px 4px 0 rgba(59,130,246,0.05);
-                    outline: none;
-                    transition: border 0.18s, box-shadow 0.18s, transform 0.13s;
-                    appearance: none;
-                    /* Green arrow */
-                    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%2300a651" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>');
+                    padding-right: 2.5rem;
+                    min-width: 140px;
+                    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%2316a34a" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>');
                     background-repeat: no-repeat;
-                    background-position: right 0.9rem center;
-                    background-size: 1.2em;
-                    margin-right: 0;
-                    margin-bottom: 0.5rem;
-                    box-sizing: border-box;
-                    backdrop-filter: blur(7px) saturate(1.1);
-                    -webkit-backdrop-filter: blur(7px) saturate(1.1);
+                    background-position: right 1rem center;
+                    background-size: 1.3em;
+                    transition: all 0.3s ease;
                 }
+
+                /* Arrow flip effect on focus/active */
                 .custom-select:focus {
-                    border-color: green;
-                    box-shadow: 0 0 0 2px green;
-                    transform: scale(1.025);
+                    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%2315803d" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M18 15l-6-6-6 6"/></svg>');
                 }
-                .custom-select:hover {
-                    border-color: green;
-                    background: rgba(255,255,255,0.75);
-                    box-shadow: 0 4px 16px 0 rgba(59,130,246,0.10);
-                    transform: scale(1.015);
+
+                .custom-select:active {
+                    background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%2315803d" stroke-width="2.2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M18 15l-6-6-6 6"/></svg>');
                 }
+
+                /* Hover and focus states */
+                .modern-search-input:focus, .custom-select:focus {
+                    border-color: #15803d;
+                    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15), 0 4px 20px rgba(34, 197, 94, 0.15);
+                    transform: translateY(-1px);
+                    background: rgba(255, 255, 255, 1);
+                }
+
+                .modern-search-input:hover, .custom-select:hover {
+                    border-color: #15803d;
+                    background: rgba(255, 255, 255, 1);
+                    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.12);
+                    transform: translateY(-0.5px);
+                }
+
+                .modern-search-input::placeholder {
+                    color: #6b7280;
+                    opacity: 0.8;
+                    font-weight: 400;
+                }
+
                 .custom-select option {
-                    background: #fff;
-                    color: green;
+                    background: #ffffff;
+                    color: #374151;
+                    font-weight: 400;
                 }
+
                 .custom-select::-ms-expand {
                     display: none;
                 }
+                
+                /* Responsive adjustments */
                 @media (max-width: 600px) {
-                    .custom-select {
+                    .custom-select, .modern-search-input {
                         min-width: 80px;
-                        font-size: 0.89rem;
-                        padding: 0.4rem 1.2rem 0.4rem 0.7rem;
-                        background-position: right 0.5rem center;
-                        background-size: 1em;
+                        font-size: 0.9rem;
+                        padding: 0.6rem 0.8rem;
+                        background-position: right 0.6rem center;
+                        background-size: 1.1em;
                     }
+                    .modern-search-input {
+                        padding-left: 2.2rem;
+                    }
+                    .custom-select {
+                        padding-right: 2rem;
+                    }
+                }
+
+                /* Custom green shade utilities */
+                .bg-green-25 {
+                    background-color: #f7fdf9;
+                }
+                .bg-green-75 {
+                    background-color: #ecfdf5;
+                }
+                .hover\\:bg-green-75:hover {
+                    background-color: #ecfdf5;
                 }
             `}</style>
             

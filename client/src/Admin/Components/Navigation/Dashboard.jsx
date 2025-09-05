@@ -22,6 +22,7 @@ import AccountProfile from '../../../Components/settings/AccountProfile/AccountP
 // SUB COMPONENT
 import Sidebar from './sub/Sidebar.jsx';
 import Audit from '../../Services/Logs/Audit.jsx';
+import { menuItems } from './sub/menuItems.jsx';
 
 export default function Dashboard() {
     const { theme, isDark } = useTheme();
@@ -495,19 +496,31 @@ export default function Dashboard() {
             {/* Mobile sidebar */}
             {!showAccountPanel && (
                 <aside
-                    className={`fixed inset-y-0 left-0 bg-white backdrop-blur-xl border-r border-green-200 w-full max-w-xs z-50 transform transition-transform duration-300 ${
+                    className={`fixed inset-y-0 left-0 backdrop-blur-xl border-r shadow-2xl w-full max-w-xs z-50 transform transition-transform duration-300 ${
                         mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-                    } md:hidden flex flex-col h-screen max-h-screen shadow-2xl`}
+                    } md:hidden flex flex-col h-screen max-h-screen ${
+                        isDark 
+                            ? 'bg-gray-800 border-gray-700' 
+                            : 'bg-white border-green-200'
+                    }`}
                     id="mobile-menu"
-                    style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22' }}
+                    style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
                 >
                     <div className="flex flex-col h-full max-h-screen">
-                        <div className="p-6 border-b border-green-200 bg-white flex items-center justify-between shadow-sm">
+                        <div className={`p-6 border-b flex items-center justify-between shadow-sm ${
+                            isDark 
+                                ? 'border-gray-700 bg-gray-800' 
+                                : 'border-green-200 bg-white'
+                        }`}>
                             <div className="flex items-center gap-3">
-                                <h1 className="text-2xl font-extrabold text-green-800 tracking-tight drop-shadow-sm">FITS - TANZA</h1>
+                                <h1 className={`text-2xl font-extrabold tracking-tight drop-shadow-sm ${
+                                    isDark ? 'text-green-400' : 'text-green-800'
+                                }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>FITS - TANZA</h1>
                             </div>
                             <button
-                                className="text-green-500 hover:text-green-700 transition"
+                                className={`transition ${
+                                    isDark ? 'text-green-500 hover:text-green-300' : 'text-green-500 hover:text-green-700'
+                                }`}
                                 onClick={() => setMobileMenuOpen(false)}
                                 aria-label="Close menu"
                             >
@@ -529,184 +542,104 @@ export default function Dashboard() {
                         </div>
                         <div className="flex-1 min-h-0 flex flex-col">
                             <nav className="mt-3 flex-1 overflow-y-auto minimalist-scrollbar">
-                                <ul className="space-y-2 px-3 max-h-[70vh]">
-                                {/* Analytics */}
-                                <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
-                                        currentPageKey === 'analytics'
-                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
-                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
-                                    }`}
-                                    onClick={() => {
-                                        handleSetPage('analytics');
-                                        setMobileMenuOpen(false);
-                                    }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                >
-                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
-                                        <i className="fas fa-chart-line h-6 w-6"></i>
-                                    </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Analytics</span>
-                                </li>
-                                {/* User Profiles */}
-                                <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
-                                        currentPageKey === 'profiles'
-                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
-                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
-                                    }`}
-                                    onClick={() => {
-                                        handleSetPage('profiles');
-                                        setMobileMenuOpen(false);
-                                    }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                >
-                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
-                                        <i className="fas fa-user-circle h-6 w-6"></i>
-                                    </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>User Profiles</span>
-                                </li>
-                                {/* Seminar Programs */}
-                                <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
-                                        currentPageKey === 'enrollment'
-                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
-                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
-                                    }`}
-                                    onClick={() => {
-                                        handleSetPage('enrollment');
-                                        setMobileMenuOpen(false);
-                                    }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                >
-                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
-                                        <i className="fas fa-user-plus h-6 w-6"></i>
-                                    </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Seminars </span>
-                                </li>
-                                {/* EIC */}
-                                <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
-                                        currentPageKey === 'eic'
-                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
-                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
-                                    }`}
-                                    onClick={() => {
-                                        handleSetPage('eic');
-                                        setMobileMenuOpen(false);
-                                    }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                >
-                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
-                                        <i className="fas fa-id-card h-6 w-6"></i>
-                                    </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>EIC - Item Panel</span>
-                                </li>
-                                {/* Distribution */}
-                                <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
-                                        currentPageKey === 'distribution'
-                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
-                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
-                                    }`}
-                                    onClick={() => {
-                                        handleSetPage('distribution');
-                                        setMobileMenuOpen(false);
-                                    }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                >
-                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
-                                        <i className="fas fa-box-open h-6 w-6"></i>
-                                    </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Distributions</span>
-                                </li>
-                                {/* Content Management */}
-                                <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
-                                        currentPageKey === 'content'
-                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
-                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
-                                    }`}
-                                    onClick={() => {
-                                        handleSetPage('content');
-                                        setMobileMenuOpen(false);
-                                    }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                >
-                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
-                                        <i className="fas fa-archive h-6 w-6"></i>
-                                    </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Inventory</span>
-                                </li>
-                                {/* Audit */}
-                                <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
-                                        currentPageKey === 'audit'
-                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
-                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
-                                    }`}
-                                    onClick={() => {
-                                        handleSetPage('audit');
-                                        setMobileMenuOpen(false);
-                                    }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                >
-                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
-                                        <i className="fas fa-clipboard-list h-6 w-6"></i>
-                                    </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Logs / Audit Trail</span>
-                                </li>
-                                {/* Survey */}
-                                <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
-                                        currentPageKey === 'survey'
-                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
-                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
-                                    }`}
-                                    onClick={() => {
-                                        handleSetPage('survey');
-                                        setMobileMenuOpen(false);
-                                    }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                >
-                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
-                                        <i className="fas fa-poll h-6 w-6"></i>
-                                    </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Survey Forms</span>
-                                </li>
-                                {/* Settings */}
-                                <li
-                                    className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer w-full h-16 min-h-[4rem] shadow-sm ${
-                                        currentPageKey === 'settings'
-                                            ? 'bg-gradient-to-r from-green-200/80 to-green-100/80 font-bold text-green-800'
-                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
-                                    }`}
-                                    onClick={() => {
-                                        handleSetPage('settings');
-                                        setMobileMenuOpen(false);
-                                    }}
-                                    style={{ minHeight: '4rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
-                                >
-                                    <span className="text-green-700/90 text-xl drop-shadow-sm">
-                                        <i className="fas fa-cog h-6 w-6"></i>
-                                    </span>
-                                    <span className="font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}>Settings</span>
-                                </li>
-                            </ul>
-                        </nav>
+                                <ul className="space-y-2 px-6 py-4">
+                                    {menuItems.filter(item => item.key !== 'home').map((item) => (
+                                        <li
+                                            key={item.key}
+                                            className={`flex items-center gap-4 px-5 py-3 text-lg rounded-xl transition cursor-pointer shadow-sm
+                                                ${
+                                                    currentPageKey === item.key
+                                                        ? isDark 
+                                                            ? 'bg-gradient-to-r from-green-900/50 to-green-800/50 text-green-300 ring-2 ring-green-500/30 shadow-lg'
+                                                            : 'bg-gradient-to-r from-green-200/80 to-green-100/80 text-green-800 ring-2 ring-green-400/30 shadow-lg'
+                                                        : isDark
+                                                            ? 'text-gray-300 hover:bg-green-900/30 hover:shadow-md'
+                                                            : 'text-gray-700 hover:bg-green-100/70 hover:shadow-md'
+                                                }
+                                            `}
+                                            style={{ minHeight: '3.2rem', letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif' }}
+                                            onClick={() => {
+                                                if (item.to) {
+                                                    window.location.href = item.to;
+                                                } else {
+                                                    handleSetPage(item.key);
+                                                }
+                                                setMobileMenuOpen(false);
+                                            }}
+                                        >
+                                            <span className={`sidebar-icon flex items-center justify-center drop-shadow-sm ${
+                                                currentPageKey === item.key 
+                                                    ? isDark ? 'text-green-400' : 'text-green-700/90'
+                                                    : isDark ? 'text-green-500' : 'text-green-700/90'
+                                            }`}>{item.icon}</span>
+                                            <span className="sidebar-label font-medium tracking-tight" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '500' }}>{item.label}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </nav>
+                        </div>
                         {/* Profile and Logout at the bottom, styled like desktop */}
-                        <div className="p-6 border-t border-green-200 flex flex-col items-center mt-auto bg-white shadow-inner">
-                        <div className="flex items-center mb-5 w-full gap-4 cursor-pointer hover:bg-green-100/60 rounded-xl p-3 transition shadow-sm"
-                            onClick={() => {
-                                if (window.innerWidth <= 751) {
-                                    setMobileMenuOpen(false);
-                                    setTimeout(() => navigate('/settings/profile'), 300);
-                                } else {
-                                    navigate('/settings/profile');
-                                }
-                            }}
-                            style={{ minHeight: '4.2rem' }}
-                        >
+                        <div className={`p-6 border-t flex flex-col items-center mt-auto shadow-inner ${
+                            isDark 
+                                ? 'border-gray-700 bg-gray-800' 
+                                : 'border-green-200 bg-white'
+                        }`}>
+                            <div
+                                className={`flex items-center mb-5 w-full gap-4 cursor-pointer rounded-xl p-3 transition shadow-sm ${
+                                    isDark 
+                                        ? 'hover:bg-green-900/30' 
+                                        : 'hover:bg-green-100/60'
+                                }`}
+                                onClick={() => {
+                                    if (window.innerWidth <= 751) {
+                                        setMobileMenuOpen(false);
+                                        setTimeout(() => navigate('/settings/profile'), 300);
+                                    } else {
+                                        navigate('/settings/profile');
+                                    }
+                                }}
+                                style={{ minHeight: '4.2rem' }}
+                            >
+                                <img
+                                    src={details.picture}
+                                    alt="Profile"
+                                    className={`h-12 w-12 rounded-full object-cover border-2 shadow ${
+                                        isDark ? 'border-green-500' : 'border-green-300'
+                                    }`}
+                                    style={{ background: '#e0e7ef' }}
+                                />
+                                <div className="flex flex-col sidebar-profile-info">
+                                    <span className={`font-bold sidebar-username text-base tracking-tight drop-shadow-sm ${
+                                        isDark ? 'text-green-300' : 'text-green-900'
+                                    }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '600' }}>
+                                        {details.username}
+                                    </span>
+                                    <span className={`text-sm sidebar-position font-medium ${
+                                        isDark ? 'text-green-400' : 'text-green-500'
+                                    }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '500' }}>
+                                        {details.position}
+                                    </span>
+                                </div>
+                            </div>
+                            <button
+                                className={`flex items-center justify-center gap-3 px-6 py-3 rounded-xl transition w-full border font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn ${
+                                    isDark 
+                                        ? 'bg-gray-700 hover:bg-red-900 border-gray-600 text-red-400 hover:text-red-300' 
+                                        : 'bg-white hover:bg-red-50 border-red-200 text-red-700 hover:text-red-800'
+                                }`}
+                                onClick={logging}
+                                style={{ letterSpacing: '0.01em', fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: '600' }}
+                            >
+                                <span>
+                                    <i className="fas fa-sign-out-alt h-5 w-5"></i>
+                                </span>
+                                <span className="sidebar-logout-text">Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+            )}
+
             {/* Account management overlay panel for mobile */}
             {showAccountPanel && (
                 <div
@@ -743,41 +676,66 @@ export default function Dashboard() {
                     </div>
                 </div>
             )}
-                            <img
-                                src={details.picture}
-                                alt="Profile"
-                                className="h-12 w-12 rounded-full object-cover border-2 border-green-300 shadow"
-                                style={{ background: '#e0e7ef' }}
-                            />
-                            <div className="flex flex-col sidebar-profile-info">
-                                <span className="font-bold text-green-900 sidebar-username text-base tracking-tight drop-shadow-sm">
-                                    {details.username}
-                                </span>
-                                <span className="text-sm text-green-500 sidebar-position font-medium">
-                                    {details.position}
-                                </span>
-                            </div>
-                        </div>
-                            {/* Logout button (mobile sidebar, bottom) */}
-                            <button
-                                className="flex items-center justify-center gap-3 px-6 py-3 bg-white hover:bg-green-100  rounded-xl transition text-green-800 w-full border border-green-200 font-bold text-base shadow-md hover:shadow-lg sidebar-logout-btn"
-                                onClick={logging}
-                                style={{ letterSpacing: '0.01em' }}
-                            >
-                                <span>
-                                    <i className="fas fa-sign-out-alt h-5 w-5"></i>
-                                </span>
-                                <span className="sidebar-logout-text">Logout</span>
-                            </button>
-                        </div>
-                        </div>
 
+            {/* Mobile CSS for sidebar */}
+            <style>{`
+                /* Use Poppins font for sidebar with specific font weights */
+                .sidebar, .sidebar * {
+                    font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
+                }
+                
+                /* Override all font-weight inheritance for sidebar labels */
+                .sidebar-label {
+                    font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
+                    font-weight: 500 !important;
+                }
+                
+                /* Ensure navigation links don't inherit bold font weight */
+                .sidebar-item .sidebar-label {
+                    font-weight: 500 !important;
+                }
+                
+                /* Profile info specific font weights */
+                .sidebar-username {
+                    font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
+                    font-weight: 600 !important;
+                }
+                
+                .sidebar-position {
+                    font-family: 'Poppins', Inter, 'Segoe UI, Arial, sans-serif !important;
+                    font-weight: 500 !important;
+                }
+                
+                .sidebar-logout-text {
+                    font-family: 'Poppins', Inter, 'Segoe UI', Arial, sans-serif !important;
+                    font-weight: 600 !important;
+                }
+                
+                .sidebar-icon {
+                    width: 1.25rem !important;
+                    height: 1.25rem !important;
+                    min-width: 1.25rem !important;
+                    min-height: 1.25rem !important;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.25rem !important;
+                }
+                .sidebar-icon svg {
+                    width: 1.25rem !important;
+                    height: 1.25rem !important;
+                }
+                .sidebar-icon i {
+                    width: 1.25rem !important;
+                    height: 1.25rem !important;
+                    font-size: 1.25rem !important;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            `}</style>
 
-                </div>
-            </aside>
-        )}
-
-            {/* Minimalist scrollbar utility and sidebar icon-only mode */}
+            {/* Additional CSS for layout and fonts */}
             <style>{`
       /* Use Poppins font for headings and navbar */
       .professional-navbar, .professional-navbar-title, h1, h2, h3, h4, h5, h6 {

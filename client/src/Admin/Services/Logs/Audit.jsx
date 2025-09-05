@@ -274,15 +274,15 @@ function AuditLogsTable({ admin_navigate }) {
 
     return (
         <div className="max-w-6xl mx-auto">
-            {/* Filters Section */}
-            <div className="pt-8 pb-4">
+            {/* Filters Section - Enhanced Professional Layout */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-8">
                 {/* Search and Basic Controls */}
-                <div className="flex flex-col lg:flex-row gap-4 mb-6">
-                    {/* Search Input */}
-                    <div className="relative flex-1 max-w-md">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <div className="flex flex-col lg:flex-row gap-6 mb-6 lg:items-center">
+                    {/* Search Input - Enhanced Design */}
+                    <div className="relative flex-1 max-w-lg">
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                             <svg
-                                className="w-5 h-5 text-gray-500"
+                                className="w-5 h-5 text-green-500"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
@@ -298,20 +298,20 @@ function AuditLogsTable({ admin_navigate }) {
                         <input
                             type="search"
                             placeholder="Search admins, actions, targets, or details..."
-                            className="block w-full p-3 pl-10 text-sm text-neutral-900 border border-neutral-200 rounded-lg bg-white focus:ring-2 focus:ring-green-200 focus:border-green-400 transition-all"
+                            className="block w-full py-3 pl-12 pr-4 text-sm text-gray-900 bg-gray-50 border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 focus:bg-white transition-all duration-200 hover:border-green-300"
                             value={search}
                             onChange={(e) => handleSearchChange(e.target.value)}
                         />
                     </div>
 
-                    {/* Control Buttons */}
-                    <div className="flex gap-2">
+                    {/* Control Buttons - Right Side Enhanced */}
+                    <div className="flex gap-3">
                         <button
                             onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                            className={`flex items-center justify-center px-4 py-3 rounded-lg text-sm font-semibold border transition-all ${
+                            className={`flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold border-2 transition-all duration-200 transform hover:scale-105 ${
                                 showAdvancedFilters || adminId || action || targetType || dateFrom || dateTo
-                                    ? 'bg-green-50 text-green-700 border-green-200 shadow'
-                                    : 'bg-white text-neutral-700 border-neutral-200 hover:bg-neutral-100'
+                                    ? 'bg-green-50 text-green-700 border-green-300 shadow-lg'
+                                    : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                             }`}
                         >
                             <svg
@@ -323,12 +323,12 @@ function AuditLogsTable({ admin_navigate }) {
                             >
                                 <path d="M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a2 2 0 0 1-.553 1.382l-5.894 6.183A2 2 0 0 0 14 15.118V19a1 1 0 0 1-1.447.894l-2-1A1 1 0 0 1 10 18v-2.882a2 2 0 0 0-.553-1.382L3.553 7.382A2 2 0 0 1 3 6V4Z" />
                             </svg>
-                            Advanced Filters
+                            Filters
                         </button>
 
                         <button
                             onClick={clearFilters}
-                            className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-semibold bg-neutral-100 text-neutral-700 hover:bg-neutral-200 border border-neutral-200 transition-all"
+                            className="flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 border-2 border-gray-200 hover:border-gray-300 transition-all duration-200 transform hover:scale-105"
                         >
                             <svg
                                 className="w-4 h-4 mr-2"
@@ -349,7 +349,7 @@ function AuditLogsTable({ admin_navigate }) {
                         <button
                             onClick={refreshLogs}
                             disabled={isFetching}
-                            className="flex items-center justify-center px-4 py-3 rounded-lg text-sm font-semibold bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 transition-all shadow"
+                            className="flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 disabled:opacity-50 transition-all duration-200 transform hover:scale-105 shadow-lg border-2 border-green-600"
                         >
                             <svg
                                 className={`w-4 h-4 mr-2 ${
@@ -371,139 +371,157 @@ function AuditLogsTable({ admin_navigate }) {
                     </div>
                 </div>
 
-                {/* Advanced Filters */}
+                {/* Advanced Filters - Enhanced Design */}
                 {showAdvancedFilters && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 p-6 bg-white rounded-lg border border-neutral-100 shadow-sm mt-2">
-                        {/* Admin Filter */}
-                        <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
-                                Admin
-                            </label>
-                            <select
-                                value={adminId}
-                                onChange={(e) =>
-                                    handleFilterChange(
-                                        'adminId',
-                                        e.target.value
-                                    )
-                                }
-                                className="w-full p-2 text-sm border border-neutral-200 rounded-md focus:ring-2 focus:ring-green-200 focus:border-green-400 transition-all"
-                                disabled={isLoadingFilters}
-                            >
-                                <option value="">All Admins</option>
-                                {filterData?.admins?.map((admin) => (
-                                    <option key={admin.id} value={admin.id}>
-                                        {admin.fullName} (@{admin.username})
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                    <div className="bg-gradient-to-br from-gray-50 to-green-50 rounded-xl border-2 border-green-100 p-6 mt-4 shadow-inner">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                            </svg>
+                            Advanced Filters
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                            {/* Admin Filter */}
+                            <div className="flex flex-col">
+                                <label className="text-sm font-medium text-gray-700 mb-3 order-1">
+                                    Admin
+                                </label>
+                                <select
+                                    value={adminId}
+                                    onChange={(e) =>
+                                        handleFilterChange(
+                                            'adminId',
+                                            e.target.value
+                                        )
+                                    }
+                                    className="w-full px-4 py-3 text-sm bg-white border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2"
+                                    disabled={isLoadingFilters}
+                                >
+                                    <option value="">All Admins</option>
+                                    {filterData?.admins?.map((admin) => (
+                                        <option key={admin.id} value={admin.id}>
+                                            {admin.fullName} (@{admin.username})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
 
-                        {/* Action Filter */}
-                        <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
-                                Action
-                            </label>
-                            <select
-                                value={action}
-                                onChange={(e) =>
-                                    handleFilterChange('action', e.target.value)
-                                }
-                                className="w-full p-2 text-sm border border-neutral-200 rounded-md focus:ring-2 focus:ring-green-200 focus:border-green-400 transition-all"
-                                disabled={isLoadingFilters}
-                            >
-                                <option value="">All Actions</option>
-                                {filterData?.actions?.map((actionOption) => (
-                                    <option
-                                        key={actionOption}
-                                        value={actionOption}
-                                    >
-                                        {getActionDisplayName(actionOption)}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                            {/* Action Filter */}
+                            <div className="flex flex-col">
+                                <label className="text-sm font-medium text-gray-700 mb-3 order-1">
+                                    Action
+                                </label>
+                                <select
+                                    value={action}
+                                    onChange={(e) =>
+                                        handleFilterChange('action', e.target.value)
+                                    }
+                                    className="w-full px-4 py-3 text-sm bg-white border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2"
+                                    disabled={isLoadingFilters}
+                                >
+                                    <option value="">All Actions</option>
+                                    {filterData?.actions?.map((actionOption) => (
+                                        <option
+                                            key={actionOption}
+                                            value={actionOption}
+                                        >
+                                            {getActionDisplayName(actionOption)}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
 
-                        {/* Target Type Filter */}
-                        <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
-                                Target Type
-                            </label>
-                            <select
-                                value={targetType}
-                                onChange={(e) =>
-                                    handleFilterChange(
-                                        'targetType',
-                                        e.target.value
-                                    )
-                                }
-                                className="w-full p-2 text-sm border border-neutral-200 rounded-md focus:ring-2 focus:ring-green-200 focus:border-green-400 transition-all"
-                                disabled={isLoadingFilters}
-                            >
-                                <option value="">All Types</option>
-                                {filterData?.targetTypes?.map((type) => (
-                                    <option key={type} value={type}>
-                                        {type}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                            {/* Target Type Filter */}
+                            <div className="flex flex-col">
+                                <label className="text-sm font-medium text-gray-700 mb-3 order-1">
+                                    Target Type
+                                </label>
+                                <select
+                                    value={targetType}
+                                    onChange={(e) =>
+                                        handleFilterChange(
+                                            'targetType',
+                                            e.target.value
+                                        )
+                                    }
+                                    className="w-full px-4 py-3 text-sm bg-white border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2"
+                                    disabled={isLoadingFilters}
+                                >
+                                    <option value="">All Types</option>
+                                    {filterData?.targetTypes?.map((type) => (
+                                        <option key={type} value={type}>
+                                            {type}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
 
-                        {/* Date From */}
-                        <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
-                                From Date
-                            </label>
-                            <input
-                                type="date"
-                                value={dateFrom}
-                                onChange={(e) =>
-                                    handleFilterChange(
-                                        'dateFrom',
-                                        e.target.value
-                                    )
-                                }
-                                className="w-full p-2 text-sm border border-neutral-200 rounded-md focus:ring-2 focus:ring-green-200 focus:border-green-400 transition-all"
-                            />
-                        </div>
+                            {/* Date From */}
+                            <div className="flex flex-col">
+                                <label className="text-sm font-medium text-gray-700 mb-3 order-1">
+                                    From Date
+                                </label>
+                                <input
+                                    type="date"
+                                    value={dateFrom}
+                                    onChange={(e) =>
+                                        handleFilterChange(
+                                            'dateFrom',
+                                            e.target.value
+                                        )
+                                    }
+                                    className="w-full px-4 py-3 text-sm bg-white border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2"
+                                />
+                            </div>
 
-                        {/* Date To */}
-                        <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
-                                To Date
-                            </label>
-                            <input
-                                type="date"
-                                value={dateTo}
-                                onChange={(e) =>
-                                    handleFilterChange('dateTo', e.target.value)
-                                }
-                                className="w-full p-2 text-sm border border-neutral-200 rounded-md focus:ring-2 focus:ring-green-200 focus:border-green-400 transition-all"
-                            />
+                            {/* Date To */}
+                            <div className="flex flex-col">
+                                <label className="text-sm font-medium text-gray-700 mb-3 order-1">
+                                    To Date
+                                </label>
+                                <input
+                                    type="date"
+                                    value={dateTo}
+                                    onChange={(e) =>
+                                        handleFilterChange('dateTo', e.target.value)
+                                    }
+                                    className="w-full px-4 py-3 text-sm bg-white border-2 border-green-200 rounded-xl focus:ring-3 focus:ring-green-100 focus:border-green-400 transition-all duration-200 hover:border-green-300 order-2"
+                                />
+                            </div>
                         </div>
                     </div>
                 )}
 
-                {/* Results Summary */}
-                <div className="flex items-center justify-end text-sm text-neutral-500 mt-4">
-                    {isFetching && (
-                        <div className="text-green-600 flex items-center mr-4">
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600 mr-2"></div>
-                            Updating...
-                        </div>
-                    )}
-                    <div>
-                        Showing {logs.length} of {pagination.totalCount || 0} entries
-                        {(search ||
-                            adminId ||
-                            action ||
-                            targetType ||
-                            dateFrom ||
-                            dateTo) && (
-                            <span className="ml-2 text-green-600">
-                                (filtered)
-                            </span>
+                {/* Results Summary - Enhanced */}
+                <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
+                    <div className="flex items-center text-sm text-gray-600">
+                        {isFetching && (
+                            <div className="text-green-600 flex items-center mr-6">
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600 mr-2"></div>
+                                Updating...
+                            </div>
                         )}
+                        <div className="flex items-center">
+                            <svg className="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            <span className="font-medium">Showing {logs.length} of {pagination.totalCount || 0} entries</span>
+                            {(search ||
+                                adminId ||
+                                action ||
+                                targetType ||
+                                dateFrom ||
+                                dateTo) && (
+                                <span className="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                                    Filtered
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                    
+                    {/* Quick Stats */}
+                    <div className="flex items-center text-sm text-gray-500">
+                        <span className="mr-4">Page {pagination.currentPage || 1} of {pagination.totalPages || 1}</span>
                     </div>
                 </div>
             </div>
@@ -511,23 +529,23 @@ function AuditLogsTable({ admin_navigate }) {
             {/* Table */}
         <div className="overflow-x-auto rounded-xl border border-neutral-100 shadow-sm mt-4">
             <table className="w-full">
-                <thead className="bg-green-100 border-b border-neutral-100">
+                <thead className="bg-green-600 border-b border-neutral-100">
                         <tr>
                             <th
-                                className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
+                                className="py-4 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
                                 onClick={() => handleSort('createdAt')}
                             >
                                 <div className="flex items-center gap-1">
                                     Time
                                     {sortBy === 'createdAt' && (
-                                        <span className="text-green-500">
+                                        <span className="text-white">
                                             {sortOrder === 'asc' ? '▲' : '▼'}
                                         </span>
                                     )}
                                 </div>
                             </th>
                             <th
-                                className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
+                                className="py-4 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
                                 onClick={() => handleSort('admin')}
                             >
                                 <div className="flex items-center gap-1">
@@ -540,7 +558,7 @@ function AuditLogsTable({ admin_navigate }) {
                                 </div>
                             </th>
                             <th
-                                className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
+                                className="py-4 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
                                 onClick={() => handleSort('action')}
                             >
                                 <div className="flex items-center gap-1">
@@ -553,7 +571,7 @@ function AuditLogsTable({ admin_navigate }) {
                                 </div>
                             </th>
                             <th
-                                className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
+                                className="py-4 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider cursor-pointer hover:bg-gray-200 transition-colors"
                                 onClick={() => handleSort('targetType')}
                             >
                                 <div className="flex items-center gap-1">
@@ -565,7 +583,7 @@ function AuditLogsTable({ admin_navigate }) {
                                     )}
                                 </div>
                             </th>
-                            <th className="py-4 px-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="py-4 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
                                 Details
                             </th>
                         </tr>

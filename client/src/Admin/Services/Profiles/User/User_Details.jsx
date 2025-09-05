@@ -142,7 +142,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         <select
                             value={editValue || ''}
                             onChange={(e) => handleChange(fieldName, e.target.value)}
-                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition"
                         >
                             {options.map(option => (
                                 <option key={option.value} value={option.value}>
@@ -159,7 +159,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         <select
                             value={editValue === true ? 'true' : editValue === false ? 'false' : ''}
                             onChange={(e) => handleChange(fieldName, e.target.value === 'true')}
-                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition"
                         >
                             <option value="">Select</option>
                             <option value="true">Yes</option>
@@ -175,7 +175,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             type={type}
                             value={editValue || ''}
                             onChange={(e) => handleChange(fieldName, e.target.value)}
-                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
+                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition"
                             autoComplete="off"
                         />
                     </div>
@@ -208,8 +208,8 @@ export default function User_Details({ user, isEdit, refetchRow}) {
 
     const renderDisplayMode = () => (
         <div className="max-w-6xl mx-auto">
-            {/* User Profile Header */}
-            <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white py-8 rounded-2xl shadow-lg mb-6">
+            {/* User Profile Header - Updated with green theme */}
+            <div className="bg-gradient-to-r from-green-600 via-green-700 to-green-800 text-white py-8 rounded-2xl shadow-lg mb-6">
                 <div className="flex items-center justify-between px-8">
                     <div className="flex items-center gap-6">
                         <div className="w-24 h-24 rounded-full bg-white p-1 shadow-xl">
@@ -225,22 +225,22 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                 {userDetail?.extensionName ? ' ' + userDetail.extensionName : ''}
                             </h1>
                             <div className="flex flex-col gap-1">
-                                <span className="text-blue-100">@{userDetail?.username}</span>
-                                <span className="text-blue-100">{userDetail?.email}</span>
+                                <span className="text-green-100">@{userDetail?.username}</span>
+                                <span className="text-green-100">{userDetail?.email}</span>
                             </div>
                         </div>
                     </div>
                     <div className="text-right">
                         <span className={`inline-flex px-4 py-2 rounded-full text-sm font-bold ${
                             userDetail?.access === 'Super_Admin'
-                                ? 'bg-red-500 text-white'
+                                ? 'bg-gray-800 text-white'
                                 : userDetail?.access === 'Admin'
-                                ? 'bg-yellow-500 text-black'
-                                : 'bg-green-500 text-white'
+                                ? 'bg-gray-600 text-white'
+                                : 'bg-white text-green-700'
                         }`}>
                             {userDetail?.access?.replace('_', ' ') || 'User'}
                         </span>
-                        <p className="text-xs text-blue-200 mt-2">ID: {userDetail?.id}</p>
+                        <p className="text-xs text-green-200 mt-2">ID: {userDetail?.id}</p>
                     </div>
                 </div>
             </div>
@@ -262,7 +262,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`${
                                     activeTab === tab.id
-                                        ? 'border-blue-500 text-blue-600 bg-blue-50'
+                                        ? 'border-green-500 text-green-600 bg-green-50'
                                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                 } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 rounded-t-lg`}
                             >
@@ -278,7 +278,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     {activeTab === 'personal' && (
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 mb-6">
-                                <i className="fa-solid fa-user text-blue-600 text-xl"></i>
+                                <i className="fa-solid fa-user text-green-600 text-xl"></i>
                                 <h2 className="text-2xl font-bold text-gray-900">Personal Information</h2>
                             </div>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -309,7 +309,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     {activeTab === 'contact' && (
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 mb-6">
-                                <i className="fa-solid fa-map-marker-alt text-blue-600 text-xl"></i>
+                                <i className="fa-solid fa-map-marker-alt text-green-600 text-xl"></i>
                                 <h2 className="text-2xl font-bold text-gray-900">Contact & Address Information</h2>
                             </div>
                             
@@ -340,7 +340,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     {activeTab === 'family' && (
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 mb-6">
-                                <i className="fa-solid fa-users text-blue-600 text-xl"></i>
+                                <i className="fa-solid fa-users text-green-600 text-xl"></i>
                                 <h2 className="text-2xl font-bold text-gray-900">Family & Background Information</h2>
                             </div>
 
@@ -399,7 +399,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     {activeTab === 'professional' && (
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 mb-6">
-                                <i className="fa-solid fa-briefcase text-blue-600 text-xl"></i>
+                                <i className="fa-solid fa-briefcase text-green-600 text-xl"></i>
                                 <h2 className="text-2xl font-bold text-gray-900">Professional Information</h2>
                             </div>
 
@@ -460,7 +460,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     {activeTab === 'government' && (
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 mb-6">
-                                <i className="fa-solid fa-id-card text-blue-600 text-xl"></i>
+                                <i className="fa-solid fa-id-card text-green-600 text-xl"></i>
                                 <h2 className="text-2xl font-bold text-gray-900">Government & ID Information</h2>
                             </div>
 
@@ -488,15 +488,13 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         </div>
                     )}
 
-                    {/* System Information Tab */}
-                    {activeTab === 'system' && (
-                        <div className="space-y-8">
-                            <div className="flex items-center gap-3 mb-6">
-                                <i className="fa-solid fa-cog text-blue-600 text-xl"></i>
-                                <h2 className="text-2xl font-bold text-gray-900">System Information</h2>
-                            </div>
-
-                            <div>
+                        {/* System Information Tab */}
+                        {activeTab === 'system' && (
+                            <div className="space-y-8">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <i className="fa-solid fa-cog text-green-600 text-xl"></i>
+                                    <h2 className="text-2xl font-bold text-gray-900">System Information</h2>
+                                </div>                            <div>
                                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Details</h3>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     {renderField('Access Level', userDetail?.access, 'access', 'select', [
