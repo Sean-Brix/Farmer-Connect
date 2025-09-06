@@ -32,6 +32,7 @@ export default function Chat() {
     const messagesEndRef = useRef(null);
     const { socket, isConnected, connectSocket } = useSocket();
     const [viewer, setViewer] = useState({ open: false, src: '', filename: '' });
+    const [myImgErr, setMyImgErr] = useState(false);
 
     // Bot and quick questions removed: direct-to-agent experience
 
@@ -974,7 +975,16 @@ export default function Chat() {
                                     {msg.from === 'user' && (
                                         <div className="flex-shrink-0">
                                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 p-0.5">
-                                                <img src={userAvatar} alt="You" className="w-full h-full rounded-full object-cover" />
+                                                {activeInquiry?.userId && !myImgErr ? (
+                                                    <img
+                                                        src={`/api/account/picture/${activeInquiry.userId}?t=${activeInquiry?.updatedAt ? new Date(activeInquiry.updatedAt).getTime() : ''}`}
+                                                        alt="You"
+                                                        onError={() => setMyImgErr(true)}
+                                                        className="w-full h-full rounded-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <img src={userAvatar} alt="You" className="w-full h-full rounded-full object-cover" />
+                                                )}
                                             </div>
                                         </div>
                                     )}

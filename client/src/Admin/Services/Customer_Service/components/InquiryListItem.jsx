@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 
 const InquiryListItem = ({ chat, isSelected, onClick, getUserName, getLastMessage }) => {
+  const [imgError, setImgError] = useState(false);
+  const userName = getUserName(chat);
+  const avatarUrl = useMemo(() => (
+    chat?.userId ? `/api/account/picture/${chat.userId}?t=${chat.updatedAt ? new Date(chat.updatedAt).getTime() : ''}` : ''
+  ), [chat?.userId, chat?.updatedAt]);
+
   return (
     <div
       className={`p-5 border-b border-gray-100 cursor-pointer transition-all duration-200 hover:bg-gray-50 ${
@@ -10,9 +16,18 @@ const InquiryListItem = ({ chat, isSelected, onClick, getUserName, getLastMessag
     >
       <div className="flex items-center gap-4">
         <div className="flex-shrink-0 relative">
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center text-white font-bold text-lg shadow-md">
-            {getUserName(chat).charAt(0).toUpperCase()}
-          </div>
+          {avatarUrl && !imgError ? (
+            <img
+              src={avatarUrl}
+              alt={userName}
+              onError={() => setImgError(true)}
+              className="w-14 h-14 rounded-full object-cover border shadow-md"
+            />
+          ) : (
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center text-white font-bold text-lg shadow-md">
+              {userName?.charAt(0).toUpperCase()}
+            </div>
+          )}
           <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white shadow-sm ${
             chat.isOnline ? 'bg-green-500' : 'bg-gray-400'
           }`}></div>
@@ -20,7 +35,7 @@ const InquiryListItem = ({ chat, isSelected, onClick, getUserName, getLastMessag
         
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between mb-1">
-            <h4 className="font-semibold text-gray-900 truncate text-lg">{getUserName(chat)}</h4>
+            <h4 className="font-semibold text-gray-900 truncate text-lg">{userName}</h4>
             <div className="flex flex-col items-end gap-1 ml-2">
               <span className="text-xs text-gray-500 font-medium">
                 {chat.updatedAt ? new Date(chat.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Now'}

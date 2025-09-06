@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ImageViewer from '../../../../Components/Common/ImageViewer.jsx';
 import FillSurveyModal from '../../../../Components/Survey/FillSurveyModal.jsx';
 
@@ -8,6 +8,15 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
   
   // Get the user name from either userName prop or getUserName function
   const displayName = userName || (getUserName && chat ? getUserName(chat) : 'Unknown User');
+  const [userImgErr, setUserImgErr] = useState(false);
+  const [adminImgErr, setAdminImgErr] = useState(false);
+  const userAvatarUrl = useMemo(() => (
+    chat?.userId ? `/api/account/picture/${chat.userId}?t=${chat.updatedAt ? new Date(chat.updatedAt).getTime() : ''}` : ''
+  ), [chat?.userId, chat?.updatedAt]);
+  // If you have admin account id on message (e.g., message.adminId), use it. Otherwise keep initial.
+  const adminAvatarUrl = useMemo(() => (
+    message?.adminId ? `/api/account/picture/${message.adminId}?t=${chat?.updatedAt ? new Date(chat.updatedAt).getTime() : ''}` : ''
+  ), [message?.adminId, chat?.updatedAt]);
 
   // Detect attachment-like content if backend enriches messages later
   const isMediaUrl = (url) => typeof url === 'string' && (/\.(png|jpe?g|webp|gif|mp4|webm)$/i.test(url) || url.startsWith('/api/inquiries/attachments/'));
@@ -71,9 +80,18 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
   <div className={`flex ${isAdmin ? 'justify-end' : 'justify-start'} items-end gap-3`}>
       {isUser && (
         <div className="flex-shrink-0">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center text-white text-sm font-bold shadow-md">
-            {displayName && displayName.charAt(0).toUpperCase()}
-          </div>
+          {userAvatarUrl && !userImgErr ? (
+            <img
+              src={userAvatarUrl}
+              alt={displayName}
+              onError={() => setUserImgErr(true)}
+              className="w-10 h-10 rounded-full object-cover border shadow-md"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-green-700 flex items-center justify-center text-white text-sm font-bold shadow-md">
+              {displayName && displayName.charAt(0).toUpperCase()}
+            </div>
+          )}
         </div>
       )}
       
@@ -92,9 +110,18 @@ const ChatMessage = ({ message, getUserName, chat, userName, isInitialMessage = 
       
       {isAdmin && (
         <div className="flex-shrink-0">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center text-white text-sm font-bold shadow-md">
-            A
-          </div>
+          {adminAvatarUrl && !adminImgErr ? (
+            <img
+              src={adminAvatarUrl}
+              alt="Admin"
+              onError={() => setAdminImgErr(true)}
+              className="w-10 h-10 rounded-full object-cover border shadow-md"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center text-white text-sm font-bold shadow-md">
+              A
+            </div>
+          )}
         </div>
       )}
       {viewer.open && (

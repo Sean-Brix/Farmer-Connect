@@ -68,6 +68,11 @@ const ChatWindow = ({ selectedChat, messagesEndRef, messagesContainerRef, getUse
     return deduped;
   }, [selectedChat]);
 
+  const [headerImgError, setHeaderImgError] = useState(false);
+  const headerAvatarUrl = useMemo(() => (
+    selectedChat?.userId ? `/api/account/picture/${selectedChat.userId}?t=${selectedChat.updatedAt ? new Date(selectedChat.updatedAt).getTime() : ''}` : ''
+  ), [selectedChat?.userId, selectedChat?.updatedAt]);
+
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-gray-200 h-[700px] flex flex-col overflow-hidden">
       {/* Chat Header */}
@@ -75,9 +80,18 @@ const ChatWindow = ({ selectedChat, messagesEndRef, messagesContainerRef, getUse
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                {selectedChat ? getUserName(selectedChat).charAt(0).toUpperCase() : '?'}
-              </div>
+              {headerAvatarUrl && !headerImgError ? (
+                <img
+                  src={headerAvatarUrl}
+                  alt={selectedChat ? getUserName(selectedChat) : 'User'}
+                  onError={() => setHeaderImgError(true)}
+                  className="w-12 h-12 rounded-full object-cover border shadow-lg"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                  {selectedChat ? getUserName(selectedChat).charAt(0).toUpperCase() : '?'}
+                </div>
+              )}
               <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white shadow-sm ${
                 selectedChat?.isOnline ? 'bg-green-400' : 'bg-gray-400'
               }`}></div>
