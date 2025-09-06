@@ -7,7 +7,7 @@ import socketSessionManager from '../Sockets/utils/session-manager.js';
 import socketLogoutService from '../Services/socketLogoutService.js';
 
 // Database is now ready - re-enabling database functionality
-import { PrismaClient } from '../prisma/generated/index.js';
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // Database helper functions - Re-enabled

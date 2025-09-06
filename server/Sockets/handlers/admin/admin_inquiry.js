@@ -1,5 +1,5 @@
 
-import { PrismaClient } from '../../../prisma/generated/client.js';
+import { PrismaClient } from '@prisma/client';
 import { ADMIN_EVENTS, ADMIN_LISTENERS, CLIENT_EVENTS, ROOMS, ERROR_MESSAGES } from '../../utils/socket-events.js';
 import { 
     getInquiryStats, 

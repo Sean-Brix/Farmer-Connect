@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../prisma/generated/index.js';
+import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';

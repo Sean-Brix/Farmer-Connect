@@ -1,5 +1,5 @@
 
-import { PrismaClient } from '../../../prisma/generated/client.js';
+import { PrismaClient } from '@prisma/client';
 import { CLIENT_EVENTS, CLIENT_LISTENERS, ADMIN_EVENTS, ROOMS, ERROR_MESSAGES } from '../../utils/socket-events.js';
 import { 
     getUnreadCount, 
