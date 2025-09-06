@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 import { useTheme } from '../../contexts/ThemeContext';
+import ThemeSwitch from './ThemeSwitch';
 
 const Preferences = () => {
   const { t, i18n } = useCustomTranslation();
@@ -37,12 +38,6 @@ const Preferences = () => {
   const languages = [
     { code: 'en', name: t('settings.english'), flag: '🇺🇸' },
     { code: 'tl', name: t('settings.tagalog'), flag: '🇵🇭' },
-  ];
-
-  const themes = [
-    { value: 'light', label: t('preferences.light'), icon: 'fas fa-sun' },
-    { value: 'dark', label: t('preferences.dark'), icon: 'fas fa-moon' },
-    { value: 'auto', label: t('preferences.auto'), icon: 'fas fa-adjust' },
   ];
 
   const handleLanguageChange = async (languageCode) => {
@@ -97,6 +92,24 @@ const Preferences = () => {
 
   return (
     <div className="space-y-6 lg:space-y-8">
+      {/* Full-Screen Loading Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 h-screen w-screen z-50 flex items-center justify-center bg-black/60">
+          <div className="flex items-center space-x-4">
+            <div 
+              className="animate-spin rounded-full h-8 w-8 border-4 border-t-transparent"
+              style={{ borderColor: isDark ? '#a78bfa' : '#8b5cf6', borderTopColor: 'transparent' }}
+            ></div>
+            <span 
+              className="text-lg font-semibold"
+              style={{ color: '#ffffff' }}
+            >
+              Updating...
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Modern Success Alert - Centered Popup */}
       {showSuccess && (
         <div className="fixed inset-0 h-full z-50 flex items-center justify-center bg-black/60">
@@ -210,18 +223,6 @@ const Preferences = () => {
             </button>
           ))}
         </div>
-
-        {isLoading && (
-          <div className="mt-6 flex items-center justify-center space-x-3">
-            <div className="animate-spin rounded-full h-5 w-5 border-2 border-emerald-500 border-t-transparent"></div>
-            <span 
-              className="text-sm font-medium"
-              style={{ color: isDark ? '#10b981' : '#059669' }}
-            >
-              {t('common.loading')}
-            </span>
-          </div>
-        )}
       </div>
 
       {/* Theme Preferences */}
@@ -229,7 +230,8 @@ const Preferences = () => {
         className="border border-gray-200/50 dark:border-gray-600/50 rounded-2xl p-6 lg:p-8 shadow-sm hover:shadow-md transition-shadow duration-200"
         style={{ backgroundColor: isDark ? '#1f2937' : '#ffffff' }}
       >
-        <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-6 sm:space-y-0">
+          {/* Theme Info */}
           <div className="flex items-center space-x-4">
             <div 
               className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
@@ -251,75 +253,58 @@ const Preferences = () => {
                 className="text-sm lg:text-base mt-1"
                 style={{ color: isDark ? '#9ca3af' : '#6b7280' }}
               >
-                Choose your preferred theme appearance
+                Switch between light and dark mode
               </p>
+            </div>
+          </div>
+
+          {/* Animated Theme Switch */}
+          <div className="flex flex-col items-center sm:items-end">
+            <div className="flex items-center space-x-4">
+              <span 
+                className={`text-sm font-medium transition-opacity duration-200 ${!isDark ? 'opacity-100' : 'opacity-50'}`}
+                style={{ color: isDark ? '#d1d5db' : '#374151' }}
+              >
+                <i className="fas fa-sun mr-1"></i>
+                Light
+              </span>
+              <ThemeSwitch 
+                isDark={isDark}
+                onChange={(isChecked) => handleThemeChange(isChecked ? 'dark' : 'light')}
+                disabled={isLoading}
+              />
+              <span 
+                className={`text-sm font-medium transition-opacity duration-200 ${isDark ? 'opacity-100' : 'opacity-50'}`}
+                style={{ color: isDark ? '#d1d5db' : '#374151' }}
+              >
+                <i className="fas fa-moon mr-1"></i>
+                Dark
+              </span>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
-          {themes.map((themeOption) => (
-            <button
-              key={themeOption.value}
-              onClick={() => handleThemeChange(themeOption.value)}
-              disabled={isLoading}
-              className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-purple-500/20 ${
-                theme === themeOption.value
-                  ? 'shadow-lg scale-[1.02]'
-                  : 'shadow-sm hover:shadow-md'
-              } ${isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-              style={{
-                borderColor: theme === themeOption.value 
-                  ? (isDark ? '#8b5cf6' : '#8b5cf6')
-                  : (isDark ? '#374151' : '#e5e7eb'),
-                backgroundColor: theme === themeOption.value
-                  ? (isDark ? '#581c87' : '#faf5ff')
-                  : (isDark ? '#1f2937' : '#ffffff')
-              }}
-            >
-              <div className="flex flex-col items-center space-y-3">
-                <i 
-                  className={`${themeOption.icon} text-3xl lg:text-4xl`}
-                  style={{ 
-                    color: theme === themeOption.value
-                      ? (isDark ? '#c4b5fd' : '#7c3aed')
-                      : (isDark ? '#9ca3af' : '#6b7280')
-                  }}
-                ></i>
-                <span 
-                  className="font-semibold text-sm lg:text-base"
-                  style={{ 
-                    color: theme === themeOption.value
-                      ? (isDark ? '#c4b5fd' : '#7c3aed')
-                      : (isDark ? '#d1d5db' : '#374151')
-                  }}
-                >
-                  {themeOption.label}
-                </span>
-              </div>
-              {theme === themeOption.value && (
-                <div className="absolute -top-2 -right-2">
-                  <div 
-                    className="w-6 h-6 rounded-full flex items-center justify-center shadow-md"
-                    style={{ backgroundColor: isDark ? '#8b5cf6' : '#8b5cf6' }}
-                  >
-                    <i className="fas fa-check text-white text-xs"></i>
-                  </div>
-                </div>
-              )}
-            </button>
-          ))}
-        </div>
-
-        {isLoading && (
-          <div className="mt-6 flex items-center justify-center space-x-3">
-            <div className="animate-spin rounded-full h-5 w-5 border-2 border-purple-500 border-t-transparent"></div>
-            <span 
-              className="text-sm font-medium"
-              style={{ color: isDark ? '#8b5cf6' : '#7c3aed' }}
-            >
-              {t('common.loading')}
-            </span>
+        {/* Optional: Auto theme info - you can remove this if you don't want auto theme */}
+        {theme === 'auto' && (
+          <div 
+            className="mt-6 p-4 rounded-xl border"
+            style={{ 
+              backgroundColor: isDark ? '#374151' : '#f9fafb',
+              borderColor: isDark ? '#4b5563' : '#e5e7eb'
+            }}
+          >
+            <div className="flex items-center space-x-2">
+              <i 
+                className="fas fa-info-circle text-sm"
+                style={{ color: isDark ? '#8b5cf6' : '#7c3aed' }}
+              ></i>
+              <p 
+                className="text-sm"
+                style={{ color: isDark ? '#d1d5db' : '#374151' }}
+              >
+                Auto theme follows your system preference. Currently showing {isDark ? 'dark' : 'light'} mode.
+              </p>
+            </div>
           </div>
         )}
       </div>
