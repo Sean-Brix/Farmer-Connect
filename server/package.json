@@ -32,8 +32,9 @@
     "scripts": {
         "start": "node server.js",
         "dev": "prisma migrate deploy && nodemon server.js",
-        "setup": "prisma generate && prisma migrate deploy && node prisma/seed.js",
-        "fill": "node prisma/seed.js",
+        "setup": "prisma generate && prisma migrate deploy && node prisma/Seeds/index.js",
+        "fill": "node prisma/Seeds/index.js",
+        "seed:modular": "node prisma/Seeds/index.js",
         "reset": "npx prisma migrate reset --force && (prisma generate || echo 'Nothing to generate')",
         "seed:accounts": "node prisma/seed-accounts-only.js",
         "reset:accounts": "npx prisma migrate reset --force --skip-seed && node prisma/seed-accounts-only.js",
@@ -41,7 +42,7 @@
         
     },
     "prisma": {
-        "seed": "node prisma/seed.js",
+        "seed": "node prisma/Seeds/index.js",
         "schema": "prisma/schema/"
     },
     "keywords": [],

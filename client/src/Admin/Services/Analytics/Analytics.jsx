@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTheme } from '../../../contexts/ThemeContext';
+import { analyticsAPI } from './analyticsAPI';
+import OverviewAnalytics from './components/OverviewAnalytics.jsx';
+import UsersAnalytics from './components/UsersAnalytics.jsx';
+import SeminarsAnalytics from './components/SeminarsAnalytics.jsx';
+import EICAnalytics from './components/EICAnalytics.jsx';
+import DistributionAnalytics from './components/DistributionAnalytics.jsx';
+import InventoryAnalytics from './components/InventoryAnalytics.jsx';
 import {
     Chart,
     LineController,
@@ -145,7 +152,9 @@ function Analytics() {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const [activeView, setActiveView] = useState('overview');
-    const [timeRange, setTimeRange] = useState('7d');
+    const [timeRange, setTimeRange] = useState('30d');
+    const [from, setFrom] = useState('');
+    const [to, setTo] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
     // Data states
@@ -259,89 +268,50 @@ function Analytics() {
         },
     ];
 
-    // Mock data for development
+    // Fetch real analytics
     useEffect(() => {
-        const fetchAnalyticsData = async () => {
+        let cancelled = false;
+    const fetchAll = async () => {
             setIsLoading(true);
             try {
-                // Simulate API calls - replace with actual endpoints later
-                const endpoints = [
-                    '/api/analytics/overview',
-                    '/api/analytics/users',
-                    '/api/analytics/seminars',
-                    '/api/analytics/eic',
-                    '/api/analytics/distribution',
-                    '/api/analytics/inventory',
-                ];
-
-                // Mock data for now
-                setTimeout(() => {
-                    setOverviewData({
-                        totalUsers: 1234,
-                        totalSeminars: 45,
-                        totalEIC: 2456,
-                        totalDistributions: 699,
-                        totalInventoryItems: 1892,
-                        userGrowth: 15.5,
-                        seminarGrowth: 8.2,
-                        eicGrowth: -2.3,
-                        distributionGrowth: 12.8,
-                        inventoryGrowth: 5.1,
-                    });
-
-                    setUsersData({
-                        monthlyRegistrations: [
-                            120, 135, 145, 160, 180, 195, 210,
-                        ],
-                        activeUsers: 856,
-                        userTypes: { farmers: 890, admins: 12, staff: 332 },
-                        topRegions: ['Region 1', 'Region 2', 'Region 3'],
-                    });
-
-                    setSeminarsData({
-                        monthlyCompletions: [5, 8, 12, 15, 18, 20, 22],
-                        averageRating: 4.8,
-                        categories: {
-                            farming: 25,
-                            technology: 12,
-                            business: 8,
-                        },
-                        attendance: 87,
-                    });
-
-                    setEicData({
-                        monthlyDistribution: [
-                            150, 180, 200, 220, 250, 280, 300,
-                        ],
-                        categories: { seeds: 45, tools: 30, fertilizer: 25 },
-                        utilization: 67,
-                        topItems: ['Pechay Seeds', 'Mangrove Seeds', 'Shovel'],
-                    });
-
-                    setDistributionData({
-                        monthlyRequests: [80, 95, 110, 125, 140, 155, 170],
-                        fulfillmentRate: 92,
-                        averageTime: 2.3,
-                        regions: { region1: 45, region2: 35, region3: 20 },
-                    });
-
-                    setInventoryData({
-                        stockLevels: [1800, 1850, 1900, 1950, 2000, 1950, 1892],
-                        categories: { seeds: 40, tools: 35, fertilizer: 25 },
-                        turnover: 3.2,
-                        lowStock: 234,
-                    });
-
-                    setIsLoading(false);
-                }, 1000);
-            } catch (error) {
-                console.error('Error fetching analytics data:', error);
-                setIsLoading(false);
+        const params = {};
+        if (from) params.from = from;
+        if (to) params.to = to;
+                const [ov, us, se, ei, di, iv] = await Promise.all([
+            analyticsAPI.overview(params),
+            analyticsAPI.users(params),
+            analyticsAPI.seminars(params),
+            analyticsAPI.eic(params),
+            analyticsAPI.distribution(params),
+            analyticsAPI.inventory(params),
+                ]);
+                if (cancelled) return;
+                setOverviewData({
+                    totalUsers: ov.payload.totalUsers,
+                    totalSeminars: ov.payload.totalSeminars,
+                    totalEIC: ov.payload.totalEIC,
+                    totalDistributions: ov.payload.totalDistributions,
+                    totalInventoryItems: ov.payload.totalInventoryItems,
+                    userGrowth: ov.payload.userGrowth,
+                    seminarGrowth: ov.payload.seminarGrowth,
+                    eicGrowth: ov.payload.eicGrowth,
+                    distributionGrowth: ov.payload.distributionGrowth,
+                    inventoryGrowth: ov.payload.inventoryGrowth,
+                });
+                setUsersData(us.payload);
+                setSeminarsData(se.payload);
+                setEicData(ei.payload);
+                setDistributionData(di.payload);
+                setInventoryData(iv.payload);
+            } catch (e) {
+                console.error('Error fetching analytics data:', e);
+            } finally {
+                if (!cancelled) setIsLoading(false);
             }
         };
-
-        fetchAnalyticsData();
-    }, [timeRange]);
+        fetchAll();
+        return () => { cancelled = true; };
+    }, [timeRange, from, to]);
 
     const renderOverview = () => (
         <div className="space-y-6">
@@ -426,56 +396,20 @@ function Analytics() {
     );
 
     const renderFeatureAnalytics = () => {
-        const currentFeature = features.find((f) => f.id === activeView);
-
-        return (
-            <div className="space-y-6">
-                <div className="bg-white rounded-xl shadow-md p-6">
-                    <div className="flex items-center mb-6">
-                        <div
-                            className={`p-4 rounded-lg bg-gradient-to-r ${currentFeature.color} mr-4`}
-                        >
-                            <div className="w-8 h-8 text-white">
-                                {currentFeature.icon}
-                            </div>
-                        </div>
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900">
-                                {currentFeature.title}
-                            </h2>
-                            <p className="text-gray-600">
-                                {currentFeature.description}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        {currentFeature.stats.map((stat, idx) => (
-                            <div
-                                key={idx}
-                                className="text-center p-4 bg-gray-50 rounded-lg"
-                            >
-                                <div className="text-2xl font-bold text-gray-900 mb-1">
-                                    {stat.value}
-                                </div>
-                                <div className="text-sm text-gray-600">
-                                    {stat.label}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <ChartContainer
-                    title={`${currentFeature.title} Detailed Analytics`}
-                    className="col-span-full"
-                >
-                    <div className="h-80">
-                        <canvas ref={featureChartRef} />
-                    </div>
-                </ChartContainer>
-            </div>
-        );
+        switch (activeView) {
+            case 'users':
+                return <UsersAnalytics data={usersData} onExport={analyticsAPI.export.users} />;
+            case 'seminars':
+                return <SeminarsAnalytics data={seminarsData} onExport={analyticsAPI.export.seminars} />;
+            case 'eic':
+                return <EICAnalytics data={eicData} onExport={analyticsAPI.export.eic} />;
+            case 'distribution':
+                return <DistributionAnalytics data={distributionData} onExport={analyticsAPI.export.distribution} />;
+            case 'inventory':
+                return <InventoryAnalytics data={inventoryData} onExport={analyticsAPI.export.inventory} />;
+            default:
+                return null;
+        }
     };
 
     // Chart initialization and cleanup
@@ -518,7 +452,7 @@ function Analytics() {
                     },
                     {
                         label: 'Seminars',
-                        data: seminarsData.monthlyCompletions || [],
+                        data: seminarsData.monthly || [],
                         borderColor: '#10b981',
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         tension: 0.4,
@@ -526,7 +460,7 @@ function Analytics() {
                     },
                     {
                         label: 'Distributions',
-                        data: distributionData.monthlyRequests || [],
+                        data: distributionData.monthly || [],
                         borderColor: '#8b5cf6',
                         backgroundColor: 'rgba(139, 92, 246, 0.1)',
                         tension: 0.4,
@@ -786,6 +720,21 @@ function Analytics() {
                                     </svg>
                                 </span>
                             </div>
+                            <div className="flex items-center gap-2">
+                                <input type="date" value={from} onChange={(e) => setFrom(e.target.value)}
+                                    className={`border rounded-lg px-3 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 outline-none ${
+                                        isDark ? 'bg-gray-700 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
+                                    }`} />
+                                <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>to</span>
+                                <input type="date" value={to} onChange={(e) => setTo(e.target.value)}
+                                    className={`border rounded-lg px-3 py-2 shadow-md focus:ring-2 focus:ring-green-500 focus:border-green-400 transition-all duration-200 outline-none ${
+                                        isDark ? 'bg-gray-700 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
+                                    }`} />
+                                <button onClick={() => { setFrom(''); setTo(''); }}
+                                    className="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 shadow">
+                                    Clear
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -823,7 +772,17 @@ function Analytics() {
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
                     </div>
                 ) : activeView === 'overview' ? (
-                    renderOverview()
+                    <>
+                        {renderOverview()}
+                        <div className="mt-6 flex justify-end">
+                            <button
+                                onClick={() => analyticsAPI.export.overview()}
+                                className="px-4 py-2 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700 shadow"
+                            >
+                                Export Overview CSV
+                            </button>
+                        </div>
+                    </>
                 ) : (
                     renderFeatureAnalytics()
                 )}
