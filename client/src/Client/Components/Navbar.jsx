@@ -1095,8 +1095,9 @@ export default function Navbar({refresh}) {
                         
                         {/* Professional Mobile Sidebar with slide-in animation */}
                         <div 
-                            className="fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-[999999] md:hidden animate-slide-in-left"
+                            className="fixed top-0 left-0 h-full w-80 shadow-2xl z-[999999] md:hidden animate-slide-in-left"
                             style={{
+                                backgroundColor: isDark ? '#1f2937' : '#ffffff',
                                 fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
                                 boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)',
                                 animation: 'mobileSlideInLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
@@ -1122,7 +1123,7 @@ export default function Navbar({refresh}) {
                                                
                                             </div>
                                             <div>
-                                                <h2 className="text-xl font-bold tracking-tight leading-tight">Farmer Connect</h2>
+                                                <h2 className="text-xl font-bold tracking-tight leading-tight">FITS - TANZA</h2>
                                               
                                             </div>
                                         </div>
@@ -1146,8 +1147,12 @@ export default function Navbar({refresh}) {
                                             className={({ isActive }) =>
                                                 `mobile-menu-item flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
                                                     isActive 
-                                                        ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]' 
-                                                        : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]'
+                                                        ? (isDark 
+                                                            ? 'bg-emerald-900 text-emerald-100 border-l-4 border-emerald-400 shadow-sm transform scale-[1.02]' 
+                                                            : 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]') 
+                                                        : (isDark 
+                                                            ? 'text-gray-200 hover:bg-emerald-800 hover:text-emerald-100 hover:scale-[1.01]' 
+                                                            : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]')
                                                 }`
                                             }
                                             onClick={() => setOpen(false)}
@@ -1172,8 +1177,12 @@ export default function Navbar({refresh}) {
                                         <details className="mobile-menu-item group">
                                             <summary className={`flex items-center justify-between py-4 px-4 rounded-xl transition-all duration-200 font-semibold cursor-pointer list-none hover:scale-[1.01] ${
                                                 infoActive 
-                                                    ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm' 
-                                                    : 'text-gray-700 hover:bg-green-50 hover:text-green-700'
+                                                    ? (isDark 
+                                                        ? 'bg-emerald-900 text-emerald-100 border-l-4 border-emerald-400 shadow-sm' 
+                                                        : 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm') 
+                                                    : (isDark 
+                                                        ? 'text-gray-200 hover:bg-emerald-800 hover:text-emerald-100' 
+                                                        : 'text-gray-700 hover:bg-green-50 hover:text-green-700')
                                             }`}>
                                                 <div className="flex items-center space-x-4">
                                                     <svg
@@ -1208,8 +1217,12 @@ export default function Navbar({refresh}) {
                                                     className={({ isActive }) => 
                                                         `flex items-center space-x-3 py-3 px-4 rounded-lg transition-all duration-200 font-medium ${
                                                             isActive 
-                                                                ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
-                                                                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1'
+                                                                ? (isDark 
+                                                                    ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
+                                                                    : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
+                                                                : (isDark 
+                                                                    ? 'text-gray-300 hover:bg-emerald-800 hover:text-emerald-100 hover:translate-x-1' 
+                                                                    : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1')
                                                         }`
                                                     }
                                                     onClick={() => setOpen(false)}
@@ -1241,8 +1254,12 @@ export default function Navbar({refresh}) {
                                                     className={({ isActive }) => 
                                                         `flex items-center space-x-3 py-3 px-4 rounded-lg transition-all duration-200 font-medium ${
                                                             isActive 
-                                                                ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
-                                                                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1'
+                                                                ? (isDark 
+                                                                    ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
+                                                                    : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
+                                                                : (isDark 
+                                                                    ? 'text-gray-300 hover:bg-emerald-800 hover:text-emerald-100 hover:translate-x-1' 
+                                                                    : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1')
                                                         }`
                                                     }
                                                     onClick={() => setOpen(false)}
@@ -1272,8 +1289,12 @@ export default function Navbar({refresh}) {
                                                     className={({ isActive }) => 
                                                         `flex items-center space-x-3 py-3 px-4 rounded-lg transition-all duration-200 font-medium ${
                                                             isActive 
-                                                                ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
-                                                                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1'
+                                                                ? (isDark 
+                                                                    ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
+                                                                    : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
+                                                                : (isDark 
+                                                                    ? 'text-gray-300 hover:bg-emerald-800 hover:text-emerald-100 hover:translate-x-1' 
+                                                                    : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1')
                                                         }`
                                                     }
                                                     onClick={() => setOpen(false)}
@@ -1300,8 +1321,12 @@ export default function Navbar({refresh}) {
                                         <details className="mobile-menu-item group">
                                             <summary className={`flex items-center justify-between py-4 px-4 rounded-xl transition-all duration-200 font-semibold cursor-pointer list-none hover:scale-[1.01] ${
                                                 servicesActive 
-                                                    ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm' 
-                                                    : 'text-gray-700 hover:bg-green-50 hover:text-green-700'
+                                                    ? (isDark 
+                                                        ? 'bg-emerald-900 text-emerald-100 border-l-4 border-emerald-400 shadow-sm' 
+                                                        : 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm') 
+                                                    : (isDark 
+                                                        ? 'text-gray-200 hover:bg-emerald-800 hover:text-emerald-100' 
+                                                        : 'text-gray-700 hover:bg-green-50 hover:text-green-700')
                                             }`}>
                                                 <div className="flex items-center space-x-4">
                                                     <svg
@@ -1329,8 +1354,12 @@ export default function Navbar({refresh}) {
                                                     className={({ isActive }) => 
                                                         `flex items-center space-x-3 py-3 px-4 rounded-lg transition-all duration-200 font-medium ${
                                                             isActive 
-                                                                ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
-                                                                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1'
+                                                                ? (isDark 
+                                                                    ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
+                                                                    : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
+                                                                : (isDark 
+                                                                    ? 'text-gray-300 hover:bg-emerald-800 hover:text-emerald-100 hover:translate-x-1' 
+                                                                    : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1')
                                                         }`
                                                     }
                                                     onClick={() => setOpen(false)}
@@ -1360,8 +1389,12 @@ export default function Navbar({refresh}) {
                                                     className={({ isActive }) => 
                                                         `flex items-center space-x-3 py-3 px-4 rounded-lg transition-all duration-200 font-medium ${
                                                             isActive 
-                                                                ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
-                                                                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1'
+                                                                ? (isDark 
+                                                                    ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
+                                                                    : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
+                                                                : (isDark 
+                                                                    ? 'text-gray-300 hover:bg-emerald-800 hover:text-emerald-100 hover:translate-x-1' 
+                                                                    : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1')
                                                         }`
                                                     }
                                                     onClick={() => setOpen(false)}
@@ -1395,8 +1428,12 @@ export default function Navbar({refresh}) {
                                                     className={({ isActive }) => 
                                                         `flex items-center space-x-3 py-3 px-4 rounded-lg transition-all duration-200 font-medium ${
                                                             isActive 
-                                                                ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
-                                                                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1'
+                                                                ? (isDark 
+                                                                    ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
+                                                                    : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
+                                                                : (isDark 
+                                                                    ? 'text-gray-300 hover:bg-emerald-800 hover:text-emerald-100 hover:translate-x-1' 
+                                                                    : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1')
                                                         }`
                                                     }
                                                     onClick={() => setOpen(false)}
@@ -1426,8 +1463,12 @@ export default function Navbar({refresh}) {
                                                     className={({ isActive }) => 
                                                         `flex items-center space-x-3 py-3 px-4 rounded-lg transition-all duration-200 font-medium ${
                                                             isActive 
-                                                                ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
-                                                                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1'
+                                                                ? (isDark 
+                                                                    ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
+                                                                    : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
+                                                                : (isDark 
+                                                                    ? 'text-gray-300 hover:bg-emerald-800 hover:text-emerald-100 hover:translate-x-1' 
+                                                                    : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 hover:translate-x-1')
                                                         }`
                                                     }
                                                     onClick={() => setOpen(false)}
@@ -1457,8 +1498,12 @@ export default function Navbar({refresh}) {
                                                 className={({ isActive }) =>
                                                     `mobile-menu-item flex items-center space-x-4 py-4 px-4 rounded-xl transition-all duration-200 font-semibold ${
                                                         isActive 
-                                                            ? 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]' 
-                                                            : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]'
+                                                            ? (isDark 
+                                                                ? 'bg-emerald-900 text-emerald-100 border-l-4 border-emerald-400 shadow-sm transform scale-[1.02]' 
+                                                                : 'bg-green-50 text-green-800 border-l-4 border-green-600 shadow-sm transform scale-[1.02]') 
+                                                            : (isDark 
+                                                                ? 'text-gray-200 hover:bg-emerald-800 hover:text-emerald-100 hover:scale-[1.01]' 
+                                                                : 'text-gray-700 hover:bg-green-50 hover:text-green-700 hover:scale-[1.01]')
                                                     }`
                                                 }
                                                 onClick={() => setOpen(false)}
@@ -1481,11 +1526,21 @@ export default function Navbar({refresh}) {
                                         )}
                                         
                                         {/* User Authentication Section */}
-                                        <div className="pt-6 mt-6 border-t border-gray-200">
+                                        <div 
+                                            className="pt-6 mt-6"
+                                            style={{
+                                                borderTop: `1px solid ${isDark ? '#374151' : '#e5e7eb'}`
+                                            }}
+                                        >
                                             {loggedIn ? (
                                                 <>
                                                     {/* User Profile Display */}
-                                                    <div className="flex items-center space-x-4 py-4 px-4 mb-4 bg-green-50 rounded-xl">
+                                                    <div 
+                                                        className="flex items-center space-x-4 py-4 px-4 mb-4 rounded-xl"
+                                                        style={{
+                                                            backgroundColor: isDark ? '#065f46' : '#d1fae5'
+                                                        }}
+                                                    >
                                                         <div className="relative">
                                                             <img 
                                                                 src={user.avatar} 
@@ -1495,8 +1550,18 @@ export default function Navbar({refresh}) {
                                                             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></div>
                                                         </div>
                                                         <div>
-                                                            <p className="font-semibold text-gray-800">{user.name}</p>
-                                                            <p className="text-sm text-emerald-600">Active Member</p>
+                                                            <p 
+                                                                className="font-semibold"
+                                                                style={{
+                                                                    color: isDark ? '#d1fae5' : '#111827'
+                                                                }}
+                                                            >{user.name}</p>
+                                                            <p 
+                                                                className="text-sm"
+                                                                style={{
+                                                                    color: isDark ? '#a7f3d0' : '#065f46'
+                                                                }}
+                                                            >Active Member</p>
                                                         </div>
                                                     </div>
                                                     
@@ -1506,8 +1571,12 @@ export default function Navbar({refresh}) {
                                                         className={({ isActive }) =>
                                                             `mobile-menu-item flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
                                                                 isActive 
-                                                                    ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
-                                                                    : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
+                                                                    ? (isDark 
+                                                                        ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
+                                                                        : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
+                                                                    : (isDark 
+                                                                        ? 'text-gray-200 hover:bg-emerald-800 hover:text-emerald-100' 
+                                                                        : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700')
                                                             }`
                                                         }
                                                         onClick={() => setOpen(false)}
@@ -1531,8 +1600,12 @@ export default function Navbar({refresh}) {
                                                         className={({ isActive }) =>
                                                             `mobile-menu-item flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
                                                                 isActive 
-                                                                    ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
-                                                                    : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
+                                                                    ? (isDark 
+                                                                        ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
+                                                                        : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
+                                                                    : (isDark 
+                                                                        ? 'text-gray-200 hover:bg-emerald-800 hover:text-emerald-100' 
+                                                                        : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700')
                                                             }`
                                                         }
                                                         onClick={() => setOpen(false)}
@@ -1560,8 +1633,12 @@ export default function Navbar({refresh}) {
                                                             className={({ isActive }) =>
                                                                 `mobile-menu-item flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
                                                                     isActive 
-                                                                        ? 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm' 
-                                                                        : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
+                                                                        ? (isDark 
+                                                                            ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
+                                                                            : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
+                                                                        : (isDark 
+                                                                            ? 'text-gray-200 hover:bg-emerald-800 hover:text-emerald-100' 
+                                                                            : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700')
                                                                 }`
                                                             }
                                                             onClick={() => {
@@ -1617,15 +1694,44 @@ export default function Navbar({refresh}) {
                                             ) : (
                                                 <>
                                                     {/* Anonymous User Message */}
-                                                    <div className="flex items-center space-x-4 py-4 px-4 mb-4 bg-gray-50 rounded-xl border border-gray-200">
-                                                        <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
-                                                            <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <div 
+                                                        className="flex items-center space-x-4 py-4 px-4 mb-4 rounded-xl border"
+                                                        style={{
+                                                            backgroundColor: isDark ? '#374151' : '#f9fafb',
+                                                            borderColor: isDark ? '#4b5563' : '#e5e7eb'
+                                                        }}
+                                                    >
+                                                        <div 
+                                                            className="w-12 h-12 rounded-full flex items-center justify-center"
+                                                            style={{
+                                                                backgroundColor: isDark ? '#4b5563' : '#d1d5db'
+                                                            }}
+                                                        >
+                                                            <svg 
+                                                                className="w-6 h-6" 
+                                                                fill="none" 
+                                                                stroke="currentColor" 
+                                                                viewBox="0 0 24 24"
+                                                                style={{
+                                                                    color: isDark ? '#9ca3af' : '#6b7280'
+                                                                }}
+                                                            >
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                                             </svg>
                                                         </div>
                                                         <div>
-                                                            <p className="font-semibold text-gray-700">Guest User</p>
-                                                            <p className="text-sm text-gray-500">Please login to access all features</p>
+                                                            <p 
+                                                                className="font-semibold"
+                                                                style={{
+                                                                    color: isDark ? '#d1d5db' : '#374151'
+                                                                }}
+                                                            >Guest User</p>
+                                                            <p 
+                                                                className="text-sm"
+                                                                style={{
+                                                                    color: isDark ? '#9ca3af' : '#6b7280'
+                                                                }}
+                                                            >Please login to access all features</p>
                                                         </div>
                                                     </div>
                                                     
@@ -1654,15 +1760,23 @@ export default function Navbar({refresh}) {
                                                     {/* Sign Up Option */}
                                                     <NavLink 
                                                         to="/register"
-                                                        className="flex items-center justify-center space-x-4 py-3 px-6 mt-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium border border-gray-300"
+                                                        className="flex items-center justify-center space-x-4 py-3 px-6 mt-3 rounded-xl transition-all duration-200 font-medium border"
+                                                        style={{
+                                                            backgroundColor: isDark ? '#374151' : '#f9fafb',
+                                                            color: isDark ? '#d1d5db' : '#374151',
+                                                            borderColor: isDark ? '#4b5563' : '#d1d5db'
+                                                        }}
                                                         onClick={() => setOpen(false)}
                                                     >
                                                         <svg
-                                                            className="w-5 h-5 text-gray-600"
+                                                            className="w-5 h-5"
                                                             fill="none"
                                                             stroke="currentColor"
                                                             strokeWidth="2"
                                                             viewBox="0 0 24 24"
+                                                            style={{
+                                                                color: isDark ? '#9ca3af' : '#4b5563'
+                                                            }}
                                                         >
                                                             <path
                                                                 d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
@@ -1679,8 +1793,19 @@ export default function Navbar({refresh}) {
                                 </div>
                                 
                                 {/* Professional Footer */}
-                                <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                                    <p className="text-xs text-gray-500 text-center font-medium">
+                                <div 
+                                    className="px-6 py-4 border-t"
+                                    style={{
+                                        borderColor: isDark ? '#374151' : '#e5e7eb',
+                                        backgroundColor: isDark ? '#374151' : '#f9fafb'
+                                    }}
+                                >
+                                    <p 
+                                        className="text-xs text-center font-medium"
+                                        style={{
+                                            color: isDark ? '#9ca3af' : '#6b7280'
+                                        }}
+                                    >
                                         © 2025 Farmer Connect. Agricultural Excellence.
                                     </p>
                                 </div>

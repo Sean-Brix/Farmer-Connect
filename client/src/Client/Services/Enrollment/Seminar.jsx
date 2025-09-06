@@ -296,7 +296,7 @@ export default function Seminar() {
                                 <div className="relative w-full sm:w-auto flex justify-center">
                                     <input
                                         type="text"
-                                        className={`w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border-2 focus:ring-2 focus:ring-green-200 shadow-sm transition placeholder:text-gray-500 font-medium ${theme === 'dark' ? 'border-gray-600 focus:border-green-400 text-white bg-gray-800 placeholder:text-gray-400' : 'border-gray-300 focus:border-green-500 text-gray-800 bg-white'}`}
+                                        className={`w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border-2 focus:ring-2 focus:ring-green-200 shadow-sm transition placeholder:text-gray-500 font-medium ${theme === 'dark' ? 'border-gray-600 focus:border-green-400 text-gray-800 bg-white placeholder:text-gray-400' : 'border-gray-300 focus:border-green-500 text-gray-800 bg-white'}`}
                                         placeholder={`Search by ${filterBy.toLowerCase()}...`}
                                         value={search}
                                         onChange={(e) => {

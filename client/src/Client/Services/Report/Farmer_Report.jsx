@@ -626,7 +626,7 @@ export default function Farmer_Report() {
                         const isExpanded = expandedCrop === crop.id;
                         return (
                           <React.Fragment key={crop.id}>
-                            <tr className="border-b hover:bg-gray-50 cursor-pointer" 
+                            <tr className={`border-b cursor-pointer ${theme === 'dark' ? 'border-gray-700 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'}`}
                                 onClick={() => setExpandedCrop(isExpanded ? null : crop.id)}>
                               <td className="px-4 py-3">
                                 <div className="flex items-center gap-3">
@@ -716,7 +716,7 @@ export default function Farmer_Report() {
                             
                             {/* Expanded Details Row */}
                             {isExpanded && (
-                              <tr className="bg-gray-50 border-b">
+                              <tr className={`border-b ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}`}>
                                 <td colSpan="7" className="px-4 py-6">
                                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                     {/* Crop Details */}
@@ -815,7 +815,7 @@ export default function Farmer_Report() {
                                       {crop.reports && crop.reports.length > 0 ? (
                                         <div className="space-y-2">
                                           {crop.reports.slice(-3).reverse().map((report, idx) => (
-                                            <div key={idx} className="bg-white p-3 rounded-lg border text-sm">
+                                            <div key={idx} className={`p-3 rounded-lg border text-sm ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'}`}>
                                               <div className="flex justify-between items-start mb-2">
                                                 <span className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{report.reportDate}</span>
                                                 <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
@@ -1011,7 +1011,7 @@ export default function Farmer_Report() {
                           ? crop.reports[crop.reports.length - 1] 
                           : null;
                         return (
-                          <tr key={crop.id} className="hover:bg-gray-50 transition-colors duration-150">
+                          <tr key={crop.id} className={`transition-colors duration-150 ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
                             <td className="px-6 py-4">
                               <div className="flex items-center">
                                 <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
@@ -1030,10 +1030,10 @@ export default function Farmer_Report() {
                             </td>
                             <td className="px-6 py-4 text-center">
                               <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                                status === 'submitted' ? 'bg-green-100 text-green-800' :
-                                status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                status === 'overdue' ? 'bg-red-100 text-red-800' :
-                                'bg-gray-100 text-gray-800'
+                                status === 'submitted' ? (theme === 'dark' ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-800') :
+                                status === 'pending' ? (theme === 'dark' ? 'bg-yellow-900 text-yellow-100' : 'bg-yellow-100 text-yellow-800') :
+                                status === 'overdue' ? (theme === 'dark' ? 'bg-red-900 text-red-100' : 'bg-red-100 text-red-800') :
+                                (theme === 'dark' ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-800')
                               }`}>
                                 {status === 'submitted' ? '✅ Submitted' :
                                  status === 'pending' ? '⏰ Pending' :
@@ -1169,13 +1169,17 @@ export default function Farmer_Report() {
                         });
                         
                         days.push(
-                          <div key={d} className={`min-h-[100px] p-1 border rounded ${
-                            isCurrentMonth ? 'bg-white' : 'bg-gray-50'
+                          <div key={d} className={`min-h-[60px] p-1 border rounded ${
+                            isCurrentMonth 
+                              ? (theme === 'dark' ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200') 
+                              : (theme === 'dark' ? 'bg-gray-900 border-gray-700' : 'bg-gray-50 border-gray-300')
                           } ${isToday ? 'ring-2 ring-blue-500' : ''} ${
                             isDueDate ? 'ring-2 ring-orange-500' : ''
                           }`}>
                             <div className={`text-sm font-semibold flex justify-between items-start ${
-                              isCurrentMonth ? 'text-gray-800' : 'text-gray-400'
+                              isCurrentMonth 
+                                ? (theme === 'dark' ? 'text-gray-200' : 'text-gray-800') 
+                                : (theme === 'dark' ? 'text-gray-500' : 'text-gray-400')
                             }`}>
                               <span>{currentDate.getDate()}</span>
                               {isDueDate && (
@@ -1283,7 +1287,7 @@ export default function Farmer_Report() {
                   {weatherData?.current && (
                     <div className="overflow-x-auto">
                       <table className="min-w-full text-sm">
-                        <thead className="bg-gray-50">
+                        <thead className={theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}>
                           <tr>
                             <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Metric</th>
                             <th className={`px-3 py-2 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Current Value</th>
@@ -1340,13 +1344,13 @@ export default function Farmer_Report() {
 
               {/* 7-Day Forecast */}
               {weatherData?.daily && weatherData.daily.time && (
-                <div className="bg-white border rounded-lg shadow-sm">
-                  <div className="px-4 py-3 border-b bg-gray-50">
+                <div className={`border rounded-lg shadow-sm ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className={`px-4 py-3 border-b ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                     <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>📅 7-Day Forecast</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
-                      <thead className="bg-gray-50">
+                      <thead className={theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}>
                         <tr>
                           <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Date</th>
                           <th className={`px-3 py-2 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Weather</th>
@@ -1358,7 +1362,7 @@ export default function Farmer_Report() {
                       </thead>
                       <tbody>
                         {weatherData.daily.time.slice(0, 7).map((date, i) => (
-                          <tr key={date} className="border-b last:border-0 hover:bg-gray-50">
+                          <tr key={date} className={`border-b last:border-0 ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
                             <td className="px-3 py-2 font-medium">{new Date(date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</td>
                             <td className="px-3 py-2 text-center">
                               <span className="text-lg">{getWeatherIcon(weatherData.daily.weather_code[i])}</span>
@@ -1384,13 +1388,13 @@ export default function Farmer_Report() {
 
               {/* Soil Conditions */}
               {weatherData?.hourly && (
-                <div className="bg-white border rounded-lg shadow-sm">
-                  <div className="px-4 py-3 border-b bg-gray-50">
+                <div className={`border rounded-lg shadow-sm ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className={`px-4 py-3 border-b ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                     <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🌱 Soil Conditions (Current)</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="min-w-full text-sm">
-                      <thead className="bg-gray-50">
+                      <thead className={theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}>
                         <tr>
                           <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Soil Layer</th>
                           <th className={`px-3 py-2 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Moisture (%)</th>
@@ -1483,8 +1487,8 @@ export default function Farmer_Report() {
                       onClick={() => setSelectedCategory(selectedCategory === key ? 'all' : key)}
                       className={`p-3 rounded-lg border transition-all duration-200 ${
                         selectedCategory === key
-                          ? 'bg-green-100 border-green-500 text-green-800'
-                          : 'bg-white border-gray-200 hover:bg-gray-50'
+                          ? (theme === 'dark' ? 'bg-green-900 border-green-400 text-green-100' : 'bg-green-100 border-green-500 text-green-800')
+                          : (theme === 'dark' ? 'bg-gray-700 border-gray-600 hover:bg-gray-600 text-gray-200' : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700')
                       }`}
                     >
                       <div className="text-2xl mb-1">{category.icon}</div>
@@ -1504,55 +1508,64 @@ export default function Farmer_Report() {
                     return matchesSearch && matchesCategory;
                   })
                   .map(crop => (
-                    <div key={crop.id} className="bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
+                    <div key={crop.id} className={`border rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col h-full ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                       <div className="p-4 flex-1 flex flex-col">
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1 min-w-0 mr-3">
-                            <h3 className="font-semibold text-gray-800 text-lg truncate">{crop.name}</h3>
-                            <p className="text-sm text-gray-600 truncate">
+                            <h3 className={`font-semibold text-lg truncate ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{crop.name}</h3>
+                            <p className={`text-sm truncate ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
                               {cropGuidelinesData.cropCategories[crop.category]?.icon} {cropGuidelinesData.cropCategories[crop.category]?.name}
                             </p>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <div className="text-xs text-gray-500">Growing Period</div>
-                            <div className="text-sm font-semibold whitespace-nowrap">{crop.growingPeriod}</div>
+                            <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Growing Period</div>
+                            <div className={`text-sm font-semibold whitespace-nowrap ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{crop.growingPeriod}</div>
                           </div>
                         </div>
 
                         <div className="space-y-2 text-sm flex-1">
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-600 flex-shrink-0">Expected Yield:</span>
-                            <span className="font-semibold text-green-700 truncate ml-2">{crop.expectedYield}</span>
+                            <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Expected Yield:</span>
+                            <span className={`font-semibold truncate ml-2 ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{crop.expectedYield}</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-600 flex-shrink-0">Water Requirements:</span>
-                            <span className="font-semibold truncate ml-2">{crop.waterRequirements}</span>
+                            <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Water Requirements:</span>
+                            <span 
+                              className={`font-semibold truncate ml-2 cursor-help ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}
+                              title={crop.waterRequirements}
+                            >
+                              {crop.waterRequirements.length > 20 ? 
+                                `${crop.waterRequirements.substring(0, 20)}...` : 
+                                crop.waterRequirements
+                              }
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-600 flex-shrink-0">Difficulty:</span>
+                            <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Difficulty:</span>
                             <span className={`font-semibold flex-shrink-0 ml-2 ${
-                              crop.difficulty === 'Easy' ? 'text-green-600' :
-                              crop.difficulty === 'Moderate' ? 'text-yellow-600' : 'text-red-600'
+                              crop.difficulty === 'Easy' ? (theme === 'dark' ? 'text-green-400' : 'text-green-600') :
+                              crop.difficulty === 'Moderate' ? (theme === 'dark' ? 'text-yellow-400' : 'text-yellow-600') : 
+                              (theme === 'dark' ? 'text-red-400' : 'text-red-600')
                             }`}>
                               {crop.difficulty}
                             </span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-600 flex-shrink-0">Market Price:</span>
-                            <span className="font-semibold text-blue-700 truncate ml-2">{crop.marketPrice}</span>
+                            <span className={`flex-shrink-0 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Market Price:</span>
+                            <span className={`font-semibold truncate ml-2 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>{crop.marketPrice}</span>
                           </div>
                         </div>
 
-                        <div className="mt-3 pt-3 border-t">
-                          <div className="text-xs text-gray-500 mb-2">Key Varieties:</div>
+                        <div className={`mt-3 pt-3 border-t ${theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}>
+                          <div className={`text-xs mb-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Key Varieties:</div>
                           <div className="flex flex-wrap gap-1 min-h-[24px]">
                             {crop.varieties.slice(0, 3).map((variety, idx) => (
-                              <span key={idx} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs truncate max-w-[80px]">
+                              <span key={idx} className={`px-2 py-1 rounded text-xs truncate max-w-[80px] ${theme === 'dark' ? 'bg-gray-600 text-gray-200' : 'bg-gray-100 text-gray-700'}`}>
                                 {variety}
                               </span>
                             ))}
                             {crop.varieties.length > 3 && (
-                              <span className="text-gray-500 text-xs flex-shrink-0">+{crop.varieties.length - 3} more</span>
+                              <span className={`text-xs flex-shrink-0 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>+{crop.varieties.length - 3} more</span>
                             )}
                           </div>
                         </div>
@@ -1576,37 +1589,37 @@ export default function Farmer_Report() {
               </div>
 
               {/* Farming Calendar Reference */}
-              <div className="bg-white border rounded-lg shadow-sm">
-                <div className="px-4 py-3 border-b bg-gray-50">
-                  <h3 className="font-semibold text-gray-800">📅 Philippine Farming Calendar</h3>
+              <div className={`border rounded-lg shadow-sm ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <div className={`px-4 py-3 border-b ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
+                  <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>📅 Philippine Farming Calendar</h3>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-sm">
-                    <thead className="bg-gray-50">
+                    <thead className={theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}>
                       <tr>
-                        <th className="px-3 py-2 text-left font-medium text-gray-600">Month</th>
-                        <th className="px-3 py-2 text-left font-medium text-gray-600">Season</th>
-                        <th className="px-3 py-2 text-left font-medium text-gray-600">Planting Activities</th>
-                        <th className="px-3 py-2 text-left font-medium text-gray-600">Harvest Activities</th>
-                        <th className="px-3 py-2 text-left font-medium text-gray-600">Weather Notes</th>
+                        <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Month</th>
+                        <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Season</th>
+                        <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Planting Activities</th>
+                        <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Harvest Activities</th>
+                        <th className={`px-3 py-2 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Weather Notes</th>
                       </tr>
                     </thead>
                     <tbody>
                       {Object.entries(cropGuidelinesData.farmingCalendar).map(([month, data]) => (
-                        <tr key={month} className="border-b last:border-0 hover:bg-gray-50">
-                          <td className="px-3 py-2 font-medium text-gray-800 capitalize">{month}</td>
+                        <tr key={month} className={`border-b last:border-0 ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}>
+                          <td className={`px-3 py-2 font-medium capitalize ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{month}</td>
                           <td className="px-3 py-2 text-sm">
-                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold">
+                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${theme === 'dark' ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800'}`}>
                               {data.season}
                             </span>
                           </td>
-                          <td className="px-3 py-2 text-sm text-green-700">
+                          <td className={`px-3 py-2 text-sm ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>
                             {data.plantingActivities.join(', ')}
                           </td>
-                          <td className="px-3 py-2 text-sm text-orange-700">
+                          <td className={`px-3 py-2 text-sm ${theme === 'dark' ? 'text-orange-400' : 'text-orange-700'}`}>
                             {data.harvestActivities.join(', ')}
                           </td>
-                          <td className="px-3 py-2 text-xs text-gray-600">
+                          <td className={`px-3 py-2 text-xs ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                             {data.weatherConsiderations}
                           </td>
                         </tr>
@@ -1645,7 +1658,11 @@ export default function Farmer_Report() {
                       <select 
                         value={newCrop.cropType} 
                         onChange={(e) => setNewCrop({...newCrop, cropType: e.target.value})}
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
                       >
                         <option value="">Select crop type</option>
                         <option value="Rice">Rice (Palay)</option>
@@ -1661,7 +1678,11 @@ export default function Farmer_Report() {
                         value={newCrop.variety} 
                         onChange={(e) => setNewCrop({...newCrop, variety: e.target.value})}
                         placeholder="e.g., IR64, Sweet variety"
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
                   </div>
@@ -1673,7 +1694,11 @@ export default function Farmer_Report() {
                         type="date" 
                         value={newCrop.plantingDate} 
                         onChange={(e) => setNewCrop({...newCrop, plantingDate: e.target.value})}
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
                       />
                     </div>
                     <div>
@@ -1684,7 +1709,11 @@ export default function Farmer_Report() {
                         value={newCrop.area} 
                         onChange={(e) => setNewCrop({...newCrop, area: e.target.value})}
                         placeholder="e.g., 1.5"
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
                   </div>
@@ -1697,15 +1726,23 @@ export default function Farmer_Report() {
                         value={newCrop.expectedYield} 
                         onChange={(e) => setNewCrop({...newCrop, expectedYield: e.target.value})}
                         placeholder="e.g., 5000"
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Current Stage</label>
+                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Current Stage</label>
                       <select 
                         value={newCrop.currentStage} 
                         onChange={(e) => setNewCrop({...newCrop, currentStage: e.target.value})}
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
                       >
                         <option value="Seedling">Seedling</option>
                         <option value="Vegetative">Vegetative</option>
@@ -1717,13 +1754,17 @@ export default function Farmer_Report() {
                   </div>
                   
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Additional Notes</label>
+                    <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Additional Notes</label>
                     <textarea 
                       value={newCrop.notes} 
                       onChange={(e) => setNewCrop({...newCrop, notes: e.target.value})}
                       placeholder="Any additional information about this crop..."
                       rows="2"
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                      className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none ${
+                        theme === 'dark' 
+                          ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                      }`}
                     />
                   </div>
                 </div>
@@ -1750,18 +1791,18 @@ export default function Farmer_Report() {
 
         {showMonthlyReportModal && selectedCropForReport && (
           <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8 overflow-y-auto">
-            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto">
+            <div className={`rounded-xl shadow-2xl max-w-2xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
               {/* Modal Header */}
-              <div className="px-4 sm:px-6 py-3 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
+              <div className={`px-4 sm:px-6 py-3 border-b ${theme === 'dark' ? 'bg-gradient-to-r from-green-900/50 to-green-800/50 border-gray-600' : 'bg-gradient-to-r from-green-50 to-green-100 border-gray-200'}`}>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg">
                     <span className="text-white text-sm">📋</span>
                   </div>
                   <div>
-                    <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                    <h3 className={`text-lg sm:text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                       Add Report for {selectedCropForReport.cropType}
                     </h3>
-                    <p className="text-xs sm:text-sm text-gray-600">Record progress and observations</p>
+                    <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Record progress and observations</p>
                   </div>
                 </div>
               </div>
@@ -1770,20 +1811,28 @@ export default function Farmer_Report() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Report Date *</label>
+                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Report Date *</label>
                       <input 
                         type="date" 
                         value={newReport.reportDate} 
                         onChange={(e) => setNewReport({...newReport, reportDate: e.target.value})}
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
                       />
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Growth Stage *</label>
+                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Growth Stage *</label>
                       <select 
                         value={newReport.growthStage} 
                         onChange={(e) => setNewReport({...newReport, growthStage: e.target.value})}
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
                       >
                         <option value="">Select stage</option>
                         <option value="Seedling">Seedling</option>
@@ -1797,21 +1846,29 @@ export default function Farmer_Report() {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Plant Height (cm)</label>
+                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Plant Height (cm)</label>
                       <input 
                         type="number" 
                         value={newReport.plantHeight} 
                         onChange={(e) => setNewReport({...newReport, plantHeight: e.target.value})}
                         placeholder="e.g., 45"
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Health Status</label>
+                      <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Health Status</label>
                       <select 
                         value={newReport.healthStatus || 'Good'} 
                         onChange={(e) => setNewReport({...newReport, healthStatus: e.target.value})}
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-gray-900'
+                        }`}
                       >
                         <option value="Excellent">Excellent</option>
                         <option value="Good">Good</option>
@@ -1822,22 +1879,26 @@ export default function Farmer_Report() {
                   </div>
                   
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Observations & Notes</label>
+                    <label className={`block text-xs sm:text-sm font-semibold mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Observations & Notes</label>
                     <textarea 
                       value={newReport.notes} 
                       onChange={(e) => setNewReport({...newReport, notes: e.target.value})}
                       placeholder="Observations, problems, treatments applied..."
                       rows="2"
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                      className={`w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none ${
+                        theme === 'dark' 
+                          ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                      }`}
                     />
                   </div>
                 </div>
               </div>
               {/* Modal Footer */}
-              <div className="px-4 sm:px-6 py-3 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row justify-end gap-2">
+              <div className={`px-4 sm:px-6 py-3 border-t flex flex-col sm:flex-row justify-end gap-2 ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                 <button 
                   onClick={() => setShowMonthlyReportModal(false)}
-                  className="w-full sm:w-auto px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+                  className={`w-full sm:w-auto px-4 py-2 text-sm border rounded-lg transition-colors duration-200 font-medium ${theme === 'dark' ? 'text-gray-300 bg-gray-800 border-gray-600 hover:bg-gray-700' : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'}`}
                 >
                   Cancel
                 </button>
@@ -1855,26 +1916,26 @@ export default function Farmer_Report() {
         {/* Professional Detailed Monthly Report Modal */}
         {showDetailedReportModal && selectedCropForReport && (
           <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8 overflow-y-auto">
-            <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto">
+            <div className={`rounded-xl shadow-2xl max-w-4xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
               {/* Modal Header */}
-              <div className="px-4 sm:px-6 py-3 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
+              <div className={`px-4 sm:px-6 py-3 border-b ${theme === 'dark' ? 'bg-gradient-to-r from-green-900/50 to-green-800/50 border-gray-600' : 'bg-gradient-to-r from-green-50 to-green-100 border-gray-200'}`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg shadow-sm">
                       <span className="text-white text-sm">📊</span>
                     </div>
                     <div>
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                      <h3 className={`text-lg sm:text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                         Monthly Report - {selectedCropForReport.cropType}
                       </h3>
-                      <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                      <p className={`text-xs sm:text-sm mt-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                         {selectedCropForReport.variety} • {selectedCropForReport.area} ha • Planted: {selectedCropForReport.plantingDate}
                       </p>
                     </div>
                   </div>
                   <button 
                     onClick={() => setShowDetailedReportModal(false)}
-                    className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-white/80 rounded-lg transition-all duration-200 hover:shadow-sm"
+                    className={`flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200 hover:shadow-sm ${theme === 'dark' ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' : 'text-gray-500 hover:text-gray-700 hover:bg-white/80'}`}
                   >
                     <span className="text-xl font-light">&times;</span>
                   </button>
@@ -1884,29 +1945,29 @@ export default function Farmer_Report() {
               <div className="p-4 sm:p-6">
                 {/* Current Weather Integration */}
                 {weatherData?.current && (
-                  <div className="mb-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl">
+                  <div className={`mb-4 p-4 border rounded-xl ${theme === 'dark' ? 'bg-gradient-to-r from-gray-700/50 to-gray-600/50 border-gray-600' : 'bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200'}`}>
                     <div className="flex items-center gap-3 mb-3">
                       <div className="flex items-center justify-center w-6 h-6 bg-gray-600 rounded-lg">
                         <span className="text-white text-xs">🌤️</span>
                       </div>
-                      <h4 className="text-sm sm:text-lg font-bold text-gray-800">Current Weather Conditions</h4>
+                      <h4 className={`text-sm sm:text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Current Weather Conditions</h4>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      <div className="bg-white p-2 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow duration-200">
-                        <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Temperature</div>
-                        <div className="text-lg font-bold text-gray-800">{Math.round(weatherData.current.temperature_2m)}°C</div>
+                      <div className={`p-2 rounded-lg border hover:shadow-sm transition-shadow duration-200 ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'}`}>
+                        <div className={`text-xs uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Temperature</div>
+                        <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{Math.round(weatherData.current.temperature_2m)}°C</div>
                       </div>
-                      <div className="bg-white p-3 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow duration-200">
-                        <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Humidity</div>
-                        <div className="text-lg font-bold text-gray-800">{weatherData.current.relative_humidity_2m}%</div>
+                      <div className={`p-3 rounded-lg border hover:shadow-sm transition-shadow duration-200 ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'}`}>
+                        <div className={`text-xs uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Humidity</div>
+                        <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{weatherData.current.relative_humidity_2m}%</div>
                       </div>
-                      <div className="bg-white p-3 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow duration-200">
-                        <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Precipitation</div>
-                        <div className="text-lg font-bold text-gray-800">{weatherData.current.precipitation} mm</div>
+                      <div className={`p-3 rounded-lg border hover:shadow-sm transition-shadow duration-200 ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'}`}>
+                        <div className={`text-xs uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Precipitation</div>
+                        <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{weatherData.current.precipitation} mm</div>
                       </div>
-                      <div className="bg-white p-3 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow duration-200">
-                        <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Wind Speed</div>
-                        <div className="text-lg font-bold text-gray-800">{Math.round(weatherData.current.wind_speed_10m)} km/h</div>
+                      <div className={`p-3 rounded-lg border hover:shadow-sm transition-shadow duration-200 ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'}`}>
+                        <div className={`text-xs uppercase tracking-wide mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Wind Speed</div>
+                        <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{Math.round(weatherData.current.wind_speed_10m)} km/h</div>
                       </div>
                     </div>
                   </div>
@@ -1914,18 +1975,18 @@ export default function Farmer_Report() {
 
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                   {/* Basic Information */}
-                  <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                  <div className={`p-6 rounded-xl border ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                     <div className="flex items-center gap-3 mb-6">
                       <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg">
                         <span className="text-white text-sm">📋</span>
                       </div>
-                      <h4 className="text-lg font-bold text-gray-800">Basic Report Information</h4>
+                      <h4 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Basic Report Information</h4>
                     </div>
                     
                     <div className="space-y-6">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">Report Date *</label>
+                          <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Report Date *</label>
                           <input 
                             type="date" 
                             value={newReport.reportDate} 
@@ -1934,7 +1995,7 @@ export default function Farmer_Report() {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">Growth Stage *</label>
+                          <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Growth Stage *</label>
                           <select 
                             value={newReport.growthStage} 
                             onChange={(e) => setNewReport({...newReport, growthStage: e.target.value})}
@@ -1958,15 +2019,23 @@ export default function Farmer_Report() {
                             value={newReport.plantHeight} 
                             onChange={(e) => setNewReport({...newReport, plantHeight: e.target.value})}
                             placeholder="e.g., 45"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                              theme === 'dark' 
+                                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                            }`}
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">Health Status</label>
+                          <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Health Status</label>
                           <select 
                             value={newReport.healthStatus} 
                             onChange={(e) => setNewReport({...newReport, healthStatus: e.target.value})}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                              theme === 'dark' 
+                                ? 'bg-gray-700 border-gray-600 text-white' 
+                                : 'bg-white border-gray-300 text-gray-900'
+                            }`}
                           >
                             <option value="Healthy">Healthy</option>
                             <option value="Warning">Warning</option>
@@ -1977,21 +2046,29 @@ export default function Farmer_Report() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">Estimated Yield (kg)</label>
+                          <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Estimated Yield (kg)</label>
                           <input 
                             type="number" 
                             value={newReport.estimatedYield} 
                             onChange={(e) => setNewReport({...newReport, estimatedYield: e.target.value})}
                             placeholder="e.g., 5000"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                              theme === 'dark' 
+                                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                            }`}
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">Soil Condition</label>
+                          <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Soil Condition</label>
                           <select 
                             value={newReport.soilCondition} 
                             onChange={(e) => setNewReport({...newReport, soilCondition: e.target.value})}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                              theme === 'dark' 
+                                ? 'bg-gray-700 border-gray-600 text-white' 
+                                : 'bg-white border-gray-300 text-gray-900'
+                            }`}
                           >
                             <option value="">Select condition</option>
                             <option value="Excellent">Excellent</option>
@@ -2005,65 +2082,85 @@ export default function Farmer_Report() {
                   </div>
 
                   {/* Management Activities */}
-                  <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                  <div className={`p-6 rounded-xl border ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                     <div className="flex items-center gap-3 mb-6">
                       <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg">
                         <span className="text-white text-sm">🌿</span>
                       </div>
-                      <h4 className="text-lg font-bold text-gray-800">Management Activities</h4>
+                      <h4 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Management Activities</h4>
                     </div>
                     
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Pests Observed</label>
+                        <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Pests Observed</label>
                         <input 
                           type="text" 
                           value={newReport.pestsObserved} 
                           onChange={(e) => setNewReport({...newReport, pestsObserved: e.target.value})}
                           placeholder="e.g., Aphids, Spider mites"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                            theme === 'dark' 
+                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                          }`}
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Diseases Observed</label>
+                        <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Diseases Observed</label>
                         <input 
                           type="text" 
                           value={newReport.diseasesObserved} 
                           onChange={(e) => setNewReport({...newReport, diseasesObserved: e.target.value})}
                           placeholder="e.g., Leaf spot, Powdery mildew"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                            theme === 'dark' 
+                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                          }`}
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Fertilizers Applied</label>
+                        <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Fertilizers Applied</label>
                         <input 
                           type="text" 
                           value={newReport.fertilizersApplied} 
                           onChange={(e) => setNewReport({...newReport, fertilizersApplied: e.target.value})}
                           placeholder="e.g., NPK 14-14-14, 50kg"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                            theme === 'dark' 
+                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                          }`}
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Pesticide Applications</label>
+                        <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Pesticide Applications</label>
                         <input 
                           type="text" 
                           value={newReport.pesticideApplications} 
                           onChange={(e) => setNewReport({...newReport, pesticideApplications: e.target.value})}
                           placeholder="e.g., Insecticide spray for aphids"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                            theme === 'dark' 
+                              ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                          }`}
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Irrigation Frequency</label>
+                        <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Irrigation Frequency</label>
                         <select 
                           value={newReport.irrigationFrequency} 
                           onChange={(e) => setNewReport({...newReport, irrigationFrequency: e.target.value})}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                            theme === 'dark' 
+                              ? 'bg-gray-700 border-gray-600 text-white' 
+                              : 'bg-white border-gray-300 text-gray-900'
+                          }`}
                         >
                           <option value="">Select frequency</option>
                           <option value="Daily">Daily</option>
@@ -2078,109 +2175,141 @@ export default function Farmer_Report() {
                 </div>
 
                 {/* Additional Information Sections */}
-                <div className="mt-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <div className={`mt-8 p-6 rounded-xl border ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg">
                       <span className="text-white text-sm">📝</span>
                     </div>
-                    <h4 className="text-lg font-bold text-gray-800">Additional Information</h4>
+                    <h4 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Additional Information</h4>
                   </div>
                   
                   <div className="space-y-6">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Major Activities This Month</label>
+                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Major Activities This Month</label>
                       <textarea 
                         value={newReport.majorActivities} 
                         onChange={(e) => setNewReport({...newReport, majorActivities: e.target.value})}
                         placeholder="e.g., Transplanting, weeding, fertilizer application..."
                         rows="3"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Challenges Faced</label>
+                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Challenges Faced</label>
                       <textarea 
                         value={newReport.challenges} 
                         onChange={(e) => setNewReport({...newReport, challenges: e.target.value})}
                         placeholder="e.g., Pest infestation, drought stress, equipment issues..."
                         rows="3"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Planned Actions for Next Month</label>
+                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Planned Actions for Next Month</label>
                       <textarea 
                         value={newReport.plannedActions} 
                         onChange={(e) => setNewReport({...newReport, plannedActions: e.target.value})}
                         placeholder="e.g., Apply growth booster, pest monitoring, harvest preparation..."
                         rows="3"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Additional Notes</label>
+                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Additional Notes</label>
                       <textarea 
                         value={newReport.notes} 
                         onChange={(e) => setNewReport({...newReport, notes: e.target.value})}
                         placeholder="Any other observations, treatments applied, or important notes..."
                         rows="4"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none"
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 resize-none ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Cost Tracking */}
-                <div className="mt-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <div className={`mt-8 p-6 rounded-xl border ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg">
                       <span className="text-white text-sm">💰</span>
                     </div>
-                    <h4 className="text-lg font-bold text-gray-800">Monthly Costs (Optional)</h4>
+                    <h4 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Monthly Costs (Optional)</h4>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Seeds (₱)</label>
+                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Seeds (₱)</label>
                       <input 
                         type="number" 
                         value={newReport.costs.seeds} 
                         onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, seeds: e.target.value}})}
                         placeholder="0.00"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Fertilizer (₱)</label>
+                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Fertilizer (₱)</label>
                       <input 
                         type="number" 
                         value={newReport.costs.fertilizer} 
                         onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, fertilizer: e.target.value}})}
                         placeholder="0.00"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Pesticides (₱)</label>
+                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Pesticides (₱)</label>
                       <input 
                         type="number" 
                         value={newReport.costs.pesticides} 
                         onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, pesticides: e.target.value}})}
                         placeholder="0.00"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Labor (₱)</label>
+                      <label className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Labor (₱)</label>
                       <input 
                         type="number" 
                         value={newReport.costs.labor} 
                         onChange={(e) => setNewReport({...newReport, costs: {...newReport.costs, labor: e.target.value}})}
                         placeholder="0.00"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200"
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors duration-200 ${
+                          theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                        }`}
                       />
                     </div>
                   </div>
@@ -2188,9 +2317,9 @@ export default function Farmer_Report() {
               </div>
 
               {/* Modal Footer */}
-              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
+              <div className={`px-6 py-4 border-t ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                  <div className="text-sm text-gray-600">
+                  <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                     <span className="flex items-center gap-1">
                       <span className="text-red-500">*</span>
                       Required fields. Weather data will be automatically included.
@@ -2199,7 +2328,11 @@ export default function Farmer_Report() {
                   <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-3">
                     <button 
                       onClick={() => setShowDetailedReportModal(false)}
-                      className="w-full sm:w-auto px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
+                      className={`w-full sm:w-auto px-6 py-3 border rounded-lg transition-colors duration-200 font-medium ${
+                        theme === 'dark' 
+                          ? 'text-gray-300 bg-gray-800 border-gray-600 hover:bg-gray-700' 
+                          : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50'
+                      }`}
                     >
                       Cancel
                     </button>
@@ -2219,9 +2352,9 @@ export default function Farmer_Report() {
         {/* Professional Crop Detail Modal */}
         {showCropDetail && selectedCrop && (
           <div className="fixed inset-0 bg-black/70 flex items-start justify-center z-50 p-4 pt-24 pb-8 overflow-y-auto">
-            <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto">
+            <div className={`rounded-xl shadow-2xl max-w-4xl w-full min-h-fit my-auto max-h-[calc(100vh-8rem)] overflow-y-auto ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
               {/* Modal Header */}
-              <div className="px-4 sm:px-6 py-3 bg-gradient-to-r from-green-50 to-green-100 border-b border-gray-200">
+              <div className={`px-4 sm:px-6 py-3 border-b ${theme === 'dark' ? 'bg-gradient-to-r from-green-900/50 to-green-800/50 border-gray-600' : 'bg-gradient-to-r from-green-50 to-green-100 border-gray-200'}`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center w-8 h-8 bg-green-600 rounded-lg shadow-sm">
@@ -2230,17 +2363,17 @@ export default function Farmer_Report() {
                       </span>
                     </div>
                     <div>
-                      <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                      <h3 className={`text-lg sm:text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                         {selectedCrop.name} - Complete Growing Guide
                       </h3>
-                      <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                      <p className={`text-xs sm:text-sm mt-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                         Comprehensive farming guide and best practices
                       </p>
                     </div>
                   </div>
                   <button 
                     onClick={() => setShowCropDetail(false)}
-                    className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-white/80 rounded-lg transition-all duration-200 hover:shadow-sm"
+                    className={`flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200 hover:shadow-sm ${theme === 'dark' ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' : 'text-gray-500 hover:text-gray-700 hover:bg-white/80'}`}
                   >
                     <span className="text-xl font-light">&times;</span>
                   </button>
@@ -2252,39 +2385,40 @@ export default function Farmer_Report() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-3">
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-2 text-sm">📋 Basic Information</h4>
-                      <div className="bg-gray-50 p-3 rounded-lg space-y-2 text-xs sm:text-sm">
+                      <h4 className={`font-semibold mb-2 text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>📋 Basic Information</h4>
+                      <div className={`p-3 rounded-lg space-y-2 text-xs sm:text-sm ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}`}>
                         <div className="grid grid-cols-2 gap-2">
-                          <span className="text-gray-600">Category:</span>
-                          <span className="font-semibold">{cropGuidelinesData.cropCategories[selectedCrop.category]?.name}</span>
+                          <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}>Category:</span>
+                          <span className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{cropGuidelinesData.cropCategories[selectedCrop.category]?.name}</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2">
-                          <span className="text-gray-600">Growing Period:</span>
-                          <span className="font-semibold">{selectedCrop.growingPeriod}</span>
+                          <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}>Growing Period:</span>
+                          <span className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{selectedCrop.growingPeriod}</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2">
-                          <span className="text-gray-600">Expected Yield:</span>
-                          <span className="font-semibold text-green-700">{selectedCrop.expectedYield}</span>
+                          <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}>Expected Yield:</span>
+                          <span className={`font-semibold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{selectedCrop.expectedYield}</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2">
-                          <span className="text-gray-600">Difficulty:</span>
+                          <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}>Difficulty:</span>
                           <span className={`font-semibold ${
-                            selectedCrop.difficulty === 'Easy' ? 'text-green-600' :
-                            selectedCrop.difficulty === 'Moderate' ? 'text-yellow-600' : 'text-red-600'
+                            selectedCrop.difficulty === 'Easy' ? (theme === 'dark' ? 'text-green-400' : 'text-green-600') :
+                            selectedCrop.difficulty === 'Moderate' ? (theme === 'dark' ? 'text-yellow-400' : 'text-yellow-600') : 
+                            (theme === 'dark' ? 'text-red-400' : 'text-red-600')
                           }`}>{selectedCrop.difficulty}</span>
                         </div>
                         <div className="grid grid-cols-2 gap-2">
-                          <span className="text-gray-600">Market Price:</span>
-                          <span className="font-semibold text-blue-700">{selectedCrop.marketPrice}</span>
+                          <span className={theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}>Market Price:</span>
+                          <span className={`font-semibold ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>{selectedCrop.marketPrice}</span>
                         </div>
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-2">🌱 Varieties</h4>
+                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🌱 Varieties</h4>
                       <div className="flex flex-wrap gap-2">
                         {selectedCrop.varieties.map((variety, idx) => (
-                          <span key={idx} className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                          <span key={idx} className={`px-3 py-1 rounded-full text-sm font-semibold ${theme === 'dark' ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-800'}`}>
                             {variety}
                           </span>
                         ))}
@@ -2292,35 +2426,46 @@ export default function Farmer_Report() {
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-2">🌿 Growing Requirements</h4>
-                      <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm">
-                        <div><strong>Soil Type:</strong> {selectedCrop.soilType}</div>
-                        <div><strong>Climate:</strong> {selectedCrop.climate}</div>
-                        <div><strong>Spacing:</strong> {selectedCrop.spacing}</div>
-                        <div><strong>Water Requirements:</strong> {selectedCrop.waterRequirements}</div>
-                        <div><strong>Fertilizer:</strong> {selectedCrop.fertilizer}</div>
+                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🌿 Growing Requirements</h4>
+                      <div className={`p-4 rounded-lg space-y-2 text-sm ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                        <div className={theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}><strong>Soil Type:</strong> {selectedCrop.soilType}</div>
+                        <div className={theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}><strong>Climate:</strong> {selectedCrop.climate}</div>
+                        <div className={theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}><strong>Spacing:</strong> {selectedCrop.spacing}</div>
+                        <div className={`relative ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                          <strong>Water Requirements:</strong> 
+                          <span 
+                            className="ml-1 cursor-help"
+                            title={selectedCrop.waterRequirements}
+                          >
+                            {selectedCrop.waterRequirements.length > 50 ? 
+                              `${selectedCrop.waterRequirements.substring(0, 50)}...` : 
+                              selectedCrop.waterRequirements
+                            }
+                          </span>
+                        </div>
+                        <div className={theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}><strong>Fertilizer:</strong> {selectedCrop.fertilizer}</div>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-2">💡 Key Growing Tips</h4>
+                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>💡 Key Growing Tips</h4>
                       <ul className="space-y-2">
                         {selectedCrop.keyTips.map((tip, idx) => (
                           <li key={idx} className="flex items-start gap-2 text-sm">
-                            <span className="text-green-600 mt-1">•</span>
-                            <span>{tip}</span>
+                            <span className={theme === 'dark' ? 'text-green-400 mt-1' : 'text-green-600 mt-1'}>•</span>
+                            <span className={theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}>{tip}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-2">🐛 Common Pests</h4>
+                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🐛 Common Pests</h4>
                       <div className="flex flex-wrap gap-2">
                         {selectedCrop.commonPests.map((pest, idx) => (
-                          <span key={idx} className="bg-red-100 text-red-800 px-2 py-1 rounded text-sm">
+                          <span key={idx} className={`px-2 py-1 rounded text-sm ${theme === 'dark' ? 'bg-red-900 text-red-100' : 'bg-red-100 text-red-800'}`}>
                             {pest}
                           </span>
                         ))}
@@ -2328,10 +2473,10 @@ export default function Farmer_Report() {
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-2">🦠 Common Diseases</h4>
+                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🦠 Common Diseases</h4>
                       <div className="flex flex-wrap gap-2">
                         {selectedCrop.diseases.map((disease, idx) => (
-                          <span key={idx} className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-sm">
+                          <span key={idx} className={`px-2 py-1 rounded text-sm ${theme === 'dark' ? 'bg-orange-900 text-orange-100' : 'bg-orange-100 text-orange-800'}`}>
                             {disease}
                           </span>
                         ))}
@@ -2339,10 +2484,10 @@ export default function Farmer_Report() {
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-2">📅 Planting Seasons</h4>
+                      <h4 className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>📅 Planting Seasons</h4>
                       <div className="space-y-1">
                         {selectedCrop.plantingSeasons.map((season, idx) => (
-                          <div key={idx} className="bg-blue-100 text-blue-800 px-3 py-2 rounded text-sm font-semibold">
+                          <div key={idx} className={`px-3 py-2 rounded text-sm font-semibold ${theme === 'dark' ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800'}`}>
                             {season}
                           </div>
                         ))}
@@ -2353,29 +2498,29 @@ export default function Farmer_Report() {
 
                 {/* Growth Stages */}
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-4">🔄 Growth Stages & Timeline</h4>
+                  <h4 className={`font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>🔄 Growth Stages & Timeline</h4>
                   <div className="overflow-x-auto">
-                    <table className="min-w-full text-sm border border-gray-200 rounded-lg">
-                      <thead className="bg-gray-50">
+                    <table className={`min-w-full text-sm border rounded-lg ${theme === 'dark' ? 'border-gray-600' : 'border-gray-200'}`}>
+                      <thead className={theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}>
                         <tr>
-                          <th className="px-4 py-3 text-left font-medium text-gray-600">Stage</th>
-                          <th className="px-4 py-3 text-center font-medium text-gray-600">Duration</th>
-                          <th className="px-4 py-3 text-left font-medium text-gray-600">Description</th>
-                          <th className="px-4 py-3 text-left font-medium text-gray-600">Key Activities</th>
+                          <th className={`px-4 py-3 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Stage</th>
+                          <th className={`px-4 py-3 text-center font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Duration</th>
+                          <th className={`px-4 py-3 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Description</th>
+                          <th className={`px-4 py-3 text-left font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Key Activities</th>
                         </tr>
                       </thead>
                       <tbody>
                         {selectedCrop.stages.map((stage, idx) => (
-                          <tr key={idx} className="border-t hover:bg-gray-50">
-                            <td className="px-4 py-3 font-semibold text-gray-800">{stage.stage}</td>
-                            <td className="px-4 py-3 text-center font-semibold text-blue-700">{stage.duration}</td>
-                            <td className="px-4 py-3 text-gray-600">{stage.description}</td>
+                          <tr key={idx} className={`border-t ${theme === 'dark' ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-200 hover:bg-gray-50'}`}>
+                            <td className={`px-4 py-3 font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{stage.stage}</td>
+                            <td className={`px-4 py-3 text-center font-semibold ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>{stage.duration}</td>
+                            <td className={`px-4 py-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{stage.description}</td>
                             <td className="px-4 py-3">
                               <ul className="space-y-1">
                                 {stage.activities.map((activity, actIdx) => (
                                   <li key={actIdx} className="flex items-start gap-2 text-sm">
-                                    <span className="text-green-600 mt-1">•</span>
-                                    <span>{activity}</span>
+                                    <span className={theme === 'dark' ? 'text-green-400 mt-1' : 'text-green-600 mt-1'}>•</span>
+                                    <span className={theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}>{activity}</span>
                                   </li>
                                 ))}
                               </ul>
@@ -2389,27 +2534,27 @@ export default function Farmer_Report() {
 
                 {/* Profitability Info */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-green-50 p-4 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-green-700">{selectedCrop.profitability}</div>
-                    <div className="text-sm text-gray-600">Profitability Rating</div>
+                  <div className={`p-4 rounded-lg text-center ${theme === 'dark' ? 'bg-green-900/50' : 'bg-green-50'}`}>
+                    <div className={`text-2xl font-bold ${theme === 'dark' ? 'text-green-400' : 'text-green-700'}`}>{selectedCrop.profitability}</div>
+                    <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Profitability Rating</div>
                   </div>
-                  <div className="bg-blue-50 p-4 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-blue-700">{selectedCrop.marketPrice}</div>
-                    <div className="text-sm text-gray-600">Current Market Price</div>
+                  <div className={`p-4 rounded-lg text-center ${theme === 'dark' ? 'bg-blue-900/50' : 'bg-blue-50'}`}>
+                    <div className={`text-2xl font-bold ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}>{selectedCrop.marketPrice}</div>
+                    <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Current Market Price</div>
                   </div>
-                  <div className="bg-purple-50 p-4 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-purple-700">{selectedCrop.expectedYield}</div>
-                    <div className="text-sm text-gray-600">Expected Yield</div>
+                  <div className={`p-4 rounded-lg text-center ${theme === 'dark' ? 'bg-purple-900/50' : 'bg-purple-50'}`}>
+                    <div className={`text-2xl font-bold ${theme === 'dark' ? 'text-purple-400' : 'text-purple-700'}`}>{selectedCrop.expectedYield}</div>
+                    <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Expected Yield</div>
                   </div>
                 </div>
               </div>
 
-              <div className="px-6 py-4 border-t bg-gray-50 flex justify-between">
-                <div className="text-sm text-gray-600">
+              <div className={`px-6 py-4 border-t flex justify-between ${theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
+                <div className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                   💡 Tip: Consider your local climate and soil conditions when following these guidelines
                 </div>
                 <button onClick={() => setShowCropDetail(false)}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                  className={`px-4 py-2 rounded-lg transition-colors ${theme === 'dark' ? 'bg-gray-600 text-white hover:bg-gray-500' : 'bg-gray-600 text-white hover:bg-gray-700'}`}>
                   Close Guide
                 </button>
               </div>
