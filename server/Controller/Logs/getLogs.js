@@ -193,7 +193,8 @@ async function getLogs(req, res) {
             targetId: log.targetId,
             targetName: log.targetName,
             details: log.details,
-            metadata: log.metadata ? JSON.parse(log.metadata) : null,
+            // metadata is Prisma Json field already parsed by the driver
+            metadata: log.metadata ?? null,
             ipAddress: log.ipAddress,
             userAgent: log.userAgent,
             createdAt: log.createdAt,

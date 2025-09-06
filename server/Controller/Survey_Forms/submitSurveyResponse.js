@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../prisma/generated/index.js';
+import auditLogger from '../../Services/auditLogger.js';
 
 const prisma = new PrismaClient();
 
@@ -88,6 +89,25 @@ export const submitSurveyResponse = async (req, res) => {
                 } : undefined
             }
         });
+
+        // If an admin is submitting on behalf (unlikely), log with adminId; otherwise, fallback to user if available
+        const adminId = req.user?.access === 'Admin' || req.user?.access === 'Super_Admin' ? req.user.id : null;
+        if (adminId) {
+            await auditLogger.log({
+                adminId,
+                action: 'SURVEY_RESPONSE_SUBMIT',
+                targetType: 'SurveyForm',
+                targetId: surveyForm.id,
+                targetName: surveyForm.title,
+                details: `Survey response submitted for form: ${surveyForm.title}`,
+                metadata: {
+                    responseId: surveyResponse.id,
+                    respondentId: userId || null,
+                    answersCount: surveyResponse.answers?.length || 0
+                },
+                req
+            });
+        }
 
         res.status(201).json({
             success: true,

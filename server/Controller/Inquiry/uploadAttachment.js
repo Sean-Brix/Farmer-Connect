@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../prisma/generated/index.js';
+import auditLogger from '../../Services/auditLogger.js';
 
 const prisma = new PrismaClient();
 
@@ -64,6 +65,19 @@ export async function uploadInquiryAttachment(req, res) {
 
   // Provide a streaming URL for inline rendering
   const streamUrl = `/api/inquiries/attachments/${record.id}`;
+  // Log audit trail (attachment upload)
+  try {
+    await auditLogger.log({
+      adminId: req.user?.access === 'Admin' || req.user?.access === 'Super_Admin' ? req.user.id : userId,
+      action: 'INQUIRY_ATTACHMENT_UPLOAD',
+      targetType: 'Inquiry',
+      targetId: inquiry.id,
+      targetName: inquiry.subject,
+      details: `Attachment uploaded: ${original} (${req.file.mimetype}, ${req.file.size} bytes)`,
+      metadata: { attachmentId: record.id, filename: original, mimetype: req.file.mimetype, size: req.file.size },
+      req
+    });
+  } catch {}
   return res.status(201).json({ success: true, data: { ...record, streamUrl } });
   } catch (err) {
     console.error('uploadInquiryAttachment error:', err);

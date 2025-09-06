@@ -308,6 +308,23 @@ function setup_socket(io){
 
                 // Notify admins to update lists/status to IN_PROGRESS
                 if (inquiryId) {
+                    try {
+                        // Attempt to log audit trail for admin reply
+                        const inquiry = await prisma.inquiry.findUnique({ where: { id: inquiryId } });
+                        if (inquiry) {
+                            const { default: auditLogger } = await import('../Services/auditLogger.js');
+                            await auditLogger.logInquiryAction(
+                                socket.user.id,
+                                'INQUIRY_REPLY',
+                                inquiry,
+                                `Admin replied to inquiry: ${inquiry.subject}`,
+                                { length: (data?.message || '').length },
+                                undefined
+                            );
+                        }
+                    } catch (e) {
+                        console.warn('[io] failed to log INQUIRY_REPLY', e?.message);
+                    }
                     io.to('admin_room').emit('admin_inquiry:status_update', {
                         inquiryId,
                         status: 'IN_PROGRESS',

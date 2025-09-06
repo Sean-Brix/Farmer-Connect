@@ -104,22 +104,17 @@ export const updateSurveyForm = async (req, res) => {
         });
 
         // Log the action
-        await auditLogger.log({
-            adminId: adminId,
-            action: 'SURVEY_FORM_UPDATE',
-            targetType: 'SurveyForm',
-            targetId: surveyForm.id,
-            targetName: surveyForm.title,
-            details: `Updated survey form: ${surveyForm.title}`,
-            metadata: {
+        await auditLogger.logSurveyFormAction(
+            adminId,
+            'SURVEY_FORM_UPDATE',
+            surveyForm,
+            `Updated survey form: ${surveyForm.title}`,
+            {
                 action: 'survey_form_updated',
-                title: surveyForm.title,
-                category: surveyForm.category,
-                status: surveyForm.status,
                 fieldsCount: surveyForm._count.fields
             },
-            req: req
-        });
+            req
+        );
 
         res.status(200).json({
             success: true,

@@ -1,5 +1,6 @@
 import { PrismaClient } from '../../prisma/generated/index.js';
 import socketLogoutService from '../../Services/socketLogoutService.js';
+import auditLogger from '../../Services/auditLogger.js';
 
 const prisma = new PrismaClient();
 
@@ -33,6 +34,16 @@ export const resolveInquiry = async (req, res) => {
                 resolvedAt: new Date()
             }
         });
+
+        // Log audit trail
+        await auditLogger.logInquiryAction(
+            req.user.id,
+            'INQUIRY_RESOLVE',
+            resolvedInquiry,
+            `User resolved inquiry: ${resolvedInquiry.subject}`,
+            {},
+            req
+        );
 
         try {
             // Broadcast to admins that inquiry is resolved

@@ -7,6 +7,7 @@ import { seedSurveyForms, seedSurveyResponses, seedSurveyStatistics } from './su
 import { seedChat } from './chat.seed.js';
 import { seedAuditLogs } from './audit.seed.js';
 import { seedDataAccounts, seedDataInventoryItems, seedDataSeminars, seedDataFAQsAndInquiries } from './data-import.seed.js';
+import { seedAccountImages, seedSeminarImages } from './images.seed.js';
 import { seedUserPreferences, seedRegisteredCrops } from './preferences-and-crops.seed.js';
 
 const prisma = new PrismaClient();
@@ -64,6 +65,8 @@ async function main() {
     await runStep('ItemTransactions', () => seedItemTransactions(prisma, { perStackMax: 7 }));
 
   await runStep('DataSeminars', () => seedDataSeminars(prisma));
+  await runStep('AccountImages', () => seedAccountImages(prisma));
+  await runStep('SeminarImages', () => seedSeminarImages(prisma));
   await runStep('FAQs', () => seedFAQs(prisma, { count: 40 }));
   await runStep('DataFAQs&Inquiries', () => seedDataFAQsAndInquiries(prisma));
   await runStep('Inquiries', () => seedInquiries(prisma, { count: 200 }));

@@ -45,22 +45,18 @@ export const updateSurveyStatistic = async (req, res) => {
         });
 
         // Log the action
-        await auditLogger.log({
-            adminId: adminId,
-            action: 'SURVEY_STATISTIC_UPDATE',
-            targetType: 'SurveyStatistic',
-            targetId: updatedStatistic.id,
-            targetName: updatedStatistic.title,
-            details: `Updated survey statistic: ${updatedStatistic.title} for survey: ${existingStatistic.surveyForm.title}`,
-            metadata: {
+        await auditLogger.logSurveyStatisticAction(
+            adminId,
+            'SURVEY_STATISTIC_UPDATE',
+            updatedStatistic,
+            `Updated survey statistic: ${updatedStatistic.title} for survey: ${existingStatistic.surveyForm.title}`,
+            {
                 action: 'survey_statistic_updated',
-                statisticTitle: updatedStatistic.title,
-                chartType: updatedStatistic.chartType,
                 surveyFormId: existingStatistic.surveyFormId,
                 surveyFormTitle: existingStatistic.surveyForm.title
             },
-            req: req
-        });
+            req
+        );
 
         res.status(200).json({
             success: true,

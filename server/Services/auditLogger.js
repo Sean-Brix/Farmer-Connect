@@ -1,4 +1,4 @@
-import { PrismaClient } from '../prisma/generated/client.js';
+import { PrismaClient } from '../prisma/generated/index.js';
 
 const prisma = new PrismaClient();
 
@@ -73,7 +73,7 @@ class AuditLogger {
             }
 
             // Create the audit log entry
-            const auditLog = await prisma.auditLog.create({
+        const auditLog = await prisma.auditLog.create({
                 data: {
                     adminId,
                     action,
@@ -81,7 +81,7 @@ class AuditLogger {
                     targetId,
                     targetName,
                     details,
-                    metadata: metadata ? JSON.stringify(metadata) : null,
+            metadata: metadata ?? null,
                     ipAddress,
                     userAgent,
                 },
@@ -267,6 +267,109 @@ class AuditLogger {
             targetName: item.name || item.itemName,
             details,
             metadata: {
+                ...additionalData,
+            },
+            req,
+        });
+    }
+
+    /**
+     * Convenience method for inquiry actions
+     */
+    async logInquiryAction(
+        adminId,
+        action,
+        inquiry,
+        details = null,
+        additionalData = {},
+        req = null
+    ) {
+        return this.log({
+            adminId,
+            action,
+            targetType: 'Inquiry',
+            targetId: inquiry?.id,
+            targetName: inquiry?.subject,
+            details,
+            metadata: {
+                status: inquiry?.status,
+                userId: inquiry?.userId,
+                ...additionalData,
+            },
+            req,
+        });
+    }
+
+    /**
+     * Convenience methods for survey actions
+     */
+    async logSurveyFormAction(adminId, action, surveyForm, details = null, additionalData = {}, req = null) {
+        return this.log({
+            adminId,
+            action,
+            targetType: 'SurveyForm',
+            targetId: surveyForm?.id,
+            targetName: surveyForm?.title,
+            details,
+            metadata: {
+                category: surveyForm?.category,
+                status: surveyForm?.status,
+                ...additionalData,
+            },
+            req,
+        });
+    }
+
+    async logSurveyStatisticAction(adminId, action, statistic, details = null, additionalData = {}, req = null) {
+        return this.log({
+            adminId,
+            action,
+            targetType: 'SurveyStatistic',
+            targetId: statistic?.id,
+            targetName: statistic?.title,
+            details,
+            metadata: {
+                chartType: statistic?.chartType,
+                surveyFormId: statistic?.surveyFormId,
+                ...additionalData,
+            },
+            req,
+        });
+    }
+
+    /**
+     * Convenience methods for seed tracking actions
+     */
+    async logRegisteredCropAction(adminId, action, crop, details = null, additionalData = {}, req = null) {
+        return this.log({
+            adminId,
+            action,
+            targetType: 'RegisteredCrop',
+            targetId: crop?.id,
+            targetName: `${crop?.cropType || 'Crop'} ${crop?.variety || ''}`.trim(),
+            details,
+            metadata: {
+                cropType: crop?.cropType,
+                variety: crop?.variety,
+                status: crop?.status,
+                currentStage: crop?.currentStage,
+                ...additionalData,
+            },
+            req,
+        });
+    }
+
+    async logCropReportAction(adminId, action, report, details = null, additionalData = {}, req = null) {
+        return this.log({
+            adminId,
+            action,
+            targetType: 'CropMonthlyReport',
+            targetId: report?.id,
+            targetName: `Report ${report?.reportDate ? new Date(report.reportDate).toISOString().slice(0,10) : ''}`.trim(),
+            details,
+            metadata: {
+                cropId: report?.cropId,
+                growthStage: report?.growthStage,
                 ...additionalData,
             },
             req,
