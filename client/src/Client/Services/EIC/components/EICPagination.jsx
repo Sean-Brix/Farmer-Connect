@@ -1,20 +1,24 @@
+import { useTheme } from '../../../../contexts/ThemeContext';
+
 export default function EICPagination({ 
     currentPage, 
     setCurrentPage, 
     totalPages 
 }) {
+    const { isDark } = useTheme();
+    
     if (totalPages <= 1) return null;
 
     return (
         <div className="flex justify-center mt-6 mb-2">
             <nav
-                className="flex items-center gap-1 bg-white rounded-lg shadow-md border-2 border-gray-200 px-3 py-1.5"
+                className={`flex items-center gap-1 ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'} rounded-lg shadow-md border-2 px-3 py-1.5`}
                 aria-label="Pagination"
             >
                 <button
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-600 hover:bg-gray-100 hover:text-gray-800 ${
+                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${isDark ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'} ${
                         currentPage === 1
                             ? 'opacity-50 cursor-not-allowed'
                             : ''
@@ -42,13 +46,15 @@ export default function EICPagination({
                             className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                 currentPage === 1
                                     ? 'bg-green-600 text-white shadow-md'
+                                    : isDark 
+                                    ? 'text-gray-200 hover:bg-gray-700'
                                     : 'text-gray-700 hover:bg-gray-100'
                             }`}
                         >
                             1
                         </button>
                         {currentPage > 3 && (
-                            <span className="px-1 text-gray-400">...</span>
+                            <span className={`px-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>...</span>
                         )}
                         {Array.from({ length: 3 }, (_, i) => {
                             const page = currentPage - 1 + i;
@@ -60,6 +66,8 @@ export default function EICPagination({
                                     className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                         currentPage === page
                                             ? 'bg-green-600 text-white shadow-md'
+                                            : isDark 
+                                            ? 'text-gray-200 hover:bg-gray-700'
                                             : 'text-gray-700 hover:bg-gray-100'
                                     }`}
                                 >
@@ -68,13 +76,15 @@ export default function EICPagination({
                             );
                         })}
                         {currentPage < totalPages - 2 && (
-                            <span className="px-1 text-gray-400">...</span>
+                            <span className={`px-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>...</span>
                         )}
                         <button
                             onClick={() => setCurrentPage(totalPages)}
                             className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                 currentPage === totalPages
                                     ? 'bg-green-600 text-white shadow-md'
+                                    : isDark 
+                                    ? 'text-gray-200 hover:bg-gray-700'
                                     : 'text-gray-700 hover:bg-gray-100'
                             }`}
                         >
@@ -89,6 +99,8 @@ export default function EICPagination({
                             className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                 currentPage === i + 1
                                     ? 'bg-green-600 text-white shadow-md'
+                                    : isDark 
+                                    ? 'text-gray-200 hover:bg-gray-700'
                                     : 'text-gray-700 hover:bg-gray-100'
                             }`}
                         >
@@ -99,7 +111,7 @@ export default function EICPagination({
                 <button
                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-600 hover:bg-gray-100 hover:text-gray-800 ${
+                    className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${isDark ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'} ${
                         currentPage === totalPages
                             ? 'opacity-50 cursor-not-allowed'
                             : ''

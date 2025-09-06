@@ -9,7 +9,7 @@ import default_image from './Assets/default_image.jpg';
 const ITEMS_PER_PAGE = 8;
 
 export default function Distribution() {
-    const { theme } = useTheme();
+    const { theme, isDark } = useTheme();
     const navigate = useNavigate();
     const [distributionItems, setDistributionItems] = useState([]);
     const [filter, setFilter] = useState('All');
@@ -1121,28 +1121,28 @@ export default function Distribution() {
         <>
             <Navbar />
             <div
-                className={`flex min-h-screen relative ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}
+                className={`flex min-h-screen relative ${isDark ? 'bg-gray-900' : 'bg-white'}`}
                 style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-[8vh]">
                         <header className="flex flex-col items-center mb-12 w-full">
-                            <span className={`uppercase tracking-widest text-xs font-semibold mb-1 letter-spacing-wide ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                            <span className={`uppercase tracking-widest text-xs font-semibold mb-1 letter-spacing-wide ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                 Welcome to
                             </span>
                             <h1
-                                className={`text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
+                                className={`text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center ${isDark ? 'text-white' : 'text-gray-900'}`}
                                 
                             >
                                 Distribution Center
                             </h1>
-                            <div className={`mt-4 w-24 h-2 rounded-full opacity-90 shadow-lg ${theme === 'dark' ? 'bg-gradient-to-r from-green-400 via-green-400 to-green-300' : 'bg-gradient-to-r from-green-600 via-green-500 to-green-400'}`}></div>
+                            <div className={`mt-4 w-24 h-2 rounded-full opacity-90 shadow-lg ${isDark ? 'bg-gradient-to-r from-green-400 via-green-400 to-green-300' : 'bg-gradient-to-r from-green-600 via-green-500 to-green-400'}`}></div>
                         </header>
 
                         <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
                             <div className="w-full sm:w-auto flex justify-center order-2 sm:order-1">
                                 <button
-                                    className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400"
+                                    className={`flex items-center gap-2 px-5 py-2 rounded-lg ${isDark ? 'bg-green-600 hover:bg-green-700' : 'bg-green-600 hover:bg-green-700'} text-white font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-green-400`}
                                     onClick={handleMyRequestsClick}
                                 >
                                     <i className="fa-solid fa-list-check text-lg"></i>
@@ -1153,21 +1153,21 @@ export default function Distribution() {
                                 <div className="relative w-full sm:w-auto flex justify-center">
                                     <input
                                         type="text"
-                                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 text-gray-900 bg-white shadow transition placeholder:text-gray-400 font-medium"
+                                        className={`w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-gray-500 focus:ring-2 focus:ring-gray-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-900 focus:border-gray-500 focus:ring-2 focus:ring-gray-200 placeholder:text-gray-400'} shadow transition font-medium`}
                                         placeholder="Search by name, category, description..."
                                         value={search}
                                         onChange={(e) =>
                                             setSearch(e.target.value)
                                         }
                                     />
-                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                    <span className={`absolute left-3 top-1/2 -translate-y-1/2 ${isDark ? 'text-gray-400' : 'text-gray-400'} pointer-events-none`}>
                                         <i className="fa-solid fa-magnifying-glass"></i>
                                     </span>
                                 </div>
                                 <div className="relative flex justify-center w-full sm:w-auto">
                                     <button
                                         id="modernFilterButton"
-                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-gray-50 text-gray-700 font-semibold border border-gray-300 shadow transition focus:outline-none"
+                                        className={`flex items-center gap-2 px-4 py-2 rounded-lg ${isDark ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'} font-semibold border shadow transition focus:outline-none`}
                                         onClick={() => setShowFilter((f) => !f)}
                                         type="button"
                                         aria-label="Show filter options"
@@ -1183,7 +1183,7 @@ export default function Distribution() {
                                     {showFilter && (
                                         <div
                                             id="modernFilterDropdown"
-                                            className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-20 animate-fade-in py-2"
+                                            className={`absolute left-0 mt-2 w-48 ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'} rounded-lg shadow-lg border z-20 animate-fade-in py-2`}
                                         >
                                             {filterOptions.map((opt) => (
                                                 <button
@@ -1191,6 +1191,8 @@ export default function Distribution() {
                                                     className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
                                                         filter === opt.value
                                                             ? 'bg-green-600 text-white shadow'
+                                                            : isDark 
+                                                            ? 'text-gray-200 hover:bg-gray-700'
                                                             : 'text-gray-900 hover:bg-gray-50'
                                                     }`}
                                                     onClick={() => {
@@ -1209,7 +1211,7 @@ export default function Distribution() {
                         </div>
                         <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
                             {filteredItems.length === 0 ? (
-                                <div className="col-span-full text-center text-gray-400 py-16 text-lg font-semibold tracking-wide">
+                                <div className={`col-span-full text-center ${isDark ? 'text-gray-400' : 'text-gray-400'} py-16 text-lg font-semibold tracking-wide`}>
                                     No distribution items found.
                                 </div>
                             ) : (
@@ -1217,7 +1219,7 @@ export default function Distribution() {
                                     return (
                                         <div
                                             key={item.id}
-                                            className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-xl border border-gray-200 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]"
+                                            className={`w-full max-w-sm ${isDark ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200'} rounded-2xl shadow-lg hover:shadow-xl border transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]`}
                                         >
                                             <div className="relative">
                                                 <img
@@ -1266,17 +1268,17 @@ export default function Distribution() {
                                                 </span>
                                             </div>
                                             <div className="p-5 flex flex-col flex-1">
-                                                <h3 className="text-xl font-bold mb-2 text-gray-900 line-clamp-1 min-h-[28px]">
+                                                <h3 className={`text-xl font-bold mb-2 ${isDark ? 'text-gray-100' : 'text-gray-900'} line-clamp-1 min-h-[28px]`}>
                                                     {item.Name}
                                                 </h3>
                                                 <p
-                                                    className="text-gray-600 text-sm mb-3 line-clamp-2 min-h-[40px] flex-grow"
+                                                    className={`${isDark ? 'text-gray-300' : 'text-gray-600'} text-sm mb-3 line-clamp-2 min-h-[40px] flex-grow`}
                                                     title={item.description}
                                                 >
                                                     {item.description}
                                                 </p>
                                                 <div className="flex items-center justify-between mb-4">
-                                                    <span className="text-sm text-gray-700 font-semibold">
+                                                    <span className={`text-sm ${isDark ? 'text-gray-200' : 'text-gray-700'} font-semibold`}>
                                                         Qty: {item.quantity}
                                                     </span>
                                                     <div className="flex items-center gap-1">
@@ -1303,7 +1305,7 @@ export default function Distribution() {
                         {totalPages > 1 && (
                             <div className="flex justify-center mt-6 mb-2">
                                 <nav
-                                    className="flex items-center gap-1 bg-white rounded-lg shadow px-3 py-1.5"
+                                    className={`flex items-center gap-1 ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow px-3 py-1.5`}
                                     aria-label="Pagination"
                                 >
                                     <button
@@ -1313,7 +1315,7 @@ export default function Distribution() {
                                             )
                                         }
                                         disabled={currentPage === 1}
-                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-500 hover:bg-gray-200 hover:text-gray-700 ${
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${isDark ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' : 'text-gray-500 hover:bg-gray-200 hover:text-gray-700'} ${
                                             currentPage === 1
                                                 ? 'opacity-50 cursor-not-allowed'
                                                 : ''
@@ -1343,13 +1345,15 @@ export default function Distribution() {
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === 1
                                                         ? 'bg-green-600 text-white'
+                                                        : isDark 
+                                                        ? 'text-gray-200 hover:bg-gray-700'
                                                         : 'text-gray-700 hover:bg-gray-200'
                                                 }`}
                                             >
                                                 1
                                             </button>
                                             {currentPage > 3 && (
-                                                <span className="px-1 text-gray-400">
+                                                <span className={`px-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
                                                     ...
                                                 </span>
                                             )}
@@ -1375,6 +1379,8 @@ export default function Distribution() {
                                                                 currentPage ===
                                                                 page
                                                                     ? 'bg-green-600 text-white'
+                                                                    : isDark 
+                                                                    ? 'text-gray-200 hover:bg-gray-700'
                                                                     : 'text-gray-700 hover:bg-gray-200'
                                                             }`}
                                                         >
@@ -1384,7 +1390,7 @@ export default function Distribution() {
                                                 }
                                             )}
                                             {currentPage < totalPages - 2 && (
-                                                <span className="px-1 text-gray-400">
+                                                <span className={`px-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
                                                     ...
                                                 </span>
                                             )}
@@ -1395,6 +1401,8 @@ export default function Distribution() {
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === totalPages
                                                         ? 'bg-green-600 text-white'
+                                                        : isDark 
+                                                        ? 'text-gray-200 hover:bg-gray-700'
                                                         : 'text-gray-700 hover:bg-gray-200'
                                                 }`}
                                             >
@@ -1413,6 +1421,8 @@ export default function Distribution() {
                                                     className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                         currentPage === i + 1
                                                             ? 'bg-green-600 text-white'
+                                                            : isDark 
+                                                            ? 'text-gray-200 hover:bg-gray-700'
                                                             : 'text-gray-700 hover:bg-gray-200'
                                                     }`}
                                                 >
@@ -1428,7 +1438,7 @@ export default function Distribution() {
                                             )
                                         }
                                         disabled={currentPage === totalPages}
-                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-500 hover:bg-gray-200 hover:text-gray-700 ${
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${isDark ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' : 'text-gray-500 hover:bg-gray-200 hover:text-gray-700'} ${
                                             currentPage === totalPages
                                                 ? 'opacity-50 cursor-not-allowed'
                                                 : ''
@@ -1456,10 +1466,10 @@ export default function Distribution() {
                 </main>
             </div>
             {modalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all pt-24 sm:pt-20 md:pt-16">
-                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in mx-4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 transition-all pt-24 sm:pt-20 md:pt-16">
+                    <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in mx-4`}>
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200 bg-gradient-to-r from-green-600 to-green-700">
+                        <div className={`flex items-center justify-between px-8 py-6 ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b bg-gradient-to-r from-green-600 to-green-700`}>
                             <h2 className="text-xl font-bold text-white">
                                 <i className="fa-solid fa-paper-plane mr-2"></i>
                                 Request Distribution Item
@@ -1487,21 +1497,21 @@ export default function Distribution() {
                                     className="w-16 h-16 rounded-xl object-cover border-2 border-gray-300 shadow"
                                 />
                                 <div className="flex-1">
-                                    <div className="text-lg font-semibold text-gray-900 truncate">
+                                    <div className={`text-lg font-semibold ${isDark ? 'text-gray-100' : 'text-gray-900'} truncate`}>
                                         {selectedItem?.Name}
                                     </div>
-                                    <div className="text-xs text-gray-500">
+                                    <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                         {selectedItem?.category}
                                     </div>
-                                    <div className="text-xs text-gray-500">
+                                    <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                         Available Stock:{' '}
                                         {selectedItem?.quantity}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4">
-                                <p className="text-sm text-gray-700">
+                            <div className={`${isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} border rounded-lg p-3 mb-4`}>
+                                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                                     <i className="fa-solid fa-info-circle mr-2"></i>
                                     <span className="text-red-500">*</span>{' '}
                                     indicates required fields
@@ -1511,7 +1521,7 @@ export default function Distribution() {
                                 <div>
                                     <label
                                         htmlFor="pickupDate"
-                                        className="block text-gray-700 text-sm font-medium mb-1"
+                                        className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
                                     >
                                         Pickup Date{' '}
                                         <span className="text-red-500">*</span>
@@ -1525,7 +1535,9 @@ export default function Distribution() {
                                         className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
                                             formErrors.pickupDate
                                                 ? 'border-red-300 bg-red-50'
-                                                : 'border-gray-300'
+                                                : isDark 
+                                                ? 'border-gray-600 bg-gray-700 text-gray-100'
+                                                : 'border-gray-300 bg-white text-gray-900'
                                         }`}
                                         required
                                         min={
@@ -1543,7 +1555,7 @@ export default function Distribution() {
                                 <div>
                                     <label
                                         htmlFor="quantity"
-                                        className="block text-gray-700 text-sm font-medium mb-1"
+                                        className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
                                     >
                                         Quantity{' '}
                                         <span className="text-red-500">*</span>
@@ -1557,7 +1569,9 @@ export default function Distribution() {
                                         className={`w-full rounded-xl border px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition ${
                                             formErrors.quantity
                                                 ? 'border-red-300 bg-red-50'
-                                                : 'border-gray-300'
+                                                : isDark 
+                                                ? 'border-gray-600 bg-gray-700 text-gray-100'
+                                                : 'border-gray-300 bg-white text-gray-900'
                                         }`}
                                         required
                                         min="1"
@@ -1583,10 +1597,10 @@ export default function Distribution() {
                             <div>
                                 <label
                                     htmlFor="request_note"
-                                    className="block text-gray-700 text-sm font-medium mb-1"
+                                    className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
                                 >
                                     Purpose & Additional Notes
-                                    <span className="text-gray-400 text-xs ml-1">
+                                    <span className={`${isDark ? 'text-gray-500' : 'text-gray-400'} text-xs ml-1`}>
                                         (Optional)
                                     </span>
                                 </label>
@@ -1596,19 +1610,19 @@ export default function Distribution() {
                                     value={requestData.request_note}
                                     onChange={handleInputChange}
                                     rows="3"
-                                    className="w-full rounded-xl border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition resize-none"
+                                    className={`w-full rounded-xl border ${isDark ? 'border-gray-600 bg-gray-700 text-gray-100' : 'border-gray-300 bg-white text-gray-900'} px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none transition resize-none`}
                                     placeholder="Describe the purpose for this distribution item and any special requirements..."
                                 ></textarea>
                             </div>
 
                             {/* Request Summary */}
                             {requestData.pickupDate && requestData.quantity && (
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                    <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                                <div className={`${isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'} border rounded-lg p-4`}>
+                                    <h4 className={`text-sm font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'} mb-2`}>
                                         <i className="fa-solid fa-clipboard-check mr-2"></i>
                                         Request Summary
                                     </h4>
-                                    <div className="space-y-1 text-sm text-gray-600">
+                                    <div className={`space-y-1 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                         <div className="flex justify-between">
                                             <span>Pickup Date:</span>
                                             <span className="font-medium">
@@ -1628,7 +1642,7 @@ export default function Distribution() {
                                                 {requestData.quantity} unit(s)
                                             </span>
                                         </div>
-                                        <div className="text-xs text-green-600 mt-2 p-2 bg-green-50 rounded border">
+                                        <div className={`text-xs text-green-600 mt-2 p-2 ${isDark ? 'bg-green-900/30' : 'bg-green-50'} rounded border`}>
                                             <i className="fa-solid fa-info-circle mr-1"></i>
                                             Distribution items do not require
                                             return
@@ -1639,7 +1653,7 @@ export default function Distribution() {
                             <div className="flex justify-end gap-3 pt-2">
                                 <button
                                     type="button"
-                                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-5 py-2 rounded-xl transition focus:outline-none"
+                                    className={`${isDark ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'} font-semibold px-5 py-2 rounded-xl transition focus:outline-none`}
                                     onClick={handleCloseModal}
                                 >
                                     Cancel
@@ -1666,10 +1680,10 @@ export default function Distribution() {
                 </div>
             )}
             {showMyRequestsModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-all pt-24 sm:pt-20 md:pt-16">
-                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-4 relative overflow-hidden animate-fade-in max-h-[90vh] flex flex-col">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 transition-all pt-24 sm:pt-20 md:pt-16">
+                    <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-4 relative overflow-hidden animate-fade-in max-h-[90vh] flex flex-col`}>
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200 bg-gradient-to-r from-green-600 to-green-700 flex-shrink-0">
+                        <div className={`flex items-center justify-between px-8 py-6 ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b bg-gradient-to-r from-green-600 to-green-700 flex-shrink-0`}>
                             <h2 className="text-xl font-bold text-white">
                                 <i className="fa-solid fa-list mr-2"></i>
                                 My Distribution Requests
@@ -1686,36 +1700,36 @@ export default function Distribution() {
                         <div className="px-8 py-6 space-y-5 overflow-y-auto flex-1">
                             {myRequests.length > 0 ? (
                                 <div>
-                                    <div className="mb-6 text-sm text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-200">
-                                        <i className="fa-solid fa-info-circle mr-2 text-gray-600"></i>
+                                    <div className={`mb-6 text-sm ${isDark ? 'text-gray-300 bg-gray-700 border-gray-600' : 'text-gray-600 bg-gray-50 border-gray-200'} p-4 rounded-xl border`}>
+                                        <i className={`fa-solid fa-info-circle mr-2 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}></i>
                                         <span className="font-medium">
                                             Found {myRequests.length} request
                                             {myRequests.length !== 1 ? 's' : ''}
                                         </span>
-                                        <span className="ml-2 text-gray-500">
+                                        <span className={`ml-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                             • Sorted by most recent first
                                         </span>
                                     </div>
                                     <div className="overflow-x-auto">
-                                        <table className="w-full border-collapse bg-white shadow-sm rounded-xl overflow-hidden">
+                                        <table className={`w-full border-collapse ${isDark ? 'bg-gray-800' : 'bg-white'} shadow-sm rounded-xl overflow-hidden`}>
                                             <thead>
-                                                <tr className="bg-gradient-to-r from-gray-50 to-gray-100 text-left text-gray-700">
-                                                    <th className="py-4 px-6 font-semibold border-b border-gray-200 min-w-[280px]">
+                                                <tr className={`${isDark ? 'bg-gradient-to-r from-gray-700 to-gray-600 text-gray-200' : 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700'} text-left`}>
+                                                    <th className={`py-4 px-6 font-semibold ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b min-w-[280px]`}>
                                                         Item Details
                                                     </th>
-                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 text-center min-w-[80px]">
+                                                    <th className={`py-4 px-4 font-semibold ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b text-center min-w-[80px]`}>
                                                         Quantity
                                                     </th>
-                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 min-w-[120px]">
+                                                    <th className={`py-4 px-4 font-semibold ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b min-w-[120px]`}>
                                                         Pickup Date
                                                     </th>
-                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 text-center min-w-[100px]">
+                                                    <th className={`py-4 px-4 font-semibold ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b text-center min-w-[100px]`}>
                                                         Status
                                                     </th>
-                                                    <th className="py-4 px-6 font-semibold border-b border-gray-200 text-center min-w-[100px]">
+                                                    <th className={`py-4 px-6 font-semibold ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b text-center min-w-[100px]`}>
                                                         Requested
                                                     </th>
-                                                    <th className="py-4 px-4 font-semibold border-b border-gray-200 text-center min-w-[120px]">
+                                                    <th className={`py-4 px-4 font-semibold ${isDark ? 'border-gray-600' : 'border-gray-200'} border-b text-center min-w-[120px]`}>
                                                         Actions
                                                     </th>
                                                 </tr>
@@ -1725,27 +1739,27 @@ export default function Distribution() {
                                                     (request, index) => (
                                                         <tr
                                                             key={request.id}
-                                                            className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${
+                                                            className={`${isDark ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-100 hover:bg-gray-50'} border-b transition-colors ${
                                                                 index % 2 === 0
-                                                                    ? 'bg-white'
-                                                                    : 'bg-gray-25'
+                                                                    ? isDark ? 'bg-gray-800' : 'bg-white'
+                                                                    : isDark ? 'bg-gray-750' : 'bg-gray-25'
                                                             }`}
                                                         >
                                                             <td className="py-5 px-6">
                                                                 <div className="space-y-2">
-                                                                    <div className="font-semibold text-gray-800 text-base leading-tight">
+                                                                    <div className={`font-semibold ${isDark ? 'text-gray-100' : 'text-gray-800'} text-base leading-tight`}>
                                                                         {
                                                                             request.itemName
                                                                         }
                                                                     </div>
-                                                                    <div className="text-sm text-gray-500 font-medium">
+                                                                    <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'} font-medium`}>
                                                                         <i className="fa-solid fa-tag mr-1"></i>
                                                                         {
                                                                             request.itemCategory
                                                                         }
                                                                     </div>
                                                                     {request.requestNote && (
-                                                                        <div className="text-xs text-gray-600 mt-2 p-2 bg-gray-50 rounded-lg border-l-2 border-gray-300">
+                                                                        <div className={`text-xs ${isDark ? 'text-gray-300 bg-gray-700 border-gray-600' : 'text-gray-600 bg-gray-50 border-gray-300'} mt-2 p-2 rounded-lg border-l-2`}>
                                                                             <i className="fa-solid fa-note-sticky mr-1"></i>
                                                                             <span className="font-medium">
                                                                                 Note:
@@ -1765,7 +1779,7 @@ export default function Distribution() {
                                                                 </span>
                                                             </td>
                                                             <td className="py-5 px-4">
-                                                                <div className="text-sm font-medium text-gray-700">
+                                                                <div className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
                                                                     <i className="fa-solid fa-calendar-plus mr-2 text-green-600"></i>
                                                                     {new Date(
                                                                         request.pickupDate
@@ -1807,7 +1821,7 @@ export default function Distribution() {
                                                                 </span>
                                                             </td>
                                                             <td className="py-5 px-6 text-center">
-                                                                <div className="text-xs text-gray-500 font-medium">
+                                                                <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'} font-medium`}>
                                                                     <i className="fa-solid fa-clock mr-1"></i>
                                                                     {new Date(
                                                                         request.createdAt
@@ -1842,7 +1856,7 @@ export default function Distribution() {
                                                                         Cancel
                                                                     </button>
                                                                 ) : (
-                                                                    <span className="text-gray-400 text-sm italic">
+                                                                    <span className={`${isDark ? 'text-gray-500' : 'text-gray-400'} text-sm italic`}>
                                                                         No
                                                                         actions
                                                                         available
@@ -1859,12 +1873,12 @@ export default function Distribution() {
                             ) : (
                                 <div className="text-center py-16">
                                     <div className="mb-4">
-                                        <i className="fa-solid fa-inbox text-6xl text-gray-300"></i>
+                                        <i className={`fa-solid fa-inbox text-6xl ${isDark ? 'text-gray-600' : 'text-gray-300'}`}></i>
                                     </div>
-                                    <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                                    <h3 className={`text-lg font-semibold ${isDark ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
                                         No Requests Found
                                     </h3>
-                                    <p className="text-gray-500">
+                                    <p className={`${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                                         You haven't made any distribution
                                         requests yet.
                                     </p>

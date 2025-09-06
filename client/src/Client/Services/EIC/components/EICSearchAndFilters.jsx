@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTheme } from '../../../../contexts/ThemeContext';
 
 export default function EICSearchAndFilters({ 
     search, 
@@ -11,6 +12,7 @@ export default function EICSearchAndFilters({
     typeIcon,
     onMyRequestsClick 
 }) {
+    const { isDark } = useTheme();
     // Close filter dropdown when clicking outside
     useEffect(() => {
         if (!showFilter) return;
@@ -50,19 +52,19 @@ export default function EICSearchAndFilters({
                 <div className="relative w-full sm:w-auto flex justify-center">
                     <input
                         type="text"
-                        className="w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border-2 border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 text-gray-800 bg-white shadow-sm transition placeholder:text-gray-500 font-medium"
+                        className={`w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border-2 ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-green-500 focus:ring-2 focus:ring-green-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-800 focus:border-green-500 focus:ring-2 focus:ring-green-200 placeholder:text-gray-500'} shadow-sm transition font-medium`}
                         placeholder="Search by name, category, description..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                    <span className={`absolute left-3 top-1/2 -translate-y-1/2 ${isDark ? 'text-gray-400' : 'text-gray-500'} pointer-events-none`}>
                         <i className="fa-solid fa-magnifying-glass"></i>
                     </span>
                 </div>
                 <div className="relative flex justify-center w-full sm:w-auto">
                     <button
                         id="modernFilterButton"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-gray-50 text-gray-700 font-semibold border-2 border-gray-300 shadow-sm hover:shadow-md transition focus:outline-none"
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg ${isDark ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'} font-semibold border-2 shadow-sm hover:shadow-md transition focus:outline-none`}
                         onClick={() => setShowFilter((f) => !f)}
                         type="button"
                         aria-label="Show filter options"
@@ -78,7 +80,7 @@ export default function EICSearchAndFilters({
                     {showFilter && (
                         <div 
                             id="modernFilterDropdown"
-                            className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border-2 border-gray-200 z-20 animate-fade-in py-2"
+                            className={`absolute left-0 mt-2 w-48 ${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'} rounded-lg shadow-xl border-2 z-20 animate-fade-in py-2`}
                         >
                             {filterOptions.map((opt) => (
                                 <button
@@ -86,6 +88,8 @@ export default function EICSearchAndFilters({
                                     className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
                                         filter === opt.value
                                             ? 'bg-green-600 text-white shadow'
+                                            : isDark 
+                                            ? 'text-gray-200 hover:bg-gray-700'
                                             : 'text-gray-800 hover:bg-gray-100'
                                     }`}
                                     onClick={() => {

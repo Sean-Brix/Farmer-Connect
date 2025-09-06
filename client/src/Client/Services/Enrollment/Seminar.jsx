@@ -109,7 +109,7 @@ const cancelSeminar = async (seminarId) => {
 };
 
 export default function Seminar() {
-    const { theme } = useTheme();
+    const { theme, isDark } = useTheme();
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
     const [filterBy, setFilterBy] = useState('Title');
@@ -262,23 +262,23 @@ export default function Seminar() {
         <>
             <Navbar />
             <div
-                className={`flex min-h-screen relative ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}
+                className={`flex min-h-screen relative ${isDark ? 'bg-gray-900' : 'bg-white'}`}
                 style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30 ">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-[8vh] ">
                         {/* Header */}
                         <header className="flex flex-col items-center mb-12 w-full">
-                            <span className={`uppercase tracking-widest text-xs font-semibold mb-1 letter-spacing-wide ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <span className={`uppercase tracking-widest text-xs font-semibold mb-1 letter-spacing-wide ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                 Welcome to
                             </span>
                             <h1
-                                className={`text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}
+                                className={`text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title ${isDark ? 'text-white' : 'text-gray-800'}`}
                                 
                             >
                                 Seminar Enrollment
                             </h1>
-                            <div className={`mt-4 w-24 h-2 rounded-full shadow-lg ${theme === 'dark' ? 'bg-green-400' : 'bg-green-500'}`}></div>
+                            <div className={`mt-4 w-24 h-2 rounded-full shadow-lg ${isDark ? 'bg-green-400' : 'bg-green-500'}`}></div>
                         </header>
                         {/* Modernized: My Registered Seminars Button & Search/Filter Bar */}
                         <div className="w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center max-w-5xl mb-8 gap-4 flex-wrap mx-auto">
@@ -296,7 +296,7 @@ export default function Seminar() {
                                 <div className="relative w-full sm:w-auto flex justify-center">
                                     <input
                                         type="text"
-                                        className={`w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border-2 focus:ring-2 focus:ring-green-200 shadow-sm transition placeholder:text-gray-500 font-medium ${theme === 'dark' ? 'border-gray-600 focus:border-green-400 text-gray-800 bg-white placeholder:text-gray-400' : 'border-gray-300 focus:border-green-500 text-gray-800 bg-white'}`}
+                                        className={`w-full sm:w-72 md:w-80 lg:w-96 px-10 py-2 rounded-lg border-2 focus:ring-2 shadow-sm transition font-medium ${isDark ? 'border-gray-600 bg-gray-800 text-gray-100 focus:border-green-400 focus:ring-green-600 placeholder:text-gray-400' : 'border-gray-300 bg-white text-gray-800 focus:border-green-500 focus:ring-green-200 placeholder:text-gray-500'}`}
                                         placeholder={`Search by ${filterBy.toLowerCase()}...`}
                                         value={search}
                                         onChange={(e) => {
@@ -311,7 +311,11 @@ export default function Seminar() {
                                 {/* Filter Dropdown */}
                                 <div className="relative flex justify-center w-full sm:w-auto">
                                     <button
-                                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white hover:bg-gray-50 text-gray-700 font-semibold border-2 border-gray-300 shadow-sm hover:shadow-md transition focus:outline-none"
+                                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold border-2 shadow-sm hover:shadow-md transition focus:outline-none ${
+                                            isDark 
+                                                ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' 
+                                                : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'
+                                        }`}
                                         onClick={() => setShowFilter((f) => !f)}
                                         type="button"
                                         aria-label="Show filter options"
@@ -321,14 +325,20 @@ export default function Seminar() {
                                         <i className={`fa-solid fa-chevron-${showFilter ? 'up' : 'down'} ml-1`}></i>
                                     </button>
                                     {showFilter && (
-                                        <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border-2 border-gray-200 z-20 animate-fade-in py-2">
+                                        <div className={`absolute left-0 mt-2 w-48 rounded-lg shadow-xl border-2 z-20 animate-fade-in py-2 ${
+                                            isDark 
+                                                ? 'bg-gray-800 border-gray-600' 
+                                                : 'bg-white border-gray-200'
+                                        }`}>
                                             {filterOptions.map((opt) => (
                                                 <button
                                                     key={opt.value}
                                                     className={`flex items-center gap-3 w-full text-left px-4 py-2 rounded-lg font-medium transition text-base ${
                                                         filterBy === opt.value
                                                             ? 'bg-green-600 text-white shadow'
-                                                            : 'text-gray-800 hover:bg-gray-100'
+                                                            : isDark 
+                                                                ? 'text-gray-200 hover:bg-gray-700' 
+                                                                : 'text-gray-800 hover:bg-gray-100'
                                                     }`}
                                                     onClick={() => {
                                                         setFilterBy(opt.value);
@@ -352,7 +362,9 @@ export default function Seminar() {
                                     Loading...
                                 </div>
                             ) : paginatedPrograms.length === 0 ? (
-                                <div className="col-span-full text-center text-gray-500 py-16 text-lg font-semibold tracking-wide">
+                                <div className={`col-span-full text-center py-16 text-lg font-semibold tracking-wide ${
+                                    isDark ? 'text-gray-400' : 'text-gray-500'
+                                }`}>
                                     No programs found.
                                 </div>
                             ) : (
@@ -369,7 +381,11 @@ export default function Seminar() {
                                     return (
                                         <div
                                             key={program.id}
-                                            className="relative flex flex-col bg-white border-2 border-gray-200 hover:border-green-300 rounded-lg shadow-lg hover:shadow-xl transition-all overflow-hidden group w-full sm:w-auto mx-auto"
+                                            className={`relative flex flex-col border-2 hover:border-green-300 rounded-lg shadow-lg hover:shadow-xl transition-all overflow-hidden group w-full sm:w-auto mx-auto ${
+                                                isDark 
+                                                    ? 'bg-gray-800 border-gray-700' 
+                                                    : 'bg-white border-gray-200'
+                                            }`}
                                         >
                                             <div className="relative">
                                                 <img
@@ -392,27 +408,39 @@ export default function Seminar() {
                                                 </span>
                                             </div>
                                             <div className="flex-1 flex flex-col p-5">
-                                                <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">
+                                                <h3 className={`text-lg font-semibold mb-1 truncate ${
+                                                    isDark ? 'text-gray-200' : 'text-gray-800'
+                                                }`}>
                                                     {program.title}
                                                 </h3>
-                                                <p className="text-gray-600 text-sm mb-2 flex-1 cursor-default line-clamp-3">
+                                                <p className={`text-sm mb-2 flex-1 cursor-default line-clamp-3 ${
+                                                    isDark ? 'text-gray-400' : 'text-gray-600'
+                                                }`}>
                                                     {truncatedDescription}
                                                 </p>
-                                                <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
+                                                <div className={`flex flex-wrap gap-x-3 gap-y-1 text-xs mb-3 ${
+                                                    isDark ? 'text-gray-500' : 'text-gray-500'
+                                                }`}>
                                                     <span>
-                                                        <span className="font-medium text-gray-700">
+                                                        <span className={`font-medium ${
+                                                            isDark ? 'text-gray-400' : 'text-gray-700'
+                                                        }`}>
                                                             Speaker:
                                                         </span>{' '}
                                                         {program.speaker}
                                                     </span>
                                                     <span>
-                                                        <span className="font-medium text-gray-700">
+                                                        <span className={`font-medium ${
+                                                            isDark ? 'text-gray-400' : 'text-gray-700'
+                                                        }`}>
                                                             Location:
                                                         </span>{' '}
                                                         {program.location}
                                                     </span>
                                                     <span>
-                                                        <span className="font-medium text-gray-700">
+                                                        <span className={`font-medium ${
+                                                            isDark ? 'text-gray-400' : 'text-gray-700'
+                                                        }`}>
                                                             Participants:
                                                         </span>{' '}
                                                         {program.totalParticipants} / {program.capacity}
@@ -469,7 +497,11 @@ export default function Seminar() {
                         {totalPages > 1 && (
                             <div className="flex justify-center mt-6 mb-2">
                                 <nav
-                                    className="flex items-center gap-1 bg-white rounded-lg shadow-md border-2 border-gray-200 px-3 py-1.5"
+                                    className={`flex items-center gap-1 rounded-lg shadow-md border-2 px-3 py-1.5 ${
+                                        isDark 
+                                            ? 'bg-gray-800 border-gray-600' 
+                                            : 'bg-white border-gray-200'
+                                    }`}
                                     aria-label="Pagination"
                                 >
                                     <button
@@ -477,10 +509,14 @@ export default function Seminar() {
                                             setCurrentPage((p) => Math.max(1, p - 1))
                                         }
                                         disabled={currentPage === 1}
-                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-600 hover:bg-gray-100 hover:text-gray-800 ${
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${
                                             currentPage === 1
                                                 ? 'opacity-50 cursor-not-allowed'
                                                 : ''
+                                        } ${
+                                            isDark 
+                                                ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
+                                                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
                                         }`}
                                         aria-label="Previous"
                                     >
@@ -505,13 +541,15 @@ export default function Seminar() {
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === 1
                                                         ? 'bg-green-600 text-white shadow-md'
-                                                        : 'text-gray-700 hover:bg-gray-100'
+                                                        : isDark 
+                                                            ? 'text-gray-300 hover:bg-gray-700' 
+                                                            : 'text-gray-700 hover:bg-gray-100'
                                                 }`}
                                             >
                                                 1
                                             </button>
                                             {currentPage > 3 && (
-                                                <span className="px-1 text-gray-400">
+                                                <span className={isDark ? 'px-1 text-gray-500' : 'px-1 text-gray-400'}>
                                                     ...
                                                 </span>
                                             )}
@@ -532,7 +570,9 @@ export default function Seminar() {
                                                         className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                             currentPage === page
                                                                 ? 'bg-green-600 text-white shadow-md'
-                                                                : 'text-gray-700 hover:bg-gray-100'
+                                                                : isDark 
+                                                                    ? 'text-gray-300 hover:bg-gray-700' 
+                                                                    : 'text-gray-700 hover:bg-gray-100'
                                                         }`}
                                                     >
                                                         {page}
@@ -540,7 +580,7 @@ export default function Seminar() {
                                                 );
                                             })}
                                             {currentPage < totalPages - 2 && (
-                                                <span className="px-1 text-gray-400">
+                                                <span className={isDark ? 'px-1 text-gray-500' : 'px-1 text-gray-400'}>
                                                     ...
                                                 </span>
                                             )}
@@ -549,7 +589,9 @@ export default function Seminar() {
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === totalPages
                                                         ? 'bg-green-600 text-white shadow-md'
-                                                        : 'text-gray-700 hover:bg-gray-100'
+                                                        : isDark 
+                                                            ? 'text-gray-300 hover:bg-gray-700' 
+                                                            : 'text-gray-700 hover:bg-gray-100'
                                                 }`}
                                             >
                                                 {totalPages}
@@ -563,7 +605,9 @@ export default function Seminar() {
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-all font-semibold ${
                                                     currentPage === i + 1
                                                         ? 'bg-green-600 text-white shadow-md'
-                                                        : 'text-gray-700 hover:bg-gray-100'
+                                                        : isDark 
+                                                            ? 'text-gray-300 hover:bg-gray-700' 
+                                                            : 'text-gray-700 hover:bg-gray-100'
                                                 }`}
                                             >
                                                 {i + 1}
@@ -577,10 +621,14 @@ export default function Seminar() {
                                             )
                                         }
                                         disabled={currentPage === totalPages}
-                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all text-gray-600 hover:bg-gray-100 hover:text-gray-800 ${
+                                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${
                                             currentPage === totalPages
                                                 ? 'opacity-50 cursor-not-allowed'
                                                 : ''
+                                        } ${
+                                            isDark 
+                                                ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
+                                                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'
                                         }`}
                                         aria-label="Next"
                                     >
@@ -655,17 +703,29 @@ export default function Seminar() {
 }
 
 function SeminarDetails({ seminar, onClose }) {
+    const { isDark } = useTheme();
+    
     if (!seminar) {
         return (
-            <div className="fixed top-16 left-0 right-0 bottom-0 z-[1000] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-                <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-200 max-w-md w-full">
+            <div className="fixed top-16 left-0 right-0 bottom-0 z-[1000] flex items-center justify-center bg-black/70 p-4">
+                <div className={`p-8 rounded-2xl shadow-xl border max-w-md w-full ${
+                    isDark 
+                        ? 'bg-gray-800 border-gray-600' 
+                        : 'bg-white border-gray-200'
+                }`}>
                     <div className="flex items-center justify-center mb-4">
                         <div className="w-12 h-12 border-4 border-green-200 border-t-green-600 rounded-full animate-spin"></div>
                     </div>
-                    <p className="text-gray-700 font-semibold text-center mb-6">Loading seminar details...</p>
+                    <p className={`font-semibold text-center mb-6 ${
+                        isDark ? 'text-gray-300' : 'text-gray-700'
+                    }`}>Loading seminar details...</p>
                     <button
                         onClick={onClose}
-                        className="w-full px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl font-semibold transition-colors duration-200"
+                        className={`w-full px-6 py-3 rounded-xl font-semibold transition-colors duration-200 ${
+                            isDark 
+                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' 
+                                : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                        }`}
                     >
                         Close
                     </button>
@@ -675,8 +735,12 @@ function SeminarDetails({ seminar, onClose }) {
     }
 
     return (
-        <div className="fixed top-16 left-0 right-0 bottom-0 z-[1000] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-            <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden animate-fade-in border border-gray-200">
+        <div className="fixed top-16 left-0 right-0 bottom-0 z-[1000] flex items-center justify-center bg-black/70 p-4">
+            <div className={`relative rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden animate-fade-in border ${
+                isDark 
+                    ? 'bg-gray-800 border-gray-600' 
+                    : 'bg-white border-gray-200'
+            }`}>
                 {/* Header with Close Button */}
                 <div className="sticky top-0 z-10 bg-gradient-to-r from-green-600 to-green-700 px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -699,91 +763,152 @@ function SeminarDetails({ seminar, onClose }) {
 
                 {/* Scrollable Content */}
                 <div className="overflow-y-auto max-h-[calc(85vh-80px)]">
-                    {/* Image Section */}
-                    <div className="relative">
-                        <img
-                            src={seminar.photo}
-                            alt={seminar.title}
-                            className="w-full h-64 sm:h-80 object-cover"
-                            style={{ background: 'linear-gradient(45deg, #f3f4f6, #e5e7eb)' }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                        
-                        {/* Status Badge on Image */}
-                        <div className="absolute top-4 right-4">
-                            <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold shadow-lg backdrop-blur-sm ${
-                                seminar.status === 'Ongoing'
-                                    ? 'bg-green-500/90 text-white border border-green-400'
-                                    : seminar.status === 'Completed'
-                                    ? 'bg-gray-500/90 text-white border border-gray-400'
-                                    : seminar.status === 'Cancelled'
-                                    ? 'bg-red-500/90 text-white border border-red-400'
-                                    : 'bg-blue-500/90 text-white border border-blue-400'
-                            }`}>
-                                <i className={`fa-solid ${
-                                    seminar.status === 'Ongoing' ? 'fa-circle-play' :
-                                    seminar.status === 'Completed' ? 'fa-circle-check' :
-                                    seminar.status === 'Cancelled' ? 'fa-circle-xmark' : 'fa-clock'
-                                }`}></i>
-                                {seminar.status}
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Content Section */}
-                    <div className="p-6 sm:p-8 space-y-8">
+                    {/* Main Content Layout */}
+                    <div className="p-6 sm:p-8">
                         {/* Title Section */}
-                        <div className="text-center">
-                            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+                        <div className="text-center mb-8">
+                            <h3 className={`text-2xl sm:text-3xl font-bold mb-3 leading-tight ${
+                                isDark ? 'text-gray-200' : 'text-gray-900'
+                            }`}>
                                 {seminar.title}
                             </h3>
                             <div className="w-24 h-1 bg-gradient-to-r from-green-500 to-green-600 mx-auto rounded-full"></div>
                         </div>
 
-                        {/* Key Information Cards */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
-                                <div className="flex items-center space-x-3">
-                                    <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                                        <i className="fa-solid fa-user-tie text-white"></i>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-semibold text-blue-700 uppercase tracking-wider">Speaker</p>
-                                        <p className="text-sm font-bold text-gray-900">{seminar.speaker}</p>
+                        {/* Image and Description Side by Side */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                            {/* Image Section */}
+                            <div className="relative">
+                                <div className="relative overflow-hidden rounded-xl border shadow-lg">
+                                    <img
+                                        src={seminar.photo}
+                                        alt={seminar.title}
+                                        className="w-full h-64 sm:h-72 lg:h-80 object-cover"
+                                        style={{ background: 'linear-gradient(45deg, #f3f4f6, #e5e7eb)' }}
+                                    />
+                                    {/* Status Badge on Image */}
+                                    <div className="absolute top-4 right-4">
+                                        <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold shadow-lg ${
+                                            seminar.status === 'Ongoing'
+                                                ? 'bg-green-500 text-white'
+                                                : seminar.status === 'Completed'
+                                                ? 'bg-gray-500 text-white'
+                                                : seminar.status === 'Cancelled'
+                                                ? 'bg-red-500 text-white'
+                                                : 'bg-blue-500 text-white'
+                                        }`}>
+                                            <i className={`fa-solid ${
+                                                seminar.status === 'Ongoing' ? 'fa-circle-play' :
+                                                seminar.status === 'Completed' ? 'fa-circle-check' :
+                                                seminar.status === 'Cancelled' ? 'fa-circle-xmark' : 'fa-clock'
+                                            }`}></i>
+                                            {seminar.status}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200">
-                                <div className="flex items-center space-x-3">
-                                    <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
-                                        <i className="fa-solid fa-location-dot text-white"></i>
+                            {/* Description Section */}
+                            <div className="space-y-6">
+                                <div className={`rounded-xl p-6 border ${
+                                    isDark 
+                                        ? 'bg-gradient-to-br from-gray-700 to-gray-800 border-gray-600' 
+                                        : 'bg-gradient-to-br from-gray-50 to-white border-gray-200'
+                                }`}>
+                                    <div className="flex items-center space-x-2 mb-4">
+                                        <div className="w-8 h-8 bg-gray-600 rounded-lg flex items-center justify-center">
+                                            <i className="fa-solid fa-file-text text-white text-sm"></i>
+                                        </div>
+                                        <h4 className={`text-lg font-bold ${
+                                            isDark ? 'text-gray-200' : 'text-gray-900'
+                                        }`}>About This Seminar</h4>
                                     </div>
-                                    <div>
-                                        <p className="text-xs font-semibold text-purple-700 uppercase tracking-wider">Location</p>
-                                        <p className="text-sm font-bold text-gray-900">{seminar.location}</p>
+                                    <div className={`leading-relaxed whitespace-pre-line text-sm sm:text-base ${
+                                        isDark ? 'text-gray-300' : 'text-gray-700'
+                                    }`}>
+                                        {seminar.description}
+                                    </div>
+                                </div>
+
+                                {/* Quick Info Cards */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className={`rounded-lg p-4 border ${
+                                        isDark 
+                                            ? 'bg-gray-700 border-gray-600' 
+                                            : 'bg-blue-50 border-blue-200'
+                                    }`}>
+                                        <div className="flex items-center space-x-3">
+                                            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                                                <i className="fa-solid fa-user-tie text-white"></i>
+                                            </div>
+                                            <div>
+                                                <p className={`text-xs font-semibold uppercase tracking-wider ${
+                                                    isDark ? 'text-blue-400' : 'text-blue-700'
+                                                }`}>Speaker</p>
+                                                <p className={`text-sm font-bold ${
+                                                    isDark ? 'text-gray-300' : 'text-gray-900'
+                                                }`}>{seminar.speaker}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className={`rounded-lg p-4 border ${
+                                        isDark 
+                                            ? 'bg-gray-700 border-gray-600' 
+                                            : 'bg-purple-50 border-purple-200'
+                                    }`}>
+                                        <div className="flex items-center space-x-3">
+                                            <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                                                <i className="fa-solid fa-location-dot text-white"></i>
+                                            </div>
+                                            <div>
+                                                <p className={`text-xs font-semibold uppercase tracking-wider ${
+                                                    isDark ? 'text-purple-400' : 'text-purple-700'
+                                                }`}>Location</p>
+                                                <p className={`text-sm font-bold ${
+                                                    isDark ? 'text-gray-300' : 'text-gray-900'
+                                                }`}>{seminar.location}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
+                        {/* Additional Information Cards */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div className={`rounded-lg p-4 border ${
+                                isDark 
+                                    ? 'bg-gray-700 border-gray-600' 
+                                    : 'bg-green-50 border-green-200'
+                            }`}>
                                 <div className="flex items-center space-x-3">
                                     <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
                                         <i className="fa-solid fa-layer-group text-white"></i>
                                     </div>
                                     <div>
-                                        <p className="text-xs font-semibold text-green-700 uppercase tracking-wider">Category</p>
-                                        <p className="text-sm font-bold text-gray-900">{seminar.category}</p>
+                                        <p className={`text-xs font-semibold uppercase tracking-wider ${
+                                            isDark ? 'text-green-400' : 'text-green-700'
+                                        }`}>Category</p>
+                                        <p className={`text-sm font-bold ${
+                                            isDark ? 'text-gray-300' : 'text-gray-900'
+                                        }`}>{seminar.category}</p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className={`rounded-xl p-4 border ${
+                            <div className={`rounded-lg p-4 border ${
                                 seminar.totalParticipants >= seminar.capacity
-                                    ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-200'
+                                    ? isDark 
+                                        ? 'bg-red-900/50 border-red-700'
+                                        : 'bg-red-50 border-red-200'
                                     : seminar.totalParticipants >= seminar.capacity * 0.8
-                                    ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200'
-                                    : 'bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200'
+                                    ? isDark 
+                                        ? 'bg-yellow-900/50 border-yellow-700'
+                                        : 'bg-yellow-50 border-yellow-200'
+                                    : isDark 
+                                        ? 'bg-emerald-900/50 border-emerald-700'
+                                        : 'bg-emerald-50 border-emerald-200'
                             }`}>
                                 <div className="flex items-center space-x-3">
                                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
@@ -798,12 +923,14 @@ function SeminarDetails({ seminar, onClose }) {
                                     <div>
                                         <p className={`text-xs font-semibold uppercase tracking-wider ${
                                             seminar.totalParticipants >= seminar.capacity
-                                                ? 'text-red-700'
+                                                ? isDark ? 'text-red-400' : 'text-red-700'
                                                 : seminar.totalParticipants >= seminar.capacity * 0.8
-                                                ? 'text-yellow-700'
-                                                : 'text-emerald-700'
+                                                ? isDark ? 'text-yellow-400' : 'text-yellow-700'
+                                                : isDark ? 'text-emerald-400' : 'text-emerald-700'
                                         }`}>Capacity</p>
-                                        <p className="text-sm font-bold text-gray-900">
+                                        <p className={`text-sm font-bold ${
+                                            isDark ? 'text-gray-300' : 'text-gray-900'
+                                        }`}>
                                             {seminar.totalParticipants} / {seminar.capacity}
                                         </p>
                                     </div>
@@ -811,21 +938,10 @@ function SeminarDetails({ seminar, onClose }) {
                             </div>
                         </div>
 
-                        {/* Description Section */}
-                        <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-200">
-                            <div className="flex items-center space-x-2 mb-4">
-                                <div className="w-8 h-8 bg-gray-600 rounded-lg flex items-center justify-center">
-                                    <i className="fa-solid fa-file-text text-white text-sm"></i>
-                                </div>
-                                <h4 className="text-lg font-bold text-gray-900">About This Seminar</h4>
-                            </div>
-                            <div className="text-gray-700 leading-relaxed whitespace-pre-line">
-                                {seminar.description}
-                            </div>
-                        </div>
-
                         {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+                        <div className={`flex flex-col sm:flex-row gap-4 pt-6 border-t ${
+                            isDark ? 'border-gray-600' : 'border-gray-200'
+                        }`}>
                             <button
                                 onClick={onClose}
                                 className="flex-1 px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2"
@@ -843,6 +959,7 @@ function SeminarDetails({ seminar, onClose }) {
 
 // NEW: Modal to show user's registered seminars
 function UserSeminarsModal({ seminars, isLoading, onClose }) {
+    const { isDark } = useTheme();
     const [currentModalPage, setCurrentModalPage] = useState(1);
     const MODAL_ITEMS_PER_PAGE = 3;
 
@@ -853,10 +970,16 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
     );
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm pt-24 sm:pt-20 md:pt-16 lg:pt-20 px-2 sm:px-4 md:px-6">
-            <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full flex flex-col overflow-hidden max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-5rem)] lg:max-h-[85vh] border-2 border-gray-300 mt-8 sm:mt-6 md:mt-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 pt-24 sm:pt-20 md:pt-16 lg:pt-20 px-2 sm:px-4 md:px-6">
+            <div className={`relative rounded-2xl shadow-2xl max-w-4xl w-full flex flex-col overflow-hidden max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-5rem)] lg:max-h-[85vh] border-2 mt-8 sm:mt-6 md:mt-4 ${
+                isDark 
+                    ? 'bg-gray-800 border-gray-600' 
+                    : 'bg-white border-gray-300'
+            }`}>
                 {/* Header */}
-                <div className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 border-b-2 border-gray-200 bg-green-600">
+                <div className={`flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 border-b-2 bg-green-600 ${
+                    isDark ? 'border-gray-600' : 'border-gray-200'
+                }`}>
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                             <i className="fa-solid fa-calendar-check text-white"></i>
@@ -882,15 +1005,21 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                     {isLoading ? (
                         <div className="flex flex-col items-center justify-center py-12">
                             <div className="w-12 h-12 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mb-4"></div>
-                            <p className="text-gray-600 font-medium">Loading your seminars...</p>
+                            <p className={`font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Loading your seminars...</p>
                         </div>
                     ) : seminars.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-12">
-                            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                            <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
+                                isDark ? 'bg-gray-700' : 'bg-gray-100'
+                            }`}>
                                 <i className="fa-solid fa-calendar-xmark text-2xl text-gray-400"></i>
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">No seminars registered</h3>
-                            <p className="text-gray-600 text-center max-w-md">
+                            <h3 className={`text-lg font-semibold mb-2 ${
+                                isDark ? 'text-gray-200' : 'text-gray-900'
+                            }`}>No seminars registered</h3>
+                            <p className={`text-center max-w-md ${
+                                isDark ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
                                 You haven't registered for any seminars yet. Browse available seminars and start learning!
                             </p>
                         </div>
@@ -899,7 +1028,11 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                             {paginatedModalSeminars.map((seminar, index) => (
                                 <div
                                     key={seminar.id}
-                                    className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-200"
+                                    className={`border rounded-xl p-6 hover:shadow-md transition-shadow duration-200 ${
+                                        isDark 
+                                            ? 'bg-gray-700 border-gray-600' 
+                                            : 'bg-white border-gray-200'
+                                    }`}
                                 >
                                     <div className="flex flex-col lg:flex-row gap-6">
                                         {/* Seminar Image */}
@@ -907,7 +1040,9 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                                             <img
                                                 src={`/api/seminar/picture/${seminar.id}`}
                                                 alt={seminar.title}
-                                                className="w-full lg:w-32 h-32 lg:h-24 object-cover rounded-lg border border-gray-200"
+                                                className={`w-full lg:w-32 h-32 lg:h-24 object-cover rounded-lg border ${
+                                                    isDark ? 'border-gray-600' : 'border-gray-200'
+                                                }`}
                                                 onError={(e) => {
                                                     e.target.src = default_seminar_pic;
                                                 }}
@@ -918,10 +1053,14 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                                         <div className="flex-1 min-w-0">
                                             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                                                 <div className="flex-1 min-w-0">
-                                                    <h3 className="text-lg font-bold text-gray-900 mb-2 truncate">
+                                                    <h3 className={`text-lg font-bold mb-2 truncate ${
+                                                        isDark ? 'text-gray-200' : 'text-gray-900'
+                                                    }`}>
                                                         {seminar.title}
                                                     </h3>
-                                                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
+                                                    <p className={`text-sm leading-relaxed line-clamp-2 ${
+                                                        isDark ? 'text-gray-400' : 'text-gray-600'
+                                                    }`}>
                                                         {seminar.description}
                                                     </p>
                                                 </div>
@@ -957,23 +1096,23 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-user-tie text-gray-400 w-4"></i>
-                                                    <span className="text-gray-600">Speaker:</span>
-                                                    <span className="font-medium text-gray-900 truncate">{seminar.speaker}</span>
+                                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Speaker:</span>
+                                                    <span className={`font-medium truncate ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{seminar.speaker}</span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-location-dot text-gray-400 w-4"></i>
-                                                    <span className="text-gray-600">Location:</span>
-                                                    <span className="font-medium text-gray-900 truncate">{seminar.location}</span>
+                                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Location:</span>
+                                                    <span className={`font-medium truncate ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{seminar.location}</span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <i className="fa-solid fa-users text-gray-400 w-4"></i>
-                                                    <span className="text-gray-600">Capacity:</span>
-                                                    <span className="font-medium text-gray-900">{seminar.capacity}</span>
+                                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Capacity:</span>
+                                                    <span className={`font-medium ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{seminar.capacity}</span>
                                                 </div>
                                                 <div className="flex items-center gap-2 sm:col-span-2 lg:col-span-3">
                                                     <i className="fa-solid fa-calendar-days text-gray-400 w-4"></i>
-                                                    <span className="text-gray-600">Schedule:</span>
-                                                    <span className="font-medium text-gray-900 truncate">
+                                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Schedule:</span>
+                                                    <span className={`font-medium truncate ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
                                                         {new Date(seminar.start_date).toLocaleDateString('en-US', {
                                                             month: 'short',
                                                             day: 'numeric',
@@ -989,8 +1128,8 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                                                 </div>
                                                 <div className="flex items-center gap-2 sm:col-span-2 lg:col-span-3">
                                                     <i className="fa-solid fa-clock text-gray-400 w-4"></i>
-                                                    <span className="text-gray-600">Registration Deadline:</span>
-                                                    <span className="font-medium text-gray-900">
+                                                    <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>Registration Deadline:</span>
+                                                    <span className={`font-medium ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
                                                         {new Date(seminar.registration_deadline).toLocaleDateString('en-US', {
                                                             month: 'short',
                                                             day: 'numeric',
@@ -1012,9 +1151,15 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
 
                 {/* Footer with Pagination */}
                 {!isLoading && seminars.length > 0 && (
-                    <div className="border-t border-gray-200 px-6 py-4 bg-gray-50">
+                    <div className={`border-t px-6 py-4 ${
+                        isDark 
+                            ? 'border-gray-600 bg-gray-700' 
+                            : 'border-gray-200 bg-gray-50'
+                    }`}>
                         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <div className="text-sm text-gray-600">
+                            <div className={`text-sm ${
+                                isDark ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
                                 Showing {((currentModalPage - 1) * MODAL_ITEMS_PER_PAGE) + 1} to{' '}
                                 {Math.min(currentModalPage * MODAL_ITEMS_PER_PAGE, seminars.length)} of{' '}
                                 {seminars.length} seminars
@@ -1025,7 +1170,11 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                                     <button
                                         onClick={() => setCurrentModalPage(p => Math.max(1, p - 1))}
                                         disabled={currentModalPage === 1}
-                                        className="px-3 py-1.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                                            isDark 
+                                                ? 'border-gray-600 text-gray-300 hover:bg-gray-600' 
+                                                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                                        }`}
                                     >
                                         <i className="fa-solid fa-chevron-left"></i>
                                     </button>
@@ -1038,7 +1187,9 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                                                 className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
                                                     currentModalPage === i + 1
                                                         ? 'bg-green-600 text-white'
-                                                        : 'text-gray-700 hover:bg-gray-100'
+                                                        : isDark 
+                                                            ? 'text-gray-300 hover:bg-gray-600' 
+                                                            : 'text-gray-700 hover:bg-gray-100'
                                                 }`}
                                             >
                                                 {i + 1}
@@ -1049,7 +1200,11 @@ function UserSeminarsModal({ seminars, isLoading, onClose }) {
                                     <button
                                         onClick={() => setCurrentModalPage(p => Math.min(totalModalPages, p + 1))}
                                         disabled={currentModalPage === totalModalPages}
-                                        className="px-3 py-1.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                                            isDark 
+                                                ? 'border-gray-600 text-gray-300 hover:bg-gray-600' 
+                                                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                                        }`}
                                     >
                                         <i className="fa-solid fa-chevron-right"></i>
                                     </button>

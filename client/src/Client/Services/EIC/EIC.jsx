@@ -22,7 +22,7 @@ import { showSuccessAlert, showErrorAlert, showLoginPrompt } from './utils/alert
 const ITEMS_PER_PAGE = 8;
 
 export default function Eic() {
-    const { theme } = useTheme();
+    const { theme, isDark } = useTheme();
     const navigate = useNavigate();
     const [filter, setFilter] = useState('All');
     const [search, setSearch] = useState('');
@@ -386,24 +386,24 @@ export default function Eic() {
         <>
             <Navbar />
             <div
-                className={`flex min-h-screen relative ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}
+                className={`flex min-h-screen relative ${isDark ? 'bg-gray-900' : 'bg-white'}`}
                 style={{ overflow: 'hidden' }}
             >
                 <main className="flex-1 w-full relative z-10 mt-30">
                     <section className="w-full px-2 sm:px-4 flex flex-col items-center pt-[8vh]">
                         <header className="flex flex-col items-center mb-12 w-full">
                             <span className={`uppercase tracking-widest text-xs font-semibold mb-1 letter-spacing-wide ${
-                                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                                isDark ? 'text-gray-400' : 'text-gray-600'
                             }`}>
                                 Welcome to
                             </span>
                             <h1 className={`text-4xl xs:text-2xl sm:text-4xl md:text-5xl font-extrabold text-center eic-title ${
-                                theme === 'dark' ? 'text-gray-100' : 'text-gray-800'
+                                isDark ? 'text-gray-100' : 'text-gray-800'
                             }`}>
                                 Equipment, Inputs & Commodities
                             </h1>
                             <div className={`mt-4 w-24 h-2 rounded-full shadow-lg ${
-                                theme === 'dark' ? 'bg-green-400' : 'bg-green-500'
+                                isDark ? 'bg-green-400' : 'bg-green-500'
                             }`}></div>
                         </header>
 
@@ -421,7 +421,7 @@ export default function Eic() {
 
                         <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 justify-items-center">
                             {filteredItems.length === 0 ? (
-                                <div className="col-span-full text-center text-gray-500 py-16 text-lg font-semibold tracking-wide">
+                                <div className={`col-span-full text-center ${isDark ? 'text-gray-400' : 'text-gray-500'} py-16 text-lg font-semibold tracking-wide`}>
                                     No equipment found.
                                 </div>
                             ) : (
@@ -445,10 +445,10 @@ export default function Eic() {
                 </main>
             </div>
             {modalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-all pt-20 sm:pt-20 md:pt-16 lg:pt-20 px-4 sm:px-6 md:px-8">
-                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in border-2 border-gray-300 mt-8 sm:mt-6 md:mt-4 max-h-[calc(100vh-6rem)] sm:max-h-[calc(100vh-5rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 transition-all pt-20 sm:pt-20 md:pt-16 lg:pt-20 px-4 sm:px-6 md:px-8">
+                    <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-3xl shadow-2xl p-0 max-w-lg w-full relative overflow-hidden animate-fade-in border-2 ${isDark ? 'border-gray-600' : 'border-gray-300'} mt-8 sm:mt-6 md:mt-4 max-h-[calc(100vh-6rem)] sm:max-h-[calc(100vh-5rem)] md:max-h-[calc(100vh-4rem)] overflow-y-auto`}>
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 border-b-2 border-gray-200 bg-green-600">
+                        <div className={`flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 border-b-2 ${isDark ? 'border-gray-600' : 'border-gray-200'} bg-green-600`}>
                             <h2 className="text-lg sm:text-xl font-bold text-white">
                                 <i className="fa-solid fa-paper-plane mr-2"></i>
                                 Request Equipment
@@ -473,21 +473,21 @@ export default function Eic() {
                                     className="w-16 h-16 rounded-xl object-cover border-2 border-gray-300 shadow"
                                 />
                                 <div className="flex-1">
-                                    <div className="text-lg font-semibold text-gray-800 truncate">
+                                    <div className={`text-lg font-semibold ${isDark ? 'text-gray-100' : 'text-gray-800'} truncate`}>
                                         {selectedItem?.Name}
                                     </div>
-                                    <div className="text-xs text-gray-600">
+                                    <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                         {selectedItem?.category}
                                     </div>
-                                    <div className="text-xs text-gray-600">
+                                    <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                         Available Stock:{' '}
                                         {selectedItem?.quantity}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-3 mb-4">
-                                <p className="text-sm text-gray-700">
+                            <div className={`${isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-300'} border-2 rounded-lg p-3 mb-4`}>
+                                <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                                     <i className="fa-solid fa-info-circle mr-2 text-green-600"></i>
                                     <span className="text-red-500">*</span>{' '}
                                     indicates required fields
@@ -497,7 +497,7 @@ export default function Eic() {
                                 <div>
                                     <label
                                         htmlFor="pickupDate"
-                                        className="block text-gray-700 text-sm font-medium mb-1"
+                                        className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
                                     >
                                         Pickup Date{' '}
                                         <span className="text-red-500">*</span>
@@ -511,7 +511,9 @@ export default function Eic() {
                                         className={`w-full rounded-xl border-2 px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition ${
                                             formErrors.pickupDate
                                                 ? 'border-red-400 bg-red-50'
-                                                : 'border-gray-300'
+                                                : isDark 
+                                                ? 'border-gray-600 bg-gray-700 text-gray-100'
+                                                : 'border-gray-300 bg-white text-gray-900'
                                         }`}
                                         required
                                         min={
@@ -529,10 +531,10 @@ export default function Eic() {
                                 <div>
                                     <label
                                         htmlFor="returnDate"
-                                        className="block text-gray-700 text-sm font-medium mb-1"
+                                        className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
                                     >
                                         Expected Return Date
-                                        <span className="text-gray-400 text-xs ml-1">
+                                        <span className={`${isDark ? 'text-gray-500' : 'text-gray-400'} text-xs ml-1`}>
                                             (Optional)
                                         </span>
                                     </label>
@@ -558,7 +560,9 @@ export default function Eic() {
                                         className={`w-full rounded-xl border-2 px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition ${
                                             formErrors.returnDate
                                                 ? 'border-red-400 bg-red-50'
-                                                : 'border-gray-300'
+                                                : isDark 
+                                                ? 'border-gray-600 bg-gray-700 text-gray-100'
+                                                : 'border-gray-300 bg-white text-gray-900'
                                         }`}
                                         min={
                                             requestData.pickupDate
@@ -589,7 +593,7 @@ export default function Eic() {
                                 <div>
                                     <label
                                         htmlFor="quantity"
-                                        className="block text-gray-700 text-sm font-medium mb-1"
+                                        className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
                                     >
                                         Quantity{' '}
                                         <span className="text-red-500">*</span>
@@ -603,7 +607,9 @@ export default function Eic() {
                                         className={`w-full rounded-xl border-2 px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition ${
                                             formErrors.quantity
                                                 ? 'border-red-400 bg-red-50'
-                                                : 'border-gray-300'
+                                                : isDark 
+                                                ? 'border-gray-600 bg-gray-700 text-gray-100'
+                                                : 'border-gray-300 bg-white text-gray-900'
                                         }`}
                                         required
                                         min="1"
@@ -629,10 +635,10 @@ export default function Eic() {
                             <div>
                                 <label
                                     htmlFor="request_note"
-                                    className="block text-gray-700 text-sm font-medium mb-1"
+                                    className={`block ${isDark ? 'text-gray-200' : 'text-gray-700'} text-sm font-medium mb-1`}
                                 >
                                     Purpose & Additional Notes
-                                    <span className="text-gray-400 text-xs ml-1">
+                                    <span className={`${isDark ? 'text-gray-500' : 'text-gray-400'} text-xs ml-1`}>
                                         (Optional)
                                     </span>
                                 </label>
@@ -642,19 +648,19 @@ export default function Eic() {
                                     value={requestData.request_note}
                                     onChange={handleInputChange}
                                     rows="3"
-                                    className="w-full rounded-xl border-2 border-gray-300 px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition resize-none"
+                                    className={`w-full rounded-xl border-2 ${isDark ? 'border-gray-600 bg-gray-700 text-gray-100' : 'border-gray-300 bg-white text-gray-900'} px-3 py-2 focus:ring-2 focus:ring-green-400 focus:border-green-500 focus:outline-none transition resize-none`}
                                     placeholder="Describe the purpose of borrowing this equipment and any special requirements..."
                                 ></textarea>
                             </div>
 
                             {/* Request Summary */}
                             {requestData.pickupDate && requestData.quantity && (
-                                <div className="bg-gray-50 border-2 border-gray-300 rounded-lg p-4">
-                                    <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                                <div className={`${isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-300'} border-2 rounded-lg p-4`}>
+                                    <h4 className={`text-sm font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'} mb-2`}>
                                         <i className="fa-solid fa-clipboard-check mr-2 text-green-600"></i>
                                         Request Summary
                                     </h4>
-                                    <div className="space-y-1 text-sm text-gray-600">
+                                    <div className={`space-y-1 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                         <div className="flex justify-between">
                                             <span>Pickup Date:</span>
                                             <span className="font-medium">
@@ -698,7 +704,7 @@ export default function Eic() {
                             <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
                                 <button
                                     type="button"
-                                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-4 sm:px-5 py-2 rounded-xl transition border-2 border-gray-300 focus:outline-none order-2 sm:order-1"
+                                    className={`${isDark ? 'bg-gray-700 hover:bg-gray-600 text-gray-200 border-gray-600' : 'bg-gray-200 hover:bg-gray-300 text-gray-700 border-gray-300'} font-semibold px-4 sm:px-5 py-2 rounded-xl transition border-2 focus:outline-none order-2 sm:order-1`}
                                     onClick={handleCloseModal}
                                 >
                                     Cancel
@@ -725,10 +731,10 @@ export default function Eic() {
                 </div>
             )}
             {showMyRequestsModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-all pt-24 sm:pt-20 md:pt-16 lg:pt-20 px-2 sm:px-4 md:px-6">
-                    <div className="bg-white rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-2 sm:mx-4 relative overflow-hidden animate-fade-in max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-5rem)] lg:max-h-[90vh] flex flex-col border-2 border-gray-300 mt-8 sm:mt-6 md:mt-4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 transition-all pt-24 sm:pt-20 md:pt-16 lg:pt-20 px-2 sm:px-4 md:px-6">
+                    <div className={`${isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} rounded-3xl shadow-2xl p-0 max-w-6xl w-full mx-2 sm:mx-4 relative overflow-hidden animate-fade-in max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-6rem)] md:max-h-[calc(100vh-5rem)] lg:max-h-[90vh] flex flex-col border-2 mt-8 sm:mt-6 md:mt-4`}>
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 border-b-2 border-gray-200 bg-green-600 flex-shrink-0">
+                        <div className={`flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 border-b-2 ${isDark ? 'border-gray-600' : 'border-gray-200'} bg-green-600 flex-shrink-0`}>
                             <h2 className="text-lg sm:text-xl font-bold text-white">
                                 <i className="fa-solid fa-list mr-2"></i>
                                 My Requests

@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useTheme } from '../../../../contexts/ThemeContext';
 
 // Equipment card component
 export default function EICEquipmentCard({ item, onRequestClick, typeIcon }) {
+    const { isDark } = useTheme();
     return (
-        <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg hover:shadow-xl border-2 border-gray-200 hover:border-green-300 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]">
+        <div className={`w-full max-w-sm ${isDark ? 'bg-gray-800 border-gray-700 hover:border-green-500' : 'bg-white border-gray-200 hover:border-green-300'} rounded-2xl shadow-lg hover:shadow-xl border-2 transition-all duration-300 hover:transform hover:scale-105 overflow-hidden flex flex-col h-[420px]`}>
             <div className="relative">
                 <img
                     className="w-full h-48 object-cover"
@@ -43,17 +45,17 @@ export default function EICEquipmentCard({ item, onRequestClick, typeIcon }) {
                 </span>
             </div>
             <div className="p-5 flex flex-col flex-1">
-                <h3 className="text-xl font-bold mb-2 text-gray-800 line-clamp-1 min-h-[28px]">
+                <h3 className={`text-xl font-bold mb-2 ${isDark ? 'text-gray-100' : 'text-gray-800'} line-clamp-1 min-h-[28px]`}>
                     {item.Name}
                 </h3>
                 <p
-                    className="text-gray-600 text-sm mb-3 line-clamp-2 min-h-[40px] flex-grow"
+                    className={`${isDark ? 'text-gray-300' : 'text-gray-600'} text-sm mb-3 line-clamp-2 min-h-[40px] flex-grow`}
                     title={item.description}
                 >
                     {item.description}
                 </p>
                 <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm text-gray-700 font-semibold">
+                    <span className={`text-sm ${isDark ? 'text-gray-200' : 'text-gray-700'} font-semibold`}>
                         Qty: {item.quantity}
                     </span>
                     <div className="flex items-center gap-1">
