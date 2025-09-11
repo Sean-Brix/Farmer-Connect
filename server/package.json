@@ -10,6 +10,7 @@
         "cors": "^2.8.5",
         "dotenv": "^16.5.0",
         "express": "^5.1.0",
+        "html2canvas": "^1.4.1",
         "http": "^0.0.1-security",
         "i18next": "^25.4.2",
         "i18next-fs-backend": "^2.6.0",
@@ -39,7 +40,6 @@
         "seed:accounts": "node prisma/seed-accounts-only.js",
         "reset:accounts": "npx prisma migrate reset --force --skip-seed && node prisma/seed-accounts-only.js",
         "generate": "npx prisma generate --schema=prisma/schema/schema.prisma"
-        
     },
     "prisma": {
         "seed": "node prisma/Seeds/index.js",

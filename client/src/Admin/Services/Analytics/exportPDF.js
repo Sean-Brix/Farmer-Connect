@@ -1,5 +1,5 @@
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+// import html2canvas from 'html2canvas';
+// import jsPDF from 'jspdf';
 
 // Capture a DOM element and save it as a PDF (auto-paginates if needed)
 export async function exportElementAsPDF(element, filename = 'analytics.pdf') {
