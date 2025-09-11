@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTheme } from '../../../contexts/ThemeContext';
 import Navbar from '../../Components/Navbar';
 
 // LOADING-ERROR UI/UX
@@ -8,6 +9,7 @@ import User_Profile_Error from './Error/User_Profile_Details';
 import UserProfile_UpdateLoading from './Loading/User_Profile_Update';
 
 export default function Account() {
+    const { isDark } = useTheme();
     const [refreshNav, setRefreshNav] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [activeTab, setActiveTab] = useState('personal');
@@ -519,9 +521,17 @@ export default function Account() {
     return (
         <>
             <Navbar refresh={refreshNav} />
-            <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 pt-20">
+            <div className={`min-h-screen pt-20 ${
+                isDark 
+                    ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                    : 'bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50'
+            }`}>
                 {/* Header Section */}
-                <div className="bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white py-12 shadow-lg">
+                <div className={`text-white py-12 shadow-lg ${
+                    isDark 
+                        ? 'bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800' 
+                        : 'bg-gradient-to-r from-green-600 via-green-700 to-emerald-700'
+                }`}>
                     <div className="max-w-6xl mx-auto px-6">
                         <div className="flex flex-col md:flex-row items-center gap-8">
                             {/* Profile Picture Section */}

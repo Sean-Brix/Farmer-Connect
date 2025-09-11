@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTheme } from '../../../../contexts/ThemeContext';
 
 import User_Details from './User_Details';
 
 export default function User({ user, details, refetchRow }) {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
     const queryClient = useQueryClient();
     const [isExpanded, setIsExpanded] = useState(false);
     const [editBtn, setEditBtn] = useState(false);
@@ -27,11 +30,21 @@ export default function User({ user, details, refetchRow }) {
     const Modal = ({ open, onClose, children }) => {
         if (!open) return null;
         return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70  transition-all duration-300">
-                <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full mx-4 relative animate-fade-in max-h-[90vh] flex flex-col border border-gray-200">
-                    <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white rounded-t-2xl">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 transition-all duration-300">
+                <div className={`rounded-2xl shadow-2xl max-w-6xl w-full mx-4 relative animate-fade-in max-h-[90vh] flex flex-col border ${
+                    isDark 
+                        ? 'bg-gray-800 border-gray-600' 
+                        : 'bg-white border-gray-200'
+                }`}>
+                    <div className={`flex items-center justify-between p-6 border-b rounded-t-2xl ${
+                        isDark 
+                            ? 'border-gray-600 bg-gradient-to-r from-gray-700 to-gray-800' 
+                            : 'border-gray-200 bg-gradient-to-r from-gray-50 to-white'
+                    }`}>
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-gray-600 rounded-xl shadow-sm">
+                            <div className={`p-2 rounded-xl shadow-sm ${
+                                isDark ? 'bg-green-700' : 'bg-gray-600'
+                            }`}>
                                 <svg
                                     className="w-6 h-6 text-white"
                                     fill="none"
@@ -47,13 +60,21 @@ export default function User({ user, details, refetchRow }) {
                                 </svg>
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-gray-900">{editBtn ? 'Edit User Details' : 'User Profile Details'}</h2>
-                                <p className="text-sm text-gray-600">Manage user information and settings</p>
+                                <h2 className={`text-2xl font-bold ${
+                                    isDark ? 'text-white' : 'text-gray-900'
+                                }`}>{editBtn ? 'Edit User Details' : 'User Profile Details'}</h2>
+                                <p className={`text-sm ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>Manage user information and settings</p>
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all duration-200 focus:outline-none"
+                            className={`p-2 rounded-xl transition-all duration-200 focus:outline-none ${
+                                isDark 
+                                    ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' 
+                                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                            }`}
                             aria-label="Close"
                         >
                             <svg
@@ -72,7 +93,9 @@ export default function User({ user, details, refetchRow }) {
                             </svg>
                         </button>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+                    <div className={`flex-1 overflow-y-auto p-6 ${
+                        isDark ? 'bg-gray-700' : 'bg-gray-50'
+                    }`}>
                         {children}
                     </div>
                 </div>
@@ -83,7 +106,11 @@ export default function User({ user, details, refetchRow }) {
     // Tabular cell layout for table (render only <td> elements, larger and more professional)
     return (
         <>
-            <td className="px-4 py-3 whitespace-nowrap align-middle bg-white border-b border-green-100">
+            <td className={`px-4 py-3 whitespace-nowrap align-middle border-b ${
+                isDark 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-white border-green-100'
+            }`}>
                 <div className="flex items-center gap-3 min-w-0">
                     <img
                         src={account?.picture}
@@ -91,13 +118,25 @@ export default function User({ user, details, refetchRow }) {
                         className="w-12 h-12 rounded-full object-cover border-2 border-green-400 shadow-sm align-middle"
                         style={{ boxShadow: '0 2px 8px 0 #60a5fa22' }}
                     />
-                    <span className="font-semibold text-gray-900 truncate max-w-[140px] align-middle text-base" style={{letterSpacing: '0.01em'}}>{account?.username}</span>
+                    <span className={`font-semibold truncate max-w-[140px] align-middle text-base ${
+                        isDark ? 'text-white' : 'text-gray-900'
+                    }`} style={{letterSpacing: '0.01em'}}>{account?.username}</span>
                 </div>
             </td>
-            <td className="px-4 py-3 whitespace-nowrap align-middle bg-white border-b border-green-100">
-                <span className="truncate max-w-[180px] block align-middle text-base text-gray-800 font-medium">{account?.firstName} {account?.lastName}</span>
+            <td className={`px-4 py-3 whitespace-nowrap align-middle border-b ${
+                isDark 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-white border-green-100'
+            }`}>
+                <span className={`truncate max-w-[180px] block align-middle text-base font-medium ${
+                    isDark ? 'text-gray-200' : 'text-gray-800'
+                }`}>{account?.firstName} {account?.lastName}</span>
             </td>
-            <td className="px-4 py-3 whitespace-nowrap align-middle text-center bg-white border-b border-green-100">
+            <td className={`px-4 py-3 whitespace-nowrap align-middle text-center border-b ${
+                isDark 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-white border-green-100'
+            }`}>
                 <span className={`font-bold px-3 py-1 rounded-full text-sm align-middle shadow-sm ${
                     account?.access === 'Super Admin'
                         ? 'bg-red-500 text-white border border-red-400'
@@ -108,10 +147,20 @@ export default function User({ user, details, refetchRow }) {
                     {account?.access}
                 </span>
             </td>
-            <td className="px-4 py-3 whitespace-nowrap align-middle bg-white border-b border-green-100">
-                <span className="truncate max-w-[180px] block align-middle text-base text-gray-700">{account?.client_profile || '-'}</span>
+            <td className={`px-4 py-3 whitespace-nowrap align-middle border-b ${
+                isDark 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-white border-green-100'
+            }`}>
+                <span className={`truncate max-w-[180px] block align-middle text-base ${
+                    isDark ? 'text-gray-300' : 'text-gray-700'
+                }`}>{account?.client_profile || '-'}</span>
             </td>
-            <td className="px-4 py-3 whitespace-nowrap align-middle text-center bg-white border-b border-green-100">
+            <td className={`px-4 py-3 whitespace-nowrap align-middle text-center border-b ${
+                isDark 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-white border-green-100'
+            }`}>
                 <div className="flex gap-2 justify-center items-center">
                     {details.access === 'Super_Admin' && (
                         <button
@@ -130,7 +179,11 @@ export default function User({ user, details, refetchRow }) {
                             setIsExpanded(true);
                             setEditBtn(false);
                         }}
-                        className="bg-gray-100 hover:bg-green-100 text-green-700 font-semibold py-2 px-4 rounded-lg shadow transition text-sm align-middle border border-green-200"
+                        className={`font-semibold py-2 px-4 rounded-lg shadow transition text-sm align-middle border ${
+                            isDark 
+                                ? 'bg-gray-700 hover:bg-gray-600 text-green-400 border-green-600' 
+                                : 'bg-gray-100 hover:bg-green-100 text-green-700 border-green-200'
+                        }`}
                         style={{letterSpacing: '0.01em'}}
                     >
                         Details

@@ -294,9 +294,9 @@ export default function Profiles({ details }) {
             {/* Import Poppins font from Google Fonts */}
             <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
             <style>{`
-                /* Clean white background */
+                /* Dynamic background based on theme */
                 html, body, .min-h-screen {
-                    background: #ffffff;
+                    background: ${isDark ? '#111827' : '#ffffff'};
                 }
                 @media (max-width: 640px) {
                     .flex-col, .flex-col > * {
@@ -336,9 +336,9 @@ export default function Profiles({ details }) {
 
                 /* Consistent form element design */
                 .modern-search-input, .custom-select {
-                    background: rgba(255, 255, 255, 0.95);
+                    background: ${isDark ? 'rgba(31, 41, 55, 0.95)' : 'rgba(255, 255, 255, 0.95)'};
                     border: 2px solid #16a34a;
-                    color: #374151;
+                    color: ${isDark ? '#e5e7eb' : '#374151'};
                     font-size: 0.95rem;
                     border-radius: 0.875rem;
                     padding: 0.75rem 1rem;
@@ -382,25 +382,25 @@ export default function Profiles({ details }) {
                     border-color: #15803d;
                     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15), 0 4px 20px rgba(34, 197, 94, 0.15);
                     transform: translateY(-1px);
-                    background: rgba(255, 255, 255, 1);
+                    background: ${isDark ? 'rgba(31, 41, 55, 1)' : 'rgba(255, 255, 255, 1)'};
                 }
 
                 .modern-search-input:hover, .custom-select:hover {
                     border-color: #15803d;
-                    background: rgba(255, 255, 255, 1);
+                    background: ${isDark ? 'rgba(31, 41, 55, 1)' : 'rgba(255, 255, 255, 1)'};
                     box-shadow: 0 6px 20px rgba(34, 197, 94, 0.12);
                     transform: translateY(-0.5px);
                 }
 
                 .modern-search-input::placeholder {
-                    color: #6b7280;
+                    color: ${isDark ? '#9ca3af' : '#6b7280'};
                     opacity: 0.8;
                     font-weight: 400;
                 }
 
                 .custom-select option {
-                    background: #ffffff;
-                    color: #374151;
+                    background: ${isDark ? '#1f2937' : '#ffffff'};
+                    color: ${isDark ? '#e5e7eb' : '#374151'};
                     font-weight: 400;
                 }
 
@@ -445,6 +445,7 @@ export default function Profiles({ details }) {
                     setRefreshToken(Date.now());
                     queryClient.invalidateQueries(['accounts']);
                 }}
+                isDark={isDark}
             />
         </div>
     );

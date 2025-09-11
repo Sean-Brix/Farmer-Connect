@@ -9,42 +9,70 @@ import Participants from './Participants';
 import Add_Program from './Add_Program';
 
 // Professional Delete Confirmation Modal
-function DeleteConfirmationModal({ isOpen, onClose, onConfirm, seminarTitle }) {
+function DeleteConfirmationModal({ isOpen, onClose, onConfirm, seminarTitle, isDark }) {
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-            <div className="bg-white rounded-xl shadow-2xl max-w-md w-full border border-gray-200 overflow-hidden">
+            <div className={`rounded-xl shadow-2xl max-w-md w-full border overflow-hidden ${
+                isDark 
+                    ? 'bg-gray-800 border-gray-600' 
+                    : 'bg-white border-gray-200'
+            }`}>
                 {/* Header */}
-                <div className="bg-red-50 border-b border-red-200 px-6 py-4">
+                <div className={`border-b px-6 py-4 ${
+                    isDark 
+                        ? 'bg-red-900/30 border-red-700/50' 
+                        : 'bg-red-50 border-red-200'
+                }`}>
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-red-600 rounded-lg">
                             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
                             </svg>
                         </div>
-                        <h3 className="text-lg font-bold text-red-800">Delete Seminar</h3>
+                        <h3 className={`text-lg font-bold ${
+                            isDark ? 'text-red-300' : 'text-red-800'
+                        }`}>Delete Seminar</h3>
                     </div>
                 </div>
 
                 {/* Content */}
                 <div className="p-6">
-                    <p className="text-gray-700 mb-2">
+                    <p className={`mb-2 ${
+                        isDark ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
                         Are you sure you want to delete this seminar?
                     </p>
-                    <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                        <p className="font-medium text-gray-900 text-sm">"{seminarTitle}"</p>
+                    <div className={`rounded-lg p-3 border ${
+                        isDark 
+                            ? 'bg-gray-700/50 border-gray-600' 
+                            : 'bg-gray-50 border-gray-200'
+                    }`}>
+                        <p className={`font-medium text-sm ${
+                            isDark ? 'text-gray-200' : 'text-gray-900'
+                        }`}>"{seminarTitle}"</p>
                     </div>
-                    <p className="text-red-600 text-sm mt-3 font-medium">
+                    <p className={`text-sm mt-3 font-medium ${
+                        isDark ? 'text-red-400' : 'text-red-600'
+                    }`}>
                         ⚠️ This action cannot be undone. All participant data will be permanently deleted.
                     </p>
                 </div>
 
                 {/* Footer */}
-                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end gap-3">
+                <div className={`border-t px-6 py-4 flex justify-end gap-3 ${
+                    isDark 
+                        ? 'bg-gray-700/30 border-gray-600' 
+                        : 'bg-gray-50 border-gray-200'
+                }`}>
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-50 border border-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                        className={`px-4 py-2 font-medium rounded-lg border transition-colors duration-200 focus:outline-none focus:ring-2 ${
+                            isDark 
+                                ? 'bg-gray-600 text-gray-200 hover:bg-gray-500 border-gray-500 focus:ring-gray-400' 
+                                : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300 focus:ring-gray-300'
+                        }`}
                     >
                         Cancel
                     </button>
@@ -506,6 +534,7 @@ export default function Seminar() {
                 onClose={cancelDelete}
                 onConfirm={confirmDelete}
                 seminarTitle={seminarToDelete?.title || ''}
+                isDark={isDark}
             />
         </div>
     );

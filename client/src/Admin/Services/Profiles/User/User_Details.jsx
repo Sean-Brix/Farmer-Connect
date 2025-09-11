@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTheme } from '../../../../contexts/ThemeContext';
 
 export default function User_Details({ user, isEdit, refetchRow}) {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
     const queryClient = useQueryClient();
     const [isEditing, setIsEditing] = useState(isEdit);
     const [activeTab, setActiveTab] = useState('personal');
@@ -138,11 +141,17 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             if (type === 'select' && options) {
                 return (
                     <div className="space-y-2">
-                        <label className="block text-xs font-medium text-gray-600">{label}</label>
+                        <label className={`block text-xs font-medium ${
+                            isDark ? 'text-gray-300' : 'text-gray-600'
+                        }`}>{label}</label>
                         <select
                             value={editValue || ''}
                             onChange={(e) => handleChange(fieldName, e.target.value)}
-                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition"
+                            className={`w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition ${
+                                isDark 
+                                    ? 'bg-gray-700 border-gray-600 text-white' 
+                                    : 'bg-white border-gray-300 text-gray-900'
+                            }`}
                         >
                             {options.map(option => (
                                 <option key={option.value} value={option.value}>
@@ -155,11 +164,17 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             } else if (type === 'boolean') {
                 return (
                     <div className="space-y-2">
-                        <label className="block text-xs font-medium text-gray-600">{label}</label>
+                        <label className={`block text-xs font-medium ${
+                            isDark ? 'text-gray-300' : 'text-gray-600'
+                        }`}>{label}</label>
                         <select
                             value={editValue === true ? 'true' : editValue === false ? 'false' : ''}
                             onChange={(e) => handleChange(fieldName, e.target.value === 'true')}
-                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition"
+                            className={`w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition ${
+                                isDark 
+                                    ? 'bg-gray-700 border-gray-600 text-white' 
+                                    : 'bg-white border-gray-300 text-gray-900'
+                            }`}
                         >
                             <option value="">Select</option>
                             <option value="true">Yes</option>
@@ -170,12 +185,18 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             } else {
                 return (
                     <div className="space-y-2">
-                        <label className="block text-xs font-medium text-gray-600">{label}</label>
+                        <label className={`block text-xs font-medium ${
+                            isDark ? 'text-gray-300' : 'text-gray-600'
+                        }`}>{label}</label>
                         <input
                             type={type}
                             value={editValue || ''}
                             onChange={(e) => handleChange(fieldName, e.target.value)}
-                            className="w-full bg-white border border-gray-300 text-gray-900 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition"
+                            className={`w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition ${
+                                isDark 
+                                    ? 'bg-gray-700 border-gray-600 text-white' 
+                                    : 'bg-white border-gray-300 text-gray-900'
+                            }`}
                             autoComplete="off"
                         />
                     </div>
@@ -197,8 +218,14 @@ export default function User_Details({ user, isEdit, refetchRow}) {
 
             return (
                 <div className="space-y-2">
-                    <label className="block text-xs font-medium text-gray-600">{label}</label>
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
+                    <label className={`block text-xs font-medium ${
+                        isDark ? 'text-gray-300' : 'text-gray-600'
+                    }`}>{label}</label>
+                    <div className={`border rounded-lg px-3 py-2 text-sm ${
+                        isDark 
+                            ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                            : 'bg-gray-50 border-gray-200 text-gray-900'
+                    }`}>
                         {displayValue}
                     </div>
                 </div>
@@ -209,10 +236,14 @@ export default function User_Details({ user, isEdit, refetchRow}) {
     const renderDisplayMode = () => (
         <div className="max-w-6xl mx-auto">
             {/* User Profile Header - Updated with green theme */}
-            <div className="bg-gradient-to-r from-green-600 via-green-700 to-green-800 text-white py-8 rounded-2xl shadow-lg mb-6">
+            <div className={`text-white py-8 rounded-2xl shadow-lg mb-6 ${
+                isDark 
+                    ? 'bg-gradient-to-r from-green-700 via-green-800 to-green-900' 
+                    : 'bg-gradient-to-r from-green-600 via-green-700 to-green-800'
+            }`}>
                 <div className="flex items-center justify-between px-8">
                     <div className="flex items-center gap-6">
-                        <div className="w-24 h-24 rounded-full bg-white p-1 shadow-xl">
+                        <div className={`w-24 h-24 rounded-full p-1 shadow-xl ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
                             <img
                                 src={userDetail?.picture || `/api/account/all/picture/${userDetail?.id}?refresh=${new Date().getTime()}`}
                                 alt={`${userDetail?.username}'s profile`}
@@ -220,7 +251,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold mb-2">
+                            <h1 className={`text-3xl font-bold mb-2 ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>
                                 {userDetail?.firstName} {userDetail?.middleName ? userDetail.middleName + ' ' : ''}{userDetail?.surname}
                                 {userDetail?.extensionName ? ' ' + userDetail.extensionName : ''}
                             </h1>
@@ -233,10 +266,10 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                     <div className="text-right">
                         <span className={`inline-flex px-4 py-2 rounded-full text-sm font-bold ${
                             userDetail?.access === 'Super_Admin'
-                                ? 'bg-gray-800 text-white'
+                                ? isDark ? 'bg-gray-900 text-white' : 'bg-gray-800 text-white'
                                 : userDetail?.access === 'Admin'
-                                ? 'bg-gray-600 text-white'
-                                : 'bg-white text-green-700'
+                                ? isDark ? 'bg-gray-700 text-white' : 'bg-gray-600 text-white'
+                                : (isDark ? 'bg-gray-800 text-green-200' : 'bg-white text-green-700')
                         }`}>
                             {userDetail?.access?.replace('_', ' ') || 'User'}
                         </span>
@@ -246,8 +279,14 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             </div>
 
             {/* Tab Navigation */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mb-6">
-                <div className="border-b border-gray-200">
+            <div className={`rounded-2xl shadow-lg border overflow-hidden mb-6 ${
+                isDark 
+                    ? 'bg-gray-800 border-gray-600' 
+                    : 'bg-white border-gray-200'
+            }`}>
+                <div className={`border-b ${
+                    isDark ? 'border-gray-600' : 'border-gray-200'
+                }`}>
                     <nav className="flex space-x-8 px-6" aria-label="Tabs">
                         {[
                             { id: 'personal', name: 'Personal Info', icon: 'fa-user' },
@@ -262,8 +301,12 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`${
                                     activeTab === tab.id
-                                        ? 'border-green-500 text-green-600 bg-green-50'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                        ? isDark 
+                                            ? 'border-green-400 text-green-400 bg-green-900 bg-opacity-30' 
+                                            : 'border-green-500 text-green-600 bg-green-50'
+                                        : isDark 
+                                            ? 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500' 
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                 } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-all duration-200 flex items-center gap-2 rounded-t-lg`}
                             >
                                 <i className={`fa-solid ${tab.icon}`}></i>
@@ -279,7 +322,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 mb-6">
                                 <i className="fa-solid fa-user text-green-600 text-xl"></i>
-                                <h2 className="text-2xl font-bold text-gray-900">Personal Information</h2>
+                                <h2 className={`text-2xl font-bold ${
+                                    isDark ? 'text-white' : 'text-gray-900'
+                                }`}>Personal Information</h2>
                             </div>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                 {renderField('Username', userDetail?.username, 'username')}
@@ -310,11 +355,15 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 mb-6">
                                 <i className="fa-solid fa-map-marker-alt text-green-600 text-xl"></i>
-                                <h2 className="text-2xl font-bold text-gray-900">Contact & Address Information</h2>
+                                <h2 className={`text-2xl font-bold ${
+                                    isDark ? 'text-white' : 'text-gray-900'
+                                }`}>Contact & Address Information</h2>
                             </div>
                             
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Contact Details</h3>
+                                <h3 className={`text-lg font-semibold mb-4 ${
+                                    isDark ? 'text-gray-200' : 'text-gray-800'
+                                }`}>Contact Details</h3>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     {renderField('Mobile Number', userDetail?.mobileNumber, 'mobileNumber')}
                                     {renderField('Landline Number', userDetail?.landlineNumber, 'landlineNumber')}
@@ -322,7 +371,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             </div>
 
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Address Details</h3>
+                                <h3 className={`text-lg font-semibold mb-4 ${
+                                    isDark ? 'text-gray-200' : 'text-gray-800'
+                                }`}>Address Details</h3>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     {renderField('House Number', userDetail?.houseNumber, 'houseNumber')}
                                     {renderField('Street', userDetail?.street, 'street')}
@@ -341,11 +392,15 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 mb-6">
                                 <i className="fa-solid fa-users text-green-600 text-xl"></i>
-                                <h2 className="text-2xl font-bold text-gray-900">Family & Background Information</h2>
+                                <h2 className={`text-2xl font-bold ${
+                                    isDark ? 'text-white' : 'text-gray-900'
+                                }`}>Family & Background Information</h2>
                             </div>
 
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Birth Information</h3>
+                                <h3 className={`text-lg font-semibold mb-4 ${
+                                    isDark ? 'text-gray-200' : 'text-gray-800'
+                                }`}>Birth Information</h3>
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                     {renderField('Birth Municipality', userDetail?.birthMunicipality, 'birthMunicipality')}
                                     {renderField('Birth Province', userDetail?.birthProvince, 'birthProvince')}
@@ -354,7 +409,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             </div>
 
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Personal & Family Details</h3>
+                                <h3 className={`text-lg font-semibold mb-4 ${
+                                    isDark ? 'text-gray-200' : 'text-gray-800'
+                                }`}>Personal & Family Details</h3>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     {renderField('Religion', userDetail?.religion, 'religion')}
                                     {renderField('Other Religion (Specify)', userDetail?.otherReligionSpecify, 'otherReligionSpecify')}
@@ -371,7 +428,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             </div>
 
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Household Information</h3>
+                                <h3 className={`text-lg font-semibold mb-4 ${
+                                    isDark ? 'text-gray-200' : 'text-gray-800'
+                                }`}>Household Information</h3>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     {renderField('Female Household Members', userDetail?.femaleHouseholdMembers, 'femaleHouseholdMembers', 'number')}
                                     {renderField('Male Household Members', userDetail?.maleHouseholdMembers, 'maleHouseholdMembers', 'number')}
@@ -400,11 +459,15 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 mb-6">
                                 <i className="fa-solid fa-briefcase text-green-600 text-xl"></i>
-                                <h2 className="text-2xl font-bold text-gray-900">Professional Information</h2>
+                                <h2 className={`text-2xl font-bold ${
+                                    isDark ? 'text-white' : 'text-gray-900'
+                                }`}>Professional Information</h2>
                             </div>
 
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Education & Profile</h3>
+                                <h3 className={`text-lg font-semibold mb-4 ${
+                                    isDark ? 'text-gray-200' : 'text-gray-800'
+                                }`}>Education & Profile</h3>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     {renderField('Education Level', userDetail?.education, 'education', 'select', [
                                         { value: 'No_formal_education', label: 'No formal education' },
@@ -436,7 +499,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             </div>
 
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Disability Information</h3>
+                                <h3 className={`text-lg font-semibold mb-4 ${
+                                    isDark ? 'text-gray-200' : 'text-gray-800'
+                                }`}>Disability Information</h3>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     {renderField('Person with Disability (PWD)', userDetail?.isPWD, 'isPWD', 'boolean')}
                                     {renderField('Disability Type', userDetail?.disabilityType, 'disabilityType')}
@@ -444,7 +509,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             </div>
 
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Income Information</h3>
+                                <h3 className={`text-lg font-semibold mb-4 ${
+                                    isDark ? 'text-gray-200' : 'text-gray-800'
+                                }`}>Income Information</h3>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     {renderField('Gross Annual Income', userDetail?.grossAnnualIncome, 'grossAnnualIncome')}
                                     {renderField('Income Source', userDetail?.incomeSource, 'incomeSource', 'select', [
@@ -461,11 +528,15 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 mb-6">
                                 <i className="fa-solid fa-id-card text-green-600 text-xl"></i>
-                                <h2 className="text-2xl font-bold text-gray-900">Government & ID Information</h2>
+                                <h2 className={`text-2xl font-bold ${
+                                    isDark ? 'text-white' : 'text-gray-900'
+                                }`}>Government & ID Information</h2>
                             </div>
 
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Government Identification</h3>
+                                <h3 className={`text-lg font-semibold mb-4 ${
+                                    isDark ? 'text-gray-200' : 'text-gray-800'
+                                }`}>Government Identification</h3>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     {renderField('Has Government ID', userDetail?.hasGovId, 'hasGovId', 'boolean')}
                                     {renderField('Government ID Type', userDetail?.govIdType, 'govIdType', 'select', [
@@ -493,9 +564,13 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             <div className="space-y-8">
                                 <div className="flex items-center gap-3 mb-6">
                                     <i className="fa-solid fa-cog text-green-600 text-xl"></i>
-                                    <h2 className="text-2xl font-bold text-gray-900">System Information</h2>
+                                    <h2 className={`text-2xl font-bold ${
+                                        isDark ? 'text-white' : 'text-gray-900'
+                                    }`}>System Information</h2>
                                 </div>                            <div>
-                                <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Details</h3>
+                                <h3 className={`text-lg font-semibold mb-4 ${
+                                    isDark ? 'text-gray-200' : 'text-gray-800'
+                                }`}>Account Details</h3>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     {renderField('Access Level', userDetail?.access, 'access', 'select', [
                                         { value: 'User', label: 'User' },
@@ -503,8 +578,14 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                         { value: 'Super_Admin', label: 'Super Admin' }
                                     ])}
                                     <div className="space-y-2">
-                                        <label className="block text-xs font-medium text-gray-600">Created At</label>
-                                        <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
+                                        <label className={`block text-xs font-medium ${
+                                            isDark ? 'text-gray-300' : 'text-gray-600'
+                                        }`}>Created At</label>
+                                        <div className={`border rounded-lg px-3 py-2 text-sm ${
+                                            isDark 
+                                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                                : 'bg-gray-50 border-gray-200 text-gray-900'
+                                        }`}>
                                             {userDetail?.createdAt ? new Date(userDetail?.createdAt).toLocaleDateString('en-US', { 
                                                 year: 'numeric', month: 'long', day: 'numeric', 
                                                 hour: '2-digit', minute: '2-digit' 
@@ -512,8 +593,14 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="block text-xs font-medium text-gray-600">Last Updated</label>
-                                        <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900">
+                                        <label className={`block text-xs font-medium ${
+                                            isDark ? 'text-gray-300' : 'text-gray-600'
+                                        }`}>Last Updated</label>
+                                        <div className={`border rounded-lg px-3 py-2 text-sm ${
+                                            isDark 
+                                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                                : 'bg-gray-50 border-gray-200 text-gray-900'
+                                        }`}>
                                             {userDetail?.updatedAt ? new Date(userDetail?.updatedAt).toLocaleDateString('en-US', { 
                                                 year: 'numeric', month: 'long', day: 'numeric', 
                                                 hour: '2-digit', minute: '2-digit' 
@@ -545,12 +632,18 @@ export default function User_Details({ user, isEdit, refetchRow}) {
     const renderEditMode = () => (
         <div className="max-w-6xl mx-auto">
             {/* Form Header */}
-            <div className="bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 text-white py-6 rounded-2xl shadow-lg mb-6">
+            <div className={`text-white py-6 rounded-2xl shadow-lg mb-6 ${
+                isDark 
+                    ? 'bg-gradient-to-r from-green-700 via-green-800 to-emerald-800' 
+                    : 'bg-gradient-to-r from-green-600 via-green-700 to-emerald-700'
+            }`}>
                 <div className="flex items-center justify-between px-8">
                     <div className="flex items-center gap-4">
                         <i className="fa-solid fa-edit text-2xl"></i>
                         <div>
-                            <h1 className="text-2xl font-bold">Editing User Profile</h1>
+                            <h1 className={`text-2xl font-bold ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>Editing User Profile</h1>
                             <p className="text-green-100">ID: {userDetail?.id} | @{userDetail?.username}</p>
                         </div>
                     </div>
@@ -558,7 +651,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                         <button
                             onClick={handleSave}
                             disabled={updateUserDetails.isLoading}
-                            className="px-6 py-2 bg-white text-green-700 font-semibold rounded-lg hover:bg-green-50 transition-colors duration-200 disabled:opacity-50 shadow-md"
+                            className={`px-6 py-2 font-semibold rounded-lg transition-colors duration-200 disabled:opacity-50 shadow-md ${isDark ? 'bg-gray-800 text-green-200 hover:bg-gray-700' : 'bg-white text-green-700 hover:bg-green-50'}`}
                         >
                             {updateUserDetails.isLoading ? (
                                 <>
@@ -586,8 +679,14 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             {/* Form Content */}
             <form onSubmit={handleSave} className="space-y-6">
                 {/* Tab Navigation */}
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-                    <div className="border-b border-gray-200">
+                <div className={`rounded-2xl shadow-lg border overflow-hidden ${
+                    isDark 
+                        ? 'bg-gray-800 border-gray-600' 
+                        : 'bg-white border-gray-200'
+                }`}>
+                    <div className={`border-b ${
+                        isDark ? 'border-gray-600' : 'border-gray-200'
+                    }`}>
                         <nav className="flex space-x-8 px-6" aria-label="Tabs">
                             {[
                                 { id: 'personal', name: 'Personal Info', icon: 'fa-user' },
@@ -620,7 +719,7 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             <div className="space-y-8">
                                 <div className="flex items-center gap-3 mb-6">
                                     <i className="fa-solid fa-user text-green-600 text-xl"></i>
-                                    <h2 className="text-2xl font-bold text-gray-900">Personal Information</h2>
+                                    <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Personal Information</h2>
                                 </div>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                     {renderField('Username', editedUser?.username, 'username')}
@@ -653,11 +752,13 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             <div className="space-y-8">
                                 <div className="flex items-center gap-3 mb-6">
                                     <i className="fa-solid fa-map-marker-alt text-green-600 text-xl"></i>
-                                    <h2 className="text-2xl font-bold text-gray-900">Contact & Address Information</h2>
+                                    <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Contact & Address Information</h2>
                                 </div>
                                 
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Contact Details</h3>
+                                    <h3 className={`text-lg font-semibold mb-4 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>Contact Details</h3>
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         {renderField('Mobile Number', editedUser?.mobileNumber, 'mobileNumber')}
                                         {renderField('Landline Number', editedUser?.landlineNumber, 'landlineNumber')}
@@ -665,7 +766,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                 </div>
 
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Address Details</h3>
+                                    <h3 className={`text-lg font-semibold mb-4 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>Address Details</h3>
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         {renderField('House Number', editedUser?.houseNumber, 'houseNumber')}
                                         {renderField('Street', editedUser?.street, 'street')}
@@ -684,11 +787,15 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             <div className="space-y-8">
                                 <div className="flex items-center gap-3 mb-6">
                                     <i className="fa-solid fa-users text-green-600 text-xl"></i>
-                                    <h2 className="text-2xl font-bold text-gray-900">Family & Background Information</h2>
+                                    <h2 className={`text-2xl font-bold ${
+                                        isDark ? 'text-white' : 'text-gray-900'
+                                    }`}>Family & Background Information</h2>
                                 </div>
 
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Birth Information</h3>
+                                    <h3 className={`text-lg font-semibold mb-4 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>Birth Information</h3>
                                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                         {renderField('Birth Municipality', editedUser?.birthMunicipality, 'birthMunicipality')}
                                         {renderField('Birth Province', editedUser?.birthProvince, 'birthProvince')}
@@ -697,7 +804,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                 </div>
 
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Personal & Family Details</h3>
+                                    <h3 className={`text-lg font-semibold mb-4 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>Personal & Family Details</h3>
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         {renderField('Religion', editedUser?.religion, 'religion')}
                                         {renderField('Other Religion (Specify)', editedUser?.otherReligionSpecify, 'otherReligionSpecify')}
@@ -715,7 +824,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                 </div>
 
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Household Information</h3>
+                                    <h3 className={`text-lg font-semibold mb-4 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>Household Information</h3>
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         {renderField('Female Household Members', editedUser?.femaleHouseholdMembers, 'femaleHouseholdMembers', 'number')}
                                         {renderField('Male Household Members', editedUser?.maleHouseholdMembers, 'maleHouseholdMembers', 'number')}
@@ -745,11 +856,15 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             <div className="space-y-8">
                                 <div className="flex items-center gap-3 mb-6">
                                     <i className="fa-solid fa-briefcase text-green-600 text-xl"></i>
-                                    <h2 className="text-2xl font-bold text-gray-900">Professional Information</h2>
+                                    <h2 className={`text-2xl font-bold ${
+                                        isDark ? 'text-white' : 'text-gray-900'
+                                    }`}>Professional Information</h2>
                                 </div>
 
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Education & Profile</h3>
+                                    <h3 className={`text-lg font-semibold mb-4 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>Education & Profile</h3>
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         {renderField('Education Level', editedUser?.education, 'education', 'select', [
                                             { value: '', label: 'Select Education Level' },
@@ -783,7 +898,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                 </div>
 
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Disability Information</h3>
+                                    <h3 className={`text-lg font-semibold mb-4 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>Disability Information</h3>
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         {renderField('Person with Disability (PWD)', editedUser?.isPWD, 'isPWD', 'boolean')}
                                         {renderField('Disability Type', editedUser?.disabilityType, 'disabilityType')}
@@ -791,7 +908,9 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                 </div>
 
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Income Information</h3>
+                                    <h3 className={`text-lg font-semibold mb-4 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>Income Information</h3>
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         {renderField('Gross Annual Income', editedUser?.grossAnnualIncome, 'grossAnnualIncome')}
                                         {renderField('Income Source', editedUser?.incomeSource, 'incomeSource', 'select', [
@@ -809,11 +928,15 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             <div className="space-y-8">
                                 <div className="flex items-center gap-3 mb-6">
                                     <i className="fa-solid fa-id-card text-green-600 text-xl"></i>
-                                    <h2 className="text-2xl font-bold text-gray-900">Government & ID Information</h2>
+                                    <h2 className={`text-2xl font-bold ${
+                                        isDark ? 'text-white' : 'text-gray-900'
+                                    }`}>Government & ID Information</h2>
                                 </div>
 
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Government Identification</h3>
+                                    <h3 className={`text-lg font-semibold mb-4 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>Government Identification</h3>
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         {renderField('Has Government ID', editedUser?.hasGovId, 'hasGovId', 'boolean')}
                                         {renderField('Government ID Type', editedUser?.govIdType, 'govIdType', 'select', [
@@ -842,11 +965,15 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             <div className="space-y-8">
                                 <div className="flex items-center gap-3 mb-6">
                                     <i className="fa-solid fa-cog text-green-600 text-xl"></i>
-                                    <h2 className="text-2xl font-bold text-gray-900">System Information</h2>
+                                    <h2 className={`text-2xl font-bold ${
+                                        isDark ? 'text-white' : 'text-gray-900'
+                                    }`}>System Information</h2>
                                 </div>
 
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Details</h3>
+                                    <h3 className={`text-lg font-semibold mb-4 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-800'
+                                    }`}>Account Details</h3>
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         {renderField('Access Level', editedUser?.access, 'access', 'select', [
                                             { value: 'User', label: 'User' },
@@ -854,8 +981,14 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                                             { value: 'Super_Admin', label: 'Super Admin' }
                                         ])}
                                         <div className="space-y-2">
-                                            <label className="block text-sm font-medium text-gray-700">Created At</label>
-                                            <div className="bg-gray-100 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-600">
+                                            <label className={`block text-sm font-medium ${
+                                                isDark ? 'text-gray-300' : 'text-gray-700'
+                                            }`}>Created At</label>
+                                            <div className={`border rounded-lg px-3 py-2 text-sm ${
+                                                isDark 
+                                                    ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                                    : 'bg-gray-100 border-gray-300 text-gray-600'
+                                            }`}>
                                                 {editedUser?.createdAt ? new Date(editedUser?.createdAt).toLocaleDateString('en-US', { 
                                                     year: 'numeric', month: 'long', day: 'numeric', 
                                                     hour: '2-digit', minute: '2-digit' 
@@ -877,14 +1010,18 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             {isEditing ? renderEditMode() : renderDisplayMode()}
             {errorModal.open && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 ">
-                    <div className="bg-white rounded-xl shadow-xl p-8 max-w-sm w-full text-center animate-fade-in">
+                    <div className={`rounded-xl shadow-xl p-8 max-w-sm w-full text-center animate-fade-in ${
+                        isDark 
+                            ? 'bg-gray-800 border border-gray-700' 
+                            : 'bg-white'
+                    }`}>
                         <div className="text-red-600 text-2xl mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 mx-auto">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 17c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                         </div>
-                        <h3 className="text-lg font-bold text-gray-800 mb-2">Error</h3>
-                        <p className="text-gray-600 mb-4">{errorModal.message}</p>
+                        <h3 className={`text-lg font-bold mb-2 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>Error</h3>
+                        <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{errorModal.message}</p>
                         <button
                             onClick={() => setErrorModal({ open: false, message: '' })}
                             className="bg-gradient-to-r from-green-400 to-green-600 text-white px-6 py-2 rounded-lg font-semibold shadow hover:from-green-500 hover:to-green-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-300"
@@ -896,14 +1033,18 @@ export default function User_Details({ user, isEdit, refetchRow}) {
             )}
             {confirmModal.open && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 ">
-                    <div className="bg-white rounded-xl shadow-xl p-8 max-w-sm w-full text-center animate-fade-in">
+                    <div className={`rounded-xl shadow-xl p-8 max-w-sm w-full text-center animate-fade-in ${
+                        isDark 
+                            ? 'bg-gray-800 border border-gray-700' 
+                            : 'bg-white'
+                    }`}>
                         <div className="text-green-600 text-2xl mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 mx-auto">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 6h.01M6.938 20h10.124c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 17c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                         </div>
-                        <h3 className="text-lg font-bold text-gray-800 mb-2">Confirm Save</h3>
-                        <p className="text-gray-600 mb-4">Are you sure you want to save these changes?</p>
+                        <h3 className={`text-lg font-bold mb-2 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>Confirm Save</h3>
+                        <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Are you sure you want to save these changes?</p>
                         <div className="flex justify-center gap-4">
                             <button
                                 onClick={() => {
@@ -915,7 +1056,11 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             </button>
                             <button
                                 onClick={() => setConfirmModal({ open: false, onConfirm: null })}
-                                className="bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 px-6 py-2 rounded-lg font-semibold shadow hover:from-gray-400 hover:to-gray-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                                className={`px-6 py-2 rounded-lg font-semibold shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 ${
+                                    isDark 
+                                        ? 'bg-gradient-to-r from-gray-600 to-gray-700 text-white hover:from-gray-700 hover:to-gray-800' 
+                                        : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 hover:from-gray-400 hover:to-gray-500'
+                                }`}
                             >
                                 Cancel
                             </button>

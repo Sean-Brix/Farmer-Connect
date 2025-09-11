@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 // ASSETS
 import default_image from '../../../Assets/eic_default.png';
@@ -20,6 +21,7 @@ import {
 } from './hooks/useDistributionQueries';
 
 export default function Distribution() {
+    const { isDark } = useTheme();
     const [activeSection, setActiveSection] = useState('items');
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState('quantity');
@@ -567,7 +569,11 @@ export default function Distribution() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 py-8 sm:mt-20 px-2 md:px-6 relative">
+        <div className={`min-h-screen py-8 sm:mt-20 px-2 md:px-6 relative ${
+            isDark 
+                ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                : 'bg-gradient-to-br from-white via-gray-50 to-gray-100'
+        }`}>
             {/* Alert Component */}
             {alert.show && (
                 <div
@@ -582,18 +588,26 @@ export default function Distribution() {
             {/* Header - Centered and Professional (EIC style) */}
             <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
               <span className="inline-flex items-center justify-center gap-3 w-full">
-                <span className="rounded-full bg-green-100 p-2">
-                  <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <span className={`rounded-full p-2 ${
+                    isDark ? 'bg-green-900' : 'bg-green-100'
+                }`}>
+                  <svg className={`w-9 h-9 ${
+                      isDark ? 'text-green-400' : 'text-green-500'
+                  }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>
-                <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
+                <span className={`text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow-sm ${
+                    isDark ? 'text-white' : 'text-gray-900'
+                }`}>
                   {activeSection === 'items'
                     ? 'Distribution Management'
                     : 'Distribution Requests Management'}
                 </span>
               </span>
-              <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
+              <span className={`block text-base md:text-lg font-medium mt-1 ${
+                  isDark ? 'text-gray-400' : 'text-gray-500'
+              }`}>
                 {activeSection === 'items'
                   ? 'Manage and monitor all distribution activities.'
                   : 'Oversee and process all distribution requests efficiently.'}

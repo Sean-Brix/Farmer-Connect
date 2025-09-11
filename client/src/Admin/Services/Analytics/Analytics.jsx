@@ -327,6 +327,7 @@ function Analytics() {
                         </svg>
                     }
                     color="from-green-500 to-green-600"
+                    isDark={isDark}
                 />
                 <OverviewCard
                     title="Total Seminars"
@@ -342,6 +343,7 @@ function Analytics() {
                         </svg>
                     }
                     color="from-green-500 to-green-600"
+                    isDark={isDark}
                 />
                 <OverviewCard
                     title="Available EIC"
@@ -353,6 +355,7 @@ function Analytics() {
                         </svg>
                     }
                     color="from-yellow-500 to-orange-500"
+                    isDark={isDark}
                 />
                 <OverviewCard
                     title="Distributions"
@@ -365,6 +368,7 @@ function Analytics() {
                         </svg>
                     }
                     color="from-purple-500 to-purple-600"
+                    isDark={isDark}
                 />
                 <OverviewCard
                     title="Inventory Items"
@@ -380,6 +384,7 @@ function Analytics() {
                         </svg>
                     }
                     color="from-indigo-500 to-indigo-600"
+                    isDark={isDark}
                 />
             </div>
 
@@ -387,9 +392,10 @@ function Analytics() {
             <ChartContainer
                 title="Platform Growth Overview"
                 className="col-span-full"
+                isDark={isDark}
             >
-                <div className="h-80">
-                    <canvas ref={overviewChartRef} />
+                <div className="h-96 w-full">
+                    <canvas ref={overviewChartRef} style={{ width: '100%', height: '100%' }} />
                 </div>
             </ChartContainer>
         </div>
@@ -429,6 +435,19 @@ function Analytics() {
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    resizeDelay: 100,
+                    animation: {
+                        duration: 750,
+                        easing: 'easeInOutQuart'
+                    },
+                    layout: {
+                        padding: {
+                            top: 10,
+                            bottom: 10,
+                            left: 10,
+                            right: 10
+                        }
+                    },
                     ...options,
                 },
             });
@@ -474,24 +493,67 @@ function Analytics() {
                     legend: {
                         display: true,
                         position: 'top',
+                        labels: {
+                            color: isDark ? '#d1d5db' : '#374151',
+                            font: {
+                                size: 12,
+                                family: 'Inter, system-ui, sans-serif'
+                            },
+                            padding: 20,
+                            usePointStyle: true
+                        }
                     },
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
                         grid: {
-                            color: 'rgba(0, 0, 0, 0.1)',
+                            color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
                         },
+                        ticks: {
+                            color: isDark ? '#d1d5db' : '#6b7280',
+                            font: {
+                                size: 11,
+                                family: 'Inter, system-ui, sans-serif'
+                            }
+                        },
+                        border: {
+                            color: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                        }
                     },
                     x: {
                         grid: {
-                            color: 'rgba(0, 0, 0, 0.1)',
+                            color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
                         },
+                        ticks: {
+                            color: isDark ? '#d1d5db' : '#6b7280',
+                            font: {
+                                size: 11,
+                                family: 'Inter, system-ui, sans-serif'
+                            }
+                        },
+                        border: {
+                            color: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                        }
                     },
                 },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                elements: {
+                    point: {
+                        radius: 4,
+                        hoverRadius: 6,
+                        borderWidth: 2
+                    },
+                    line: {
+                        borderWidth: 3
+                    }
+                }
             });
         }
-    }, [activeView, isLoading, usersData, seminarsData, distributionData]);
+    }, [activeView, isLoading, usersData, seminarsData, distributionData, isDark]);
 
     useEffect(() => {
         if (activeView !== 'overview' && !isLoading) {
@@ -522,6 +584,44 @@ function Analytics() {
                         ],
                     };
                     chartType = 'bar';
+                    chartOptions = {
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: isDark ? '#d1d5db' : '#374151',
+                                    font: {
+                                        size: 12,
+                                        family: 'Inter, system-ui, sans-serif'
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                                },
+                                ticks: {
+                                    color: isDark ? '#d1d5db' : '#6b7280',
+                                },
+                                border: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                                },
+                                ticks: {
+                                    color: isDark ? '#d1d5db' : '#6b7280',
+                                },
+                                border: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                                }
+                            }
+                        }
+                    };
                     break;
 
                 case 'seminars':
@@ -552,6 +652,15 @@ function Analytics() {
                         plugins: {
                             legend: {
                                 position: 'bottom',
+                                labels: {
+                                    color: isDark ? '#d1d5db' : '#374151',
+                                    font: {
+                                        size: 12,
+                                        family: 'Inter, system-ui, sans-serif'
+                                    },
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
                             },
                         },
                     };
@@ -581,6 +690,51 @@ function Analytics() {
                         ],
                     };
                     chartType = 'line';
+                    chartOptions = {
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: isDark ? '#d1d5db' : '#374151',
+                                    font: {
+                                        size: 12,
+                                        family: 'Inter, system-ui, sans-serif'
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                                },
+                                ticks: {
+                                    color: isDark ? '#d1d5db' : '#6b7280',
+                                },
+                                border: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                                },
+                                ticks: {
+                                    color: isDark ? '#d1d5db' : '#6b7280',
+                                },
+                                border: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                                }
+                            }
+                        },
+                        elements: {
+                            point: {
+                                radius: 4,
+                                hoverRadius: 6,
+                                borderWidth: 2
+                            }
+                        }
+                    };
                     break;
 
                 case 'distribution':
@@ -608,6 +762,15 @@ function Analytics() {
                         plugins: {
                             legend: {
                                 position: 'bottom',
+                                labels: {
+                                    color: isDark ? '#d1d5db' : '#374151',
+                                    font: {
+                                        size: 12,
+                                        family: 'Inter, system-ui, sans-serif'
+                                    },
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
                             },
                         },
                     };
@@ -635,6 +798,44 @@ function Analytics() {
                         ],
                     };
                     chartType = 'bar';
+                    chartOptions = {
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: isDark ? '#d1d5db' : '#374151',
+                                    font: {
+                                        size: 12,
+                                        family: 'Inter, system-ui, sans-serif'
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                                },
+                                ticks: {
+                                    color: isDark ? '#d1d5db' : '#6b7280',
+                                },
+                                border: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                                },
+                                ticks: {
+                                    color: isDark ? '#d1d5db' : '#6b7280',
+                                },
+                                border: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                                }
+                            }
+                        }
+                    };
                     break;
 
                 default:
@@ -656,6 +857,7 @@ function Analytics() {
         eicData,
         distributionData,
         inventoryData,
+        isDark
     ]);
 
     // Cleanup on unmount
@@ -731,7 +933,11 @@ function Analytics() {
                                         isDark ? 'bg-gray-700 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
                                     }`} />
                                 <button onClick={() => { setFrom(''); setTo(''); }}
-                                    className="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 shadow">
+                                    className={`px-3 py-2 rounded-lg shadow transition-colors ${
+                                        isDark 
+                                            ? 'bg-gray-600 hover:bg-gray-500 text-gray-200' 
+                                            : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+                                    }`}>
                                     Clear
                                 </button>
                             </div>
@@ -739,13 +945,19 @@ function Analytics() {
                     </div>
 
                     {/* Navigation */}
-                    <div className="flex flex-wrap gap-1 bg-gray-100 p-2 rounded-lg shadow-sm">
+                    <div className={`flex flex-wrap gap-1 p-2 rounded-lg shadow-sm ${
+                        isDark ? 'bg-gray-700' : 'bg-gray-100'
+                    }`}>
                         <button
                             onClick={() => setActiveView('overview')}
                             className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                                 activeView === 'overview'
-                                    ? 'bg-white text-green-600 shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                    ? isDark 
+                                        ? 'bg-gray-800 text-green-400 shadow-sm' 
+                                        : 'bg-white text-green-600 shadow-sm'
+                                    : isDark
+                                        ? 'text-gray-300 hover:text-gray-100'
+                                        : 'text-gray-600 hover:text-gray-900'
                             }`}
                         >
                             Overview
@@ -756,8 +968,12 @@ function Analytics() {
                                 onClick={() => setActiveView(feature.id)}
                                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                                     activeView === feature.id
-                                        ? 'bg-white text-green-600 shadow-sm'
-                                        : 'text-gray-600 hover:text-gray-900'
+                                        ? isDark 
+                                            ? 'bg-gray-800 text-green-400 shadow-sm' 
+                                            : 'bg-white text-green-600 shadow-sm'
+                                        : isDark
+                                            ? 'text-gray-300 hover:text-gray-100'
+                                            : 'text-gray-600 hover:text-gray-900'
                                 }`}
                             >
                                 {feature.title}
@@ -777,7 +993,11 @@ function Analytics() {
                         <div className="mt-6 flex justify-end">
                             <button
                                 onClick={() => analyticsAPI.export.overview()}
-                                className="px-4 py-2 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700 shadow"
+                                className={`px-4 py-2 rounded-md text-sm font-medium shadow transition-colors ${
+                                    isDark
+                                        ? 'bg-green-600 text-white hover:bg-green-700'
+                                        : 'bg-green-600 text-white hover:bg-green-700'
+                                }`}
                             >
                                 Export Overview CSV
                             </button>
@@ -790,16 +1010,19 @@ function Analytics() {
                 {/* Feature Grid for Overview */}
                 {activeView === 'overview' && !isLoading && (
                     <div className="mt-12">
-                        <h2 className="text-xl font-semibold text-gray-900 mb-6 pl-1">
+                        <h2 className={`text-xl font-semibold mb-6 pl-1 ${
+                            isDark ? 'text-white' : 'text-gray-900'
+                        }`}>
                             Feature Analytics
                         </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-3 gap-8">
                             {features.map((feature) => (
                                 <FeatureCard
                                     key={feature.id}
                                     {...feature}
                                     onClick={() => setActiveView(feature.id)}
                                     isActive={activeView === feature.id}
+                                    isDark={isDark}
                                 />
                             ))}
                         </div>

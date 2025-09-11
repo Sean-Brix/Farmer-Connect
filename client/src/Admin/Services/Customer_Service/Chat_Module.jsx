@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSocket } from '../../../contexts/SocketContext.jsx';
+import { useTheme } from '../../../contexts/ThemeContext.jsx';
 import ChatWindow from './components/ChatWindow.jsx';
 import InquiryListItem from './components/InquiryListItem.jsx';
 import DashboardStats from './components/DashboardStats.jsx';
 
 function Chat_Module() {
+  const { isDark } = useTheme();
   // Three-tab lists
   const [pending, setPending] = useState([]);
   const [inProgress, setInProgress] = useState([]);
@@ -392,7 +394,9 @@ function Chat_Module() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 py-4 sm:mt-12 px-2 md:px-6">
+    <div className={`min-h-screen py-4 sm:mt-12 px-2 md:px-6 ${
+      isDark ? 'bg-gray-900' : 'bg-gray-50'
+    }`}>
       {toast && (
         <div className={`fixed top-4 right-4 z-[100000] px-4 py-3 rounded-xl shadow-xl border ${toast.type==='info' ? 'bg-green-50 border-green-200 text-green-900' : 'bg-white border-gray-200 text-gray-800'}`}>
           <div className="flex items-start gap-3">

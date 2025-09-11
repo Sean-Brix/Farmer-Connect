@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../../../contexts/ThemeContext';
 import AddItemModal from './addItem';
 
 const categories = [
@@ -19,6 +20,7 @@ const categories = [
 const statuses = ['Available', 'Unavailable', 'Damaged', 'EIC', 'Distributed'];
 
 function Content() {
+    const { isDark } = useTheme();
     const [items, setItems] = useState([]);
     const [expandedStacks, setExpandedStacks] = useState(new Set());
     const [showModal, setShowModal] = useState(false);
@@ -842,7 +844,11 @@ function Content() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50 overflow-x-hidden">
+        <div className={`min-h-screen overflow-x-hidden ${
+            isDark 
+                ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                : 'bg-gradient-to-br from-gray-50 via-white to-green-50'
+        }`}>
             {/* Modern Alert */}
             {alert.show && (
                 <div
@@ -876,20 +882,34 @@ function Content() {
             <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 ${sizeClasses[uiSize].container}`}>
                 <div className="text-center mb-6 mt-20 sm:mb-8">
                     <div className="flex items-center justify-center gap-3 mb-4">
-                        <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl shadow-lg">
-                            <svg className="w-6 h-6 sm:w-8 sm:h-8 text-green-700" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <div className={`inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-2xl shadow-lg ${
+                            isDark 
+                                ? 'bg-gradient-to-br from-green-800 to-green-700' 
+                                : 'bg-gradient-to-br from-green-100 to-green-200'
+                        }`}>
+                            <svg className={`w-6 h-6 sm:w-8 sm:h-8 ${
+                                isDark ? 'text-green-300' : 'text-green-700'
+                            }`} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                                 <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </div>
-                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">Inventory Management</h1>
+                        <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight ${
+                            isDark ? 'text-white' : 'text-gray-900'
+                        }`}>Inventory Management</h1>
                     </div>
-                    <p className="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+                    <p className={`max-w-2xl mx-auto text-sm sm:text-base leading-relaxed ${
+                        isDark ? 'text-gray-400' : 'text-gray-600'
+                    }`}>
                         Manage and monitor all inventory items and their stacks with complete control over stock levels and distribution.
                     </p>
                 </div>
 
                 {/* Professional Controls Section */}
-                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6 mb-6 sm:mb-8 backdrop-blur-sm">
+                <div className={`rounded-2xl shadow-xl border p-4 sm:p-6 mb-6 sm:mb-8 backdrop-blur-sm ${
+                    isDark 
+                        ? 'bg-gray-800/80 border-gray-600' 
+                        : 'bg-white border-gray-100'
+                }`}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 items-end">
                         {/* Search Input */}
                         <div className="xl:col-span-2">

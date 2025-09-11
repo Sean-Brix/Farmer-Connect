@@ -434,20 +434,28 @@ class RegisterUserModal extends Component {
     }
 
     render() {
-        const { open, onClose } = this.props;
+        const { open, onClose, isDark } = this.props;
         const { currentStep, isLoading } = this.state;
         
         if (!open) return null;
 
         return (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 transition-opacity">
-                <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl max-w-6xl w-full mx-6 relative max-h-[95vh] flex flex-col border border-white/20" style={{boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'}}>
+                <div className={`backdrop-blur-sm rounded-3xl shadow-2xl max-w-6xl w-full mx-6 relative max-h-[95vh] flex flex-col border ${
+                    isDark 
+                        ? 'bg-gray-800/95 border-gray-600/20' 
+                        : 'bg-white/95 border-white/20'
+                }`} style={{boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'}}>
                     <button
                         onClick={() => {
                             this.resetForm();
                             onClose();
                         }}
-                        className="absolute top-6 right-6 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full p-2 transition-all duration-300 group focus:outline-none z-10"
+                        className={`absolute top-6 right-6 hover:text-red-500 rounded-full p-2 transition-all duration-300 group focus:outline-none z-10 ${
+                            isDark 
+                                ? 'text-gray-400 hover:bg-red-900/20' 
+                                : 'text-gray-400 hover:bg-red-50'
+                        }`}
                         aria-label="Close"
                     >
                         <svg
@@ -466,7 +474,9 @@ class RegisterUserModal extends Component {
                         </svg>
                     </button>
                     
-                    <div className="p-10 overflow-y-auto" style={{ maxHeight: '85vh', fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
+                    <div className={`p-10 overflow-y-auto ${
+                        isDark ? 'text-gray-200' : ''
+                    }`} style={{ maxHeight: '85vh', fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
                         {/* Header */}
                         <div className="text-center mb-10">
                             <div className="relative inline-flex items-center justify-center w-20 h-20 mb-6">
@@ -478,15 +488,25 @@ class RegisterUserModal extends Component {
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <h2 className="text-4xl font-black bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent">RSBSA Registration</h2>
+                                <h2 className={`text-4xl font-black bg-clip-text text-transparent ${
+                                    isDark 
+                                        ? 'bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100' 
+                                        : 'bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900'
+                                }`}>RSBSA Registration</h2>
                                 <div className="h-1 w-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto shadow-lg"></div>
-                                <p className="text-gray-600 text-lg font-medium">Registry System for Basic Sectors in Agriculture</p>
+                                <p className={`text-lg font-medium ${
+                                    isDark ? 'text-gray-400' : 'text-gray-600'
+                                }`}>Registry System for Basic Sectors in Agriculture</p>
                             </div>
                         </div>
 
                         {/* Stepper */}
                         <div className="relative flex items-center mb-10 w-full max-w-4xl mx-auto">
-                            <div className="absolute top-1/2 left-0 right-0 h-3 bg-gradient-to-r from-gray-100 via-gray-150 to-gray-100 rounded-full shadow-inner border border-gray-200/50" style={{ transform: 'translateY(-50%)' }} />
+                            <div className={`absolute top-1/2 left-0 right-0 h-3 rounded-full shadow-inner border ${
+                                isDark 
+                                    ? 'bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 border-gray-600/50' 
+                                    : 'bg-gradient-to-r from-gray-100 via-gray-150 to-gray-100 border-gray-200/50'
+                            }`} style={{ transform: 'translateY(-50%)' }} />
                             <div className="absolute top-1/2 left-0 h-3 bg-gradient-to-r from-green-500 via-emerald-500 to-green-600 rounded-full shadow-lg border border-green-400/30 transition-all duration-700 ease-out" style={{ width: `${(currentStep - 1) / (this.steps.length - 1) * 100}%`, transform: 'translateY(-50%)', boxShadow: '0 4px 14px rgba(34,197,94,0.4), inset 0 1px 0 rgba(255,255,255,0.3)' }} />
                             
                             {this.steps.map((step, idx) => (
