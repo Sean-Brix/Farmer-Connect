@@ -3,8 +3,10 @@ import User from './User/User.jsx';
 import RegisterUserModal from './RegisterUserModal.jsx';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 export default function Profiles({ details }) {
+    const { theme, isDark } = useTheme();
     const queryClient = useQueryClient();
     const [refreshToken, setRefreshToken] = useState(Date.now());
     const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -59,22 +61,32 @@ export default function Profiles({ details }) {
     }, [filter, userList.length]);
 
     return (
-        <div className="min-h-screen bg-white pt-6 px-2 sm:px-4 md:px-6 lg:px-0" style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
+        <div className={`min-h-screen pt-6 px-2 sm:px-4 md:px-6 lg:px-0 ${
+            isDark ? 'bg-gray-900' : 'bg-white'
+        }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
             <div className="w-full max-w-4xl mx-auto">
                 {/* HEADER - Clean and simple */}
                 <div className="relative mb-8 sm:mt-20 mt-5 flex flex-col items-center justify-center max-w-4xl mx-auto gap-3 text-center">
                     <span className="inline-flex items-center justify-center gap-4 w-full">
-                        <span className="rounded-full bg-gradient-to-br from-green-200 to-green-300 p-3 shadow-lg">
-                            <svg className="w-10 h-10 text-green-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <span className={`rounded-full p-3 shadow-lg ${
+                            isDark ? 'bg-gradient-to-br from-green-800 to-green-700' : 'bg-gradient-to-br from-green-200 to-green-300'
+                        }`}>
+                            <svg className={`w-10 h-10 ${
+                                isDark ? 'text-green-400' : 'text-green-700'
+                            }`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" fill="none"/>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 20v-1a7 7 0 0 1 14 0v1" stroke="currentColor" strokeWidth="2" fill="none"/>
                             </svg>
                         </span>
-                        <span className="text-3xl md:text-4xl font-bold text-gray-800 tracking-tight">
+                        <span className={`text-3xl md:text-4xl font-bold tracking-tight ${
+                            isDark ? 'text-white' : 'text-gray-800'
+                        }`}>
                             Account Management
                         </span>
                     </span>
-                    <span className="block text-base md:text-lg text-gray-600 font-medium mt-1">
+                    <span className={`block text-base md:text-lg font-medium mt-1 ${
+                        isDark ? 'text-gray-300' : 'text-gray-600'
+                    }`}>
                         Manage and oversee all user accounts and profiles
                     </span>
                 </div>
@@ -86,7 +98,9 @@ export default function Profiles({ details }) {
                             <input
                                 type="text"
                                 placeholder="Search profiles..."
-                                className="modern-search-input text-gray-700"
+                                className={`modern-search-input ${
+                                    isDark ? 'text-gray-200 bg-gray-800 border-gray-600' : 'text-gray-700 bg-white border-gray-300'
+                                }`}
                                 style={{ maxWidth: '280px' }}
                                 onChange={(e) => setFilter({ ...filter, search: e.target.value })}
                             />
@@ -97,7 +111,9 @@ export default function Profiles({ details }) {
                             </div>
                         </div>
                         <select
-                            className="custom-select w-full sm:w-auto"
+                            className={`custom-select w-full sm:w-auto ${
+                                isDark ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
+                            }`}
                             onChange={(e) => setFilter({ ...filter, roles: e.target.value })}
                         >
                             <option value="none">All Roles</option>
@@ -106,7 +122,9 @@ export default function Profiles({ details }) {
                             <option value="User">User</option>
                         </select>
                         <select
-                            className="custom-select w-full sm:w-auto"
+                            className={`custom-select w-full sm:w-auto ${
+                                isDark ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
+                            }`}
                             onChange={(e) => setFilter({ ...filter, client_profile: e.target.value })}
                         >
                             <option value="" disabled>Client Profile</option>
@@ -124,7 +142,9 @@ export default function Profiles({ details }) {
                     </div>
                     <div className="flex-none ml-auto min-w-[110px] w-full sm:w-auto mt-2 sm:mt-0">
                         <select
-                            className="custom-select w-full sm:w-auto"
+                            className={`custom-select w-full sm:w-auto ${
+                                isDark ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
+                            }`}
                             onChange={(e) => setFilter({ ...filter, order: e.target.value })}
                         >
                             <option value="none">Sort by</option>
@@ -151,16 +171,22 @@ export default function Profiles({ details }) {
                 </div>
 
                 {/* LIST - Clean table design */}
-                <div className="bg-white rounded-xl shadow-lg border border-green-100 overflow-hidden" style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
+                <div className={`rounded-xl shadow-lg border overflow-hidden ${
+                    isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-green-100'
+                }`} style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
                     {isLoading ? (
-                        <div className="text-center text-gray-500 py-12 font-medium text-base bg-green-50">
+                        <div className={`text-center py-12 font-medium text-base ${
+                            isDark ? 'text-gray-400 bg-gray-800' : 'text-gray-500 bg-green-50'
+                        }`}>
                             <div className="inline-flex items-center gap-3">
                                 <div className="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
                                 Loading profiles...
                             </div>
                         </div>
                     ) : error ? (
-                        <div className="text-center text-red-500 py-12 font-medium text-base bg-red-50">
+                        <div className={`text-center py-12 font-medium text-base ${
+                            isDark ? 'text-red-400 bg-gray-800' : 'text-red-500 bg-red-50'
+                        }`}>
                             <div className="inline-flex items-center gap-3">
                                 <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -169,7 +195,9 @@ export default function Profiles({ details }) {
                             </div>
                         </div>
                     ) : !Array.isArray(userList) || userList.length === 0 ? (
-                        <div className="text-center text-gray-500 py-12 font-medium text-base bg-gray-50">
+                        <div className={`text-center py-12 font-medium text-base ${
+                            isDark ? 'text-gray-400 bg-gray-800' : 'text-gray-500 bg-gray-50'
+                        }`}>
                             <div className="inline-flex items-center gap-3">
                                 <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
@@ -181,7 +209,9 @@ export default function Profiles({ details }) {
                         <>
                             <div className="overflow-x-auto">
                                 <table className="min-w-full text-sm">
-                                    <thead className="bg-gradient-to-r from-green-600 to-green-700 text-white">
+                                    <thead className={`text-white ${
+                                        isDark ? 'bg-gradient-to-r from-green-700 to-green-800' : 'bg-gradient-to-r from-green-600 to-green-700'
+                                    }`}>
                                         <tr>
                                             <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Username</th>
                                             <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Name</th>
@@ -190,11 +220,17 @@ export default function Profiles({ details }) {
                                             <th className="px-6 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-green-100">
+                                    <tbody className={`divide-y ${
+                                        isDark ? 'bg-gray-800 divide-gray-700' : 'bg-white divide-green-100'
+                                    }`}>
                                         {paginatedList.map((user, idx) => (
                                             <tr
                                                 key={user.id}
-                                                className={`transition-colors duration-200 ${(idx % 2 === 0 ? 'bg-white hover:bg-green-50' : 'bg-green-25 hover:bg-green-75')} hover:shadow-sm`} 
+                                                className={`transition-colors duration-200 ${
+                                                    isDark 
+                                                        ? (idx % 2 === 0 ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-750 hover:bg-gray-700')
+                                                        : (idx % 2 === 0 ? 'bg-white hover:bg-green-50' : 'bg-green-25 hover:bg-green-75')
+                                                } hover:shadow-sm`} 
                                                 style={{ lineHeight: '1.25' }}
                                             >
                                                 <User
@@ -216,7 +252,11 @@ export default function Profiles({ details }) {
                 {!isLoading && !error && Array.isArray(userList) && userList.length > 0 && (
                     <div className="flex justify-center items-center gap-4 py-8">
                         <button
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-green-300 bg-white text-green-700 font-medium shadow-sm hover:bg-green-50 hover:border-green-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                isDark 
+                                    ? 'border-green-600 bg-gray-800 text-green-400 hover:bg-gray-700 hover:border-green-500' 
+                                    : 'border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400'
+                            }`}
                             onClick={() => setPage((p) => Math.max(1, p - 1))}
                             disabled={page === 1}
                         >
@@ -226,12 +266,20 @@ export default function Profiles({ details }) {
                             Previous
                         </button>
                         
-                        <div className="px-4 py-2 bg-green-100 text-green-800 font-semibold rounded-lg border border-green-200">
+                        <div className={`px-4 py-2 font-semibold rounded-lg border ${
+                            isDark 
+                                ? 'bg-gray-700 text-green-400 border-gray-600' 
+                                : 'bg-green-100 text-green-800 border-green-200'
+                        }`}>
                             Page {page} of {totalPages}
                         </div>
                         
                         <button
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-green-300 bg-white text-green-700 font-medium shadow-sm hover:bg-green-50 hover:border-green-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                isDark 
+                                    ? 'border-green-600 bg-gray-800 text-green-400 hover:bg-gray-700 hover:border-green-500' 
+                                    : 'border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400'
+                            }`}
                             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                             disabled={page === totalPages || totalPages === 0}
                         >

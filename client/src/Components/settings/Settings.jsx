@@ -5,18 +5,12 @@ import Navbar from '../../Client/Components/Navbar';
 import Preferences from './Preferences';
 import Notifications from './Notifications';
 import AccountSettings from './AccountSettings';
+import ProfileSettings from './ProfileSettings';
 
 const Settings = () => {
   const { t } = useCustomTranslation();
   const { theme, isDark } = useTheme();
   const [activeTab, setActiveTab] = useState('preferences');
-  
-  // Updated layout - Version 2.0 - Force refresh
-  
-  // Debug: Log the theme values
-  console.log('Current theme:', theme);
-  console.log('Is dark mode:', isDark);
-  console.log('Document has dark class:', document.documentElement.classList.contains('dark'));
 
   const tabs = [
     { 
@@ -26,6 +20,12 @@ const Settings = () => {
       component: Preferences 
     },
     { 
+      id: 'profile', 
+      label: 'Profile Settings', 
+      icon: 'fas fa-user',
+      component: ProfileSettings 
+    },
+    { 
       id: 'notifications', 
       label: t('settings.notifications'), 
       icon: 'fas fa-bell',
@@ -33,10 +33,10 @@ const Settings = () => {
     },
     { 
       id: 'account', 
-      label: t('settings.account_settings'), 
+      label: 'Account Settings', 
       icon: 'fas fa-user-cog',
       component: AccountSettings 
-    },
+    }
   ];
 
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component;
@@ -92,15 +92,17 @@ const Settings = () => {
         {/* Main Content Container */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div 
-            className="rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden"
+            className="rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col"
             style={{ 
-              backgroundColor: isDark ? '#1f2937' : '#ffffff' 
+              backgroundColor: isDark ? '#1f2937' : '#ffffff',
+              height: '75vh',
+              minHeight: '600px'
             }}
           >
             
             {/* Mobile Tab Navigation */}
             <div 
-              className="lg:hidden border-b border-gray-200 dark:border-gray-600 px-4 py-4"
+              className="lg:hidden border-b border-gray-200 dark:border-gray-600 px-4 py-4 flex-shrink-0"
               style={{ 
                 backgroundColor: isDark ? '#374151' : '#ffffff' 
               }}
@@ -134,10 +136,27 @@ const Settings = () => {
               </div>
             </div>
 
-            <div className="flex">
+            {/* Mobile Content Area */}
+            <div 
+              className="lg:hidden flex-1 overflow-hidden"
+            >
+              <div 
+                className="h-full overflow-y-auto p-4 sm:p-6"
+                style={{
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: isDark ? '#4B5563 #1F2937' : '#CBD5E1 #F1F5F9'
+                }}
+              >
+                <div className="max-w-4xl h-full">
+                  {ActiveComponent && <ActiveComponent />}
+                </div>
+              </div>
+            </div>
+
+            <div className="hidden lg:flex h-full">
               {/* Desktop Sidebar Navigation */}
               <div 
-                className="hidden lg:flex lg:flex-col lg:w-80 xl:w-96 border-r border-gray-200 dark:border-gray-600"
+                className="flex flex-col w-80 xl:w-96 border-r border-gray-200 dark:border-gray-600 flex-shrink-0"
                 style={{ 
                   backgroundColor: isDark ? '#374151' : '#ffffff' 
                 }}
@@ -187,9 +206,15 @@ const Settings = () => {
               </div>
 
               {/* Main Content Area */}
-              <div className="flex-1 min-w-0">
-                <div className="p-6 sm:p-8 lg:p-10">
-                  <div className="max-w-4xl">
+              <div className="flex-1 min-w-0 overflow-hidden">
+                <div 
+                  className="h-full overflow-y-auto p-6 sm:p-8 lg:p-10 pb-8 sm:pb-12 lg:pb-16"
+                  style={{
+                    scrollbarWidth: 'thin',
+                    scrollbarColor: isDark ? '#4B5563 #1F2937' : '#CBD5E1 #F1F5F9'
+                  }}
+                >
+                  <div className="max-w-4xl h-full">
                     {ActiveComponent && <ActiveComponent />}
                   </div>
                 </div>

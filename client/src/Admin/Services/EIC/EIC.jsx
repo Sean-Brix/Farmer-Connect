@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../../../contexts/ThemeContext';
 import default_image from '../../../Assets/eic_default.png';
 import AddEICItemModal from './addEICItem.jsx';
 import {
@@ -11,6 +12,7 @@ import {
 } from './hooks/useEICQueries.js';
 
 export default function EIC() {
+    const { isDark } = useTheme();
     const [activeSection, setActiveSection] = useState('items');
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState('quantity');
@@ -535,19 +537,25 @@ export default function EIC() {
     if (isLoading)
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <div className="text-lg">Loading...</div>
+                <div className={`text-lg ${isDark ? 'text-white' : 'text-gray-900'}`}>Loading...</div>
             </div>
         );
     if (error)
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <div className="text-lg text-red-600">Error: {error?.message || String(error)}</div>
+                <div className={`text-lg ${
+                    isDark ? 'text-red-400' : 'text-red-600'
+                }`}>Error: {error?.message || String(error)}</div>
             </div>
         );
 
     return (
 
-        <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-gray-100 py-8 sm:mt-20 px-2 md:px-6">
+        <div className={`min-h-screen py-8 sm:mt-20 px-2 md:px-6 ${
+            isDark 
+                ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+                : 'bg-gradient-to-br from-white via-gray-50 to-gray-100'
+        }`}>
             {/* Alert Component */}
             {alert.show && (
                 <div
@@ -562,18 +570,24 @@ export default function EIC() {
             {/* Header - Centered and Professional (Seminar style) */}
             <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
               <span className="inline-flex items-center justify-center gap-3 w-full">
-                <span className="rounded-full bg-green-100 p-2">
+                <span className={`rounded-full p-2 ${
+                    isDark ? 'bg-green-900' : 'bg-green-100'
+                }`}>
                   <svg className="w-9 h-9 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>
-                <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">
+                <span className={`text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow-sm ${
+                    isDark ? 'text-white' : 'text-gray-900'
+                }`}>
                   {activeSection === 'items'
                     ? 'Equipment in Circulation'
                     : 'EIC Requests Management'}
                 </span>
               </span>
-              <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">
+              <span className={`block text-base md:text-lg font-medium mt-1 ${
+                  isDark ? 'text-gray-400' : 'text-gray-500'
+              }`}>
                 {activeSection === 'items'
                   ? 'Manage and monitor all equipment in circulation.'
                   : 'Oversee and process all EIC requests efficiently.'}
@@ -582,7 +596,9 @@ export default function EIC() {
           
             {/* Divider between title and search/filters */}
             {activeSection !== 'requests' && (
-                <hr className="border-t border-gray-300 my-6 w-full max-w-5xl mx-auto" />
+                <hr className={`border-t my-6 w-full max-w-5xl mx-auto ${
+                    isDark ? 'border-gray-600' : 'border-gray-300'
+                }`} />
             )}
 
             {activeSection === 'requests' ? (
@@ -595,7 +611,11 @@ export default function EIC() {
                                 <input
                                     type="search"
                                     placeholder="Search by item name, requestor, or note..."
-                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400"
+                                    className={`block w-full pl-10 pr-3 py-2 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all ${
+                                        isDark 
+                                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                                            : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
+                                    }`}
                                     value={requestSearch}
                                     onChange={(e) => setRequestSearch(e.target.value)}
                                     aria-label="Search requests"
@@ -664,7 +684,11 @@ export default function EIC() {
                     <div className="relative w-full max-w-5xl mx-auto px-2 md:px-6 mb-8">
                         <div className="flex flex-row gap-2 flex-1">
                             <select
-                                className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
+                                    isDark 
+                                        ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                        : 'bg-gray-50 border-gray-200 text-gray-700'
+                                }`}
                                 value={requestStatusFilter}
                                 onChange={(e) => setRequestStatusFilter(e.target.value)}
                                 aria-label="Filter by status"
@@ -680,7 +704,11 @@ export default function EIC() {
                                 <option value="Cancelled">Cancelled</option>
                             </select>
                             <select
-                                className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
+                                    isDark 
+                                        ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                        : 'bg-gray-50 border-gray-200 text-gray-700'
+                                }`}
                                 value={requestSortBy}
                                 onChange={(e) => setRequestSortBy(e.target.value)}
                                 aria-label="Sort by"
@@ -711,7 +739,11 @@ export default function EIC() {
                                 <input
                                     type="search"
                                     placeholder="Search items, categories, descriptions..."
-                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400"
+                                    className={`block w-full pl-10 pr-3 py-2 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400 ${
+                                        isDark 
+                                            ? 'bg-gray-700 border-gray-600 text-white' 
+                                            : 'bg-gray-50 border-gray-200 text-gray-900'
+                                    }`}
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     aria-label="Search EIC items"
@@ -761,7 +793,11 @@ export default function EIC() {
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full">
                             <div className="flex flex-row gap-2 flex-1">
                                 <select
-                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
+                                        isDark 
+                                            ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                            : 'bg-gray-50 border-gray-200 text-gray-700'
+                                    }`}
                                     value={searchFilter}
                                     onChange={(e) => setSearchFilter(e.target.value)}
                                     aria-label="Filter by"
@@ -771,7 +807,11 @@ export default function EIC() {
                                     <option value="description">Description</option>
                                 </select>
                                 <select
-                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
+                                        isDark 
+                                            ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                            : 'bg-gray-50 border-gray-200 text-gray-700'
+                                    }`}
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
                                     aria-label="Sort by"
@@ -839,7 +879,9 @@ export default function EIC() {
                         ))}
 
                         {filteredStacks.length === 0 && (
-                            <div className="col-span-full text-center text-gray-400 py-16 text-base font-medium">
+                            <div className={`col-span-full text-center py-16 text-base font-medium ${
+                                isDark ? 'text-gray-400' : 'text-gray-400'
+                            }`}>
                                 No EIC items found.
                             </div>
                         )}
@@ -848,31 +890,37 @@ export default function EIC() {
                     {/* Items Pagination Controls */}
                     {filteredStacks.length > 0 && (
                         <div className="w-full max-w-5xl mx-auto px-2 md:px-8 mt-8">
-                            <div className="bg-white rounded-xl shadow-lg border border-gray-200 px-6 py-4">
+                            <div className={`rounded-xl shadow-lg border px-6 py-4 ${
+                                isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                            }`}>
                                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                                     <div className="flex items-center space-x-2">
-                                        <span className="text-sm text-gray-600">Show:</span>
+                                        <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Show:</span>
                                         <select
                                             value={itemsPerPage}
                                             onChange={(e) => {
                                                 setItemsPerPage(Number(e.target.value));
                                                 setItemsCurrentPage(1);
                                             }}
-                                            className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                            className={`text-sm border rounded-md px-2 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                                isDark 
+                                                    ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                                    : 'bg-white border-gray-300 text-gray-900'
+                                            }`}
                                         >
                                             <option value={6}>6</option>
                                             <option value={12}>12</option>
                                             <option value={24}>24</option>
                                             <option value={48}>48</option>
                                         </select>
-                                        <span className="text-sm text-gray-600">items per page</span>
+                                        <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>items per page</span>
                                     </div>
                                     
                                     <div className="flex items-center space-x-2">
-                                        <span className="text-sm text-gray-600">
-                                            Showing <span className="font-medium text-green-700">{itemsStartIndex + 1}</span> to{' '}
-                                            <span className="font-medium text-green-700">{Math.min(itemsEndIndex, filteredStacks.length)}</span> of{' '}
-                                            <span className="font-medium text-green-700">{filteredStacks.length}</span> items
+                                        <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                                            Showing <span className={`font-medium ${isDark ? 'text-green-400' : 'text-green-700'}`}>{itemsStartIndex + 1}</span> to{' '}
+                                            <span className={`font-medium ${isDark ? 'text-green-400' : 'text-green-700'}`}>{Math.min(itemsEndIndex, filteredStacks.length)}</span> of{' '}
+                                            <span className={`font-medium ${isDark ? 'text-green-400' : 'text-green-700'}`}>{filteredStacks.length}</span> items
                                         </span>
                                     </div>
                                 </div>
@@ -883,11 +931,17 @@ export default function EIC() {
                     {/* Seminar-style Pagination Navigation */}
                     {totalItemsPages > 1 && (
                         <div className="flex justify-center mt-8 mb-2">
-                            <nav className="flex items-center gap-1 bg-white rounded-lg shadow px-2 py-1.5" aria-label="Items Pagination">
+                            <nav className={`flex items-center gap-1 rounded-lg shadow px-2 py-1.5 ${
+                                isDark ? 'bg-gray-800' : 'bg-white'
+                            }`} aria-label="Items Pagination">
                                 <button
                                     onClick={() => setItemsCurrentPage((p) => Math.max(1, p - 1))}
                                     disabled={itemsCurrentPage === 1}
-                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition text-gray-400 hover:bg-gray-100 hover:text-gray-700 ${itemsCurrentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition ${
+                                        isDark 
+                                            ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
+                                            : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
+                                    } ${itemsCurrentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     aria-label="Previous"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -898,24 +952,41 @@ export default function EIC() {
                                     <>
                                         <button
                                             onClick={() => setItemsCurrentPage(1)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === 1 ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                                itemsCurrentPage === 1 ? 'bg-green-600 text-white' : 
+                                                isDark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                         >1</button>
-                                        {itemsCurrentPage > 3 && <span className="px-1 text-gray-300">...</span>}
-                                        {Array.from({ length: 3 }, (_, i) => {
-                                            const page = Math.max(2, Math.min(itemsCurrentPage - 1 + i, totalItemsPages - 2));
-                                            if (page <= 1 || page >= totalItemsPages) return null;
-                                            return (
+                                        {itemsCurrentPage > 3 && <span className={`px-1 ${isDark ? 'text-gray-500' : 'text-gray-300'}`}>...</span>}
+                                        {(() => {
+                                            const pages = [];
+                                            const start = Math.max(2, itemsCurrentPage - 1);
+                                            const end = Math.min(totalItemsPages - 1, itemsCurrentPage + 1);
+                                            
+                                            for (let page = start; page <= end; page++) {
+                                                if (page > 1 && page < totalItemsPages && !pages.includes(page)) {
+                                                    pages.push(page);
+                                                }
+                                            }
+                                            
+                                            return pages.map(page => (
                                                 <button
                                                     key={page}
                                                     onClick={() => setItemsCurrentPage(page)}
-                                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === page ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                                        itemsCurrentPage === page ? 'bg-green-600 text-white' : 
+                                                        isDark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'
+                                                    }`}
                                                 >{page}</button>
-                                            );
-                                        })}
-                                        {itemsCurrentPage < totalItemsPages - 2 && <span className="px-1 text-gray-300">...</span>}
+                                            ));
+                                        })()}
+                                        {itemsCurrentPage < totalItemsPages - 2 && <span className={`px-1 ${isDark ? 'text-gray-500' : 'text-gray-300'}`}>...</span>}
                                         <button
                                             onClick={() => setItemsCurrentPage(totalItemsPages)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === totalItemsPages ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                                itemsCurrentPage === totalItemsPages ? 'bg-green-600 text-white' : 
+                                                isDark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                         >{totalItemsPages}</button>
                                     </>
                                 ) : (
@@ -923,14 +994,21 @@ export default function EIC() {
                                         <button
                                             key={i + 1}
                                             onClick={() => setItemsCurrentPage(i + 1)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === i + 1 ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                                itemsCurrentPage === i + 1 ? 'bg-green-600 text-white' : 
+                                                isDark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                         >{i + 1}</button>
                                     ))
                                 )}
                                 <button
                                     onClick={() => setItemsCurrentPage((p) => Math.min(totalItemsPages, p + 1))}
                                     disabled={itemsCurrentPage === totalItemsPages}
-                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition text-gray-400 hover:bg-gray-100 hover:text-gray-700 ${itemsCurrentPage === totalItemsPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition ${
+                                        isDark 
+                                            ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
+                                            : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
+                                    } ${itemsCurrentPage === totalItemsPages ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     aria-label="Next"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -986,6 +1064,7 @@ function RequestsTable({
     sortBy,
     onStatusChange,
 }) {
+    const { isDark } = useTheme();
     const [expandedNotes, setExpandedNotes] = React.useState(new Set());
     const [currentPage, setCurrentPage] = React.useState(1);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
@@ -1080,7 +1159,11 @@ function RequestsTable({
         const isLong = request.requestNote.length > 50;
         
         return (
-            <div className="text-xs text-gray-500 bg-gray-50 rounded px-2 py-1 max-w-xs relative note-tooltip-container">
+            <div className={`text-xs rounded px-2 py-1 max-w-xs relative note-tooltip-container ${
+                isDark 
+                    ? 'text-gray-400 bg-gray-700' 
+                    : 'text-gray-500 bg-gray-50'
+            }`}>
                 <div className={isExpanded ? '' : 'truncate'}>
                     {isLong && !isExpanded ? request.requestNote.substring(0, 50) + '...' : request.requestNote}
                 </div>
@@ -1109,13 +1192,19 @@ function RequestsTable({
                                     </div>
                                     
                                     {/* Content */}
-                                    <div className="text-gray-300 leading-relaxed max-h-32 overflow-y-auto">
+                                    <div className={`leading-relaxed max-h-32 overflow-y-auto ${
+                                        isDark ? 'text-gray-300' : 'text-gray-700'
+                                    }`}>
                                         {request.requestNote}
                                     </div>
                                     
                                     {/* Footer */}
-                                    <div className="mt-2 pt-2 border-t border-gray-700 text-right">
-                                        <span className="text-gray-400 text-xs">Click "Show less" to close</span>
+                                    <div className={`mt-2 pt-2 border-t text-right ${
+                                        isDark ? 'border-gray-700' : 'border-gray-200'
+                                    }`}>
+                                        <span className={`text-xs ${
+                                            isDark ? 'text-gray-400' : 'text-gray-500'
+                                        }`}>Click "Show less" to close</span>
                                     </div>
                                 </div>
                             </div>
@@ -1128,21 +1217,21 @@ function RequestsTable({
 
     const getStatusBadge = (status) => {
         const statusStyles = {
-            Pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-            Approved: 'bg-green-100 text-green-800 border-green-200',
-            Rejected: 'bg-red-100 text-red-800 border-red-200',
-            Returned: 'bg-gray-100 text-gray-800 border-gray-200',
-            No_Return: 'bg-purple-100 text-purple-800 border-purple-200',
-            late_return: 'bg-orange-100 text-orange-800 border-orange-200',
-            No_Pickup: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-            Cancelled: 'bg-gray-100 text-gray-600 border-gray-200',
+            Pending: isDark ? 'bg-yellow-800 text-yellow-200 border-yellow-700' : 'bg-yellow-100 text-yellow-800 border-yellow-200',
+            Approved: isDark ? 'bg-green-800 text-green-200 border-green-700' : 'bg-green-100 text-green-800 border-green-200',
+            Rejected: isDark ? 'bg-red-800 text-red-200 border-red-700' : 'bg-red-100 text-red-800 border-red-200',
+            Returned: isDark ? 'bg-gray-600 text-gray-200 border-gray-500' : 'bg-gray-100 text-gray-800 border-gray-200',
+            No_Return: isDark ? 'bg-purple-800 text-purple-200 border-purple-700' : 'bg-purple-100 text-purple-800 border-purple-200',
+            late_return: isDark ? 'bg-orange-800 text-orange-200 border-orange-700' : 'bg-orange-100 text-orange-800 border-orange-200',
+            No_Pickup: isDark ? 'bg-indigo-800 text-indigo-200 border-indigo-700' : 'bg-indigo-100 text-indigo-800 border-indigo-200',
+            Cancelled: isDark ? 'bg-gray-600 text-gray-300 border-gray-500' : 'bg-gray-100 text-gray-600 border-gray-200',
         };
 
         return (
             <span
                 className={`px-3 py-1 rounded-full text-xs font-semibold border ${
                     statusStyles[status] ||
-                    'bg-gray-100 text-gray-800 border-gray-200'
+                    (isDark ? 'bg-gray-600 text-gray-200 border-gray-500' : 'bg-gray-100 text-gray-800 border-gray-200')
                 }`}
             >
                 {status.replace('_', ' ')}
@@ -1183,10 +1272,14 @@ function RequestsTable({
                         />
                     </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                <h3 className={`text-lg font-semibold ${
+                    isDark ? 'text-gray-300' : 'text-gray-600'
+                } mb-2`}>
                     No Requests Found
                 </h3>
-                <p className="text-gray-500">
+                <p className={`${
+                    isDark ? 'text-gray-400' : 'text-gray-500'
+                }`}>
                     No requests match your current filters.
                 </p>
             </div>
@@ -1194,7 +1287,9 @@ function RequestsTable({
     }
 
     return (
-        <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
+        <div className={`shadow-lg rounded-xl overflow-hidden border ${
+            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+        }`}>
             {/* Mobile-friendly card layout for small screens */}
             <div className="block lg:hidden">
                 <div className="p-6 space-y-4">
@@ -1206,10 +1301,14 @@ function RequestsTable({
                             {/* Header */}
                             <div className="flex justify-between items-start mb-3">
                                 <div>
-                                    <h4 className="font-semibold text-gray-900 text-sm">
+                                    <h4 className={`font-semibold text-sm ${
+                                        isDark ? 'text-white' : 'text-gray-900'
+                                    }`}>
                                         {request.itemName}
                                     </h4>
-                                    <p className="text-xs text-gray-600 mt-1">
+                                    <p className={`text-xs mt-1 ${
+                                        isDark ? 'text-gray-400' : 'text-gray-600'
+                                    }`}>
                                         {request.itemCategory}
                                     </p>
                                 </div>
@@ -1219,22 +1318,38 @@ function RequestsTable({
                             {/* Details */}
                             <div className="grid grid-cols-2 gap-3 text-xs">
                                 <div>
-                                    <span className="font-medium text-gray-700">Requestor:</span>
-                                    <p className="text-gray-600">{request.requestorName}</p>
+                                    <span className={`font-medium ${
+                                        isDark ? 'text-gray-300' : 'text-gray-700'
+                                    }`}>Requestor:</span>
+                                    <p className={`${
+                                        isDark ? 'text-gray-300' : 'text-gray-600'
+                                    }`}>{request.requestorName}</p>
                                 </div>
                                 <div>
-                                    <span className="font-medium text-gray-700">Quantity:</span>
-                                    <p className="text-gray-600">{request.requestQuantity}</p>
+                                    <span className={`font-medium ${
+                                        isDark ? 'text-gray-300' : 'text-gray-700'
+                                    }`}>Quantity:</span>
+                                    <p className={`${
+                                        isDark ? 'text-gray-300' : 'text-gray-600'
+                                    }`}>{request.requestQuantity}</p>
                                 </div>
                                 <div>
-                                    <span className="font-medium text-gray-700">Requested:</span>
-                                    <p className="text-gray-600">
+                                    <span className={`font-medium ${
+                                        isDark ? 'text-gray-300' : 'text-gray-700'
+                                    }`}>Requested:</span>
+                                    <p className={`${
+                                        isDark ? 'text-gray-300' : 'text-gray-600'
+                                    }`}>
                                         {new Date(request.createdAt).toLocaleDateString()}
                                     </p>
                                 </div>
                                 <div>
-                                    <span className="font-medium text-gray-700">Stock:</span>
-                                    <p className="text-gray-600">{request.currentStock || 'N/A'}</p>
+                                    <span className={`font-medium ${
+                                        isDark ? 'text-gray-300' : 'text-gray-700'
+                                    }`}>Stock:</span>
+                                    <p className={`${
+                                        isDark ? 'text-gray-300' : 'text-gray-600'
+                                    }`}>{request.currentStock || 'N/A'}</p>
                                 </div>
                             </div>
                             
@@ -1263,7 +1378,11 @@ function RequestsTable({
                                                 e.target.value = '';
                                             }
                                         }}
-                                        className="w-full text-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+                                        className={`w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                            isDark 
+                                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                                : 'bg-white border-gray-300 text-gray-900'
+                                        }`}
                                     >
                                         <option value="">Change Status</option>
                                         {getStatusOptions(request.status).map((status) => (
@@ -1282,32 +1401,52 @@ function RequestsTable({
             {/* Desktop table layout */}
             <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className={`border-b ${
+                        isDark ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+                    }`}>
                         <tr>
-                            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
                                 Item Details
                             </th>
-                            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
                                 Requestor
                             </th>
-                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
                                 Qty
                             </th>
-                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
                                 Stock
                             </th>
-                            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
                                 Dates
                             </th>
-                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
                                 Status
                             </th>
-                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}>
                                 Actions
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className={`divide-y ${
+                        isDark 
+                            ? 'bg-gray-800 divide-gray-700' 
+                            : 'bg-white divide-gray-200'
+                    }`}>
                         {paginatedRequests.map((request, index) => (
                             <tr
                                 key={request.id}
@@ -1315,10 +1454,14 @@ function RequestsTable({
                             >
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="space-y-1">
-                                        <div className="font-medium text-gray-900 text-sm">
+                                        <div className={`font-medium text-sm ${
+                                            isDark ? 'text-white' : 'text-gray-900'
+                                        }`}>
                                             {request.itemName}
                                         </div>
-                                        <div className="text-xs text-gray-600 flex items-center">
+                                        <div className={`text-xs flex items-center ${
+                                            isDark ? 'text-gray-400' : 'text-gray-600'
+                                        }`}>
                                             <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                                             </svg>
@@ -1329,30 +1472,42 @@ function RequestsTable({
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="space-y-1">
-                                        <div className="font-medium text-gray-900 text-sm">
+                                        <div className={`font-medium text-sm ${
+                                            isDark ? 'text-white' : 'text-gray-900'
+                                        }`}>
                                             {request.requestorName}
                                         </div>
-                                        <div className="text-xs text-gray-600">
+                                        <div className={`text-xs ${
+                                            isDark ? 'text-gray-300' : 'text-gray-600'
+                                        }`}>
                                             {request.requestorEmail}
                                         </div>
-                                        <div className="text-xs text-gray-500">
+                                        <div className={`text-xs ${
+                                            isDark ? 'text-gray-400' : 'text-gray-500'
+                                        }`}>
                                             @{request.requestorUsername}
                                         </div>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-center">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                        isDark ? 'bg-green-800 text-green-200' : 'bg-green-100 text-green-800'
+                                    }`}>
                                         {request.requestQuantity}
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-center">
-                                    <span className="text-sm text-gray-900">
+                                    <span className={`text-sm ${
+                                        isDark ? 'text-white' : 'text-gray-900'
+                                    }`}>
                                         {request.currentStock || 'N/A'}
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="space-y-1 text-xs">
-                                        <div className="text-gray-900">
+                                        <div className={`${
+                                            isDark ? 'text-gray-300' : 'text-gray-900'
+                                        }`}>
                                             <span className="font-medium">Requested:</span>
                                             <br />
                                             {new Date(request.createdAt).toLocaleDateString()}
@@ -1393,7 +1548,11 @@ function RequestsTable({
                                                     e.target.value = '';
                                                 }
                                             }}
-                                            className="text-xs px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
+                                            className={`text-xs px-2 py-1 border rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                                isDark 
+                                                    ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                                    : 'bg-white border-gray-300 text-gray-900'
+                                            }`}
                                         >
                                             <option value="">Change Status</option>
                                             {getStatusOptions(request.status).map((status) => (
@@ -1414,28 +1573,40 @@ function RequestsTable({
             
             {/* Pagination Controls */}
             {filteredRequests.length > 0 && (
-                <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                <div className={`px-6 py-4 border-t ${
+                    isDark ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-200'
+                }`}>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                            <span className="text-sm text-gray-600">Show:</span>
+                            <span className={`text-sm ${
+                                isDark ? 'text-gray-300' : 'text-gray-600'
+                            }`}>Show:</span>
                             <select
                                 value={itemsPerPage}
                                 onChange={(e) => {
                                     setItemsPerPage(Number(e.target.value));
                                     setCurrentPage(1);
                                 }}
-                                className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                className={`text-sm border rounded-md px-2 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                    isDark 
+                                        ? 'bg-gray-700 border-gray-600 text-white' 
+                                        : 'bg-white border-gray-300 text-gray-900'
+                                }`}
                             >
                                 <option value={5}>5</option>
                                 <option value={10}>10</option>
                                 <option value={20}>20</option>
                                 <option value={50}>50</option>
                             </select>
-                            <span className="text-sm text-gray-600">per page</span>
+                            <span className={`text-sm ${
+                                isDark ? 'text-gray-300' : 'text-gray-600'
+                            }`}>per page</span>
                         </div>
                         
                         <div className="flex items-center space-x-2">
-                            <span className="text-sm text-gray-600">
+                            <span className={`text-sm ${
+                                isDark ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
                                 Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
                                 <span className="font-medium">{Math.min(endIndex, filteredRequests.length)}</span> of{' '}
                                 <span className="font-medium">{filteredRequests.length}</span> results
@@ -1447,49 +1618,87 @@ function RequestsTable({
                                 <button
                                     onClick={() => setCurrentPage(1)}
                                     disabled={currentPage === 1}
-                                    className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    className={`px-3 py-1 text-sm border rounded-md disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                        isDark 
+                                            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600'
+                                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                                    }`}
                                 >
                                     First
                                 </button>
                                 <button
                                     onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                                     disabled={currentPage === 1}
-                                    className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    className={`px-3 py-1 text-sm border rounded-md disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                        isDark 
+                                            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600'
+                                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                                    }`}
                                 >
                                     Previous
                                 </button>
                                 
                                 {/* Page Numbers */}
-                                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                                    const pageNumber = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
-                                    if (pageNumber > totalPages) return null;
+                                {(() => {
+                                    const maxPagesToShow = Math.min(5, totalPages);
+                                    let startPage, endPage;
                                     
-                                    return (
-                                        <button
-                                            key={pageNumber}
-                                            onClick={() => setCurrentPage(pageNumber)}
-                                            className={`px-3 py-1 text-sm border rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                                                currentPage === pageNumber
-                                                    ? 'bg-green-600 text-white border-green-600'
-                                                    : 'border-gray-300 hover:bg-gray-50'
-                                            }`}
-                                        >
-                                            {pageNumber}
-                                        </button>
-                                    );
-                                })}
+                                    if (totalPages <= 5) {
+                                        startPage = 1;
+                                        endPage = totalPages;
+                                    } else {
+                                        if (currentPage <= 3) {
+                                            startPage = 1;
+                                            endPage = 5;
+                                        } else if (currentPage + 2 >= totalPages) {
+                                            startPage = totalPages - 4;
+                                            endPage = totalPages;
+                                        } else {
+                                            startPage = currentPage - 2;
+                                            endPage = currentPage + 2;
+                                        }
+                                    }
+                                    
+                                    const pageButtons = [];
+                                    for (let i = startPage; i <= endPage; i++) {
+                                        pageButtons.push(
+                                            <button
+                                                key={i}
+                                                onClick={() => setCurrentPage(i)}
+                                                className={`px-3 py-1 text-sm border rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                                    currentPage === i
+                                                        ? 'bg-green-600 text-white border-green-600'
+                                                        : isDark 
+                                                            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600'
+                                                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                                                }`}
+                                            >
+                                                {i}
+                                            </button>
+                                        );
+                                    }
+                                    return pageButtons;
+                                })()}
                                 
                                 <button
                                     onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                                     disabled={currentPage === totalPages}
-                                    className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    className={`px-3 py-1 text-sm border rounded-md disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                        isDark 
+                                            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600'
+                                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                                    }`}
                                 >
                                     Next
                                 </button>
                                 <button
                                     onClick={() => setCurrentPage(totalPages)}
                                     disabled={currentPage === totalPages}
-                                    className="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    className={`px-3 py-1 text-sm border rounded-md disabled:opacity-50 disabled:cursor-not-allowed focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                        isDark 
+                                            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600'
+                                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                                    }`}
                                 >
                                     Last
                                 </button>
@@ -1500,11 +1709,21 @@ function RequestsTable({
             )}
             
             {/* Summary Footer */}
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
-                <div className="text-sm text-gray-600 font-medium text-right">
-                    Showing <span className="font-bold text-green-700">{paginatedRequests.length}</span> of <span className="font-bold text-green-700">{filteredRequests.length}</span> filtered requests
+            <div className={`px-6 py-4 border-t ${
+                isDark ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-200'
+            }`}>
+                <div className={`text-sm font-medium text-right ${
+                    isDark ? 'text-gray-300' : 'text-gray-600'
+                }`}>
+                    Showing <span className={`font-bold ${
+                        isDark ? 'text-green-400' : 'text-green-700'
+                    }`}>{paginatedRequests.length}</span> of <span className={`font-bold ${
+                        isDark ? 'text-green-400' : 'text-green-700'
+                    }`}>{filteredRequests.length}</span> filtered requests
                     {filteredRequests.length !== requests.length && (
-                        <span className="text-gray-500"> (from {requests.length} total)</span>
+                        <span className={`${
+                            isDark ? 'text-gray-400' : 'text-gray-500'
+                        }`}> (from {requests.length} total)</span>
                     )}
                 </div>
             </div>
@@ -1517,6 +1736,7 @@ function RequestsTable({
 // =================================================================
 
 function EICItemCard({ stack, onViewDetails, onEdit, imageUpdateTimestamp }) {
+    const { isDark } = useTheme();
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -1531,7 +1751,9 @@ function EICItemCard({ stack, onViewDetails, onEdit, imageUpdateTimestamp }) {
             : stack.item?.description;
 
     return (
-        <div className="relative flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group">
+        <div className={`relative flex flex-col border rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group ${
+            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+        }`}>
             <div className="relative">
                 <img
                     src={
@@ -1550,27 +1772,39 @@ function EICItemCard({ stack, onViewDetails, onEdit, imageUpdateTimestamp }) {
                 </span>
             </div>
             <div className="flex-1 flex flex-col p-5">
-                <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">
+                <h3 className={`text-lg font-semibold mb-1 truncate ${
+                    isDark ? 'text-white' : 'text-gray-800'
+                }`}>
                     {stack.item?.name || 'Unknown Item'}
                 </h3>
-                <p className="text-gray-600 text-sm mb-2 flex-1 cursor-default line-clamp-3">
+                <p className={`text-sm mb-2 flex-1 cursor-default line-clamp-3 ${
+                    isDark ? 'text-gray-300' : 'text-gray-600'
+                }`}>
                     {truncatedDescription || 'No description available'}
                 </p>
-                <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
+                <div className={`flex flex-wrap gap-x-3 gap-y-1 text-xs mb-3 ${
+                    isDark ? 'text-gray-400' : 'text-gray-500'
+                }`}>
                     <span>
-                        <span className="font-medium text-gray-700">
+                        <span className={`font-medium ${
+                            isDark ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
                             Quantity:
                         </span>{' '}
                         {stack.quantity}
                     </span>
                     <span>
-                        <span className="font-medium text-gray-700">
+                        <span className={`font-medium ${
+                            isDark ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
                             Category:
                         </span>{' '}
                         {stack.item?.category?.replace('_', ' ') || 'N/A'}
                     </span>
                     <span>
-                        <span className="font-medium text-gray-700">
+                        <span className={`font-medium ${
+                            isDark ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
                             Date Added:
                         </span>{' '}
                         {formatDate(stack.createdAt)}
@@ -1579,13 +1813,21 @@ function EICItemCard({ stack, onViewDetails, onEdit, imageUpdateTimestamp }) {
                 <div className="flex flex-col gap-2 mt-auto md:flex-row">
                     <button
                         onClick={() => onViewDetails(stack)}
-                        className="w-full md:w-auto bg-gray-800 hover:bg-gray-700 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
+                        className={`w-full md:w-auto cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm ${
+                            isDark 
+                                ? 'bg-gray-700 hover:bg-gray-600 text-white' 
+                                : 'bg-gray-800 hover:bg-gray-700 text-white'
+                        }`}
                     >
                         View Details
                     </button>
                     <button
                         onClick={() => onEdit(stack)}
-                        className="w-full md:w-auto bg-green-500 hover:bg-green-600 text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm"
+                        className={`w-full md:w-auto text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm ${
+                            isDark 
+                                ? 'bg-green-600 hover:bg-green-700' 
+                                : 'bg-green-500 hover:bg-green-600'
+                        }`}
                     >
                         Edit
                     </button>
@@ -1605,6 +1847,7 @@ function EICDetailModal({
     imageUpdateTimestamp,
     onViewRequests,
 }) {
+    const { isDark } = useTheme();
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -1632,9 +1875,15 @@ function EICDetailModal({
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-            <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full border border-gray-200 overflow-hidden max-h-[95vh] overflow-y-auto">
+            <div className={`rounded-xl shadow-2xl max-w-2xl w-full border overflow-hidden max-h-[95vh] overflow-y-auto ${
+                isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            }`}>
                 {/* Header */}
-                <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+                <div className={`border-b px-6 py-4 ${
+                    isDark 
+                        ? 'bg-gray-700 border-gray-600' 
+                        : 'bg-gray-50 border-gray-200'
+                }`}>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-600 rounded-lg">
@@ -1643,13 +1892,21 @@ function EICDetailModal({
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-gray-800">EIC Item Details</h3>
-                                <p className="text-sm text-gray-600">View item information and statistics</p>
+                                <h3 className={`text-lg font-bold ${
+                                    isDark ? 'text-white' : 'text-gray-800'
+                                }`}>EIC Item Details</h3>
+                                <p className={`text-sm ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>View item information and statistics</p>
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            className={`p-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 ${
+                                isDark 
+                                    ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700 focus:ring-gray-600' 
+                                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:ring-gray-300'
+                            }`}
                             aria-label="Close"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1660,7 +1917,9 @@ function EICDetailModal({
                 </div>
 
                 {/* IMAGE */}
-                <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+                <div className={`w-full h-64 flex items-center justify-center overflow-hidden ${
+                    isDark ? 'bg-gray-700' : 'bg-gray-100'
+                }`}>
                     {stack.item?.id ? (
                         <img
                             className="object-cover w-full h-full"
@@ -1674,7 +1933,9 @@ function EICDetailModal({
                         />
                     ) : null}
                     <div
-                        className="text-gray-400 text-3xl flex flex-col items-center"
+                        className={`text-3xl flex flex-col items-center ${
+                            isDark ? 'text-gray-500' : 'text-gray-400'
+                        }`}
                         style={{ display: stack.item?.id ? 'none' : 'flex' }}
                     >
                         <svg
@@ -1695,21 +1956,31 @@ function EICDetailModal({
                 </div>
 
                 {/* DETAILS */}
-                <div className="px-6 py-6 bg-white">
+                <div className={`px-6 py-6 ${
+                    isDark ? 'bg-gray-800' : 'bg-white'
+                }`}>
                     <div className="mb-4">
-                        <span className="text-xs uppercase tracking-widest text-gray-400 font-semibold">
+                        <span className={`text-xs uppercase tracking-widest font-semibold ${
+                            isDark ? 'text-gray-400' : 'text-gray-400'
+                        }`}>
                             Item Name
                         </span>
-                        <h1 className="text-2xl font-bold text-gray-900 mt-1">
+                        <h1 className={`text-2xl font-bold mt-1 ${
+                            isDark ? 'text-white' : 'text-gray-900'
+                        }`}>
                             {stack.item?.name || 'Unknown Item'}
                         </h1>
                     </div>
 
                     <div className="mb-6">
-                        <span className="text-xs uppercase tracking-widest text-gray-400 font-semibold">
+                        <span className={`text-xs uppercase tracking-widest font-semibold ${
+                            isDark ? 'text-gray-400' : 'text-gray-400'
+                        }`}>
                             Description
                         </span>
-                        <p className="text-gray-600 mt-1 leading-relaxed">
+                        <p className={`${
+                            isDark ? 'text-gray-300' : 'text-gray-600'
+                        } mt-1 leading-relaxed`}>
                             {stack.item?.description ||
                                 'No description available'}
                         </p>
@@ -1722,35 +1993,28 @@ function EICDetailModal({
                             className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default
                                 ${
                                     stack.item?.category === 'Farming Equipment'
-                                        ? 'bg-green-100 text-green-800'
-                                        : stack.item?.category ===
-                                          'Harvesting Tools'
-                                        ? 'bg-pink-100 text-pink-800'
-                                        : stack.item?.category ===
-                                          'Irrigation Systems'
-                                        ? 'bg-purple-100 text-purple-800'
-                                        : stack.item?.category ===
-                                          'Storage Equipment'
-                                        ? 'bg-yellow-100 text-yellow-800'
-                                        : stack.item?.category ===
-                                          'Processing Equipment'
-                                        ? 'bg-green-100 text-green-800'
+                                        ? isDark ? 'bg-green-800 text-green-200' : 'bg-green-100 text-green-800'
+                                        : stack.item?.category === 'Harvesting Tools'
+                                        ? isDark ? 'bg-pink-800 text-pink-200' : 'bg-pink-100 text-pink-800'
+                                        : stack.item?.category === 'Irrigation Systems'
+                                        ? isDark ? 'bg-purple-800 text-purple-200' : 'bg-purple-100 text-purple-800'
+                                        : stack.item?.category === 'Storage Equipment'
+                                        ? isDark ? 'bg-yellow-800 text-yellow-200' : 'bg-yellow-100 text-yellow-800'
+                                        : stack.item?.category === 'Processing Equipment'
+                                        ? isDark ? 'bg-green-800 text-green-200' : 'bg-green-100 text-green-800'
                                         : stack.item?.category === 'Safety Gear'
-                                        ? 'bg-red-100 text-red-800'
-                                        : stack.item?.category ===
-                                          'Pest Control'
-                                        ? 'bg-indigo-100 text-indigo-800'
-                                        : stack.item?.category ===
-                                          'Livestock Equipment'
-                                        ? 'bg-orange-100 text-orange-800'
-                                        : stack.item?.category ===
-                                          'Measuring Tools'
-                                        ? 'bg-teal-100 text-teal-800'
+                                        ? isDark ? 'bg-red-800 text-red-200' : 'bg-red-100 text-red-800'
+                                        : stack.item?.category === 'Pest Control'
+                                        ? isDark ? 'bg-indigo-800 text-indigo-200' : 'bg-indigo-100 text-indigo-800'
+                                        : stack.item?.category === 'Livestock Equipment'
+                                        ? isDark ? 'bg-orange-800 text-orange-200' : 'bg-orange-100 text-orange-800'
+                                        : stack.item?.category === 'Measuring Tools'
+                                        ? isDark ? 'bg-teal-800 text-teal-200' : 'bg-teal-100 text-teal-800'
                                         : stack.item?.category === 'Fisheries'
-                                        ? 'bg-lime-100 text-lime-800'
+                                        ? isDark ? 'bg-lime-800 text-lime-200' : 'bg-lime-100 text-lime-800'
                                         : stack.item?.category === 'Machinery'
-                                        ? 'bg-cyan-100 text-cyan-800'
-                                        : 'bg-gray-100 text-gray-800'
+                                        ? isDark ? 'bg-cyan-800 text-cyan-200' : 'bg-cyan-100 text-cyan-800'
+                                        : isDark ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-800'
                                 }`}
                             title="Category"
                         >
@@ -1774,7 +2038,9 @@ function EICDetailModal({
 
                         {/* QUANTITY */}
                         <span
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-orange-100 text-orange-800 text-xs font-semibold cursor-default"
+                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default ${
+                                isDark ? 'bg-orange-800 text-orange-200' : 'bg-orange-100 text-orange-800'
+                            }`}
                             title="Available Quantity"
                         >
                             <svg
@@ -1802,7 +2068,9 @@ function EICDetailModal({
 
                         {/* STATUS */}
                         <span
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-green-100 text-green-800 text-xs font-semibold cursor-default"
+                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default ${
+                                isDark ? 'bg-green-800 text-green-200' : 'bg-green-100 text-green-800'
+                            }`}
                             title="EIC Status"
                         >
                             <svg
@@ -1849,22 +2117,32 @@ function EICDetailModal({
                 </div>
 
                 {/* Footer */}
-                <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-between items-center">
+                <div className={`border-t px-6 py-4 flex justify-between items-center ${
+                    isDark ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-200'
+                }`}>
                     {/* CREATED AT */}
                     <div>
-                        <span className="block text-xs text-gray-400 font-medium">
+                        <span className={`block text-xs font-medium ${
+                            isDark ? 'text-gray-400' : 'text-gray-400'
+                        }`}>
                             Added to EIC
                         </span>
-                        <span className="block text-sm text-gray-700">
+                        <span className={`block text-sm ${
+                            isDark ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
                             {formatDateTime(stack.createdAt)}
                         </span>
                     </div>
                     {/* UPDATED AT */}
                     <div className="text-right">
-                        <span className="block text-xs text-gray-400 font-medium">
+                        <span className={`block text-xs font-medium ${
+                            isDark ? 'text-gray-400' : 'text-gray-400'
+                        }`}>
                             Last Updated
                         </span>
-                        <span className="block text-sm text-gray-700">
+                        <span className={`block text-sm ${
+                            isDark ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
                             {stack.updatedAt
                                 ? formatDateTime(stack.updatedAt)
                                 : formatDateTime(stack.createdAt)}
@@ -1881,6 +2159,7 @@ function EICDetailModal({
 // =================================================================
 
 function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
+    const { isDark } = useTheme();
     const [formData, setFormData] = useState({
         name: stack.item?.name || '',
         description: stack.item?.description || '',
@@ -1995,9 +2274,13 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-200 max-h-[95vh] overflow-y-auto">
+            <div className={`rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden border max-h-[95vh] overflow-y-auto ${
+                isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            }`}>
                 {/* Header */}
-                <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+                <div className={`border-b px-6 py-4 ${
+                    isDark ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-200'
+                }`}>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-600 rounded-lg">
@@ -2006,13 +2289,21 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-gray-800">Edit EIC Item</h3>
-                                <p className="text-sm text-gray-600">Modify item details and inventory</p>
+                                <h3 className={`text-lg font-bold ${
+                                    isDark ? 'text-white' : 'text-gray-800'
+                                }`}>Edit EIC Item</h3>
+                                <p className={`text-sm ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>Modify item details and inventory</p>
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            className={`p-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 ${
+                                isDark 
+                                    ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700 focus:ring-gray-600' 
+                                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:ring-gray-300'
+                            }`}
                             aria-label="Close"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -2028,7 +2319,9 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                     <div>
                         <label
                             htmlFor="name"
-                            className="block text-sm font-medium text-gray-700 mb-2"
+                            className={`block text-sm font-medium mb-2 ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}
                         >
                             Item Name
                         </label>
@@ -2038,11 +2331,17 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                isDark 
+                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                            }`}
                             required
                         />
                         {formData.name !== originalData.name && (
-                            <p className="text-xs text-amber-600 mt-1">
+                            <p className={`text-xs mt-1 ${
+                                isDark ? 'text-amber-400' : 'text-amber-600'
+                            }`}>
                                 ⚠️ Changing the name will update the item in
                                 inventory
                             </p>
@@ -2053,7 +2352,9 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                     <div>
                         <label
                             htmlFor="description"
-                            className="block text-sm font-medium text-gray-700 mb-2"
+                            className={`block text-sm font-medium mb-2 ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}
                         >
                             Description
                         </label>
@@ -2063,10 +2364,16 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                             value={formData.description}
                             onChange={handleChange}
                             rows="3"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
+                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none ${
+                                isDark 
+                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                            }`}
                         />
                         {formData.description !== originalData.description && (
-                            <p className="text-xs text-amber-600 mt-1">
+                            <p className={`text-xs mt-1 ${
+                                isDark ? 'text-amber-400' : 'text-amber-600'
+                            }`}>
                                 ⚠️ Changing the description will update the item
                                 in inventory
                             </p>
@@ -2077,7 +2384,9 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                     <div>
                         <label
                             htmlFor="category"
-                            className="block text-sm font-medium text-gray-700 mb-2"
+                            className={`block text-sm font-medium mb-2 ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}
                         >
                             Category
                         </label>
@@ -2086,7 +2395,11 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                isDark 
+                                    ? 'bg-gray-700 border-gray-600 text-white' 
+                                    : 'bg-white border-gray-300 text-gray-900'
+                            }`}
                         >
                             {categories.map((cat) => (
                                 <option key={cat} value={cat}>
@@ -2095,7 +2408,9 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                             ))}
                         </select>
                         {formData.category !== originalData.category && (
-                            <p className="text-xs text-amber-600 mt-1">
+                            <p className={`text-xs mt-1 ${
+                                isDark ? 'text-amber-400' : 'text-amber-600'
+                            }`}>
                                 ⚠️ Changing the category will update the item in
                                 inventory
                             </p>
@@ -2106,7 +2421,9 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                     <div>
                         <label
                             htmlFor="quantity"
-                            className="block text-sm font-medium text-gray-700 mb-2"
+                            className={`block text-sm font-medium mb-2 ${
+                                isDark ? 'text-gray-300' : 'text-gray-700'
+                            }`}
                         >
                             Available Quantity
                         </label>
@@ -2117,21 +2434,29 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                             value={formData.quantity}
                             onChange={handleChange}
                             min="0"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                isDark 
+                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                            }`}
                             required
                         />
                     </div>
 
                     {/* Image Upload */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={`block text-sm font-medium mb-2 ${
+                            isDark ? 'text-gray-300' : 'text-gray-700'
+                        }`}>
                             Item Image
                         </label>
 
                         {/* Current Image Display */}
                         {currentImageUrl && !imagePreview && (
                             <div className="mb-3">
-                                <p className="text-xs text-gray-600 mb-2">
+                                <p className={`text-xs mb-2 ${
+                                    isDark ? 'text-gray-400' : 'text-gray-600'
+                                }`}>
                                     Current Image:
                                 </p>
                                 <img
@@ -2148,7 +2473,9 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                         {/* Image Preview */}
                         {imagePreview && (
                             <div className="mb-3">
-                                <p className="text-xs text-gray-600 mb-2">
+                                <p className={`text-xs mb-2 ${
+                                    isDark ? 'text-gray-400' : 'text-gray-600'
+                                }`}>
                                     New Image Preview:
                                 </p>
                                 <img
@@ -2170,7 +2497,11 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                             />
                             <label
                                 htmlFor="edit-image-upload"
-                                className="flex items-center px-3 py-2 bg-green-100 text-green-700 rounded cursor-pointer hover:bg-green-200 transition text-sm"
+                                className={`flex items-center px-3 py-2 rounded cursor-pointer transition text-sm ${
+                                    isDark 
+                                        ? 'bg-green-800 text-green-200 hover:bg-green-700' 
+                                        : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                }`}
                             >
                                 <svg
                                     className="w-4 h-4 mr-2"
@@ -2193,25 +2524,37 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                                 <button
                                     type="button"
                                     onClick={removeImage}
-                                    className="px-2 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 transition"
+                                    className={`px-2 py-1 rounded text-sm transition ${
+                                        isDark 
+                                            ? 'bg-red-800 text-red-200 hover:bg-red-700' 
+                                            : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                    }`}
                                 >
                                     Remove
                                 </button>
                             )}
                         </div>
 
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className={`text-xs ${
+                            isDark ? 'text-gray-400' : 'text-gray-500'
+                        } mt-1`}>
                             Optional. Supported formats: JPEG, PNG, GIF. Max
                             size: 5MB.
                         </p>
                     </div>
 
                     {/* Footer */}
-                    <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end gap-3 -mx-6 -mb-6 rounded-b-xl">
+                    <div className={`border-t px-6 py-4 flex justify-end gap-3 -mx-6 -mb-6 rounded-b-xl ${
+                        isDark ? 'bg-gray-800 border-gray-600' : 'bg-gray-50 border-gray-200'
+                    }`}>
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-50 border border-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            className={`px-4 py-2 font-medium rounded-lg border transition-colors duration-200 focus:outline-none focus:ring-2 ${
+                                isDark 
+                                    ? 'bg-gray-700 text-gray-200 hover:bg-gray-600 border-gray-600 focus:ring-gray-500' 
+                                    : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300 focus:ring-gray-300'
+                            }`}
                         >
                             Cancel
                         </button>

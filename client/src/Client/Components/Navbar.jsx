@@ -658,7 +658,7 @@ export default function Navbar({refresh}) {
                                         viewBox="0 0 24 24"
                                     >
                                         <path
-                                            d="M4 6h16M4 12h16M4 18h16"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
                                         />
@@ -705,12 +705,12 @@ export default function Navbar({refresh}) {
                                                 viewBox="0 0 24 24"
                                             >
                                                 <path
-                                                    d="M8 17l4 4 4-4m-4-5v9"
+                                                    d="M12 14l9-5-9-5-9 5 9 5z"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 />
                                                 <path
-                                                    d="M20 12a8 8 0 10-16 0 8 8 0 0016 0z"
+                                                    d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 />
@@ -735,17 +735,8 @@ export default function Navbar({refresh}) {
                                                 strokeWidth="2"
                                                 viewBox="0 0 24 24"
                                             >
-                                                <rect
-                                                    x="4"
-                                                    y="4"
-                                                    width="16"
-                                                    height="16"
-                                                    rx="4"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                />
                                                 <path
-                                                    d="M8 12h8"
+                                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 />
@@ -771,12 +762,7 @@ export default function Navbar({refresh}) {
                                                 viewBox="0 0 24 24"
                                             >
                                                 <path
-                                                    d="M3 17v-6a2 2 0 012-2h14a2 2 0 012 2v6"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                                <path
-                                                    d="M16 21v-4a2 2 0 00-2-2H10a2 2 0 00-2 2v4"
+                                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 />
@@ -830,12 +816,11 @@ export default function Navbar({refresh}) {
                                                 viewBox="0 0 24 24"
                                             >
                                                 <path
-                                                    d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 15h-2v-2h2zm0-4h-2V7h2z"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
+                                                    d="M9 17h6l3 3v-3h2V9h-2M4 4h11v8H9l-3 3v-3H4V4z"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
                                                 />
                                             </svg>
-
                                             Report
                                         </NavLink>
                                     </li>
@@ -886,36 +871,6 @@ export default function Navbar({refresh}) {
                                             closeProfileTimeout.current = setTimeout(() => setOpen(false), 250);
                                         }}
                                     >
-                                        <li>
-                                            <Link
-                                                to="/settings/profile"
-                                                className="flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium"
-                                                style={{
-                                                    color: isDark ? '#ffffff' : '#374151',
-                                                    backgroundColor: 'transparent'
-                                                }}
-                                                onMouseEnter={(e) => {
-                                                    e.currentTarget.style.backgroundColor = isDark ? 'rgba(16, 185, 129, 0.1)' : 'rgba(16, 185, 129, 0.05)';
-                                                }}
-                                                onMouseLeave={(e) => {
-                                                    e.currentTarget.style.backgroundColor = 'transparent';
-                                                }}
-                                                onClick={() => setOpen(false)}
-                                            >
-                                                <svg
-                                                    className="w-5 h-5"
-                                                    style={{ color: isDark ? '#4ade80' : '#16a34a' }}
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <circle cx="12" cy="7" r="4" />
-                                                    <path d="M5.5 21a8.38 8.38 0 0113 0" />
-                                                </svg>
-                                                {t('navigation.profile_settings')}
-                                            </Link>
-                                        </li>
                                         <li>
                                             <Link
                                                 to="/settings"
@@ -1337,7 +1292,7 @@ export default function Navbar({refresh}) {
                                                         viewBox="0 0 24 24"
                                                     >
                                                         <path
-                                                            d="M4 6h16M4 12h16M4 18h16"
+                                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                                                             strokeLinecap="round"
                                                             strokeLinejoin="round"
                                                         />
@@ -1564,35 +1519,6 @@ export default function Navbar({refresh}) {
                                                             >Active Member</p>
                                                         </div>
                                                     </div>
-                                                    
-                                                    {/* Profile Settings Link */}
-                                                    <NavLink 
-                                                        to="/settings/profile"
-                                                        className={({ isActive }) =>
-                                                            `mobile-menu-item flex items-center space-x-4 py-3 px-4 mb-3 rounded-xl transition-all duration-200 font-medium ${
-                                                                isActive 
-                                                                    ? (isDark 
-                                                                        ? 'bg-emerald-800 text-emerald-100 border-l-3 border-emerald-400 shadow-sm' 
-                                                                        : 'bg-emerald-100 text-emerald-800 border-l-3 border-emerald-600 shadow-sm') 
-                                                                    : (isDark 
-                                                                        ? 'text-gray-200 hover:bg-emerald-800 hover:text-emerald-100' 
-                                                                        : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700')
-                                                            }`
-                                                        }
-                                                        onClick={() => setOpen(false)}
-                                                    >
-                                                        <svg
-                                                            className="w-5 h-5 text-emerald-500"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <circle cx="12" cy="7" r="4" />
-                                                            <path d="M5.5 21a8.38 8.38 0 0113 0" />
-                                                        </svg>
-                                                        <span>{t('navigation.profile_settings')}</span>
-                                                    </NavLink>
                                                     
                                                     {/* Settings Link */}
                                                     <NavLink 

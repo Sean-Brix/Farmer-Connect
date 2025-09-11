@@ -111,7 +111,7 @@ const AccountSettings = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-8">
       {/* Success Message - Centered Popup */}
       {showSuccess && (
         <div className="fixed inset-0 h-full z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">

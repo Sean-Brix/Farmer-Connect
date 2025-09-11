@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../../../contexts/ThemeContext';
 import { categories, eicStatuses } from './constants';
 import { convertToSnakeCase } from './utils/helpers';
 
@@ -9,6 +10,7 @@ const AddEICItemModal = ({
     existingItems,
     eicItems,
 }) => {
+    const { isDark } = useTheme();
     const [form, setForm] = useState({
         name: '',
         quantity: '1',
@@ -207,9 +209,15 @@ const AddEICItemModal = ({
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto border border-gray-200">
+            <div className={`rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto border ${
+                isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            }`}>
                 {/* Header */}
-                <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+                <div className={`border-b px-6 py-4 ${
+                    isDark 
+                        ? 'bg-gray-700 border-gray-600' 
+                        : 'bg-gray-50 border-gray-200'
+                }`}>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-600 rounded-lg">
@@ -218,13 +226,21 @@ const AddEICItemModal = ({
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-gray-800">Add EIC Item</h3>
-                                <p className="text-sm text-gray-600">Add new item to EIC inventory</p>
+                                <h3 className={`text-lg font-bold ${
+                                    isDark ? 'text-white' : 'text-gray-800'
+                                }`}>Add EIC Item</h3>
+                                <p className={`text-sm ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>Add new item to EIC inventory</p>
                             </div>
                         </div>
                         <button
                             onClick={handleClose}
-                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            className={`p-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 ${
+                                isDark 
+                                    ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-600 focus:ring-gray-500' 
+                                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:ring-gray-300'
+                            }`}
                             aria-label="Close"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -238,8 +254,14 @@ const AddEICItemModal = ({
                 <form className="p-6" onSubmit={handleSubmit}>
                     <div className="space-y-6">
                         {/* Name Input with Dropdown */}
-                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 relative">
-                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        <div className={`border rounded-lg p-4 relative ${
+                            isDark 
+                                ? 'bg-gray-700 border-gray-600' 
+                                : 'bg-gray-50 border-gray-200'
+                        }`}>
+                            <label className={`block text-sm font-semibold mb-3 ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Item Name
                             </label>
                             <input
@@ -249,15 +271,27 @@ const AddEICItemModal = ({
                                 onFocus={() => setShowDropdown(true)}
                                 onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
                                 placeholder="Enter or select item name"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${
+                                    isDark 
+                                        ? 'bg-gray-600 border-gray-500 text-white placeholder-gray-300' 
+                                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                                }`}
                                 required
                             />
                             {showDropdown && filteredItems.length > 0 && (
-                                <div className="absolute top-full left-4 right-4 bg-white border border-gray-300 rounded-lg max-h-44 overflow-y-auto z-20 shadow-xl mt-1">
+                                <div className={`absolute top-full left-4 right-4 border rounded-lg max-h-44 overflow-y-auto z-20 shadow-xl mt-1 ${
+                                    isDark 
+                                        ? 'bg-gray-600 border-gray-500' 
+                                        : 'bg-white border-gray-300'
+                                }`}>
                                     {filteredItems.map((item, index) => (
                                         <div
                                             key={item.id || index}
-                                            className="px-4 py-3 hover:bg-green-50 cursor-pointer text-sm border-b border-gray-100 last:border-b-0 transition-colors duration-200"
+                                            className={`px-4 py-3 cursor-pointer text-sm border-b last:border-b-0 transition-colors duration-200 ${
+                                                isDark 
+                                                    ? 'hover:bg-gray-500 border-gray-500 text-white' 
+                                                    : 'hover:bg-green-50 border-gray-100 text-gray-900'
+                                            }`}
                                             onClick={() => handleNameSelect(item.name)}
                                         >
                                             {item.name}
@@ -266,8 +300,14 @@ const AddEICItemModal = ({
                                 </div>
                             )}
                             {isNewItem && nameInput.trim() !== '' && (
-                                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                                    <p className="text-sm text-green-700 font-medium flex items-center gap-2">
+                                <div className={`mt-3 p-3 border rounded-lg ${
+                                    isDark 
+                                        ? 'bg-green-900/20 border-green-700' 
+                                        : 'bg-green-50 border-green-200'
+                                }`}>
+                                    <p className={`text-sm font-medium flex items-center gap-2 ${
+                                        isDark ? 'text-green-400' : 'text-green-700'
+                                    }`}>
                                         <svg className='w-4 h-4 text-green-600' fill='none' stroke='currentColor' strokeWidth='2' viewBox='0 0 24 24'>
                                             <path d='M5 13l4 4L19 7' strokeLinecap='round' strokeLinejoin='round'/>
                                         </svg>
@@ -278,8 +318,14 @@ const AddEICItemModal = ({
                         </div>
 
                         {/* Quantity Input */}
-                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        <div className={`border rounded-lg p-4 ${
+                            isDark 
+                                ? 'bg-gray-700 border-gray-600' 
+                                : 'bg-gray-50 border-gray-200'
+                        }`}>
+                            <label className={`block text-sm font-semibold mb-3 ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Quantity
                             </label>
                             <input
@@ -288,7 +334,11 @@ const AddEICItemModal = ({
                                 value={form.quantity}
                                 onChange={handleChange}
                                 placeholder="Enter quantity"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${
+                                    isDark 
+                                        ? 'bg-gray-600 border-gray-500 text-white placeholder-gray-300' 
+                                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                                }`}
                                 min="1"
                                 required
                             />
@@ -298,8 +348,14 @@ const AddEICItemModal = ({
                         {isNewItem && (
                             <>
                                 {/* Description Input */}
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                <div className={`border rounded-lg p-4 ${
+                                    isDark 
+                                        ? 'bg-gray-700 border-gray-600' 
+                                        : 'bg-gray-50 border-gray-200'
+                                }`}>
+                                    <label className={`block text-sm font-semibold mb-3 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-700'
+                                    }`}>
                                         Description
                                     </label>
                                     <input
@@ -308,20 +364,34 @@ const AddEICItemModal = ({
                                         value={form.description}
                                         onChange={handleChange}
                                         placeholder="Enter item description"
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${
+                                            isDark 
+                                                ? 'bg-gray-600 border-gray-500 text-white placeholder-gray-300' 
+                                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                                        }`}
                                     />
                                 </div>
 
                                 {/* Category Dropdown */}
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                <div className={`border rounded-lg p-4 ${
+                                    isDark 
+                                        ? 'bg-gray-700 border-gray-600' 
+                                        : 'bg-gray-50 border-gray-200'
+                                }`}>
+                                    <label className={`block text-sm font-semibold mb-3 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-700'
+                                    }`}>
                                         Category
                                     </label>
                                     <select
                                         name="category"
                                         value={form.category}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white transition-colors duration-200"
+                                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 ${
+                                            isDark 
+                                                ? 'bg-gray-600 border-gray-500 text-white' 
+                                                : 'bg-white border-gray-300 text-gray-900'
+                                        }`}
                                     >
                                         {categories.map((cat) => (
                                             <option key={cat} value={cat}>
@@ -332,8 +402,14 @@ const AddEICItemModal = ({
                                 </div>
 
                                 {/* Image Upload */}
-                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                <div className={`border rounded-lg p-4 ${
+                                    isDark 
+                                        ? 'bg-gray-700 border-gray-600' 
+                                        : 'bg-gray-50 border-gray-200'
+                                }`}>
+                                    <label className={`block text-sm font-semibold mb-3 ${
+                                        isDark ? 'text-gray-200' : 'text-gray-700'
+                                    }`}>
                                         Item Image (Optional)
                                     </label>
                                     <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -392,12 +468,20 @@ const AddEICItemModal = ({
                     </div>
 
                     {/* Buttons */}
-                    <div className="border-t border-gray-200 px-6 py-4 bg-gray-50 -mx-6 -mb-6 rounded-b-xl">
+                    <div className={`border-t px-6 py-4 -mx-6 -mb-6 rounded-b-xl ${
+                        isDark 
+                            ? 'border-gray-600 bg-gray-700' 
+                            : 'border-gray-200 bg-gray-50'
+                    }`}>
                         <div className="flex flex-col sm:flex-row justify-end gap-3">
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                className="px-6 py-3 text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-gray-300"
+                                className={`px-6 py-3 border rounded-lg transition-colors duration-200 font-medium focus:outline-none focus:ring-2 ${
+                                    isDark 
+                                        ? 'text-gray-300 bg-gray-600 border-gray-500 hover:bg-gray-500 focus:ring-gray-400' 
+                                        : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50 focus:ring-gray-300'
+                                }`}
                             >
                                 Cancel
                             </button>

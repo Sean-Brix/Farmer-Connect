@@ -15,6 +15,7 @@ import Distribution from '../../Services/Distribution/Distribution.jsx';
 import Chat from '../../Services/Customer_Service/Chat_Module.jsx';
 import Survey from '../../Services/Survey/Survey.jsx';
 import Seed_Track from '../../Services/Seed_track/Seed.jsx';
+import Settings from '../../Services/Settings/Settings.jsx';
 
 // GLOBAL
 import AccountProfile from '../../../Components/settings/AccountProfile/AccountProfile.jsx';
@@ -50,6 +51,7 @@ export default function Dashboard() {
         survey: () => Survey,
         chat: () => Chat,
         seed: () => Seed_Track,
+        settings: () => Settings,
 
         // GLOBAL
         account: () => AccountProfile,
@@ -473,7 +475,9 @@ export default function Dashboard() {
                         </div>
                     </header>
                     {/* Render children below the header */}
-                    <main className="flex-1 p-2 sm:p-6 overflow-auto pt-20 h-0 min-h-0 minimalist-scrollbar bg-white/70">
+                    <main className={`flex-1 p-2 sm:p-6 overflow-auto pt-20 h-0 min-h-0 minimalist-scrollbar ${
+                        isDark ? 'bg-gray-900' : 'bg-white/70'
+                    }`}>
                         {currentPageKey === 'account' ? (
                             <div className="max-w-[22rem] w-full mx-auto">
                                 <Page admin_navigate={admin_navigate} details={details} />

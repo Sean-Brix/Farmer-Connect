@@ -78,20 +78,17 @@ const Preferences = () => {
   };
 
   const handleThemeChange = async (themeValue) => {
-    setIsLoading(true);
     try {
       await changeTheme(themeValue);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 2000);
     } catch (error) {
       console.error('Error changing theme:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <div className="space-y-6 lg:space-y-8">
+    <div className="space-y-6 lg:space-y-8 pb-8">
       {/* Full-Screen Loading Overlay */}
       {isLoading && (
         <div className="fixed inset-0 h-screen w-screen z-50 flex items-center justify-center bg-black/60">

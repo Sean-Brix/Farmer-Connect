@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 import default_seminar_pic from '../../../Assets/default_seminar_pic.jpg';
 
@@ -60,6 +61,7 @@ function DeleteConfirmationModal({ isOpen, onClose, onConfirm, seminarTitle }) {
 }
 
 export default function Seminar() {
+    const { isDark } = useTheme();
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [searchFilter, setSearchFilter] = useState('Title');
@@ -181,23 +183,23 @@ export default function Seminar() {
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="min-h-screen bg-white pt-30 pb-8 px-2 md:px-6">
+        <div className={`min-h-screen pt-30 pb-8 px-2 md:px-6 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
             <div className="w-full max-w-5xl mx-auto">
                 {/* Header - Centered and Professional */}
                 <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
                   <span className="inline-flex items-center justify-center gap-3 w-full">
-                    <span className="rounded-full bg-green-100 p-2">
+                    <span className={`rounded-full p-2 ${isDark ? 'bg-green-900' : 'bg-green-100'}`}>
                       <svg className="w-9 h-9" style={{ color: '#059669' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path d="M12 3L2 9l10 6 10-6-10-6zm0 13v5m-7-7v2a2 2 0 002 2h10a2 2 0 002-2v-2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </span>
-                    <span className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">Seminars & Programs</span>
+                    <span className={`text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>Seminars & Programs</span>
                   </span>
-                  <span className="block text-base md:text-lg text-gray-500 font-medium mt-1">Empowering communities through knowledge and engagement</span>
+                  <span className={`block text-base md:text-lg font-medium mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Empowering communities through knowledge and engagement</span>
                 </div>
 
                 {/* Divider between title and search/filters */}
-                <hr className="border-t border-gray-300 my-6 w-full max-w-5xl mx-auto" />
+                <hr className={`border-t my-6 w-full max-w-5xl mx-auto ${isDark ? 'border-gray-600' : 'border-gray-300'}`} />
 
                 {/* Modern Search, Filters, and Actions - Responsive, no box */}
                 <div className="relative mt-0 mb-8 w-full max-w-5xl mx-auto px-2 md:px-6">
@@ -207,7 +209,11 @@ export default function Seminar() {
                       <input
                         type="search"
                         placeholder="Search seminars, speakers, locations..."
-                        className="block w-full py-2.5 pl-10 pr-3 text-sm text-gray-900 border border-gray-300 rounded-xl bg-white focus:ring-1 focus:ring-green-400 focus:border-green-400 transition placeholder-gray-400"
+                        className={`block w-full py-2.5 pl-10 pr-3 text-sm border rounded-xl focus:ring-1 focus:ring-green-400 focus:border-green-400 transition ${
+                            isDark 
+                                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                        }`}
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         aria-label="Search seminars"

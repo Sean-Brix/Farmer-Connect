@@ -61,4 +61,9 @@ export const menuItems = [
         label: 'Survey Forms',
         icon: <i className="fas fa-clipboard-check w-5 h-5"></i>,
     },
+    {
+        key: 'settings',
+        label: 'Settings',
+        icon: <i className="fas fa-cog w-5 h-5"></i>,
+    },
 ];
