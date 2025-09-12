@@ -511,10 +511,26 @@ class RegisterUserModal extends Component {
                             
                             {this.steps.map((step, idx) => (
                                 <div key={step.label} className="relative flex-1 flex flex-col items-center z-20">
-                                    <div className={`flex items-center justify-center w-16 h-16 rounded-full border-4 transition-all duration-500 shadow-lg font-bold text-2xl ${idx < currentStep - 1 ? 'border-green-600 bg-gradient-to-br from-green-500 to-green-600 text-white shadow-green-200' : idx === currentStep - 1 ? 'border-green-600 bg-white text-green-700 shadow-green-300 ring-4 ring-green-100' : 'border-gray-300 bg-white text-gray-400 shadow-gray-200'}`} style={{boxShadow: idx === currentStep - 1 ? '0 8px 25px rgba(34,197,94,0.25), 0 0 0 4px rgba(34,197,94,0.1)' : undefined}}>
+                                    <div className={`flex items-center justify-center w-16 h-16 rounded-full border-4 transition-all duration-500 shadow-lg font-bold text-2xl ${
+                                        idx < currentStep - 1 
+                                            ? 'border-green-600 bg-gradient-to-br from-green-500 to-green-600 text-white shadow-green-200' 
+                                            : idx === currentStep - 1 
+                                                ? `border-green-600 text-green-700 shadow-green-300 ring-4 ring-green-100 ${
+                                                    isDark ? 'bg-gray-700' : 'bg-white'
+                                                }` 
+                                                : `border-gray-300 text-gray-400 shadow-gray-200 ${
+                                                    isDark ? 'bg-gray-700' : 'bg-white'
+                                                }`
+                                    }`} style={{boxShadow: idx === currentStep - 1 ? '0 8px 25px rgba(34,197,94,0.25), 0 0 0 4px rgba(34,197,94,0.1)' : undefined}}>
                                         {step.icon}
                                     </div>
-                                    <span className={`mt-3 text-sm font-semibold text-center transition-colors duration-300 ${idx < currentStep - 1 ? 'text-green-600' : idx === currentStep - 1 ? 'text-green-700' : 'text-gray-400'}`}>
+                                    <span className={`mt-3 text-sm font-semibold text-center transition-colors duration-300 ${
+                                        idx < currentStep - 1 
+                                            ? 'text-green-600' 
+                                            : idx === currentStep - 1 
+                                                ? 'text-green-700' 
+                                                : isDark ? 'text-gray-500' : 'text-gray-400'
+                                    }`}>
                                         {step.label}
                                     </span>
                                 </div>
@@ -536,18 +552,27 @@ class RegisterUserModal extends Component {
 
     renderPersonalInfo() {
         const { inputs } = this.state;
+        const { isDark } = this.props;
         return (
             <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); this.onNext(); }}>
                 <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">🧑 Personal Information</h3>
+                    <h3 className={`text-2xl font-bold bg-gradient-to-r ${
+                        isDark 
+                            ? 'from-gray-100 to-gray-300' 
+                            : 'from-gray-900 to-gray-700'
+                    } bg-clip-text text-transparent mb-3`}>🧑 Personal Information</h3>
                     <div className="h-1 w-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-3"></div>
-                    <p className="text-gray-600 font-medium">Enter basic personal details and contact information</p>
+                    <p className={`font-medium ${
+                        isDark ? 'text-gray-400' : 'text-gray-600'
+                    }`}>Enter basic personal details and contact information</p>
                 </div>
 
                 {/* Name Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div className="space-y-3">
-                        <label htmlFor="firstName" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="firstName" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             First Name <span className="text-red-500">*</span>
                         </label>
                         <input 
@@ -557,12 +582,18 @@ class RegisterUserModal extends Component {
                             value={inputs.firstName}
                             onChange={this.onChange_input} 
                             required 
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
+                                isDark 
+                                    ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
+                                    : 'bg-white/80 border-gray-200 hover:border-gray-300 placeholder-gray-400 text-gray-700'
+                            }`}
                             placeholder="Enter first name"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="middleName" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="middleName" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Middle Name
                         </label>
                         <input 
@@ -571,12 +602,18 @@ class RegisterUserModal extends Component {
                             name="middleName" 
                             value={inputs.middleName}
                             onChange={this.onChange_input} 
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
+                                isDark 
+                                    ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
+                                    : 'bg-white/80 border-gray-200 hover:border-gray-300 placeholder-gray-400 text-gray-700'
+                            }`}
                             placeholder="Enter middle name"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="surname" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="surname" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Surname <span className="text-red-500">*</span>
                         </label>
                         <input 
@@ -586,12 +623,18 @@ class RegisterUserModal extends Component {
                             value={inputs.surname}
                             onChange={this.onChange_input} 
                             required 
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
+                                isDark 
+                                    ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
+                                    : 'bg-white/80 border-gray-200 hover:border-gray-300 placeholder-gray-400 text-gray-700'
+                            }`}
                             placeholder="Enter surname"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="extensionName" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="extensionName" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Extension Name
                         </label>
                         <input 
@@ -600,7 +643,11 @@ class RegisterUserModal extends Component {
                             name="extensionName" 
                             value={inputs.extensionName}
                             onChange={this.onChange_input} 
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
+                                isDark 
+                                    ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
+                                    : 'bg-white/80 border-gray-200 hover:border-gray-300 placeholder-gray-400 text-gray-700'
+                            }`}
                             placeholder="Jr., Sr., III"
                         />
                     </div>
@@ -608,26 +655,48 @@ class RegisterUserModal extends Component {
 
                 {/* Sex */}
                 <div className="space-y-4">
-                    <label className="block text-sm font-bold text-gray-700 tracking-wide">
+                    <label className={`block text-sm font-bold tracking-wide ${
+                        isDark ? 'text-gray-200' : 'text-gray-700'
+                    }`}>
                         Sex <span className="text-red-500">*</span>
                     </label>
                     <div className="grid grid-cols-2 gap-4">
-                        <label className="relative flex items-center justify-center py-4 px-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all duration-300 group backdrop-blur-sm bg-white/60">
+                        <label className={`relative flex items-center justify-center py-4 px-5 border-2 rounded-xl cursor-pointer hover:border-green-400 transition-all duration-300 group backdrop-blur-sm ${
+                            isDark 
+                                ? 'border-gray-600 hover:bg-green-900/20 bg-gray-700/60' 
+                                : 'border-gray-200 hover:bg-green-50/50 bg-white/60'
+                        }`}>
                             <input type="radio" name="sex" value="Male" checked={inputs.sex === 'Male'} onChange={this.onChange_input} required className="sr-only" />
                             <div className="flex items-center space-x-3">
-                                <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.sex === 'Male' ? 'border-green-500 bg-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
+                                <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.sex === 'Male' ? 'border-green-500 bg-green-500' : isDark ? 'border-gray-500 group-hover:border-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
                                     <div className={`w-2.5 h-2.5 bg-white rounded-full transition-all duration-300 ${inputs.sex === 'Male' ? 'scale-100' : 'scale-0'}`}></div>
                                 </div>
-                                <span className={`text-sm font-semibold transition-colors duration-300 ${inputs.sex === 'Male' ? 'text-green-700' : 'text-gray-700 group-hover:text-green-700'}`}>Male</span>
+                                <span className={`text-sm font-semibold transition-colors duration-300 ${
+                                    inputs.sex === 'Male' 
+                                        ? 'text-green-700' 
+                                        : isDark 
+                                            ? 'text-gray-200 group-hover:text-green-400' 
+                                            : 'text-gray-700 group-hover:text-green-700'
+                                }`}>Male</span>
                             </div>
                         </label>
-                        <label className="relative flex items-center justify-center py-4 px-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all duration-300 group backdrop-blur-sm bg-white/60">
+                        <label className={`relative flex items-center justify-center py-4 px-5 border-2 rounded-xl cursor-pointer hover:border-green-400 transition-all duration-300 group backdrop-blur-sm ${
+                            isDark 
+                                ? 'border-gray-600 hover:bg-green-900/20 bg-gray-700/60' 
+                                : 'border-gray-200 hover:bg-green-50/50 bg-white/60'
+                        }`}>
                             <input type="radio" name="sex" value="Female" checked={inputs.sex === 'Female'} onChange={this.onChange_input} required className="sr-only" />
                             <div className="flex items-center space-x-3">
-                                <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.sex === 'Female' ? 'border-green-500 bg-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
+                                <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.sex === 'Female' ? 'border-green-500 bg-green-500' : isDark ? 'border-gray-500 group-hover:border-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
                                     <div className={`w-2.5 h-2.5 bg-white rounded-full transition-all duration-300 ${inputs.sex === 'Female' ? 'scale-100' : 'scale-0'}`}></div>
                                 </div>
-                                <span className={`text-sm font-semibold transition-colors duration-300 ${inputs.sex === 'Female' ? 'text-green-700' : 'text-gray-700 group-hover:text-green-700'}`}>Female</span>
+                                <span className={`text-sm font-semibold transition-colors duration-300 ${
+                                    inputs.sex === 'Female' 
+                                        ? 'text-green-700' 
+                                        : isDark 
+                                            ? 'text-gray-200 group-hover:text-green-400' 
+                                            : 'text-gray-700 group-hover:text-green-700'
+                                }`}>Female</span>
                             </div>
                         </label>
                     </div>
@@ -635,10 +704,16 @@ class RegisterUserModal extends Component {
 
                 {/* Address */}
                 <div className="space-y-6">
-                    <h4 className="text-lg font-semibold text-gray-700 border-b border-gray-300 pb-2">Address</h4>
+                    <h4 className={`text-lg font-semibold border-b pb-2 ${
+                        isDark 
+                            ? 'text-gray-200 border-gray-600' 
+                            : 'text-gray-700 border-gray-300'
+                    }`}>Address</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-3">
-                            <label htmlFor="street" className="block text-sm font-bold text-gray-700 tracking-wide">
+                            <label htmlFor="street" className={`block text-sm font-bold tracking-wide ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Street/Sitio/Purok <span className="text-red-500">*</span>
                             </label>
                             <input 
@@ -648,12 +723,18 @@ class RegisterUserModal extends Component {
                                 value={inputs.street}
                                 onChange={this.onChange_input} 
                                 required 
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
+                                    isDark 
+                                        ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
+                                        : 'bg-white/80 border-gray-200 hover:border-gray-300 placeholder-gray-400 text-gray-700'
+                                }`}
                                 placeholder="Enter street address"
                             />
                         </div>
                         <div className="space-y-3">
-                            <label htmlFor="barangay" className="block text-sm font-bold text-gray-700 tracking-wide">
+                            <label htmlFor="barangay" className={`block text-sm font-bold tracking-wide ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Barangay <span className="text-red-500">*</span>
                             </label>
                             <input 
@@ -663,12 +744,18 @@ class RegisterUserModal extends Component {
                                 value={inputs.barangay}
                                 onChange={this.onChange_input} 
                                 required 
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
+                                    isDark 
+                                        ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
+                                        : 'bg-white/80 border-gray-200 hover:border-gray-300 placeholder-gray-400 text-gray-700'
+                                }`}
                                 placeholder="Enter barangay"
                             />
                         </div>
                         <div className="space-y-3">
-                            <label htmlFor="municipality" className="block text-sm font-bold text-gray-700 tracking-wide">
+                            <label htmlFor="municipality" className={`block text-sm font-bold tracking-wide ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Municipality/City <span className="text-red-500">*</span>
                             </label>
                             <input 
@@ -678,12 +765,18 @@ class RegisterUserModal extends Component {
                                 value={inputs.municipality}
                                 onChange={this.onChange_input} 
                                 required 
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
+                                    isDark 
+                                        ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
+                                        : 'bg-white/80 border-gray-200 hover:border-gray-300 placeholder-gray-400 text-gray-700'
+                                }`}
                                 placeholder="Enter municipality/city"
                             />
                         </div>
                         <div className="space-y-3">
-                            <label htmlFor="province" className="block text-sm font-bold text-gray-700 tracking-wide">
+                            <label htmlFor="province" className={`block text-sm font-bold tracking-wide ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Province <span className="text-red-500">*</span>
                             </label>
                             <input 
@@ -693,12 +786,18 @@ class RegisterUserModal extends Component {
                                 value={inputs.province}
                                 onChange={this.onChange_input} 
                                 required 
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
+                                    isDark 
+                                        ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
+                                        : 'bg-white/80 border-gray-200 hover:border-gray-300 placeholder-gray-400 text-gray-700'
+                                }`}
                                 placeholder="Enter province"
                             />
                         </div>
                         <div className="space-y-3">
-                            <label htmlFor="region" className="block text-sm font-bold text-gray-700 tracking-wide">
+                            <label htmlFor="region" className={`block text-sm font-bold tracking-wide ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Region <span className="text-red-500">*</span>
                             </label>
                             <input 
@@ -708,12 +807,18 @@ class RegisterUserModal extends Component {
                                 value={inputs.region}
                                 onChange={this.onChange_input} 
                                 required 
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                    isDark 
+                                        ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                        : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                                }`}
                                 placeholder="Enter region"
                             />
                         </div>
                         <div className="space-y-3">
-                            <label htmlFor="houseNumber" className="block text-sm font-bold text-gray-700 tracking-wide">
+                            <label htmlFor="houseNumber" className={`block text-sm font-bold tracking-wide ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 House/Lot/Building No./Floor
                             </label>
                             <input 
@@ -722,7 +827,11 @@ class RegisterUserModal extends Component {
                                 name="houseNumber" 
                                 value={inputs.houseNumber}
                                 onChange={this.onChange_input} 
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                    isDark 
+                                        ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                        : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                                }`}
                                 placeholder="Enter house number"
                             />
                         </div>
@@ -732,7 +841,9 @@ class RegisterUserModal extends Component {
                 {/* Contact Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <label htmlFor="mobileNumber" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="mobileNumber" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Mobile Number <span className="text-red-500">*</span>
                         </label>
                         <input 
@@ -742,12 +853,18 @@ class RegisterUserModal extends Component {
                             value={inputs.mobileNumber}
                             onChange={this.onChange_input} 
                             required 
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg font-medium ${
+                                isDark 
+                                    ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 placeholder-gray-400 text-gray-100' 
+                                    : 'bg-white/80 border-gray-200 hover:border-gray-300 placeholder-gray-400 text-gray-700'
+                            }`}
                             placeholder="+63 912 345 6789"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="landlineNumber" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="landlineNumber" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Landline Number
                         </label>
                         <input 
@@ -756,7 +873,11 @@ class RegisterUserModal extends Component {
                             name="landlineNumber" 
                             value={inputs.landlineNumber}
                             onChange={this.onChange_input} 
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                isDark 
+                                    ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                    : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                            }`}
                             placeholder="(02) 123-4567"
                         />
                     </div>
@@ -765,7 +886,9 @@ class RegisterUserModal extends Component {
                 {/* Birth Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <label htmlFor="placeOfBirth" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="placeOfBirth" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Place of Birth - Municipality/City <span className="text-red-500">*</span>
                         </label>
                         <input 
@@ -775,12 +898,18 @@ class RegisterUserModal extends Component {
                             value={inputs.birthMunicipality}
                             onChange={this.onChange_input} 
                             required 
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                isDark 
+                                    ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                    : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                            }`}
                             placeholder="Enter municipality/city of birth"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="birthProvince" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="birthProvince" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Place of Birth - Province/State <span className="text-red-500">*</span>
                         </label>
                         <input 
@@ -790,12 +919,18 @@ class RegisterUserModal extends Component {
                             value={inputs.birthProvince}
                             onChange={this.onChange_input} 
                             required 
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                isDark 
+                                    ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                    : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                            }`}
                             placeholder="Enter province/state of birth"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="birthCountry" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="birthCountry" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Place of Birth - Country <span className="text-red-500">*</span>
                         </label>
                         <input 
@@ -805,12 +940,18 @@ class RegisterUserModal extends Component {
                             value={inputs.birthCountry}
                             onChange={this.onChange_input} 
                             required 
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                isDark 
+                                    ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                    : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                            }`}
                             placeholder="Enter country of birth"
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="dateOfBirth" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="dateOfBirth" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Date of Birth <span className="text-red-500">*</span>
                         </label>
                         <input 
@@ -829,7 +970,11 @@ class RegisterUserModal extends Component {
                             }} 
                             required 
                             max={new Date().toISOString().split('T')[0]}
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                isDark 
+                                    ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100' 
+                                    : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700'
+                            }`}
                         />
                     </div>
                 </div>
@@ -837,7 +982,9 @@ class RegisterUserModal extends Component {
                 {/* Religion and Civil Status */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <label htmlFor="religion" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="religion" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Religion <span className="text-red-500">*</span>
                         </label>
                         <select 
@@ -846,7 +993,11 @@ class RegisterUserModal extends Component {
                             value={inputs.religion}
                             onChange={this.onChange_input} 
                             required 
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg appearance-none font-medium text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg appearance-none font-medium ${
+                                isDark 
+                                    ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 text-gray-100' 
+                                    : 'bg-white/80 border-gray-200 hover:border-gray-300 text-gray-700'
+                            }`}
                         >
                             <option value="">Select religion</option>
                             <option value="Roman Catholic">Roman Catholic</option>
@@ -869,13 +1020,19 @@ class RegisterUserModal extends Component {
                                 value={inputs.otherReligionSpecify}
                                 onChange={this.onChange_input} 
                                 required={inputs.religion === 'Others'}
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700 mt-3"
+                                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium mt-3 ${
+                                    isDark 
+                                        ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                        : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                                }`}
                                 placeholder="Please specify your religion"
                             />
                         )}
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="civilStatus" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="civilStatus" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Civil Status <span className="text-red-500">*</span>
                         </label>
                         <select 
@@ -884,7 +1041,11 @@ class RegisterUserModal extends Component {
                             value={inputs.civilStatus}
                             onChange={this.onChange_input} 
                             required 
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg appearance-none font-medium text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg appearance-none font-medium ${
+                                isDark 
+                                    ? 'bg-gray-700/80 border-gray-600 hover:border-gray-500 text-gray-100' 
+                                    : 'bg-white/80 border-gray-200 hover:border-gray-300 text-gray-700'
+                            }`}
                         >
                             <option value="">Select civil status</option>
                             <option value="Single">Single</option>
@@ -898,7 +1059,9 @@ class RegisterUserModal extends Component {
                 {/* Spouse Name - conditionally shown */}
                 {inputs.civilStatus === 'Married' && (
                     <div className="space-y-3">
-                        <label htmlFor="spouseName" className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label htmlFor="spouseName" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Name of Spouse <span className="text-red-500">*</span>
                         </label>
                         <input 
@@ -908,7 +1071,11 @@ class RegisterUserModal extends Component {
                             value={inputs.spouseName}
                             onChange={this.onChange_input} 
                             required={inputs.civilStatus === 'Married'}
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                isDark 
+                                    ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                    : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                            }`}
                             placeholder="Enter spouse's full name"
                         />
                     </div>
@@ -916,14 +1083,20 @@ class RegisterUserModal extends Component {
 
                 {/* Household Information */}
                 <div className="space-y-6">
-                    <h4 className="text-lg font-semibold text-gray-700 border-b border-gray-300 pb-2">
+                    <h4 className={`text-lg font-semibold border-b pb-2 ${
+                        isDark 
+                            ? 'text-gray-200 border-gray-600' 
+                            : 'text-gray-700 border-gray-300'
+                    }`}>
                         Household Information <span className="text-red-500">*</span>
                     </h4>
                     
                     {/* Household Members */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-3">
-                            <label htmlFor="femaleHouseholdMembers" className="block text-sm font-bold text-gray-700 tracking-wide">
+                            <label htmlFor="femaleHouseholdMembers" className={`block text-sm font-bold tracking-wide ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Number of Female Household Members
                             </label>
                             <input 
@@ -933,12 +1106,18 @@ class RegisterUserModal extends Component {
                                 value={inputs.femaleHouseholdMembers}
                                 onChange={this.onChange_input} 
                                 min="0"
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                    isDark 
+                                        ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                        : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                                }`}
                                 placeholder="0"
                             />
                         </div>
                         <div className="space-y-3">
-                            <label htmlFor="maleHouseholdMembers" className="block text-sm font-bold text-gray-700 tracking-wide">
+                            <label htmlFor="maleHouseholdMembers" className={`block text-sm font-bold tracking-wide ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Number of Male Household Members
                             </label>
                             <input 
@@ -948,7 +1127,11 @@ class RegisterUserModal extends Component {
                                 value={inputs.maleHouseholdMembers}
                                 onChange={this.onChange_input} 
                                 min="0"
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                    isDark 
+                                        ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                        : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                                }`}
                                 placeholder="0"
                             />
                         </div>
@@ -956,34 +1139,62 @@ class RegisterUserModal extends Component {
 
                     {/* Household Head Status */}
                     <div className="space-y-4">
-                        <label className="block text-sm font-bold text-gray-700 tracking-wide">
+                        <label className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Are you the Household Head? <span className="text-red-500">*</span>
                         </label>
                         <div className="grid grid-cols-2 gap-4">
-                            <label className="relative flex items-center justify-center py-4 px-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all duration-300 group backdrop-blur-sm bg-white/60">
+                            <label className={`relative flex items-center justify-center py-4 px-5 border-2 rounded-xl cursor-pointer hover:border-green-400 transition-all duration-300 group backdrop-blur-sm ${
+                                isDark 
+                                    ? 'border-gray-600 hover:bg-green-900/20 bg-gray-700/60' 
+                                    : 'border-gray-200 hover:bg-green-50/50 bg-white/60'
+                            }`}>
                                 <input type="radio" name="isHouseholdHead" value="Yes" checked={inputs.isHouseholdHead === 'Yes'} onChange={this.onChange_input} required className="sr-only" />
                                 <div className="flex items-center space-x-3">
-                                    <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.isHouseholdHead === 'Yes' ? 'border-green-500 bg-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
+                                    <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.isHouseholdHead === 'Yes' ? 'border-green-500 bg-green-500' : isDark ? 'border-gray-500 group-hover:border-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
                                         <div className={`w-2.5 h-2.5 bg-white rounded-full transition-all duration-300 ${inputs.isHouseholdHead === 'Yes' ? 'scale-100' : 'scale-0'}`}></div>
                                     </div>
-                                    <span className={`text-sm font-semibold transition-colors duration-300 ${inputs.isHouseholdHead === 'Yes' ? 'text-green-700' : 'text-gray-700 group-hover:text-green-700'}`}>Yes, I am the household head</span>
+                                    <span className={`text-sm font-semibold transition-colors duration-300 ${
+                                        inputs.isHouseholdHead === 'Yes' 
+                                            ? 'text-green-700' 
+                                            : isDark 
+                                                ? 'text-gray-200 group-hover:text-green-400' 
+                                                : 'text-gray-700 group-hover:text-green-700'
+                                    }`}>Yes, I am the household head</span>
                                 </div>
                             </label>
-                            <label className="relative flex items-center justify-center py-4 px-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all duration-300 group backdrop-blur-sm bg-white/60">
+                            <label className={`relative flex items-center justify-center py-4 px-5 border-2 rounded-xl cursor-pointer hover:border-green-400 transition-all duration-300 group backdrop-blur-sm ${
+                                isDark 
+                                    ? 'border-gray-600 hover:bg-green-900/20 bg-gray-700/60' 
+                                    : 'border-gray-200 hover:bg-green-50/50 bg-white/60'
+                            }`}>
                                 <input type="radio" name="isHouseholdHead" value="No" checked={inputs.isHouseholdHead === 'No'} onChange={this.onChange_input} required className="sr-only" />
                                 <div className="flex items-center space-x-3">
-                                    <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.isHouseholdHead === 'No' ? 'border-green-500 bg-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
+                                    <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.isHouseholdHead === 'No' ? 'border-green-500 bg-green-500' : isDark ? 'border-gray-500 group-hover:border-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
                                         <div className={`w-2.5 h-2.5 bg-white rounded-full transition-all duration-300 ${inputs.isHouseholdHead === 'No' ? 'scale-100' : 'scale-0'}`}></div>
                                     </div>
-                                    <span className={`text-sm font-semibold transition-colors duration-300 ${inputs.isHouseholdHead === 'No' ? 'text-green-700' : 'text-gray-700 group-hover:text-green-700'}`}>No</span>
+                                    <span className={`text-sm font-semibold transition-colors duration-300 ${
+                                        inputs.isHouseholdHead === 'No' 
+                                            ? 'text-green-700' 
+                                            : isDark 
+                                                ? 'text-gray-200 group-hover:text-green-400' 
+                                                : 'text-gray-700 group-hover:text-green-700'
+                                    }`}>No</span>
                                 </div>
                             </label>
                         </div>
 
                         {inputs.isHouseholdHead === 'No' && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 p-6 bg-green-50/30 rounded-2xl border border-green-200/50">
+                            <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 p-6 rounded-2xl border ${
+                                isDark 
+                                    ? 'bg-gray-800/30 border-gray-600/50' 
+                                    : 'bg-green-50/30 border-green-200/50'
+                            }`}>
                                 <div className="space-y-3">
-                                    <label htmlFor="householdHeadName" className="block text-sm font-bold text-gray-700 tracking-wide">
+                                    <label htmlFor="householdHeadName" className={`block text-sm font-bold tracking-wide ${
+                                        isDark ? 'text-gray-200' : 'text-gray-700'
+                                    }`}>
                                         Name of Household Head <span className="text-red-500">*</span>
                                     </label>
                                     <input 
@@ -993,12 +1204,18 @@ class RegisterUserModal extends Component {
                                         value={inputs.householdHeadName}
                                         onChange={this.onChange_input} 
                                         required={inputs.isHouseholdHead === 'No'}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                                        className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                            isDark 
+                                                ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                                : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                                        }`}
                                         placeholder="Enter full name of household head"
                                     />
                                 </div>
                                 <div className="space-y-3">
-                                    <label htmlFor="relationshipToHead" className="block text-sm font-bold text-gray-700 tracking-wide">
+                                    <label htmlFor="relationshipToHead" className={`block text-sm font-bold tracking-wide ${
+                                        isDark ? 'text-gray-200' : 'text-gray-700'
+                                    }`}>
                                         Relationship to Household Head <span className="text-red-500">*</span>
                                     </label>
                                     <select 
@@ -1007,7 +1224,11 @@ class RegisterUserModal extends Component {
                                         value={inputs.relationshipToHead}
                                         onChange={this.onChange_input} 
                                         required={inputs.isHouseholdHead === 'No'}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium text-gray-700"
+                                        className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                            isDark 
+                                                ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100' 
+                                                : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700'
+                                        }`}
                                     >
                                         <option value="">Select relationship</option>
                                         <option value="Son">Son</option>
@@ -1030,34 +1251,64 @@ class RegisterUserModal extends Component {
 
                 {/* Government ID */}
                 <div className="space-y-6">
-                    <h4 className="text-lg font-semibold text-gray-700 border-b border-gray-300 pb-2">
+                    <h4 className={`text-lg font-semibold border-b pb-2 ${
+                        isDark 
+                            ? 'text-gray-200 border-gray-600' 
+                            : 'text-gray-700 border-gray-300'
+                    }`}>
                         Government ID <span className="text-red-500">*</span>
                     </h4>
                     <div className="grid grid-cols-2 gap-4">
-                        <label className="relative flex items-center justify-center py-4 px-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all duration-300 group backdrop-blur-sm bg-white/60">
+                        <label className={`relative flex items-center justify-center py-4 px-5 border-2 rounded-xl cursor-pointer hover:border-green-400 transition-all duration-300 group backdrop-blur-sm ${
+                            isDark 
+                                ? 'border-gray-600 hover:bg-green-900/20 bg-gray-700/60' 
+                                : 'border-gray-200 hover:bg-green-50/50 bg-white/60'
+                        }`}>
                             <input type="radio" name="hasGovId" value="Yes" checked={inputs.hasGovId === 'Yes'} onChange={this.onChange_input} required className="sr-only" />
                             <div className="flex items-center space-x-3">
-                                <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.hasGovId === 'Yes' ? 'border-green-500 bg-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
+                                <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.hasGovId === 'Yes' ? 'border-green-500 bg-green-500' : isDark ? 'border-gray-500 group-hover:border-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
                                     <div className={`w-2.5 h-2.5 bg-white rounded-full transition-all duration-300 ${inputs.hasGovId === 'Yes' ? 'scale-100' : 'scale-0'}`}></div>
                                 </div>
-                                <span className={`text-sm font-semibold transition-colors duration-300 ${inputs.hasGovId === 'Yes' ? 'text-green-700' : 'text-gray-700 group-hover:text-green-700'}`}>Yes</span>
+                                <span className={`text-sm font-semibold transition-colors duration-300 ${
+                                    inputs.hasGovId === 'Yes' 
+                                        ? 'text-green-700' 
+                                        : isDark 
+                                            ? 'text-gray-200 group-hover:text-green-400' 
+                                            : 'text-gray-700 group-hover:text-green-700'
+                                }`}>Yes</span>
                             </div>
                         </label>
-                        <label className="relative flex items-center justify-center py-4 px-5 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all duration-300 group backdrop-blur-sm bg-white/60">
+                        <label className={`relative flex items-center justify-center py-4 px-5 border-2 rounded-xl cursor-pointer hover:border-green-400 transition-all duration-300 group backdrop-blur-sm ${
+                            isDark 
+                                ? 'border-gray-600 hover:bg-green-900/20 bg-gray-700/60' 
+                                : 'border-gray-200 hover:bg-green-50/50 bg-white/60'
+                        }`}>
                             <input type="radio" name="hasGovId" value="No" checked={inputs.hasGovId === 'No'} onChange={this.onChange_input} required className="sr-only" />
                             <div className="flex items-center space-x-3">
-                                <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.hasGovId === 'No' ? 'border-green-500 bg-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
+                                <div className={`w-5 h-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${inputs.hasGovId === 'No' ? 'border-green-500 bg-green-500' : isDark ? 'border-gray-500 group-hover:border-green-500' : 'border-gray-300 group-hover:border-green-500'}`}>
                                     <div className={`w-2.5 h-2.5 bg-white rounded-full transition-all duration-300 ${inputs.hasGovId === 'No' ? 'scale-100' : 'scale-0'}`}></div>
                                 </div>
-                                <span className={`text-sm font-semibold transition-colors duration-300 ${inputs.hasGovId === 'No' ? 'text-green-700' : 'text-gray-700 group-hover:text-green-700'}`}>No</span>
+                                <span className={`text-sm font-semibold transition-colors duration-300 ${
+                                    inputs.hasGovId === 'No' 
+                                        ? 'text-green-700' 
+                                        : isDark 
+                                            ? 'text-gray-200 group-hover:text-green-400' 
+                                            : 'text-gray-700 group-hover:text-green-700'
+                                }`}>No</span>
                             </div>
                         </label>
                     </div>
 
                     {inputs.hasGovId === 'Yes' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 p-6 bg-green-50/30 rounded-2xl border border-green-200/50">
+                        <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 p-6 rounded-2xl border ${
+                            isDark 
+                                ? 'bg-gray-800/30 border-gray-600/50' 
+                                : 'bg-green-50/30 border-green-200/50'
+                        }`}>
                             <div className="space-y-3">
-                                <label htmlFor="govIdType" className="block text-sm font-bold text-gray-700 tracking-wide">
+                                <label htmlFor="govIdType" className={`block text-sm font-bold tracking-wide ${
+                                    isDark ? 'text-gray-200' : 'text-gray-700'
+                                }`}>
                                     ID Type <span className="text-red-500">*</span>
                                 </label>
                                 <select 
@@ -1066,7 +1317,11 @@ class RegisterUserModal extends Component {
                                     value={inputs.govIdType}
                                     onChange={this.onChange_input} 
                                     required={inputs.hasGovId === 'Yes'}
-                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium text-gray-700"
+                                    className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                        isDark 
+                                            ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100' 
+                                            : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700'
+                                    }`}
                                 >
                                     <option value="">Select ID type</option>
                                     <option value="PhilID">PhilID (National ID)</option>
@@ -1084,7 +1339,9 @@ class RegisterUserModal extends Component {
                                 </select>
                             </div>
                             <div className="space-y-3">
-                                <label htmlFor="govIdNumber" className="block text-sm font-bold text-gray-700 tracking-wide">
+                                <label htmlFor="govIdNumber" className={`block text-sm font-bold tracking-wide ${
+                                    isDark ? 'text-gray-200' : 'text-gray-700'
+                                }`}>
                                     ID Number <span className="text-red-500">*</span>
                                 </label>
                                 <input 
@@ -1094,7 +1351,11 @@ class RegisterUserModal extends Component {
                                     value={inputs.govIdNumber}
                                     onChange={this.onChange_input} 
                                     required={inputs.hasGovId === 'Yes'}
-                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                                    className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                        isDark 
+                                            ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                            : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                                    }`}
                                     placeholder="Enter ID number"
                                 />
                             </div>
@@ -1130,7 +1391,9 @@ class RegisterUserModal extends Component {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                        <label htmlFor="fname" className="block text-sm font-bold text-gray-700 tracking-wide">First Name</label>
+                        <label htmlFor="fname" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>First Name</label>
                         <input 
                             type="text" 
                             id="fname" 
@@ -1144,7 +1407,9 @@ class RegisterUserModal extends Component {
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="lname" className="block text-sm font-bold text-gray-700 tracking-wide">Last Name</label>
+                        <label htmlFor="lname" className={`block text-sm font-bold tracking-wide ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>Last Name</label>
                         <input 
                             type="text" 
                             id="lname" 
@@ -1160,7 +1425,9 @@ class RegisterUserModal extends Component {
                 </div>
                 
                 <div className="space-y-4">
-                    <label className="block text-sm font-bold text-gray-700 tracking-wide">Gender</label>
+                    <label className={`block text-sm font-bold tracking-wide ${
+                        isDark ? 'text-gray-200' : 'text-gray-700'
+                    }`}>Gender</label>
                     <div className="grid grid-cols-3 gap-4">
                         <label className="relative flex items-center justify-center py-4 px-5 border-2 border-gray-200 rounded-2xl cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-all duration-300 group backdrop-blur-sm bg-white/60">
                             <input type="radio" name="gender" value="Male" checked={inputs.gender === 'Male'} onChange={this.onChange_input} required className="sr-only" />
@@ -1570,6 +1837,7 @@ class RegisterUserModal extends Component {
 
     renderEducationPWD() {
         const { inputs } = this.state;
+        const { isDark } = this.props;
         const educationOptions = [
             'None',
             'Preschool',
@@ -1585,14 +1853,24 @@ class RegisterUserModal extends Component {
         return (
             <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); this.onNext(); }}>
                 <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">🎓 Education & Disability Information</h3>
+                    <h3 className={`text-2xl font-bold bg-gradient-to-r ${
+                        isDark 
+                            ? 'from-gray-100 to-gray-300' 
+                            : 'from-gray-900 to-gray-700'
+                    } bg-clip-text text-transparent mb-3`}>🎓 Education & Disability Information</h3>
                     <div className="h-1 w-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-3"></div>
-                    <p className="text-gray-600 font-medium">Select highest education level and disability status</p>
+                    <p className={`font-medium ${
+                        isDark ? 'text-gray-400' : 'text-gray-600'
+                    }`}>Select highest education level and disability status</p>
                 </div>
 
                 {/* Education Level */}
                 <div className="space-y-6">
-                    <h4 className="text-lg font-semibold text-gray-700 border-b border-gray-300 pb-2">
+                    <h4 className={`text-lg font-semibold border-b pb-2 ${
+                        isDark 
+                            ? 'text-gray-200 border-gray-600' 
+                            : 'text-gray-700 border-gray-300'
+                    }`}>
                         Highest Formal Education <span className="text-red-500">*</span>
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1659,7 +1937,11 @@ class RegisterUserModal extends Component {
                                 value={inputs.disabilityType}
                                 onChange={this.onChange_input} 
                                 required={inputs.isPWD === 'Yes'}
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                    isDark 
+                                        ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                        : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                                }`}
                                 placeholder="Please specify type of disability"
                             />
                         </div>
@@ -1691,18 +1973,29 @@ class RegisterUserModal extends Component {
 
     renderLivelihood() {
         const { inputs } = this.state;
+        const { isDark } = this.props;
 
         return (
             <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); this.onNext(); }}>
                 <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">🌾 Main Livelihood Profile</h3>
+                    <h3 className={`text-2xl font-bold bg-gradient-to-r ${
+                        isDark 
+                            ? 'from-gray-100 to-gray-300' 
+                            : 'from-gray-900 to-gray-700'
+                    } bg-clip-text text-transparent mb-3`}>🌾 Main Livelihood Profile</h3>
                     <div className="h-1 w-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-3"></div>
-                    <p className="text-gray-600 font-medium">Select your main source of livelihood and activities</p>
+                    <p className={`font-medium ${
+                        isDark ? 'text-gray-400' : 'text-gray-600'
+                    }`}>Select your main source of livelihood and activities</p>
                 </div>
 
                 {/* Main Livelihood Profile */}
                 <div className="space-y-6">
-                    <h4 className="text-lg font-semibold text-gray-700 border-b border-gray-300 pb-2">
+                    <h4 className={`text-lg font-semibold border-b pb-2 ${
+                        isDark 
+                            ? 'text-gray-200 border-gray-600' 
+                            : 'text-gray-700 border-gray-300'
+                    }`}>
                         Main Livelihood <span className="text-red-500">*</span>
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -1990,7 +2283,11 @@ class RegisterUserModal extends Component {
                             onChange={this.onChange_input} 
                             required 
                             min="0"
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:border-gray-300 hover:shadow-lg font-medium placeholder-gray-400 text-gray-700"
+                            className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 focus:ring-green-100 focus:border-green-500 backdrop-blur-sm transition-all duration-300 font-medium ${
+                                isDark 
+                                    ? 'border-gray-600 bg-gray-800/80 hover:border-gray-500 hover:shadow-lg text-gray-100 placeholder-gray-400' 
+                                    : 'border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-lg text-gray-700 placeholder-gray-400'
+                            }`}
                             placeholder="Enter gross annual income in pesos"
                         />
                     </div>
@@ -2048,17 +2345,26 @@ class RegisterUserModal extends Component {
 
     renderAccountSetup() {
         const { inputs, isLoading } = this.state;
+        const { isDark } = this.props;
 
         return (
             <form className="space-y-8" onSubmit={this.post_account}>
                 <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">🔐 Account Setup</h3>
+                    <h3 className={`text-2xl font-bold bg-gradient-to-r ${
+                        isDark 
+                            ? 'from-gray-100 to-gray-300' 
+                            : 'from-gray-900 to-gray-700'
+                    } bg-clip-text text-transparent mb-3`}>🔐 Account Setup</h3>
                     <div className="h-1 w-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mx-auto mb-3"></div>
-                    <p className="text-gray-600 font-medium">Create login credentials for the RSBSA account</p>
+                    <p className={`font-medium ${
+                        isDark ? 'text-gray-400' : 'text-gray-600'
+                    }`}>Create login credentials for the RSBSA account</p>
                 </div>
 
                 <div className="space-y-3">
-                    <label htmlFor="email" className="block text-sm font-bold text-gray-700 tracking-wide">
+                    <label htmlFor="email" className={`block text-sm font-bold tracking-wide ${
+                        isDark ? 'text-gray-200' : 'text-gray-700'
+                    }`}>
                         Email Address <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">

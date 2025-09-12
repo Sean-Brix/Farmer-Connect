@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { ThemeContext } from '../../../contexts/ThemeContext';
 
 export default function Participants({ data, toggleOff }) {
+    const { isDark } = useContext(ThemeContext);
     const [section, setSection] = useState('participants');
     const [statsVisible, setStatsVisible] = useState(false);
     const [selectedParticipants, setSelectedParticipants] = useState([]);
@@ -206,9 +208,17 @@ export default function Participants({ data, toggleOff }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-            <div className="relative w-full max-w-6xl mx-auto bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col h-[95vh] sm:max-h-[95vh] overflow-hidden">
+            <div className={`relative w-full max-w-6xl mx-auto rounded-xl shadow-2xl border flex flex-col h-[95vh] sm:max-h-[95vh] overflow-hidden ${
+                isDark 
+                    ? 'bg-gray-800 border-gray-600' 
+                    : 'bg-white border-gray-200'
+            }`}>
                 {/* HEADER */}
-                <div className="bg-gray-50 border-b border-gray-200 px-6 py-5">
+                <div className={`border-b px-6 py-5 ${
+                    isDark 
+                        ? 'bg-gray-700 border-gray-600' 
+                        : 'bg-gray-50 border-gray-200'
+                }`}>
                     <div className="flex items-start justify-between gap-4">
                         <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-3 mb-3">
@@ -217,21 +227,39 @@ export default function Participants({ data, toggleOff }) {
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                                     </svg>
                                 </div>
-                                <h2 className="text-xl font-bold text-gray-900 truncate">
+                                <h2 className={`text-xl font-bold truncate ${
+                                    isDark ? 'text-gray-100' : 'text-gray-900'
+                                }`}>
                                     Participants - {data.title}
                                 </h2>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                                <div className="bg-white rounded-lg p-3 border border-gray-200">
+                                <div className={`rounded-lg p-3 border ${
+                                    isDark 
+                                        ? 'bg-gray-600 border-gray-500' 
+                                        : 'bg-white border-gray-200'
+                                }`}>
                                     <div className="space-y-1">
-                                        <div><span className="font-medium text-gray-700">Speaker:</span> <span className="text-gray-900">{data.speaker}</span></div>
-                                        <div><span className="font-medium text-gray-700">Location:</span> <span className="text-gray-900">{data.location}</span></div>
+                                        <div><span className={`font-medium ${
+                                            isDark ? 'text-gray-300' : 'text-gray-700'
+                                        }`}>Speaker:</span> <span className={isDark ? 'text-gray-100' : 'text-gray-900'}>{data.speaker}</span></div>
+                                        <div><span className={`font-medium ${
+                                            isDark ? 'text-gray-300' : 'text-gray-700'
+                                        }`}>Location:</span> <span className={isDark ? 'text-gray-100' : 'text-gray-900'}>{data.location}</span></div>
                                     </div>
                                 </div>
-                                <div className="bg-white rounded-lg p-3 border border-gray-200">
+                                <div className={`rounded-lg p-3 border ${
+                                    isDark 
+                                        ? 'bg-gray-600 border-gray-500' 
+                                        : 'bg-white border-gray-200'
+                                }`}>
                                     <div className="space-y-1">
-                                        <div><span className="font-medium text-gray-700">Status:</span> <span className="text-gray-900">{data.status}</span></div>
-                                        <div><span className="font-medium text-gray-700">Duration:</span> <span className="text-gray-900">
+                                        <div><span className={`font-medium ${
+                                            isDark ? 'text-gray-300' : 'text-gray-700'
+                                        }`}>Status:</span> <span className={isDark ? 'text-gray-100' : 'text-gray-900'}>{data.status}</span></div>
+                                        <div><span className={`font-medium ${
+                                            isDark ? 'text-gray-300' : 'text-gray-700'
+                                        }`}>Duration:</span> <span className={isDark ? 'text-gray-100' : 'text-gray-900'}>
                                             {new Date(data.start_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                                             {' '}–{' '}
                                             {new Date(data.end_date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
@@ -242,7 +270,11 @@ export default function Participants({ data, toggleOff }) {
                         </div>
                         <button
                             onClick={toggleOff}
-                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            className={`p-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 ${
+                                isDark 
+                                    ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-600 focus:ring-gray-400' 
+                                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:ring-gray-300'
+                            }`}
                             aria-label="Close"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -253,7 +285,11 @@ export default function Participants({ data, toggleOff }) {
                 </div>
 
                 {/* CONTROLS */}
-                <div className="bg-white border-b border-gray-200 px-6 py-4">
+                <div className={`border-b px-6 py-4 ${
+                    isDark 
+                        ? 'bg-gray-700 border-gray-600' 
+                        : 'bg-white border-gray-200'
+                }`}>
                     <div className="flex flex-col lg:flex-row lg:items-center gap-4">
                         {/* Left: Search and Stats */}
                         <div className="flex flex-col sm:flex-row gap-3 flex-1">
@@ -329,27 +365,63 @@ export default function Participants({ data, toggleOff }) {
 
                 {/* STATISTICS */}
                 {statsVisible && (
-                    <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+                    <div className={`border-b px-6 py-4 ${
+                        isDark 
+                            ? 'bg-gray-700 border-gray-600' 
+                            : 'bg-gray-50 border-gray-200'
+                    }`}>
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                            <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
-                                <div className="text-2xl font-bold text-gray-900">{total}</div>
-                                <div className="text-sm text-gray-600 font-medium">Total</div>
+                            <div className={`rounded-lg p-4 border text-center ${
+                                isDark 
+                                    ? 'bg-gray-600 border-gray-500' 
+                                    : 'bg-white border-gray-200'
+                            }`}>
+                                <div className={`text-2xl font-bold ${
+                                    isDark ? 'text-gray-100' : 'text-gray-900'
+                                }`}>{total}</div>
+                                <div className={`text-sm font-medium ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>Total</div>
                             </div>
-                            <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                            <div className={`rounded-lg p-4 border text-center ${
+                                isDark 
+                                    ? 'bg-gray-600 border-gray-500' 
+                                    : 'bg-white border-gray-200'
+                            }`}>
                                 <div className="text-2xl font-bold text-green-600">{attended}</div>
-                                <div className="text-sm text-gray-600 font-medium">Attended</div>
+                                <div className={`text-sm font-medium ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>Attended</div>
                             </div>
-                            <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                            <div className={`rounded-lg p-4 border text-center ${
+                                isDark 
+                                    ? 'bg-gray-600 border-gray-500' 
+                                    : 'bg-white border-gray-200'
+                            }`}>
                                 <div className="text-2xl font-bold text-blue-600">{registered}</div>
-                                <div className="text-sm text-gray-600 font-medium">Registered</div>
+                                <div className={`text-sm font-medium ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>Registered</div>
                             </div>
-                            <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                            <div className={`rounded-lg p-4 border text-center ${
+                                isDark 
+                                    ? 'bg-gray-600 border-gray-500' 
+                                    : 'bg-white border-gray-200'
+                            }`}>
                                 <div className="text-2xl font-bold text-red-600">{cancelled}</div>
-                                <div className="text-sm text-gray-600 font-medium">Cancelled</div>
+                                <div className={`text-sm font-medium ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>Cancelled</div>
                             </div>
-                            <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
+                            <div className={`rounded-lg p-4 border text-center ${
+                                isDark 
+                                    ? 'bg-gray-600 border-gray-500' 
+                                    : 'bg-white border-gray-200'
+                            }`}>
                                 <div className="text-2xl font-bold text-yellow-600">{noShow}</div>
-                                <div className="text-sm text-gray-600 font-medium">Not Attended</div>
+                                <div className={`text-sm font-medium ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>Not Attended</div>
                             </div>
                         </div>
                     </div>
@@ -357,15 +429,27 @@ export default function Participants({ data, toggleOff }) {
 
                 {/* PARTICIPANTS TABLE */}
                 {section === 'participants' && (
-                    <div className="flex-1 overflow-hidden border border-gray-200 rounded-lg flex flex-col">
+                    <div className={`flex-1 overflow-hidden border rounded-lg flex flex-col mx-6 mb-6 ${
+                        isDark 
+                            ? 'border-gray-600' 
+                            : 'border-gray-200'
+                    }`}>
                         <div className="overflow-x-auto overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" style={{ maxHeight: 'calc(100vh - 300px)', minHeight: '150px' }}>
                             <table className="min-w-full text-sm">
-                                <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
+                                <thead className={`border-b sticky top-0 z-10 ${
+                                    isDark 
+                                        ? 'bg-gray-700 border-gray-600' 
+                                        : 'bg-gray-50 border-gray-200'
+                                }`}>
                                     <tr>
-                                        <th className="px-3 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider text-xs sm:text-sm">
+                                        <th className={`px-3 sm:px-6 py-3 text-left font-medium uppercase tracking-wider text-xs sm:text-sm ${
+                                            isDark ? 'text-gray-300' : 'text-gray-700'
+                                        }`}>
                                             Full Name
                                         </th>
-                                        <th className="px-3 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider text-xs sm:text-sm">
+                                        <th className={`px-3 sm:px-6 py-3 text-left font-medium uppercase tracking-wider text-xs sm:text-sm ${
+                                            isDark ? 'text-gray-300' : 'text-gray-700'
+                                        }`}>
                                             Email
                                         </th>
                                         <th className="px-3 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider text-xs sm:text-sm">

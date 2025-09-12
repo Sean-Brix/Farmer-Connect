@@ -256,7 +256,11 @@ export default function Seminar() {
                     <div className="flex flex-row gap-2 w-full sm:w-1/2">
                       <div className="relative flex-1 min-w-0">
                         <select
-                          className="appearance-none bg-white border border-gray-300 text-gray-700 text-base rounded-xl focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-4 pr-10 w-full transition"
+                          className={`appearance-none border text-base rounded-xl focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-4 pr-10 w-full transition ${
+                            isDark 
+                              ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                              : 'bg-white border-gray-300 text-gray-700'
+                          }`}
                           value={searchFilter}
                           onChange={(e) => setSearchFilter(e.target.value)}
                           aria-label="Filter by"
@@ -273,7 +277,11 @@ export default function Seminar() {
                       </div>
                       <div className="relative flex-1 min-w-0">
                         <select
-                          className="appearance-none bg-white border border-gray-300 text-gray-700 text-base rounded-xl focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-4 pr-10 w-full transition"
+                          className={`appearance-none border text-base rounded-xl focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-4 pr-10 w-full transition ${
+                            isDark 
+                              ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                              : 'bg-white border-gray-300 text-gray-700'
+                          }`}
                           value={statusFilter}
                           onChange={(e) => setStatusFilter(e.target.value)}
                           aria-label="Status filter"
@@ -334,7 +342,11 @@ export default function Seminar() {
                         return (
                             <div
                                 key={globalIdx}
-                                className="relative flex flex-col bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition overflow-hidden group"
+                                className={`relative flex flex-col border rounded-xl shadow-sm hover:shadow-md transition overflow-hidden group ${
+                                    isDark 
+                                        ? 'bg-gray-800 border-gray-700' 
+                                        : 'bg-white border-gray-100'
+                                }`}
                             >
                                 <div className="relative">
                                     <img
@@ -357,16 +369,30 @@ export default function Seminar() {
                                     </span>
                                 </div>
                                 <div className="flex-1 flex flex-col p-4">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-1 truncate w-full" title={item.title}>{item.title}</h3>
-                                    <p className="text-gray-500 text-xs mb-2 flex-1 cursor-default line-clamp-3 w-full truncate" title={item.description}>{truncatedDescription}</p>
-                                    <div className="flex flex-col gap-1 text-xs text-gray-400 mb-2 w-full">
+                                    <h3 className={`text-lg font-bold mb-1 truncate w-full ${
+                                        isDark ? 'text-gray-100' : 'text-gray-900'
+                                    }`} title={item.title}>{item.title}</h3>
+                                    <p className={`text-xs mb-2 flex-1 cursor-default line-clamp-3 w-full truncate ${
+                                        isDark ? 'text-gray-300' : 'text-gray-500'
+                                    }`} title={item.description}>{truncatedDescription}</p>
+                                    <div className={`flex flex-col gap-1 text-xs mb-2 w-full ${
+                                        isDark ? 'text-gray-400' : 'text-gray-400'
+                                    }`}>
                                         <div className="flex flex-row items-center w-full">
-                                            <span className="font-medium text-gray-700 mr-1 shrink-0">Speaker:</span>
-                                            <span className="truncate text-gray-500" style={{ maxWidth: 'calc(100% - 60px)' }} title={item.speaker}>{item.speaker}</span>
+                                            <span className={`font-medium mr-1 shrink-0 ${
+                                                isDark ? 'text-gray-200' : 'text-gray-700'
+                                            }`}>Speaker:</span>
+                                            <span className={`truncate ${
+                                                isDark ? 'text-gray-300' : 'text-gray-500'
+                                            }`} style={{ maxWidth: 'calc(100% - 60px)' }} title={item.speaker}>{item.speaker}</span>
                                         </div>
                                         <div className="flex flex-row items-center w-full">
-                                            <span className="font-medium text-gray-700 mr-1 shrink-0">Location:</span>
-                                            <span className="truncate text-gray-500" style={{ maxWidth: 'calc(100% - 70px)' }} title={item.location}>{item.location}</span>
+                                            <span className={`font-medium mr-1 shrink-0 ${
+                                                isDark ? 'text-gray-200' : 'text-gray-700'
+                                            }`}>Location:</span>
+                                            <span className={`truncate ${
+                                                isDark ? 'text-gray-300' : 'text-gray-500'
+                                            }`} style={{ maxWidth: 'calc(100% - 70px)' }} title={item.location}>{item.location}</span>
                                         </div>
                                     </div>
                                     <div className="flex flex-wrap gap-2 mt-auto w-full">
@@ -401,7 +427,9 @@ export default function Seminar() {
                         );
                     })}
                     {programList && programList.length === 0 && (
-                        <div className="col-span-full text-center text-gray-300 py-16 text-base font-medium">
+                        <div className={`col-span-full text-center py-16 text-base font-medium ${
+                            isDark ? 'text-gray-400' : 'text-gray-300'
+                        }`}>
                             No programs found.
                         </div>
                     )}
@@ -409,11 +437,21 @@ export default function Seminar() {
 
                 {totalPages > 1 && (
                     <div className="flex justify-center mt-8 mb-2">
-                        <nav className="flex items-center gap-1 bg-white rounded-lg shadow px-2 py-1.5" aria-label="Pagination">
+                        <nav className={`flex items-center gap-1 rounded-lg shadow px-2 py-1.5 ${
+                            isDark ? 'bg-gray-800' : 'bg-white'
+                        }`} aria-label="Pagination">
                             <button
                                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
-                                className={`w-7 h-7 flex items-center justify-center rounded-full transition text-gray-400 hover:bg-gray-100 hover:text-gray-700 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                className={`w-7 h-7 flex items-center justify-center rounded-full transition ${
+                                    currentPage === 1 
+                                        ? 'opacity-50 cursor-not-allowed' 
+                                        : ''
+                                } ${
+                                    isDark 
+                                        ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
+                                        : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
+                                }`}
                                 aria-label="Previous"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -424,9 +462,17 @@ export default function Seminar() {
                                 <>
                                     <button
                                         onClick={() => setCurrentPage(1)}
-                                        className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === 1 ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                        className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                            currentPage === 1 
+                                                ? 'bg-green-600 text-white' 
+                                                : isDark 
+                                                    ? 'text-gray-200 hover:bg-gray-700' 
+                                                    : 'text-gray-700 hover:bg-gray-100'
+                                        }`}
                                     >1</button>
-                                    {currentPage > 3 && <span className="px-1 text-gray-300">...</span>}
+                                    {currentPage > 3 && <span className={`px-1 ${
+                                        isDark ? 'text-gray-500' : 'text-gray-300'
+                                    }`}>...</span>}
                                     {Array.from({ length: 3 }, (_, i) => {
                                         const page = Math.max(2, Math.min(currentPage - 1 + i, totalPages - 2));
                                         if (page <= 1 || page >= totalPages) return null;
@@ -434,14 +480,28 @@ export default function Seminar() {
                                             <button
                                                 key={page}
                                                 onClick={() => setCurrentPage(page)}
-                                                className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === page ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                                className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                                    currentPage === page 
+                                                        ? 'bg-green-600 text-white' 
+                                                        : isDark 
+                                                            ? 'text-gray-200 hover:bg-gray-700' 
+                                                            : 'text-gray-700 hover:bg-gray-100'
+                                                }`}
                                             >{page}</button>
                                         );
                                     })}
-                                    {currentPage < totalPages - 2 && <span className="px-1 text-gray-300">...</span>}
+                                    {currentPage < totalPages - 2 && <span className={`px-1 ${
+                                        isDark ? 'text-gray-500' : 'text-gray-300'
+                                    }`}>...</span>}
                                     <button
                                         onClick={() => setCurrentPage(totalPages)}
-                                        className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === totalPages ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                        className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                            currentPage === totalPages 
+                                                ? 'bg-green-600 text-white' 
+                                                : isDark 
+                                                    ? 'text-gray-200 hover:bg-gray-700' 
+                                                    : 'text-gray-700 hover:bg-gray-100'
+                                        }`}
                                     >{totalPages}</button>
                                 </>
                             ) : (
@@ -449,14 +509,28 @@ export default function Seminar() {
                                     <button
                                         key={i + 1}
                                         onClick={() => setCurrentPage(i + 1)}
-                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${currentPage === i + 1 ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                        className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                            currentPage === i + 1 
+                                                ? 'bg-green-600 text-white' 
+                                                : isDark 
+                                                    ? 'text-gray-200 hover:bg-gray-700' 
+                                                    : 'text-gray-700 hover:bg-gray-100'
+                                        }`}
                                     >{i + 1}</button>
                                 ))
                             )}
                             <button
                                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
-                                className={`w-7 h-7 flex items-center justify-center rounded-full transition text-gray-400 hover:bg-gray-100 hover:text-gray-700 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                className={`w-7 h-7 flex items-center justify-center rounded-full transition ${
+                                    currentPage === totalPages 
+                                        ? 'opacity-50 cursor-not-allowed' 
+                                        : ''
+                                } ${
+                                    isDark 
+                                        ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
+                                        : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
+                                }`}
                                 aria-label="Next"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
