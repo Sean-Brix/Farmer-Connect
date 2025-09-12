@@ -638,7 +638,11 @@ export default function Distribution() {
                             <input
                                 type="search"
                                 placeholder="Search by item name, requestor, or note..."
-                                className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500"
+                                className={`block w-full p-3 pl-10 text-sm border rounded-lg focus:ring-green-500 focus:border-green-500 ${
+                                    isDark 
+                                        ? 'text-white bg-gray-800 border-gray-600 placeholder-gray-400' 
+                                        : 'text-gray-900 bg-gray-50 border-gray-300 placeholder-gray-500'
+                                }`}
                                 value={requestSearch}
                                 onChange={(e) =>
                                     setRequestSearch(e.target.value)
@@ -648,7 +652,11 @@ export default function Distribution() {
 
                         <div className="flex flex-wrap gap-2">
                             <select
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3"
+                                className={`border text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3 ${
+                                    isDark 
+                                        ? 'bg-gray-800 border-gray-600 text-white' 
+                                        : 'bg-gray-50 border-gray-300 text-gray-900'
+                                }`}
                                 value={requestStatusFilter}
                                 onChange={(e) =>
                                     setRequestStatusFilter(e.target.value)
@@ -663,7 +671,11 @@ export default function Distribution() {
                             </select>
 
                             <select
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3"
+                                className={`border text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3 ${
+                                    isDark 
+                                        ? 'bg-gray-800 border-gray-600 text-white' 
+                                        : 'bg-gray-50 border-gray-300 text-gray-900'
+                                }`}
                                 value={requestSortBy}
                                 onChange={(e) =>
                                     setRequestSortBy(e.target.value)
@@ -724,6 +736,7 @@ export default function Distribution() {
                         statusFilter={requestStatusFilter}
                         sortBy={requestSortBy}
                         onStatusChange={handleStatusChange}
+                        isDark={isDark}
                     />
                 </div>
             ) : (
@@ -737,7 +750,11 @@ export default function Distribution() {
                                 <input
                                     type="search"
                                     placeholder="Search items, categories, descriptions..."
-                                    className="block w-full pl-10 pr-3 py-2 text-base text-gray-900 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400"
+                                    className={`block w-full pl-10 pr-3 py-2 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all ${
+                                        isDark 
+                                            ? 'text-white bg-gray-800 border-gray-600 placeholder-gray-400' 
+                                            : 'text-gray-900 bg-gray-50 border-gray-200 placeholder-gray-400'
+                                    }`}
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     aria-label="Search distribution items"
@@ -790,7 +807,11 @@ export default function Distribution() {
                             {/* Filters */}
                             <div className="flex flex-row gap-2 flex-1">
                                 <select
-                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    className={`border text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
+                                        isDark 
+                                            ? 'bg-gray-800 border-gray-600 text-white' 
+                                            : 'bg-gray-50 border-gray-200 text-gray-700'
+                                    }`}
                                     value={searchFilter}
                                     onChange={(e) => setSearchFilter(e.target.value)}
                                     aria-label="Filter by"
@@ -800,7 +821,11 @@ export default function Distribution() {
                                     <option value="description">Description</option>
                                 </select>
                                 <select
-                                    className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto"
+                                    className={`border text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
+                                        isDark 
+                                            ? 'bg-gray-800 border-gray-600 text-white' 
+                                            : 'bg-gray-50 border-gray-200 text-gray-700'
+                                    }`}
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
                                     aria-label="Sort by"
@@ -865,11 +890,14 @@ export default function Distribution() {
                                 onViewDetails={handleViewDetails}
                                 onEdit={handleEditStack}
                                 imageUpdateTimestamp={imageUpdateTimestamp}
+                                isDark={isDark}
                             />
                         ))}
 
                         {filteredStacks.length === 0 && (
-                            <div className="col-span-full text-center text-gray-400 py-16 text-base font-medium">
+                            <div className={`col-span-full text-center py-16 text-base font-medium ${
+                                isDark ? 'text-gray-400' : 'text-gray-400'
+                            }`}>
                                 No Distribution items found.
                             </div>
                         )}
@@ -878,31 +906,51 @@ export default function Distribution() {
                     {/* Items Pagination Controls */}
                     {filteredStacks.length > 0 && (
                         <div className="w-full max-w-5xl mx-auto px-2 md:px-8 mt-8">
-                            <div className="bg-white rounded-xl shadow-lg border border-gray-200 px-6 py-4">
+                            <div className={`rounded-xl shadow-lg border px-6 py-4 ${
+                                isDark 
+                                    ? 'bg-gray-800 border-gray-600' 
+                                    : 'bg-white border-gray-200'
+                            }`}>
                                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                                     <div className="flex items-center space-x-2">
-                                        <span className="text-sm text-gray-600">Show:</span>
+                                        <span className={`text-sm ${
+                                            isDark ? 'text-gray-300' : 'text-gray-600'
+                                        }`}>Show:</span>
                                         <select
                                             value={itemsPerPage}
                                             onChange={(e) => {
                                                 setItemsPerPage(Number(e.target.value));
                                                 setItemsCurrentPage(1);
                                             }}
-                                            className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                            className={`text-sm border rounded-md px-2 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                                                isDark 
+                                                    ? 'bg-gray-700 border-gray-600 text-white' 
+                                                    : 'bg-white border-gray-300 text-gray-900'
+                                            }`}
                                         >
                                             <option value={6}>6</option>
                                             <option value={12}>12</option>
                                             <option value={24}>24</option>
                                             <option value={48}>48</option>
                                         </select>
-                                        <span className="text-sm text-gray-600">items per page</span>
+                                        <span className={`text-sm ${
+                                            isDark ? 'text-gray-300' : 'text-gray-600'
+                                        }`}>items per page</span>
                                     </div>
                                     
                                     <div className="flex items-center space-x-2">
-                                        <span className="text-sm text-gray-600">
-                                            Showing <span className="font-medium text-green-700">{itemsStartIndex + 1}</span> to{' '}
-                                            <span className="font-medium text-green-700">{Math.min(itemsEndIndex, filteredStacks.length)}</span> of{' '}
-                                            <span className="font-medium text-green-700">{filteredStacks.length}</span> items
+                                        <span className={`text-sm ${
+                                            isDark ? 'text-gray-300' : 'text-gray-600'
+                                        }`}>
+                                            Showing <span className={`font-medium ${
+                                                isDark ? 'text-green-400' : 'text-green-700'
+                                            }`}>{itemsStartIndex + 1}</span> to{' '}
+                                            <span className={`font-medium ${
+                                                isDark ? 'text-green-400' : 'text-green-700'
+                                            }`}>{Math.min(itemsEndIndex, filteredStacks.length)}</span> of{' '}
+                                            <span className={`font-medium ${
+                                                isDark ? 'text-green-400' : 'text-green-700'
+                                            }`}>{filteredStacks.length}</span> items
                                         </span>
                                     </div>
                                 </div>
@@ -913,11 +961,19 @@ export default function Distribution() {
                     {/* Seminar-style Pagination Navigation */}
                     {totalItemsPages > 1 && (
                         <div className="flex justify-center mt-8 mb-2">
-                            <nav className="flex items-center gap-1 bg-white rounded-lg shadow px-2 py-1.5" aria-label="Items Pagination">
+                            <nav className={`flex items-center gap-1 rounded-lg shadow px-2 py-1.5 ${
+                                isDark ? 'bg-gray-800' : 'bg-white'
+                            }`} aria-label="Items Pagination">
                                 <button
                                     onClick={() => setItemsCurrentPage((p) => Math.max(1, p - 1))}
                                     disabled={itemsCurrentPage === 1}
-                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition text-gray-400 hover:bg-gray-100 hover:text-gray-700 ${itemsCurrentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition ${
+                                        itemsCurrentPage === 1 
+                                            ? 'opacity-50 cursor-not-allowed' 
+                                            : isDark 
+                                                ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
+                                                : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
+                                    }`}
                                     aria-label="Previous"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -928,9 +984,17 @@ export default function Distribution() {
                                     <>
                                         <button
                                             onClick={() => setItemsCurrentPage(1)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === 1 ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                                itemsCurrentPage === 1 
+                                                    ? 'bg-green-600 text-white' 
+                                                    : isDark 
+                                                        ? 'text-gray-300 hover:bg-gray-700' 
+                                                        : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                         >1</button>
-                                        {itemsCurrentPage > 3 && <span className="px-1 text-gray-300">...</span>}
+                                        {itemsCurrentPage > 3 && <span className={`px-1 ${
+                                            isDark ? 'text-gray-500' : 'text-gray-300'
+                                        }`}>...</span>}
                                         {Array.from({ length: 3 }, (_, i) => {
                                             const page = Math.max(2, Math.min(itemsCurrentPage - 1 + i, totalItemsPages - 2));
                                             if (page <= 1 || page >= totalItemsPages) return null;
@@ -938,14 +1002,28 @@ export default function Distribution() {
                                                 <button
                                                     key={page}
                                                     onClick={() => setItemsCurrentPage(page)}
-                                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === page ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                                        itemsCurrentPage === page 
+                                                            ? 'bg-green-600 text-white' 
+                                                            : isDark 
+                                                                ? 'text-gray-300 hover:bg-gray-700' 
+                                                                : 'text-gray-700 hover:bg-gray-100'
+                                                    }`}
                                                 >{page}</button>
                                             );
                                         })}
-                                        {itemsCurrentPage < totalItemsPages - 2 && <span className="px-1 text-gray-300">...</span>}
+                                        {itemsCurrentPage < totalItemsPages - 2 && <span className={`px-1 ${
+                                            isDark ? 'text-gray-500' : 'text-gray-300'
+                                        }`}>...</span>}
                                         <button
                                             onClick={() => setItemsCurrentPage(totalItemsPages)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === totalItemsPages ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                                itemsCurrentPage === totalItemsPages 
+                                                    ? 'bg-green-600 text-white' 
+                                                    : isDark 
+                                                        ? 'text-gray-300 hover:bg-gray-700' 
+                                                        : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                         >{totalItemsPages}</button>
                                     </>
                                 ) : (
@@ -953,14 +1031,26 @@ export default function Distribution() {
                                         <button
                                             key={i + 1}
                                             onClick={() => setItemsCurrentPage(i + 1)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${itemsCurrentPage === i + 1 ? 'bg-green-600 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
+                                                itemsCurrentPage === i + 1 
+                                                    ? 'bg-green-600 text-white' 
+                                                    : isDark 
+                                                        ? 'text-gray-300 hover:bg-gray-700' 
+                                                        : 'text-gray-700 hover:bg-gray-100'
+                                            }`}
                                         >{i + 1}</button>
                                     ))
                                 )}
                                 <button
                                     onClick={() => setItemsCurrentPage((p) => Math.min(totalItemsPages, p + 1))}
                                     disabled={itemsCurrentPage === totalItemsPages}
-                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition text-gray-400 hover:bg-gray-100 hover:text-gray-700 ${itemsCurrentPage === totalItemsPages ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition ${
+                                        itemsCurrentPage === totalItemsPages 
+                                            ? 'opacity-50 cursor-not-allowed' 
+                                            : isDark 
+                                                ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
+                                                : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
+                                    }`}
                                     aria-label="Next"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -980,6 +1070,7 @@ export default function Distribution() {
                 onSubmit={handleAddDistributionItem}
                 existingItems={allItems}
                 distributionItems={distributionStacks}
+                isDark={isDark}
                 maxWidth="1200px"
                 modalStyle={{
                     maxWidth: '99vw',
@@ -997,6 +1088,7 @@ export default function Distribution() {
                     onClose={handleCloseDetailModal}
                     imageUpdateTimestamp={imageUpdateTimestamp}
                     onViewRequests={handleViewRequests}
+                    isDark={isDark}
                     maxWidth="1200px"
                     modalStyle={{
                         maxWidth: '99vw',
@@ -1015,6 +1107,7 @@ export default function Distribution() {
                     onClose={handleCloseEditModal}
                     onSubmit={handleEditSubmit}
                     imageUpdateTimestamp={imageUpdateTimestamp}
+                    isDark={isDark}
                     maxWidth="1600px"
                     modalStyle={{
                         maxWidth: '99vw',
@@ -1664,6 +1757,7 @@ function DistributionDetailModal({
     onClose,
     imageUpdateTimestamp,
     onViewRequests,
+    isDark,
 }) {
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -1930,6 +2024,7 @@ function DistributionEditModal({
     onClose,
     onSubmit,
     imageUpdateTimestamp,
+    isDark,
 }) {
     const [formData, setFormData] = useState({
         name: stack.item?.name || '',
@@ -2331,6 +2426,7 @@ function AddDistributionItemModal({
     onSubmit,
     existingItems,
     distributionItems,
+    isDark,
 }) {
     const [form, setForm] = useState({
         name: '',
@@ -2528,9 +2624,17 @@ function AddDistributionItemModal({
 
     return (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto border border-gray-200">
+            <div className={`rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-y-auto border ${
+                isDark 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-white border-gray-200'
+            }`}>
                 {/* Header */}
-                <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+                <div className={`border-b px-6 py-4 ${
+                    isDark 
+                        ? 'bg-gray-700 border-gray-600' 
+                        : 'bg-gray-50 border-gray-200'
+                }`}>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-600 rounded-lg">
@@ -2539,13 +2643,21 @@ function AddDistributionItemModal({
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-gray-800">Add Distribution Item</h3>
-                                <p className="text-sm text-gray-600">Add new item to distribution inventory</p>
+                                <h3 className={`text-lg font-bold ${
+                                    isDark ? 'text-white' : 'text-gray-800'
+                                }`}>Add Distribution Item</h3>
+                                <p className={`text-sm ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>Add new item to distribution inventory</p>
                             </div>
                         </div>
                         <button
                             onClick={handleClose}
-                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                            className={`p-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 ${
+                                isDark 
+                                    ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-600 focus:ring-gray-500' 
+                                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:ring-gray-300'
+                            }`}
                             aria-label="Close"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">

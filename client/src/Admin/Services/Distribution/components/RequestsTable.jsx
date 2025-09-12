@@ -6,6 +6,7 @@ export default function RequestsTable({
     statusFilter,
     sortBy,
     onStatusChange,
+    isDark,
 }) {
     const [expandedNotes, setExpandedNotes] = React.useState(new Set());
     const [currentPage, setCurrentPage] = React.useState(1);
@@ -145,7 +146,13 @@ export default function RequestsTable({
     };
 
     const getStatusBadge = (status) => {
-        const statusStyles = {
+        const statusStyles = isDark ? {
+            Pending: 'bg-yellow-900 text-yellow-200 border-yellow-700',
+            Approved: 'bg-green-900 text-green-200 border-green-700',
+            Rejected: 'bg-red-900 text-red-200 border-red-700',
+            No_Pickup: 'bg-indigo-900 text-indigo-200 border-indigo-700',
+            Cancelled: 'bg-gray-700 text-gray-300 border-gray-600',
+        } : {
             Pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
             Approved: 'bg-green-100 text-green-800 border-green-200',
             Rejected: 'bg-red-100 text-red-800 border-red-200',
@@ -157,7 +164,7 @@ export default function RequestsTable({
             <span
                 className={`px-3 py-1 rounded-full text-xs font-semibold border ${
                     statusStyles[status] ||
-                    'bg-gray-100 text-gray-800 border-gray-200'
+                    (isDark ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-100 text-gray-800 border-gray-200')
                 }`}
             >
                 {status.replace('_', ' ')}
@@ -185,7 +192,9 @@ export default function RequestsTable({
             <div className="text-center py-16">
                 <div className="mb-4">
                     <svg
-                        className="w-16 h-16 text-gray-300 mx-auto"
+                        className={`w-16 h-16 mx-auto ${
+                            isDark ? 'text-gray-600' : 'text-gray-300'
+                        }`}
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1"
@@ -198,10 +207,14 @@ export default function RequestsTable({
                         />
                     </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                <h3 className={`text-lg font-semibold mb-2 ${
+                    isDark ? 'text-gray-300' : 'text-gray-600'
+                }`}>
                     No Requests Found
                 </h3>
-                <p className="text-gray-500">
+                <p className={`${
+                    isDark ? 'text-gray-400' : 'text-gray-500'
+                }`}>
                     Try adjusting your search criteria or filters.
                 </p>
             </div>
@@ -209,14 +222,24 @@ export default function RequestsTable({
     }
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className={`rounded-xl shadow-sm border overflow-hidden ${
+            isDark 
+                ? 'bg-gray-800 border-gray-700' 
+                : 'bg-white border-gray-200'
+        }`}>
             {/* Summary Stats */}
-            <div className="bg-gradient-to-r from-green-50 to-green-100 px-6 py-4 border-b border-green-200">
+            <div className={`px-6 py-4 border-b ${
+                isDark 
+                    ? 'bg-gradient-to-r from-gray-700 to-gray-600 border-gray-600' 
+                    : 'bg-gradient-to-r from-green-50 to-green-100 border-green-200'
+            }`}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <span className="text-sm font-medium text-gray-700">
+                            <span className={`text-sm font-medium ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 {filteredRequests.length} Total Requests
                             </span>
                         </div>
@@ -227,13 +250,17 @@ export default function RequestsTable({
                                     return acc;
                                 }, {})
                             ).map(([status, count]) => (
-                                <span key={status} className="text-gray-600">
+                                <span key={status} className={`${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>
                                     {status.replace('_', ' ')}: {count}
                                 </span>
                             ))}
                         </div>
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className={`text-xs ${
+                        isDark ? 'text-gray-400' : 'text-gray-500'
+                    }`}>
                         Page {currentPage} of {totalPages}
                     </div>
                 </div>
@@ -242,38 +269,62 @@ export default function RequestsTable({
             {/* Table */}
             <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className={`border-b ${
+                        isDark 
+                            ? 'bg-gray-700 border-gray-600' 
+                            : 'bg-gray-50 border-gray-200'
+                    }`}>
                         <tr>
-                            <th className="text-left py-3 px-6 font-semibold text-gray-700">
+                            <th className={`text-left py-3 px-6 font-semibold ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Request Details
                             </th>
-                            <th className="text-left py-3 px-6 font-semibold text-gray-700">
+                            <th className={`text-left py-3 px-6 font-semibold ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Client Info
                             </th>
-                            <th className="text-left py-3 px-6 font-semibold text-gray-700">
+                            <th className={`text-left py-3 px-6 font-semibold ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Status
                             </th>
-                            <th className="text-left py-3 px-6 font-semibold text-gray-700">
+                            <th className={`text-left py-3 px-6 font-semibold ${
+                                isDark ? 'text-gray-200' : 'text-gray-700'
+                            }`}>
                                 Actions
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className={`divide-y ${
+                        isDark ? 'divide-gray-700' : 'divide-gray-100'
+                    }`}>
                         {paginatedRequests.map((request) => (
                             <tr
                                 key={request.id}
-                                className="hover:bg-gray-50 transition-colors duration-150"
+                                className={`transition-colors duration-150 ${
+                                    isDark 
+                                        ? 'hover:bg-gray-700' 
+                                        : 'hover:bg-gray-50'
+                                }`}
                             >
                                 {/* Request Details */}
                                 <td className="py-4 px-6">
                                     <div className="space-y-1">
-                                        <div className="font-medium text-gray-900">
+                                        <div className={`font-medium ${
+                                            isDark ? 'text-white' : 'text-gray-900'
+                                        }`}>
                                             {request.itemName}
                                         </div>
-                                        <div className="text-xs text-gray-500">
+                                        <div className={`text-xs ${
+                                            isDark ? 'text-gray-400' : 'text-gray-500'
+                                        }`}>
                                             Quantity: {request.requestQuantity}
                                         </div>
-                                        <div className="text-xs text-gray-500">
+                                        <div className={`text-xs ${
+                                            isDark ? 'text-gray-400' : 'text-gray-500'
+                                        }`}>
                                             {new Date(
                                                 request.createdAt
                                             ).toLocaleDateString('en-US', {
@@ -291,10 +342,14 @@ export default function RequestsTable({
                                 {/* Client Info */}
                                 <td className="py-4 px-6">
                                     <div className="space-y-1">
-                                        <div className="font-medium text-gray-900">
+                                        <div className={`font-medium ${
+                                            isDark ? 'text-white' : 'text-gray-900'
+                                        }`}>
                                             {request.requestorName}
                                         </div>
-                                        <div className="text-xs text-gray-500">
+                                        <div className={`text-xs ${
+                                            isDark ? 'text-gray-400' : 'text-gray-500'
+                                        }`}>
                                             {request.requestorEmail}
                                         </div>
                                     </div>
@@ -347,9 +402,15 @@ export default function RequestsTable({
 
             {/* Pagination */}
             {totalPages > 1 && (
-                <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
+                <div className={`px-6 py-3 border-t ${
+                    isDark 
+                        ? 'bg-gray-700 border-gray-600' 
+                        : 'bg-gray-50 border-gray-200'
+                }`}>
                     <div className="flex items-center justify-between">
-                        <div className="text-xs text-gray-500">
+                        <div className={`text-xs ${
+                            isDark ? 'text-gray-400' : 'text-gray-500'
+                        }`}>
                             Showing {startIndex + 1} to{' '}
                             {Math.min(endIndex, filteredRequests.length)} of{' '}
                             {filteredRequests.length} results
@@ -360,7 +421,11 @@ export default function RequestsTable({
                                     setCurrentPage(Math.max(1, currentPage - 1))
                                 }
                                 disabled={currentPage === 1}
-                                className="px-3 py-1 text-xs bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className={`px-3 py-1 text-xs border rounded-md hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    isDark 
+                                        ? 'bg-gray-800 border-gray-600 text-gray-200' 
+                                        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                                }`}
                             >
                                 Previous
                             </button>
@@ -375,7 +440,9 @@ export default function RequestsTable({
                                             className={`px-3 py-1 text-xs rounded-md ${
                                                 currentPage === pageNum
                                                     ? 'bg-green-600 text-white'
-                                                    : 'bg-white border border-gray-300 hover:bg-gray-50'
+                                                    : isDark 
+                                                        ? 'bg-gray-800 border border-gray-600 text-gray-200 hover:bg-gray-700' 
+                                                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
                                             }`}
                                         >
                                             {pageNum}
@@ -391,7 +458,11 @@ export default function RequestsTable({
                                     )
                                 }
                                 disabled={currentPage === totalPages}
-                                className="px-3 py-1 text-xs bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className={`px-3 py-1 text-xs border rounded-md hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    isDark 
+                                        ? 'bg-gray-800 border-gray-600 text-gray-200' 
+                                        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                                }`}
                             >
                                 Next
                             </button>

@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ThemeContext } from '../../../contexts/ThemeContext';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 export default function Participants({ data, toggleOff }) {
-    const { isDark } = useContext(ThemeContext);
+    const { isDark } = useTheme();
     const [section, setSection] = useState('participants');
     const [statsVisible, setStatsVisible] = useState(false);
     const [selectedParticipants, setSelectedParticipants] = useState([]);

@@ -6,6 +6,7 @@ export default function DistributionItemCard({
     onViewDetails,
     onEdit,
     imageUpdateTimestamp,
+    isDark,
 }) {
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -21,7 +22,11 @@ export default function DistributionItemCard({
             : stack.item?.description;
 
     return (
-        <div className="relative flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group">
+        <div className={`relative flex flex-col border rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group ${
+            isDark 
+                ? 'bg-gray-800 border-gray-700' 
+                : 'bg-white border-gray-200'
+        }`}>
             <div className="relative">
                 <img
                     src={
@@ -40,27 +45,39 @@ export default function DistributionItemCard({
                 </span>
             </div>
             <div className="flex-1 flex flex-col p-5">
-                <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">
+                <h3 className={`text-lg font-semibold mb-1 truncate ${
+                    isDark ? 'text-white' : 'text-gray-800'
+                }`}>
                     {stack.item?.name || 'Unknown Item'}
                 </h3>
-                <p className="text-gray-600 text-sm mb-2 flex-1 cursor-default line-clamp-3">
+                <p className={`text-sm mb-2 flex-1 cursor-default line-clamp-3 ${
+                    isDark ? 'text-gray-300' : 'text-gray-600'
+                }`}>
                     {truncatedDescription || 'No description available'}
                 </p>
-                <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
+                <div className={`flex flex-wrap gap-x-3 gap-y-1 text-xs mb-3 ${
+                    isDark ? 'text-gray-400' : 'text-gray-500'
+                }`}>
                     <span>
-                        <span className="font-medium text-gray-700">
+                        <span className={`font-medium ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Quantity:
                         </span>{' '}
                         {stack.quantity}
                     </span>
                     <span>
-                        <span className="font-medium text-gray-700">
+                        <span className={`font-medium ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Category:
                         </span>{' '}
                         {stack.item?.category?.replace('_', ' ') || 'N/A'}
                     </span>
                     <span>
-                        <span className="font-medium text-gray-700">
+                        <span className={`font-medium ${
+                            isDark ? 'text-gray-200' : 'text-gray-700'
+                        }`}>
                             Date Added:
                         </span>{' '}
                         {formatDate(stack.createdAt)}

@@ -453,7 +453,11 @@ export default function Dashboard() {
                                 <i className="fas fa-cog text-xl"></i>
                             </button>
                             <button
-                                className="md:hidden text-green-600 hover:text-green-800 transition ml-2"
+                                className={`md:hidden transition ml-2 ${
+                                    isDark 
+                                        ? 'text-green-400 hover:text-green-300' 
+                                        : 'text-green-600 hover:text-green-800'
+                                }`}
                                 onClick={() => setMobileMenuOpen(true)}
                                 aria-label="Open menu"
                             >
@@ -647,15 +651,29 @@ export default function Dashboard() {
             {/* Account management overlay panel for mobile */}
             {showAccountPanel && (
                 <div
-                    className="fixed inset-y-0 left-0 bg-white backdrop-blur-xl border-r border-green-200 w-full max-w-xs z-[60] flex flex-col h-screen max-h-screen shadow-2xl transition-all duration-300"
+                    className={`fixed inset-y-0 left-0 backdrop-blur-xl border-r w-full max-w-xs z-[60] flex flex-col h-screen max-h-screen shadow-2xl transition-all duration-300 ${
+                        isDark 
+                            ? 'bg-gray-800 border-gray-700' 
+                            : 'bg-white border-green-200'
+                    }`}
                     style={{ boxShadow: '0 8px 32px 0 rgba(30,41,59,0.13), 0 1.5px 0 0 #2563eb22' }}
                 >
-                    <div className="p-6 border-b border-green-200 bg-white flex items-center justify-between shadow-sm">
+                    <div className={`p-6 border-b flex items-center justify-between shadow-sm ${
+                        isDark 
+                            ? 'border-gray-700 bg-gray-800' 
+                            : 'border-green-200 bg-white'
+                    }`}>
                         <div className="flex items-center gap-3">
-                            <h1 className="text-2xl font-extrabold text-green-800 tracking-tight drop-shadow-sm">Account</h1>
+                            <h1 className={`text-2xl font-extrabold tracking-tight drop-shadow-sm ${
+                                isDark ? 'text-green-400' : 'text-green-800'
+                            }`}>Account</h1>
                         </div>
                         <button
-                            className="text-green-500 hover:text-green-700 transition"
+                            className={`transition ${
+                                isDark 
+                                    ? 'text-green-500 hover:text-green-300' 
+                                    : 'text-green-500 hover:text-green-700'
+                            }`}
                             onClick={() => setShowAccountPanel(false)}
                             aria-label="Close account panel"
                         >
@@ -771,9 +789,9 @@ export default function Dashboard() {
         }
       }
       .professional-navbar {
-        box-shadow: 0 4px 24px 0 #2563eb13;
-        border-bottom: 2px solid #dbeafe;
-        background: #fff;
+        box-shadow: 0 4px 24px 0 ${isDark ? '#00000020' : '#2563eb13'};
+        border-bottom: 2px solid ${isDark ? '#374151' : '#dbeafe'};
+        background: ${isDark ? '#111827' : '#fff'};
         padding-left: 2rem !important;
         padding-right: 2rem !important;
         padding-top: 0.75rem !important;
@@ -783,7 +801,7 @@ export default function Dashboard() {
       .professional-navbar-title {
         font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
         font-weight: 700;
-        color: #1e293b;
+        color: ${isDark ? '#f9fafb' : '#1e293b'};
         letter-spacing: -0.5px;
         display: flex;
         align-items: center;
@@ -794,12 +812,12 @@ export default function Dashboard() {
         background: transparent;
       }
       .minimalist-scrollbar::-webkit-scrollbar-thumb {
-        background: #e5e7eb;
+        background: ${isDark ? '#4b5563' : '#e5e7eb'};
         border-radius: 4px;
       }
       .minimalist-scrollbar {
         scrollbar-width: thin;
-        scrollbar-color: #e5e7eb transparent;
+        scrollbar-color: ${isDark ? '#4b5563' : '#e5e7eb'} transparent;
       }
       html, body, #root {
         height: 100%;

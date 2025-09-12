@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ThemeContext } from '../../../contexts/ThemeContext';
+import { useTheme } from '../../../contexts/ThemeContext';
 import default_picture from '../../../Assets/default_seminar_pic.jpg';
 
 export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
-    const { isDark } = useContext(ThemeContext);
+    const { isDark } = useTheme();
     
     // Render editing data
     const [newData, setNewData] = useState(data);
