@@ -71,7 +71,8 @@ class RegisterUserModal extends Component {
         email_prompt: '',
         isLoading: false,
         currentStep: 1,
-        totalSteps: 5
+        totalSteps: 5,
+        showConfirmDialog: false
     };
 
     steps = [
@@ -433,6 +434,46 @@ class RegisterUserModal extends Component {
         }
     }
 
+    // Method to check if form has any data
+    hasFormData = () => {
+        const { inputs } = this.state;
+        const fieldsToCheck = [
+            'firstName', 'middleName', 'surname', 'extensionName', 'sex', 'street', 'barangay',
+            'houseNumber', 'mobileNumber', 'landlineNumber', 'birthMunicipality', 'birthProvince',
+            'dateOfBirth', 'religion', 'otherReligionSpecify', 'civilStatus', 'spouseName',
+            'femaleHouseholdMembers', 'maleHouseholdMembers', 'householdHeadName', 'relationshipToHead',
+            'govIdNumber', 'disabilityType', 'username', 'email', 'password', 'confirmPassword'
+        ];
+        
+        return fieldsToCheck.some(field => inputs[field] && inputs[field].trim() !== '') ||
+               inputs.livelihoodProfile.length > 0 ||
+               inputs.farmingActivities.length > 0 ||
+               inputs.fishingActivities.length > 0 ||
+               inputs.farmworkActivities.length > 0 ||
+               inputs.youthActivities.length > 0;
+    };
+
+    // Method to handle close with confirmation
+    handleCloseWithConfirmation = () => {
+        if (this.hasFormData()) {
+            this.setState({ showConfirmDialog: true });
+        } else {
+            this.resetForm();
+            this.props.onClose();
+        }
+    };
+
+    // Method to handle confirmation dialog actions
+    handleConfirmCancel = () => {
+        this.setState({ showConfirmDialog: false });
+        this.resetForm();
+        this.props.onClose();
+    };
+
+    handleConfirmStay = () => {
+        this.setState({ showConfirmDialog: false });
+    };
+
     render() {
         const { open, onClose, isDark } = this.props;
         const { currentStep, isLoading } = this.state;
@@ -440,39 +481,37 @@ class RegisterUserModal extends Component {
         if (!open) return null;
 
         return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 transition-opacity">
-                <div className={`backdrop-blur-sm rounded-3xl shadow-2xl max-w-6xl w-full mx-6 relative max-h-[95vh] flex flex-col border ${
-                    isDark 
-                        ? 'bg-gray-800/95 border-gray-600/20' 
-                        : 'bg-white/95 border-white/20'
-                }`} style={{boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'}}>
-                    <button
-                        onClick={() => {
-                            this.resetForm();
-                            onClose();
-                        }}
-                        className={`absolute top-6 right-6 hover:text-red-500 rounded-full p-2 transition-all duration-300 group focus:outline-none z-10 ${
-                            isDark 
-                                ? 'text-gray-400 hover:bg-red-900/20' 
-                                : 'text-gray-400 hover:bg-red-50'
-                        }`}
-                        aria-label="Close"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 group-hover:scale-110 transition-transform"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+            <React.Fragment>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 transition-opacity">
+                    <div className={`backdrop-blur-sm rounded-3xl shadow-2xl max-w-6xl w-full mx-6 relative max-h-[95vh] flex flex-col border ${
+                        isDark 
+                            ? 'bg-gray-800/95 border-gray-600/20' 
+                            : 'bg-white/95 border-white/20'
+                    }`} style={{boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'}}>
+                        <button
+                            onClick={this.handleCloseWithConfirmation}
+                            className={`absolute top-6 right-6 hover:text-red-500 rounded-full p-2 transition-all duration-300 group focus:outline-none z-10 ${
+                                isDark 
+                                    ? 'text-gray-400 hover:bg-red-900/20' 
+                                    : 'text-gray-400 hover:bg-red-50'
+                            }`}
+                            aria-label="Close"
                         >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
-                    </button>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6 group-hover:scale-110 transition-transform"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
                     
                     <div className={`p-10 overflow-y-auto ${
                         isDark ? 'text-gray-200' : ''
@@ -545,8 +584,113 @@ class RegisterUserModal extends Component {
                             {currentStep === 4 && this.renderAccountSetup()}
                         </div>
                     </div>
+                    
+                    {/* Custom Confirmation Dialog */}
+                    {this.state.showConfirmDialog && (
+                        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70">
+                            <div className={`relative mx-4 w-full max-w-md rounded-2xl shadow-2xl border ${
+                                isDark 
+                                    ? 'bg-gray-800 border-gray-600' 
+                                    : 'bg-white border-gray-200'
+                            }`} style={{
+                                animation: 'fadeInScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                            }}>
+                                {/* Icon and Title */}
+                                <div className="flex flex-col items-center px-6 pt-8 pb-4">
+                                    <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-gradient-to-br from-orange-400 to-red-500 shadow-lg">
+                                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                        </svg>
+                                    </div>
+                                    <h3 className={`text-xl font-bold text-center mb-2 ${
+                                        isDark ? 'text-white' : 'text-gray-900'
+                                    }`}>
+                                        Cancel Registration?
+                                    </h3>
+                                    <p className={`text-center leading-relaxed ${
+                                        isDark ? 'text-gray-300' : 'text-gray-600'
+                                    }`}>
+                                        Are you sure you want to cancel? All entered information will be lost and cannot be recovered.
+                                    </p>
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex gap-3 px-6 pb-6">
+                                    <button
+                                        onClick={this.handleConfirmStay}
+                                        className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                                            isDark 
+                                                ? 'bg-gray-700 text-gray-200 hover:bg-gray-600 focus:ring-gray-500' 
+                                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-400'
+                                        }`}
+                                    >
+                                        Continue Editing
+                                    </button>
+                                    <button
+                                        onClick={this.handleConfirmCancel}
+                                        className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 shadow-lg hover:shadow-xl"
+                                    >
+                                        Yes, Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
+
+                {/* Custom Confirmation Dialog - Full Screen Overlay */}
+                {this.state.showConfirmDialog && (
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70">
+                        <div className={`relative mx-4 w-full max-w-md rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] border ${
+                            isDark 
+                                ? 'bg-gray-800 border-gray-600' 
+                                : 'bg-white border-gray-200'
+                        }`} style={{
+                            animation: 'fadeInScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                        }}>
+                            {/* Icon and Title */}
+                            <div className="flex flex-col items-center px-6 pt-8 pb-4">
+                                <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-gradient-to-br from-orange-400 to-red-500 shadow-lg">
+                                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                    </svg>
+                                </div>
+                                <h3 className={`text-xl font-bold text-center mb-2 ${
+                                    isDark ? 'text-white' : 'text-gray-900'
+                                }`}>
+                                    Cancel Registration?
+                                </h3>
+                                <p className={`text-center leading-relaxed ${
+                                    isDark ? 'text-gray-300' : 'text-gray-600'
+                                }`}>
+                                    Are you sure you want to cancel? All entered information will be lost and cannot be recovered.
+                                </p>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-3 px-6 pb-6">
+                                <button
+                                    onClick={this.handleConfirmStay}
+                                    className={`flex-1 px-4 py-3 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                                        isDark 
+                                            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600 focus:ring-gray-500' 
+                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-400'
+                                    }`}
+                                >
+                                    Continue Editing
+                                </button>
+                                <button
+                                    onClick={this.handleConfirmCancel}
+                                    className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 shadow-lg hover:shadow-xl"
+                                >
+                                    Yes, Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </React.Fragment>
         );
     }
 

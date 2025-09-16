@@ -58,15 +58,15 @@ export default function Profiles({ details }) {
     // Reset to first page if filter changes or userList changes
     useEffect(() => {
         setPage(1);
-    }, [filter, userList.length, itemsPerPage]);
+    }, [filter, userList.length]);
 
     return (
         <div className={`min-h-screen pt-6 px-2 sm:px-4 md:px-6 lg:px-0 ${
             isDark ? 'bg-gray-900' : 'bg-white'
         }`} style={{ fontFamily: 'Poppins, Inter, Segoe UI, Arial, sans-serif', fontWeight: 400 }}>
-            <div className="w-full max-w-4xl mx-auto">
+            <div className="w-full max-w-[1400px] mx-auto">
                 {/* HEADER - Clean and simple */}
-                <div className="relative mb-8 sm:mt-20 mt-5 flex flex-col items-center justify-center max-w-4xl mx-auto gap-3 text-center">
+                <div className="relative mb-8 sm:mt-20 mt-5 flex flex-col items-center justify-center max-w-[1400px] mx-auto gap-3 text-center">
                     <span className="inline-flex items-center justify-center gap-4 w-full">
                         <span className={`rounded-full p-3 shadow-lg ${
                             isDark ? 'bg-gradient-to-br from-green-800 to-green-700' : 'bg-gradient-to-br from-green-200 to-green-300'
@@ -105,28 +105,29 @@ export default function Profiles({ details }) {
                 </div>
 
                 {/* FILTERS - Clean layout with consistent design */}
-                <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-stretch w-full mb-8">
-                    {/* Search and filter controls */}
-                    <div className="flex flex-col xs:flex-row sm:flex-row flex-1 gap-4 items-stretch w-full sm:w-auto">
-                        <div className="relative flex-grow min-w-[100px] sm:min-w-[120px] md:w-54 flex-shrink-0 w-full sm:w-auto">
+                <div className="relative mt-0 mb-8 w-full max-w-5xl mx-auto px-2 md:px-6">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 flex-wrap items-stretch w-full">
+                        {/* Search bar - Made narrower like Seminar */}
+                        <div className="relative flex-1 min-w-0 w-full sm:w-1/3">
                             <input
                                 type="text"
                                 placeholder="Search profiles..."
-                                className={`modern-search-input ${
-                                    isDark ? 'text-gray-200 bg-gray-800 border-gray-600' : 'text-gray-700 bg-white border-gray-300'
+                                className={`block w-full pl-10 pr-3 py-2 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400 ${
+                                    isDark ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50 border-gray-200 text-gray-900'
                                 }`}
-                                style={{ maxWidth: '280px' }}
                                 onChange={(e) => setFilter({ ...filter, search: e.target.value })}
                             />
-                            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                                <svg className="w-4 h-4 text-green-500 opacity-70" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
                         </div>
+                        {/* Filter controls */}
+                        <div className="flex gap-3 flex-wrap">
                         <select
-                            className={`custom-select w-full sm:w-auto ${
-                                isDark ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
+                            className={`border text-sm rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 py-2 px-3 min-w-[120px] transition ${
+                                isDark ? 'bg-gray-700 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
                             }`}
                             onChange={(e) => setFilter({ ...filter, roles: e.target.value })}
                         >
@@ -136,8 +137,8 @@ export default function Profiles({ details }) {
                             <option value="User">User</option>
                         </select>
                         <select
-                            className={`custom-select w-full sm:w-auto ${
-                                isDark ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
+                            className={`border text-sm rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 py-2 px-3 min-w-[140px] transition ${
+                                isDark ? 'bg-gray-700 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
                             }`}
                             onChange={(e) => setFilter({ ...filter, client_profile: e.target.value })}
                         >
@@ -153,11 +154,9 @@ export default function Profiles({ details }) {
                             <option value="PWD">PWD</option>
                             <option value="Indigenous People">Indigenous People</option>
                         </select>
-                    </div>
-                    <div className="flex-none ml-auto min-w-[110px] w-full sm:w-auto mt-2 sm:mt-0">
                         <select
-                            className={`custom-select w-full sm:w-auto ${
-                                isDark ? 'bg-gray-800 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
+                            className={`border text-sm rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 py-2 px-3 min-w-[110px] transition ${
+                                isDark ? 'bg-gray-700 border-gray-600 text-gray-200' : 'bg-white border-gray-300 text-gray-700'
                             }`}
                             onChange={(e) => setFilter({ ...filter, order: e.target.value })}
                         >
@@ -168,10 +167,12 @@ export default function Profiles({ details }) {
                             <option value="created_at">Date Created</option>
                             <option value="updated_at">Recently Updated</option>
                         </select>
+                        </div>
                     </div>
                 </div>
 
                 {/* LIST - Clean table design */}
+                <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8">
                 <div className={`rounded-xl shadow-lg border overflow-hidden ${
                     isDark ? 'bg-gray-800 border-gray-600' : 'bg-white border-green-100'
                 }`} style={{ fontFamily: 'Inter, Segoe UI, Arial, sans-serif' }}>
@@ -248,58 +249,54 @@ export default function Profiles({ details }) {
                         </>
                     )}
                 </div>
+                </div>
                 
-                {/* Showing items info and rows per page selector */}
+                {/* Pagination Controls - Like Seminar page */}
                 {!isLoading && !error && Array.isArray(userList) && userList.length > 0 && (
-                    <div className="w-full max-w-4xl mx-auto px-2 md:px-8 mt-4">
-                        <div className="flex justify-between items-center mb-2">
-                            <span className={`text-xs ${
-                                isDark ? 'text-gray-400' : 'text-gray-500'
-                            }`}>
-                                Showing {paginatedList.length} of {userList.length} profiles
-                            </span>
-                            
-                            <div className="flex items-center gap-2">
-                                <span className={`text-xs ${
-                                    isDark ? 'text-gray-400' : 'text-gray-500'
+                    <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mt-4">
+                        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 py-4">
+                            <div className="flex items-center gap-4">
+                                <span className={`text-sm ${
+                                    isDark ? 'text-gray-400' : 'text-gray-600'
                                 }`}>
-                                    Rows per page:
+                                    Showing {((page - 1) * itemsPerPage) + 1} to {Math.min(page * itemsPerPage, userList.length)} of {userList.length} entries
                                 </span>
-                                <div className="relative">
-                                    <select
-                                        className={`appearance-none border text-sm rounded-lg focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-3 pr-10 min-w-[70px] transition ${
-                                            isDark 
-                                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                                : 'bg-white border-gray-300 text-gray-700'
-                                        }`}
-                                        value={itemsPerPage}
-                                        onChange={(e) => {
-                                            setItemsPerPage(Number(e.target.value));
-                                            setPage(1); // Reset to first page when changing items per page
-                                        }}
-                                        aria-label="Rows per page"
-                                    >
-                                        <option value={5}>5</option>
-                                        <option value={10}>10</option>
-                                        <option value={15}>15</option>
-                                        <option value={20}>20</option>
-                                        <option value={25}>25</option>
-                                        <option value={50}>50</option>
-                                    </select>
-                                    <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                            <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
+                                
+                                <div className="flex items-center gap-2">
+                                    <span className={`text-xs ${
+                                        isDark ? 'text-gray-400' : 'text-gray-500'
+                                    }`}>
+                                        Rows per page:
+                                    </span>
+                                    <div className="relative">
+                                        <select
+                                            className={`appearance-none border text-sm rounded-lg focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-3 pr-10 min-w-[70px] transition ${
+                                                isDark 
+                                                    ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                                    : 'bg-white border-gray-300 text-gray-700'
+                                            }`}
+                                            value={itemsPerPage}
+                                            onChange={(e) => {
+                                                setItemsPerPage(Number(e.target.value));
+                                                setPage(1); // Reset to first page when changing items per page
+                                            }}
+                                        >
+                                            <option value={5}>5</option>
+                                            <option value={10}>10</option>
+                                            <option value={15}>15</option>
+                                            <option value={20}>20</option>
+                                            <option value={25}>25</option>
+                                        </select>
+                                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Pagination Controls - Fixed professional layout */}
-                {!isLoading && !error && Array.isArray(userList) && userList.length > 0 && (
-                    <div className="flex justify-center items-center gap-4 py-8">
+                            
+                            <div className="flex items-center gap-2">
                         <button
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                                 isDark 
@@ -340,9 +337,21 @@ export default function Profiles({ details }) {
                     </div>
                 )}
             </div>
-            {/* Import Poppins font from Google Fonts */}
-            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-            <style>{`
+            </div>
+            
+            {/* Register User Modal */}
+            <RegisterUserModal
+                open={showRegisterModal}
+                onClose={() => setShowRegisterModal(false)}
+                onSuccess={() => {
+                    setRefreshToken(Date.now());
+                    queryClient.invalidateQueries(['accounts']);
+                }}
+                isDark={isDark}
+            />
+        </div>
+    );
+}
                 /* Dynamic background based on theme */
                 html, body, .min-h-screen {
                     background: ${isDark ? '#111827' : '#ffffff'};
@@ -362,10 +371,10 @@ export default function Profiles({ details }) {
                     }
                 }
                 @media (max-width: 1024px) {
-                    .max-w-4xl { max-width: 98vw !important; }
+                    .max-w-\\[1400px\\] { max-width: 98vw !important; }
                 }
                 @media (max-width: 600px) {
-                    .max-w-4xl {
+                    .max-w-\\[1400px\\] {
                         padding-left: 0 !important;
                         padding-right: 0 !important;
                     }

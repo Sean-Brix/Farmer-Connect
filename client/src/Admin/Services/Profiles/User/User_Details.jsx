@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { useTheme } from '../../../../contexts/ThemeContext';
 
 export default function User_Details({ user, isEdit, refetchRow}) {
@@ -251,29 +252,27 @@ export default function User_Details({ user, isEdit, refetchRow}) {
                             />
                         </div>
                         <div>
-                            <h1 className={`text-3xl font-bold mb-2 ${
-                                isDark ? 'text-white' : 'text-gray-900'
-                            }`}>
+                            <h1 className="text-3xl font-bold mb-2 text-white">
                                 {userDetail?.firstName} {userDetail?.middleName ? userDetail.middleName + ' ' : ''}{userDetail?.surname}
                                 {userDetail?.extensionName ? ' ' + userDetail.extensionName : ''}
                             </h1>
                             <div className="flex flex-col gap-1">
-                                <span className="text-green-100">@{userDetail?.username}</span>
-                                <span className="text-green-100">{userDetail?.email}</span>
+                                <span className="text-white">@{userDetail?.username}</span>
+                                <span className="text-white">{userDetail?.email}</span>
                             </div>
                         </div>
                     </div>
                     <div className="text-right">
-                        <span className={`inline-flex px-4 py-2 rounded-full text-sm font-bold ${
+                        <span className={`inline-flex px-6 py-3 rounded-full text-lg font-bold shadow-lg border-2 ${
                             userDetail?.access === 'Super_Admin'
-                                ? isDark ? 'bg-gray-900 text-white' : 'bg-gray-800 text-white'
+                                ? 'bg-red-600 text-white border-red-500'
                                 : userDetail?.access === 'Admin'
-                                ? isDark ? 'bg-gray-700 text-white' : 'bg-gray-600 text-white'
-                                : (isDark ? 'bg-gray-800 text-green-200' : 'bg-white text-green-700')
+                                ? 'bg-blue-600 text-white border-blue-500'
+                                : 'bg-green-600 text-white border-green-500'
                         }`}>
                             {userDetail?.access?.replace('_', ' ') || 'User'}
                         </span>
-                        <p className="text-xs text-green-200 mt-2">ID: {userDetail?.id}</p>
+                        <p className="text-sm text-white mt-2 font-semibold">ID: {userDetail?.id}</p>
                     </div>
                 </div>
             </div>
@@ -631,49 +630,32 @@ export default function User_Details({ user, isEdit, refetchRow}) {
 
     const renderEditMode = () => (
         <div className="max-w-6xl mx-auto">
-            {/* Form Header */}
-            <div className={`text-white py-6 rounded-2xl shadow-lg mb-6 ${
-                isDark 
-                    ? 'bg-gradient-to-r from-green-700 via-green-800 to-emerald-800' 
-                    : 'bg-gradient-to-r from-green-600 via-green-700 to-emerald-700'
-            }`}>
-                <div className="flex items-center justify-between px-8">
-                    <div className="flex items-center gap-4">
-                        <i className="fa-solid fa-edit text-2xl"></i>
-                        <div>
-                            <h1 className={`text-2xl font-bold ${
-                                isDark ? 'text-white' : 'text-gray-900'
-                            }`}>Editing User Profile</h1>
-                            <p className="text-green-100">ID: {userDetail?.id} | @{userDetail?.username}</p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <button
-                            onClick={handleSave}
-                            disabled={updateUserDetails.isLoading}
-                            className={`px-6 py-2 font-semibold rounded-lg transition-colors duration-200 disabled:opacity-50 shadow-md ${isDark ? 'bg-gray-800 text-green-200 hover:bg-gray-700' : 'bg-white text-green-700 hover:bg-green-50'}`}
-                        >
-                            {updateUserDetails.isLoading ? (
-                                <>
-                                    <i className="fa-solid fa-spinner fa-spin mr-2"></i>
-                                    Saving...
-                                </>
-                            ) : (
-                                <>
-                                    <i className="fa-solid fa-save mr-2"></i>
-                                    Save Changes
-                                </>
-                            )}
-                        </button>
-                        <button
-                            onClick={handleCancel}
-                            className="px-6 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors duration-200 shadow-md"
-                        >
-                            <i className="fa-solid fa-times mr-2"></i>
-                            Cancel
-                        </button>
-                    </div>
-                </div>
+            {/* Buttons only in upper right */}
+            <div className="flex justify-end gap-3 mb-6">
+                <button
+                    onClick={handleSave}
+                    disabled={updateUserDetails.isLoading}
+                    className={`px-6 py-2 font-semibold text-base rounded-lg transition-colors duration-200 disabled:opacity-50 shadow-md border ${isDark ? 'bg-green-600 text-white hover:bg-green-700 border-green-500' : 'bg-green-600 text-white hover:bg-green-700 border-green-500'}`}
+                >
+                    {updateUserDetails.isLoading ? (
+                        <>
+                            <i className="fa-solid fa-spinner fa-spin mr-2"></i>
+                            Saving...
+                        </>
+                    ) : (
+                        <>
+                            <i className="fa-solid fa-save mr-2"></i>
+                            Save Changes
+                        </>
+                    )}
+                </button>
+                <button
+                    onClick={handleCancel}
+                    className="px-6 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors duration-200 shadow-md"
+                >
+                    <i className="fa-solid fa-times mr-2"></i>
+                    Cancel
+                </button>
             </div>
 
             {/* Form Content */}

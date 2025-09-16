@@ -31,6 +31,8 @@ export default function Distribution() {
     const [selectedStack, setSelectedStack] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [editingStack, setEditingStack] = useState(null);
+    const [showImagePreview, setShowImagePreview] = useState(false);
+    const [previewImage, setPreviewImage] = useState(null);
 
     // Items pagination states
     const [itemsCurrentPage, setItemsCurrentPage] = useState(1);
@@ -193,6 +195,12 @@ export default function Distribution() {
     const handleCloseEditModal = () => {
         setShowEditModal(false);
         setEditingStack(null);
+    };
+
+    // Handle preview image
+    const handlePreviewImage = (stack) => {
+        setPreviewImage(`/api/distribution/picture/${stack.id}?t=${imageUpdateTimestamp}`);
+        setShowImagePreview(true);
     };
 
     // Handle edit form submission
@@ -807,10 +815,10 @@ export default function Distribution() {
                             {/* Filters */}
                             <div className="flex flex-row gap-2 flex-1">
                                 <select
-                                    className={`border text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
+                                    className={`border-2 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
                                         isDark 
-                                            ? 'bg-gray-800 border-gray-600 text-white' 
-                                            : 'bg-gray-50 border-gray-200 text-gray-700'
+                                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
+                                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
                                     }`}
                                     value={searchFilter}
                                     onChange={(e) => setSearchFilter(e.target.value)}
@@ -821,10 +829,10 @@ export default function Distribution() {
                                     <option value="description">Description</option>
                                 </select>
                                 <select
-                                    className={`border text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
+                                    className={`border-2 text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
                                         isDark 
-                                            ? 'bg-gray-800 border-gray-600 text-white' 
-                                            : 'bg-gray-50 border-gray-200 text-gray-700'
+                                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
+                                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
                                     }`}
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
@@ -881,183 +889,228 @@ export default function Distribution() {
                         </div>
                     </div>
 
-                    {/* Items Grid */}
-                    <div className="w-full max-w-5xl mx-auto px-2 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                        {paginatedStacks.map((stack) => (
-                            <DistributionItemCard
-                                key={stack.id}
-                                stack={stack}
-                                onViewDetails={handleViewDetails}
-                                onEdit={handleEditStack}
-                                imageUpdateTimestamp={imageUpdateTimestamp}
-                                isDark={isDark}
-                            />
-                        ))}
-
-                        {filteredStacks.length === 0 && (
-                            <div className={`col-span-full text-center py-16 text-base font-medium ${
-                                isDark ? 'text-gray-400' : 'text-gray-400'
-                            }`}>
-                                No Distribution items found.
-                            </div>
-                        )}
+                    {/* TABLE LAYOUT - Clean and professional distribution management */}
+                    <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8">
+                        <div className={`rounded-t-xl shadow-lg border overflow-hidden ${
+                            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                        }`}>
+                            {paginatedStacks && paginatedStacks.length > 0 ? (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full">
+                                    <thead className={`${
+                                        isDark ? 'bg-gradient-to-r from-green-700 to-green-800' : 'bg-gradient-to-r from-green-600 to-green-700'
+                                    }`}>
+                                        <tr>
+                                            <th className="pl-6 pr-2 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12 rounded-tl-lg">Item</th>
+                                            <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Category</th>
+                                            <th className="pl-4 pr-4 py-4 text-center text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Quantity</th>
+                                            <th className="pl-4 pr-4 py-4 text-center text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Status</th>
+                                            <th className="px-4 py-4 text-center text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-4/12 rounded-tr-lg">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className={`divide-y ${
+                                        isDark ? 'divide-gray-700' : 'divide-gray-200'
+                                    }`}>
+                                        {paginatedStacks.map((stack, idx) => {
+                                            const globalIdx = (itemsCurrentPage - 1) * itemsPerPage + idx;
+                                            return (
+                                                <tr
+                                                    key={globalIdx}
+                                                    className={`transition-colors duration-150 ${
+                                                        isDark 
+                                                            ? 'hover:bg-gray-750' 
+                                                            : 'hover:bg-gray-50'
+                                                    }`}
+                                                >
+                                                    <td className="pl-6 pr-2 py-4 w-2/12">
+                                                        <div className="min-w-0">
+                                                            <div className={`text-sm font-semibold truncate ${
+                                                                isDark ? 'text-white' : 'text-gray-900'
+                                                            }`} title={stack.item?.name}>
+                                                                {stack.item?.name || 'N/A'}
+                                                            </div>
+                                                            <div className={`text-xs truncate mt-0.5 ${
+                                                                isDark ? 'text-gray-400' : 'text-gray-500'
+                                                            }`} title={stack.item?.description}>
+                                                                {stack.item?.description && stack.item.description.length > 30 
+                                                                    ? stack.item.description.slice(0, 30) + '...' 
+                                                                    : stack.item?.description || 'No description'
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="pl-4 pr-4 py-4 w-2/12">
+                                                        <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-default bg-green-100 text-green-800">
+                                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                                            </svg>
+                                                            {stack.item?.category?.replace('_', ' ') || 'N/A'}
+                                                        </span>
+                                                    </td>
+                                                    <td className="pl-4 pr-4 py-4 text-center w-2/12">
+                                                        <div className="flex items-center justify-center gap-1">
+                                                            <span className={`text-lg font-bold ${
+                                                                isDark ? 'text-green-400' : 'text-green-600'
+                                                            }`}>
+                                                                {stack.quantity || 0}
+                                                            </span>
+                                                            <span className={`text-xs ${
+                                                                isDark ? 'text-gray-400' : 'text-gray-500'
+                                                            }`}>
+                                                                units
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="pl-4 pr-4 py-4 text-center w-2/12">
+                                                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${
+                                                            stack.quantity > 0
+                                                                ? 'bg-green-100 text-green-800'
+                                                                : 'bg-red-100 text-red-800'
+                                                        }`}>
+                                                            {stack.quantity > 0 ? 'In Stock' : 'Out of Stock'}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-4 py-4 whitespace-nowrap text-center w-4/12">
+                                                        <div className="flex justify-center space-x-2">
+                                                            <button
+                                                                onClick={() => handleViewDetails(stack)}
+                                                                className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                                                                    isDark 
+                                                                        ? 'bg-green-600 hover:bg-green-500 text-green-100' 
+                                                                        : 'bg-green-200 hover:bg-green-300 text-green-800'
+                                                                }`}
+                                                                title="View details"
+                                                            >
+                                                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                                </svg>
+                                                                Details
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleEditStack(stack)}
+                                                                className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                                                                    isDark 
+                                                                        ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' 
+                                                                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                                                                }`}
+                                                                title="Edit item"
+                                                            >
+                                                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                                </svg>
+                                                                Edit
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                                </div>
+                            ) : (
+                                <div className={`text-center py-12 ${
+                                    isDark ? 'text-gray-400' : 'text-gray-500'
+                                }`}>
+                                    <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M9 12l3-3 3 3" />
+                                    </svg>
+                                    <h3 className="mt-2 text-sm font-medium">No distribution items found</h3>
+                                    <p className="mt-1 text-sm text-gray-400">Get started by adding a new distribution item.</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
-                    {/* Items Pagination Controls */}
-                    {filteredStacks.length > 0 && (
-                        <div className="w-full max-w-5xl mx-auto px-2 md:px-8 mt-8">
-                            <div className={`rounded-xl shadow-lg border px-6 py-4 ${
-                                isDark 
-                                    ? 'bg-gray-800 border-gray-600' 
-                                    : 'bg-white border-gray-200'
-                            }`}>
-                                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                                    <div className="flex items-center space-x-2">
-                                        <span className={`text-sm ${
-                                            isDark ? 'text-gray-300' : 'text-gray-600'
-                                        }`}>Show:</span>
+                    {/* Showing items info and rows per page selector */}
+                    {paginatedStacks && paginatedStacks.length > 0 && (
+                        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mt-4">
+                            <div className="flex justify-between items-center mb-2">
+                                <span className={`text-xs ${
+                                    isDark ? 'text-gray-400' : 'text-gray-500'
+                                }`}>
+                                    Showing {paginatedStacks.length} of {filteredStacks?.length || 0} items
+                                </span>
+                                
+                                <div className="flex items-center gap-2">
+                                    <span className={`text-xs ${
+                                        isDark ? 'text-gray-400' : 'text-gray-500'
+                                    }`}>
+                                        Rows per page:
+                                    </span>
+                                    <div className="relative">
                                         <select
+                                            className={`appearance-none border text-sm rounded-lg focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-3 pr-10 min-w-[70px] transition ${
+                                                isDark 
+                                                    ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                                    : 'bg-white border-gray-300 text-gray-700'
+                                            }`}
                                             value={itemsPerPage}
                                             onChange={(e) => {
                                                 setItemsPerPage(Number(e.target.value));
                                                 setItemsCurrentPage(1);
                                             }}
-                                            className={`text-sm border rounded-md px-2 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                                                isDark 
-                                                    ? 'bg-gray-700 border-gray-600 text-white' 
-                                                    : 'bg-white border-gray-300 text-gray-900'
-                                            }`}
+                                            aria-label="Rows per page"
                                         >
                                             <option value={6}>6</option>
+                                            <option value={10}>10</option>
                                             <option value={12}>12</option>
-                                            <option value={24}>24</option>
-                                            <option value={48}>48</option>
+                                            <option value={15}>15</option>
+                                            <option value={20}>20</option>
+                                            <option value={25}>25</option>
                                         </select>
-                                        <span className={`text-sm ${
-                                            isDark ? 'text-gray-300' : 'text-gray-600'
-                                        }`}>items per page</span>
-                                    </div>
-                                    
-                                    <div className="flex items-center space-x-2">
-                                        <span className={`text-sm ${
-                                            isDark ? 'text-gray-300' : 'text-gray-600'
-                                        }`}>
-                                            Showing <span className={`font-medium ${
-                                                isDark ? 'text-green-400' : 'text-green-700'
-                                            }`}>{itemsStartIndex + 1}</span> to{' '}
-                                            <span className={`font-medium ${
-                                                isDark ? 'text-green-400' : 'text-green-700'
-                                            }`}>{Math.min(itemsEndIndex, filteredStacks.length)}</span> of{' '}
-                                            <span className={`font-medium ${
-                                                isDark ? 'text-green-400' : 'text-green-700'
-                                            }`}>{filteredStacks.length}</span> items
-                                        </span>
+                                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     )}
 
-                    {/* Seminar-style Pagination Navigation */}
+                    {/* Pagination Controls - Professional layout matching Seminar */}
                     {totalItemsPages > 1 && (
-                        <div className="flex justify-center mt-8 mb-2">
-                            <nav className={`flex items-center gap-1 rounded-lg shadow px-2 py-1.5 ${
-                                isDark ? 'bg-gray-800' : 'bg-white'
-                            }`} aria-label="Items Pagination">
-                                <button
-                                    onClick={() => setItemsCurrentPage((p) => Math.max(1, p - 1))}
-                                    disabled={itemsCurrentPage === 1}
-                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition ${
-                                        itemsCurrentPage === 1 
-                                            ? 'opacity-50 cursor-not-allowed' 
-                                            : isDark 
-                                                ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
-                                                : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
-                                    }`}
-                                    aria-label="Previous"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path d="M15 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </button>
-                                {totalItemsPages > 6 ? (
-                                    <>
-                                        <button
-                                            onClick={() => setItemsCurrentPage(1)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
-                                                itemsCurrentPage === 1 
-                                                    ? 'bg-green-600 text-white' 
-                                                    : isDark 
-                                                        ? 'text-gray-300 hover:bg-gray-700' 
-                                                        : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
-                                        >1</button>
-                                        {itemsCurrentPage > 3 && <span className={`px-1 ${
-                                            isDark ? 'text-gray-500' : 'text-gray-300'
-                                        }`}>...</span>}
-                                        {Array.from({ length: 3 }, (_, i) => {
-                                            const page = Math.max(2, Math.min(itemsCurrentPage - 1 + i, totalItemsPages - 2));
-                                            if (page <= 1 || page >= totalItemsPages) return null;
-                                            return (
-                                                <button
-                                                    key={page}
-                                                    onClick={() => setItemsCurrentPage(page)}
-                                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
-                                                        itemsCurrentPage === page 
-                                                            ? 'bg-green-600 text-white' 
-                                                            : isDark 
-                                                                ? 'text-gray-300 hover:bg-gray-700' 
-                                                                : 'text-gray-700 hover:bg-gray-100'
-                                                    }`}
-                                                >{page}</button>
-                                            );
-                                        })}
-                                        {itemsCurrentPage < totalItemsPages - 2 && <span className={`px-1 ${
-                                            isDark ? 'text-gray-500' : 'text-gray-300'
-                                        }`}>...</span>}
-                                        <button
-                                            onClick={() => setItemsCurrentPage(totalItemsPages)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
-                                                itemsCurrentPage === totalItemsPages 
-                                                    ? 'bg-green-600 text-white' 
-                                                    : isDark 
-                                                        ? 'text-gray-300 hover:bg-gray-700' 
-                                                        : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
-                                        >{totalItemsPages}</button>
-                                    </>
-                                ) : (
-                                    Array.from({ length: totalItemsPages }, (_, i) => (
-                                        <button
-                                            key={i + 1}
-                                            onClick={() => setItemsCurrentPage(i + 1)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
-                                                itemsCurrentPage === i + 1 
-                                                    ? 'bg-green-600 text-white' 
-                                                    : isDark 
-                                                        ? 'text-gray-300 hover:bg-gray-700' 
-                                                        : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
-                                        >{i + 1}</button>
-                                    ))
-                                )}
-                                <button
-                                    onClick={() => setItemsCurrentPage((p) => Math.min(totalItemsPages, p + 1))}
-                                    disabled={itemsCurrentPage === totalItemsPages}
-                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition ${
-                                        itemsCurrentPage === totalItemsPages 
-                                            ? 'opacity-50 cursor-not-allowed' 
-                                            : isDark 
-                                                ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
-                                                : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
-                                    }`}
-                                    aria-label="Next"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </button>
-                            </nav>
+                        <div className="flex justify-center items-center gap-4 py-8">
+                            <button
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    isDark 
+                                        ? 'border-green-600 bg-gray-800 text-green-400 hover:bg-gray-700 hover:border-green-500' 
+                                        : 'border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400'
+                                }`}
+                                onClick={() => setItemsCurrentPage(prev => Math.max(1, prev - 1))}
+                                disabled={itemsCurrentPage === 1}
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                </svg>
+                                Previous
+                            </button>
+                            
+                            <div className={`px-4 py-2 font-semibold rounded-lg border ${
+                                isDark 
+                                    ? 'bg-gray-700 text-green-400 border-gray-600' 
+                                    : 'bg-green-100 text-green-800 border-green-200'
+                            }`}>
+                                Page {itemsCurrentPage} of {totalItemsPages}
+                            </div>
+                            
+                            <button
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    isDark 
+                                        ? 'border-green-600 bg-gray-800 text-green-400 hover:bg-gray-700 hover:border-green-500' 
+                                        : 'border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400'
+                                }`}
+                                onClick={() => setItemsCurrentPage(prev => Math.min(totalItemsPages, prev + 1))}
+                                disabled={itemsCurrentPage === totalItemsPages}
+                            >
+                                Next
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
                         </div>
                     )}
                 </>
@@ -1428,27 +1481,29 @@ function InternalRequestsTable({
             {/* Desktop table layout */}
             <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+                    <thead className={`${
+                        isDark ? 'bg-gradient-to-r from-green-700 to-green-800' : 'bg-gradient-to-r from-green-600 to-green-700'
+                    }`}>
                         <tr>
-                            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                                 Item Details
                             </th>
-                            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                                 Requestor
                             </th>
-                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">
                                 Quantity
                             </th>
-                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">
                                 Stock
                             </th>
-                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">
                                 Pickup Date
                             </th>
-                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">
                                 Status
                             </th>
-                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
@@ -1863,39 +1918,7 @@ function DistributionDetailModal({
                     <div className="flex flex-wrap gap-3 mb-6">
                         {/* CATEGORY */}
                         <span
-                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default
-                                ${
-                                    stack.item?.category === 'Farming_Equipment'
-                                        ? 'bg-green-100 text-green-800'
-                                        : stack.item?.category ===
-                                          'Harvesting_Tools'
-                                        ? 'bg-pink-100 text-pink-800'
-                                        : stack.item?.category ===
-                                          'Irrigation_Systems'
-                                        ? 'bg-purple-100 text-purple-800'
-                                        : stack.item?.category ===
-                                          'Storage_Equipment'
-                                        ? 'bg-yellow-100 text-yellow-800'
-                                        : stack.item?.category ===
-                                          'Processing_Equipment'
-                                        ? 'bg-green-100 text-green-800'
-                                        : stack.item?.category === 'Safety_Gear'
-                                        ? 'bg-red-100 text-red-800'
-                                        : stack.item?.category ===
-                                          'Pest_Control'
-                                        ? 'bg-indigo-100 text-indigo-800'
-                                        : stack.item?.category ===
-                                          'Livestock_Equipment'
-                                        ? 'bg-orange-100 text-orange-800'
-                                        : stack.item?.category ===
-                                          'Measuring_Tools'
-                                        ? 'bg-teal-100 text-teal-800'
-                                        : stack.item?.category === 'Fisheries'
-                                        ? 'bg-lime-100 text-lime-800'
-                                        : stack.item?.category === 'Machinery'
-                                        ? 'bg-cyan-100 text-cyan-800'
-                                        : 'bg-gray-100 text-gray-800'
-                                }`}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold cursor-default bg-green-100 text-green-800"
                             title="Category"
                         >
                             <svg
@@ -2043,6 +2066,7 @@ function DistributionEditModal({
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [currentImageUrl, setCurrentImageUrl] = useState(null);
+    const [showImagePreview, setShowImagePreview] = useState(false);
 
     const categories = [
         'Farming Equipment',
@@ -2348,6 +2372,34 @@ function DistributionEditModal({
                                         ? 'Change Image'
                                         : 'Add Image'}
                                 </label>
+                                {(currentImageUrl || imagePreview) && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowImagePreview(true)}
+                                        className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium shadow-sm"
+                                    >
+                                        <svg
+                                            className="w-4 h-4 mr-2"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                            />
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                            />
+                                        </svg>
+                                        Preview
+                                    </button>
+                                )}
                                 {selectedImage && (
                                     <button
                                         type="button"
@@ -2386,6 +2438,30 @@ function DistributionEditModal({
                     </div>
                 </form>
             </div>
+
+            {/* Image Preview Modal */}
+            {showImagePreview && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 px-4">
+                    <div className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden">
+                        <button
+                            onClick={() => setShowImagePreview(false)}
+                            className="absolute top-4 right-4 z-10 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors duration-200"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <img
+                            src={imagePreview || currentImageUrl}
+                            alt="Item preview"
+                            className="max-w-full max-h-[90vh] object-contain"
+                            onError={(e) => {
+                                e.target.src = '/api/default_picture.png';
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -793,10 +793,10 @@ export default function EIC() {
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full">
                             <div className="flex flex-row gap-2 flex-1">
                                 <select
-                                    className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
+                                    className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto border-2 ${
                                         isDark 
-                                            ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                            : 'bg-gray-50 border-gray-200 text-gray-700'
+                                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
+                                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
                                     }`}
                                     value={searchFilter}
                                     onChange={(e) => setSearchFilter(e.target.value)}
@@ -807,10 +807,10 @@ export default function EIC() {
                                     <option value="description">Description</option>
                                 </select>
                                 <select
-                                    className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto ${
+                                    className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto border-2 ${
                                         isDark 
-                                            ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                            : 'bg-gray-50 border-gray-200 text-gray-700'
+                                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
+                                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
                                     }`}
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
@@ -866,156 +866,134 @@ export default function EIC() {
                         </div>
                     </div>
 
-                    {/* Items Grid */}
-                    <div className="w-full max-w-5xl mx-auto px-2 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                        {paginatedStacks.map((stack) => (
-                            <EICItemCard
-                                key={stack.id}
-                                stack={stack}
-                                onViewDetails={handleViewDetails}
-                                onEdit={handleEditStack}
-                                imageUpdateTimestamp={imageUpdateTimestamp}
-                            />
-                        ))}
-
-                        {filteredStacks.length === 0 && (
-                            <div className={`col-span-full text-center py-16 text-base font-medium ${
-                                isDark ? 'text-gray-400' : 'text-gray-400'
+                    {/* Items Table */}
+                    <div className="w-full max-w-7xl mx-auto px-2 md:px-8">
+                        <div className={`rounded-t-xl shadow-lg border overflow-hidden ${
+                            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                        }`}>
+                            {/* Table Header */}
+                            <div className={`px-6 py-4 border-b ${
+                                isDark ? 'bg-green-800 border-green-700' : 'bg-green-600 border-green-700'
                             }`}>
-                                No EIC items found.
+                                <div className="grid grid-cols-12 gap-4 items-center font-semibold text-sm uppercase">
+                                    <div className={`col-span-3 ${isDark ? 'text-green-100' : 'text-white'}`}>Item Name</div>
+                                    <div className={`col-span-2 ${isDark ? 'text-green-100' : 'text-white'}`}>Category</div>
+                                    <div className={`col-span-2 ${isDark ? 'text-green-100' : 'text-white'}`}>Quantity</div>
+                                    <div className={`col-span-2 ${isDark ? 'text-green-100' : 'text-white'}`}>Date Added</div>
+                                    <div className={`col-span-3 text-right ${isDark ? 'text-green-100' : 'text-white'}`}>Actions</div>
+                                </div>
                             </div>
-                        )}
+
+                            {/* Table Body */}
+                            <div className="divide-y divide-gray-200">
+                                {paginatedStacks.map((stack) => (
+                                    <EICItemRow
+                                        key={stack.id}
+                                        stack={stack}
+                                        onViewDetails={handleViewDetails}
+                                        onEdit={handleEditStack}
+                                        imageUpdateTimestamp={imageUpdateTimestamp}
+                                        isDark={isDark}
+                                    />
+                                ))}
+
+                                {filteredStacks.length === 0 && (
+                                    <div className={`col-span-full text-center py-16 text-base font-medium ${
+                                        isDark ? 'text-gray-400' : 'text-gray-400'
+                                    }`}>
+                                        No EIC items found.
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Items Pagination Controls */}
-                    {filteredStacks.length > 0 && (
-                        <div className="w-full max-w-5xl mx-auto px-2 md:px-8 mt-8">
-                            <div className={`rounded-xl shadow-lg border px-6 py-4 ${
-                                isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-                            }`}>
-                                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                                    <div className="flex items-center space-x-2">
-                                        <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Show:</span>
+                    {/* Showing items info and rows per page selector */}
+                    {paginatedStacks && paginatedStacks.length > 0 && (
+                        <div className="w-full max-w-7xl mx-auto px-2 md:px-8 mt-4">
+                            <div className="flex justify-between items-center mb-2">
+                                <span className={`text-xs ${
+                                    isDark ? 'text-gray-400' : 'text-gray-500'
+                                }`}>
+                                    Showing {paginatedStacks.length} of {filteredStacks?.length || 0} items
+                                </span>
+                                
+                                <div className="flex items-center gap-2">
+                                    <span className={`text-xs ${
+                                        isDark ? 'text-gray-400' : 'text-gray-500'
+                                    }`}>
+                                        Rows per page:
+                                    </span>
+                                    <div className="relative">
                                         <select
+                                            className={`appearance-none border-2 text-sm rounded-lg focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-3 pr-10 min-w-[70px] transition ${
+                                                isDark 
+                                                    ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
+                                                    : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
+                                            }`}
                                             value={itemsPerPage}
                                             onChange={(e) => {
                                                 setItemsPerPage(Number(e.target.value));
-                                                setItemsCurrentPage(1);
+                                                setItemsCurrentPage(1); // Reset to first page when changing items per page
                                             }}
-                                            className={`text-sm border rounded-md px-2 py-1 focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                                                isDark 
-                                                    ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                                    : 'bg-white border-gray-300 text-gray-900'
-                                            }`}
+                                            aria-label="Rows per page"
                                         >
                                             <option value={6}>6</option>
                                             <option value={12}>12</option>
                                             <option value={24}>24</option>
                                             <option value={48}>48</option>
                                         </select>
-                                        <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>items per page</span>
-                                    </div>
-                                    
-                                    <div className="flex items-center space-x-2">
-                                        <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                                            Showing <span className={`font-medium ${isDark ? 'text-green-400' : 'text-green-700'}`}>{itemsStartIndex + 1}</span> to{' '}
-                                            <span className={`font-medium ${isDark ? 'text-green-400' : 'text-green-700'}`}>{Math.min(itemsEndIndex, filteredStacks.length)}</span> of{' '}
-                                            <span className={`font-medium ${isDark ? 'text-green-400' : 'text-green-700'}`}>{filteredStacks.length}</span> items
-                                        </span>
+                                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     )}
 
-                    {/* Seminar-style Pagination Navigation */}
+                    {/* Pagination Controls - Professional layout matching Seminar */}
                     {totalItemsPages > 1 && (
-                        <div className="flex justify-center mt-8 mb-2">
-                            <nav className={`flex items-center gap-1 rounded-lg shadow px-2 py-1.5 ${
-                                isDark ? 'bg-gray-800' : 'bg-white'
-                            }`} aria-label="Items Pagination">
-                                <button
-                                    onClick={() => setItemsCurrentPage((p) => Math.max(1, p - 1))}
-                                    disabled={itemsCurrentPage === 1}
-                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition ${
-                                        isDark 
-                                            ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
-                                            : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
-                                    } ${itemsCurrentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    aria-label="Previous"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path d="M15 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </button>
-                                {totalItemsPages > 6 ? (
-                                    <>
-                                        <button
-                                            onClick={() => setItemsCurrentPage(1)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
-                                                itemsCurrentPage === 1 ? 'bg-green-600 text-white' : 
-                                                isDark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
-                                        >1</button>
-                                        {itemsCurrentPage > 3 && <span className={`px-1 ${isDark ? 'text-gray-500' : 'text-gray-300'}`}>...</span>}
-                                        {(() => {
-                                            const pages = [];
-                                            const start = Math.max(2, itemsCurrentPage - 1);
-                                            const end = Math.min(totalItemsPages - 1, itemsCurrentPage + 1);
-                                            
-                                            for (let page = start; page <= end; page++) {
-                                                if (page > 1 && page < totalItemsPages && !pages.includes(page)) {
-                                                    pages.push(page);
-                                                }
-                                            }
-                                            
-                                            return pages.map(page => (
-                                                <button
-                                                    key={page}
-                                                    onClick={() => setItemsCurrentPage(page)}
-                                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
-                                                        itemsCurrentPage === page ? 'bg-green-600 text-white' : 
-                                                        isDark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'
-                                                    }`}
-                                                >{page}</button>
-                                            ));
-                                        })()}
-                                        {itemsCurrentPage < totalItemsPages - 2 && <span className={`px-1 ${isDark ? 'text-gray-500' : 'text-gray-300'}`}>...</span>}
-                                        <button
-                                            onClick={() => setItemsCurrentPage(totalItemsPages)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
-                                                itemsCurrentPage === totalItemsPages ? 'bg-green-600 text-white' : 
-                                                isDark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
-                                        >{totalItemsPages}</button>
-                                    </>
-                                ) : (
-                                    Array.from({ length: totalItemsPages }, (_, i) => (
-                                        <button
-                                            key={i + 1}
-                                            onClick={() => setItemsCurrentPage(i + 1)}
-                                            className={`w-7 h-7 flex items-center justify-center rounded-full transition font-semibold ${
-                                                itemsCurrentPage === i + 1 ? 'bg-green-600 text-white' : 
-                                                isDark ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'
-                                            }`}
-                                        >{i + 1}</button>
-                                    ))
-                                )}
-                                <button
-                                    onClick={() => setItemsCurrentPage((p) => Math.min(totalItemsPages, p + 1))}
-                                    disabled={itemsCurrentPage === totalItemsPages}
-                                    className={`w-7 h-7 flex items-center justify-center rounded-full transition ${
-                                        isDark 
-                                            ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
-                                            : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'
-                                    } ${itemsCurrentPage === totalItemsPages ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    aria-label="Next"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </button>
-                            </nav>
+                        <div className="flex justify-center items-center gap-4 py-8">
+                            <button
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    isDark 
+                                        ? 'border-green-600 bg-gray-800 text-green-400 hover:bg-gray-700 hover:border-green-500' 
+                                        : 'border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400'
+                                }`}
+                                onClick={() => setItemsCurrentPage(prev => Math.max(1, prev - 1))}
+                                disabled={itemsCurrentPage === 1}
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                </svg>
+                                Previous
+                            </button>
+                            
+                            <div className={`px-4 py-2 font-semibold rounded-lg border ${
+                                isDark 
+                                    ? 'bg-gray-700 text-green-400 border-gray-600' 
+                                    : 'bg-green-100 text-green-800 border-green-200'
+                            }`}>
+                                Page {itemsCurrentPage} of {totalItemsPages}
+                            </div>
+                            
+                            <button
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    isDark 
+                                        ? 'border-green-600 bg-gray-800 text-green-400 hover:bg-gray-700 hover:border-green-500' 
+                                        : 'border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400'
+                                }`}
+                                onClick={() => setItemsCurrentPage(prev => Math.min(totalItemsPages, prev + 1))}
+                                disabled={itemsCurrentPage === totalItemsPages}
+                            >
+                                Next
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
                         </div>
                     )}
                 </>
@@ -1735,8 +1713,9 @@ function RequestsTable({
 // EIC ITEM CARD COMPONENT
 // =================================================================
 
-function EICItemCard({ stack, onViewDetails, onEdit, imageUpdateTimestamp }) {
-    const { isDark } = useTheme();
+function EICItemRow({ stack, onViewDetails, onEdit, imageUpdateTimestamp, isDark }) {
+    const [showDescription, setShowDescription] = useState(false);
+    
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -1746,94 +1725,128 @@ function EICItemCard({ stack, onViewDetails, onEdit, imageUpdateTimestamp }) {
     };
 
     const truncatedDescription =
-        stack.item?.description && stack.item.description.length > 100
-            ? stack.item.description.slice(0, 100) + '...'
+        stack.item?.description && stack.item.description.length > 50
+            ? stack.item.description.slice(0, 50) + '...'
             : stack.item?.description;
 
     return (
-        <div className={`relative flex flex-col border rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden group ${
-            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-        }`}>
-            <div className="relative">
-                <img
-                    src={
-                        stack.item?.id
-                            ? `/api/eic/photo/${stack.item.id}?t=${imageUpdateTimestamp}`
-                            : default_image
-                    }
-                    alt={stack.item?.name || 'EIC Item'}
-                    className="w-full h-40 sm:h-48 object-cover transition-all duration-300 group-hover:scale-105"
-                    onError={(e) => {
-                        e.target.src = default_image;
-                    }}
-                />
-                <span className="absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm bg-orange-50 text-orange-700 border border-orange-100">
-                    EIC
-                </span>
-            </div>
-            <div className="flex-1 flex flex-col p-5">
-                <h3 className={`text-lg font-semibold mb-1 truncate ${
-                    isDark ? 'text-white' : 'text-gray-800'
-                }`}>
-                    {stack.item?.name || 'Unknown Item'}
-                </h3>
-                <p className={`text-sm mb-2 flex-1 cursor-default line-clamp-3 ${
-                    isDark ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                    {truncatedDescription || 'No description available'}
-                </p>
-                <div className={`flex flex-wrap gap-x-3 gap-y-1 text-xs mb-3 ${
-                    isDark ? 'text-gray-400' : 'text-gray-500'
-                }`}>
-                    <span>
-                        <span className={`font-medium ${
-                            isDark ? 'text-gray-300' : 'text-gray-700'
-                        }`}>
-                            Quantity:
-                        </span>{' '}
-                        {stack.quantity}
-                    </span>
-                    <span>
-                        <span className={`font-medium ${
-                            isDark ? 'text-gray-300' : 'text-gray-700'
-                        }`}>
-                            Category:
-                        </span>{' '}
-                        {stack.item?.category?.replace('_', ' ') || 'N/A'}
-                    </span>
-                    <span>
-                        <span className={`font-medium ${
-                            isDark ? 'text-gray-300' : 'text-gray-700'
-                        }`}>
-                            Date Added:
-                        </span>{' '}
-                        {formatDate(stack.createdAt)}
-                    </span>
-                </div>
-                <div className="flex flex-col gap-2 mt-auto md:flex-row">
-                    <button
-                        onClick={() => onViewDetails(stack)}
-                        className={`w-full md:w-auto cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm ${
+        <>
+            <div className={`px-6 py-4 hover:bg-gray-50 transition-colors ${
+                isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
+            }`}>
+                <div className="grid grid-cols-12 gap-4 items-center">
+                    {/* Item Name - Col 3 */}
+                    <div className="col-span-3">
+                        <div className="min-w-0">
+                            <h3 className={`font-semibold text-sm truncate ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>
+                                {stack.item?.name || 'Unknown Item'}
+                            </h3>
+                            <p className={`text-xs truncate ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`}>
+                                {truncatedDescription || 'No description'}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Category - Col 2 */}
+                    <div className="col-span-2">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             isDark 
-                                ? 'bg-gray-700 hover:bg-gray-600 text-white' 
-                                : 'bg-gray-800 hover:bg-gray-700 text-white'
-                        }`}
-                    >
-                        View Details
-                    </button>
-                    <button
-                        onClick={() => onEdit(stack)}
-                        className={`w-full md:w-auto text-white cursor-pointer px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm ${
-                            isDark 
-                                ? 'bg-green-600 hover:bg-green-700' 
-                                : 'bg-green-500 hover:bg-green-600'
-                        }`}
-                    >
-                        Edit
-                    </button>
+                                ? 'bg-green-900/30 text-green-300' 
+                                : 'bg-green-100 text-green-800'
+                        }`}>
+                            {stack.item?.category?.replace('_', ' ') || 'N/A'}
+                        </span>
+                    </div>
+
+                    {/* Quantity - Col 2 */}
+                    <div className="col-span-2">
+                        <div className="flex items-center gap-1">
+                            <span className={`font-medium ${
+                                isDark ? 'text-gray-200' : 'text-gray-900'
+                            }`}>
+                                {stack.quantity}
+                            </span>
+                            <span className={`text-xs ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`}>
+                                units
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Date Added - Col 2 */}
+                    <div className="col-span-2">
+                        <span className={`text-sm ${
+                            isDark ? 'text-gray-300' : 'text-gray-600'
+                        }`}>
+                            {formatDate(stack.createdAt)}
+                        </span>
+                    </div>
+
+                    {/* Actions - Col 3 */}
+                    <div className="col-span-3 flex justify-end space-x-2">
+                        <button
+                            onClick={() => setShowDescription(!showDescription)}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                                isDark 
+                                    ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' 
+                                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                            }`}
+                        >
+                            Details
+                        </button>
+                        <button
+                            onClick={() => onViewDetails(stack)}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                                isDark 
+                                    ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                            }`}
+                        >
+                            View
+                        </button>
+                        <button
+                            onClick={() => onEdit(stack)}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                                isDark 
+                                    ? 'bg-green-600 hover:bg-green-700 text-white' 
+                                    : 'bg-green-600 hover:bg-green-700 text-white'
+                            }`}
+                        >
+                            Edit
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            {/* Expandable Description Row */}
+            {showDescription && (
+                <div className={`px-6 py-4 border-t ${
+                    isDark 
+                        ? 'bg-gray-800 border-gray-600' 
+                        : 'bg-gray-50 border-gray-200'
+                }`}>
+                    <div className="grid grid-cols-12 gap-4">
+                        <div className="col-span-12">
+                            <h4 className={`font-medium text-sm mb-2 ${
+                                isDark ? 'text-gray-200' : 'text-gray-800'
+                            }`}>
+                                Description:
+                            </h4>
+                            <p className={`text-sm ${
+                                isDark ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
+                                {stack.item?.description || 'No description available'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
 
@@ -2177,6 +2190,7 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [currentImageUrl, setCurrentImageUrl] = useState(null);
+    const [showImagePreview, setShowImagePreview] = useState(false);
 
     const categories = [
         'Farming Equipment',
@@ -2520,6 +2534,38 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                                     ? 'Change Image'
                                     : 'Add Image'}
                             </label>
+                            {(currentImageUrl || imagePreview) && (
+                                <button
+                                    type="button"
+                                    onClick={() => setShowImagePreview(true)}
+                                    className={`flex items-center px-3 py-2 rounded transition text-sm ${
+                                        isDark 
+                                            ? 'bg-blue-800 text-blue-200 hover:bg-blue-700' 
+                                            : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                                    }`}
+                                >
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                        />
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                        />
+                                    </svg>
+                                    Preview
+                                </button>
+                            )}
                             {selectedImage && (
                                 <button
                                     type="button"
@@ -2567,6 +2613,29 @@ function EICEditModal({ stack, onClose, onSubmit, imageUpdateTimestamp }) {
                     </div>
                 </form>
             </div>
+
+            {/* Image Preview Modal */}
+            {showImagePreview && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[60] p-4">
+                    <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
+                        <button
+                            onClick={() => setShowImagePreview(false)}
+                            className="absolute top-4 right-4 z-10 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
+                            aria-label="Close preview"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <img
+                            src={imagePreview || currentImageUrl}
+                            alt="Preview"
+                            className="max-w-full max-h-full object-contain rounded-lg"
+                            onClick={() => setShowImagePreview(false)}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

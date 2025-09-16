@@ -310,9 +310,9 @@ export default function Seminar() {
 
     return (
         <div className={`min-h-screen pt-30 pb-8 px-2 md:px-6 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-            <div className="w-full max-w-5xl mx-auto">
+            <div className="w-full max-w-[1400px] mx-auto">
                 {/* Header - Centered and Professional */}
-                <div className="relative mb-8 flex flex-col items-center justify-center max-w-5xl mx-auto gap-2 text-center">
+                <div className="relative mb-8 flex flex-col items-center justify-center max-w-[1400px] mx-auto gap-2 text-center">
                   <span className="inline-flex items-center justify-center gap-3 w-full">
                     <span className={`rounded-full p-2 ${isDark ? 'bg-green-900' : 'bg-green-100'}`}>
                       <svg className="w-9 h-9" style={{ color: '#059669' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -325,87 +325,76 @@ export default function Seminar() {
                 </div>
 
                 {/* Divider between title and search/filters */}
-                <hr className={`border-t my-6 w-full max-w-5xl mx-auto ${isDark ? 'border-gray-600' : 'border-gray-300'}`} />
+                <hr className={`border-t my-6 w-full max-w-[1400px] mx-auto ${isDark ? 'border-gray-600' : 'border-gray-300'}`} />
 
-                {/* Modern Search, Filters, and Actions - Responsive, no box */}
+                {/* Modern Search, Filters, and Actions - EIC Style */}
                 <div className="relative mt-0 mb-8 w-full max-w-5xl mx-auto px-2 md:px-6">
                   <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 flex-wrap items-stretch w-full">
-                    {/* Search bar */}
-                    <div className="relative flex-1 min-w-0 w-full sm:w-1/2">
+                    {/* Search bar - Made longer */}
+                    <div className="relative flex-1 min-w-0 w-full sm:w-2/3">
                       <input
                         type="search"
                         placeholder="Search seminars, speakers, locations..."
-                        className={`block w-full py-2.5 pl-10 pr-3 text-sm border rounded-xl focus:ring-1 focus:ring-green-400 focus:border-green-400 transition ${
+                        className={`block w-full pl-10 pr-3 py-2 text-base border rounded-xl focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all placeholder-gray-400 ${
                             isDark 
-                                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                                ? 'bg-gray-700 border-gray-600 text-white' 
+                                : 'bg-gray-50 border-gray-200 text-gray-900'
                         }`}
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         aria-label="Search seminars"
                       />
-                      <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                        <svg className="w-5 h-5" style={{ color: '#059669' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </div>
                     </div>
-                    {/* Filters and Controls */}
-                    <div className="flex flex-row gap-2 w-full sm:w-1/2">
-                      <div className="relative flex-1 min-w-0">
-                        <select
-                          className={`appearance-none border text-base rounded-xl focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-4 pr-10 w-full transition ${
-                            isDark 
-                              ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                              : 'bg-white border-gray-300 text-gray-700'
-                          }`}
-                          value={searchFilter}
-                          onChange={(e) => setSearchFilter(e.target.value)}
-                          aria-label="Filter by"
-                        >
-                          <option value="title">Title</option>
-                          <option value="speaker">Speaker</option>
-                          <option value="location">Location</option>
-                        </select>
-                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="relative flex-1 min-w-0">
-                        <select
-                          className={`appearance-none border text-base rounded-xl focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-4 pr-10 w-full transition ${
-                            isDark 
-                              ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                              : 'bg-white border-gray-300 text-gray-700'
-                          }`}
-                          value={statusFilter}
-                          onChange={(e) => setStatusFilter(e.target.value)}
-                          aria-label="Status filter"
-                        >
-                          <option value="all">All Statuses</option>
-                          <option value="Upcoming">Upcoming</option>
-                          <option value="Ongoing">Ongoing</option>
-                          <option value="Completed">Completed</option>
-                          <option value="Cancelled">Cancelled</option>
-                        </select>
-                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </div>
-                      </div>
+                    {/* Filters and Controls - Made narrower */}
+                    <div className="flex flex-row gap-2 w-full sm:w-1/3">
+                      <select
+                        className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto border-2 ${
+                          isDark 
+                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
+                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
+                        }`}
+                        value={searchFilter}
+                        onChange={(e) => setSearchFilter(e.target.value)}
+                        aria-label="Filter by"
+                      >
+                        <option value="title">Title</option>
+                        <option value="speaker">Speaker</option>
+                        <option value="location">Location</option>
+                      </select>
+                      <select
+                        className={`text-sm rounded-xl focus:ring-green-400 focus:border-green-400 py-2 px-3 transition-all min-w-[120px] w-full sm:w-auto border-2 ${
+                          isDark 
+                            ? 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400' 
+                            : 'bg-gray-50 border-gray-300 text-gray-700 hover:border-gray-400'
+                        }`}
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        aria-label="Status filter"
+                      >
+                        <option value="all">All Statuses</option>
+                        <option value="Upcoming">Upcoming</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
                     </div>
                     {/* Action buttons: Only Add remains */}
                     <div className="flex flex-row gap-2 w-full sm:w-auto items-center">
                       <button
-                        className="flex items-center gap-1 px-4 py-2.5 rounded-xl text-sm font-semibold bg-green-500 hover:bg-green-600 text-white transition shadow-sm w-full sm:w-auto"
+                        className="w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-green-600 hover:bg-green-700 text-white transition-all focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm"
                         onClick={() => setShowAdd(true)}
                         aria-label="Add seminar"
+                        style={{ minWidth: '120px' }}
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                        Add
+                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Add Seminar
                       </button>
                     </div>
                   </div>
@@ -434,22 +423,22 @@ export default function Seminar() {
                 )}
 
                 {/* TABLE LAYOUT - Clean and professional seminar management */}
-                <div className={`w-full max-w-7xl mx-auto rounded-lg border ${
-                    isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-                }`}>
-                    {paginatedPrograms && paginatedPrograms.length > 0 ? (
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
+                <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8">
+                    <div className={`rounded-t-xl shadow-lg border overflow-hidden ${
+                        isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    }`}>
+                        {paginatedPrograms && paginatedPrograms.length > 0 ? (
+                            <div className="overflow-x-auto">
+                                <table className="w-full">
                                 <thead className={`${
                                     isDark ? 'bg-gradient-to-r from-green-700 to-green-800' : 'bg-gradient-to-r from-green-600 to-green-700'
                                 }`}>
                                     <tr>
-                                        <th className="px-4 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap min-w-[150px] rounded-tl-lg">Title</th>
-                                        <th className="px-4 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap min-w-[120px]">Speaker</th>
-                                        <th className="px-4 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap min-w-[120px]">Location</th>
-                                        <th className="px-4 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap min-w-[100px]">Status</th>
-                                        <th className="px-4 py-4 text-left font-bold text-white uppercase tracking-wider whitespace-nowrap min-w-[200px]">Description</th>
-                                        <th className="px-4 py-4 text-center font-bold text-white uppercase tracking-wider whitespace-nowrap min-w-[140px] rounded-tr-lg">Actions</th>
+                                        <th className="pl-6 pr-2 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12 rounded-tl-lg">Title</th>
+                                        <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Speaker</th>
+                                        <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Location</th>
+                                        <th className="pl-4 pr-4 py-4 text-left text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-2/12">Status</th>
+                                        <th className="px-4 py-4 text-center text-base font-semibold text-white uppercase tracking-wider whitespace-nowrap w-4/12 rounded-tr-lg">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className={`divide-y ${
@@ -466,28 +455,38 @@ export default function Seminar() {
                                                         : 'hover:bg-gray-50'
                                                 }`}
                                             >
-                                                <td className="px-4 py-4">
-                                                    <div className={`text-sm font-semibold truncate max-w-[140px] ${
-                                                        isDark ? 'text-white' : 'text-gray-900'
-                                                    }`} title={item.title}>
-                                                        {item.title}
+                                                <td className="pl-6 pr-2 py-4 w-2/12">
+                                                    <div className="min-w-0">
+                                                        <div className={`text-sm font-semibold truncate ${
+                                                            isDark ? 'text-white' : 'text-gray-900'
+                                                        }`} title={item.title}>
+                                                            {item.title}
+                                                        </div>
+                                                        <div className={`text-xs truncate mt-0.5 ${
+                                                            isDark ? 'text-gray-400' : 'text-gray-500'
+                                                        }`} title={item.description}>
+                                                            {item.description && item.description.length > 30 
+                                                                ? item.description.slice(0, 30) + '...' 
+                                                                : item.description || 'No description'
+                                                            }
+                                                        </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-4">
-                                                    <div className={`text-sm truncate max-w-[110px] ${
+                                                <td className="pl-4 pr-4 py-4 w-2/12">
+                                                    <div className={`text-sm truncate ${
                                                         isDark ? 'text-gray-300' : 'text-gray-700'
                                                     }`} title={item.speaker}>
                                                         {item.speaker}
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-4">
-                                                    <div className={`text-sm truncate max-w-[110px] ${
+                                                <td className="pl-4 pr-4 py-4 w-2/12">
+                                                    <div className={`text-sm truncate ${
                                                         isDark ? 'text-gray-300' : 'text-gray-700'
                                                     }`} title={item.location}>
                                                         {item.location}
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-4 whitespace-nowrap">
+                                                <td className="pl-4 pr-4 py-4 whitespace-nowrap w-2/12">
                                                     <span
                                                         className={`inline-flex px-2 py-1 text-xs font-medium rounded-md ${
                                                             item.status === 'Ongoing'
@@ -502,36 +501,25 @@ export default function Seminar() {
                                                         {item.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-4">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className={`text-sm truncate flex-1 ${
-                                                            isDark ? 'text-gray-400' : 'text-gray-600'
-                                                        }`} title={item.description}>
-                                                            {item.description && item.description.length > 40 
-                                                                ? item.description.slice(0, 40) + '...' 
-                                                                : item.description || 'No description'
-                                                            }
-                                                        </span>
-                                                        {item.description && item.description.length > 40 && (
-                                                            <button
-                                                                onClick={() => {
-                                                                    setSelectedDescription({ title: item.title, description: item.description, seminar: item });
-                                                                    setShowDescriptionModal(true);
-                                                                }}
-                                                                className={`text-xs px-2 py-1 rounded-md transition-colors whitespace-nowrap ${
-                                                                    isDark 
-                                                                        ? 'bg-green-800 hover:bg-green-700 text-green-200' 
-                                                                        : 'bg-green-100 hover:bg-green-200 text-green-700'
-                                                                }`}
-                                                                title="View full description"
-                                                            >
-                                                                View Details
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-center">
+                                                <td className="px-4 py-4 whitespace-nowrap text-center w-4/12">
                                                     <div className="flex justify-center space-x-2">
+                                                        <button
+                                                            onClick={() => {
+                                                                setSelectedDescription({ title: item.title, description: item.description, seminar: item });
+                                                                setShowDescriptionModal(true);
+                                                            }}
+                                                            className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                                                                isDark 
+                                                                    ? 'bg-green-600 hover:bg-green-500 text-green-100' 
+                                                                    : 'bg-green-200 hover:bg-green-300 text-green-800'
+                                                            }`}
+                                                            title="View full description"
+                                                        >
+                                                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                            Details
+                                                        </button>
                                                         <button
                                                             onClick={(e) => { edit_seminar(e, item); }}
                                                             className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-md transition-colors ${
@@ -563,19 +551,68 @@ export default function Seminar() {
                                     })}
                                 </tbody>
                             </table>
-                        </div>
-                    ) : (
-                        <div className={`text-center py-12 ${
-                            isDark ? 'text-gray-400' : 'text-gray-500'
-                        }`}>
-                            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            <h3 className="mt-2 text-sm font-medium">No seminars found</h3>
-                            <p className="mt-1 text-sm text-gray-400">Get started by creating a new seminar.</p>
-                        </div>
-                    )}
+                            </div>
+                        ) : (
+                            <div className={`text-center py-12 ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`}>
+                                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <h3 className="mt-2 text-sm font-medium">No seminars found</h3>
+                                <p className="mt-1 text-sm text-gray-400">Get started by creating a new seminar.</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
+
+                {/* Showing items info and rows per page selector */}
+                {paginatedPrograms && paginatedPrograms.length > 0 && (
+                    <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mt-4">
+                        <div className="flex justify-between items-center mb-2">
+                            <span className={`text-xs ${
+                                isDark ? 'text-gray-400' : 'text-gray-500'
+                            }`}>
+                                Showing {paginatedPrograms.length} of {programList?.length || 0} seminars
+                            </span>
+                            
+                            <div className="flex items-center gap-2">
+                                <span className={`text-xs ${
+                                    isDark ? 'text-gray-400' : 'text-gray-500'
+                                }`}>
+                                    Rows per page:
+                                </span>
+                                <div className="relative">
+                                    <select
+                                        className={`appearance-none border text-sm rounded-lg focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-3 pr-10 min-w-[70px] transition ${
+                                            isDark 
+                                                ? 'bg-gray-700 border-gray-600 text-gray-200' 
+                                                : 'bg-white border-gray-300 text-gray-700'
+                                        }`}
+                                        value={itemsPerPage}
+                                        onChange={(e) => {
+                                            setItemsPerPage(Number(e.target.value));
+                                            setCurrentPage(1); // Reset to first page when changing items per page
+                                        }}
+                                        aria-label="Rows per page"
+                                    >
+                                        <option value={5}>5</option>
+                                        <option value={6}>6</option>
+                                        <option value={10}>10</option>
+                                        <option value={15}>15</option>
+                                        <option value={20}>20</option>
+                                        <option value={25}>25</option>
+                                    </select>
+                                    <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Pagination Controls - Professional layout matching Profiles */}
                 {totalPages > 1 && (
@@ -617,52 +654,6 @@ export default function Seminar() {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                             </svg>
                         </button>
-                    </div>
-                )}
-
-                {/* Showing items info and rows per page selector */}
-                {paginatedPrograms && paginatedPrograms.length > 0 && (
-                    <div className="flex justify-between items-center mt-4 mb-2">
-                        <span className={`text-xs ${
-                            isDark ? 'text-gray-400' : 'text-gray-500'
-                        }`}>
-                            Showing {paginatedPrograms.length} of {programList?.length || 0} seminars
-                        </span>
-                        
-                        <div className="flex items-center gap-2">
-                            <span className={`text-xs ${
-                                isDark ? 'text-gray-400' : 'text-gray-500'
-                            }`}>
-                                Rows per page:
-                            </span>
-                            <div className="relative">
-                                <select
-                                    className={`appearance-none border text-sm rounded-lg focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-3 pr-10 min-w-[70px] transition ${
-                                        isDark 
-                                            ? 'bg-gray-700 border-gray-600 text-gray-200' 
-                                            : 'bg-white border-gray-300 text-gray-700'
-                                    }`}
-                                    value={itemsPerPage}
-                                    onChange={(e) => {
-                                        setItemsPerPage(Number(e.target.value));
-                                        setCurrentPage(1); // Reset to first page when changing items per page
-                                    }}
-                                    aria-label="Rows per page"
-                                >
-                                    <option value={5}>5</option>
-                                    <option value={6}>6</option>
-                                    <option value={10}>10</option>
-                                    <option value={15}>15</option>
-                                    <option value={20}>20</option>
-                                    <option value={25}>25</option>
-                                </select>
-                                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 )}
             </div>
