@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useCustomTranslation } from '../../hooks/useCustomTranslation';
 import { useTheme } from '../../contexts/ThemeContext.jsx';
 import Navbar from '../../Client/Components/Navbar';
@@ -10,7 +11,15 @@ import ProfileSettings from './ProfileSettings';
 const Settings = () => {
   const { t } = useCustomTranslation();
   const { theme, isDark } = useTheme();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('preferences');
+
+  // Check if we should navigate to a specific tab based on location state
+  useEffect(() => {
+    if (location.state && location.state.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
 
   const tabs = [
     { 

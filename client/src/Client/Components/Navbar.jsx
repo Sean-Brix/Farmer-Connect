@@ -904,6 +904,40 @@ export default function Navbar({refresh}) {
                                                 {t('navigation.settings')}
                                             </Link>
                                         </li>
+                                        <li>
+                                            <Link
+                                                to="/settings"
+                                                state={{ activeTab: 'profile' }}
+                                                className="flex items-center gap-3 px-8 py-4 rounded-xl transition-all duration-200 font-medium"
+                                                style={{
+                                                    color: isDark ? '#ffffff' : '#374151',
+                                                    backgroundColor: 'transparent'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.backgroundColor = isDark ? 'rgba(16, 185, 129, 0.1)' : 'rgba(16, 185, 129, 0.05)';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                                }}
+                                                onClick={() => setOpen(false)}
+                                            >
+                                                <svg
+                                                    className="w-5 h-5"
+                                                    style={{ color: isDark ? '#4ade80' : '#16a34a' }}
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                                Profile
+                                            </Link>
+                                        </li>
                                         {/* Only show Admin Panel to admin/superadmin users */}
                                         {(user.access === 'Admin' || user.access === 'Super_Admin' || user.access === 'admin' || user.access === 'superadmin') && (
                                             <li>
@@ -988,10 +1022,10 @@ export default function Navbar({refresh}) {
                         ) : (
                             <Link
                                 to="/login"
-                                className="nav-link-animated hidden md:flex items-center gap-2 px-4 py-3 transition-all duration-300 font-medium"
+                                className="hidden md:flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:scale-[1.02] border border-green-500 hover:border-green-400"
                             >
                                 <svg
-                                    className="w-5 h-5"
+                                    className="w-4 h-4"
                                     fill="none"
                                     stroke="currentColor"
                                     strokeWidth="2"
@@ -1003,7 +1037,7 @@ export default function Navbar({refresh}) {
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                <span className="nav-text-underline">Login</span>
+                                <span>Login</span>
                             </Link>
                         )}
                         <button

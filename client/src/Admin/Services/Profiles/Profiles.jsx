@@ -90,6 +90,20 @@ export default function Profiles({ details }) {
                         Manage and oversee all user accounts and profiles
                     </span>
                 </div>
+
+                {/* Register New User Button - Minimal green design */}
+                <div className="flex justify-end mb-6">
+                    <button
+                        onClick={() => setShowRegisterModal(true)}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md border border-green-500 hover:border-green-400 transition-all duration-200"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                        Register New User
+                    </button>
+                </div>
+
                 {/* FILTERS - Clean layout with consistent design */}
                 <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-stretch w-full mb-8">
                     {/* Search and filter controls */}
@@ -155,19 +169,6 @@ export default function Profiles({ details }) {
                             <option value="updated_at">Recently Updated</option>
                         </select>
                     </div>
-                </div>
-
-                {/* Register New User Button - Enhanced with green theme */}
-                <div className="flex justify-end mb-8">
-                    <button
-                        onClick={() => setShowRegisterModal(true)}
-                        className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl shadow-lg hover:from-green-700 hover:to-green-800 hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-green-500"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                        </svg>
-                        Register New User
-                    </button>
                 </div>
 
                 {/* LIST - Clean table design */}

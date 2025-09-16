@@ -25,6 +25,7 @@ export default function Add_Program({
     });
 
     const [newImage, setNewImage] = useState(default_seminar_pic);
+    const [showImagePreview, setShowImagePreview] = useState(false);
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
@@ -92,7 +93,24 @@ export default function Add_Program({
     return (
         <>
             {/* Remove browser autofill background for inputs */}
-            <style>{`input:-webkit-autofill,input:-webkit-autofill:focus,input:-webkit-autofill:hover,input:-webkit-autofill:active{-webkit-box-shadow:0 0 0 1000px #fff inset!important;box-shadow:0 0 0 1000px #fff inset!important;-webkit-text-fill-color:#222!important;}`}</style>
+            <style>{`
+                input:-webkit-autofill,
+                input:-webkit-autofill:focus,
+                input:-webkit-autofill:hover,
+                input:-webkit-autofill:active {
+                    -webkit-box-shadow: none !important;
+                    box-shadow: none !important;
+                    -webkit-background-clip: text !important;
+                    background-clip: text !important;
+                    transition: background-color 5000s ease-in-out 0s !important;
+                    -webkit-text-fill-color: inherit !important;
+                }
+                input[autocomplete="off"] {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                }
+            `}</style>
             <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-2 sm:px-4">
                 <form
                     className={`rounded-xl shadow-2xl w-full max-w-4xl max-h-[95vh] relative border flex flex-col overflow-hidden ${
@@ -106,8 +124,8 @@ export default function Add_Program({
                     {/* Header */}
                     <div className={`flex justify-between items-center border-b px-6 py-4 ${
                         isDark 
-                            ? 'border-gray-600 bg-gray-700' 
-                            : 'border-green-200 bg-green-50'
+                            ? 'border-gray-600 bg-gray-800' 
+                            : 'border-gray-200 bg-gray-50'
                     }`}>
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-600 rounded-lg">
@@ -116,7 +134,7 @@ export default function Add_Program({
                                 </svg>
                             </div>
                             <h2 className={`text-xl font-bold ${
-                                isDark ? 'text-gray-100' : 'text-green-800'
+                                isDark ? 'text-gray-100' : 'text-gray-800'
                             }`}>Add New Seminar</h2>
                         </div>
                         <button
@@ -138,14 +156,14 @@ export default function Add_Program({
                     {/* Content */}
                     <div className="flex flex-col lg:flex-row gap-0 overflow-y-auto flex-1">
                         {/* Left: Form Fields */}
-                        <div className="flex-1 p-6 pb-8">
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="flex-1 p-6">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                                 {/* Basic Information */}
                                 <div className="lg:col-span-2">
                                     <div className={`rounded-xl p-6 border ${
                                         isDark 
-                                            ? 'bg-gray-700 border-gray-600' 
-                                            : 'bg-green-50 border-green-200'
+                                            ? 'bg-gray-800 border-gray-600' 
+                                            : 'bg-white border-gray-200'
                                     }`}>
                                         <div className="flex items-center gap-2 mb-4">
                                             <div className="p-1.5 bg-green-600 rounded-lg">
@@ -154,13 +172,13 @@ export default function Add_Program({
                                                 </svg>
                                             </div>
                                             <h3 className={`text-lg font-semibold ${
-                                                isDark ? 'text-gray-100' : 'text-green-800'
+                                                isDark ? 'text-gray-100' : 'text-gray-800'
                                             }`}>Basic Information</h3>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="md:col-span-2">
                                                 <label className={`block text-sm font-medium mb-2 ${
-                                                    isDark ? 'text-gray-200' : 'text-green-700'
+                                                    isDark ? 'text-gray-200' : 'text-gray-700'
                                                 }`}>Title</label>
                                                 <input
                                                     type="text"
@@ -178,11 +196,12 @@ export default function Add_Program({
                                                     }
                                                     required
                                                     autoFocus
+                                                    autoComplete="off"
                                                 />
                                             </div>
                                             <div>
                                                 <label className={`block text-sm font-medium mb-2 ${
-                                                    isDark ? 'text-gray-200' : 'text-green-700'
+                                                    isDark ? 'text-gray-200' : 'text-gray-800'
                                                 }`}>Location</label>
                                                 <input
                                                     type="text"
@@ -199,11 +218,12 @@ export default function Add_Program({
                                                         })
                                                     }
                                                     required
+                                                    autoComplete="off"
                                                 />
                                             </div>
                                             <div>
                                                 <label className={`block text-sm font-medium mb-2 ${
-                                                    isDark ? 'text-gray-200' : 'text-green-700'
+                                                    isDark ? 'text-gray-200' : 'text-gray-800'
                                                 }`}>Maximum Participants</label>
                                                 <input
                                                     type="number"
@@ -221,11 +241,12 @@ export default function Add_Program({
                                                         })
                                                     }
                                                     required
+                                                    autoComplete="off"
                                                 />
                                             </div>
                                             <div className="md:col-span-2">
                                                 <label className={`block text-sm font-medium mb-2 ${
-                                                    isDark ? 'text-gray-200' : 'text-green-700'
+                                                    isDark ? 'text-gray-200' : 'text-gray-800'
                                                 }`}>Description</label>
                                                 <textarea
                                                     className={`w-full border rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition resize-none ${
@@ -250,10 +271,10 @@ export default function Add_Program({
 
                                 {/* Speaker Information */}
                                 <div>
-                                    <div className={`rounded-xl p-6 border h-full ${
+                                    <div className={`rounded-t-xl p-6 border h-full ${
                                         isDark 
-                                            ? 'bg-gray-700 border-gray-600' 
-                                            : 'bg-green-50 border-green-200'
+                                            ? 'bg-gray-800 border-gray-600' 
+                                            : 'bg-white border-gray-200'
                                     }`}>
                                         <div className="flex items-center gap-2 mb-4">
                                             <div className="p-1.5 bg-green-600 rounded-lg">
@@ -262,12 +283,12 @@ export default function Add_Program({
                                                 </svg>
                                             </div>
                                             <h3 className={`text-lg font-semibold ${
-                                                isDark ? 'text-gray-100' : 'text-green-800'
+                                                isDark ? 'text-gray-100' : 'text-gray-800'
                                             }`}>Speaker</h3>
                                         </div>
                                         <div>
                                             <label className={`block text-sm font-medium mb-2 ${
-                                                isDark ? 'text-gray-200' : 'text-green-700'
+                                                isDark ? 'text-gray-200' : 'text-gray-800'
                                             }`}>Speaker Name</label>
                                             <input
                                                 type="text"
@@ -285,6 +306,7 @@ export default function Add_Program({
                                                 }
                                                 required
                                                 placeholder="Enter speaker name"
+                                                autoComplete="off"
                                             />
                                         </div>
                                     </div>
@@ -292,10 +314,10 @@ export default function Add_Program({
 
                                 {/* Schedule */}
                                 <div>
-                                    <div className={`rounded-xl p-6 border h-full ${
+                                    <div className={`rounded-t-xl p-6 border h-full ${
                                         isDark 
-                                            ? 'bg-gray-700 border-gray-600' 
-                                            : 'bg-green-50 border-green-200'
+                                            ? 'bg-gray-800 border-gray-600' 
+                                            : 'bg-white border-gray-200'
                                     }`}>
                                         <div className="flex items-center gap-2 mb-4">
                                             <div className="p-1.5 bg-green-600 rounded-lg">
@@ -304,14 +326,14 @@ export default function Add_Program({
                                                 </svg>
                                             </div>
                                             <h3 className={`text-lg font-semibold ${
-                                                isDark ? 'text-gray-100' : 'text-green-800'
+                                                isDark ? 'text-gray-100' : 'text-gray-800'
                                             }`}>Schedule</h3>
                                         </div>
                                         <div className="space-y-4">
                                             <div className="grid grid-cols-2 gap-3">
                                                 <div>
                                                     <label className={`block text-xs font-medium mb-1 ${
-                                                        isDark ? 'text-gray-300' : 'text-green-600'
+                                                        isDark ? 'text-gray-300' : 'text-gray-800'
                                                     }`}>Start Date</label>
                                                     <input
                                                         type="date"
@@ -332,7 +354,7 @@ export default function Add_Program({
                                                 </div>
                                                 <div>
                                                     <label className={`block text-xs font-medium mb-1 ${
-                                                        isDark ? 'text-gray-300' : 'text-green-600'
+                                                        isDark ? 'text-gray-300' : 'text-gray-800'
                                                     }`}>End Date</label>
                                                     <input
                                                         type="date"
@@ -355,7 +377,7 @@ export default function Add_Program({
                                             <div className="grid grid-cols-2 gap-3">
                                                 <div>
                                                     <label className={`block text-xs font-medium mb-1 ${
-                                                        isDark ? 'text-gray-300' : 'text-green-600'
+                                                        isDark ? 'text-gray-300' : 'text-gray-800'
                                                     }`}>Start Time</label>
                                                     <input
                                                         type="time"
@@ -376,7 +398,7 @@ export default function Add_Program({
                                                 </div>
                                                 <div>
                                                     <label className={`block text-xs font-medium mb-1 ${
-                                                        isDark ? 'text-gray-300' : 'text-green-600'
+                                                        isDark ? 'text-gray-300' : 'text-gray-800'
                                                     }`}>End Time</label>
                                                     <input
                                                         type="time"
@@ -398,7 +420,7 @@ export default function Add_Program({
                                             </div>
                                             <div>
                                                 <label className={`block text-sm font-medium mb-2 ${
-                                                    isDark ? 'text-gray-300' : 'text-green-700'
+                                                    isDark ? 'text-gray-300' : 'text-gray-800'
                                                 }`}>Registration Deadline</label>
                                                 <input
                                                     type="date"
@@ -424,10 +446,10 @@ export default function Add_Program({
                         </div>
 
                         {/* Right: Image Upload */}
-                        <div className={`w-full lg:w-80 border-l p-6 pb-8 ${
+                        <div className={`w-full lg:w-80 border-l p-6 ${
                             isDark 
                                 ? 'bg-gray-800 border-gray-600' 
-                                : 'bg-green-50 border-green-200'
+                                : 'bg-white border-gray-200'
                         }`}>
                             <div className="flex items-center gap-2 mb-4">
                                 <div className="p-1.5 bg-green-600 rounded-lg">
@@ -436,13 +458,13 @@ export default function Add_Program({
                                     </svg>
                                 </div>
                                 <h3 className={`text-lg font-semibold ${
-                                    isDark ? 'text-gray-200' : 'text-green-800'
+                                    isDark ? 'text-gray-200' : 'text-gray-800'
                                 }`}>Seminar Image</h3>
                             </div>
-                            <div className="space-y-4">
+                            <div className="space-y-4 mb-8">
                                 <div>
                                     <label className={`block text-sm font-medium mb-2 ${
-                                        isDark ? 'text-gray-300' : 'text-green-700'
+                                        isDark ? 'text-gray-300' : 'text-gray-800'
                                     }`}>Upload Image <span className={`text-xs ${
                                         isDark ? 'text-gray-500' : 'text-gray-500'
                                     }`}>(optional)</span></label>
@@ -457,19 +479,28 @@ export default function Add_Program({
                                         onChange={changeImage}
                                     />
                                 </div>
-                                <div className="flex justify-center">
+                                <div className="space-y-3 flex flex-col items-center">
                                     <img
                                         src={typeof newImage === 'string' ? newImage : URL.createObjectURL(newImage)}
                                         alt="Seminar Preview"
-                                        className={`w-full max-w-[250px] h-auto object-cover rounded-xl border shadow-sm ${
+                                        className={`w-full max-w-[250px] h-auto object-cover rounded-xl border shadow-sm cursor-pointer transition-opacity hover:opacity-90 ${
                                             isDark 
                                                 ? 'bg-gray-700 border-gray-600' 
-                                                : 'bg-white border-green-300'
+                                                : 'bg-white border-gray-300'
                                         }`}
+                                        onClick={() => setShowImagePreview(true)}
                                         onError={(e) => {
                                             e.target.src = default_seminar_pic;
                                         }}
                                     />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowImagePreview(true)}
+                                        className="bg-black/70 text-white px-3 py-1.5 rounded-lg hover:bg-opacity-80 transition-all text-sm font-medium"
+                                        title="Preview Image"
+                                    >
+                                        Preview
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -479,7 +510,7 @@ export default function Add_Program({
                     <div className={`border-t px-6 py-4 flex justify-end gap-3 ${
                         isDark 
                             ? 'border-gray-600 bg-gray-700' 
-                            : 'border-green-200 bg-green-50'
+                            : 'border-gray-200 bg-white'
                     }`}>
                         <button
                             type="button"
@@ -502,6 +533,31 @@ export default function Add_Program({
                     </div>
                 </form>
             </div>
+
+            {/* Image Preview Modal */}
+            {showImagePreview && (
+                <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+                    <div className="relative max-w-4xl max-h-full">
+                        <button
+                            onClick={() => setShowImagePreview(false)}
+                            className="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-lg hover:bg-opacity-70 transition-all z-10"
+                            title="Close Preview"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <img
+                            src={typeof newImage === 'string' ? newImage : URL.createObjectURL(newImage)}
+                            alt="Seminar Image Preview"
+                            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                            onError={(e) => {
+                                e.target.src = default_seminar_pic;
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
         </>
     );
 }

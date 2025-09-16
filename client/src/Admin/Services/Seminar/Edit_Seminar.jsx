@@ -9,6 +9,7 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
     const [newData, setNewData] = useState(data);
     const [image, setImage] = useState(data.photo);
     const [newImage, setNewImage] = useState(null);
+    const [showImagePreview, setShowImagePreview] = useState(false);
     const changedImage = useRef(false);
 
     // Save the record
@@ -115,8 +116,8 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                 {/* Header */}
                 <div className={`flex justify-between items-center border-b px-6 py-4 ${
                     isDark 
-                        ? 'border-gray-600 bg-gray-700' 
-                        : 'border-green-200 bg-green-50'
+                        ? 'border-gray-600 bg-gray-800' 
+                        : 'border-gray-200 bg-gray-50'
                 }`}>
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-green-600 rounded-lg">
@@ -147,14 +148,14 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                 {/* Content */}
                 <div className="flex flex-col lg:flex-row gap-0 overflow-y-auto flex-1">
                     {/* Left: Form Fields */}
-                    <div className="flex-1 p-6 pb-8">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="flex-1 p-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                             {/* Basic Information */}
                             <div className="lg:col-span-2">
                                 <div className={`rounded-xl p-6 border ${
                                     isDark 
-                                        ? 'bg-gray-700 border-gray-600' 
-                                        : 'bg-green-50 border-green-200'
+                                        ? 'bg-gray-800 border-gray-600' 
+                                        : 'bg-white border-gray-200'
                                 }`}>
                                     <div className="flex items-center gap-2 mb-4">
                                         <div className="p-1.5 bg-green-600 rounded-lg">
@@ -207,7 +208,7 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                         </div>
                                         <div className="md:col-span-2">
                                             <label className={`block text-sm font-medium mb-2 ${
-                                                isDark ? 'text-gray-300' : 'text-green-700'
+                                                isDark ? 'text-gray-300' : 'text-gray-800'
                                             }`}>Title</label>
                                             <input
                                                 type="text"
@@ -223,7 +224,7 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                             />
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-medium text-green-700 mb-2">Description</label>
+                                            <label className="block text-sm font-medium text-gray-800 mb-2">Description</label>
                                             <textarea
                                                 className="w-full border border-green-300 rounded-lg px-3 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent text-gray-900 transition resize-none"
                                                 value={newData.description}
@@ -239,10 +240,10 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
 
                             {/* Location & Speaker */}
                             <div>
-                                <div className={`rounded-xl p-6 border h-full ${
+                                <div className={`rounded-t-xl p-6 border h-full ${
                                     isDark 
-                                        ? 'bg-gray-700 border-gray-600' 
-                                        : 'bg-green-50 border-green-200'
+                                        ? 'bg-gray-800 border-gray-600' 
+                                        : 'bg-white border-gray-200'
                                 }`}>
                                     <div className="flex items-center gap-2 mb-4">
                                         <div className="p-1.5 bg-green-600 rounded-lg">
@@ -252,13 +253,13 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                             </svg>
                                         </div>
                                         <h3 className={`text-lg font-semibold ${
-                                            isDark ? 'text-gray-200' : 'text-green-800'
+                                            isDark ? 'text-gray-100' : 'text-gray-800'
                                         }`}>Venue & Speaker</h3>
                                     </div>
                                     <div className="space-y-4">
                                         <div>
                                             <label className={`block text-sm font-medium mb-2 ${
-                                                isDark ? 'text-gray-300' : 'text-green-700'
+                                                isDark ? 'text-gray-300' : 'text-gray-800'
                                             }`}>Location</label>
                                             <input
                                                 type="text"
@@ -274,7 +275,7 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-green-700 mb-2">Speaker Name</label>
+                                            <label className="block text-sm font-medium text-gray-800 mb-2">Speaker Name</label>
                                             <input
                                                 type="text"
                                                 className="w-full border border-green-300 rounded-lg px-3 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent text-gray-900 transition"
@@ -291,10 +292,10 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
 
                             {/* Schedule */}
                             <div>
-                                <div className={`rounded-xl p-6 border h-full ${
+                                <div className={`rounded-t-xl p-6 border h-full ${
                                     isDark 
-                                        ? 'bg-gray-700 border-gray-600' 
-                                        : 'bg-green-50 border-green-200'
+                                        ? 'bg-gray-800 border-gray-600' 
+                                        : 'bg-white border-gray-200'
                                 }`}>
                                     <div className="flex items-center gap-2 mb-4">
                                         <div className="p-1.5 bg-green-600 rounded-lg">
@@ -302,7 +303,9 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
                                         </div>
-                                        <h3 className="text-lg font-semibold text-green-800">Schedule</h3>
+                                        <h3 className={`text-lg font-semibold ${
+                                            isDark ? 'text-gray-100' : 'text-gray-800'
+                                        }`}>Schedule</h3>
                                     </div>
                                     <div className="space-y-4">
                                         <div className="grid grid-cols-2 gap-3">
@@ -371,10 +374,10 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                     </div>
 
                     {/* Right: Image Upload */}
-                    <div className={`w-full lg:w-80 border-l p-6 pb-8 ${
+                    <div className={`w-full lg:w-80 border-l p-6 ${
                         isDark 
                             ? 'bg-gray-800 border-gray-600' 
-                            : 'bg-green-50 border-green-200'
+                            : 'bg-white border-gray-200'
                     }`}>
                         <div className="flex items-center gap-2 mb-4">
                             <div className="p-1.5 bg-green-600 rounded-lg">
@@ -382,11 +385,15 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                             </div>
-                            <h3 className="text-lg font-semibold text-green-800">Seminar Image</h3>
+                            <h3 className={`text-lg font-semibold ${
+                                isDark ? 'text-gray-100' : 'text-gray-800'
+                            }`}>Seminar Image</h3>
                         </div>
-                        <div className="space-y-4">
+                        <div className="space-y-4 mb-8">
                             <div>
-                                <label className="block text-sm font-medium text-green-700 mb-2">Upload Image <span className="text-gray-500 text-xs">(optional)</span></label>
+                                <label className={`block text-sm font-medium mb-2 ${
+                                    isDark ? 'text-gray-300' : 'text-gray-800'
+                                }`}>Upload Image <span className="text-gray-500 text-xs">(optional)</span></label>
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -394,19 +401,36 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                                     onChange={changeImage}
                                 />
                             </div>
-                            <div className="flex justify-center">
+                            <div className="space-y-3 flex flex-col items-center">
                                 <img
                                     src={image}
                                     alt="Seminar"
-                                    className="w-full max-w-[250px] h-auto bg-white object-cover rounded-xl border border-green-300 shadow-sm"
+                                    className={`w-full max-w-[250px] h-auto object-cover rounded-xl border shadow-sm cursor-pointer transition-opacity hover:opacity-90 ${
+                                        isDark 
+                                            ? 'bg-gray-700 border-gray-600' 
+                                            : 'bg-white border-gray-300'
+                                    }`}
+                                    onClick={() => setShowImagePreview(true)}
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowImagePreview(true)}
+                                    className="bg-black/70 text-white px-3 py-1.5 rounded-lg hover:bg-opacity-80 transition-all text-sm font-medium"
+                                    title="Preview Image"
+                                >
+                                    Preview
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Footer */}
-                <div className="border-t border-green-200 bg-green-50 px-6 py-4 flex justify-end gap-3">
+                <div className={`border-t px-6 py-4 flex justify-end gap-3 ${
+                    isDark 
+                        ? 'border-gray-600 bg-gray-700' 
+                        : 'border-gray-200 bg-white'
+                }`}>
                     <button
                         type="button"
                         onClick={() => toggleOff()}
@@ -422,6 +446,28 @@ export default function Edit_Seminar({ data, toggleOff, setProgramList }) {
                     </button>
                 </div>
             </form>
+            
+            {/* Image Preview Modal */}
+            {showImagePreview && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[60] p-4">
+                    <div className="relative max-w-4xl max-h-[90vh] w-full">
+                        <button
+                            onClick={() => setShowImagePreview(false)}
+                            className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10"
+                            title="Close Preview"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                        <img
+                            src={image}
+                            alt="Seminar Preview"
+                            className="w-full h-full object-contain rounded-lg"
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
