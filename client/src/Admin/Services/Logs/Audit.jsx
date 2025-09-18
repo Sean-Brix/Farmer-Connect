@@ -79,6 +79,7 @@ export default function Audit({ admin_navigate }) {
 function AuditLogsTable({ admin_navigate }) {
     // Filter and pagination states
     const [page, setPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState('createdAt');
     const [sortOrder, setSortOrder] = useState('desc');
@@ -108,7 +109,7 @@ function AuditLogsTable({ admin_navigate }) {
     // Prepare filters object
     const filters = {
         page,
-        limit: 25,
+        limit: itemsPerPage,
         search,
         adminId,
         action,
@@ -277,7 +278,7 @@ function AuditLogsTable({ admin_navigate }) {
             {/* Filters Section - Enhanced Professional Layout */}
             <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-8">
                 {/* Search and Basic Controls */}
-                <div className="flex flex-col lg:flex-row gap-6 mb-6 lg:items-center">
+                <div className="flex flex-row items-center justify-between gap-4 mb-6">
                     {/* Search Input - Enhanced Design */}
                     <div className="relative flex-1 max-w-lg">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
@@ -304,8 +305,8 @@ function AuditLogsTable({ admin_navigate }) {
                         />
                     </div>
 
-                    {/* Control Buttons - Right Side Enhanced */}
-                    <div className="flex gap-3">
+                    {/* Filters and Buttons - Right Side */}
+                    <div className="flex flex-row items-center gap-3">
                         <button
                             onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
                             className={`flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold border-2 transition-all duration-200 transform hover:scale-105 ${
@@ -741,71 +742,63 @@ function AuditLogsTable({ admin_navigate }) {
                 </table>
             </div>
 
-            {/* Pagination */}
+            {/* Pagination - Seminar style */}
             {pagination.totalPages > 1 && (
-                <div className="px-4 py-4 border-t border-neutral-100 bg-neutral-50">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                        <div className="text-sm text-neutral-600">
-                            Page {pagination.currentPage} of{' '}
-                            {pagination.totalPages}
-                            <span className="text-gray-500 ml-2">
-                                ({pagination.totalCount} total entries)
-                            </span>
+                <div className="w-full max-w-[1400px] mx-auto px-2 md:px-8 mt-4">
+                    <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs text-gray-500">
+                            Showing {logs.length} of {pagination.totalCount || 0} entries
+                        </span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs text-gray-500">Rows per page:</span>
+                            <div className="relative">
+                                <select
+                                    className="appearance-none border text-sm rounded-lg focus:ring-1 focus:ring-green-600 focus:border-green-600 block py-2 pl-3 pr-10 min-w-[70px] transition bg-white border-gray-300 text-gray-700"
+                                    value={itemsPerPage}
+                                    onChange={e => {
+                                        setItemsPerPage(Number(e.target.value));
+                                        setPage(1);
+                                    }}
+                                    aria-label="Rows per page"
+                                >
+                                    <option value={5}>5</option>
+                                    <option value={10}>10</option>
+                                    <option value={15}>15</option>
+                                    <option value={20}>20</option>
+                                    <option value={25}>25</option>
+                                </select>
+                                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#059669' }}>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
                         </div>
-
-                        <div className="flex items-center gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-neutral-200 scrollbar-track-transparent pb-1">
-                            <button
-                                onClick={() => setPage(Math.max(1, page - 1))}
-                                disabled={!pagination.hasPrevPage || isFetching}
-                                className="px-3 py-1 text-sm font-medium text-neutral-700 bg-white border border-neutral-200 rounded-md hover:bg-green-400 disabled:opacity-50 disabled:cursor-not-allowed min-w-[70px]"
-                            >
-                                Previous
-                            </button>
-
-                            {/* Page Numbers */}
-                            {Array.from(
-                                { length: Math.min(5, pagination.totalPages) },
-                                (_, i) => {
-                                    const pageNum =
-                                        Math.max(
-                                            1,
-                                            pagination.currentPage - 2
-                                        ) + i;
-                                    if (pageNum > pagination.totalPages)
-                                        return null;
-
-                                    return (
-                                        <button
-                                            key={pageNum}
-                                            onClick={() => setPage(pageNum)}
-                                            disabled={isFetching}
-                                            className={`px-3 py-1 text-sm font-bold rounded-md disabled:cursor-not-allowed min-w-[40px] transition-all $${
-                                                pageNum === pagination.currentPage
-                                                    ? 'bg-green-900 text-black border-2 border-green-900 shadow-lg scale-105 z-10'
-                                                    : 'text-neutral-800 bg-white border border-neutral-200 hover:bg-green-200 hover:text-green-700'
-                                            }`}
-                                        >
-                                            {pageNum}
-                                        </button>
-                                    );
-                                }
-                            )}
-
-                            <button
-                                onClick={() =>
-                                    setPage(
-                                        Math.min(
-                                            pagination.totalPages,
-                                            page + 1
-                                        )
-                                    )
-                                }
-                                disabled={!pagination.hasNextPage || isFetching}
-                                className="px-3 py-1 text-sm font-medium text-neutral-700 bg-white border border-neutral-200 rounded-md hover:bg-green-400 disabled:opacity-50 disabled:cursor-not-allowed min-w-[70px]"
-                            >
-                                Next
-                            </button>
+                    </div>
+                    <div className="flex justify-center items-center gap-4 py-8">
+                        <button
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400"
+                            onClick={() => setPage(prev => Math.max(1, prev - 1))}
+                            disabled={page === 1 || isFetching}
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Previous
+                        </button>
+                        <div className="px-4 py-2 font-semibold rounded-lg border bg-green-100 text-green-800 border-green-200">
+                            Page {pagination.currentPage} of {pagination.totalPages}
                         </div>
+                        <button
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg border font-medium shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed border-green-300 bg-white text-green-700 hover:bg-green-50 hover:border-green-400"
+                            onClick={() => setPage(prev => Math.min(pagination.totalPages, prev + 1))}
+                            disabled={page === pagination.totalPages || isFetching}
+                        >
+                            Next
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             )}

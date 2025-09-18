@@ -1021,7 +1021,6 @@ function Seed_Track() {
                   <thead className="bg-gray-50 border-b border-gray-200">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Farmer</th>
-                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Contact</th>
                       <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Location</th>
                       <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Crops</th>
                       <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Reports</th>
@@ -1040,10 +1039,6 @@ function Seed_Track() {
                               <div className="text-xs text-gray-500">ID: {farmer.id}</div>
                             </div>
                           </div>
-                        </td>
-                        <td className="px-6 py-3 whitespace-nowrap">
-                          <div className="text-sm text-black">{farmer.email}</div>
-                          <div className="text-sm text-gray-600">{farmer.phone}</div>
                         </td>
                         <td className="px-6 py-3 whitespace-nowrap">
                           <div className="text-sm text-black">{farmer.location}</div>
@@ -1071,7 +1066,12 @@ function Seed_Track() {
                         </td>
                         <td className="px-3 py-3 whitespace-nowrap text-right">
                           <button
-                            onClick={() => openFarmerTab({ farmerId: farmer.id, name: farmer.name, ...farmer })}
+                            onClick={() => {
+                              openFarmerTab({ farmerId: farmer.id, name: farmer.name, ...farmer });
+                              setTimeout(() => {
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                              }, 100);
+                            }}
                             className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 rounded-lg transition-colors duration-200"
                           >
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -1472,8 +1472,9 @@ function Seed_Track() {
                                           farmerId: currentFarmer.id
                                         });
                                         setShowCropReportsModal(true);
+                                        window.scrollTo({ top: 0, behavior: 'smooth' });
                                       }}
-                                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                      className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                                     >
                                       View All Reports →
                                     </button>
@@ -1629,7 +1630,7 @@ function Seed_Track() {
                               borderColor: '#10B981',
                               backgroundColor: 'rgba(16, 185, 129, 0.1)',
                               tension: 0.4,
-                              fill: true
+                              fill: false
                             }]
                           };
 
@@ -1670,6 +1671,16 @@ function Seed_Track() {
                                 title: {
                                   display: true,
                                   text: 'Report Date'
+                                },
+                                ticks: {
+                                  maxRotation: 0,
+                                  minRotation: 0,
+                                  align: 'center',
+                                  font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                  },
+                                  padding: 10
                                 }
                               }
                             }
@@ -1700,6 +1711,18 @@ function Seed_Track() {
                                 title: {
                                   display: true,
                                   text: 'Report Date'
+                                },
+                                ticks: {
+                                  maxRotation: 0,
+                                  minRotation: 0,
+                                  align: 'center',
+                                  font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                  },
+                                  padding: 20,
+                                  autoSkip: true,
+                                  autoSkipPadding: 30
                                 }
                               }
                             }

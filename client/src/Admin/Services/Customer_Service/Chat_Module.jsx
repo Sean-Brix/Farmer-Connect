@@ -6,6 +6,11 @@ import InquiryListItem from './components/InquiryListItem.jsx';
 import DashboardStats from './components/DashboardStats.jsx';
 
 function Chat_Module() {
+  // Pagination states for each tab
+  const [pendingPage, setPendingPage] = useState(1);
+  const [inProgressPage, setInProgressPage] = useState(1);
+  const [resolvedPage, setResolvedPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(8);
   const { isDark } = useTheme();
   // Three-tab lists
   const [pending, setPending] = useState([]);
@@ -392,6 +397,11 @@ function Chat_Module() {
     const term = searchTerm.toLowerCase();
     return userName.toLowerCase().includes(term) || lastMessage.toLowerCase().includes(term) || subject.includes(term);
   });
+  // Pagination logic
+  const currentPage = activeTab === 'PENDING' ? pendingPage : activeTab === 'IN_PROGRESS' ? inProgressPage : resolvedPage;
+  const setCurrentPage = activeTab === 'PENDING' ? setPendingPage : activeTab === 'IN_PROGRESS' ? setInProgressPage : setResolvedPage;
+  const totalPages = Math.max(1, Math.ceil(filteredChats.length / itemsPerPage));
+  const paginatedChats = filteredChats.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className={`min-h-screen py-4 sm:mt-12 px-2 md:px-6 ${
@@ -483,6 +493,26 @@ function Chat_Module() {
 
               {/* Active Chats */}
               <div className="flex-1 overflow-y-auto bg-white">
+                {/* Items per page selector, no outer box */}
+                <div className="flex justify-start items-center mt-4 pl-6">
+                  <label htmlFor="itemsPerPage" className="mr-2 text-sm font-medium text-gray-700">Items per page:</label>
+                  <select
+                    id="itemsPerPage"
+                    value={itemsPerPage}
+                    onChange={e => {
+                      setItemsPerPage(Number(e.target.value));
+                      setPendingPage(1);
+                      setInProgressPage(1);
+                      setResolvedPage(1);
+                    }}
+                    className="px-2 py-1 rounded border border-green-600 bg-green-50 text-green-700 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    {[5, 8, 10, 20, 50].map(n => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                </div>
+                  <hr className="my-2 border-gray-300" />
                 {loading ? (
                   <div className="p-12 text-center text-gray-500">
                     <div className="w-20 h-20 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center shadow-sm">
@@ -503,16 +533,32 @@ function Chat_Module() {
                       <p className="text-sm text-gray-500">Waiting for customer messages...</p>
                     </div>
                   ) : (
-                    filteredChats.map((chat) => (
-                      <InquiryListItem
-                        key={chat.id}
-                        chat={chat}
-                        isSelected={selectedChat?.id === chat.id}
-                        onClick={() => setSelectedChat(chat)}
-                        getUserName={getUserName}
-                        getLastMessage={getLastMessage}
-                      />
-                    ))
+                    <>
+                      {paginatedChats.map((chat) => (
+                        <InquiryListItem
+                          key={chat.id}
+                          chat={chat}
+                          isSelected={selectedChat?.id === chat.id}
+                          onClick={() => setSelectedChat(chat)}
+                          getUserName={getUserName}
+                          getLastMessage={getLastMessage}
+                        />
+                      ))}
+                      {/* Pagination Controls */}
+                      <div className="flex justify-center items-center gap-2 py-4">
+                        <button
+                          className={`px-4 py-2 rounded-lg font-medium text-sm ${currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
+                          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                          disabled={currentPage === 1}
+                        >Previous</button>
+                        <span className="px-2 text-gray-700 font-semibold">Page {currentPage} of {totalPages}</span>
+                        <button
+                          className={`px-4 py-2 rounded-lg font-medium text-sm ${currentPage === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-green-600 text-white hover:bg-green-700'}`}
+                          onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                          disabled={currentPage === totalPages}
+                        >Next</button>
+                      </div>
+                    </>
                   )
                 )}
               </div>

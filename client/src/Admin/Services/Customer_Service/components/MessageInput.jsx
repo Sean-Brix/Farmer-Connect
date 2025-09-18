@@ -13,8 +13,8 @@ const MessageInput = ({ onSendMessage, selectedChat }) => {
 
   return (
     <div className="bg-white border-t-2 border-gray-200 px-6 py-5 rounded-b-2xl">
-      <form onSubmit={handleSendMessage} className="flex items-center gap-4">
-        <div className="flex-1 relative">
+      <form onSubmit={handleSendMessage} className="flex items-center gap-4 flex-nowrap">
+        <div className="flex-1 min-w-0 relative">
           <input
             type="text"
             placeholder="Type your reply..."
@@ -30,7 +30,7 @@ const MessageInput = ({ onSendMessage, selectedChat }) => {
         </div>
         <button
           type="submit"
-          className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-2xl px-8 py-4 transition-all duration-200 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center gap-3"
+          className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-2xl px-8 py-4 transition-all duration-200 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center gap-3 flex-shrink-0"
           disabled={!message?.trim() || !selectedChat}
         >
           <span>Send</span>

@@ -96,9 +96,9 @@ const ChatWindow = ({ selectedChat, messagesEndRef, messagesContainerRef, getUse
                 selectedChat?.isOnline ? 'bg-green-400' : 'bg-gray-400'
               }`}></div>
             </div>
-            <div>
-              <h3 className="font-bold text-xl">{selectedChat ? getUserName(selectedChat) : 'No conversation selected'}</h3>
-              <p className="text-green-100 text-sm font-medium">{selectedChat?.user?.email || selectedChat?.userEmail || ''}</p>
+            <div className="min-w-0">
+              <h3 className="font-semibold text-sm truncate max-w-xs">{selectedChat ? getUserName(selectedChat) : 'No conversation selected'}</h3>
+              <p className="text-green-100 text-xs font-normal truncate max-w-xs">{selectedChat?.user?.email || selectedChat?.userEmail || ''}</p>
             </div>
           </div>
           <div className="flex items-center gap-4">

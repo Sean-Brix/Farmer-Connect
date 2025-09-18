@@ -985,7 +985,7 @@ function Content() {
                                 className="flex-1 bg-gradient-to-r from-green-600 to-green-700  text-white font-semibold px-4 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                             >
                                 
-                                + Add
+                                Add Item
                             </button>
                             {!showDelete ? (
                                 <button
@@ -1267,52 +1267,89 @@ function Content() {
                                                             {item.totalQuantity || 0}
                                                         </div>
                                                     </td>
-                                                    <td className={`${sizeClasses[uiSize].padding} text-right`}>
-                                                        <div className="flex items-center justify-end">
-                                                            <button
-                                                                onClick={() => handleViewStacks(item)}
-                                                                className={`inline-flex items-center px-3 py-2 border-2 border-green-200 shadow-sm font-semibold rounded-xl text-green-700 bg-green-100 hover:bg-green-200 hover:border-green-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-300 transition-all duration-200 ${sizeClasses[uiSize].text}`}
-                                                            >
-                                                                {expandedStacks.has(item.id) ? (
-                                                                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                                        <path d="M19 15l-7-7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                                                                    </svg>
-                                                                ) : (
-                                                                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                                        <path d="M5 9l7 7 7-7" strokeLinecap="round" strokeLinejoin="round" />
-                                                                    </svg>
-                                                                )}
-                                                                Details
-                                                            </button>
-                                                        </div>
-                                                    </td>
+                                                <td className={`${sizeClasses[uiSize].padding} text-right`}>
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        <button
+                                                            onClick={() => handleViewStacks(item)}
+                                                            className={`inline-flex items-center px-3 py-2 border-2 border-transparent font-semibold rounded-xl text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 ${sizeClasses[uiSize].text}`}
+                                                        >
+                                                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" />
+                                                                <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" strokeLinecap="round" strokeLinejoin="round" />
+                                                            </svg>
+                                                            Details
+                                                        </button>
+                                                    </div>
+                                                </td>
                                             </tr>
                                             )}
                                             {/* Expanded Stack Details Row */}
                                             {expandedStacks.has(item.id) && selectedItemStacks && selectedItemStacks.id === item.id && (
                                                 <tr>
-                                                    <td colSpan={showDelete ? "5" : "4"} className="px-3 sm:px-4 py-3 bg-gradient-to-r from-green-50 to-gray-50 border-l-4 border-green-400">
-                                                        <div className="space-y-4">
-                                                            <div className="flex items-center justify-between mb-4">
-                                                                <div className="flex items-center gap-2">
-                                                                    <div className="bg-green-600 rounded p-1.5">
-                                                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                                            <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeLinecap="round" strokeLinejoin="round" />
-                                                                        </svg>
-                                                                    </div>
-                                                                    <h4 className="text-lg font-semibold text-gray-800">Inventory Stacks for {item.name}</h4>
-                                                                </div>
+                                                    <td colSpan={showDelete ? "5" : "4"} className="px-4 sm:px-6 py-4 bg-gradient-to-r from-green-50 to-gray-50 border-l-4 border-green-400">
+                                                        <div className="space-y-3">
+                                                            <div className="flex items-center justify-between">
+                                                                <h4 className="text-base font-semibold text-gray-800">{item.name} - Details</h4>
                                                                 <button
                                                                     onClick={() => handleEdit(item)}
-                                                                    className="inline-flex items-center px-3 py-1.5 border border-gray-300 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all duration-200 text-sm"
+                                                                    className="inline-flex items-center px-2 py-1 border border-gray-300 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all duration-200 text-sm"
                                                                 >
                                                                     <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                                                         <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" strokeLinecap="round" strokeLinejoin="round" />
                                                                     </svg>
-                                                                    Edit Item
+                                                                    Edit
                                                                 </button>
                                                             </div>
-                                                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+                                                            
+                                                            {/* Compact Info Row */}
+                                                            <div className="flex flex-wrap items-center gap-4 text-sm">
+                                                                <div className="flex items-center gap-1">
+                                                                    <span className="font-medium text-gray-600">Category:</span>
+                                                                    <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                                        {item.category?.name || 'Uncategorized'}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex items-center gap-1">
+                                                                    <span className="font-medium text-gray-600">Total:</span>
+                                                                    <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                                        {item.totalQuantity || 0} units
+                                                                    </span>
+                                                                </div>
+                                                                {item.description && (
+                                                                    <div className="flex items-start gap-1 flex-1 min-w-0">
+                                                                        <span className="font-medium text-gray-600 flex-shrink-0">Description:</span>
+                                                                        <span className="text-gray-600 truncate">{item.description}</span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            
+                                                            {/* Compact Inventory Stacks */}
+                                                            <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-6 gap-2">
+                                                            
+                                                            {/* Compact Info Row */}
+                                                            <div className="flex flex-wrap items-center gap-4 text-sm">
+                                                                <div className="flex items-center gap-1">
+                                                                    <span className="font-medium text-gray-600">Category:</span>
+                                                                    <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                                        {item.category?.name || 'Uncategorized'}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex items-center gap-1">
+                                                                    <span className="font-medium text-gray-600">Total:</span>
+                                                                    <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                                        {item.totalQuantity || 0} units
+                                                                    </span>
+                                                                </div>
+                                                                {item.description && (
+                                                                    <div className="flex items-start gap-1 flex-1 min-w-0">
+                                                                        <span className="font-medium text-gray-600 flex-shrink-0">Description:</span>
+                                                                        <span className="text-gray-600 truncate">{item.description}</span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            
+                                                            {/* Compact Inventory Stacks */}
+                                                            <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-6 gap-2">
                                                                 {(() => {
                                                                     // Group existing stacks by status
                                                                     const groupedStacks = selectedItemStacks.stacks.reduce((acc, stack) => {
@@ -1388,47 +1425,17 @@ function Content() {
                                                                         return (
                                                                             <div
                                                                                 key={status}
-                                                                                className={`${styles.bg} ${styles.border} border rounded-md p-3 shadow-sm hover:shadow-md transition-all duration-200`}
+                                                                                className={`${styles.bg} ${styles.border} border rounded-md p-2 shadow-sm hover:shadow-md transition-all duration-200`}
                                                                             >
-                                                                                <div className="flex items-center justify-between mb-2">
-                                                                                    <span className={`${styles.badge} px-2 py-0.5 rounded-full text-xs font-semibold`}>
+                                                                                <div className="flex items-center justify-between mb-1">
+                                                                                    <span className={`${styles.badge} px-1.5 py-0.5 rounded-full text-xs font-semibold`}>
                                                                                         {status}
                                                                                     </span>
-                                                                                    <div className={`${styles.icon} p-0.5`}>
-                                                                                        {status === 'Available' && (
-                                                                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                                                            </svg>
-                                                                                        )}
-                                                                                        {status === 'Unavailable' && (
-                                                                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                                                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                                                                            </svg>
-                                                                                        )}
-                                                                                        {status === 'Damaged' && (
-                                                                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                                                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                                                                            </svg>
-                                                                                        )}
-                                                                                        {status === 'EIC' && (
-                                                                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                                                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                                                            </svg>
-                                                                                        )}
-                                                                                        {status === 'Distributed' && (
-                                                                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                                                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                                                                                            </svg>
-                                                                                        )}
-                                                                                    </div>
                                                                                 </div>
 
-                                                                                <div className="text-center mb-2">
-                                                                                    <div className="text-lg font-bold text-gray-800 mb-0.5">
+                                                                                <div className="text-center mb-1">
+                                                                                    <div className="text-base font-bold text-gray-800">
                                                                                         {statusData.totalQuantity}
-                                                                                    </div>
-                                                                                    <div className="text-xs text-gray-600 font-medium">
-                                                                                        {statusData.totalQuantity === 1 ? 'unit' : 'units'}
                                                                                     </div>
                                                                                 </div>
 
